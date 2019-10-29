@@ -1,15 +1,16 @@
 {
   "name": "bken-web",
-  "version": "0.0.0",
-  "description": "The website for bken.io",
+  "version": "0.0.1",
+  "description": "frontend for bken.io",
   "main": "index.js",
   "repository": "git@github.com:bken-io/web.git",
-  "author": "Brendan Kennedy <brendan.kennedy@skyspecs.com>",
+  "author": "Brendan Kennedy <brenwken@gmail.com>",
   "license": "UNLICENSED",
   "private": false,
   "scripts": {
     "start": "parcel src/index.html",
-    "build": "parcel build src/index.html"
+    "build": "parcel build src/index.html",
+    "deploy": "git checkout master && git pull && yarn build && cp -R dist/* /var/www/html"
   },
   "dependencies": {
     "@material-ui/core": "^4.5.2",
