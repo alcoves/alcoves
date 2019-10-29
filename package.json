@@ -9,7 +9,7 @@
   "private": false,
   "scripts": {
     "start": "parcel src/index.html",
-    "build": "parcel build src/index.html",
+    "build": "parcel build public/index.html && cp public/favicon.ico dist/",
     "deploy": "git checkout master && git pull && yarn build && cp -R dist/* /var/www/html"
   },
   "dependencies": {
