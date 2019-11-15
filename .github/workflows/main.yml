@@ -1,25 +1,20 @@
-on: push
-name: Deployment
+name: Deploy
+on:
+  push:
+    branches:
+      - master
 jobs:
-  master:
+  deploy-development:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
-      - name: master
-        uses: actions/bin/filter@master
-        with:
-          args: branch master
-      - name: install
-        uses: actions/npm@master
-        with:
-          args: install
-      - name: build
-        uses: actions/npm@master
-        with:
-          args: run build
-      - name: deploy
-        uses: peaceiris/actions-gh-pages@v1.0.0
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Deploy to Production
+        uses: JamesIves/github-pages-deploy-action@releases/v2
         env:
-          ACTIONS_DEPLOY_KEY: ${{ secrets.ACCESS_TOKEN }}
-          PUBLISH_BRANCH: gh-pages
-          PUBLISH_DIR: ./dist
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          BASE_BRANCH: master
+          BRANCH: gh-pages
+          FOLDER: dist
+          BUILD_SCRIPT: yarn && yarn build
