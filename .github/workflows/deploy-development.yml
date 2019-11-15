@@ -16,5 +16,5 @@ jobs:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           BASE_BRANCH: development
           BRANCH: deploy-development
-          FOLDER: build
-          BUILD_SCRIPT: yarn i && yarn build
+          FOLDER: dist
+          BUILD_SCRIPT: yarn && yarn build
