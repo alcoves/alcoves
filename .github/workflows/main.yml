@@ -19,11 +19,9 @@ jobs:
           yarn test
         env:
           CI: true
-      - name: Deploy to Production
-        uses: JamesIves/github-pages-deploy-action@releases/v2
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v2.5.0
         env:
-          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-          BASE_BRANCH: master
-          BRANCH: gh-pages
-          FOLDER: dist
-          BUILD_SCRIPT: yarn && yarn build
+          ACTIONS_DEPLOY_KEY: ${{ secrets.ACCESS_TOKEN }}
+          PUBLISH_BRANCH: gh-pages
+          PUBLISH_DIR: ./dist
