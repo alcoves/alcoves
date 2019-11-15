@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@development
+        uses: actions/checkout@master
 
       - name: Deploy to Development
         uses: JamesIves/github-pages-deploy-action@releases/v2
