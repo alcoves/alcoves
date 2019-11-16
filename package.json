@@ -8,21 +8,20 @@
   "license": "UNLICENSED",
   "private": false,
   "scripts": {
-    "start": "parcel src/index.html",
-    "build": "parcel build public/index.html && cp public/favicon.ico dist/",
-    "deploy": "git checkout master && git pull && yarn build && cp -R dist/* /var/www/html"
+    "start": "parcel public/index.html",
+    "build": "rm -rf dist/ && parcel build public/index.html && cp public/favicon.ico dist/ && echo 'bken.io\ndev.bken.io' > dist/CNAME"
   },
   "dependencies": {
-    "@material-ui/core": "^4.5.2",
+    "@material-ui/core": "^4.6.1",
     "@material-ui/icons": "^4.5.1",
-    "react": "^16.11.0",
-    "react-dom": "^16.11.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
     "react-router-dom": "^5.1.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.6.4",
-    "@babel/preset-env": "^7.6.3",
-    "@babel/preset-react": "^7.6.3",
+    "@babel/core": "^7.7.2",
+    "@babel/preset-env": "^7.7.1",
+    "@babel/preset-react": "^7.7.0",
     "parcel-bundler": "^1.12.4"
   }
 }

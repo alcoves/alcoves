@@ -6,3 +6,6 @@ dist
 
 # Scripts
 *.sh
+
+# Github pages
+CNAME
