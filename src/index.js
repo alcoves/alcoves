@@ -1,13 +1,19 @@
+import './index.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import theme from './config/theme';
+
+import TopBar from './components/TopBar/TopBar';
+import Content from './components/Content/Content';
+
+import { ThemeProvider } from '@material-ui/core/styles';
 
 const Index = () => {
   return (
-    <div>
-      <div>
-        <h1>Welcome</h1>
-      </div>
-    </div>
+    <ThemeProvider theme={theme}>
+      <TopBar />
+      <Content />
+    </ThemeProvider>
   );
 };
 
