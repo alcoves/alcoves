@@ -1,0 +1,4 @@
+node_modules
+*.env
+nodemon.json
+yarn-error.log
