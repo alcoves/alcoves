@@ -1,13 +1,10 @@
-const auth = require('../middleware/auth');
 const express = require('express');
+const auth = require('../middleware/auth');
+const c = require('../controllers/channels');
+
 const router = express.Router();
 
-router.get('/:channelId', async (req, res) => {
-  res.status(200).send({ message: req.params.channelId });
-});
-
-router.post('/', auth, async (req, res) => {
-  res.status(200).send({ message: 'channel created' });
-});
+router.get('/:channelId', c.getChannel);
+router.post('/', auth, c.createChannel);
 
 module.exports = router;
