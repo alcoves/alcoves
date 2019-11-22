@@ -10,7 +10,9 @@ router.get('/', (req, res) => {
 });
 
 router.get('/favicon.ico', (req, res) => {
-  res.status(200).sendFile(path.normalize(`${__dirname}/favicon.ico`));
+  res
+    .status(200)
+    .sendFile(path.normalize(`${__dirname}/../../img/favicon.ico`));
 });
 
 module.exports = router;
