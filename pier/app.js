@@ -23,6 +23,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use('/', require('./api/routes/root'));
 app.use('/user', require('./api/routes/user'));
 app.use('/posts', require('./api/routes/posts'));
+app.use('/channels', require('./api/routes/channels'));
 
 app.use((req, res, next) => {
   const error = new Error('not found');
