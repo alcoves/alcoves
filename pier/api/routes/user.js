@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const router = express.Router();
 const User = require('../models/user');
@@ -15,8 +16,15 @@ router.post('/login', async (req, res) => {
       );
 
       if (passwordsMatch) {
+        const token = jwt.sign(
+          { email: user.email, userId: user.id },
+          process.env.JWT_KEY,
+          { expiresIn: '1h' }
+        );
+
         res.status(200).send({
           message: 'login succeeded',
+          token,
         });
       } else {
         res.status(401).send({ message: 'authentication failed' });
