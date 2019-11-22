@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 const router = express.Router();
 const User = require('../models/user');
@@ -8,7 +9,7 @@ router.post('/signup', (req, res) => {
   const user = new User({
     _id: mongoose.Types.ObjectId(),
     email: req.body.email,
-    password: req.body.password,
+    password: bcrypt.hash(req.body.password),
   });
 
   res.status(200).send({
