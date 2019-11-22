@@ -20,7 +20,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/', require('./api/routes/root'));
-app.use('/users', require('./api/routes/users'));
+app.use('/user', require('./api/routes/user'));
 app.use('/posts', require('./api/routes/posts'));
 
 app.use((req, res, next) => {
@@ -30,7 +30,10 @@ app.use((req, res, next) => {
 });
 
 app.use((error, req, res, next) => {
-  res.status(500).send(error);
+  res.status(500).send({
+    message: error.message || 'unknown',
+    error,
+  });
 });
 
 app.listen(port);

@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const postSchema = new Schema({
-  _id: mongoose.Schema.Types.ObjectId,
+  _id: Schema.Types.ObjectId,
   channel: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'Channel',
     required: true,
   },
