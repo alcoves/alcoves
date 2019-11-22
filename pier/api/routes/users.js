@@ -1,13 +1,20 @@
 const express = require('express');
-const router = express.Router();
+const mongoose = require('mongoose');
 
-router.get('/', (req, res) => {
+const router = express.Router();
+const User = require('../models/user');
+
+router.post('/signup', (req, res) => {
+  const user = new User({
+    _id: mongoose.Types.ObjectId(),
+    email: req.body.email,
+    password: req.body.password,
+  });
+
   res.status(200).send({
     payload: ['users'],
   });
 });
-
-// const User = require('../models/user');
 
 // app.post('/user', async (req, res) => {
 //   const user = new User({
