@@ -5,6 +5,30 @@ const bcrypt = require('bcrypt');
 const router = express.Router();
 const User = require('../models/user');
 
+router.post('/login', async (req, res) => {
+  try {
+    const user = await User.findOne({ email: req.body.email });
+    if (user) {
+      const passwordsMatch = await bcrypt.compare(
+        req.body.password,
+        user.password
+      );
+
+      if (passwordsMatch) {
+        res.status(200).send({
+          message: 'login succeeded',
+        });
+      } else {
+        res.status(401).send({ message: 'authentication failed' });
+      }
+    } else {
+      res.status(401).send({ message: 'authentication failed' });
+    }
+  } catch (error) {
+    throw error;
+  }
+});
+
 router.post('/', async (req, res) => {
   try {
     const userExists = await User.find({ email: req.body.email });
