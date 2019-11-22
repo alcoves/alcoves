@@ -5,26 +5,15 @@ const bcrypt = require('bcrypt');
 const router = express.Router();
 const User = require('../models/user');
 
-router.post('/signup', (req, res) => {
+router.post('/signup', async (req, res) => {
   const user = new User({
     _id: mongoose.Types.ObjectId(),
     email: req.body.email,
-    password: bcrypt.hash(req.body.password),
+    password: await bcrypt.hash(req.body.password),
   });
 
-  res.status(200).send({
-    payload: ['users'],
-  });
+  await user.save();
+  res.status(201).send({ message: 'user created' });
 });
-
-// app.post('/user', async (req, res) => {
-//   const user = new User({
-//     _id: new mongoose.Types.ObjectId(),
-//     displayName: 'Brendan Kennedy',
-//   });
-
-//   const userRes = await user.save();
-//   res.send(userRes);
-// });
 
 module.exports = router;
