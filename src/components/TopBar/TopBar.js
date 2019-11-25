@@ -7,6 +7,8 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 
+import { useHistory } from 'react-router-dom';
+
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
@@ -21,6 +23,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function ButtonAppBar() {
   const classes = useStyles();
+  const history = useHistory();
 
   return (
     <div className={classes.root}>
@@ -29,10 +32,21 @@ export default function ButtonAppBar() {
           <IconButton edge='start' className={classes.menuButton} color='inherit' aria-label='menu'>
             <MenuIcon />
           </IconButton>
-          <Typography variant='h6' className={classes.title}>
+          <Typography
+            variant='h6'
+            className={classes.title}
+            onClick={() => {
+              history.push('/');
+            }}>
             bken
           </Typography>
-          <Button color='inherit'>Login</Button>
+          <Button
+            onClick={() => {
+              history.push('/login');
+            }}
+            color='inherit'>
+            Login
+          </Button>
         </Toolbar>
       </AppBar>
     </div>
