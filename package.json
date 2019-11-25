@@ -12,16 +12,16 @@
     "build": "rm -rf dist/ && parcel build public/index.html && cp public/favicon.ico dist/ && echo 'bken.io\ndev.bken.io' > dist/CNAME"
   },
   "dependencies": {
-    "@material-ui/core": "^4.6.1",
+    "@material-ui/core": "^4.7.0",
     "@material-ui/icons": "^4.5.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-router-dom": "^5.1.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.7.2",
-    "@babel/preset-env": "^7.7.1",
-    "@babel/preset-react": "^7.7.0",
+    "@babel/core": "^7.7.4",
+    "@babel/preset-env": "^7.7.4",
+    "@babel/preset-react": "^7.7.4",
     "parcel-bundler": "^1.12.4"
   }
 }
