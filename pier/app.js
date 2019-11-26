@@ -4,6 +4,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const responseTime = require('response-time');
+const cookieParser = require('cookie-parser');
 
 mongoose.set('useCreateIndex', true);
 mongoose.connect(process.env.DB_CONNECTION_STRING, {
@@ -14,9 +15,22 @@ mongoose.connect(process.env.DB_CONNECTION_STRING, {
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(cors());
+// const whitelist = [
+//   'https://bken.io',
+//   'https://api.bken.io',
+//   'http://localhost:1234',
+//   `http://localhost:${port}`,
+// ];
+
+const corsOptions = {
+  origin: 'http://localhost:1234',
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 app.use(morgan('dev'));
 app.use(responseTime());
+app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -38,4 +52,4 @@ app.use((error, req, res, next) => {
   });
 });
 
-app.listen(port);
+app.listen(port, () => console.log(`started on ${port}`));
