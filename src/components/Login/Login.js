@@ -15,13 +15,19 @@ class Login extends React.Component {
         container
         direction='column'
         justify='center'
-        spacing={2}
-        style={{ marginTop: '75px', border: 'yellow solid 2px' }}>
-        <Grid item xs={12} sm={6} md={4} lg={3}>
-          <TextField fullWidth id='login-email' label='Email Address' required variant='outlined' />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={3}>
+        alignItems='center'
+        style={{ marginTop: '75px' }}>
+        <Grid item xs={11} sm={8} md={5} lg={3}>
           <TextField
+            margin='dense'
+            fullWidth
+            id='login-email'
+            label='Email Address'
+            required
+            variant='outlined'
+          />
+          <TextField
+            margin='dense'
             fullWidth
             type='password'
             id='login-password'
@@ -29,9 +35,12 @@ class Login extends React.Component {
             variant='outlined'
             required
           />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={3}>
-          <Button size='medium' fullWidth variant='outlined'>
+          <Button
+            style={{ marginTop: '30px' }}
+            margin='normal'
+            size='medium'
+            fullWidth
+            variant='contained'>
             Log In
           </Button>
         </Grid>
