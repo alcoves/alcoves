@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -8,6 +8,9 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 
 import { useHistory } from 'react-router-dom';
+import { observer } from 'mobx-react-lite';
+
+import UserStore from '../../data/User';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -21,7 +24,8 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function ButtonAppBar() {
+export default observer(() => {
+  const { user } = useContext(UserStore);
   const classes = useStyles();
   const history = useHistory();
 
@@ -40,15 +44,19 @@ export default function ButtonAppBar() {
             }}>
             bken
           </Typography>
-          <Button
-            onClick={() => {
-              history.push('/login');
-            }}
-            color='inherit'>
-            Login
-          </Button>
+          {user.id ? (
+            <div> {user.email} </div>
+          ) : (
+            <Button
+              onClick={() => {
+                history.push('/login');
+              }}
+              color='inherit'>
+              Login
+            </Button>
+          )}
         </Toolbar>
       </AppBar>
     </div>
   );
-}
+});

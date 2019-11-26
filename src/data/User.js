@@ -1,9 +1,12 @@
-import { observable } from 'mobx';
+import { createContext } from 'react';
+import { decorate, observable, computed } from 'mobx';
 
-class User {
-  @observable id = '';
-  @observable email = '';
-  @observable accessToken = '';
+export class User {
+  user = {
+    id: '',
+    email: '',
+  };
 }
 
-export default User;
+decorate(User, { user: observable });
+export default createContext(new User());
