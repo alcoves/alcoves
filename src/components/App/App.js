@@ -1,15 +1,14 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 
 import Login from '../Login/Login';
 import TopBar from '../TopBar/TopBar';
 import Content from '../Content/Content';
 
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { ThemeProvider } from '@material-ui/core/styles';
+import jwt from 'jsonwebtoken';
+
+import { Route, Switch } from 'react-router-dom';
 import { observer } from 'mobx-react';
 import { withCookies } from 'react-cookie';
-import { reAuthenticate } from '../../api/api';
 
 @observer
 class Root extends React.Component {
@@ -17,18 +16,29 @@ class Root extends React.Component {
     super(props);
     this.state = {
       error: null,
-      authenticated: false,
+      loading: false,
     };
   }
 
   componentDidMount() {
-    reAuthenticate(this.props.cookies)
-      .then(() => {
-        this.setState({ authenticated: true });
-      })
-      .catch(error => {
-        this.setState({ error: JSON.stringify(error, null, 2) });
-      });
+    const accessToken = this.props.cookies.get('accessToken');
+
+    if (accessToken) {
+      console.log('accessToken present');
+
+      const { payload } = jwt.decode(accessToken, { complete: true });
+
+      console.log(payload);
+
+      // this.props.stores.user.id = payload.userId;
+      // this.props.stores.user.email = payload.email;
+      // console.log(this.props.stores.user.id);
+
+      this.setState({ loading: false });
+    } else {
+      console.log('no accessToken present');
+      this.setState({ loading: false });
+    }
   }
 
   render() {
@@ -36,10 +46,12 @@ class Root extends React.Component {
       return <div> {this.state.error} </div>;
     }
 
-    if (this.state.authenticated) {
+    if (this.state.loading) {
+      return <div />;
+    } else {
       return (
         <div>
-          <TopBar />
+          <TopBar {...this.props} />
           <Switch>
             <Route
               path='/login'
@@ -49,8 +61,6 @@ class Root extends React.Component {
           </Switch>
         </div>
       );
-    } else {
-      return <div />;
     }
   }
 }

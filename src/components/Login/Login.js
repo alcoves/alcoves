@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import jwt from 'jsonwebtoken';
+
+import UserStore from '../../data/User';
+
 import { login } from '../../api/api';
 
 class Login extends React.Component {
@@ -15,7 +19,8 @@ class Login extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.props);
+    const { user } = useContext(UserStore);
+    console.log(user);
   }
 
   handleLogin = () => {
@@ -27,8 +32,13 @@ class Login extends React.Component {
     })
       .then(res => {
         this.setState({ loading: false });
-        this.props.stores.user.accessToken = res.data.accessToken;
-        console.log(this.props.stores.user.accessToken);
+        this.props.cookies.set('accessToken', res.data.accessToken);
+
+        const { payload } = jwt.decode(res.data.accessToken, { complete: true });
+
+        this.props.stores.user.id = payload.userId;
+        this.props.stores.user.email = payload.email;
+        this.props.history.push('/profile');
       })
       .catch(err => {
         this.setState({ loading: false });
