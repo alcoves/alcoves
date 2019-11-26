@@ -3,27 +3,25 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import theme from './config/theme';
 
-import Login from './components/Login/Login';
-import TopBar from './components/TopBar/TopBar';
-import Content from './components/Content/Content';
+import App from './components/App/App';
 
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from '@material-ui/core/styles';
+import { CookiesProvider } from 'react-cookie';
 
-const Index = () => {
+import User from './data/User';
+
+const Index = props => {
   return (
-    <BrowserRouter>
-      <ThemeProvider theme={theme}>
-        <TopBar />
-        <Switch>
-          <Route path='/login' render={props => <Login {...props} />} />
-          <Route path='/' render={props => <Content {...props} />} />
-        </Switch>
-      </ThemeProvider>
-    </BrowserRouter>
+    <CookiesProvider>
+      <BrowserRouter>
+        <ThemeProvider theme={theme}>
+          <App stores={{ user: User }} />
+        </ThemeProvider>
+      </BrowserRouter>
+    </CookiesProvider>
   );
 };
 
-const App = document.getElementById('app');
-
-ReactDOM.render(<Index />, App);
+const Root = document.getElementById('root');
+ReactDOM.render(<Index />, Root);

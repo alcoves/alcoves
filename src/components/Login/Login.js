@@ -2,48 +2,73 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import { login } from '../../api/api';
 
 class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: false,
+      email: '',
+      password: '',
     };
+  }
+
+  componentDidMount() {
+    console.log(this.props);
   }
 
   handleLogin = () => {
     this.setState({ loading: true });
-    // make api request
-    // add api token to localstorage
-    // show logged in user state
-    // update global store
+
+    login({
+      email: this.state.email,
+      password: this.state.password,
+    })
+      .then(res => {
+        this.setState({ loading: false });
+        this.props.stores.user.accessToken = res.data.accessToken;
+        console.log(this.props.stores.user.accessToken);
+      })
+      .catch(err => {
+        this.setState({ loading: false });
+        console.log(err);
+      });
+  };
+
+  handleTextField = e => {
+    this.setState({ [e.target.id]: e.target.value });
   };
 
   render() {
     return (
       <Grid
         container
-        direction='column'
         justify='center'
+        direction='column'
         alignItems='center'
         style={{ marginTop: '75px' }}>
         <Grid item xs={11} sm={8} md={5} lg={3}>
           <TextField
-            margin='dense'
-            fullWidth
-            id='login-email'
-            label='Email Address'
             required
+            fullWidth
+            id='email'
+            margin='dense'
             variant='outlined'
+            label='Email Address'
+            value={this.state.email}
+            onChange={this.handleTextField}
           />
           <TextField
-            margin='dense'
+            required
             fullWidth
+            id='password'
+            margin='dense'
             type='password'
-            id='login-password'
             label='Password'
             variant='outlined'
-            required
+            value={this.state.password}
+            onChange={this.handleTextField}
           />
           <Button
             fullWidth
