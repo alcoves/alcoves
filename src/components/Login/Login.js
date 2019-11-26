@@ -6,8 +6,18 @@ import TextField from '@material-ui/core/TextField';
 class Login extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      loading: false,
+    };
   }
+
+  handleLogin = () => {
+    this.setState({ loading: true });
+    // make api request
+    // add api token to localstorage
+    // show logged in user state
+    // update global store
+  };
 
   render() {
     return (
@@ -36,11 +46,13 @@ class Login extends React.Component {
             required
           />
           <Button
-            style={{ marginTop: '30px' }}
+            fullWidth
             margin='normal'
             size='medium'
-            fullWidth
-            variant='contained'>
+            variant='contained'
+            onClick={this.handleLogin}
+            disabled={this.state.loading}
+            style={{ marginTop: '30px' }}>
             Log In
           </Button>
         </Grid>
