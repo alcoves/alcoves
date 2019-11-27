@@ -31,13 +31,18 @@ export default observer(() => {
 
   return (
     <div className={classes.root}>
-      <AppBar position='static'>
+      <AppBar position="static">
         <Toolbar>
-          <IconButton edge='start' className={classes.menuButton} color='inherit' aria-label='menu'>
+          <IconButton
+            edge="start"
+            className={classes.menuButton}
+            color="inherit"
+            aria-label="menu">
             <MenuIcon />
           </IconButton>
+          Welcome
           <Typography
-            variant='h6'
+            variant="h6"
             className={classes.title}
             onClick={() => {
               history.push('/');
@@ -51,7 +56,7 @@ export default observer(() => {
               onClick={() => {
                 history.push('/login');
               }}
-              color='inherit'>
+              color="inherit">
               Login
             </Button>
           )}
