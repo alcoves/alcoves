@@ -3,6 +3,7 @@ import React from 'react';
 import Login from '../Login/Login';
 import TopBar from '../TopBar/TopBar';
 import Content from '../Content/Content';
+import Notification from '../Notification/Notification';
 
 import jwt from 'jsonwebtoken';
 
@@ -22,6 +23,7 @@ export default observer(
     return (
       <div>
         <TopBar {...props} />
+        <Notification {...props} />
         <Switch>
           <Route path='/login' render={routerProps => <Login {...routerProps} {...props} />} />
           <Route path='/' render={routerProps => <Content {...routerProps} {...props} />} />
