@@ -6,9 +6,11 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import BkenIcon from '../../../public/favicon.ico';
+import Avatar from '@material-ui/core/Avatar';
 
 import { useHistory } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
+import { deepOrange } from '@material-ui/core/colors';
 
 import UserStore from '../../data/User';
 
@@ -19,8 +21,16 @@ const useStyles = makeStyles(theme => ({
   menuButton: {
     marginRight: theme.spacing(2),
   },
+  toolbar: {
+    minHeight: '50px',
+    maxHeight: '50px',
+  },
   title: {
     flexGrow: 1,
+  },
+  defaultAvatar: {
+    color: '#fff',
+    backgroundColor: '#1f2430',
   },
 }));
 
@@ -32,7 +42,7 @@ export default observer(() => {
   return (
     <div className={classes.root}>
       <AppBar position='static'>
-        <Toolbar>
+        <Toolbar className={classes.toolbar}>
           <IconButton edge='start' className={classes.menuButton} color='inherit' aria-label='menu'>
             <MenuIcon />
           </IconButton>
@@ -44,7 +54,7 @@ export default observer(() => {
             <img style={{ cursor: 'pointer' }} src={BkenIcon} width={30} height={30} />
           </div>
           {user.id ? (
-            <div> {user.email} </div>
+            <Avatar className={classes.defaultAvatar}>{user.email[0].toUpperCase()}</Avatar>
           ) : (
             <Button
               onClick={() => {

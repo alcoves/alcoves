@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import Login from '../Login/Login';
 import TopBar from '../TopBar/TopBar';
@@ -11,13 +11,19 @@ import { Route, Switch } from 'react-router-dom';
 import { observer } from 'mobx-react';
 import { withCookies } from 'react-cookie';
 
+import UserStore from '../../data/User';
+
 export default observer(
   withCookies(props => {
+    const { user } = useContext(UserStore);
     const accessToken = props.cookies.get('accessToken');
 
     if (accessToken) {
+      // Rehydrate im memory user store with token information
+      console.log('access token present, hydrating in memory store');
       const { payload } = jwt.decode(accessToken, { complete: true });
-      console.log('accessToken present', payload);
+      user.id = payload.userId;
+      user.email = payload.email;
     }
 
     return (
