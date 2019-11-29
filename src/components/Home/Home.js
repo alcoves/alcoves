@@ -4,9 +4,12 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 
+import Video from '../Video/Video';
+
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
+    marginTop: '30px',
   },
   paper: {
     padding: theme.spacing(1),
@@ -15,14 +18,14 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function CenteredGrid() {
+export default () => {
   const classes = useStyles();
 
   return (
     <Container maxWidth='xl' className={classes.root}>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <Paper className={classes.paper}>xs=12</Paper>
+          <Video />
         </Grid>
         <Grid item xs={6}>
           <Paper className={classes.paper}>xs=6</Paper>
@@ -45,4 +48,4 @@ export default function CenteredGrid() {
       </Grid>
     </Container>
   );
-}
+};

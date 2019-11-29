@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 
 import Login from '../Login/Login';
 import TopBar from '../TopBar/TopBar';
-import Content from '../Content/Content';
+import Home from '../Home/Home';
 import Notification from '../Notification/Notification';
 
 import jwt from 'jsonwebtoken';
@@ -32,7 +32,7 @@ export default observer(
         <Notification {...props} />
         <Switch>
           <Route path='/login' render={routerProps => <Login {...routerProps} {...props} />} />
-          <Route path='/' render={routerProps => <Content {...routerProps} {...props} />} />
+          <Route path='/' render={routerProps => <Home {...routerProps} {...props} />} />
         </Switch>
       </div>
     );
