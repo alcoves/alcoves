@@ -10,7 +10,6 @@ import Avatar from '@material-ui/core/Avatar';
 
 import { useHistory } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
-import { deepOrange } from '@material-ui/core/colors';
 
 import UserStore from '../../data/User';
 
@@ -24,6 +23,7 @@ const useStyles = makeStyles(theme => ({
   toolbar: {
     minHeight: '50px',
     maxHeight: '50px',
+    backgroundColor: '#191e2a',
   },
   title: {
     flexGrow: 1,
