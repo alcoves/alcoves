@@ -2,6 +2,7 @@ body {
   margin: 0;
   padding: 0;
   background: #1f2430;
+  font-family: 'Work Sans', sans-serif;
 }
 
 h1,
@@ -14,5 +15,5 @@ p,
 code,
 pre {
   color: #fff;
-  font-family: 'Fira Sans', sans-serif;
+  font-weight: 400;
 }
