@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
+import jwt from 'jsonwebtoken';
 
 import Login from '../Login/Login';
 import TopBar from '../TopBar/TopBar';
 import Home from '../Home/Home';
 import Notification from '../Notification/Notification';
-
-import jwt from 'jsonwebtoken';
+import Video from '../Video/Video';
 
 import { Route, Switch } from 'react-router-dom';
 import { observer } from 'mobx-react';
@@ -32,6 +32,7 @@ export default observer(
         <Notification {...props} />
         <Switch>
           <Route path='/login' render={routerProps => <Login {...routerProps} {...props} />} />
+          <Route path='/video/*' render={routerProps => <Video {...routerProps} {...props} />} />
           <Route path='/' render={routerProps => <Home {...routerProps} {...props} />} />
         </Switch>
       </div>
