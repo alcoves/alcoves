@@ -53,3 +53,4 @@ app.use((error, req, res, next) => {
 });
 
 app.listen(port, () => console.log(`started on ${port}`));
+module.exports = app;
