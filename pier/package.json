@@ -8,8 +8,8 @@
   "license": "GPL-3.0",
   "private": false,
   "scripts": {
-    "dev": "nodemon -r dotenv/config app.js",
-    "start": "node -r dotenv/config app.js",
+    "dev": "nodemon -r dotenv/config server.js",
+    "start": "node -r dotenv/config server.js",
     "test": "jest --setupFiles dotenv/config"
   },
   "dependencies": {
