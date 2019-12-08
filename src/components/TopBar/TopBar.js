@@ -8,8 +8,6 @@ import MenuIcon from '@material-ui/icons/Menu';
 import BkenIcon from '../../../public/favicon.ico';
 import Avatar from '@material-ui/core/Avatar';
 
-import { Button as AntdButton } from 'antd';
-
 import { useHistory } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 
@@ -45,7 +43,6 @@ export default observer(() => {
     <div className={classes.root}>
       <AppBar position='static'>
         <Toolbar className={classes.toolbar}>
-          <AntdButton type='dashed'>Dashed</AntdButton>
           <IconButton edge='start' className={classes.menuButton} color='inherit' aria-label='menu'>
             <MenuIcon />
           </IconButton>
