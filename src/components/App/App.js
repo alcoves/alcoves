@@ -32,7 +32,7 @@ export default observer(
         <Notification {...props} />
         <Switch>
           <Route path='/login' render={routerProps => <Login {...routerProps} {...props} />} />
-          <Route path='/video/*' render={routerProps => <Video {...routerProps} {...props} />} />
+          <Route path='/videos/*' render={routerProps => <Video {...routerProps} {...props} />} />
           <Route path='/' render={routerProps => <Home {...routerProps} {...props} />} />
         </Switch>
       </div>

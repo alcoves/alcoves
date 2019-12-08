@@ -10,11 +10,7 @@ export default () => {
         controls={true}
         className='react-player'
         url={[
-          { src: 'https://s3.us-east-2.wasabisys.com/media-bken/123/video.mp4', type: 'video/mp4' },
-          {
-            src: 'https://s3.us-east-2.wasabisys.com/media-bken/123/video.webm',
-            type: 'video/webm',
-          },
+          { src: 'https://s3.us-east-2.wasabisys.com/media-bken/123/train.mp4', type: 'video/mp4' },
         ]}
       />
       <div style={{ padding: '10px' }}>
