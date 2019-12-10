@@ -28,22 +28,22 @@ export default observer(
 
     return (
       <div>
-        <Navigation {...props} />
-        {/* <TopBar {...props} />
-        <Switch>
-          <Route
-            path="/login"
-            render={routerProps => <Login {...routerProps} {...props} />}
-          />
-          <Route
-            path="/videos/*"
-            render={routerProps => <Video {...routerProps} {...props} />}
-          />
-          <Route
-            path="/"
-            render={routerProps => <Home {...routerProps} {...props} />}
-          />
-        </Switch> */}
+        <Navigation {...props}>
+          <Switch>
+            <Route
+              path="/login"
+              render={routerProps => <Login {...routerProps} {...props} />}
+            />
+            <Route
+              path="/videos/*"
+              render={routerProps => <Video {...routerProps} {...props} />}
+            />
+            <Route
+              path="/"
+              render={routerProps => <Home {...routerProps} {...props} />}
+            />
+          </Switch>
+        </Navigation>
       </div>
     );
   })
