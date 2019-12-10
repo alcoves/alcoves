@@ -5,12 +5,23 @@ export default () => {
   return (
     <div style={{ width: '100%', height: 'auto' }}>
       <ReactPlayer
-        width='100%'
-        height='100%'
+        width="100%"
+        height="100%"
         controls={true}
-        className='react-player'
+        className="react-player"
         url={[
-          { src: 'https://s3.us-east-2.wasabisys.com/media-bken/123/train.mp4', type: 'video/mp4' },
+          {
+            src: 'https://s3.us-east-2.wasabisys.com/media-bken/123/train.mp4',
+            type: 'video/mp4',
+          },
+          {
+            src: 'https://s3.us-east-2.wasabisys.com/media-bken/123/train.mp4',
+            type: 'video/mp4',
+          },
+          {
+            src: 'https://s3.us-east-2.wasabisys.com/media-bken/123/train.mp4',
+            type: 'video/mp4',
+          },
         ]}
       />
       <div style={{ padding: '10px' }}>
