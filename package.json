@@ -14,7 +14,7 @@
   "dependencies": {
     "@material-ui/core": "^4.7.2",
     "@material-ui/icons": "^4.5.1",
-    "antd": "^3.26.0",
+    "antd": "^3.26.2",
     "axios": "^0.19.0",
     "js-cookie": "^2.2.1",
     "jsonwebtoken": "^8.5.1",
