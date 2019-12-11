@@ -1,34 +1,28 @@
 import React from 'react';
 
-import { Menu, Icon, Layout } from 'antd';
+import { Drawer, Menu, Icon, Layout } from 'antd';
 import { observer, useObservable } from 'mobx-react-lite';
 
 const { Header, Sider, Content } = Layout;
 
 export default observer(props => {
   const state = useObservable({
-    collapsed: true,
+    visible: false,
   });
 
-  const toggle = () => {
-    state.collapsed = !state.collapsed;
+  const openDrawer = () => {
+    state.visible = true;
+  };
+
+  const onClose = () => {
+    state.visible = false;
   };
 
   return (
     <Layout style={{ height: '100vh' }}>
       <Layout>
-        <Sider trigger={null} collapsible collapsed={state.collapsed}>
-          <Icon
-            style={{
-              display: 'flex',
-              padding: '23px 0px 23px 0px',
-              justifyContent: 'center',
-              color: 'white',
-            }}
-            type={state.collapsed ? 'menu-unfold' : 'menu-fold'}
-            onClick={toggle}
-          />
-          <Menu theme='dark' mode='inline' defaultSelectedKeys={['1']}>
+        <Drawer title='bken.io' placement='left' onClose={onClose} visible={state.visible}>
+          <Menu mode='inline' defaultSelectedKeys={['1']}>
             <Menu.Item key='1'>
               <Icon type='home' />
               <span>Home</span>
@@ -46,9 +40,23 @@ export default observer(props => {
               <span>Account</span>
             </Menu.Item>
           </Menu>
-        </Sider>
+        </Drawer>
         <Layout>
-          <Header theme='dark' style={{ background: '#001529', padding: 0 }}></Header>
+          <Header theme='dark' style={{ background: '#001529', padding: 0 }}>
+            <Icon
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                fontSize: '22px',
+                color: 'white',
+                height: '64px',
+                width: '64px',
+              }}
+              type='menu'
+              onClick={openDrawer}
+            />
+          </Header>
           <Content
             style={{
               background: '#212c34',

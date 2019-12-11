@@ -14,7 +14,7 @@ export default () => {
           width: '100%',
           height: 'calc(100vh - 64px)',
           minHeight: '480px',
-          maxHeight: 'calc((9 / 16) * (100vw - 80px))',
+          maxHeight: 'calc((9 / 16) * 100vw',
         }}>
         <ReactPlayer
           height='100%'
