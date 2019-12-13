@@ -18,6 +18,7 @@ app.use('/', require('./api/routes/root'));
 // TODO :: Refactor into plural resource
 app.use('/user', require('./api/routes/user'));
 app.use('/posts', require('./api/routes/posts'));
+app.use('/videos', require('./api/routes/videos'));
 app.use('/channels', require('./api/routes/channels'));
 
 app.use((req, res, next) => {
