@@ -2,10 +2,12 @@ import React from 'react';
 
 import { Drawer, Menu, Icon, Layout } from 'antd';
 import { observer, useObservable } from 'mobx-react-lite';
+import { useHistory } from 'react-router-dom';
 
-const { Header, Sider, Content } = Layout;
+const { Header, Content } = Layout;
 
 export default observer(props => {
+  const history = useHistory();
   const state = useObservable({
     visible: false,
   });
@@ -16,6 +18,10 @@ export default observer(props => {
 
   const onClose = () => {
     state.visible = false;
+  };
+
+  const handleClick = () => {
+    history.push('/upload');
   };
 
   return (
@@ -42,7 +48,16 @@ export default observer(props => {
           </Menu>
         </Drawer>
         <Layout>
-          <Header theme='dark' style={{ background: '#001529', padding: 0 }}>
+          <Header
+            theme='dark'
+            style={{
+              display: 'flex',
+              height: '64px',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              background: '#001529',
+              padding: 0,
+            }}>
             <Icon
               style={{
                 display: 'flex',
@@ -55,6 +70,19 @@ export default observer(props => {
               }}
               type='menu'
               onClick={openDrawer}
+            />
+            <Icon
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                fontSize: '22px',
+                color: 'white',
+                height: '64px',
+                width: '64px',
+              }}
+              type='upload'
+              onClick={handleClick}
             />
           </Header>
           <Content
