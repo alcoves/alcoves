@@ -1,9 +1,10 @@
 import React, { useContext } from 'react';
 import jwt from 'jsonwebtoken';
 
-import Login from '../Login/Login';
 import Home from '../Home/Home';
 import Video from '../Video/Video';
+import Login from '../Login/Login';
+import Upload from '../Upload/Upload';
 import Navigation from '../Navigation/Navigation';
 
 import { Route, Switch } from 'react-router-dom';
@@ -31,6 +32,7 @@ export default observer(
           <Switch>
             <Route path='/login' render={routerProps => <Login {...routerProps} {...props} />} />
             <Route path='/videos/*' render={routerProps => <Video {...routerProps} {...props} />} />
+            <Route path='/upload' render={routerProps => <Upload {...routerProps} {...props} />} />
             <Route path='/' render={routerProps => <Home {...routerProps} {...props} />} />
           </Switch>
         </Navigation>
