@@ -1,6 +1,7 @@
-import 'antd/dist/antd.css';
 import React from 'react';
+import 'antd/dist/antd.css';
 import ReactDOM from 'react-dom';
+import 'regenerator-runtime/runtime';
 
 import App from './components/App/App';
 
