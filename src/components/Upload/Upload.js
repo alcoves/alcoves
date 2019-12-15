@@ -1,78 +1,102 @@
 import React from 'react';
 
 import { useObservable, observer } from 'mobx-react-lite';
-import { Upload, message, Button, Icon } from 'antd';
+import { Upload, message, Button, Icon, Progress } from 'antd';
 import axios from 'axios';
 
 export default observer(() => {
   const state = useObservable({
-    uploading: false,
-    uploadUrl: '',
     fileList: [],
+    uploadUrl: '',
+    uploadProgress: 0,
   });
 
-  const beforeUpload = file => {
-    state.fileList.push(file);
-    return false;
-  };
-
   const handleUpload = e => {
-    console.log('Uploading video', state.fileList[0]);
-    const { name, lastModified, size, type, uid } = state.fileList[0];
-
-    state.uploading = true;
-
+    const { name, type } = state.fileList[0];
     axios
       .post('http://localhost:3000/videos/upload', { type: type, name })
       .then(({ data }) => {
         state.uploadUrl = data.payload.url;
-        console.log(state.uploadUrl);
-
         axios
           .put(state.uploadUrl, state.fileList[0], {
             headers: { 'Content-Type': type },
+            onUploadProgress: e => {
+              state.uploadProgress = Math.floor((e.loaded / e.total) * 100);
+            },
           })
           .then(res => {
-            state.uploading = false;
-            console.log('video uploaded!', res);
+            state.fileList = [];
+            state.uploadProgress = 0;
           })
           .catch(error => {
             state.fileList = [];
-            state.uploading = false;
-
+            state.uploadProgress = 0;
             console.error('error', error);
           });
       })
       .catch(error => {
-        state.uploading = false;
+        state.fileList = [];
+        state.uploadProgress = 0;
         console.error(error);
       });
   };
 
-  const changeHandler = e => {
-    state.fileList = e.target.files;
-    console.log(state.fileList);
+  const beforeUpload = file => {
+    state.uploadProgress = 0;
+    state.fileList = [file];
+    return false;
   };
 
   return (
-    <div>
-      <input type='file' name='file' onChange={changeHandler} />
-
-      <button onClick={handleUpload}>upload </button>
-
-      {/* <Upload beforeUpload={beforeUpload} fileList={state.fileList}>
-        <Button>
-          <Icon type='upload' /> Select File
+    <div
+      style={{
+        display: 'flex',
+        padding: '20px 5px 5px 5px',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        width: '100%',
+        height: '100%',
+        flexDirection: 'column',
+      }}>
+      <div
+        style={{
+          height: '74px',
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          padding: '5px',
+        }}>
+        <Upload beforeUpload={beforeUpload} fileList={state.fileList}>
+          <Button style={{ width: '120px' }}>
+            <Icon type='upload' /> Select File
+          </Button>
+        </Upload>
+      </div>
+      <div
+        style={{
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          padding: '5px',
+        }}>
+        <Button
+          type='primary'
+          onClick={handleUpload}
+          disabled={state.fileList.length === 0}
+          style={{ width: '120px' }}
+          loading={Boolean(state.uploadProgress)}>
+          {state.uploadProgress ? 'Uploading' : 'Start Upload'}
         </Button>
-      </Upload>
-      <Button
-        type='primary'
-        onClick={handleUpload}
-        disabled={!Boolean(state.fileList)}
-        loading={state.uploading}
-        style={{ marginTop: 16 }}>
-        {state.uploading ? 'Uploading' : 'Start Upload'}
-      </Button> */}
+      </div>
+      <div
+        style={{
+          width: '100%',
+          padding: '5px',
+          display: 'flex',
+          justifyContent: 'center',
+        }}>
+        {state.uploadProgress ? <Progress type='circle' percent={state.uploadProgress} /> : null}
+      </div>
     </div>
   );
 });
