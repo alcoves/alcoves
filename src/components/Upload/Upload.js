@@ -22,7 +22,7 @@ export default observer(() => {
 
     const parts = [];
     const fileSize = file.size;
-    const FILE_CHUNK_SIZE = 10000000; // 10MB
+    const FILE_CHUNK_SIZE = 10000000 * 10; // 100MB
     const NUM_CHUNKS = Math.floor(fileSize / FILE_CHUNK_SIZE) + 1;
 
     for (let index = 1; index < NUM_CHUNKS + 1; index++) {
@@ -44,7 +44,7 @@ export default observer(() => {
         const getUploadUrlResp = await axios.get('http://localhost:3000/uploads/url', {
           params: {
             fileName: file.name,
-            partNumber: partIndex,
+            partNumber: partIndex + 1,
             uploadId: uploadId,
           },
         });
@@ -65,7 +65,7 @@ export default observer(() => {
         });
       });
 
-      await axios.post(`${backendUrl}/`, {
+      await axios.post('http://localhost:3000/uploads', {
         params: {
           fileName: file.name,
           parts: uploadPartsArray,
