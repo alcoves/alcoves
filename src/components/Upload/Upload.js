@@ -1,8 +1,8 @@
 import React from 'react';
+import axios from 'axios';
 
 import { useObservable, observer } from 'mobx-react-lite';
 import { Upload, message, Button, Icon, Progress } from 'antd';
-import axios from 'axios';
 
 export default observer(() => {
   const state = useObservable({
