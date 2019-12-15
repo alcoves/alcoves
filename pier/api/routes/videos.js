@@ -8,6 +8,5 @@ router.get('/:id', c.getVideo);
 router.post('/', c.createVideo);
 router.patch('/:id', c.updateVideo);
 router.delete('/:id', c.deleteVideo);
-router.post('/upload', c.getUploadUrl);
 
 module.exports = router;

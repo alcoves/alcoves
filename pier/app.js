@@ -19,6 +19,7 @@ app.use('/', require('./api/routes/root'));
 app.use('/user', require('./api/routes/user'));
 app.use('/posts', require('./api/routes/posts'));
 app.use('/videos', require('./api/routes/videos'));
+app.use('/uploads', require('./api/routes/uploads'));
 app.use('/channels', require('./api/routes/channels'));
 
 app.use((req, res, next) => {

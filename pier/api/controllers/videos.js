@@ -1,30 +1,5 @@
 const mongoose = require('mongoose');
 const Video = require('../models/video');
-const AWS = require('aws-sdk');
-
-const s3 = new AWS.S3({
-  endpoint: new AWS.Endpoint('https://s3.us-east-2.wasabisys.com'),
-  s3ForcePathStyle: true,
-});
-
-exports.getUploadUrl = async (req, res) => {
-  try {
-    const presignedUpload = s3.getSignedUrl('putObject', {
-      Expires: 3600,
-      ACL: 'public-read',
-      Key: req.body.name,
-      Bucket: 'media-bken',
-      ContentType: req.body.type,
-    });
-
-    res.status(200).send({
-      message: 'upload url created',
-      payload: { url: presignedUpload },
-    });
-  } catch (error) {
-    throw error;
-  }
-};
 
 exports.createVideo = async (req, res) => {
   try {
