@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 
 import { useObservable, observer } from 'mobx-react-lite';
-import { Upload, message, Button, Icon, Progress } from 'antd';
+import { Upload, Button, Icon, Progress } from 'antd';
 
 export default observer(() => {
   const state = useObservable({
@@ -22,7 +22,7 @@ export default observer(() => {
 
     const parts = [];
     const fileSize = file.size;
-    const FILE_CHUNK_SIZE = 10000000 * 10; // 100MB
+    const FILE_CHUNK_SIZE = 10000000 * 5; // 50MB
     const NUM_CHUNKS = Math.floor(fileSize / FILE_CHUNK_SIZE) + 1;
 
     for (let index = 1; index < NUM_CHUNKS + 1; index++) {
@@ -38,9 +38,8 @@ export default observer(() => {
   const uploadMultipartFile = async (file, uploadId) => {
     try {
       const promisesArray = [];
-      const parts = chunkFile(file);
 
-      for (const [partIndex, blob] of parts.entries()) {
+      for (const [partIndex, blob] of chunkFile(file).entries()) {
         const getUploadUrlResp = await axios.get('http://localhost:3000/uploads/url', {
           params: {
             fileName: file.name,
