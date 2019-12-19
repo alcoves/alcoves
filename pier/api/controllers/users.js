@@ -47,7 +47,7 @@ exports.login = async (req, res) => {
   }
 };
 
-exports.signup = async (req, res) => {
+exports.register = async (req, res) => {
   try {
     const userExists = await User.find({ email: req.body.email });
 
@@ -82,29 +82,3 @@ exports.remove = async (req, res) => {
     throw error;
   }
 };
-
-// exports.refresh = async (req, res) => {
-//   try {
-//     // TODO :: Remove log
-//     console.log(req.cookies);
-
-//     // TODO :: Match tokens with database
-//     // const tokensMatch = await bcrypt.compare(
-//     //   req.cookies.refreshToken,
-//     //   'database.refreshToken'
-//     // );
-
-//     if (true || tokensMatch) {
-//       // const accessToken = jwt.sign(
-//       //   { email: user.email, userId: user.id },
-//       //   process.env.JWT_KEY,
-//       //   { expiresIn: '1h' }
-//       // );
-//       res.status(200).send({ msg: 'granted', accessToken: 'new access token' });
-//     } else {
-//       res.status(403).send({ msg: 'get outta dodge' });
-//     }
-//   } catch (error) {
-//     throw error;
-//   }
-// };
