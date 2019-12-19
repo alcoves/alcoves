@@ -18,6 +18,21 @@ pre {
   font-weight: 400;
 }
 
+video {
+  outline: none;
+}
+
+.player-wrapper {
+  position: relative;
+  padding-top: 56.25%; /* Player ratio: 100 / (1280 / 720) */
+}
+
+.react-player {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
 .ant-input {
   background-color: #1f2430;
 }
