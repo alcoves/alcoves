@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const baseUrl =
-  process.env.NODE_ENV === 'production' ? 'https://api.bken.io' : 'http://localhost:3000';
+  process.env.NODE_ENV === 'production' ? 'http://api.bken.io' : 'http://localhost:3000';
 
 export default config => {
   return new Promise((resolve, reject) => {
