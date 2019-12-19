@@ -1,5 +1,4 @@
 import axios from 'axios';
-// import user from '../data/User';
 
 const baseUrl =
   process.env.NODE_ENV === 'production' ? 'https://api.bken.io' : 'http://localhost:3000';

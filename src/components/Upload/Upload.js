@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import api from '../../api/api';
 
 import { useObservable, observer } from 'mobx-react-lite';
 import { Upload, Button, Icon, Progress } from 'antd';
@@ -35,16 +36,17 @@ export default observer(() => {
     return parts;
   };
 
-  const uploadMultipartFile = async (file, uploadId) => {
+  const uploadMultipartFile = async (file, { uploadId, key }) => {
     try {
       const promisesArray = [];
-
       for (const [partIndex, blob] of chunkFile(file).entries()) {
-        const getUploadUrlResp = await axios.get('http://localhost:3000/uploads/url', {
+        const getUploadUrlResp = await api({
+          method: 'get',
+          url: '/uploads/url',
           params: {
-            fileName: file.name,
+            key,
+            uploadId,
             partNumber: partIndex + 1,
-            uploadId: uploadId,
           },
         });
 
@@ -64,13 +66,16 @@ export default observer(() => {
         });
       });
 
-      await axios.post('http://localhost:3000/uploads', {
-        params: {
-          fileName: file.name,
+      await api({
+        method: 'post',
+        url: '/uploads',
+        data: {
+          key,
+          uploadId,
           parts: uploadPartsArray,
-          uploadId: uploadId,
         },
       });
+      console.log('upload complete!');
     } catch (err) {
       console.log(err);
     }
@@ -78,15 +83,16 @@ export default observer(() => {
 
   const startUpload = async file => {
     try {
-      const { data } = await axios.get('http://localhost:3000/uploads/', {
+      const { data } = await api({
+        method: 'get',
+        url: '/uploads',
         params: {
           fileName: file.name,
           fileType: file.type,
         },
       });
 
-      const { uploadId } = data.payload;
-      uploadMultipartFile(file, uploadId);
+      return uploadMultipartFile(file, data.payload);
     } catch (err) {
       console.log(err);
     }
