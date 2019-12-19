@@ -10,7 +10,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 const Index = () => {
   return (
-    <BrowserRouter basename='/web'>
+    <BrowserRouter>
       <App />
     </BrowserRouter>
   );

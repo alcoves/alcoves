@@ -1,8 +1,6 @@
-name: Deploy to Prod
+name: Quality
 on:
   push:
-    branches:
-      - master
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -12,15 +10,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
-      - name: yarn install, build, and test
+      - name: yarn install, lint, build
         run: |
           yarn
+          yarn lint
           yarn build
         env:
           CI: true
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v2.5.1
-        env:
-          PERSONAL_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-          PUBLISH_BRANCH: gh-pages
-          PUBLISH_DIR: ./dist
