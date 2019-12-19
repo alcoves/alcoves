@@ -40,8 +40,13 @@ export default observer(props => {
 
   return (
     <div>
-      <Row align='center' type='flex'>
-        <Col span={8} style={{ margin: '10px' }}>
+      <Row justify='center' type='flex'>
+        <Col
+          xs={22}
+          md={12}
+          lg={8}
+          xxl={5}
+          style={{ margin: '50px 10px 10px 10px', maxWidth: '400px' }}>
           <Input
             id='email'
             size='large'
@@ -51,8 +56,8 @@ export default observer(props => {
           />
         </Col>
       </Row>
-      <Row align='center' type='flex'>
-        <Col span={8} style={{ margin: '10px' }}>
+      <Row justify='center' type='flex'>
+        <Col xs={22} md={12} lg={8} xxl={5} style={{ margin: '10px', maxWidth: '400px' }}>
           <Input.Password
             size='large'
             id='password'
@@ -62,8 +67,8 @@ export default observer(props => {
           />
         </Col>
       </Row>
-      <Row align='center' type='flex'>
-        <Col span={8} style={{ margin: '10px' }}>
+      <Row justify='center' type='flex'>
+        <Col xs={22} md={12} lg={8} xxl={5} style={{ margin: '10px', maxWidth: '400px' }}>
           <Button block onClick={handleLogin} disabled={state.loading}>
             Log In
           </Button>

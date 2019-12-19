@@ -21,3 +21,8 @@ pre {
 .ant-input {
   background-color: #1f2430;
 }
+
+.ant-message {
+  bottom: 20px;
+  top: initial;
+}

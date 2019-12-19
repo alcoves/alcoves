@@ -18,7 +18,7 @@ export default observer(() => {
         <Button
           type='primary'
           onClick={() => {
-            user.logout();
+            user.logout(true);
           }}>
           Logout
         </Button>

@@ -15,23 +15,30 @@ export class User {
 
   async login(accessToken) {
     try {
-      const { payload } = jwt.decode(accessToken, {
-        complete: true,
-      });
-
-      localStorage.setItem('accessToken', accessToken);
-      this.id = payload.userId;
-      this.email = payload.email;
+      if (accessToken) {
+        const decoded = jwt.decode(accessToken, {
+          complete: true,
+        });
+        if (decoded) {
+          localStorage.setItem('accessToken', accessToken);
+          this.id = decoded.payload.userId;
+          this.email = decoded.payload.email;
+        } else {
+          this.logout();
+        }
+      }
     } catch (error) {
+      this.logout();
       console.error(error);
       throw error;
     }
   }
 
-  async logout() {
+  async logout(refresh = false) {
     try {
       console.log('Logging user out');
       await localStorage.removeItem('accessToken');
+      if (refresh) window.location.reload();
     } catch (error) {
       console.error(error);
       throw error;

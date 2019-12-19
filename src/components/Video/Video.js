@@ -1,48 +1,52 @@
 import React from 'react';
+import api from '../../api/api';
 import ReactPlayer from 'react-player';
 
-import { Menu, Icon, Layout } from 'antd';
 import { observer, useObservable } from 'mobx-react-lite';
 
-const { Header, Sider, Content } = Layout;
+export default observer(() => {
+  const state = useObservable({
+    url: '',
+    title: '',
+    loading: true,
+  });
 
-export default () => {
-  return (
-    <div>
-      <div
-        style={{
-          width: '100%',
-          height: 'calc(100vh - 64px)',
-          minHeight: '480px',
-          maxHeight: 'calc((9 / 16) * 100vw',
-        }}>
-        <ReactPlayer
-          height='100%'
-          width='100%'
-          controls={true}
-          className='react-player'
-          url={[
-            {
-              src: 'https://s3.us-east-2.wasabisys.com/media-bken/123/train.mp4',
-              type: 'video/mp4',
-            },
-            {
-              src: 'https://s3.us-east-2.wasabisys.com/media-bken/123/train.mp4',
-              type: 'video/mp4',
-            },
-            {
-              src: 'https://s3.us-east-2.wasabisys.com/media-bken/123/train.mp4',
-              type: 'video/mp4',
-            },
-          ]}
-        />
+  if (state.loading) {
+    const videoId = window.location.pathname.split('/videos/')[1];
+    api.getVideo(videoId).then(res => {
+      state.loading = false;
+      state.title = res.data.payload.title;
+    });
+
+    return <div> Loading </div>;
+  } else {
+    return (
+      <div>
+        <div
+          style={{
+            width: '100%',
+            height: 'calc(100vh - 64px)',
+            minHeight: '480px',
+            maxHeight: 'calc((9 / 16) * 100vw',
+          }}>
+          <ReactPlayer
+            height='100%'
+            width='100%'
+            controls={true}
+            className='react-player'
+            url={[
+              {
+                src: state.url,
+                type: 'video/mp4',
+              },
+            ]}
+          />
+        </div>
+        <div style={{ padding: '10px' }}>
+          {/* <img src='https://s3.us-east-2.wasabisys.com/media-bken/123/thumb.jpg' width='100%' /> */}
+          <h3 style={{ color: 'white', padding: '5px' }}>{state.title}</h3>
+        </div>
       </div>
-      <div style={{ padding: '10px' }}>
-        {/* <img src='https://s3.us-east-2.wasabisys.com/media-bken/123/thumb.jpg' width='100%' /> */}
-        <h3 style={{ color: 'white', padding: '5px' }}>
-          {`This is a test of a title for a video that is really long so that we can test how long video titles.`}
-        </h3>
-      </div>
-    </div>
-  );
-};
+    );
+  }
+});
