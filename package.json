@@ -1,26 +1,26 @@
 {
   "name": "bken-web",
-  "version": "0.0.1",
-  "description": "frontend for bken.io",
   "main": "index.js",
-  "repository": "git@github.com:bken-io/web.git",
-  "author": "Brendan Kennedy <brenwken@gmail.com>",
   "license": "UNLICENSED",
+  "homepage": "https://bken.github.io/web",
   "private": false,
+  "version": "0.0.1",
+  "author": "Brendan Kennedy <brenwken@gmail.com>",
+  "repository": "git@github.com:bken-io/web.git",
+  "description": "frontend for bken.io",
   "scripts": {
     "dev": "parcel public/index.html",
+    "lint": "prettier --write \"src/**/*.*\"",
     "build": "rm -rf dist/ && parcel build public/index.html && cp public/favicon.ico dist/ && echo 'bken.io' > dist/CNAME"
   },
   "dependencies": {
     "antd": "^3.26.3",
     "axios": "^0.19.0",
-    "js-cookie": "^2.2.1",
     "jsonwebtoken": "^8.5.1",
     "mobx": "^5.15.1",
     "mobx-react": "^6.1.4",
     "mobx-react-lite": "^1.5.2",
-    "react": ">= 16.3.0",
-    "react-cookie": "^4.0.1",
+    "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-player": "^1.14.2",
     "react-router-dom": "^5.1.2"
@@ -31,6 +31,7 @@
     "@babel/plugin-proposal-decorators": "^7.7.4",
     "@babel/preset-env": "^7.7.7",
     "@babel/preset-react": "^7.7.4",
-    "parcel-bundler": "^1.12.4"
+    "parcel-bundler": "^1.12.4",
+    "prettier": "^1.19.1"
   }
 }
