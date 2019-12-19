@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import UserStore from '../../data/User';
 
-import { Drawer, Menu, Icon, Layout } from 'antd';
+import { Avatar, Drawer, Menu, Icon, Layout } from 'antd';
 import { observer, useObservable } from 'mobx-react-lite';
 import { useHistory } from 'react-router-dom';
 
@@ -8,6 +9,8 @@ const { Header, Content } = Layout;
 
 export default observer(props => {
   const history = useHistory();
+  const user = useContext(UserStore);
+
   const state = useObservable({
     visible: false,
   });
@@ -22,6 +25,14 @@ export default observer(props => {
 
   const handleClick = () => {
     history.push('/upload');
+  };
+
+  const handleLoginRedirect = () => {
+    history.push('/login');
+  };
+
+  const handleProfileRedirect = () => {
+    history.push('/profile');
   };
 
   return (
@@ -71,23 +82,53 @@ export default observer(props => {
               type='menu'
               onClick={openDrawer}
             />
-            <Icon
+            <div
               style={{
                 display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                fontSize: '22px',
-                color: 'white',
-                height: '64px',
-                width: '64px',
-              }}
-              type='upload'
-              onClick={handleClick}
-            />
+                flexDirection: 'row',
+              }}>
+              <Icon
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  fontSize: '22px',
+                  color: 'white',
+                  height: '64px',
+                  width: '46px',
+                }}
+                type='upload'
+                onClick={handleClick}
+              />
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  fontSize: '22px',
+                  color: 'white',
+                  height: '64px',
+                  width: '46px',
+                }}>
+                {user.id ? (
+                  <Avatar
+                    style={{
+                      color: '#f56a00',
+                      backgroundColor: '#fde3cf',
+                      cursor: 'pointer',
+                    }}
+                    onClick={handleProfileRedirect}>
+                    B
+                  </Avatar>
+                ) : (
+                  <Icon type='user' onClick={handleLoginRedirect} />
+                )}
+              </div>
+            </div>
           </Header>
           <Content
             style={{
-              background: '#212c34',
+              background: '#1f2430',
               height: 'auto',
               minHeight: 'auto',
             }}>
