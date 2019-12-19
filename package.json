@@ -2,7 +2,7 @@
   "name": "bken-web",
   "main": "index.js",
   "license": "UNLICENSED",
-  "homepage": "https://bken.github.io/web",
+  "homepage": "https://bken-io.github.io/web",
   "private": false,
   "version": "0.0.1",
   "author": "Brendan Kennedy <brenwken@gmail.com>",
