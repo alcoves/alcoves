@@ -40,6 +40,38 @@ git clone https://github.com/bken-io/api
 # Download secrets and store them on disk
 # .env
 
+# Forward 80 to application port
+user www-data;
+worker_processes auto;
+pid /run/nginx.pid;
+include /etc/nginx/modules-enabled/*.conf;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+  sendfile            on;
+  tcp_nopush          on;
+  tcp_nodelay         on;
+  keepalive_timeout   65;
+  types_hash_max_size 2048;
+
+  server {
+    listen       80 default_server;
+    listen       [::]:80 default_server;
+    server_name  _;
+    root         /usr/share/nginx/html;
+    include /etc/nginx/default.d/*.conf;
+
+    location / {
+      proxy_pass  http://127.0.0.1:3000/;
+    }
+  }
+}
+
+
+
 # Start api server
 mv ~/.env api/.env
 cd api && yarn && yarn start
