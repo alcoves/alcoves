@@ -1,34 +1,4 @@
-const mongoose = require('mongoose');
 const Video = require('../models/video');
-
-exports.createVideo = async (req, res) => {
-  try {
-    const video = new Video({
-      status: 'uploading',
-      author: req.user.id,
-      title: req.body.title,
-      _id: mongoose.Types.ObjectId(),
-    });
-
-    await video.save();
-    res.status(201).send({ message: 'video created', payload: video });
-  } catch (error) {
-    throw error;
-  }
-};
-
-exports.getVideos = async (req, res) => {
-  try {
-    // REMOVE THIS ENDPOINT
-    const videos = await Video.find();
-    res.status(200).send({
-      message: 'query for video was successfull',
-      payload: videos,
-    });
-  } catch (error) {
-    throw error;
-  }
-};
 
 exports.getVideo = async (req, res) => {
   try {

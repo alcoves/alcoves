@@ -1,4 +1,6 @@
 const AWS = require('aws-sdk');
+const mongoose = require('mongoose');
+const Video = require('../models/video');
 
 AWS.config.update({
   accessKeyId: process.env.WASABI_ACCESS_KEY_ID,
@@ -13,19 +15,36 @@ const s3 = new AWS.S3({
 
 const BUCKET_NAME = 'media-bken';
 
+const buildSourceFileKey = (id, fileType) => {
+  return `${id}/source-${id}.${fileType.split('/')[1]}`;
+};
+
 exports.createMultipartUpload = async (req, res) => {
   try {
-    const { UploadId: uploadId } = await s3
+    const video = new Video({
+      status: 'uploading',
+      author: req.user.id,
+      title: req.query.fileName,
+      _id: mongoose.Types.ObjectId(),
+      sourceFileName: req.query.fileName,
+    });
+
+    await video.save();
+
+    const { UploadId, Key } = await s3
       .createMultipartUpload({
         Bucket: BUCKET_NAME,
-        Key: req.query.fileName,
+        Key: buildSourceFileKey(video._id, req.query.fileType),
         ContentType: req.query.fileType,
       })
       .promise();
 
     res.status(200).send({
-      message: 'started multipart upload successfully',
-      payload: { uploadId },
+      message: 'started multipart upload',
+      payload: {
+        key: Key,
+        uploadId: UploadId,
+      },
     });
   } catch (err) {
     console.log(err);
@@ -35,11 +54,11 @@ exports.createMultipartUpload = async (req, res) => {
 exports.getUploadUrl = async (req, res) => {
   try {
     res.send({
-      message: 'created signed url successfully',
+      message: 'created signed url',
       payload: {
         url: s3.getSignedUrl('uploadPart', {
           Bucket: BUCKET_NAME,
-          Key: req.query.fileName,
+          Key: req.query.key,
           PartNumber: req.query.partNumber,
           UploadId: req.query.uploadId,
         }),
@@ -54,15 +73,13 @@ exports.completeMultipartUpload = async (req, res) => {
   try {
     const data = await s3
       .completeMultipartUpload({
+        Key: req.body.key,
         Bucket: BUCKET_NAME,
-        Key: req.body.params.fileName,
-        MultipartUpload: {
-          Parts: req.body.params.parts,
-        },
-        UploadId: req.body.params.uploadId,
+        UploadId: req.body.uploadId,
+        MultipartUpload: { Parts: req.body.parts },
       })
       .promise();
-    res.send({ message: 'successfully completed upload', payload: data });
+    res.send({ message: 'completed upload', payload: data });
   } catch (err) {
     console.log(err);
   }
