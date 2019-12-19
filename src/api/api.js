@@ -4,19 +4,17 @@ import axios from 'axios';
 const baseUrl =
   process.env.NODE_ENV === 'production' ? 'https://api.bken.io' : 'http://localhost:3000';
 
-// export default config => {
-//   return new Promise((resolve, reject) => {
-//     if (user.accessToken) {
-//       config.headers = { authorization: user.accessToken };
-//     }
-
-//     config.url = `${baseUrl}${config.url}`;
-//     console.log(`making ${config.method} request to ${config.url}`);
-//     axios(config)
-//       .then(resolve)
-//       .catch(reject);
-//   });
-// };
+export default config => {
+  return new Promise((resolve, reject) => {
+    const accessToken = localStorage.getItem('accessToken');
+    if (accessToken) config.headers = { authorization: `Bearer ${accessToken}` };
+    config.url = `${baseUrl}${config.url}`;
+    console.log('axios config', JSON.stringify(config, null, 2));
+    axios(config)
+      .then(resolve)
+      .catch(reject);
+  });
+};
 
 export const login = async data => {
   try {
@@ -25,18 +23,4 @@ export const login = async data => {
     console.error(error);
     throw error;
   }
-};
-
-const getVideo = async id => {
-  try {
-    return axios.get(`${baseUrl}/videos/${id}`);
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
-
-export default {
-  getVideo,
-  login,
 };
