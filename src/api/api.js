@@ -18,44 +18,11 @@ export default config => {
   });
 };
 
-export const login = data => {
-  return new Promise((resolve, reject) => {
-    axios({
-      url: `${baseUrl}/user/login`,
-      method: 'post',
-      withCredentials: true,
-      data,
-    })
-      .then(res => {
-        // TODO :: Store accessToken in memory
-        resolve(res);
-      })
-      .catch(error => {
-        reject('there was an error');
-      });
-  });
+export const login = async data => {
+  try {
+    return axios.post(`${baseUrl}/users/login`, data);
+  } catch (error) {
+    console.error(error);
+    throw new Error('Failed to log user in');
+  }
 };
-
-// export const reAuthenticate = () => {
-//   return new Promise((resolve, reject) => {
-//     // accessTokens will live in memory
-//     // They expire when page reloads or after 5min
-//     // To mint a new accessToken, grab the refreshToken from httpOnly cookies
-//     // We send a request to the api that recieves the cookie.
-//     // If the refreshToken matches the token in the database, we mint a new accessToken
-//     // The refresh token stays in the cookie. When we evict the refreshToken from the db...
-//     // The user will be logged out
-
-//     axios({
-//       url: `${baseUrl}/user/refresh`,
-//       method: 'post',
-//       withCredentials: true,
-//     })
-//       .then(res => {
-//         resolve(res);
-//       })
-//       .catch(error => {
-//         reject(error);
-//       });
-//   });
-// };

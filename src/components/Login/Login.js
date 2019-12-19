@@ -1,18 +1,13 @@
-import jwt from 'jsonwebtoken';
 import React, { useContext } from 'react';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 
-import UserStore from '../../data/User';
-import { message } from 'antd';
+import User from '../../data/User';
+import { Button, Input, message, Row, Col } from 'antd';
 
 import { login } from '../../api/api';
 import { observer, useObservable } from 'mobx-react-lite';
 
 export default observer(props => {
-  const { user } = useContext(UserStore);
-  // console.log(user);
+  const user = useContext(User);
 
   const state = useObservable({
     email: '',
@@ -31,16 +26,9 @@ export default observer(props => {
       email: state.email,
       password: state.password,
     })
-      .then(res => {
+      .then(({ data }) => {
         state.loading = false;
-        props.cookies.set('accessToken', res.data.accessToken);
-
-        const { payload } = jwt.decode(res.data.accessToken, {
-          complete: true,
-        });
-
-        user.id = payload.userId;
-        user.email = payload.email;
+        user.login(data.accessToken);
         props.history.push('/profile');
       })
       .catch(err => {
@@ -51,45 +39,36 @@ export default observer(props => {
   };
 
   return (
-    <Grid
-      container
-      justify="center"
-      direction="column"
-      alignItems="center"
-      style={{ marginTop: '75px' }}>
-      <Grid item xs={11} sm={8} md={5} lg={3}>
-        <TextField
-          required
-          fullWidth
-          id="email"
-          margin="dense"
-          variant="outlined"
-          label="Email Address"
-          value={state.email}
-          onChange={handleTextField}
-        />
-        <TextField
-          required
-          fullWidth
-          id="password"
-          margin="dense"
-          type="password"
-          label="Password"
-          variant="outlined"
-          value={state.password}
-          onChange={handleTextField}
-        />
-        <Button
-          fullWidth
-          margin="normal"
-          size="medium"
-          variant="contained"
-          onClick={handleLogin}
-          disabled={state.loading}
-          style={{ marginTop: '30px' }}>
-          Log In
-        </Button>
-      </Grid>
-    </Grid>
+    <div>
+      <Row align='center' type='flex'>
+        <Col span={8} style={{ margin: '10px' }}>
+          <Input
+            id='email'
+            size='large'
+            placeholder='email address'
+            value={state.email}
+            onChange={handleTextField}
+          />
+        </Col>
+      </Row>
+      <Row align='center' type='flex'>
+        <Col span={8} style={{ margin: '10px' }}>
+          <Input.Password
+            size='large'
+            id='password'
+            placeholder='password'
+            value={state.password}
+            onChange={handleTextField}
+          />
+        </Col>
+      </Row>
+      <Row align='center' type='flex'>
+        <Col span={8} style={{ margin: '10px' }}>
+          <Button block onClick={handleLogin} disabled={state.loading}>
+            Log In
+          </Button>
+        </Col>
+      </Row>
+    </div>
   );
 });
