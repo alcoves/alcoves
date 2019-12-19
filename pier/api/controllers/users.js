@@ -14,15 +14,15 @@ exports.login = async (req, res) => {
 
       if (passwordsMatch) {
         const accessToken = jwt.sign(
-          { email: user.email, userId: user.id },
+          { email: user.email, id: user.id },
           process.env.JWT_KEY,
-          { expiresIn: '1h' }
+          { expiresIn: '7d' }
         );
 
         // TODO :: add hashed refreshToken to database
 
         const refreshToken = jwt.sign(
-          { email: user.email, userId: user.id },
+          { email: user.email, id: user.id },
           process.env.JWT_KEY,
           { expiresIn: '1d' }
         );

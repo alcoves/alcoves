@@ -4,8 +4,10 @@ const Video = require('../models/video');
 exports.createVideo = async (req, res) => {
   try {
     const video = new Video({
-      _id: mongoose.Types.ObjectId(),
+      status: 'uploading',
+      author: req.user.id,
       title: req.body.title,
+      _id: mongoose.Types.ObjectId(),
     });
 
     await video.save();
@@ -17,6 +19,7 @@ exports.createVideo = async (req, res) => {
 
 exports.getVideos = async (req, res) => {
   try {
+    // REMOVE THIS ENDPOINT
     const videos = await Video.find();
     res.status(200).send({
       message: 'query for video was successfull',
