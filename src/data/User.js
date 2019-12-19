@@ -21,7 +21,7 @@ export class User {
         });
         if (decoded) {
           localStorage.setItem('accessToken', accessToken);
-          this.id = decoded.payload.userId;
+          this.id = decoded.payload.id;
           this.email = decoded.payload.email;
         } else {
           this.logout();
