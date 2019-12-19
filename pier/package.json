@@ -9,7 +9,7 @@
   "private": false,
   "scripts": {
     "dev": "nodemon -r dotenv/config server.js",
-    "start": "node -r dotenv/config server.js",
+    "start": "pm2 start server.js",
     "test": "jest --setupFiles dotenv/config"
   },
   "dependencies": {
