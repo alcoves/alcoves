@@ -11,7 +11,7 @@
   "scripts": {
     "dev": "parcel public/index.html",
     "lint": "prettier --write \"src/**/*.*\"",
-    "build": "rm -rf dist/ && parcel build public/index.html --public-url ./web/ && cp public/favicon.ico dist/",
+    "build": "rm -rf dist/ && parcel build public/index.html --public-url ./ && cp public/favicon.ico dist/",
     "build:cname": "echo 'bken.io' > dist/CNAME"
   },
   "dependencies": {
