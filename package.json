@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "parcel public/index.html",
     "lint": "prettier --write \"src/**/*.*\"",
-    "build": "rm -rf dist/ && parcel build public/index.html && cp public/favicon.ico dist/"
+    "build": "rm -rf dist/ && parcel build public/index.html && cp public/favicon.ico dist/ && echo '/* /index.html 200' > ./dist/_redirects"
   },
   "dependencies": {
     "antd": "^3.26.3",
