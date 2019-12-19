@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import UserStore from '../../data/User';
 
-import { Avatar, Drawer, Menu, Icon, Layout } from 'antd';
+import { Button, Avatar, Drawer, Menu, Icon, Layout } from 'antd';
 import { observer, useObservable } from 'mobx-react-lite';
 import { useHistory } from 'react-router-dom';
 
@@ -87,19 +87,20 @@ export default observer(props => {
                 display: 'flex',
                 flexDirection: 'row',
               }}>
-              <Icon
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  fontSize: '22px',
-                  color: 'white',
-                  height: '64px',
-                  width: '46px',
-                }}
-                type='upload'
-                onClick={handleClick}
-              />
+              {user.isLoggedIn() ? (
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    fontSize: '22px',
+                    color: 'white',
+                    height: '64px',
+                    width: '46px',
+                  }}>
+                  <Button onClick={handleClick} shape='circle' icon='upload' />
+                </div>
+              ) : null}
               <div
                 style={{
                   display: 'flex',
@@ -110,7 +111,7 @@ export default observer(props => {
                   height: '64px',
                   width: '46px',
                 }}>
-                {user.id ? (
+                {user.isLoggedIn() ? (
                   <Avatar
                     style={{
                       color: '#f56a00',
@@ -121,7 +122,7 @@ export default observer(props => {
                     B
                   </Avatar>
                 ) : (
-                  <Icon type='user' onClick={handleLoginRedirect} />
+                  <Button onClick={handleLoginRedirect} shape='circle' icon='user' />
                 )}
               </div>
             </div>
