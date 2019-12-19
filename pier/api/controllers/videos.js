@@ -8,7 +8,10 @@ exports.getVideo = async (req, res) => {
       payload: video,
     });
   } catch (error) {
-    throw error;
+    console.error(error);
+    return res.status(404).send({
+      message: 'not found',
+    });
   }
 };
 
@@ -24,6 +27,7 @@ exports.updateVideo = async (req, res) => {
       payload,
     });
   } catch (error) {
+    console.error(error);
     throw error;
   }
 };
@@ -37,6 +41,7 @@ exports.deleteVideo = async (req, res) => {
       res.status(400).send({ message: 'video was not deleted' });
     }
   } catch (error) {
+    console.error(error);
     throw error;
   }
 };

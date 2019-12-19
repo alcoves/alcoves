@@ -2,18 +2,19 @@ const AWS = require('aws-sdk');
 const mongoose = require('mongoose');
 const Video = require('../models/video');
 
+const BUCKET_NAME = 'media-bken';
+const WASABI_ENDPOINT = 'https://s3.us-east-2.wasabisys.com';
+
 AWS.config.update({
   accessKeyId: process.env.WASABI_ACCESS_KEY_ID,
   secretAccessKey: process.env.WASABI_SECRET_ACCESS_KEY,
 });
 
 const s3 = new AWS.S3({
-  endpoint: new AWS.Endpoint('https://s3.us-east-2.wasabisys.com'),
+  endpoint: new AWS.Endpoint(WASABI_ENDPOINT),
   s3ForcePathStyle: true,
   signatureVersion: 'v4',
 });
-
-const BUCKET_NAME = 'media-bken';
 
 const buildSourceFileKey = (id, fileType) => {
   return `${id}/source-${id}.${fileType.split('/')[1]}`;
@@ -28,9 +29,7 @@ exports.createMultipartUpload = async (req, res) => {
       _id: mongoose.Types.ObjectId(),
       sourceFileName: req.query.fileName,
     });
-
     await video.save();
-
     const { UploadId, Key } = await s3
       .createMultipartUpload({
         Bucket: BUCKET_NAME,
@@ -79,6 +78,21 @@ exports.completeMultipartUpload = async (req, res) => {
         MultipartUpload: { Parts: req.body.parts },
       })
       .promise();
+
+    const videoId = req.body.key.split('/')[0];
+    console.log(videoId);
+
+    const payload = await Video.updateOne(
+      { _id: req.body.key.split('/')[0] },
+      {
+        $set: {
+          'media.source': `${WASABI_ENDPOINT}/${BUCKET_NAME}/${req.body.key}`,
+          status: 'queueing',
+        },
+      }
+    );
+
+    console.log('payload', payload);
     res.send({ message: 'completed upload', payload: data });
   } catch (err) {
     console.log(err);
