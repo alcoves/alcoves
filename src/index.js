@@ -8,9 +8,9 @@ import App from './components/App/App';
 
 import { BrowserRouter } from 'react-router-dom';
 
-const Index = props => {
+const Index = () => {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
       <App />
     </BrowserRouter>
   );
