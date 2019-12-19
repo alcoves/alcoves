@@ -8,6 +8,8 @@ import App from './components/App/App';
 
 import { BrowserRouter } from 'react-router-dom';
 
+console.log('process.env.PUBLIC_URL', process.env.PUBLIC_URL);
+
 const Index = () => {
   return (
     <BrowserRouter>
