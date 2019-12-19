@@ -14,8 +14,10 @@ export default observer(() => {
   if (state.loading) {
     const videoId = window.location.pathname.split('/videos/')[1];
     api({ url: `/videos/${videoId}`, method: 'get' }).then(res => {
+      console.log(res.data.payload);
       state.loading = false;
       state.title = res.data.payload.title;
+      state.url = res.data.payload.media.source;
     });
 
     return <div> Loading </div>;

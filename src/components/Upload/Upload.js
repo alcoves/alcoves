@@ -2,10 +2,12 @@ import React from 'react';
 import axios from 'axios';
 import api from '../../api/api';
 
-import { useObservable, observer } from 'mobx-react-lite';
+import { useHistory } from 'react-router-dom';
 import { Upload, Button, Icon, Progress } from 'antd';
+import { useObservable, observer } from 'mobx-react-lite';
 
 export default observer(() => {
+  const history = useHistory();
   const state = useObservable({
     fileList: [],
     uploadUrl: '',
@@ -75,6 +77,8 @@ export default observer(() => {
           parts: uploadPartsArray,
         },
       });
+
+      history.push(`/videos/${key.split('/')[0]}`);
       console.log('upload complete!');
     } catch (err) {
       console.log(err);
