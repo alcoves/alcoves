@@ -1,11 +1,17 @@
 const AWS = require('aws-sdk');
-const BUCKET_NAME = 'media-bken';
+
+AWS.config.update({
+  accessKeyId: process.env.WASABI_ACCESS_KEY_ID,
+  secretAccessKey: process.env.WASABI_SECRET_ACCESS_KEY,
+});
 
 const s3 = new AWS.S3({
   endpoint: new AWS.Endpoint('https://s3.us-east-2.wasabisys.com'),
   s3ForcePathStyle: true,
   signatureVersion: 'v4',
 });
+
+const BUCKET_NAME = 'media-bken';
 
 exports.createMultipartUpload = async (req, res) => {
   try {
