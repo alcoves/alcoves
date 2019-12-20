@@ -8,8 +8,8 @@
   "license": "GPL-3.0",
   "private": false,
   "scripts": {
-    "dev": "nodemon -r dotenv/config server.js",
-    "start": "pm2 start server.js",
+    "dev": "nodemon -r dotenv/config api/server.js",
+    "start": "pm2 start api/server.js",
     "test": "jest --setupFiles dotenv/config",
     "lint": "prettier --check \"api/**/*.*\"",
     "lint:fix": "prettier --write \"api/**/*.*\""

@@ -16,13 +16,13 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use('/', require('./api/routes/root'));
+app.use('/', require('./routes/root'));
 // TODO :: Refactor into plural resource
-app.use('/users', require('./api/routes/users'));
-app.use('/posts', require('./api/routes/posts'));
-app.use('/videos', require('./api/routes/videos'));
-app.use('/uploads', require('./api/routes/uploads'));
-app.use('/channels', require('./api/routes/channels'));
+app.use('/users', require('./routes/users'));
+app.use('/posts', require('./routes/posts'));
+app.use('/videos', require('./routes/videos'));
+app.use('/uploads', require('./routes/uploads'));
+app.use('/channels', require('./routes/channels'));
 
 app.use((req, res, next) => {
   const error = new Error('not found');
