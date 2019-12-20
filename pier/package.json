@@ -10,7 +10,9 @@
   "scripts": {
     "dev": "nodemon -r dotenv/config server.js",
     "start": "pm2 start server.js",
-    "test": "jest --setupFiles dotenv/config"
+    "test": "jest --setupFiles dotenv/config",
+    "lint": "prettier --check \"api/**/*.*\"",
+    "lint:fix": "prettier --write \"api/**/*.*\""
   },
   "dependencies": {
     "aws-sdk": "^2.594.0",
@@ -28,6 +30,7 @@
   "devDependencies": {
     "jest": "^24.9.0",
     "nodemon": "^2.0.2",
+    "prettier": "^1.19.1",
     "supertest": "^4.0.2"
   }
 }
