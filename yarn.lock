@@ -871,9 +871,9 @@
     "@types/react" "*"
 
 "@types/react@*":
-  version "16.9.16"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.9.16.tgz#4f12515707148b1f53a8eaa4341dae5dfefb066d"
-  integrity sha512-dQ3wlehuBbYlfvRXfF5G+5TbZF3xqgkikK7DWAsQXe2KnzV+kjD4W2ea+ThCrKASZn9h98bjjPzoTYzfRqyBkw==
+  version "16.9.17"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.9.17.tgz#58f0cc0e9ec2425d1441dd7b623421a867aa253e"
+  integrity sha512-UP27In4fp4sWF5JgyV6pwVPAQM83Fj76JOcg02X5BZcpSu5Wx+fP9RMqc2v0ssBoQIFvD5JdKY41gjJJKmw6Bg==
   dependencies:
     "@types/prop-types" "*"
     csstype "^2.2.0"
@@ -1998,9 +1998,9 @@ data-urls@^1.1.0:
     whatwg-url "^7.0.0"
 
 deasync@^0.1.14:
-  version "0.1.18"
-  resolved "https://registry.yarnpkg.com/deasync/-/deasync-0.1.18.tgz#97ed2b1acb190ede71fc9d72feba2c6e2cdc93c0"
-  integrity sha512-4KXhVJRh9sw5uNqx0IPXavF7d2bYg/Ka4dnEnjrLdph3rdDwJmhGWA4wnb4B7zNtPg3TkzVxlPdL3oxJzGBgKg==
+  version "0.1.19"
+  resolved "https://registry.yarnpkg.com/deasync/-/deasync-0.1.19.tgz#e7ea89fcc9ad483367e8a48fe78f508ca86286e8"
+  integrity sha512-oh3MRktfnPlLysCPpBpKZZzb4cUC/p0aA3SyRGp15lN30juJBTo/CiD0d4fR+f1kBtUQoJj1NE9RPNWQ7BQ9Mg==
   dependencies:
     bindings "^1.5.0"
     node-addon-api "^1.7.1"
@@ -4979,9 +4979,9 @@ rc-hammerjs@~0.6.0:
     prop-types "^15.5.9"
 
 rc-input-number@~4.5.0:
-  version "4.5.2"
-  resolved "https://registry.yarnpkg.com/rc-input-number/-/rc-input-number-4.5.2.tgz#cb0189314ddb0a8f2ae3bb2b73b52b9d8b4f80d5"
-  integrity sha512-bvDGxptcKn2ErfHmNycRKljDaMLkKvhkfM1prXWqqtD2S4mjt5Q6j1YtjXaJRTQvYSuGDlyxHFA+4DYz+jyMmw==
+  version "4.5.3"
+  resolved "https://registry.yarnpkg.com/rc-input-number/-/rc-input-number-4.5.3.tgz#ed497c727658e870d3f2a5e5a750d1ee71089f43"
+  integrity sha512-jBwxX5KDkp2nHOaEoMQ1mZBwWpmmGUuHXF/qralpmN+wDp8rlB6Xvr9d7AHgmzGZhbWIMyLeq6ET6HDDCCjvAA==
   dependencies:
     babel-runtime "6.x"
     classnames "^2.2.0"
