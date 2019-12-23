@@ -5,6 +5,8 @@ import Video from '../Video/Video';
 import Login from '../Login/Login';
 import Upload from '../Upload/Upload';
 import Profile from '../Profile/Profile';
+import Channel from '../Channel/Channel';
+import NotFound from '../NotFound/NotFound';
 import Navigation from '../Navigation/Navigation';
 
 import { Route, Switch } from 'react-router-dom';
@@ -12,20 +14,22 @@ import { observer } from 'mobx-react';
 
 import UserStore from '../../data/User';
 
-export default observer(props => {
+export default observer(p => {
   const userStore = useContext(UserStore);
   const accessToken = localStorage.getItem('accessToken');
   userStore.login(accessToken);
 
   return (
     <div>
-      <Navigation {...props}>
+      <Navigation {...p}>
         <Switch>
-          <Route path='/login' render={routerProps => <Login {...routerProps} {...props} />} />
-          <Route path='/profile' render={routerProps => <Profile {...routerProps} {...props} />} />
-          <Route path='/videos/*' render={routerProps => <Video {...routerProps} {...props} />} />
-          <Route path='/upload' render={routerProps => <Upload {...routerProps} {...props} />} />
-          <Route path='/' render={routerProps => <Home {...routerProps} {...props} />} />
+          <Route path='/' exact render={rp => <Home {...rp} {...p} />} />
+          <Route path='/login' exact render={rp => <Login {...rp} {...p} />} />
+          <Route path='/profile' exact render={rp => <Profile {...rp} {...p} />} />
+          <Route path='/upload' exact render={rp => <Upload {...rp} {...p} />} />
+          <Route path='/channels/*' render={rp => <Channel {...rp} {...p} />} />
+          <Route path='/videos/*' render={rp => <Video {...rp} {...p} />} />
+          <Route path='*' render={rp => <NotFound {...rp} {...p} />} />
         </Switch>
       </Navigation>
     </div>
