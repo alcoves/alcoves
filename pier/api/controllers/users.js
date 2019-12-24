@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
+const Video = require('../models/video');
 
 exports.login = async (req, res) => {
   try {
@@ -80,5 +81,20 @@ exports.remove = async (req, res) => {
     }
   } catch (error) {
     throw error;
+  }
+};
+
+exports.getVideos = async (req, res) => {
+  try {
+    const videos = await Video.find({ author: req.params.userId });
+    res.status(200).send({
+      message: 'query for video was successfull',
+      payload: videos,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(404).send({
+      message: 'not found',
+    });
   }
 };
