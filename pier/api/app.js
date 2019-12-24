@@ -17,9 +17,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/', require('./routes/root'));
-// TODO :: Refactor into plural resource
 app.use('/users', require('./routes/users'));
-app.use('/posts', require('./routes/posts'));
 app.use('/videos', require('./routes/videos'));
 app.use('/uploads', require('./routes/uploads'));
 

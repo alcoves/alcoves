@@ -1,5 +1,14 @@
 const Video = require('../models/video');
 
+exports.getPosts = async (req, res) => {
+  try {
+    const docs = await Post.find().select('-__v');
+    res.status(200).send({ count: docs.length, payload: docs });
+  } catch (error) {
+    throw error;
+  }
+};
+
 exports.getVideo = async (req, res) => {
   try {
     const video = await Video.findOne({ _id: req.params.id });
