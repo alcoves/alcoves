@@ -4,16 +4,19 @@ import ReactPlayer from 'react-player';
 
 import { observer, useObservable } from 'mobx-react-lite';
 
-export default observer(() => {
+export default observer(props => {
   const state = useObservable({
     url: '',
     title: '',
     loading: true,
   });
 
+  if (!props.id) {
+    return <div> Invalid Video ID </div>;
+  }
+
   if (state.loading) {
-    const videoId = window.location.pathname.split('/videos/')[1];
-    api({ url: `/videos/${videoId}`, method: 'get' }).then(res => {
+    api({ url: `/videos/${props.id}`, method: 'get' }).then(res => {
       state.loading = false;
       state.title = res.data.payload.title;
       state.url = res.data.payload.media.source;
