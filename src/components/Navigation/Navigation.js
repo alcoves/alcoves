@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import UserStore from '../../data/User';
 
-import { Button, Avatar, Drawer, Menu, Icon, Layout } from 'antd';
+import { Button, Avatar, Drawer, Icon, Layout } from 'antd';
 import { observer, useObservable } from 'mobx-react-lite';
 import { useHistory } from 'react-router-dom';
 
@@ -27,6 +27,11 @@ export default observer(props => {
     history.push('/upload');
   };
 
+  const handleMenuClick = e => {
+    onClose();
+    history.push(`/${e.currentTarget.id}`);
+  };
+
   const handleLoginRedirect = () => {
     history.push('/login');
   };
@@ -35,28 +40,31 @@ export default observer(props => {
     history.push('/profile');
   };
 
+  const row = {
+    cursor: 'pointer',
+    height: '40px',
+  };
+
   return (
     <Layout style={{ height: '100vh' }}>
       <Layout>
         <Drawer title='bken.io' placement='left' onClose={onClose} visible={state.visible}>
-          <Menu mode='inline' defaultSelectedKeys={['1']}>
-            <Menu.Item key='1'>
-              <Icon type='home' />
-              <span>Home</span>
-            </Menu.Item>
-            <Menu.Item key='2'>
-              <Icon type='upload' />
-              <span>Upload</span>
-            </Menu.Item>
-            <Menu.Item key='3'>
-              <Icon type='video-camera' />
-              <span>Videos</span>
-            </Menu.Item>
-            <Menu.Item key='4'>
-              <Icon type='user' />
-              <span>Account</span>
-            </Menu.Item>
-          </Menu>
+          <div id='' style={row} onClick={handleMenuClick}>
+            <Icon type='home' />
+            <span>Home</span>
+          </div>
+          <div id='upload' style={row} onClick={handleMenuClick}>
+            <Icon type='upload' />
+            <span>Upload</span>
+          </div>
+          <div id='channel' style={row} onClick={handleMenuClick}>
+            <Icon type='video-camera' />
+            <span>Channel</span>
+          </div>
+          <div id='profile' style={row} onClick={handleMenuClick}>
+            <Icon type='user' />
+            <span>Acount</span>
+          </div>
         </Drawer>
         <Layout>
           <Header
