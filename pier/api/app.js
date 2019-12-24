@@ -22,7 +22,6 @@ app.use('/users', require('./routes/users'));
 app.use('/posts', require('./routes/posts'));
 app.use('/videos', require('./routes/videos'));
 app.use('/uploads', require('./routes/uploads'));
-app.use('/channels', require('./routes/channels'));
 
 app.use((req, res, next) => {
   const error = new Error('not found');

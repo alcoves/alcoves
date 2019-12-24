@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const Post = require('../models/post');
-const Channel = require('../models/channel');
 
 exports.getPosts = async (req, res) => {
   try {
@@ -23,29 +22,26 @@ exports.getPost = async (req, res) => {
 };
 
 exports.createPost = async (req, res) => {
-  try {
-    const channel = await Channel.findById(req.body.channel);
-
-    if (!channel) {
-      return res.status(404).send({
-        message: 'bken not found',
-      });
-    }
-
-    const post = new Post({
-      _id: new mongoose.Types.ObjectId(),
-      channel: channel._id,
-      title: req.body.title,
-      authorName: req.body.authorName,
-    });
-
-    res.status(201).send({
-      message: 'post created',
-      payload: await post.save(),
-    });
-  } catch (error) {
-    throw error;
-  }
+  // try {
+  //   const channel = await Channel.findById(req.body.channel);
+  //   if (!channel) {
+  //     return res.status(404).send({
+  //       message: 'bken not found',
+  //     });
+  //   }
+  //   const post = new Post({
+  //     _id: new mongoose.Types.ObjectId(),
+  //     channel: channel._id,
+  //     title: req.body.title,
+  //     authorName: req.body.authorName,
+  //   });
+  //   res.status(201).send({
+  //     message: 'post created',
+  //     payload: await post.save(),
+  //   });
+  // } catch (error) {
+  //   throw error;
+  // }
 };
 
 exports.patchPost = async (req, res) => {
