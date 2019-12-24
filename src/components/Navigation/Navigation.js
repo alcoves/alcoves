@@ -57,9 +57,9 @@ export default observer(props => {
             <Icon type='upload' />
             <span>Upload</span>
           </div>
-          <div id='channel' style={row} onClick={handleMenuClick}>
+          <div id='videos' style={row} onClick={handleMenuClick}>
             <Icon type='video-camera' />
-            <span>Channel</span>
+            <span>Videos</span>
           </div>
           <div id='profile' style={row} onClick={handleMenuClick}>
             <Icon type='user' />

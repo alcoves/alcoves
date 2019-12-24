@@ -5,7 +5,6 @@ import Video from '../Video/Video';
 import Login from '../Login/Login';
 import Upload from '../Upload/Upload';
 import Profile from '../Profile/Profile';
-import Channel from '../Channel/Channel';
 import NotFound from '../NotFound/NotFound';
 import Navigation from '../Navigation/Navigation';
 
@@ -27,7 +26,6 @@ export default observer(p => {
           <Route path='/login' exact render={rp => <Login {...rp} {...p} />} />
           <Route path='/profile' exact render={rp => <Profile {...rp} {...p} />} />
           <Route path='/upload' exact render={rp => <Upload {...rp} {...p} />} />
-          <Route path='/channels/*' render={rp => <Channel {...rp} {...p} />} />
           <Route path='/videos/*' render={rp => <Video {...rp} {...p} />} />
           <Route path='*' render={rp => <NotFound {...rp} {...p} />} />
         </Switch>
