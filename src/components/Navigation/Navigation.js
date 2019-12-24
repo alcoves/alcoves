@@ -43,6 +43,7 @@ export default observer(props => {
   const row = {
     cursor: 'pointer',
     height: '40px',
+    color: '#fff',
   };
 
   return (
@@ -50,19 +51,19 @@ export default observer(props => {
       <Layout>
         <Drawer title='bken.io' placement='left' onClose={onClose} visible={state.visible}>
           <div id='' style={row} onClick={handleMenuClick}>
-            <Icon type='home' />
+            <Icon style={{ margin: '0 10px 0 10px' }} type='home' />
             <span>Home</span>
           </div>
           <div id='upload' style={row} onClick={handleMenuClick}>
-            <Icon type='upload' />
+            <Icon style={{ margin: '0 10px 0 10px' }} type='upload' />
             <span>Upload</span>
           </div>
-          <div id='videos' style={row} onClick={handleMenuClick}>
-            <Icon type='video-camera' />
+          <div id={`users/${user.id}/videos`} style={row} onClick={handleMenuClick}>
+            <Icon style={{ margin: '0 10px 0 10px' }} type='video-camera' />
             <span>Videos</span>
           </div>
           <div id='profile' style={row} onClick={handleMenuClick}>
-            <Icon type='user' />
+            <Icon style={{ margin: '0 10px 0 10px' }} type='user' />
             <span>Acount</span>
           </div>
         </Drawer>
