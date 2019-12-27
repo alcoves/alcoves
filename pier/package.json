@@ -15,7 +15,7 @@
     "lint:fix": "prettier --write \"api/**/*.*\""
   },
   "dependencies": {
-    "aws-sdk": "^2.594.0",
+    "aws-sdk": "^2.596.0",
     "bcrypt": "^3.0.7",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.4",
@@ -23,7 +23,7 @@
     "dotenv": "^8.2.0",
     "express": "^5.0.0-alpha.7",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "5.8.1",
+    "mongoose": "5.8.3",
     "morgan": "^1.9.1",
     "response-time": "^2.3.2"
   },
