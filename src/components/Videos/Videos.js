@@ -1,7 +1,7 @@
 import React from 'react';
 import api from '../../api/api';
 
-import { Spin, Icon } from 'antd';
+import { Spin, Icon, Button } from 'antd';
 import { observer, useObservable } from 'mobx-react-lite';
 
 const loadVideos = async userId => {
@@ -11,6 +11,19 @@ const loadVideos = async userId => {
       url: `/users/${userId}/videos`,
     });
     return data.payload;
+  }
+};
+
+const handleDelete = async e => {
+  try {
+    await api({
+      method: 'delete',
+      url: `/videos/${e.target.id}`,
+    });
+
+    window.location.reload();
+  } catch (error) {
+    throw error;
   }
 };
 
@@ -48,6 +61,9 @@ export default observer(props => {
             {Object.entries(video).map(([k, v]) => {
               return <p>{`key: ${k}  |  value: ${v}`}</p>;
             })}
+            <Button id={video._id} type='danger' onClick={handleDelete}>
+              Delete
+            </Button>
           </div>
         );
       })}
