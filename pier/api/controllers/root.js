@@ -3,7 +3,7 @@ const path = require('path');
 exports.root = (req, res) => {
   console.log();
   res.status(200).send({
-    message: `welcome to ${req.hostname}`,
+    message: `welcome to the api`,
   });
 };
 
