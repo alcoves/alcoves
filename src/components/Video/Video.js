@@ -35,7 +35,7 @@ export default observer(props => {
     return (
       <div>
         <div style={outerDivStyle}>
-          <ReactPlayer height='100%' width='100%' controls={true} url={state.url} />
+          <ReactPlayer playing height='100%' width='100%' controls={true} url={state.url} />
         </div>
         <div style={{ padding: '10px' }}>
           <h3 style={{ color: 'white', padding: '5px' }}>{state.title}</h3>
