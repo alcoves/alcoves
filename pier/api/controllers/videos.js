@@ -1,4 +1,7 @@
+const s3 = require('../config/s3');
 const Video = require('../models/video');
+
+const BUCKET_NAME = 'media-bken';
 
 exports.getPosts = async (req, res) => {
   try {
@@ -41,8 +44,21 @@ exports.updateVideo = async (req, res) => {
   }
 };
 
+const emptyS3Dir = async (Prefix) => {
+  const Bucket = BUCKET_NAME;
+  const { Contents } = await s3.listObjectsV2({ Bucket, Prefix }).promise();
+  return Promise.all(
+    Contents.map(({ Key }) => {
+      console.log(`Deleting ${Key}`);
+      return s3.deleteObject({ Bucket, Key }).promise();
+    })
+  );
+};
+
 exports.deleteVideo = async (req, res) => {
   try {
+    await emptyS3Dir(req.params.id);
+
     const result = await Video.deleteOne({ _id: req.params.id });
     if (result.deletedCount >= 1) {
       res.status(200).send({ message: 'video deleted' });
