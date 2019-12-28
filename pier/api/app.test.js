@@ -13,14 +13,9 @@ describe('should test root routes', () => {
   });
 });
 
-describe('should test root routes', () => {
-  test('should return 200', async () => {
-    const res = await request(app).get('/');
-    expect(res.body.message).toEqual('welcome to the api');
-  });
-
-  test('should return 200', async () => {
-    const res = await request(app).get('/favicon.ico');
-    expect(res.body.length).toEqual(10228);
-  });
-});
+// describe('should test video routes', () => {
+//   test('should return 200', async () => {
+//     const res = await request(app).get('/videos');
+//     expect(res.body).toEqual('welcome to the api');
+//   });
+// });
