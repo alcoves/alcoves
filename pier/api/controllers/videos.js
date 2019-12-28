@@ -12,6 +12,21 @@ exports.getPosts = async (req, res) => {
   }
 };
 
+exports.getVideos = async (req, res) => {
+  try {
+    const videos = await Video.find();
+    res.status(200).send({
+      message: 'query for videos was successfull',
+      payload: videos,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(404).send({
+      message: 'not found',
+    });
+  }
+};
+
 exports.getVideo = async (req, res) => {
   try {
     const video = await Video.findOne({ _id: req.params.id });
