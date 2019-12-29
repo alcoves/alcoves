@@ -1,6 +1,8 @@
 const s3 = require('../config/s3');
 const Video = require('../models/video');
 
+const convertObjectToDotNotation = require('../lib/convertObjectToDotNotation');
+
 const BUCKET_NAME = 'media-bken';
 
 exports.getPosts = async (req, res) => {
@@ -46,7 +48,7 @@ exports.updateVideo = async (req, res) => {
   try {
     const payload = await Video.updateOne(
       { _id: req.params.id },
-      { $set: req.body }
+      { $set: convertObjectToDotNotation(req.body) }
     );
 
     res.status(200).send({
