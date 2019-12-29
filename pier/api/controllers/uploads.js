@@ -17,7 +17,7 @@ const s3 = new AWS.S3({
 });
 
 const buildSourceFileKey = (id, fileType) => {
-  return `${id}/source-${id}.${fileType.split('/')[1]}`;
+  return `${id}/source.${fileType.split('/')[1]}`;
 };
 
 exports.createMultipartUpload = async (req, res) => {
