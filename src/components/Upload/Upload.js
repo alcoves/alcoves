@@ -3,7 +3,7 @@ import axios from 'axios';
 import api from '../../api/api';
 
 import { useHistory } from 'react-router-dom';
-import { Upload, Button, Icon, Progress } from 'antd';
+import { Upload, Button, Icon, Progress, message } from 'antd';
 import { useObservable, observer } from 'mobx-react-lite';
 
 export default observer(() => {
@@ -12,6 +12,8 @@ export default observer(() => {
     fileList: [],
     uploadUrl: '',
     uploadProgress: 0,
+    numberOfParts: 0,
+    numberOfPartsCompleted: 0,
   });
 
   const beforeUpload = file => {
@@ -40,33 +42,43 @@ export default observer(() => {
 
   const uploadMultipartFile = async (file, { uploadId, key }) => {
     try {
-      const promisesArray = [];
-      for (const [partIndex, blob] of chunkFile(file).entries()) {
-        const getUploadUrlResp = await api({
-          method: 'get',
-          url: '/uploads/url',
-          params: {
-            key,
-            uploadId,
-            partNumber: partIndex + 1,
-          },
-        });
+      const resolvedUploads = await Promise.all(
+        chunkFile(file).reduce((acc, blob, partIndex) => {
+          state.numberOfParts++;
+          acc.push(
+            new Promise((resolve, reject) => {
+              api({
+                method: 'get',
+                url: '/uploads/url',
+                params: {
+                  key,
+                  uploadId,
+                  partNumber: partIndex + 1,
+                },
+              })
+                .then(({ data }) => {
+                  axios
+                    .put(data.payload.url, blob, {
+                      headers: { 'Content-Type': file.type },
+                    })
+                    .then(res => {
+                      state.numberOfPartsCompleted++;
+                      resolve(res);
+                    })
+                    .catch(err => reject);
+                })
+                .catch(err => reject);
+            }),
+          );
 
-        const presignedUrl = getUploadUrlResp.data.payload.url;
-        const uploadResp = axios.put(presignedUrl, blob, {
-          headers: { 'Content-Type': file.type },
-        });
-        promisesArray.push(uploadResp);
-      }
+          return acc;
+        }, []),
+      );
 
-      const resolvedArray = await Promise.all(promisesArray);
-      const uploadPartsArray = [];
-      resolvedArray.forEach((resolvedPromise, index) => {
-        uploadPartsArray.push({
-          ETag: resolvedPromise.headers.etag,
-          PartNumber: index + 1,
-        });
-      });
+      const uploadPartsArray = resolvedUploads.reduce((acc, { headers }, i) => {
+        acc.push({ ETag: headers.etag, PartNumber: i + 1 });
+        return acc;
+      }, []);
 
       await api({
         method: 'post',
@@ -78,10 +90,11 @@ export default observer(() => {
         },
       });
 
-      history.push(`/videos/${key.split('/')[0]}`);
+      history.push(`/editor/videos/${key.split('/')[0]}`);
       console.log('upload complete!');
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.log('Upload Error', error);
+      message.error('there was an error while uploading');
     }
   };
 
@@ -139,8 +152,8 @@ export default observer(() => {
           onClick={() => startUpload(state.fileList[0])}
           disabled={state.fileList.length === 0}
           style={{ width: '120px' }}
-          loading={Boolean(state.uploadProgress)}>
-          {state.uploadProgress ? 'Uploading' : 'Start Upload'}
+          loading={Boolean(state.numberOfParts)}>
+          {state.numberOfParts ? 'Uploading' : 'Start Upload'}
         </Button>
       </div>
       <div
@@ -150,7 +163,14 @@ export default observer(() => {
           display: 'flex',
           justifyContent: 'center',
         }}>
-        {state.uploadProgress ? <Progress type='circle' percent={state.uploadProgress} /> : null}
+        {state.numberOfParts ? (
+          <Progress
+            type='circle'
+            percent={parseInt(
+              ((state.numberOfPartsCompleted / state.numberOfParts) * 100).toFixed(0),
+            )}
+          />
+        ) : null}
       </div>
     </div>
   );
