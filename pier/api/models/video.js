@@ -6,8 +6,10 @@ const mediaSchema = new Schema({
   '480p': { type: String, required: false },
   '720p': { type: String, required: false },
   '1080p': { type: String, required: false },
-  '2560p': { type: String, required: false },
-  '3840p': { type: String, required: false },
+  '1440p': { type: String, required: false },
+  '2160p': { type: String, required: false },
+  '4320p': { type: String, required: false },
+  thumbnail: { type: String, required: false },
 });
 
 const videoSchema = new Schema({

@@ -46,6 +46,7 @@ exports.getVideo = async (req, res) => {
 
 exports.updateVideo = async (req, res) => {
   try {
+    console.log(convertObjectToDotNotation(req.body));
     const payload = await Video.updateOne(
       { _id: req.params.id },
       { $set: convertObjectToDotNotation(req.body) }
