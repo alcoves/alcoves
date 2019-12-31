@@ -33,8 +33,9 @@ export default observer(() => {
     );
   } else {
     return (
-      <div>
+      <div style={{ padding: '20px' }}>
         {state.videos.map(video => {
+          console.log(video.media['thumbnail']);
           return (
             <Card
               onClick={() => history.push(`/videos/${video._id}`)}
@@ -43,19 +44,21 @@ export default observer(() => {
               cover={
                 <img
                   alt='example'
-                  src='https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png'
+                  src={
+                    video.media.thumbnail ||
+                    'https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png'
+                  }
                 />
-              }
-              // actions={[
-              //   <Icon type='setting' key='setting' />,
-              //   <Icon type='edit' key='edit' />,
-              //   <Icon type='ellipsis' key='ellipsis' />,
-              // ]}>
-            >
+              }>
               <Meta
-                avatar={
-                  <Avatar src='https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png' />
-                }
+                // avatar={
+                //   <Avatar
+                //     src={
+                //       video.thumbnail ||
+                //       'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
+                //     }
+                //   />
+                // }
                 title={video.title}
                 description='This is the description'
               />
