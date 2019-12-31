@@ -1,8 +1,9 @@
 import React from 'react';
 import api from '../../api/api';
 
-import { Spin, Icon, Button } from 'antd';
+import { Spin, Icon, Button, Tag, Input, Tooltip } from 'antd';
 import { observer, useObservable } from 'mobx-react-lite';
+import { useHistory } from 'react-router-dom';
 
 const loadVideos = async userId => {
   if (userId) {
@@ -28,17 +29,28 @@ const handleDelete = async e => {
 };
 
 export default observer(props => {
+  const history = useHistory();
+
   const userId = props.match.params.userId;
   const state = useObservable({
     loading: true,
     videos: [],
   });
 
+  const handleRefresh = () => {
+    loadVideos(userId).then(videos => {
+      state.videos = videos;
+    });
+  };
+
+  const handleView = e => {
+    history.push(`/videos/${e.target.id}`);
+  };
+
   if (state.loading) {
     loadVideos(userId)
       .then(videos => {
         state.videos = videos;
-        console.log('done');
         state.loading = false;
       })
       .catch(() => {
@@ -50,23 +62,53 @@ export default observer(props => {
         <Spin indicator={<Icon type='loading' style={{ fontSize: 24 }} spin />} />
       </div>
     );
+  } else {
+    return (
+      <div>
+        <Button type='default' onClick={handleRefresh}>
+          Refresh
+        </Button>
+        {state.videos.map(video => {
+          return (
+            <div
+              key={video._id}
+              style={{
+                width: '400px',
+                height: 'auto',
+                backgroundColor: 'rgb(0, 21, 41)',
+                border: 'solid white 1px',
+                margin: '10px',
+                padding: '10px',
+              }}>
+              <h1>{video.title}</h1>
+              <h5>Video ID : {video._id}</h5>
+              <h5>Authord ID : {video.author}</h5>
+              <p>
+                Status:
+                {video.status !== 'completed' ? (
+                  <Icon type='setting' theme='filled' spin />
+                ) : (
+                  video.status
+                )}
+              </p>
+              {video.media &&
+                Object.entries(video.media).map(([k, v]) => {
+                  return (
+                    <Tag color='green' key={k} closable={false}>
+                      {k}
+                    </Tag>
+                  );
+                })}
+              <Button id={video._id} type='primary' onClick={handleView}>
+                View
+              </Button>
+              <Button id={video._id} type='danger' onClick={handleDelete}>
+                Delete
+              </Button>
+            </div>
+          );
+        })}
+      </div>
+    );
   }
-  return (
-    <div>
-      <h1> Videos </h1>
-      {state.videos.map(video => {
-        console.log('video', video);
-        return (
-          <div key={video._id} style={{ width: '400px', height: '400px', border: 'solid red 2px' }}>
-            {Object.entries(video).map(([k, v]) => {
-              return <p>{`key: ${k}  |  value: ${v}`}</p>;
-            })}
-            <Button id={video._id} type='danger' onClick={handleDelete}>
-              Delete
-            </Button>
-          </div>
-        );
-      })}
-    </div>
-  );
 });
