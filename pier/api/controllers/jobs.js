@@ -14,7 +14,6 @@ exports.createJob = async (req, res) => {
     'sleep 30',
     'apt update',
     'apt install -y git nodejs npm ffmpeg',
-    'snap install doctl',
     'npm i -g yarn',
     'cd /root',
     'git clone https://github.com/bken-io/video',
@@ -25,9 +24,10 @@ exports.createJob = async (req, res) => {
     `echo "WASABI_ACCESS_KEY_ID=${process.env.WASABI_ACCESS_KEY_ID}" >> .env`,
     `echo "WASABI_SECRET_ACCESS_KEY=${process.env.WASABI_SECRET_ACCESS_KEY}" >> .env`,
     `echo "CONVERSION_API_KEY=${process.env.CONVERSION_API_KEY}" >> .env`,
+    `echo "DO_API_KEY=${process.env.DO_API_KEY}" >> .env`,
     `echo "NODE_ENV=production" >> .env`,
-    `node cli.js --type=video --preset=all --id=${req.body.videoId}`,
-    'echo shutting system down',
+    'chmod +x scripts/terminate.sh',
+    `node cli.js --type=video --preset=all --id=${req.body.videoId} --terminate=true >> out.log`,
   ].join(' && ');
 
   const cloudInit = `
@@ -36,20 +36,19 @@ exports.createJob = async (req, res) => {
     - ${bashInit}
   `;
 
-  console.log(cloudInit);
-
   const createEvent = await api.dropletsCreate({
+    size: '8gb',
     ipv6: true,
-    tags: ['worker'],
     volumes: null,
     region: 'nyc3',
     backups: false,
-    user_data: cloudInit,
-    name: `worker-${shortid()}`,
-    size: '1gb',
+    tags: ['worker'],
+    monitoring: true,
     ssh_keys: sshKeyIds,
+    user_data: cloudInit,
     private_networking: null,
     image: 'ubuntu-18-04-x64',
+    name: `worker-${req.body.videoId}`,
   });
 
   res.status(202).send({
