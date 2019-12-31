@@ -19,7 +19,12 @@ export default observer(props => {
     api({ url: `/videos/${props.id}`, method: 'get' }).then(res => {
       state.loading = false;
       state.title = res.data.payload.title;
-      state.url = res.data.payload.media.source;
+      state.url =
+        res.data.payload.media['3440p'] ||
+        res.data.payload.media['1440p'] ||
+        res.data.payload.media['1080p'] ||
+        res.data.payload.media['720p'] ||
+        res.data.payload.media.source;
     });
 
     return <div> Loading </div>;
@@ -39,6 +44,7 @@ export default observer(props => {
         </div>
         <div style={{ padding: '10px' }}>
           <h3 style={{ color: 'white', padding: '5px' }}>{state.title}</h3>
+          <h5>{`quality: ${state.url.split('/')[state.url.split('/').length - 1]}`}</h5>
         </div>
       </div>
     );
