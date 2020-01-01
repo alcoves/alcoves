@@ -1,7 +1,7 @@
 import React from 'react';
 import api from '../../api/api';
 
-import { Card, Icon, Avatar } from 'antd';
+import { Card } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { observer, useObservable } from 'mobx-react-lite';
 
@@ -12,6 +12,40 @@ const loadVideos = async () => {
     method: 'get',
     url: '/videos',
   });
+};
+
+const styles = {
+  card: {
+    width: '320px',
+    minWidth: '320px',
+    maxWidth: '320px',
+    cursor: 'pointer',
+    margin: '10px',
+    borderRadius: '5px',
+    backgroundColor: '#272d3c',
+    color: 'white',
+    overflow: 'hidden',
+  },
+  row: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    padding: '10px',
+  },
+  meta: {
+    height: '100px',
+    padding: '10px',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+  },
+  title: {
+    fontSize: '1.1em',
+  },
+  image: {
+    objectFit: 'cover',
+    minHeight: '180px',
+    width: '320px',
+  },
 };
 
 export default observer(() => {
@@ -33,36 +67,19 @@ export default observer(() => {
     );
   } else {
     return (
-      <div style={{ padding: '20px' }}>
+      <div style={styles.row}>
         {state.videos.map(video => {
-          console.log(video.media['thumbnail']);
           return (
-            <Card
-              onClick={() => history.push(`/videos/${video._id}`)}
+            <div
+              style={styles.card}
               key={video._id}
-              style={{ width: 300, cursor: 'pointer' }}
-              cover={
-                <img
-                  alt='example'
-                  src={
-                    video.media.thumbnail ||
-                    'https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png'
-                  }
-                />
-              }>
-              <Meta
-                // avatar={
-                //   <Avatar
-                //     src={
-                //       video.thumbnail ||
-                //       'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
-                //     }
-                //   />
-                // }
-                title={video.title}
-                description='This is the description'
-              />
-            </Card>
+              onClick={() => history.push(`/videos/${video._id}`)}>
+              <img style={styles.image} alt='thumbnail' src={video.media.thumbnail}></img>
+
+              <div style={styles.meta}>
+                <div style={styles.title}>{video.title}</div>
+              </div>
+            </div>
           );
         })}
       </div>
