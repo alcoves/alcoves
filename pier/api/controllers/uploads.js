@@ -2,6 +2,9 @@ const AWS = require('aws-sdk');
 const mongoose = require('mongoose');
 const Video = require('../models/video');
 
+const convertSourceVideo = require('../lib/convertSourceVideo');
+const convertObjectToDotNotation = require('../lib/convertObjectToDotNotation');
+
 const BUCKET_NAME = 'media-bken';
 const WASABI_ENDPOINT = 'https://s3.us-east-2.wasabisys.com';
 
@@ -22,12 +25,14 @@ const buildSourceFileKey = (id, fileType) => {
 
 exports.createMultipartUpload = async (req, res) => {
   try {
+    const videoId = mongoose.Types.ObjectId();
     const video = new Video({
       status: 'uploading',
       author: req.user.id,
       title: req.query.fileName,
-      _id: mongoose.Types.ObjectId(),
+      _id: videoId,
       sourceFileName: req.query.fileName,
+      media: { source: 'null' },
     });
     await video.save();
     const { UploadId, Key } = await s3
@@ -80,19 +85,20 @@ exports.completeMultipartUpload = async (req, res) => {
       .promise();
 
     const videoId = req.body.key.split('/')[0];
-    console.log(videoId);
 
-    const payload = await Video.updateOne(
+    await Video.updateOne(
       { _id: req.body.key.split('/')[0] },
       {
-        $set: {
-          'media.source': `${WASABI_ENDPOINT}/${BUCKET_NAME}/${req.body.key}`,
+        $set: convertObjectToDotNotation({
           status: 'queueing',
-        },
+          media: {
+            source: `${WASABI_ENDPOINT}/${BUCKET_NAME}/${req.body.key}`,
+          },
+        }),
       }
     );
 
-    console.log('payload', payload);
+    await convertSourceVideo({ videoId });
     res.send({ message: 'completed upload', payload: data });
   } catch (err) {
     console.log(err);
