@@ -8,6 +8,7 @@ import Upload from '../Upload/Upload';
 import Profile from '../Profile/Profile';
 import NotFound from '../NotFound/NotFound';
 import Navigation from '../Navigation/Navigation';
+import VideoEditor from '../VideoEditor/VideoEditor';
 
 import { Route, Switch } from 'react-router-dom';
 import { observer } from 'mobx-react';
@@ -32,6 +33,7 @@ export default observer(p => {
             render={rp => <Video id={rp.match.params.videoId} {...rp} {...p} />}
           />
           <Route path='/users/:userId/videos' render={rp => <Videos {...rp} {...p} />} />
+          <Route path='/editor/videos/:videoId' render={rp => <VideoEditor {...rp} {...p} />} />
           <Route path='*' render={rp => <NotFound {...rp} {...p} />} />
         </Switch>
       </Navigation>
