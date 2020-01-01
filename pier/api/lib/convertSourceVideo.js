@@ -35,7 +35,6 @@ module.exports = async ({ videoId }) => {
   `;
 
   return api.dropletsCreate({
-    size: '8gb',
     ipv6: true,
     volumes: null,
     region: 'nyc3',
@@ -43,6 +42,7 @@ module.exports = async ({ videoId }) => {
     tags: ['worker'],
     monitoring: true,
     ssh_keys: sshKeyIds,
+    size: 's-2vcpu-2gb',
     user_data: cloudInit,
     private_networking: null,
     image: 'ubuntu-18-04-x64',
