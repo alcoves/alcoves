@@ -20,7 +20,7 @@ export default observer(props => {
       state.loading = false;
       state.title = res.data.payload.title;
       state.url =
-        res.data.payload.media['3440p'] ||
+        res.data.payload.media['2160p'] ||
         res.data.payload.media['1440p'] ||
         res.data.payload.media['1080p'] ||
         res.data.payload.media['720p'] ||
