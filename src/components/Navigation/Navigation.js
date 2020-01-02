@@ -1,151 +1,86 @@
 import React, { useContext } from 'react';
 import UserStore from '../../data/User';
 
-import { Button, Avatar, Drawer, Icon, Layout } from 'antd';
-import { observer, useObservable } from 'mobx-react-lite';
+import { Button, Avatar } from 'antd';
+import { observer } from 'mobx-react-lite';
 import { useHistory } from 'react-router-dom';
-
-const { Header, Content } = Layout;
 
 export default observer(props => {
   const history = useHistory();
   const user = useContext(UserStore);
 
-  const state = useObservable({
-    visible: false,
-  });
-
-  const openDrawer = () => {
-    state.visible = true;
-  };
-
-  const onClose = () => {
-    state.visible = false;
-  };
-
-  const handleClick = () => {
-    history.push('/upload');
-  };
-
-  const handleMenuClick = e => {
-    onClose();
+  const handleClick = e => {
     history.push(`/${e.currentTarget.id}`);
   };
 
-  const handleLoginRedirect = () => {
-    history.push('/login');
-  };
-
-  const handleProfileRedirect = () => {
-    history.push('/profile');
-  };
-
-  const row = {
-    cursor: 'pointer',
-    height: '40px',
-    color: '#fff',
+  const styles = {
+    menu: {
+      height: '50px',
+      backgroundColor: '#171b24',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    menuContainer: {
+      display: 'flex',
+    },
+    logo: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      width: '100px',
+      height: '50px',
+      cursor: 'pointer',
+    },
+    menuItem: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      fontSize: '22px',
+      color: 'white',
+      height: '50px',
+      width: '50px',
+    },
   };
 
   return (
-    <Layout style={{ height: '100vh' }}>
-      <Layout>
-        <Drawer title='bken.io' placement='left' onClose={onClose} visible={state.visible}>
-          <div id='' style={row} onClick={handleMenuClick}>
-            <Icon style={{ margin: '0 10px 0 10px' }} type='home' />
-            <span>Home</span>
+    <div>
+      <div style={styles.menu}>
+        <div style={styles.menuContainer}>
+          <div styles={styles.logo}>
+            <img height={35} src='https://bken.io/favicon.ico' />
           </div>
-          <div id='upload' style={row} onClick={handleMenuClick}>
-            <Icon style={{ margin: '0 10px 0 10px' }} type='upload' />
-            <span>Upload</span>
-          </div>
-          <div id={`users/${user.id}/videos`} style={row} onClick={handleMenuClick}>
-            <Icon style={{ margin: '0 10px 0 10px' }} type='video-camera' />
-            <span>Videos</span>
-          </div>
-          <div id='profile' style={row} onClick={handleMenuClick}>
-            <Icon style={{ margin: '0 10px 0 10px' }} type='user' />
-            <span>Acount</span>
-          </div>
-        </Drawer>
-        <Layout>
-          <Header
-            theme='dark'
-            style={{
-              display: 'flex',
-              height: '64px',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              background: '#001529',
-              padding: 0,
-            }}>
-            <Icon
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                fontSize: '22px',
-                color: 'white',
-                height: '64px',
-                width: '64px',
-              }}
-              type='menu'
-              onClick={openDrawer}
-            />
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-              }}>
-              {user.isLoggedIn() ? (
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    fontSize: '22px',
-                    color: 'white',
-                    height: '64px',
-                    width: '46px',
-                  }}>
-                  <Button onClick={handleClick} shape='circle' icon='upload' />
-                </div>
-              ) : null}
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  fontSize: '22px',
-                  color: 'white',
-                  height: '64px',
-                  width: '46px',
-                }}>
-                {user.isLoggedIn() ? (
-                  <Avatar
-                    style={{
-                      color: '#f56a00',
-                      backgroundColor: '#fde3cf',
-                      cursor: 'pointer',
-                    }}
-                    onClick={handleProfileRedirect}>
-                    B
-                  </Avatar>
-                ) : (
-                  <Button onClick={handleLoginRedirect} shape='circle' icon='user' />
-                )}
-              </div>
+        </div>
+        {user.isLoggedIn() ? (
+          <div style={styles.menuContainer}>
+            <div style={styles.menuItem}>
+              <Button id='upload' onClick={handleClick} shape='circle' icon='upload' />
             </div>
-          </Header>
-          <Content
-            style={{
-              background: '#1f2430',
-              height: 'auto',
-              minHeight: 'auto',
-            }}>
-            {props.children}
-          </Content>
-        </Layout>
-      </Layout>
-    </Layout>
+            <div style={styles.menuItem}>
+              <Button id='' onClick={handleClick} shape='circle' icon='video-camera' />
+            </div>
+            <div style={styles.menuItem}>
+              <Avatar
+                id='profile'
+                style={{
+                  color: '#f56a00',
+                  backgroundColor: '#fde3cf',
+                  cursor: 'pointer',
+                }}
+                onClick={handleClick}>
+                {user.userName ? user.userName.charAt(0).toUpperCase() : null}
+              </Avatar>
+            </div>
+          </div>
+        ) : (
+          <div style={styles.menuContainer}>
+            <div style={styles.menuItem}>
+              <Button id='login' onClick={handleClick} shape='circle' icon='user' />
+            </div>
+          </div>
+        )}
+      </div>
+      <div>{props.children}</div>
+    </div>
   );
 });

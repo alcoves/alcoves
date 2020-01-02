@@ -1,16 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import api from '../../api/api';
+import UserStore from '../../data/User';
 
-import { Card } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { observer, useObservable } from 'mobx-react-lite';
 
-const { Meta } = Card;
-
-const loadVideos = async () => {
+const loadVideos = async userId => {
   return api({
     method: 'get',
-    url: '/videos',
+    url: `/videos`,
   });
 };
 
@@ -50,13 +48,14 @@ const styles = {
 
 export default observer(() => {
   const history = useHistory();
+  const user = useContext(UserStore);
   const state = useObservable({
     videos: [],
     loading: true,
   });
 
   if (state.loading) {
-    loadVideos().then(res => {
+    loadVideos(user.id).then(res => {
       state.videos = res.data.payload;
       state.loading = false;
     });
