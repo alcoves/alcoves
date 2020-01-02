@@ -33,7 +33,7 @@ export default observer(props => {
       width: '100%',
       minHeight: '480px',
       backgroundColor: 'black',
-      height: 'calc(100vh - 64px)',
+      height: 'calc(100vh - 50px)',
       maxHeight: 'calc((9 / 16) * 100vw',
     };
 

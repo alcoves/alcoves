@@ -101,9 +101,9 @@ export default observer(() => {
   const startUpload = async file => {
     try {
       const { data } = await api({
-        method: 'get',
-        url: '/uploads',
-        params: {
+        method: 'post',
+        url: '/videos',
+        data: {
           fileName: file.name,
           fileType: file.type,
         },

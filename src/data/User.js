@@ -6,8 +6,7 @@ import { decorate, observable } from 'mobx';
 export class User {
   id = '';
   email = '';
-  lastName = '';
-  firstName = '';
+  userName = '';
 
   isLoggedIn() {
     return this.id ? true : false;
@@ -23,6 +22,7 @@ export class User {
           localStorage.setItem('accessToken', accessToken);
           this.id = decoded.payload.id;
           this.email = decoded.payload.email;
+          this.userName = decoded.payload.userName;
         } else {
           this.logout();
         }
