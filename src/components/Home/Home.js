@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import api from '../../api/api';
 import UserStore from '../../data/User';
 
-import { Icon } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { observer, useObservable } from 'mobx-react-lite';
 
@@ -85,13 +84,12 @@ export default observer(() => {
                   {video.title}
                 </div>
                 <div style={styles.cardFooter}>
-                  <Icon
+                  <button
                     onClick={() => {
                       history.push(`/editor/videos/${video._id}`);
-                    }}
-                    style={{ cursor: 'pointer', fontSize: '1.3em' }}
-                    type='setting'
-                  />
+                    }}>
+                    Settings
+                  </button>
                 </div>
               </div>
             </div>

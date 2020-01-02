@@ -3,7 +3,6 @@ import axios from 'axios';
 import api from '../../api/api';
 
 import { useHistory } from 'react-router-dom';
-import { Upload, Button, Icon, Progress, message } from 'antd';
 import { useObservable, observer } from 'mobx-react-lite';
 
 export default observer(() => {
@@ -15,12 +14,6 @@ export default observer(() => {
     numberOfParts: 0,
     numberOfPartsCompleted: 0,
   });
-
-  const beforeUpload = file => {
-    state.uploadProgress = 0;
-    state.fileList = [file];
-    return false;
-  };
 
   const chunkFile = file => {
     let start, end, blob;
@@ -65,9 +58,9 @@ export default observer(() => {
                       state.numberOfPartsCompleted++;
                       resolve(res);
                     })
-                    .catch(err => reject);
+                    .catch(reject);
                 })
-                .catch(err => reject);
+                .catch(reject);
             }),
           );
 
@@ -90,16 +83,16 @@ export default observer(() => {
         },
       });
 
-      history.push(`/editor/videos/${key.split('/')[0]}`);
       console.log('upload complete!');
+      history.push(`/editor/videos/${key.split('/')[0]}`);
     } catch (error) {
       console.log('Upload Error', error);
-      message.error('there was an error while uploading');
     }
   };
 
   const startUpload = async file => {
     try {
+      console.log('starting upload');
       const { data } = await api({
         method: 'post',
         url: '/videos',
@@ -134,27 +127,21 @@ export default observer(() => {
           justifyContent: 'center',
           padding: '5px',
         }}>
-        <Upload beforeUpload={beforeUpload} fileList={state.fileList}>
-          <Button style={{ width: '120px' }}>
-            <Icon type='upload' /> Select File
-          </Button>
-        </Upload>
-      </div>
-      <div
-        style={{
-          width: '100%',
-          display: 'flex',
-          justifyContent: 'center',
-          padding: '5px',
-        }}>
-        <Button
-          type='primary'
+        <input
+          onChange={e => {
+            state.uploadProgress = 0;
+            state.fileList = [e.target.files[0]];
+          }}
+          type='file'
+          name='video'
+          accept='video/mp4'
+          files={state.fileList}
+        />
+        <button
           onClick={() => startUpload(state.fileList[0])}
-          disabled={state.fileList.length === 0}
-          style={{ width: '120px' }}
-          loading={Boolean(state.numberOfParts)}>
-          {state.numberOfParts ? 'Uploading' : 'Start Upload'}
-        </Button>
+          disabled={state.fileList.length === 0}>
+          Upload
+        </button>
       </div>
       <div
         style={{
@@ -163,14 +150,7 @@ export default observer(() => {
           display: 'flex',
           justifyContent: 'center',
         }}>
-        {state.numberOfParts ? (
-          <Progress
-            type='circle'
-            percent={parseInt(
-              ((state.numberOfPartsCompleted / state.numberOfParts) * 100).toFixed(0),
-            )}
-          />
-        ) : null}
+        {state.numberOfParts ? <p> uploading </p> : null}
       </div>
     </div>
   );

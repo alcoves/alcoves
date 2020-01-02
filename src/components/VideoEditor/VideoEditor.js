@@ -1,7 +1,6 @@
 import React from 'react';
 import api from '../../api/api';
 
-import { Spin, Icon, Button, Tag } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { observer, useObservable } from 'mobx-react-lite';
 
@@ -58,15 +57,15 @@ export default observer(props => {
 
     return (
       <div>
-        <Spin indicator={<Icon type='loading' style={{ fontSize: 24 }} spin />} />
+        <h1>loading</h1>
       </div>
     );
   } else {
     return (
       <div>
-        <Button type='default' onClick={handleRefresh}>
+        <button type='default' onClick={handleRefresh}>
           Refresh
-        </Button>
+        </button>
         <div
           style={{
             width: '400px',
@@ -81,26 +80,18 @@ export default observer(props => {
           <h5>Authord ID : {state.video.author}</h5>
           <p>
             Status:
-            {state.video.status !== 'completed' ? (
-              <Icon type='setting' theme='filled' spin />
-            ) : (
-              state.video.status
-            )}
+            {state.video.status}
           </p>
           {state.video.media &&
             Object.entries(state.video.media).map(([k, v]) => {
-              return (
-                <Tag color='green' key={k} closable={false}>
-                  {k}
-                </Tag>
-              );
+              return <p key={k}>{k}</p>;
             })}
-          <Button id={state.video._id} type='primary' onClick={handleView}>
+          <button id={state.video._id} type='primary' onClick={handleView}>
             View
-          </Button>
-          <Button id={state.video._id} type='danger' onClick={handleDelete}>
+          </button>
+          <button id={state.video._id} type='danger' onClick={handleDelete}>
             Delete
-          </Button>
+          </button>
         </div>
       </div>
     );
