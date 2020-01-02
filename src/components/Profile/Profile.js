@@ -1,7 +1,5 @@
 import User from '../../data/User';
 import React, { useContext } from 'react';
-
-import { Button } from 'antd';
 import { observer } from 'mobx-react-lite';
 
 export default observer(() => {
@@ -33,13 +31,13 @@ export default observer(() => {
         <div style={styles.profile}>
           <h1>Hey there, {user.userName}</h1>
           <div style={styles.profileFooter}>
-            <Button
+            <button
               type='primary'
               onClick={() => {
                 user.logout(true);
               }}>
               Logout
-            </Button>
+            </button>
           </div>
         </div>
       </div>

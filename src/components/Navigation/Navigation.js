@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import UserStore from '../../data/User';
 
-import { Button, Avatar } from 'antd';
 import { observer } from 'mobx-react-lite';
 import { useHistory } from 'react-router-dom';
 
@@ -36,7 +35,6 @@ export default observer(props => {
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      fontSize: '22px',
       color: 'white',
       height: '50px',
       width: '50px',
@@ -54,13 +52,17 @@ export default observer(props => {
         {user.isLoggedIn() ? (
           <div style={styles.menuContainer}>
             <div style={styles.menuItem}>
-              <Button id='upload' onClick={handleClick} shape='circle' icon='upload' />
+              <button id='upload' onClick={handleClick}>
+                upload{' '}
+              </button>
             </div>
             <div style={styles.menuItem}>
-              <Button id='' onClick={handleClick} shape='circle' icon='video-camera' />
+              <button id='' onClick={handleClick}>
+                videos
+              </button>
             </div>
             <div style={styles.menuItem}>
-              <Avatar
+              <div
                 id='profile'
                 style={{
                   color: '#f56a00',
@@ -69,13 +71,15 @@ export default observer(props => {
                 }}
                 onClick={handleClick}>
                 {user.userName ? user.userName.charAt(0).toUpperCase() : null}
-              </Avatar>
+              </div>
             </div>
           </div>
         ) : (
           <div style={styles.menuContainer}>
             <div style={styles.menuItem}>
-              <Button id='login' onClick={handleClick} shape='circle' icon='user' />
+              <button id='login' onClick={handleClick}>
+                login
+              </button>
             </div>
           </div>
         )}

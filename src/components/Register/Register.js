@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import User from '../../data/User';
 import api from '../../api/api';
 
-import { Button, Input, message, Row, Col } from 'antd';
 import { observer, useObservable } from 'mobx-react-lite';
 
 export default observer(props => {
@@ -37,57 +36,49 @@ export default observer(props => {
       .catch(error => {
         console.log(error);
         state.loading = false;
-        message.error(error.message);
       });
   };
 
   return (
     <div>
-      <Row justify='center' type='flex'>
-        <Col
-          xs={22}
-          md={12}
-          lg={8}
-          xxl={5}
-          style={{ margin: '50px 10px 10px 10px', maxWidth: '400px' }}>
-          <Input
-            id='userName'
-            size='large'
-            placeholder='username'
-            value={state.userName}
-            onChange={handleTextField}
-          />
-        </Col>
-      </Row>
-      <Row justify='center' type='flex'>
-        <Col xs={22} md={12} lg={8} xxl={5} style={{ margin: '10px', maxWidth: '400px' }}>
-          <Input
-            id='email'
-            size='large'
-            placeholder='email address'
-            value={state.email}
-            onChange={handleTextField}
-          />
-        </Col>
-      </Row>
-      <Row justify='center' type='flex'>
-        <Col xs={22} md={12} lg={8} xxl={5} style={{ margin: '10px', maxWidth: '400px' }}>
-          <Input.Password
-            size='large'
-            id='password'
-            placeholder='password'
-            value={state.password}
-            onChange={handleTextField}
-          />
-        </Col>
-      </Row>
-      <Row justify='center' type='flex'>
-        <Col xs={22} md={12} lg={8} xxl={5} style={{ margin: '10px', maxWidth: '400px' }}>
-          <Button block onClick={handleLogin} disabled={state.loading}>
-            Register
-          </Button>
-        </Col>
-      </Row>
+      <div
+        xs={22}
+        md={12}
+        lg={8}
+        xxl={5}
+        style={{ margin: '50px 10px 10px 10px', maxWidth: '400px' }}>
+        <input
+          id='userName'
+          size='large'
+          placeholder='username'
+          value={state.userName}
+          onChange={handleTextField}
+        />
+      </div>
+      <div xs={22} md={12} lg={8} xxl={5} style={{ margin: '10px', maxWidth: '400px' }}>
+        <input
+          id='email'
+          size='large'
+          placeholder='email address'
+          value={state.email}
+          onChange={handleTextField}
+        />
+      </div>
+      <div xs={22} md={12} lg={8} xxl={5} style={{ margin: '10px', maxWidth: '400px' }}>
+        <input
+          size='large'
+          id='password'
+          type='password'
+          placeholder='password'
+          value={state.password}
+          onChange={handleTextField}
+        />
+      </div>
+      <div xs={22} md={12} lg={8} xxl={5} style={{ margin: '10px', maxWidth: '400px' }}>
+        <button block onClick={handleLogin} disabled={state.loading}>
+          Register
+        </button>
+      </div>
     </div>
   );
 });
