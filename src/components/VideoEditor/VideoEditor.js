@@ -1,9 +1,9 @@
 import React from 'react';
 import api from '../../api/api';
 
-import { Spin, Icon, Button, Tag, Input, Tooltip } from 'antd';
-import { observer, useObservable } from 'mobx-react-lite';
+import { Spin, Icon, Button, Tag } from 'antd';
 import { useHistory } from 'react-router-dom';
+import { observer, useObservable } from 'mobx-react-lite';
 
 const loadVideo = async videoId => {
   if (videoId) {
@@ -44,7 +44,7 @@ export default observer(props => {
         state.loading = false;
       })
       .catch(error => {
-        console.errror(error);
+        console.error(error);
         state.loading = false;
       });
   };
