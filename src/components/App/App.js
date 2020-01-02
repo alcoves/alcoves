@@ -1,3 +1,4 @@
+import UserStore from '../../data/User';
 import React, { useContext } from 'react';
 
 import Home from '../Home/Home';
@@ -10,10 +11,8 @@ import NotFound from '../NotFound/NotFound';
 import Navigation from '../Navigation/Navigation';
 import VideoEditor from '../VideoEditor/VideoEditor';
 
+import { observer } from 'mobx-react-lite';
 import { Route, Switch } from 'react-router-dom';
-import { observer } from 'mobx-react';
-
-import UserStore from '../../data/User';
 
 export default observer(p => {
   const userStore = useContext(UserStore);
