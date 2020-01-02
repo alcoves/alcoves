@@ -1,5 +1,6 @@
 const AWS = require('aws-sdk');
-const WASABI_ENDPOINT = 'https://s3.us-east-2.wasabisys.com';
+
+const { WASABI_ENDPOINT } = require('./config');
 
 AWS.config.update({
   accessKeyId: process.env.WASABI_ACCESS_KEY_ID,

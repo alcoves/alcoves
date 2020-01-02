@@ -17,10 +17,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/', require('./routes/root'));
-app.use('/jobs', require('./routes/jobs'));
-app.use('/users', require('./routes/users'));
+app.use('/me', require('./routes/me'));
+app.use('/login', require('./routes/login'));
 app.use('/videos', require('./routes/videos'));
 app.use('/uploads', require('./routes/uploads'));
+app.use('/register', require('./routes/register'));
 
 app.use((req, res, next) => {
   const error = new Error('not found');

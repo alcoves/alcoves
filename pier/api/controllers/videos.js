@@ -1,25 +1,62 @@
 const s3 = require('../config/s3');
+const mongoose = require('mongoose');
 const Video = require('../models/video');
-
 const convertObjectToDotNotation = require('../lib/convertObjectToDotNotation');
 
-const BUCKET_NAME = 'media-bken';
+const { MEDIA_BUCKET_NAME } = require('../config/config');
 
-exports.getPosts = async (req, res) => {
+const buildSourceFileKey = (id, fileType) => {
+  return `${id}/source.${fileType.split('/')[1]}`;
+};
+
+const emptyS3Dir = async (Prefix) => {
+  const Bucket = MEDIA_BUCKET_NAME;
+  const { Contents } = await s3.listObjectsV2({ Bucket, Prefix }).promise();
+  return Promise.all(
+    Contents.map(({ Key }) => {
+      console.log(`Deleting ${Key}`);
+      return s3.deleteObject({ Bucket, Key }).promise();
+    })
+  );
+};
+
+exports.createMultipartUpload = async (req, res) => {
   try {
-    const docs = await Post.find().select('-__v');
-    res.status(200).send({ count: docs.length, payload: docs });
-  } catch (error) {
-    throw error;
+    const videoId = mongoose.Types.ObjectId();
+    const video = new Video({
+      status: 'uploading',
+      author: req.user.id,
+      title: req.body.fileName,
+      _id: videoId,
+      sourceFileName: req.body.fileName,
+      media: { source: 'null' },
+    });
+    await video.save();
+    const { UploadId, Key } = await s3
+      .createMultipartUpload({
+        Bucket: MEDIA_BUCKET_NAME,
+        Key: buildSourceFileKey(video._id, req.body.fileType),
+        ContentType: req.body.fileType,
+      })
+      .promise();
+
+    res.status(200).send({
+      message: 'started multipart upload',
+      payload: {
+        key: Key,
+        uploadId: UploadId,
+      },
+    });
+  } catch (err) {
+    console.log(err);
   }
 };
 
 exports.getVideos = async (req, res) => {
   try {
-    const videos = await Video.find();
     res.status(200).send({
       message: 'query for videos was successfull',
-      payload: videos,
+      payload: await Video.find({ author: req.user.id }),
     });
   } catch (error) {
     console.error(error);
@@ -46,7 +83,6 @@ exports.getVideo = async (req, res) => {
 
 exports.updateVideo = async (req, res) => {
   try {
-    console.log(convertObjectToDotNotation(req.body));
     const payload = await Video.updateOne(
       { _id: req.params.id },
       { $set: convertObjectToDotNotation(req.body) }
@@ -60,17 +96,6 @@ exports.updateVideo = async (req, res) => {
     console.error(error);
     throw error;
   }
-};
-
-const emptyS3Dir = async (Prefix) => {
-  const Bucket = BUCKET_NAME;
-  const { Contents } = await s3.listObjectsV2({ Bucket, Prefix }).promise();
-  return Promise.all(
-    Contents.map(({ Key }) => {
-      console.log(`Deleting ${Key}`);
-      return s3.deleteObject({ Bucket, Key }).promise();
-    })
-  );
 };
 
 exports.deleteVideo = async (req, res) => {
