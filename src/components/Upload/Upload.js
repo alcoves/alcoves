@@ -2,8 +2,8 @@ import React from 'react';
 import axios from 'axios';
 import api from '../../api/api';
 
-import { Button } from 'semantic-ui-react';
 import { useHistory } from 'react-router-dom';
+import { Button, Progress } from 'semantic-ui-react';
 import { useObservable, observer } from 'mobx-react-lite';
 
 export default observer(() => {
@@ -122,13 +122,22 @@ export default observer(() => {
         height: '100%',
         flexDirection: 'column',
       }}>
-      <div>
-        <Button
-          content='Select Video'
-          labelPosition='left'
-          icon='video'
-          onClick={() => fileInputRef.current.click()}
-        />
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          flexDirection: 'column',
+          width: '300px',
+        }}>
+        <div style={{ margin: '10px 0px 10px 0px' }}>
+          <Button
+            content='Select Video'
+            labelPosition='left'
+            icon='video'
+            fluid
+            onClick={() => fileInputRef.current.click()}
+          />
+        </div>
         <input
           ref={fileInputRef}
           type='file'
@@ -142,20 +151,27 @@ export default observer(() => {
             state.fileList = [e.target.files[0]];
           }}
         />
-        <Button
-          onClick={() => startUpload(state.fileList[0])}
-          disabled={state.fileList.length === 0}>
-          Upload
-        </Button>
-      </div>
-      <div
-        style={{
-          width: '100%',
-          padding: '5px',
-          display: 'flex',
-          justifyContent: 'center',
-        }}>
-        {state.numberOfParts ? <p> uploading </p> : null}
+        <div style={{ margin: '10px 0px 10px 0px' }}>
+          <Button
+            fluid
+            onClick={() => startUpload(state.fileList[0])}
+            disabled={state.fileList.length === 0}>
+            Upload
+          </Button>
+        </div>
+        <div style={{ margin: '10px 0px 10px 0px' }}>
+          {state.fileList.length ? state.fileList[0].name : null}
+        </div>
+        <div style={{ margin: '10px 0px 10px 0px' }}>
+          {state.numberOfParts ? (
+            <Progress
+              size='small'
+              value={state.numberOfPartsCompleted}
+              total={state.numberOfParts}
+              progress='ratio'
+            />
+          ) : null}
+        </div>
       </div>
     </div>
   );
