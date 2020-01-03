@@ -3,6 +3,7 @@ import api from '../../api/api';
 import ReactPlayer from 'react-player';
 
 import { Helmet } from 'react-helmet';
+import { Loader } from 'semantic-ui-react';
 import { observer, useObservable } from 'mobx-react-lite';
 
 const InjectMetadata = ({ state }) => {
@@ -63,10 +64,6 @@ export default observer(props => {
     loading: true,
   });
 
-  if (!props.id) {
-    return <div> Invalid Video ID </div>;
-  }
-
   if (state.loading) {
     api({ url: `/videos/${props.id}`, method: 'get' }).then(res => {
       state.loading = false;
@@ -79,12 +76,10 @@ export default observer(props => {
         res.data.payload.media.source;
     });
 
-    return <div> Loading </div>;
+    return <Loader active inline='centered' style={{ marginTop: '30px' }} />;
   } else {
     const outerDivStyle = {
-      width: '100%',
-      minHeight: '480px',
-      backgroundColor: 'black',
+      backgroundColor: '#000000',
       height: 'calc(100vh - 50px)',
       maxHeight: 'calc((9 / 16) * 100vw',
     };
