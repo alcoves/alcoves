@@ -5,48 +5,39 @@ import { Button } from 'semantic-ui-react';
 import { useHistory } from 'react-router-dom';
 import { observer, useObservable } from 'mobx-react-lite';
 
-const loadVideo = async videoId => {
-  if (videoId) {
-    const { data } = await api({
-      method: 'get',
-      url: `/videos/${videoId}`,
-    });
-    return data.payload;
-  }
-};
-
-const handleDelete = async e => {
-  try {
-    await api({
-      method: 'delete',
-      url: `/videos/${e.target.id}`,
-    });
-
-    window.location.reload();
-  } catch (error) {
-    throw error;
-  }
-};
-
 export default observer(props => {
   const history = useHistory();
-
-  const videoId = props.match.params.videoId;
   const state = useObservable({
-    loading: true,
     video: {},
+    loading: true,
   });
 
-  const handleRefresh = () => {
-    loadVideo(videoId)
-      .then(video => {
-        state.video = video;
-        state.loading = false;
-      })
-      .catch(error => {
-        console.error(error);
-        state.loading = false;
+  const handleRefresh = async () => {
+    try {
+      const { data } = await api({
+        method: 'get',
+        url: `/videos/${props.match.params.videoId}`,
       });
+
+      state.video = data.payload;
+      state.loading = false;
+    } catch (error) {
+      console.error(error);
+      state.loading = false;
+    }
+  };
+
+  const handleDelete = async e => {
+    try {
+      await api({
+        method: 'delete',
+        url: `/videos/${e.target.id}`,
+      });
+
+      history.push('/');
+    } catch (error) {
+      throw error;
+    }
   };
 
   const handleView = e => {
