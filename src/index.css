@@ -26,6 +26,19 @@ input {
   background-color: #171b24 !important;
 }
 
+.ui.form .field .ui.input input,
+.ui.form .fields .field .ui.input input {
+  color: #e2eeee;
+}
+
 .ui.stacked.segment {
   background-color: transparent;
+}
+
+.ui.tabular.menu {
+  border-bottom: none;
+}
+
+.item {
+  border: none;
 }

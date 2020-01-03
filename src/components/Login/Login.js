@@ -2,42 +2,44 @@ import api from '../../api/api';
 import User from '../../data/User';
 import React, { useContext } from 'react';
 
+import { useHistory } from 'react-router-dom';
 import { observer, useObservable } from 'mobx-react-lite';
-import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react';
+import { Button, Form, Grid, Segment } from 'semantic-ui-react';
 
 export default observer(props => {
   const user = useContext(User);
+  const history = useHistory();
 
   const state = useObservable({
     email: '',
     password: '',
+    userName: '',
     loading: false,
   });
 
   const handleChange = (e, { name, value }) => {
-    console.log(name, value);
     state[name] = value;
   };
 
-  const handleSubmit = () => {
-    state.loading = true;
-    api({
-      method: 'post',
-      url: '/login',
-      data: {
-        email: state.email,
-        password: state.password,
-      },
-    })
-      .then(({ data }) => {
-        state.loading = false;
-        user.login(data.accessToken);
-        props.history.push('/profile');
-      })
-      .catch(error => {
-        console.log(error);
-        state.loading = false;
+  const handleSubmit = async () => {
+    try {
+      state.loading = true;
+      const { data } = await api({
+        method: 'post',
+        url: '/login',
+        data: {
+          email: state.email,
+          password: state.password,
+        },
       });
+
+      state.loading = false;
+      user.login(data.accessToken);
+      props.history.push('/');
+    } catch (error) {
+      console.log(error);
+      state.loading = false;
+    }
   };
 
   return (
@@ -47,7 +49,7 @@ export default observer(props => {
           <Segment stacked>
             <Form.Input
               fluid
-              icon='user'
+              icon='mail'
               name='email'
               iconPosition='left'
               value={state.email}
@@ -64,44 +66,23 @@ export default observer(props => {
               value={state.password}
               onChange={handleChange}
             />
-            <Form.Button color='teal' fluid size='large' content='Login' />
+            <Grid>
+              <Grid.Column width={10}>
+                <Form.Button color='teal' fluid content='Login' />
+              </Grid.Column>
+              <Grid.Column width={6}>
+                <Button
+                  color='teal'
+                  basic
+                  fluid
+                  content='Or Register'
+                  onClick={() => history.push('/register')}
+                />
+              </Grid.Column>
+            </Grid>
           </Segment>
         </Form>
       </Grid.Column>
     </Grid>
   );
 });
-
-{
-  /* <div
-style={{
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  flexDirection: 'column',
-  marginTop: '50px',
-}}>
-<div>
-  <Input
-    id='email'
-    placeholder='email address'
-    value={state.email}
-    onChange={handleTextField}
-  />
-</div>
-<div>
-  <Input
-    id='password'
-    type='password'
-    placeholder='password'
-    value={state.password}
-    onChange={handleTextField}
-  />
-</div>
-<div>
-  <Button basic color='teal' size='small' onClick={handleLogin} disabled={state.loading}>
-    Log In
-  </Button>
-</div>
-</div> */
-}
