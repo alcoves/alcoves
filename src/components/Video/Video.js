@@ -1,7 +1,6 @@
 import React from 'react';
 import api from '../../api/api';
 
-import { Helmet } from 'react-helmet';
 import { Loader } from 'semantic-ui-react';
 import { observer, useObservable } from 'mobx-react-lite';
 
