@@ -3,7 +3,7 @@ import axios from 'axios';
 import api from '../../api/api';
 
 import { useHistory } from 'react-router-dom';
-import { Button, Progress } from 'semantic-ui-react';
+import { Button, Progress, Loader } from 'semantic-ui-react';
 import { useObservable, observer } from 'mobx-react-lite';
 
 export default observer(() => {
@@ -11,10 +11,33 @@ export default observer(() => {
   const state = useObservable({
     fileList: [],
     uploadUrl: '',
-    uploadProgress: 0,
-    numberOfParts: 0,
-    numberOfPartsCompleted: 0,
+    queuing: false,
+    uploading: false,
+    bytesUploaded: 0,
   });
+
+  const completeVideoUpload = async ({ key, uploadId, parts }) => {
+    try {
+      console.log('completing video upload');
+      state.queuing = true;
+      await api({
+        method: 'post',
+        url: '/uploads',
+        data: {
+          key,
+          parts,
+          uploadId,
+        },
+      });
+
+      console.log('upload complete!');
+      history.push(`/editor/videos/${key.split('/')[0]}`);
+    } catch (error) {
+      console.error('complete video upload error', error);
+    } finally {
+      state.queuing = false;
+    }
+  };
 
   const chunkFile = file => {
     let start, end, blob;
@@ -34,11 +57,11 @@ export default observer(() => {
     return parts;
   };
 
-  const uploadMultipartFile = async (file, { uploadId, key }) => {
+  const uploadParts = async (file, { key, uploadId }) => {
     try {
+      state.uploading = true;
       const resolvedUploads = await Promise.all(
         chunkFile(file).reduce((acc, blob, partIndex) => {
-          state.numberOfParts++;
           acc.push(
             new Promise((resolve, reject) => {
               api({
@@ -51,14 +74,16 @@ export default observer(() => {
                 },
               })
                 .then(({ data }) => {
+                  let lastBytesUploaded = 0;
                   axios
                     .put(data.payload.url, blob, {
                       headers: { 'Content-Type': file.type },
+                      onUploadProgress: e => {
+                        state.bytesUploaded += e.loaded - lastBytesUploaded;
+                        lastBytesUploaded = e.loaded;
+                      },
                     })
-                    .then(res => {
-                      state.numberOfPartsCompleted++;
-                      resolve(res);
-                    })
+                    .then(resolve)
                     .catch(reject);
                 })
                 .catch(reject);
@@ -69,25 +94,16 @@ export default observer(() => {
         }, []),
       );
 
-      const uploadPartsArray = resolvedUploads.reduce((acc, { headers }, i) => {
+      const parts = resolvedUploads.reduce((acc, { headers }, i) => {
         acc.push({ ETag: headers.etag, PartNumber: i + 1 });
         return acc;
       }, []);
 
-      await api({
-        method: 'post',
-        url: '/uploads',
-        data: {
-          key,
-          uploadId,
-          parts: uploadPartsArray,
-        },
-      });
-
-      console.log('upload complete!');
-      history.push(`/editor/videos/${key.split('/')[0]}`);
+      return { key, parts, uploadId };
     } catch (error) {
-      console.log('Upload Error', error);
+      console.log('upload error', error);
+    } finally {
+      state.uploading = false;
     }
   };
 
@@ -103,7 +119,8 @@ export default observer(() => {
         },
       });
 
-      return uploadMultipartFile(file, data.payload);
+      const completeVideoUploadObj = await uploadParts(file, data.payload);
+      await completeVideoUpload(completeVideoUploadObj);
     } catch (err) {
       console.log(err);
     }
@@ -135,6 +152,7 @@ export default observer(() => {
             labelPosition='left'
             icon='video'
             fluid
+            disabled={state.uploading || state.queuing}
             onClick={() => fileInputRef.current.click()}
           />
         </div>
@@ -147,7 +165,7 @@ export default observer(() => {
           type='file'
           hidden
           onChange={e => {
-            state.uploadProgress = 0;
+            state.bytesUploaded = 0;
             state.fileList = [e.target.files[0]];
           }}
         />
@@ -155,23 +173,29 @@ export default observer(() => {
           <Button
             fluid
             onClick={() => startUpload(state.fileList[0])}
-            disabled={state.fileList.length === 0}>
+            disabled={state.fileList.length === 0 || state.uploading || state.queuing}>
             Upload
           </Button>
         </div>
         <div style={{ margin: '10px 0px 10px 0px' }}>
-          {state.fileList.length ? state.fileList[0].name : null}
+          {state.fileList.length ? <h3>{state.fileList[0].name}</h3> : null}
         </div>
         <div style={{ margin: '10px 0px 10px 0px' }}>
-          {state.numberOfParts ? (
+          {state.bytesUploaded && state.fileList[0].size ? (
             <Progress
               size='small'
-              value={state.numberOfPartsCompleted}
-              total={state.numberOfParts}
-              progress='ratio'
+              percent={((state.bytesUploaded / state.fileList[0].size) * 100).toFixed(0)}
+              progress='percent'
             />
           ) : null}
         </div>
+        {state.queuing ? (
+          <div style={{ margin: '10px 0px 10px 0px' }}>
+            <Loader active inline='centered'>
+              Completing upload...
+            </Loader>
+          </div>
+        ) : null}
       </div>
     </div>
   );
