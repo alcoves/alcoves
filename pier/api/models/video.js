@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const shortid = require('shortid');
 const Schema = mongoose.Schema;
 
 const mediaSchema = new Schema({
@@ -24,6 +25,13 @@ const videoSchema = new Schema({
   createdAt: { type: Date, default: Date.now, required: true },
   modifiedAt: { type: Date, default: Date.now, required: true },
   author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  slug: {
+    type: String,
+    unique: true,
+    default: shortid.generate,
+    required: true,
+    index: true,
+  },
 });
 
 module.exports = mongoose.model('Video', videoSchema);
