@@ -8,9 +8,9 @@ import { observer, useObservable } from 'mobx-react-lite';
 
 const styles = {
   card: {
-    width: '100%',
-    minWidth: '320px',
-    maxWidth: '320px',
+    // minWidth: '320px',
+    // width: '100%',
+    maxWidth: '500px',
     padding: 0,
     margin: '10px',
     borderRadius: '5px',
@@ -67,40 +67,38 @@ export default observer(() => {
     });
 
     return <Loader active inline='centered' style={{ marginTop: '30px' }} />;
-  } else {
+  } else if (state.videos.length) {
     return (
-      <Grid container centered columns={4} style={{ paddingTop: '30px' }}>
-        {state.videos.length ? (
-          state.videos.map(video => {
-            return (
-              <Grid.Column key={video._id} style={styles.card}>
-                <img
-                  style={styles.image}
-                  alt='thumbnail'
-                  src={video.thumbnail}
-                  onClick={() => history.push(`/videos/${video._id}`)}></img>
-                <div style={styles.meta}>
-                  <div onClick={() => history.push(`/videos/${video._id}`)} style={styles.title}>
-                    {video.title}
-                  </div>
-                  <div style={styles.cardFooter}>
-                    <Button.Group size='mini' color='teal' basic>
-                      <Button
-                        icon='setting'
-                        onClick={() => {
-                          history.push(`/editor/videos/${video._id}`);
-                        }}
-                      />
-                    </Button.Group>
-                  </div>
+      <Grid centered doubling style={{ paddingTop: '30px' }}>
+        {state.videos.map(video => {
+          return (
+            <Grid.Column key={video._id} mobile={14} tablet={10} computer={4} style={styles.card}>
+              <img
+                style={styles.image}
+                alt='thumbnail'
+                src={video.thumbnail}
+                onClick={() => history.push(`/videos/${video._id}`)}></img>
+              <div style={styles.meta}>
+                <div onClick={() => history.push(`/videos/${video._id}`)} style={styles.title}>
+                  {video.title}
                 </div>
-              </Grid.Column>
-            );
-          })
-        ) : (
-          <h1>You don't have any videos</h1>
-        )}
+                <div style={styles.cardFooter}>
+                  <Button.Group size='mini' color='teal' basic>
+                    <Button
+                      icon='setting'
+                      onClick={() => {
+                        history.push(`/editor/videos/${video._id}`);
+                      }}
+                    />
+                  </Button.Group>
+                </div>
+              </div>
+            </Grid.Column>
+          );
+        })}
       </Grid>
     );
+  } else {
+    return <h1>You don't have any videos</h1>;
   }
 });
