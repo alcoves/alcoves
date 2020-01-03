@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const User = require('../models/user');
 
@@ -20,7 +21,14 @@ exports.register = async (req, res) => {
     });
 
     await user.save();
-    res.status(201).send({ message: 'user created' });
+
+    const accessToken = jwt.sign(
+      { email: user.email, id: user.id, userName: user.userName },
+      process.env.JWT_KEY,
+      { expiresIn: '7d' }
+    );
+
+    res.status(201).send({ message: 'registration successful', accessToken });
   } catch (error) {
     throw error;
   }
