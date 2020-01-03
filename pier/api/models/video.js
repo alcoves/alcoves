@@ -8,12 +8,16 @@ const mediaSchema = new Schema({
   '1080p': { type: String, required: false },
   '1440p': { type: String, required: false },
   '2160p': { type: String, required: false },
-  thumbnail: {
-    type: String,
-    default:
-      'https://s3.us-east-2.wasabisys.com/media-bken/files/default-thumbnail-sm.jpg',
-    required: false,
-  },
+});
+
+const videoFileSchema = new Schema({
+  conversionTime: { type: Number, required: true },
+  conversionCost: { type: Number, required: true },
+  createdAt: { type: Date, default: Date.now, required: true },
+  modifiedAt: { type: Date, default: Date.now, required: true },
+  objectBucket: { type: String, required: true },
+  objectPath: { type: String, required: true },
+  preset: { type: String, required: true },
 });
 
 const videoSchema = new Schema({
@@ -25,6 +29,12 @@ const videoSchema = new Schema({
   createdAt: { type: Date, default: Date.now, required: true },
   modifiedAt: { type: Date, default: Date.now, required: true },
   author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  thumbnail: {
+    type: String,
+    default:
+      'https://s3.us-east-2.wasabisys.com/media-bken/files/default-thumbnail-sm.jpg',
+    required: true,
+  },
   slug: {
     type: String,
     unique: true,
