@@ -1,6 +1,5 @@
 import React from 'react';
 import api from '../../api/api';
-import ReactPlayer from 'react-player';
 
 import { Helmet } from 'react-helmet';
 import { Loader } from 'semantic-ui-react';
@@ -88,7 +87,9 @@ export default observer(props => {
       <div>
         <InjectMetadata state={state} />
         <div style={outerDivStyle}>
-          <ReactPlayer playing height='100%' width='100%' controls={true} url={state.url} />
+          <video width='100%' height='100%' controls autoplay>
+            <source src={state.url} type='video/mp4' />
+          </video>
         </div>
         <div style={{ padding: '10px' }}>
           <h3 style={{ color: 'white', padding: '5px' }}>{state.title}</h3>
