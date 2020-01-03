@@ -77,7 +77,7 @@ export default observer(() => {
                 <img
                   style={styles.image}
                   alt='thumbnail'
-                  src={video.media.thumbnail}
+                  src={video.thumbnail}
                   onClick={() => history.push(`/videos/${video._id}`)}></img>
                 <div style={styles.meta}>
                   <div onClick={() => history.push(`/videos/${video._id}`)} style={styles.title}>
