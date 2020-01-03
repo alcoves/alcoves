@@ -56,7 +56,9 @@ exports.getVideos = async (req, res) => {
   try {
     res.status(200).send({
       message: 'query for videos was successfull',
-      payload: await Video.find({ author: req.user.id }),
+      payload: await Video.find({ author: req.user.id }).sort({
+        createdAt: 'descending',
+      }),
     });
   } catch (error) {
     console.error(error);
