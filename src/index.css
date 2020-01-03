@@ -21,3 +21,11 @@ pre {
 video {
   outline: none;
 }
+
+input {
+  background-color: #171b24 !important;
+}
+
+.ui.stacked.segment {
+  background-color: transparent;
+}

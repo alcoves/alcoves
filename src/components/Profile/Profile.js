@@ -3,8 +3,10 @@ import React, { useContext } from 'react';
 
 import { observer } from 'mobx-react-lite';
 import { Button } from 'semantic-ui-react';
+import { useHistory } from 'react-router-dom';
 
 export default observer(() => {
+  const history = useHistory();
   const user = useContext(User);
 
   const styles = {
@@ -45,6 +47,6 @@ export default observer(() => {
       </div>
     );
   } else {
-    return <div>You aren't logged in!</div>;
+    history.push('/login');
   }
 });
