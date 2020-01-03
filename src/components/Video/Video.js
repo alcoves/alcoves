@@ -35,7 +35,7 @@ export default observer(props => {
     return (
       <div>
         <div style={outerDivStyle}>
-          <video width='100%' height='100%' controls autoplay>
+          <video width='100%' height='100%' controls autoPlay>
             <source src={state.url} type='video/mp4' />
           </video>
         </div>
