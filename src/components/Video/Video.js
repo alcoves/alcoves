@@ -28,7 +28,7 @@ export default observer(props => {
   } else {
     const outerDivStyle = {
       backgroundColor: '#000000',
-      height: 'calc(100vh - 50px)',
+      height: 'calc(100vh - 100px)',
       maxHeight: 'calc((9 / 16) * 100vw',
     };
 
