@@ -1,6 +1,8 @@
 import User from '../../data/User';
 import React, { useContext } from 'react';
+
 import { observer } from 'mobx-react-lite';
+import { Button } from 'semantic-ui-react';
 
 export default observer(() => {
   const user = useContext(User);
@@ -31,13 +33,13 @@ export default observer(() => {
         <div style={styles.profile}>
           <h1>Hey there, {user.userName}</h1>
           <div style={styles.profileFooter}>
-            <button
+            <Button
               type='primary'
               onClick={() => {
                 user.logout(true);
               }}>
               Logout
-            </button>
+            </Button>
           </div>
         </div>
       </div>

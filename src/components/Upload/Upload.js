@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import api from '../../api/api';
 
+import { Button } from 'semantic-ui-react';
 import { useHistory } from 'react-router-dom';
 import { useObservable, observer } from 'mobx-react-lite';
 
@@ -108,6 +109,8 @@ export default observer(() => {
     }
   };
 
+  let fileInputRef = React.createRef();
+
   return (
     <div
       style={{
@@ -119,29 +122,31 @@ export default observer(() => {
         height: '100%',
         flexDirection: 'column',
       }}>
-      <div
-        style={{
-          height: '74px',
-          width: '100%',
-          display: 'flex',
-          justifyContent: 'center',
-          padding: '5px',
-        }}>
+      <div>
+        <Button
+          content='Select Video'
+          labelPosition='left'
+          icon='video'
+          onClick={() => fileInputRef.current.click()}
+        />
         <input
-          onChange={e => {
-            state.uploadProgress = 0;
-            state.fileList = [e.target.files[0]];
-          }}
+          ref={fileInputRef}
           type='file'
           name='video'
           accept='video/mp4'
           files={state.fileList}
+          type='file'
+          hidden
+          onChange={e => {
+            state.uploadProgress = 0;
+            state.fileList = [e.target.files[0]];
+          }}
         />
-        <button
+        <Button
           onClick={() => startUpload(state.fileList[0])}
           disabled={state.fileList.length === 0}>
           Upload
-        </button>
+        </Button>
       </div>
       <div
         style={{

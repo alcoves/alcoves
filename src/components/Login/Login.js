@@ -2,6 +2,7 @@ import api from '../../api/api';
 import User from '../../data/User';
 import React, { useContext } from 'react';
 
+import { Button } from 'semantic-ui-react';
 import { observer, useObservable } from 'mobx-react-lite';
 
 export default observer(props => {
@@ -63,9 +64,9 @@ export default observer(props => {
         />
       </div>
       <div xs={22} md={12} lg={8} xxl={5} style={{ margin: '10px', maxWidth: '400px' }}>
-        <button onClick={handleLogin} disabled={state.loading}>
+        <Button onClick={handleLogin} disabled={state.loading}>
           Log In
-        </button>
+        </Button>
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import React from 'react';
 import api from '../../api/api';
 
+import { Button } from 'semantic-ui-react';
 import { useHistory } from 'react-router-dom';
 import { observer, useObservable } from 'mobx-react-lite';
 
@@ -63,9 +64,9 @@ export default observer(props => {
   } else {
     return (
       <div>
-        <button type='default' onClick={handleRefresh}>
+        <Button type='default' onClick={handleRefresh}>
           Refresh
-        </button>
+        </Button>
         <div
           style={{
             width: '400px',
@@ -86,12 +87,12 @@ export default observer(props => {
             Object.entries(state.video.media).map(([k, v]) => {
               return <p key={k}>{k}</p>;
             })}
-          <button id={state.video._id} type='primary' onClick={handleView}>
+          <Button id={state.video._id} type='primary' onClick={handleView}>
             View
-          </button>
-          <button id={state.video._id} type='danger' onClick={handleDelete}>
+          </Button>
+          <Button id={state.video._id} type='danger' onClick={handleDelete}>
             Delete
-          </button>
+          </Button>
         </div>
       </div>
     );

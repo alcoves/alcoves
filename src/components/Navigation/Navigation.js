@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import UserStore from '../../data/User';
 
+import { Button } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
 import { useHistory } from 'react-router-dom';
 
@@ -27,9 +28,8 @@ export default observer(props => {
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      width: '100px',
+      width: '70px',
       height: '50px',
-      cursor: 'pointer',
     },
     menuItem: {
       display: 'flex',
@@ -45,41 +45,38 @@ export default observer(props => {
     <div>
       <div style={styles.menu}>
         <div style={styles.menuContainer}>
-          <div styles={styles.logo}>
-            <img height={35} src='https://bken.io/favicon.ico' />
+          <div style={styles.logo}>
+            <img
+              id=''
+              style={{ cursor: 'pointer' }}
+              height={35}
+              src='https://bken.io/favicon.ico'
+              onClick={handleClick}
+            />
           </div>
         </div>
         {user.isLoggedIn() ? (
           <div style={styles.menuContainer}>
             <div style={styles.menuItem}>
-              <button id='upload' onClick={handleClick}>
-                upload{' '}
-              </button>
+              <Button circular id='upload' icon='upload' onClick={handleClick} />
             </div>
             <div style={styles.menuItem}>
-              <button id='' onClick={handleClick}>
-                videos
-              </button>
+              <Button circular id='' icon='video' onClick={handleClick} />
             </div>
             <div style={styles.menuItem}>
-              <div
+              <Button
+                circular
                 id='profile'
-                style={{
-                  color: '#f56a00',
-                  backgroundColor: '#fde3cf',
-                  cursor: 'pointer',
-                }}
-                onClick={handleClick}>
-                {user.userName ? user.userName.charAt(0).toUpperCase() : null}
-              </div>
+                onClick={handleClick}
+                icon='user'
+                onClick={handleClick}
+              />
             </div>
           </div>
         ) : (
           <div style={styles.menuContainer}>
             <div style={styles.menuItem}>
-              <button id='login' onClick={handleClick}>
-                login
-              </button>
+              <Button circular id='login' icon='user' onClick={handleClick} />
             </div>
           </div>
         )}

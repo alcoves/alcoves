@@ -1,26 +1,24 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import api from '../../api/api';
-import UserStore from '../../data/User';
 
 import { useHistory } from 'react-router-dom';
+import { Loader, Button, Grid } from 'semantic-ui-react';
 import { observer, useObservable } from 'mobx-react-lite';
 
 const styles = {
   card: {
-    width: '320px',
+    width: '100%',
     minWidth: '320px',
     maxWidth: '320px',
+    padding: 0,
     margin: '10px',
     borderRadius: '5px',
     backgroundColor: '#272d3c',
     color: 'white',
     overflow: 'hidden',
-  },
-  row: {
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    padding: '10px',
+    WebkitBoxShadow: '3px 8px 42px -8px rgba(0,0,0,0.48)',
+    MozBoxShadow: '3px 8px 42px -8px rgba(0,0,0,0.48)',
+    boxShadow: '3px 8px 42px -8px rgba(0,0,0,0.48)',
   },
   meta: {
     height: '100px',
@@ -37,7 +35,7 @@ const styles = {
     objectFit: 'cover',
     minHeight: '180px',
     maxHeight: '180px',
-    width: '320px',
+    width: '100%',
     cursor: 'pointer',
   },
   cardFooter: {
@@ -63,17 +61,14 @@ export default observer(() => {
       state.videos = res.data.payload;
       state.loading = false;
     });
-    return (
-      <div>
-        <h1> Loading </h1>
-      </div>
-    );
+
+    return <Loader active inline='centered' style={{ marginTop: '30px' }} />;
   } else {
     return (
-      <div style={styles.row}>
+      <Grid container centered columns={4} style={{ paddingTop: '30px' }}>
         {state.videos.map(video => {
           return (
-            <div style={styles.card} key={video._id}>
+            <Grid.Column key={video._id} style={styles.card}>
               <img
                 style={styles.image}
                 alt='thumbnail'
@@ -84,18 +79,20 @@ export default observer(() => {
                   {video.title}
                 </div>
                 <div style={styles.cardFooter}>
-                  <button
-                    onClick={() => {
-                      history.push(`/editor/videos/${video._id}`);
-                    }}>
-                    Settings
-                  </button>
+                  <Button.Group size='mini' color='teal' basic>
+                    <Button
+                      icon='setting'
+                      onClick={() => {
+                        history.push(`/editor/videos/${video._id}`);
+                      }}
+                    />
+                  </Button.Group>
                 </div>
               </div>
-            </div>
+            </Grid.Column>
           );
         })}
-      </div>
+      </Grid>
     );
   }
 });
