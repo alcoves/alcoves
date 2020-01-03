@@ -2,8 +2,8 @@ import api from '../../api/api';
 import User from '../../data/User';
 import React, { useContext } from 'react';
 
-import { Button } from 'semantic-ui-react';
 import { observer, useObservable } from 'mobx-react-lite';
+import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react';
 
 export default observer(props => {
   const user = useContext(User);
@@ -14,11 +14,12 @@ export default observer(props => {
     loading: false,
   });
 
-  const handleTextField = e => {
-    state[e.target.id] = e.target.value;
+  const handleChange = (e, { name, value }) => {
+    console.log(name, value);
+    state[name] = value;
   };
 
-  const handleLogin = () => {
+  const handleSubmit = () => {
     state.loading = true;
     api({
       method: 'post',
@@ -40,34 +41,67 @@ export default observer(props => {
   };
 
   return (
-    <div>
-      <div
-        xs={22}
-        md={12}
-        lg={8}
-        xxl={5}
-        style={{ margin: '50px 10px 10px 10px', maxWidth: '400px' }}>
-        <input
-          id='email'
-          placeholder='email address'
-          value={state.email}
-          onChange={handleTextField}
-        />
-      </div>
-      <div xs={22} md={12} lg={8} xxl={5} style={{ margin: '10px', maxWidth: '400px' }}>
-        <input
-          id='password'
-          type='password'
-          placeholder='password'
-          value={state.password}
-          onChange={handleTextField}
-        />
-      </div>
-      <div xs={22} md={12} lg={8} xxl={5} style={{ margin: '10px', maxWidth: '400px' }}>
-        <Button onClick={handleLogin} disabled={state.loading}>
-          Log In
-        </Button>
-      </div>
-    </div>
+    <Grid textAlign='center' style={{ marginTop: '50px' }} verticalAlign='middle'>
+      <Grid.Column style={{ maxWidth: 450 }}>
+        <Form size='large' onSubmit={handleSubmit}>
+          <Segment stacked>
+            <Form.Input
+              fluid
+              icon='user'
+              name='email'
+              iconPosition='left'
+              value={state.email}
+              placeholder='E-mail address'
+              onChange={handleChange}
+            />
+            <Form.Input
+              fluid
+              icon='lock'
+              type='password'
+              name='password'
+              iconPosition='left'
+              placeholder='Password'
+              value={state.password}
+              onChange={handleChange}
+            />
+            <Form.Button color='teal' fluid size='large' content='Login' />
+          </Segment>
+        </Form>
+      </Grid.Column>
+    </Grid>
   );
 });
+
+{
+  /* <div
+style={{
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  flexDirection: 'column',
+  marginTop: '50px',
+}}>
+<div>
+  <Input
+    id='email'
+    placeholder='email address'
+    value={state.email}
+    onChange={handleTextField}
+  />
+</div>
+<div>
+  <Input
+    id='password'
+    type='password'
+    placeholder='password'
+    value={state.password}
+    onChange={handleTextField}
+  />
+</div>
+<div>
+  <Button basic color='teal' size='small' onClick={handleLogin} disabled={state.loading}>
+    Log In
+  </Button>
+</div>
+</div> */
+}
