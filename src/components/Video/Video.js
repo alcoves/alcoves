@@ -5,7 +5,7 @@ import ReactPlayer from 'react-player';
 import { Helmet } from 'react-helmet';
 import { observer, useObservable } from 'mobx-react-lite';
 
-const InjectMetadata = state => {
+const InjectMetadata = ({ state }) => {
   return (
     <Helmet>
       <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
