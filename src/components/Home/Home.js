@@ -1,5 +1,6 @@
-import React from 'react';
 import api from '../../api/api';
+import UserStore from '../../data/User';
+import React, { useContext } from 'react';
 
 import { useHistory } from 'react-router-dom';
 import { Loader, Button, Grid } from 'semantic-ui-react';
@@ -47,13 +48,16 @@ const styles = {
 };
 
 export default observer(() => {
+  const user = useContext(UserStore);
   const history = useHistory();
   const state = useObservable({
     videos: [],
     loading: true,
   });
 
-  if (state.loading) {
+  if (!user.isLoggedIn()) {
+    return <p> You must login to view this page </p>;
+  } else if (state.loading) {
     api({
       method: 'get',
       url: `/videos`,
@@ -66,32 +70,36 @@ export default observer(() => {
   } else {
     return (
       <Grid container centered columns={4} style={{ paddingTop: '30px' }}>
-        {state.videos.map(video => {
-          return (
-            <Grid.Column key={video._id} style={styles.card}>
-              <img
-                style={styles.image}
-                alt='thumbnail'
-                src={video.media.thumbnail}
-                onClick={() => history.push(`/videos/${video._id}`)}></img>
-              <div style={styles.meta}>
-                <div onClick={() => history.push(`/videos/${video._id}`)} style={styles.title}>
-                  {video.title}
+        {state.videos.length ? (
+          state.videos.map(video => {
+            return (
+              <Grid.Column key={video._id} style={styles.card}>
+                <img
+                  style={styles.image}
+                  alt='thumbnail'
+                  src={video.media.thumbnail}
+                  onClick={() => history.push(`/videos/${video._id}`)}></img>
+                <div style={styles.meta}>
+                  <div onClick={() => history.push(`/videos/${video._id}`)} style={styles.title}>
+                    {video.title}
+                  </div>
+                  <div style={styles.cardFooter}>
+                    <Button.Group size='mini' color='teal' basic>
+                      <Button
+                        icon='setting'
+                        onClick={() => {
+                          history.push(`/editor/videos/${video._id}`);
+                        }}
+                      />
+                    </Button.Group>
+                  </div>
                 </div>
-                <div style={styles.cardFooter}>
-                  <Button.Group size='mini' color='teal' basic>
-                    <Button
-                      icon='setting'
-                      onClick={() => {
-                        history.push(`/editor/videos/${video._id}`);
-                      }}
-                    />
-                  </Button.Group>
-                </div>
-              </div>
-            </Grid.Column>
-          );
-        })}
+              </Grid.Column>
+            );
+          })
+        ) : (
+          <h1>You don't have any videos</h1>
+        )}
       </Grid>
     );
   }
