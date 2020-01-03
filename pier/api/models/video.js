@@ -10,16 +10,6 @@ const mediaSchema = new Schema({
   '2160p': { type: String, required: false },
 });
 
-const videoFileSchema = new Schema({
-  conversionTime: { type: Number, required: true },
-  conversionCost: { type: Number, required: true },
-  createdAt: { type: Date, default: Date.now, required: true },
-  modifiedAt: { type: Date, default: Date.now, required: true },
-  objectBucket: { type: String, required: true },
-  objectPath: { type: String, required: true },
-  preset: { type: String, required: true },
-});
-
 const videoSchema = new Schema({
   _id: Schema.Types.ObjectId,
   title: { type: String, required: true },
