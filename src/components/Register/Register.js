@@ -11,6 +11,7 @@ export default observer(props => {
   const history = useHistory();
 
   const state = useObservable({
+    code: '',
     email: '',
     password: '',
     userName: '',
@@ -28,6 +29,7 @@ export default observer(props => {
         method: 'post',
         url: '/register',
         data: {
+          code: state.code,
           email: state.email,
           password: state.password,
           userName: state.userName,
@@ -74,6 +76,15 @@ export default observer(props => {
               iconPosition='left'
               placeholder='Password'
               value={state.password}
+              onChange={handleChange}
+            />
+            <Form.Input
+              fluid
+              icon='code'
+              name='code'
+              iconPosition='left'
+              placeholder='Beta Code'
+              value={state.code}
               onChange={handleChange}
             />
             <Grid>
