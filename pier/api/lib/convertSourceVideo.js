@@ -9,13 +9,8 @@ module.exports = async ({ videoId }) => {
   });
 
   const bashInit = [
-    'sleep 30',
-    'apt update',
-    'apt install -y git nodejs npm ffmpeg',
-    'npm i -g yarn',
-    'cd /root',
-    'git clone https://github.com/bken-io/video',
-    'cd video',
+    'cd /root/video',
+    'git pull',
     'yarn',
     `echo "DO_SPACES_ACCESS_KEY_ID=${process.env.DO_SPACES_ACCESS_KEY_ID}" >> .env`,
     `echo "DO_SPACES_SECRET_ACCESS_KEY=${process.env.DO_SPACES_SECRET_ACCESS_KEY}" >> .env`,
@@ -45,7 +40,7 @@ module.exports = async ({ videoId }) => {
     size: '1gb',
     user_data: cloudInit,
     private_networking: null,
-    image: 'ubuntu-18-04-x64',
+    image: 57308931,
     name: `worker`,
   });
 };
