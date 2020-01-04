@@ -7,8 +7,8 @@ const defaultThumbnail =
 
 const fileSchema = new Schema({
   link: { type: String },
-  conversionStartTime: { type: Date },
-  conversionCompleteTime: { type: Date },
+  startedAt: { type: Date },
+  completedAt: { type: Date },
   status: { type: String, required: true },
   percentCompleted: { type: Number, default: 0, required: true },
 });
