@@ -2,30 +2,33 @@ const mongoose = require('mongoose');
 const shortid = require('shortid');
 const Schema = mongoose.Schema;
 
-const mediaSchema = new Schema({
-  source: { type: String, required: true },
-  '720p': { type: String, required: false },
-  '1080p': { type: String, required: false },
-  '1440p': { type: String, required: false },
-  '2160p': { type: String, required: false },
-});
+const defaultThumbnail =
+  'https://s3.us-east-2.wasabisys.com/media-bken/files/default-thumbnail-sm.jpg';
+
+const fileSchema = new Schema(
+  {
+    link: { type: String },
+    totalTime: { type: Number },
+    status: { type: String, required: true },
+    percentCompleted: { type: Number, required: true },
+  },
+  { timestamps: true }
+);
 
 const videoSchema = new Schema(
   {
     title: { type: String, required: true },
     status: { type: String, required: true },
-    media: { type: mediaSchema, required: true },
-    sourceFileName: { type: String, required: true },
+    _id: { type: String, default: shortid.generate },
     author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    _id: {
-      type: String,
-      default: shortid.generate,
-    },
-    thumbnail: {
-      type: String,
-      default:
-        'https://s3.us-east-2.wasabisys.com/media-bken/files/default-thumbnail-sm.jpg',
-      required: true,
+    thumbnail: { type: String, default: defaultThumbnail, required: true },
+    files: {
+      '480p': { type: fileSchema },
+      '720p': { type: fileSchema },
+      '1080p': { type: fileSchema },
+      '1440p': { type: fileSchema },
+      '2160p': { type: fileSchema },
+      highQuality: { type: fileSchema },
     },
   },
   { timestamps: true }

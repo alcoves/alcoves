@@ -1,12 +1,12 @@
 const s3 = require('../config/s3');
-const mongoose = require('mongoose');
+const mime = require('mime-types');
 const Video = require('../models/video');
 const convertObjectToDotNotation = require('../lib/convertObjectToDotNotation');
 
 const { MEDIA_BUCKET_NAME } = require('../config/config');
 
 const buildSourceFileKey = (id, fileType) => {
-  return `${id}/source.${fileType.split('/')[1]}`;
+  return `${id}/highQuality.${mime.extension(fileType)}`;
 };
 
 const emptyS3Dir = async (Prefix) => {
@@ -22,16 +22,29 @@ const emptyS3Dir = async (Prefix) => {
 
 exports.createMultipartUpload = async (req, res) => {
   try {
-    const videoId = mongoose.Types.ObjectId();
-    const video = new Video({
+    const video = await Video({
       status: 'uploading',
       author: req.user.id,
       title: req.body.fileName,
-      _id: videoId,
-      sourceFileName: req.body.fileName,
-      media: { source: 'null' },
-    });
-    await video.save();
+    }).save();
+
+    // This should really happen on multipart upload complete, not create
+    await Video.updateOne(
+      { _id: video._id },
+      {
+        $set: convertObjectToDotNotation({
+          files: {
+            highQuality: {
+              status: 'completed',
+              percentCompleted: 0,
+              objectBucket: MEDIA_BUCKET_NAME,
+              objectKey: buildSourceFileKey(video._id, req.body.fileType),
+            },
+          },
+        }),
+      }
+    );
+
     const { UploadId, Key } = await s3
       .createMultipartUpload({
         Bucket: MEDIA_BUCKET_NAME,
@@ -72,13 +85,12 @@ exports.getVideos = async (req, res) => {
 
 exports.getVideo = async (req, res) => {
   try {
-    const video = await Video.findOne({ _id: req.params.id }).populate(
-      'author',
-      '_id email userName'
-    );
     res.status(200).send({
       message: 'query for video was successfull',
-      payload: video,
+      payload: await Video.findOne({ _id: req.params.id }).populate(
+        'author',
+        '_id email userName'
+      ),
     });
   } catch (error) {
     console.error(error);
@@ -90,14 +102,12 @@ exports.getVideo = async (req, res) => {
 
 exports.updateVideo = async (req, res) => {
   try {
-    const payload = await Video.updateOne(
-      { _id: req.params.id },
-      { $set: convertObjectToDotNotation(req.body) }
-    );
-
     res.status(200).send({
       message: 'post patched successfully',
-      payload,
+      payload: await Video.updateOne(
+        { _id: req.params.id },
+        { $set: convertObjectToDotNotation(req.body) }
+      ),
     });
   } catch (error) {
     console.error(error);
@@ -108,7 +118,6 @@ exports.updateVideo = async (req, res) => {
 exports.deleteVideo = async (req, res) => {
   try {
     await emptyS3Dir(req.params.id);
-
     const result = await Video.deleteOne({ _id: req.params.id });
     if (result.deletedCount >= 1) {
       res.status(200).send({ message: 'video deleted' });
