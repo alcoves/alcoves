@@ -25,7 +25,7 @@ module.exports = async ({ videoId }) => {
     `echo "DO_API_KEY=${process.env.DO_API_KEY}" >> .env`,
     `echo "NODE_ENV=production" >> .env`,
     'chmod +x scripts/terminate.sh',
-    `nohup node cli.js --type=video --preset=all --id=${videoId} --terminate=true >> out.log &`,
+    `nohup node cli.js --videoId=${videoId} --type=all >> out.log &`,
   ].join(' && ');
 
   const cloudInit = `
