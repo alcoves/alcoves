@@ -10,28 +10,25 @@ const mediaSchema = new Schema({
   '2160p': { type: String, required: false },
 });
 
-const videoSchema = new Schema({
-  _id: Schema.Types.ObjectId,
-  title: { type: String, required: true },
-  status: { type: String, required: true },
-  media: { type: mediaSchema, required: true },
-  sourceFileName: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now, required: true },
-  modifiedAt: { type: Date, default: Date.now, required: true },
-  author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  thumbnail: {
-    type: String,
-    default:
-      'https://s3.us-east-2.wasabisys.com/media-bken/files/default-thumbnail-sm.jpg',
-    required: true,
+const videoSchema = new Schema(
+  {
+    title: { type: String, required: true },
+    status: { type: String, required: true },
+    media: { type: mediaSchema, required: true },
+    sourceFileName: { type: String, required: true },
+    author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    _id: {
+      type: String,
+      default: shortid.generate,
+    },
+    thumbnail: {
+      type: String,
+      default:
+        'https://s3.us-east-2.wasabisys.com/media-bken/files/default-thumbnail-sm.jpg',
+      required: true,
+    },
   },
-  slug: {
-    type: String,
-    unique: true,
-    default: shortid.generate,
-    required: true,
-    index: true,
-  },
-});
+  { timestamps: true }
+);
 
 module.exports = mongoose.model('Video', videoSchema);
