@@ -19,11 +19,10 @@ export default observer(props => {
     loading: true,
   });
 
-  if (state.loading) {
+  if (state.loading || !state.url) {
     api({ url: `/videos/${props.id}`, method: 'get' }).then(({ data }) => {
       state.loading = false;
       state.title = data.payload.title;
-      console.log(data.payload.files);
       state.url = pickVideoUrl(data.payload.files);
     });
 
@@ -34,8 +33,6 @@ export default observer(props => {
       height: 'calc(100vh - 100px)',
       maxHeight: 'calc((9 / 16) * 100vw',
     };
-
-    console.log(state.url);
 
     return (
       <div>
