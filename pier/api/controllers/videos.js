@@ -35,7 +35,7 @@ exports.createMultipartUpload = async (req, res) => {
         $set: convertObjectToDotNotation({
           files: {
             highQuality: {
-              status: 'completed',
+              status: 'processing',
               percentCompleted: 0,
               objectBucket: MEDIA_BUCKET_NAME,
               objectKey: buildSourceFileKey(video._id, req.body.fileType),
