@@ -5,15 +5,13 @@ const Schema = mongoose.Schema;
 const defaultThumbnail =
   'https://s3.us-east-2.wasabisys.com/media-bken/files/default-thumbnail-sm.jpg';
 
-const fileSchema = new Schema(
-  {
-    link: { type: String },
-    totalTime: { type: Number },
-    status: { type: String, required: true },
-    percentCompleted: { type: Number, required: true },
-  },
-  { timestamps: true }
-);
+const fileSchema = new Schema({
+  link: { type: String },
+  conversionStartTime: { type: Date },
+  conversionCompleteTime: { type: Date },
+  status: { type: String, required: true },
+  percentCompleted: { type: Number, default: 0, required: true },
+});
 
 const videoSchema = new Schema(
   {
