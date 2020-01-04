@@ -4,6 +4,14 @@ import api from '../../api/api';
 import { Loader } from 'semantic-ui-react';
 import { observer, useObservable } from 'mobx-react-lite';
 
+const pickVideoUrl = files => {
+  if (files['2160p'] && files['2160p'].link) return files['2160p'].link;
+  if (files['1440p'] && files['1440p'].link) return files['1440p'].link;
+  if (files['1080p'] && files['1080p'].link) return files['1080p'].link;
+  if (files['720p'] && files['720p'].link) return files['720p'].link;
+  if (files.highQuality && files.highQuality.link) return files.highQuality.link;
+};
+
 export default observer(props => {
   const state = useObservable({
     url: '',
@@ -12,15 +20,11 @@ export default observer(props => {
   });
 
   if (state.loading) {
-    api({ url: `/videos/${props.id}`, method: 'get' }).then(res => {
+    api({ url: `/videos/${props.id}`, method: 'get' }).then(({ data }) => {
       state.loading = false;
-      state.title = res.data.payload.title;
-      state.url =
-        res.data.payload.media['2160p'] ||
-        res.data.payload.media['1440p'] ||
-        res.data.payload.media['1080p'] ||
-        res.data.payload.media['720p'] ||
-        res.data.payload.media.source;
+      state.title = data.payload.title;
+      console.log(data.payload.files);
+      state.url = pickVideoUrl(data.payload.files);
     });
 
     return <Loader active inline='centered' style={{ marginTop: '30px' }} />;
@@ -31,6 +35,8 @@ export default observer(props => {
       maxHeight: 'calc((9 / 16) * 100vw',
     };
 
+    console.log(state.url);
+
     return (
       <div>
         <div style={outerDivStyle}>
@@ -40,7 +46,9 @@ export default observer(props => {
         </div>
         <div style={{ padding: '10px' }}>
           <h3 style={{ color: 'white', padding: '5px' }}>{state.title}</h3>
-          <h5>{`quality: ${state.url.split('/')[state.url.split('/').length - 1]}`}</h5>
+          <h5>{`quality: ${
+            state.url.split('/')[state.url.split('/').length - 1].split('.')[0]
+          }`}</h5>
         </div>
       </div>
     );
