@@ -29,7 +29,7 @@ exports.login = async (req, res) => {
         res
           .cookie('refreshToken', refreshToken, {
             httpOnly: true,
-            SameSite: true
+            SameSite: 'Secure',
           })
           .status(200)
           .send({

@@ -13,6 +13,12 @@ exports.register = async (req, res) => {
       });
     }
 
+    if (req.body.code !== process.env.BETA_CODE) {
+      return res.status(400).send({
+        message: 'bad beta code',
+      });
+    }
+
     const user = new User({
       _id: mongoose.Types.ObjectId(),
       email: req.body.email,
