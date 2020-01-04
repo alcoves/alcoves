@@ -1,12 +1,13 @@
 import api from '../../api/api';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
+import useInterval from '../../lib/useInterval';
 
 import { useHistory } from 'react-router-dom';
 import { observer, useObservable } from 'mobx-react-lite';
 import { Button, Label, Icon, Container } from 'semantic-ui-react';
 
 function timeConversion(startTime, completeTime) {
-  const millisec = new Date(completeTime).getMilliseconds() - new Date(startTime).getMilliseconds();
+  const millisec = new Date(completeTime).getTime() - new Date(startTime).getTime();
   const seconds = (millisec / 1000).toFixed(1);
   const minutes = (millisec / (1000 * 60)).toFixed(1);
   const hours = (millisec / (1000 * 60 * 60)).toFixed(1);
@@ -23,34 +24,12 @@ function timeConversion(startTime, completeTime) {
   }
 }
 
-function useInterval(callback, delay) {
-  const savedCallback = useRef();
-
-  // Remember the latest function.
-  useEffect(() => {
-    savedCallback.current = callback;
-  }, [callback]);
-
-  // Set up the interval.
-  useEffect(() => {
-    function tick() {
-      savedCallback.current();
-    }
-    if (delay !== null) {
-      let id = setInterval(tick, delay);
-      return () => clearInterval(id);
-    }
-  }, [delay]);
-}
-
 export default observer(props => {
   const history = useHistory();
   const state = useObservable({
     video: {},
     loading: true,
   });
-
-  let [count, setCount] = useState(0);
 
   const handleRefresh = async () => {
     try {
@@ -75,8 +54,6 @@ export default observer(props => {
     if (state.video.status !== 'completed') {
       handleRefresh();
     }
-
-    setCount(count + 1);
   }, 3000);
 
   const handleDelete = async e => {
@@ -108,10 +85,10 @@ export default observer(props => {
             )}
             {quality}
             <Label.Detail>{`${fileObj.percentCompleted}%`}</Label.Detail>
-            {fileObj.conversionStartTime && fileObj.conversionCompleteTime ? (
+            {fileObj.startedAt && fileObj.completedAt ? (
               <Label.Detail>{`took ${timeConversion(
-                fileObj.conversionStartTime,
-                fileObj.conversionCompleteTime,
+                fileObj.startedAt,
+                fileObj.completedAt,
               )}`}</Label.Detail>
             ) : null}
           </Label>

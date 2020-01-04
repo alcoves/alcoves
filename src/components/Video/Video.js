@@ -1,15 +1,17 @@
 import React from 'react';
 import api from '../../api/api';
+import useInterval from '../../lib/useInterval';
 
 import { Loader } from 'semantic-ui-react';
 import { observer, useObservable } from 'mobx-react-lite';
 
 const pickVideoUrl = files => {
-  if (files['2160p'] && files['2160p'].link) return files['2160p'].link;
-  if (files['1440p'] && files['1440p'].link) return files['1440p'].link;
-  if (files['1080p'] && files['1080p'].link) return files['1080p'].link;
-  if (files['720p'] && files['720p'].link) return files['720p'].link;
-  if (files.highQuality && files.highQuality.link) return files.highQuality.link;
+  if (files['2160p'] && files['2160p'].link) return { quality: '2160p', link: files['2160p'].link };
+  if (files['1440p'] && files['1440p'].link) return { quality: '1440p', link: files['1440p'].link };
+  if (files['1080p'] && files['1080p'].link) return { quality: '1080p', link: files['1080p'].link };
+  if (files['720p'] && files['720p'].link) return { quality: '720p', link: files['720p'].link };
+
+  return { quality: 'highQuality', link: files['highQuality'].link };
 };
 
 export default observer(props => {
@@ -17,16 +19,36 @@ export default observer(props => {
     url: '',
     title: '',
     loading: true,
+    percentCompleted: 0,
   });
 
-  if (state.loading || !state.url) {
+  const handleRefresh = () => {
     api({ url: `/videos/${props.id}`, method: 'get' }).then(({ data }) => {
+      const { quality, link } = pickVideoUrl(data.payload.files);
       state.loading = false;
-      state.title = data.payload.title;
-      state.url = pickVideoUrl(data.payload.files);
-    });
 
-    return <Loader active inline='centered' style={{ marginTop: '30px' }} />;
+      state.url = link;
+      state.title = data.payload.title;
+      state.percentCompleted = data.payload.files[quality].percentCompleted;
+    });
+  };
+
+  if (state.loading === true) {
+    handleRefresh();
+  }
+
+  useInterval(() => {
+    if (state.percentCompleted !== 100) {
+      handleRefresh();
+    }
+  }, 3000);
+
+  if (state.loading || !state.url) {
+    return (
+      <Loader active inline='centered' style={{ marginTop: '30px' }}>
+        {`${state.percentCompleted}%`}
+      </Loader>
+    );
   } else {
     const outerDivStyle = {
       backgroundColor: '#000000',
