@@ -56,9 +56,11 @@ exports.getVideos = async (req, res) => {
   try {
     res.status(200).send({
       message: 'query for videos was successfull',
-      payload: await Video.find({ author: req.user.id }).sort({
-        createdAt: 'descending',
-      }),
+      payload: await Video.find({ author: req.user.id })
+        .populate('author', '_id email userName')
+        .sort({
+          createdAt: 'descending',
+        }),
     });
   } catch (error) {
     console.error(error);
@@ -70,7 +72,10 @@ exports.getVideos = async (req, res) => {
 
 exports.getVideo = async (req, res) => {
   try {
-    const video = await Video.findOne({ _id: req.params.id });
+    const video = await Video.findOne({ _id: req.params.id }).populate(
+      'author',
+      '_id email userName'
+    );
     res.status(200).send({
       message: 'query for video was successfull',
       payload: video,
