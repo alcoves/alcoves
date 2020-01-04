@@ -46,6 +46,6 @@ module.exports = async ({ videoId }) => {
     user_data: cloudInit,
     private_networking: null,
     image: 'ubuntu-18-04-x64',
-    name: `worker-${videoId}`,
+    name: `worker`,
   });
 };
