@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const cors = require('cors');
+const axios = require('axios');
 const morgan = require('morgan');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -30,10 +31,17 @@ app.use((req, res, next) => {
 });
 
 app.use((error, req, res, next) => {
-  res.status(500).send({
-    message: error.message || 'unknown',
-    error,
-  });
+  axios
+    .post(process.env.DISCORD_WEBHOOK_URL, {
+      content: JSON.stringify(error),
+      username: 'API Error Bot',
+    })
+    .then(() => {
+      res.status(500).send({
+        message: error.message || 'unknown',
+        error,
+      });
+    });
 });
 
 module.exports = app;
