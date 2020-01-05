@@ -38,7 +38,7 @@ module.exports = async ({ videoId }) => {
     tags: ['worker'],
     monitoring: true,
     ssh_keys: sshKeyIds,
-    size: 'c-32' || '1gb',
+    size: '1gb',
     user_data: cloudInit,
     private_networking: null,
     image: 57308931,
