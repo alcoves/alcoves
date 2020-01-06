@@ -1,3 +1,4 @@
+import ReactGA from 'react-ga';
 import UserStore from '../../data/User';
 import React, { useContext } from 'react';
 
@@ -12,15 +13,27 @@ import Navigation from '../Navigation/Navigation';
 import VideoEditor from '../VideoEditor/VideoEditor';
 
 import { observer } from 'mobx-react-lite';
-import { Route, Switch } from 'react-router-dom';
+import { createBrowserHistory } from 'history';
+import { Router, Route, Switch } from 'react-router-dom';
+
+const history = createBrowserHistory();
+
+history.listen(location => {
+  ReactGA.set({ page: location.pathname });
+  ReactGA.pageview(location.pathname);
+});
 
 export default observer(p => {
-  const userStore = useContext(UserStore);
+  const user = useContext(UserStore);
   const accessToken = localStorage.getItem('accessToken');
-  userStore.login(accessToken);
+  user.login(accessToken);
+
+  if (user.isLoggedIn()) {
+    ReactGA.set({ userId: user.id });
+  }
 
   return (
-    <div>
+    <Router history={history}>
       <Navigation {...p}>
         <Switch>
           <Route path='/' exact render={rp => <Home {...rp} {...p} />} />
@@ -36,6 +49,6 @@ export default observer(p => {
           <Route path='*' render={rp => <NotFound {...rp} {...p} />} />
         </Switch>
       </Navigation>
-    </div>
+    </Router>
   );
 });
