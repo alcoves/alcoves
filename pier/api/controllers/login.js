@@ -20,17 +20,17 @@ exports.login = async (req, res) => {
 
         // TODO :: Add logic for refresh token
 
-        const refreshToken = jwt.sign(
-          { email: user.email, id: user.id, userName: user.userName },
-          process.env.JWT_KEY,
-          { expiresIn: '1d' }
-        );
+        // const refreshToken = jwt.sign(
+        //   { email: user.email, id: user.id, userName: user.userName },
+        //   process.env.JWT_KEY,
+        //   { expiresIn: '1d' }
+        // );
 
         res
-          .cookie('refreshToken', refreshToken, {
-            httpOnly: true,
-            SameSite: 'Secure',
-          })
+          // .cookie('refreshToken', refreshToken, {
+          //   httpOnly: true,
+          //   SameSite: 'Secure',
+          // })
           .status(200)
           .send({
             message: 'login succeeded',
