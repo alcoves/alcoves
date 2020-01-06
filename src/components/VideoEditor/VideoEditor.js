@@ -107,6 +107,7 @@ export default observer(props => {
     return (
       <Container>
         <h1>{state.video.title}</h1>
+        <h3>{state.video._id}</h3>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <div>{renderFiles()}</div>
           <div>

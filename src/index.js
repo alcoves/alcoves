@@ -3,18 +3,11 @@ import 'semantic-ui-css/semantic.min.css';
 import './index.css';
 
 import React from 'react';
+import ReactGA from 'react-ga';
 import ReactDOM from 'react-dom';
 import App from './components/App/App';
 
-import { BrowserRouter } from 'react-router-dom';
-
-const Index = () => {
-  return (
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  );
-};
+ReactGA.initialize('UA-77834417-2');
 
 const Root = document.getElementById('root');
-ReactDOM.render(<Index />, Root);
+ReactDOM.render(<App />, Root);
