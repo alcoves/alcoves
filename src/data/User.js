@@ -15,10 +15,13 @@ export class User {
   async login(accessToken) {
     try {
       if (accessToken) {
-        const decoded = jwt.decode(accessToken, {
-          complete: true,
-        });
-        if (decoded) {
+        const decoded = jwt.decode(accessToken, { complete: true });
+
+        const isTokenExpired = token => {
+          return token.payload.exp < Date.now() / 1000;
+        };
+
+        if (decoded && !isTokenExpired(decoded)) {
           localStorage.setItem('accessToken', accessToken);
           this.id = decoded.payload.id;
           this.email = decoded.payload.email;
