@@ -30,18 +30,19 @@ app.use((req, res, next) => {
   next(error);
 });
 
-app.use((error, req, res, next) => {
-  axios
-    .post(process.env.DISCORD_WEBHOOK_URL, {
-      content: JSON.stringify(error),
-      username: 'API Error Bot',
-    })
-    .then(() => {
-      res.status(500).send({
-        message: error.message || 'unknown',
-        error,
+app.use(async (error, req, res, next) => {
+  if (error && error.status) {
+    if (error.status >= 500) {
+      await axios.post(process.env.DISCORD_WEBHOOK_URL, {
+        content: JSON.stringify({ error, req }),
+        username: 'API Error Bot',
       });
+    }
+    res.status(error.status || 500).send({
+      message: error.message || 'unknown',
+      error,
     });
+  }
 });
 
 module.exports = app;
