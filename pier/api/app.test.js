@@ -12,10 +12,3 @@ describe('should test root routes', () => {
     expect(res.body.length).toEqual(10228);
   });
 });
-
-// describe('should test video routes', () => {
-//   test('should return 200', async () => {
-//     const res = await request(app).get('/videos');
-//     expect(res.body).toEqual('welcome to the api');
-//   });
-// });
