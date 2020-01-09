@@ -74,27 +74,29 @@ export default observer(props => {
   };
 
   const renderFiles = () => {
-    return Object.entries(state.video.files).map(([quality, fileObj]) => {
-      return (
-        <div key={quality} style={{ margin: '5px 0px 5px 0px' }}>
-          <Label as='a' color='grey'>
-            {fileObj.status === 'completed' ? (
-              <Icon color='green' name='check circle outline' />
-            ) : (
-              <Icon color='yellow' loading name='setting' />
-            )}
-            {quality}
-            <Label.Detail>{`${fileObj.percentCompleted}%`}</Label.Detail>
-            {fileObj.startedAt && fileObj.completedAt ? (
-              <Label.Detail>{`took ${timeConversion(
-                fileObj.startedAt,
-                fileObj.completedAt,
-              )}`}</Label.Detail>
-            ) : null}
-          </Label>
-        </div>
-      );
-    });
+    if (state.video.files) {
+      return Object.entries(state.video.files).map(([quality, fileObj]) => {
+        return (
+          <div key={quality} style={{ margin: '5px 0px 5px 0px' }}>
+            <Label as='a' color='grey'>
+              {fileObj.status === 'completed' ? (
+                <Icon color='green' name='check circle outline' />
+              ) : (
+                <Icon color='yellow' loading name='setting' />
+              )}
+              {quality}
+              <Label.Detail>{`${fileObj.percentCompleted}%`}</Label.Detail>
+              {fileObj.conversionStartTime && fileObj.conversionCompleteTime ? (
+                <Label.Detail>{`took ${timeConversion(
+                  fileObj.conversionStartTime,
+                  fileObj.conversionCompleteTime,
+                )}`}</Label.Detail>
+              ) : null}
+            </Label>
+          </div>
+        );
+      });
+    }
   };
 
   if (state.loading) {
