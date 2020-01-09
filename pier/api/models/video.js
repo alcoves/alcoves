@@ -17,6 +17,7 @@ const videoSchema = new Schema(
   {
     title: { type: String, required: true },
     status: { type: String, required: true },
+    sourceFile: { type: String, required: false },
     _id: { type: String, default: shortid.generate },
     author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     thumbnail: { type: String, default: defaultThumbnail, required: true },

@@ -6,7 +6,7 @@ const convertObjectToDotNotation = require('../lib/convertObjectToDotNotation');
 const { MEDIA_BUCKET_NAME } = require('../config/config');
 
 const buildSourceFileKey = (id, fileType) => {
-  return `${id}/highQuality.${mime.extension(fileType)}`;
+  return `${id}/source.${mime.extension(fileType)}`;
 };
 
 const emptyS3Dir = async (Prefix) => {
@@ -33,14 +33,10 @@ exports.createMultipartUpload = async (req, res) => {
       { _id: video._id },
       {
         $set: convertObjectToDotNotation({
-          files: {
-            highQuality: {
-              status: 'queuing',
-              percentCompleted: 0,
-              objectBucket: MEDIA_BUCKET_NAME,
-              objectKey: buildSourceFileKey(video._id, req.body.fileType),
-            },
-          },
+          sourceFile: `${MEDIA_BUCKET_NAME}/${buildSourceFileKey(
+            video._id,
+            req.body.fileType
+          )}`,
         }),
       }
     );
