@@ -6,12 +6,12 @@ import { Loader } from 'semantic-ui-react';
 import { observer, useObservable } from 'mobx-react-lite';
 
 const pickVideoUrl = files => {
-  if (files['2160p'] && files['2160p'].link) return { quality: '2160p', link: files['2160p'].link };
-  if (files['1440p'] && files['1440p'].link) return { quality: '1440p', link: files['1440p'].link };
-  if (files['1080p'] && files['1080p'].link) return { quality: '1080p', link: files['1080p'].link };
-  if (files['720p'] && files['720p'].link) return { quality: '720p', link: files['720p'].link };
-
-  return { quality: 'highQuality', link: files['highQuality'].link };
+  if (files['2160p'] && files['2160p'].link) return { format: '2160p', link: files['2160p'].link };
+  if (files['1440p'] && files['1440p'].link) return { format: '1440p', link: files['1440p'].link };
+  if (files['1080p'] && files['1080p'].link) return { format: '1080p', link: files['1080p'].link };
+  if (files['720p'] && files['720p'].link) return { format: '720p', link: files['720p'].link };
+  if (files['highQuality'] && files['highQuality'].link)
+    return { format: 'highQuality', link: files['highQuality'].link };
 };
 
 export default observer(props => {
@@ -24,12 +24,16 @@ export default observer(props => {
 
   const handleRefresh = () => {
     api({ url: `/videos/${props.id}`, method: 'get' }).then(({ data }) => {
-      const { quality, link } = pickVideoUrl(data.payload.files);
-      state.loading = false;
+      const quality = pickVideoUrl(data.payload.files);
 
-      state.url = link;
-      state.title = data.payload.title;
-      state.percentCompleted = data.payload.files[quality].percentCompleted;
+      if (!quality) {
+        state.loading = true;
+      } else {
+        state.loading = false;
+        state.url = quality.link;
+        state.title = data.payload.title;
+        state.percentCompleted = data.payload.files[quality.format].percentCompleted;
+      }
     });
   };
 
