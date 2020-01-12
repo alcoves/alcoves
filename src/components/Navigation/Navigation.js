@@ -61,12 +61,12 @@ export default observer(props => {
               <Button circular id='upload' icon='upload' onClick={handleClick} />
             </div>
             <div style={styles.menuItem}>
-              <Button circular id='' icon='video' onClick={handleClick} />
+              <Button circular id={`users/${user.id}`} icon='video' onClick={handleClick} />
             </div>
             <div style={styles.menuItem}>
               <Button
                 circular
-                id='profile'
+                id='account'
                 onClick={handleClick}
                 icon='user'
                 onClick={handleClick}

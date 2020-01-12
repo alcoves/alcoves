@@ -10,6 +10,7 @@ import Profile from '../Profile/Profile';
 import Register from '../Register/Register';
 import NotFound from '../NotFound/NotFound';
 import Navigation from '../Navigation/Navigation';
+import UserProfile from '../UserProfile/UserProfile';
 import VideoEditor from '../VideoEditor/VideoEditor';
 
 import { observer } from 'mobx-react-lite';
@@ -39,12 +40,13 @@ export default observer(p => {
           <Route path='/' exact render={rp => <Home {...rp} {...p} />} />
           <Route path='/login' exact render={rp => <Login {...rp} {...p} />} />
           <Route path='/register' exact render={rp => <Register {...rp} {...p} />} />
-          <Route path='/profile' exact render={rp => <Profile {...rp} {...p} />} />
+          <Route path='/account' exact render={rp => <Profile {...rp} {...p} />} />
           <Route path='/upload' exact render={rp => <Upload {...rp} {...p} />} />
           <Route
             path='/videos/:videoId'
             render={rp => <Video id={rp.match.params.videoId} {...rp} {...p} />}
           />
+          <Route path='/users/:userId' exact render={rp => <UserProfile {...rp} {...p} />} />
           <Route path='/editor/videos/:videoId' render={rp => <VideoEditor {...rp} {...p} />} />
           <Route path='*' render={rp => <NotFound {...rp} {...p} />} />
         </Switch>
