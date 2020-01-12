@@ -19,6 +19,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/', require('./routes/root'));
 app.use('/me', require('./routes/me'));
+app.use('/users', require('./routes/users'));
 app.use('/login', require('./routes/login'));
 app.use('/videos', require('./routes/videos'));
 app.use('/uploads', require('./routes/uploads'));
