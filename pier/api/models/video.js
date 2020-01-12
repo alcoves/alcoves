@@ -21,6 +21,7 @@ const videoSchema = new Schema(
     _id: { type: String, default: shortid.generate },
     author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     thumbnail: { type: String, default: defaultThumbnail, required: true },
+    views: { type: Number, default: 0, required: true },
     files: {
       '480p': { type: fileSchema },
       '720p': { type: fileSchema },

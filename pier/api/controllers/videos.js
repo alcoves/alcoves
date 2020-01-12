@@ -1,6 +1,10 @@
 const s3 = require('../config/s3');
 const mime = require('mime-types');
+const mongoose = require('mongoose');
+
 const Video = require('../models/video');
+const View = require('../models/view');
+
 const convertObjectToDotNotation = require('../lib/convertObjectToDotNotation');
 
 const { MEDIA_BUCKET_NAME } = require('../config/config');
@@ -81,6 +85,17 @@ exports.getVideos = async (req, res) => {
 
 exports.getVideo = async (req, res) => {
   try {
+    const view = new View({
+      _id: mongoose.Types.ObjectId(),
+      videoId: req.params.id,
+      // TODO :: Since getVideo is not an authed route, we don't have the userId here, we should have
+      // two auth middlewares, requireAuth, and optionalAuth
+    });
+
+    await view.save();
+
+    await Video.updateOne({ _id: req.params.id }, { $inc: { views: 1 } });
+
     res.status(200).send({
       message: 'query for video was successfull',
       payload: await Video.findOne({ _id: req.params.id }).populate(
