@@ -143,9 +143,17 @@ exports.deleteVideo = async (req, res) => {
       return res.status(401).send();
     } else {
       await emptyS3Dir(req.params.id);
-      await View.deleteMany({ videoId: req.params.id });
-      await Video.deleteOne({ _id: req.params.id });
-      res.status(200).send({ message: 'video deleted' });
+      // TODO :: Delete comments
+      const viewDeleteRes = await View.deleteMany({ videoId: req.params.id });
+      const videoDeleteRes = await Video.deleteOne({ _id: req.params.id });
+
+      res.status(400).send({
+        message: 'video was deleted',
+        payload: {
+          videosDeleted: videoDeleteRes.deletedCount,
+          viewsDeleted: viewDeleteRes.deletedCount,
+        },
+      });
     }
   } catch (error) {
     console.error(error);
