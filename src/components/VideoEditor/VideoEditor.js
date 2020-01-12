@@ -113,10 +113,10 @@ export default observer(props => {
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <div>{renderFiles()}</div>
           <div>
-            <Button id={state.video._id} type='primary' onClick={handleView}>
+            <Button id={state.video._id} basic color='teal' onClick={handleView}>
               View
             </Button>
-            <Button id={state.video._id} type='danger' onClick={handleDelete}>
+            <Button id={state.video._id} negative onClick={handleDelete}>
               Delete
             </Button>
           </div>
