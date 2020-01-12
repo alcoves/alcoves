@@ -28,7 +28,7 @@ exports.createMultipartUpload = async (req, res) => {
   try {
     const video = await Video({
       status: 'uploading',
-      author: req.user.id,
+      userId: req.user.id,
       title: req.body.fileName,
     }).save();
 
@@ -69,8 +69,8 @@ exports.getVideos = async (req, res) => {
   try {
     res.status(200).send({
       message: 'query for videos was successfull',
-      payload: await Video.find({ author: req.user.id })
-        .populate('author', '_id email userName')
+      payload: await Video.find({ userId: req.user.id })
+        .populate('userId', '_id email userName')
         .sort({
           createdAt: 'descending',
         }),
@@ -100,7 +100,7 @@ exports.getVideo = async (req, res) => {
     }
 
     const video = await Video.findOne({ _id: req.params.id }).populate(
-      'author',
+      'userId',
       '_id email userName'
     );
 
