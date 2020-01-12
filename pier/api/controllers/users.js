@@ -19,7 +19,9 @@ exports.getUserVideosByUserId = async (req, res) => {
   try {
     res.status(200).send({
       message: 'successfully fetched user videos',
-      payload: await Video.find({ author: req.params.userId }),
+      payload: await Video.find({ author: req.params.userId }).sort({
+        createdAt: 'descending',
+      }),
     });
   } catch (error) {
     console.error(error);
