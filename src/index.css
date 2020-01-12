@@ -1,21 +1,64 @@
 body {
   margin: 0;
   padding: 0;
+  color: #ffffff;
   background: #1f2430;
-  font-family: 'Work Sans', sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-code,
-pre {
+/* width */
+::-webkit-scrollbar {
+  width: 17px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #1f2430;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #272d3c;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(47, 55, 73);
+}
+
+h1 {
   color: #ffffff;
   font-weight: 400;
+}
+
+h2 {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+h3 {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+h4 {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+h5 {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+h6 {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+p {
+  color: #ffffff;
+  font-weight: 300;
 }
 
 video {
