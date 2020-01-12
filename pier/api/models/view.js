@@ -4,8 +4,8 @@ const Schema = mongoose.Schema;
 const viewSchema = new Schema(
   {
     _id: Schema.Types.ObjectId,
-    videoId: { type: String, ref: 'Video', required: true },
     userId: { type: Schema.Types.ObjectId, ref: 'User' },
+    videoId: { type: String, ref: 'Video', required: true, index: true },
   },
   { timestamps: true }
 );

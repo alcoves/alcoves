@@ -143,12 +143,9 @@ exports.deleteVideo = async (req, res) => {
       return res.status(401).send();
     } else {
       await emptyS3Dir(req.params.id);
-      const result = await Video.deleteOne({ _id: req.params.id });
-      if (result.deletedCount >= 1) {
-        res.status(200).send({ message: 'video deleted' });
-      } else {
-        res.status(400).send({ message: 'video was not deleted' });
-      }
+      await View.deleteMany({ videoId: req.params.id });
+      await Video.deleteOne({ _id: req.params.id });
+      res.status(200).send({ message: 'video deleted' });
     }
   } catch (error) {
     console.error(error);
