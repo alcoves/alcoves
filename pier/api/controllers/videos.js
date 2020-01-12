@@ -85,7 +85,9 @@ exports.getVideos = async (req, res) => {
 
 exports.getVideo = async (req, res) => {
   try {
-    if (req.get('Referrer').includes('https://bken.io')) {
+    const referrer = req.get('Referrer');
+
+    if (referrer && referrer.includes('https://bken.io')) {
       const view = new View({
         _id: mongoose.Types.ObjectId(),
         videoId: req.params.id,
@@ -97,18 +99,24 @@ exports.getVideo = async (req, res) => {
       await Video.updateOne({ _id: req.params.id }, { $inc: { views: 1 } });
     }
 
-    res.status(200).send({
-      message: 'query for video was successfull',
-      payload: await Video.findOne({ _id: req.params.id }).populate(
-        'author',
-        '_id email userName'
-      ),
-    });
+    const video = await Video.findOne({ _id: req.params.id }).populate(
+      'author',
+      '_id email userName'
+    );
+
+    if (video) {
+      res.status(200).send({
+        message: 'query for video was successfull',
+        payload: video,
+      });
+    } else {
+      return res.status(404).send({
+        message: 'not found',
+      });
+    }
   } catch (error) {
     console.error(error);
-    return res.status(404).send({
-      message: 'not found',
-    });
+    throw error;
   }
 };
 
