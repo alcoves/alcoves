@@ -16,6 +16,7 @@ const pickVideoUrl = files => {
 
 export default observer(props => {
   const state = useObservable({
+    video: {},
     url: '',
     title: '',
     loading: true,
@@ -33,6 +34,8 @@ export default observer(props => {
         state.url = quality.link;
         state.title = data.payload.title;
         state.percentCompleted = data.payload.files[quality.format].percentCompleted;
+
+        state.video = data.payload;
       }
     });
   };
@@ -69,6 +72,7 @@ export default observer(props => {
         </div>
         <div style={{ padding: '10px' }}>
           <h3 style={{ color: 'white', padding: '5px' }}>{state.title}</h3>
+          <h3 style={{ color: 'white', padding: '5px' }}>Views: {state.video.views}</h3>
           <h5>{`quality: ${
             state.url.split('/')[state.url.split('/').length - 1].split('.')[0]
           }`}</h5>
