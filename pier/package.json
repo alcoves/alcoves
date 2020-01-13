@@ -21,7 +21,7 @@
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.4",
     "cors": "^2.8.5",
-    "do-wrapper": "^3.25.3",
+    "do-wrapper": "^4.0.0-alpha.1",
     "dotenv": "^8.2.0",
     "express": "^5.0.0-alpha.7",
     "jsonwebtoken": "^8.5.1",
