@@ -39,4 +39,6 @@ const videoSchema = new Schema(
   { timestamps: true }
 );
 
+videoSchema.index({ title: 'text' });
+
 module.exports = mongoose.model('Video', videoSchema);

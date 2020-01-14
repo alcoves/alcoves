@@ -21,6 +21,7 @@ app.use('/', require('./routes/root'));
 app.use('/me', require('./routes/me'));
 app.use('/users', require('./routes/users'));
 app.use('/login', require('./routes/login'));
+app.use('/search', require('./routes/search'));
 app.use('/videos', require('./routes/videos'));
 app.use('/uploads', require('./routes/uploads'));
 app.use('/register', require('./routes/register'));
