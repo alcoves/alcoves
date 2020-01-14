@@ -9,6 +9,7 @@ import Upload from '../Upload/Upload';
 import Profile from '../Profile/Profile';
 import Register from '../Register/Register';
 import NotFound from '../NotFound/NotFound';
+import SearchPage from '../SearchPage/SearchPage';
 import Navigation from '../Navigation/Navigation';
 import UserProfile from '../UserProfile/UserProfile';
 import VideoEditor from '../VideoEditor/VideoEditor';
@@ -42,6 +43,7 @@ export default observer(p => {
           <Route path='/register' exact render={rp => <Register {...rp} {...p} />} />
           <Route path='/account' exact render={rp => <Profile {...rp} {...p} />} />
           <Route path='/upload' exact render={rp => <Upload {...rp} {...p} />} />
+          <Route path='/search*' exact render={rp => <SearchPage {...rp} {...p} />} />
           <Route
             path='/videos/:videoId'
             render={rp => <Video id={rp.match.params.videoId} {...rp} {...p} />}

@@ -5,6 +5,8 @@ import { Button } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
 import { useHistory } from 'react-router-dom';
 
+import SearchBar from '../SearchBar/SearchBar';
+
 export default observer(props => {
   const history = useHistory();
   const user = useContext(UserStore);
@@ -54,6 +56,9 @@ export default observer(props => {
               onClick={handleClick}
             />
           </div>
+        </div>
+        <div style={styles.menuContainer}>
+          <SearchBar />
         </div>
         {user.isLoggedIn() ? (
           <div style={styles.menuContainer}>
