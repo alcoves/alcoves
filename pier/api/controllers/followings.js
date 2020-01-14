@@ -11,7 +11,7 @@ exports.getFollowings = async (req, res) => {
       message: 'success',
       payload: await Following.find({
         followerId: req.user.id,
-      }),
+      }).populate('followeeId', '_id userName'),
     });
   } catch (error) {
     console.error(error);
