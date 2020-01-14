@@ -13,5 +13,13 @@ export default observer(() => {
     }
   };
 
-  return <Input onKeyDown={handleChange} size='small' placeholder='Search' icon='search' />;
+  return (
+    <Input
+      style={{ width: '100%', minWidth: '300px' }}
+      onKeyDown={handleChange}
+      size='small'
+      placeholder='Search'
+      icon='search'
+    />
+  );
 });

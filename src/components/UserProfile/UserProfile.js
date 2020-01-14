@@ -70,17 +70,18 @@ const FollowButton = observer(props => {
   };
 
   const loadButton = async () => {
+    state.isFollowing = false;
+    state.loading = true;
+
     api({
       method: 'get',
       url: `/followings`,
     })
       .then(res => {
-        state.isFollowing = res.data.payload.length
-          ? res.data.payload.reduce((acc = false, cv) => {
-              if (props.followeeId === cv.followeeId) acc = true;
-              return acc;
-            })
-          : false;
+        res.data.payload.map(following => {
+          console.log('following', following);
+          if (props.followeeId === following.followeeId._id) state.isFollowing = true;
+        });
 
         state.loading = false;
       })
