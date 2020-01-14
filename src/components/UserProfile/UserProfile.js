@@ -3,7 +3,7 @@ import UserStore from '../../data/User';
 import React, { useContext } from 'react';
 
 import { useHistory } from 'react-router-dom';
-import { Loader, Button, Grid } from 'semantic-ui-react';
+import { Loader, Button } from 'semantic-ui-react';
 import { observer, useObservable } from 'mobx-react-lite';
 
 import VideoGrid from '../VideoGrid/VideoGrid';
@@ -21,7 +21,7 @@ const Videos = observer(props => {
       url: `/users/${props.userId}/videos`,
     })
       .then(res => {
-        console.log(res);
+        console.log('videos query', res);
         state.videos = res.data.payload;
         state.loading = false;
       })
@@ -32,6 +32,81 @@ const Videos = observer(props => {
     return <Loader active inline='centered' style={{ marginTop: '30px' }} />;
   } else {
     return <VideoGrid videos={state.videos} isEditor={Boolean(props.userId === user.id)} />;
+  }
+});
+
+const FollowButton = observer(props => {
+  const state = useObservable({
+    loading: true,
+    isFollowing: false,
+  });
+
+  const handleFollow = async () => {
+    try {
+      await api({
+        method: 'post',
+        url: '/followings',
+        data: { followeeId: props.followeeId },
+      });
+
+      await loadButton();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleUnfollow = async () => {
+    try {
+      await api({
+        method: 'delete',
+        url: '/followings',
+        data: { followeeId: props.followeeId },
+      });
+
+      await loadButton();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const loadButton = async () => {
+    api({
+      method: 'get',
+      url: `/followings`,
+    })
+      .then(res => {
+        state.isFollowing = res.data.payload.length
+          ? res.data.payload.reduce((acc = false, cv) => {
+              if (props.followeeId === cv.followeeId) acc = true;
+              return acc;
+            })
+          : false;
+
+        state.loading = false;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+
+    return null;
+  };
+
+  if (state.loading) {
+    loadButton();
+  } else {
+    if (state.isFollowing) {
+      return (
+        <Button basic color='teal' onClick={handleUnfollow}>
+          Unfollow
+        </Button>
+      );
+    } else {
+      return (
+        <Button basic color='teal' onClick={handleFollow}>
+          Follow
+        </Button>
+      );
+    }
   }
 });
 
@@ -49,7 +124,7 @@ export default observer(props => {
       url: `/users/${props.match.params.userId}`,
     })
       .then(res => {
-        console.log(res);
+        console.log('users query', res);
         state.user = res.data.payload;
         state.loading = false;
       })
@@ -86,7 +161,7 @@ export default observer(props => {
             }}>
             <h2> {state.user.userName} </h2>
             <div>
-              <Button disabled>Subscribe</Button>
+              <FollowButton followeeId={props.match.params.userId} />
             </div>
           </div>
         </div>
