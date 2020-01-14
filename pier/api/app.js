@@ -24,6 +24,7 @@ app.use('/login', require('./routes/login'));
 app.use('/videos', require('./routes/videos'));
 app.use('/uploads', require('./routes/uploads'));
 app.use('/register', require('./routes/register'));
+app.use('/followings', require('./routes/followings'));
 
 app.use((req, res, next) => {
   const error = new Error('not found');
