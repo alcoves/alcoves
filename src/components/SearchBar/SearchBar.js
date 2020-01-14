@@ -9,7 +9,7 @@ export default observer(() => {
 
   const handleChange = e => {
     if (e.key === 'Enter') {
-      history.push(`/search/?resource=users&text=${e.target.value}`);
+      history.push(`/search?resource=videos&text=${e.target.value}`);
     }
   };
 

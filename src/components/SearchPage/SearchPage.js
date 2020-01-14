@@ -8,8 +8,11 @@ export default observer(props => {
   const history = useHistory();
   const state = useObservable({
     loading: true,
+    resource: props.location.search.split('resource=')[1].split('&')[0],
     results: [],
   });
+
+  console.log(props);
 
   const search = async () => {
     try {
@@ -34,11 +37,19 @@ export default observer(props => {
         Search Results
         {state.results.map(result => {
           console.log(JSON.stringify(result, null, 2));
-          return (
-            <div key={result._id}>
-              <a href={`/users/${result._id}`}>{result.userName}</a>
-            </div>
-          );
+          if (state.resource === 'videos') {
+            return (
+              <div key={result._id}>
+                <a href={`/videos/${result._id}`}>{result.title}</a>
+              </div>
+            );
+          } else if (state.resource === 'users') {
+            return (
+              <div key={result._id}>
+                <a href={`/users/${result._id}`}>{result.userName}</a>
+              </div>
+            );
+          }
         })}
       </div>
     );
