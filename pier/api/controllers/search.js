@@ -12,11 +12,14 @@ exports.search = async (req, res) => {
     let searchResult;
 
     if (req.query.resource === 'users') {
-      searchResult = await User.find({
-        userName: new RegExp(escapeRegex(req.query.text), 'gi'),
-      });
+      searchResult = await User.find(
+        {
+          userName: new RegExp(escapeRegex(req.query.text), 'gi'),
+        },
+        '-password -email'
+      );
     } else if (req.query.resource === 'videos') {
-      searchResult = await User.find({
+      searchResult = await Video.find({
         title: new RegExp(escapeRegex(req.query.text), 'gi'),
       });
     } else {
