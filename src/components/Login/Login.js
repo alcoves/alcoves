@@ -13,7 +13,7 @@ export default observer(props => {
   const state = useObservable({
     email: '',
     password: '',
-    userName: '',
+    displayName: '',
     loading: false,
   });
 

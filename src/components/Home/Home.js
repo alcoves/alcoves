@@ -48,15 +48,15 @@ const SidebarNav = observer(() => {
           <h5>Following</h5>
         </div>
         {state.followings.map(following => {
-          console.log('following', following.followeeId.userName);
+          console.log('following', following.followee.displayName);
           return (
             <div
               onClick={() => {
-                history.push(`/users/${following.followeeId._id}`);
+                history.push(`/users/${following.followee._id}`);
               }}
               key={following._id}
               className='followerMenuItem'>
-              <p>{following.followeeId.userName}</p>
+              <p>{following.followee.displayName}</p>
             </div>
           );
         })}

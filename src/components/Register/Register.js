@@ -14,7 +14,7 @@ export default observer(props => {
     code: '',
     email: '',
     password: '',
-    userName: '',
+    displayName: '',
     loading: false,
   });
 
@@ -32,7 +32,7 @@ export default observer(props => {
           code: state.code,
           email: state.email,
           password: state.password,
-          userName: state.userName,
+          displayName: state.displayName,
         },
       });
 
@@ -53,10 +53,10 @@ export default observer(props => {
             <Form.Input
               fluid
               icon='user'
-              name='userName'
+              name='displayName'
               iconPosition='left'
-              value={state.userName}
-              placeholder='Username'
+              value={state.displayName}
+              placeholder='displayName'
               onChange={handleChange}
             />
             <Form.Input
