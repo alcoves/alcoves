@@ -88,6 +88,11 @@ input {
   background-color: #171b24 !important;
 }
 
+.ui.input.focus > input,
+.ui.input > input:focus {
+  color: #e2eeee;
+}
+
 .ui.form .field .ui.input input,
 .ui.form .fields .field .ui.input input {
   color: #e2eeee;
