@@ -106,10 +106,12 @@ export default observer(props => {
       </div>
     );
   } else {
+    console.log('video', JSON.stringify(state.video));
     return (
       <Container>
-        <h1>{state.video.title}</h1>
-        <h3>{state.video._id}</h3>
+        <h1>video title: {state.video.title}</h1>
+        <h3>video id: {state.video._id}</h3>
+        <h3>status: {state.video.status}</h3>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <div>{renderFiles()}</div>
           <div>
