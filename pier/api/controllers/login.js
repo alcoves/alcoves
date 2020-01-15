@@ -13,7 +13,7 @@ exports.login = async (req, res) => {
 
       if (passwordsMatch) {
         const accessToken = jwt.sign(
-          { email: user.email, id: user.id, userName: user.userName },
+          { email: user.email, id: user.id, displayName: user.displayName },
           process.env.JWT_KEY,
           { expiresIn: '7d' }
         );
@@ -21,7 +21,7 @@ exports.login = async (req, res) => {
         // TODO :: Add logic for refresh token
 
         // const refreshToken = jwt.sign(
-        //   { email: user.email, id: user.id, userName: user.userName },
+        //   { email: user.email, id: user.id, displayName: user.displayName },
         //   process.env.JWT_KEY,
         //   { expiresIn: '1d' }
         // );

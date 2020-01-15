@@ -7,14 +7,12 @@ const escapeRegex = (t) => {
 
 exports.search = async (req, res) => {
   try {
-    console.log(req.query);
-    console.log(req.params);
     let searchResult;
 
     if (req.query.resource === 'users') {
       searchResult = await User.find(
         {
-          userName: new RegExp(escapeRegex(req.query.text), 'gi'),
+          displayName: new RegExp(escapeRegex(req.query.text), 'gi'),
         },
         '-password -email'
       );

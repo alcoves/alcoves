@@ -28,7 +28,7 @@ exports.createMultipartUpload = async (req, res) => {
   try {
     const video = await Video({
       status: 'uploading',
-      userId: req.user.id,
+      user: req.user.id,
       title: req.body.fileName,
     }).save();
 
@@ -69,8 +69,8 @@ exports.getVideos = async (req, res) => {
   try {
     res.status(200).send({
       message: 'query for videos was successfull',
-      payload: await Video.find({ userId: req.user.id })
-        .populate('userId', '_id email userName')
+      payload: await Video.find({ user: req.user.id })
+        .populate('user', '_id email displayName')
         .sort({
           createdAt: 'descending',
         }),
@@ -90,7 +90,7 @@ exports.getVideo = async (req, res) => {
     if (referrer && referrer.includes('https://bken.io')) {
       const view = new View({
         _id: mongoose.Types.ObjectId(),
-        videoId: req.params.id,
+        video: req.params.id,
         // TODO :: Since getVideo is not an authed route, we don't have the userId here, we should have
         // two auth middlewares, requireAuth, and optionalAuth
       });
@@ -100,8 +100,8 @@ exports.getVideo = async (req, res) => {
     }
 
     const video = await Video.findOne({ _id: req.params.id }).populate(
-      'userId',
-      '_id email userName'
+      'user',
+      '_id email displayName'
     );
 
     if (video) {

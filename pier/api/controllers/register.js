@@ -23,13 +23,13 @@ exports.register = async (req, res) => {
       _id: mongoose.Types.ObjectId(),
       email: req.body.email,
       password: await bcrypt.hash(req.body.password, 10),
-      userName: req.body.userName,
+      displayName: req.body.displayName,
     });
 
     await user.save();
 
     const accessToken = jwt.sign(
-      { email: user.email, id: user.id, userName: user.userName },
+      { email: user.email, id: user.id, displayName: user.displayName },
       process.env.JWT_KEY,
       { expiresIn: '7d' }
     );

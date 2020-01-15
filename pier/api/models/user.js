@@ -5,7 +5,7 @@ const userSchema = new Schema(
   {
     _id: Schema.Types.ObjectId,
     password: { type: String, required: true },
-    userName: { type: String, required: true },
+    displayName: { type: String, required: true },
     email: {
       type: String,
       required: true,
@@ -16,6 +16,6 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
-userSchema.index({ userName: 'text' });
+userSchema.index({ displayName: 'text' });
 
 module.exports = mongoose.model('User', userSchema);
