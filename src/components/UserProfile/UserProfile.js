@@ -46,7 +46,7 @@ const FollowButton = observer(props => {
       await api({
         method: 'post',
         url: '/followings',
-        data: { followeeId: props.followeeId },
+        data: { followee: props.followee },
       });
 
       await loadButton();
@@ -60,7 +60,7 @@ const FollowButton = observer(props => {
       await api({
         method: 'delete',
         url: '/followings',
-        data: { followeeId: props.followeeId },
+        data: { followee: props.followee },
       });
 
       await loadButton();
@@ -80,7 +80,7 @@ const FollowButton = observer(props => {
       .then(res => {
         res.data.payload.map(following => {
           console.log('following', following);
-          if (props.followeeId === following.followeeId._id) state.isFollowing = true;
+          if (props.followee === following.followee._id) state.isFollowing = true;
         });
 
         state.loading = false;
@@ -160,9 +160,9 @@ export default observer(props => {
               alignItems: 'center',
               flexDirection: 'column',
             }}>
-            <h2> {state.user.userName} </h2>
+            <h2> {state.user.displayName} </h2>
             <div>
-              <FollowButton followeeId={props.match.params.userId} />
+              <FollowButton followee={props.match.params.userId} />
             </div>
           </div>
         </div>

@@ -33,7 +33,7 @@ export default observer(() => {
     return (
       <div style={styles.container}>
         <div style={styles.profile}>
-          <h1>Hey there, {user.userName}</h1>
+          <h1>Hey there, {user.displayName}</h1>
           <div style={styles.profileFooter}>
             <Button
               type='primary'

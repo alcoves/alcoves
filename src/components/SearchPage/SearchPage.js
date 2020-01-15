@@ -46,7 +46,7 @@ export default observer(props => {
           } else if (state.resource === 'users') {
             return (
               <div key={result._id}>
-                <a href={`/users/${result._id}`}>{result.userName}</a>
+                <a href={`/users/${result._id}`}>{result.displayName}</a>
               </div>
             );
           }
