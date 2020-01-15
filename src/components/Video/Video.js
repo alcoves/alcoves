@@ -18,7 +18,6 @@ export default observer(props => {
   const state = useObservable({
     video: {},
     url: '',
-    title: '',
     loading: true,
     percentCompleted: 0,
   });
@@ -30,12 +29,11 @@ export default observer(props => {
       if (!quality) {
         state.loading = true;
       } else {
-        state.loading = false;
+        state.video = data.payload;
         state.url = quality.link;
-        state.title = data.payload.title;
         state.percentCompleted = data.payload.files[quality.format].percentCompleted;
 
-        state.video = data.payload;
+        state.loading = false;
       }
     });
   };
@@ -63,6 +61,8 @@ export default observer(props => {
       maxHeight: 'calc((9 / 16) * 100vw',
     };
 
+    console.log(JSON.stringify(state.video));
+
     return (
       <div>
         <div style={outerDivStyle}>
@@ -71,11 +71,13 @@ export default observer(props => {
           </video>
         </div>
         <div style={{ padding: '10px' }}>
-          <h3 style={{ color: 'white', padding: '5px' }}>{state.title}</h3>
-          <h3 style={{ color: 'white', padding: '5px' }}>Views: {state.video.views}</h3>
-          <h5>{`quality: ${
-            state.url.split('/')[state.url.split('/').length - 1].split('.')[0]
-          }`}</h5>
+          <p>{state.video.title}</p>
+          <p>
+            {state.video.views} views • {state.video.createdAt}
+          </p>
+          <p>{`quality: ${state.url.split('/')[state.url.split('/').length - 1].split('.')[0]}`}</p>
+          <div>---</div>
+          <p>{state.video.user.displayName}</p>
         </div>
       </div>
     );
