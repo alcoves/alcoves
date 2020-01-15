@@ -44,7 +44,9 @@ const SidebarNav = observer(() => {
   } else {
     return (
       <div style={styles.container}>
-        <h4>Following</h4>
+        <div style={{ paddingLeft: '10px' }}>
+          <h5>Following</h5>
+        </div>
         {state.followings.map(following => {
           console.log('following', following.followeeId.userName);
           return (
