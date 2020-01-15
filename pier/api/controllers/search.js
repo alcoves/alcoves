@@ -19,7 +19,7 @@ exports.search = async (req, res) => {
     } else if (req.query.resource === 'videos') {
       searchResult = await Video.find({
         title: new RegExp(escapeRegex(req.query.text), 'gi'),
-      });
+      }).populate('user', 'displayName _id');
     } else {
       res.status(400).end();
     }
