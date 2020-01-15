@@ -88,14 +88,13 @@ exports.getVideo = async (req, res) => {
     const referrer = req.get('Referrer');
 
     if (referrer && referrer.includes('https://bken.io')) {
-      const view = new View({
+      await new View({
         _id: mongoose.Types.ObjectId(),
         video: req.params.id,
         // TODO :: Since getVideo is not an authed route, we don't have the userId here, we should have
         // two auth middlewares, requireAuth, and optionalAuth
-      });
+      }).save();
 
-      await view.save();
       await Video.updateOne({ _id: req.params.id }, { $inc: { views: 1 } });
     }
 

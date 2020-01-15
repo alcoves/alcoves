@@ -38,7 +38,10 @@ exports.createFollowing = async (req, res) => {
         followee: req.body.followee, // the user that is being followed
       }).save();
 
-      await User.updateOne({ _id: req.user.id }, { $inc: { followers: 1 } });
+      await User.updateOne(
+        { _id: req.body.followee },
+        { $inc: { followers: 1 } }
+      );
 
       res.status(200).send({
         message: 'success',
