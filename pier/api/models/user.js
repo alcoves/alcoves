@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const avatarSchema = new Schema({
+  link: { type: String },
+});
+
 const userSchema = new Schema(
   {
     _id: Schema.Types.ObjectId,
@@ -12,6 +16,11 @@ const userSchema = new Schema(
       required: true,
       unique: true,
       match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/,
+    },
+    avatars: {
+      original: { type: avatarSchema },
+      sm: { type: avatarSchema },
+      lg: { type: avatarSchema },
     },
   },
   { timestamps: true }
