@@ -93,7 +93,7 @@ export default observer(props => {
                   src={state.video.user.avatar}
                   style={{
                     borderRadius: '50%',
-                    pointer: 'cursor',
+                    cursor: 'pointer',
                   }}
                   onClick={() => history.push(`/users/${state.video.user._id}`)}
                 />
@@ -104,11 +104,9 @@ export default observer(props => {
                   style={{
                     display: 'flex',
                     alignItems: 'flex-end',
-                    pointer: 'cursor',
                     height: '50%',
                     // border: 'blue solid 1px',
-                  }}
-                  onClick={() => history.push(`/users/${state.video.user._id}`)}>
+                  }}>
                   {state.video.user.displayName}
                 </div>
                 <div
