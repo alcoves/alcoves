@@ -8,16 +8,16 @@ const followings = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true,
-      index: true,
     },
     followee: {
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true,
-      index: true,
     },
   },
   { timestamps: true }
 );
+
+followings.index({ follower: 1, followee: 1 }, { unique: false });
 
 module.exports = mongoose.model('Followings', followings);

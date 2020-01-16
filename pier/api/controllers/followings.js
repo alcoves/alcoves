@@ -33,6 +33,7 @@ exports.createFollowing = async (req, res) => {
     ) {
       res.status(400).send({ message: 'following already exists' });
     } else {
+      console.log(`${req.user.id} wants to follow ${req.body.followee}`);
       const following = await Following({
         follower: req.user.id, // the user that is following
         followee: req.body.followee, // the user that is being followed
@@ -64,6 +65,11 @@ exports.deleteFollowing = async (req, res) => {
       follower: req.user.id,
       followee: req.body.followee,
     });
+
+    await User.updateOne(
+      { _id: req.body.followee },
+      { $inc: { followers: -1 } }
+    );
 
     res.status(200).send();
   } catch (error) {

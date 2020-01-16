@@ -15,7 +15,7 @@
     "lint:fix": "prettier --write \"api/**/*.*\""
   },
   "dependencies": {
-    "aws-sdk": "^2.603.0",
+    "aws-sdk": "^2.604.0",
     "axios": "^0.19.1",
     "bcrypt": "^3.0.7",
     "body-parser": "^1.19.0",
