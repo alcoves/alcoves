@@ -20,7 +20,7 @@ export default observer(() => {
     try {
       console.log('completing video upload');
       state.queuing = true;
-      await api({
+      const completeRes = await api({
         method: 'post',
         url: '/uploads',
         data: {
@@ -31,7 +31,7 @@ export default observer(() => {
       });
 
       console.log('upload complete!');
-      history.push(`/editor/videos/${key.split('/')[0]}`);
+      history.push(`/editor/videos/${completeRes.data.payload.videoId}`);
     } catch (error) {
       console.error('complete video upload error', error);
     } finally {
