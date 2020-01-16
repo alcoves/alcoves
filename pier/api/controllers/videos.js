@@ -100,7 +100,7 @@ exports.getVideo = async (req, res) => {
 
     const video = await Video.findOne({ _id: req.params.id }).populate(
       'user',
-      '_id email displayName'
+      '_id email displayName avatar followers'
     );
 
     if (video) {
