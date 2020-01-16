@@ -143,7 +143,7 @@ exports.deleteVideo = async (req, res) => {
     } else if (videoRecord.status !== 'completed') {
       return res.status(400).send({ message: 'video is still processing' });
     } else {
-      await emptyS3Dir(req.params.id);
+      await emptyS3Dir(`videos/${req.params.id}`);
       // TODO :: Delete comments
       const viewDeleteRes = await View.deleteMany({ videoId: req.params.id });
       const videoDeleteRes = await Video.deleteOne({ _id: req.params.id });

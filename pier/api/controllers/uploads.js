@@ -34,7 +34,8 @@ exports.completeMultipartUpload = async (req, res) => {
       })
       .promise();
 
-    const videoId = req.body.key.split('/')[0];
+    // TODO :: This is hacky and breaks everything if we change the videos directory
+    const videoId = req.body.key.split('videos/')[1].split('/')[0];
 
     await Video.updateOne(
       { _id: req.body.key.split('/')[0] },
@@ -49,7 +50,13 @@ exports.completeMultipartUpload = async (req, res) => {
     );
 
     await convertSourceVideo({ videoId });
-    res.send({ message: 'completed upload', payload: data });
+    res.send({
+      message: 'completed upload',
+      payload: {
+        videoId,
+        s3: data,
+      },
+    });
   } catch (err) {
     console.log(err);
   }
