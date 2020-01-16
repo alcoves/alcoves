@@ -61,54 +61,25 @@ exports.uploadUserAvatar = async (req, res) => {
       };
     }
 
-    const smallAvatar = await sharp(req.file.buffer)
+    const avatarBuffer = await sharp(req.file.buffer)
       .extract(extractArea)
       .resize({
-        width: 40,
-        height: 40,
+        width: 300,
+        height: 300,
       })
-      .webp({
-        quality: 75,
-      })
-      .toBuffer();
-
-    const largeAvatar = await sharp(req.file.buffer)
-      .extract(extractArea)
-      .resize({
-        width: 200,
-        height: 200,
-      })
-      .webp({
+      .jpeg({
         quality: 80,
+        progressive: true,
       })
       .toBuffer();
 
-    const s3OrigRes = await s3
+    // TODO :: Should check before possibly overwriting
+    const s3Res = await s3
       .upload({
-        Body: req.file.buffer,
+        Body: avatarBuffer,
         Bucket: MEDIA_BUCKET_NAME,
-        ContentType: req.file.mimetype,
-        Key: `avatars/${req.user.id}/original.${mime.extension(
-          req.file.mimetype
-        )}`,
-      })
-      .promise();
-
-    const s3SmRes = await s3
-      .upload({
-        Body: smallAvatar,
-        Bucket: MEDIA_BUCKET_NAME,
-        ContentType: 'image/webp',
-        Key: `avatars/${req.user.id}/avatar-sm.jpg`,
-      })
-      .promise();
-
-    const s3LgRes = await s3
-      .upload({
-        Body: largeAvatar,
-        Bucket: MEDIA_BUCKET_NAME,
-        ContentType: 'image/webp',
-        Key: `avatars/${req.user.id}/avatar-lg.jpg`,
+        ContentType: 'image/jpeg',
+        Key: `avatars/${req.user.id}/avatar.jpg`,
       })
       .promise();
 
@@ -116,11 +87,7 @@ exports.uploadUserAvatar = async (req, res) => {
       { _id: req.user.id },
       {
         $set: convertObjectToDotNotation({
-          avatars: {
-            sm: { link: s3SmRes.Location },
-            lg: { link: s3LgRes.Location },
-            original: { link: s3OrigRes.Location },
-          },
+          avatar: s3Res.Location,
         }),
       }
     );

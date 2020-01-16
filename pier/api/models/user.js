@@ -1,9 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const avatarSchema = new Schema({
-  link: { type: String },
-});
+const avatarDefault =
+  'https://s3.us-east-2.wasabisys.com/media-bken/files/avatar.jpg';
 
 const userSchema = new Schema(
   {
@@ -17,11 +16,7 @@ const userSchema = new Schema(
       unique: true,
       match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/,
     },
-    avatars: {
-      original: { type: avatarSchema },
-      sm: { type: avatarSchema },
-      lg: { type: avatarSchema },
-    },
+    avatar: { type: String, required: true, default: avatarDefault },
   },
   { timestamps: true }
 );
