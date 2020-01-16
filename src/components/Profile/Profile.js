@@ -16,7 +16,7 @@ const styles = {
   card: {
     minWidth: '250px',
     width: '100%',
-    maxWidth: '300px',
+    maxWidth: '400px',
     padding: '10px',
     margin: '10px',
     borderRadius: '5px',
@@ -76,7 +76,6 @@ export default observer(() => {
         url: `/me`,
       });
 
-      console.log(res.data.payload);
       state.user = res.data.payload;
       state.loading = false;
     } catch (error) {
@@ -112,10 +111,10 @@ export default observer(() => {
       <div style={styles.container}>
         <div style={styles.card}>
           <div style={styles.avatarCircleContainer}>
-            {state.user.avatars ? (
+            {state.user.avatar ? (
               <img
                 alt='profile'
-                src={`${state.user.avatars.lg.link}?${Date.now()}`}
+                src={`${state.user.avatar}?${Date.now()}`}
                 style={styles.avatarCircle}
               />
             ) : (
