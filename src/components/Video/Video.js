@@ -2,7 +2,8 @@ import React from 'react';
 import api from '../../api/api';
 import useInterval from '../../lib/useInterval';
 
-import { Loader } from 'semantic-ui-react';
+import { useHistory } from 'react-router-dom';
+import { Loader, Container } from 'semantic-ui-react';
 import { observer, useObservable } from 'mobx-react-lite';
 
 const pickVideoUrl = files => {
@@ -15,11 +16,11 @@ const pickVideoUrl = files => {
 };
 
 export default observer(props => {
+  const history = useHistory();
   const state = useObservable({
     video: {},
     url: '',
     loading: true,
-    percentCompleted: 0,
   });
 
   const handleRefresh = () => {
@@ -31,8 +32,6 @@ export default observer(props => {
       } else {
         state.video = data.payload;
         state.url = quality.link;
-        state.percentCompleted = data.payload.files[quality.format].percentCompleted;
-
         state.loading = false;
       }
     });
@@ -43,17 +42,11 @@ export default observer(props => {
   }
 
   useInterval(() => {
-    if (state.percentCompleted !== 100) {
-      handleRefresh();
-    }
+    if (state.loading) handleRefresh();
   }, 3000);
 
   if (state.loading || !state.url) {
-    return (
-      <Loader active inline='centered' style={{ marginTop: '30px' }}>
-        {`${state.percentCompleted}%`}
-      </Loader>
-    );
+    return <Loader active inline='centered' style={{ marginTop: '30px' }} />;
   } else {
     const outerDivStyle = {
       backgroundColor: '#000000',
@@ -70,14 +63,66 @@ export default observer(props => {
             <source src={state.url} type='video/mp4' />
           </video>
         </div>
-        <div style={{ padding: '10px' }}>
-          <p>{state.video.title}</p>
-          <p>
-            {state.video.views} views • {state.video.createdAt}
-          </p>
-          <p>{`quality: ${state.url.split('/')[state.url.split('/').length - 1].split('.')[0]}`}</p>
-          <div>---</div>
-          <p>{state.video.user.displayName}</p>
+
+        <div>
+          <Container style={{ marginTop: '20px' }}>
+            <div>
+              <h2>{state.video.title}</h2>
+              <p>
+                {state.video.views} views • {state.video.createdAt} •
+                {state.url.split('/')[state.url.split('/').length - 1].split('.')[0]}
+              </p>
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                marginTop: '10px',
+                height: '75px',
+              }}>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginRight: '10px',
+                }}>
+                <img
+                  width={50}
+                  height={50}
+                  alt='profile'
+                  src={state.video.user.avatar}
+                  style={{
+                    borderRadius: '50%',
+                    pointer: 'cursor',
+                  }}
+                  onClick={() => history.push(`/users/${state.video.user._id}`)}
+                />
+              </div>
+
+              <div style={{ height: '100%' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'flex-end',
+                    pointer: 'cursor',
+                    height: '50%',
+                    // border: 'blue solid 1px',
+                  }}
+                  onClick={() => history.push(`/users/${state.video.user._id}`)}>
+                  {state.video.user.displayName}
+                </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    height: '50%',
+                    // border: 'blue solid 1px',
+                  }}>
+                  {state.video.user.followers} followers
+                </div>
+              </div>
+            </div>
+          </Container>
         </div>
       </div>
     );
