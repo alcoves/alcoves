@@ -10,7 +10,7 @@ const convertObjectToDotNotation = require('../lib/convertObjectToDotNotation');
 const { MEDIA_BUCKET_NAME } = require('../config/config');
 
 const buildSourceFileKey = (id, fileType) => {
-  return `${id}/source.${mime.extension(fileType)}`;
+  return `videos/${id}/source.${mime.extension(fileType)}`;
 };
 
 const emptyS3Dir = async (Prefix) => {
