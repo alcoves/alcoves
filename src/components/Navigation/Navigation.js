@@ -1,15 +1,19 @@
 import React, { useContext } from 'react';
 import UserStore from '../../data/User';
 
-import { Button } from 'semantic-ui-react';
-import { observer } from 'mobx-react-lite';
+import { observer, useObservable } from 'mobx-react-lite';
 import { useHistory } from 'react-router-dom';
+import { Button, Header, Icon, Image, Menu, Segment, Sidebar } from 'semantic-ui-react';
 
 import SearchBar from '../SearchBar/SearchBar';
 
 export default observer(props => {
   const history = useHistory();
   const user = useContext(UserStore);
+
+  const state = useObservable({
+    visible: false,
+  });
 
   const handleClick = e => {
     history.push(`/${e.currentTarget.id}`);
@@ -30,7 +34,7 @@ export default observer(props => {
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      width: '70px',
+      width: '50px',
       height: '50px',
     },
     menuItem: {
@@ -47,6 +51,13 @@ export default observer(props => {
     <div>
       <div style={styles.menu}>
         <div style={styles.menuContainer}>
+          <div style={styles.logo}>
+            <Icon
+              name='bars'
+              style={{ cursor: 'pointer' }}
+              onClick={() => (state.visible = !state.visible)}
+            />
+          </div>
           <div style={styles.logo}>
             <img
               id=''
@@ -86,7 +97,90 @@ export default observer(props => {
           </div>
         )}
       </div>
-      <div>{props.children}</div>
+      <Sidebar.Pushable style={{ height: 'calc(100vh - 50px)' }}>
+        <Sidebar
+          vertical
+          inverted
+          as={Menu}
+          icon='labeled'
+          animation='overlay'
+          style={{ backgroundColor: '#171B24' }}
+          onHide={() => (state.visible = false)}
+          visible={state.visible}>
+          <Menu.Item as='a' style={{ width: '200px' }}>
+            <Icon name='home' />
+            Home
+          </Menu.Item>
+          <Menu.Item as='a'>
+            <Icon name='gamepad' />
+            Games
+          </Menu.Item>
+          <Menu.Item as='a'>
+            <Icon name='camera' />
+            Channels
+          </Menu.Item>
+        </Sidebar>
+        <Sidebar.Pusher>
+          <div>{props.children}</div>
+        </Sidebar.Pusher>
+      </Sidebar.Pushable>
     </div>
   );
 });
+
+// const SidebarNav = observer(() => {
+//   const history = useHistory();
+//   const state = useObservable({
+//     followings: [],
+//     loading: true,
+//   });
+
+//   const loadFollowings = async () => {
+//     try {
+//       api({
+//         method: 'get',
+//         url: `/followings`,
+//       }).then(res => {
+//         console.log(res.data.payload);
+//         state.followings = res.data.payload;
+//         state.loading = false;
+//       });
+//     } catch (error) {
+//       console.error(error);
+//     }
+//   };
+
+//   const styles = {
+//     container: {
+//       backgroundColor: '#171B24',
+//       width: '200px',
+//       height: 'calc(100vh - 50px)',
+//     },
+//   };
+
+//   if (state.loading) {
+//     loadFollowings();
+//     return <div style={styles.container}> loading </div>;
+//   } else {
+//     return (
+//       <div style={styles.container}>
+//         <div style={{ paddingLeft: '10px' }}>
+//           <h5>Following</h5>
+//         </div>
+//         {state.followings.map(following => {
+//           console.log('following', following.followee.displayName);
+//           return (
+//             <div
+//               onClick={() => {
+//                 history.push(`/users/${following.followee._id}`);
+//               }}
+//               key={following._id}
+//               className='followerMenuItem'>
+//               <p>{following.followee.displayName}</p>
+//             </div>
+//           );
+//         })}
+//       </div>
+//     );
+//   }
+// });

@@ -1,73 +1,12 @@
 import './Home.css';
 
 import api from '../../api/api';
-import UserStore from '../../data/User';
-import React, { useContext } from 'react';
+import React from 'react';
 
 import { Loader } from 'semantic-ui-react';
-import { useHistory } from 'react-router-dom';
 import { observer, useObservable } from 'mobx-react-lite';
 
-const SidebarNav = observer(() => {
-  const history = useHistory();
-  const state = useObservable({
-    followings: [],
-    loading: true,
-  });
-
-  const loadFollowings = async () => {
-    try {
-      api({
-        method: 'get',
-        url: `/followings`,
-      }).then(res => {
-        console.log(res.data.payload);
-        state.followings = res.data.payload;
-        state.loading = false;
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const styles = {
-    container: {
-      backgroundColor: '#171B24',
-      width: '200px',
-      height: 'calc(100vh - 50px)',
-    },
-  };
-
-  if (state.loading) {
-    loadFollowings();
-    return <div style={styles.container}> loading </div>;
-  } else {
-    return (
-      <div style={styles.container}>
-        <div style={{ paddingLeft: '10px' }}>
-          <h5>Following</h5>
-        </div>
-        {state.followings.map(following => {
-          console.log('following', following.followee.displayName);
-          return (
-            <div
-              onClick={() => {
-                history.push(`/users/${following.followee._id}`);
-              }}
-              key={following._id}
-              className='followerMenuItem'>
-              <p>{following.followee.displayName}</p>
-            </div>
-          );
-        })}
-      </div>
-    );
-  }
-});
-
 export default observer(() => {
-  const user = useContext(UserStore);
-  const history = useHistory();
   const state = useObservable({
     videos: [],
     loading: true,
@@ -86,7 +25,6 @@ export default observer(() => {
   } else {
     return (
       <div style={{ display: 'flex', flexDirection: 'row' }}>
-        <SidebarNav />
         <div>We are working on a new homepage!</div>{' '}
       </div>
     );
