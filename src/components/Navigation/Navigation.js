@@ -22,10 +22,10 @@ export default observer(props => {
   const styles = {
     menu: {
       height: '50px',
-      backgroundColor: '#171b24',
       display: 'flex',
-      justifyContent: 'space-between',
       alignItems: 'center',
+      backgroundColor: '#efefef',
+      justifyContent: 'space-between',
     },
     menuContainer: {
       display: 'flex',

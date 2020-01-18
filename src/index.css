@@ -1,8 +1,6 @@
 body {
   margin: 0;
   padding: 0;
-  color: #ffffff;
-  background: #1f2430;
   font-family: 'Montserrat', sans-serif;
 }
 
@@ -27,7 +25,7 @@ body {
 }
 
 h1 {
-  color: #abb0b6;
+  /* color: #abb0b6; */
   font-weight: 400;
   font-size: 2em;
   letter-spacing: 0em;
@@ -35,7 +33,7 @@ h1 {
 }
 
 h2 {
-  color: #abb0b6;
+  /* color: #abb0b6; */
   font-weight: 400;
   font-size: 1.7em;
   letter-spacing: 0em;
@@ -43,14 +41,14 @@ h2 {
 }
 
 h3 {
-  color: #abb0b6;
+  /* color: #abb0b6; */
   font-weight: 400;
   font-size: 1.17em;
   letter-spacing: 0em;
 }
 
 h4 {
-  color: #abb0b6;
+  /* color: #abb0b6; */
   font-weight: 700;
   letter-spacing: 0.15em;
   text-transform: uppercase;
@@ -58,7 +56,7 @@ h4 {
 }
 
 h5 {
-  color: #abb0b6;
+  /* color: #abb0b6; */
   font-weight: 700;
   letter-spacing: 0.15em;
   text-transform: uppercase;
@@ -66,7 +64,7 @@ h5 {
 }
 
 h6 {
-  color: #abb0b6;
+  /* color: #abb0b6; */
   font-weight: 700;
   letter-spacing: 0.15em;
   text-transform: uppercase;
@@ -74,7 +72,7 @@ h6 {
 }
 
 p {
-  color: #abb0b6;
+  /* color: #abb0b6; */
   font-weight: 400;
   font-size: 1em;
   line-height: 1.5em;
@@ -84,11 +82,11 @@ video {
   outline: none;
 }
 
-input {
+/* input {
   background-color: #171b24 !important;
-}
+} */
 
-.ui.input.focus > input,
+/* .ui.input.focus > input,
 .ui.input > input:focus {
   color: #e2eeee;
 }
@@ -96,7 +94,7 @@ input {
 .ui.form .field .ui.input input,
 .ui.form .fields .field .ui.input input {
   color: #e2eeee;
-}
+} */
 
 .ui.stacked.segment {
   background-color: transparent;
