@@ -56,7 +56,6 @@ export default observer(props => {
           flexDirection: 'column',
           alignItems: 'center',
           padding: '10px',
-          // border: 'solid red 1px',
         }}>
         <div
           style={{
@@ -66,8 +65,6 @@ export default observer(props => {
             maxWidth: '500px',
             width: '100%',
             marginTop: '25px',
-            color: '#efefef',
-            // border: 'solid red 1px',
           }}>
           Results
         </div>
