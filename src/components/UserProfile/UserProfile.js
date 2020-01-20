@@ -1,12 +1,10 @@
 import api from '../../api/api';
 import UserStore from '../../data/User';
 import React, { useContext } from 'react';
+import VideoGrid from '../VideoGrid/VideoGrid';
 
-import { useHistory } from 'react-router-dom';
 import { Loader, Button } from 'semantic-ui-react';
 import { observer, useObservable } from 'mobx-react-lite';
-
-import VideoGrid from '../VideoGrid/VideoGrid';
 
 const Videos = observer(props => {
   const user = useContext(UserStore);
@@ -36,8 +34,9 @@ const Videos = observer(props => {
 });
 
 const FollowButton = observer(props => {
+  const user = useContext(UserStore);
   const state = useObservable({
-    loading: true,
+    loading: false,
     isFollowing: false,
   });
 
@@ -92,7 +91,9 @@ const FollowButton = observer(props => {
     return null;
   };
 
-  if (state.loading) {
+  if (user.id === props.followee) {
+    return null;
+  } else if (!state.loading) {
     loadButton();
   } else {
     if (state.isFollowing) {
@@ -112,8 +113,6 @@ const FollowButton = observer(props => {
 });
 
 export default observer(props => {
-  const user = useContext(UserStore);
-  const history = useHistory();
   const state = useObservable({
     user: null,
     loading: true,
@@ -145,7 +144,7 @@ export default observer(props => {
               backgroundSize: 'cover',
               backgroundPosition: 'center center',
               backgroundRepeat: 'no-repeat',
-              backgroundImage: `radial-gradient(circle, rgba(255,255,255,.1) 0%, rgba(0,0,0,.7) 100%)`,
+              backgroundImage: `linear-gradient(15deg, #13547a 0%, #80d0c7 100%)`,
             }}
           />
           <div
@@ -158,12 +157,18 @@ export default observer(props => {
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
+              alignSelf: 'center',
               flexDirection: 'column',
             }}>
+            <img
+              src={state.user.avatar}
+              alt='avatar'
+              width='75px'
+              height='75px'
+              style={{ borderRadius: '50%' }}
+            />
             <h2> {state.user.displayName} </h2>
-            <div>
-              <FollowButton followee={props.match.params.userId} />
-            </div>
+            <FollowButton followee={props.match.params.userId} />
           </div>
         </div>
         <div style={{ padding: '5px 20px 20px 20px' }}>
