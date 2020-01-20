@@ -1,11 +1,10 @@
-import React, { useContext } from 'react';
 import UserStore from '../../data/User';
-
-import { observer, useObservable } from 'mobx-react-lite';
-import { useHistory } from 'react-router-dom';
-import { Button, Header, Icon, Image, Menu, Segment, Sidebar } from 'semantic-ui-react';
-
+import React, { useContext } from 'react';
 import SearchBar from '../SearchBar/SearchBar';
+
+import { useHistory } from 'react-router-dom';
+import { observer, useObservable } from 'mobx-react-lite';
+import { Button, Icon, Menu, Sidebar } from 'semantic-ui-react';
 
 export default observer(props => {
   const history = useHistory();
@@ -27,8 +26,9 @@ export default observer(props => {
       backgroundColor: '#efefef',
       justifyContent: 'space-between',
     },
-    menuContainer: {
+    menuCol: {
       display: 'flex',
+      minWidth: '160px',
     },
     logo: {
       display: 'flex',
@@ -50,7 +50,7 @@ export default observer(props => {
   return (
     <div>
       <div style={styles.menu}>
-        <div style={styles.menuContainer}>
+        <div style={styles.menuCol}>
           <div style={styles.logo}>
             <Icon
               name='bars'
@@ -68,11 +68,11 @@ export default observer(props => {
             />
           </div>
         </div>
-        <div style={styles.menuContainer}>
+        <div style={styles.menuCol}>
           <SearchBar />
         </div>
         {user.isLoggedIn() ? (
-          <div style={styles.menuContainer}>
+          <div style={styles.menuCol}>
             <div style={styles.menuItem}>
               <Button circular id='upload' icon='upload' onClick={handleClick} />
             </div>
@@ -90,7 +90,7 @@ export default observer(props => {
             </div>
           </div>
         ) : (
-          <div style={styles.menuContainer}>
+          <div style={styles.menuCol}>
             <div style={styles.menuItem}>
               <Button circular id='login' icon='user' onClick={handleClick} />
             </div>
@@ -100,11 +100,9 @@ export default observer(props => {
       <Sidebar.Pushable style={{ height: 'calc(100vh - 50px)' }}>
         <Sidebar
           vertical
-          inverted
           as={Menu}
           icon='labeled'
           animation='overlay'
-          style={{ backgroundColor: '#171B24' }}
           onHide={() => (state.visible = false)}
           visible={state.visible}>
           <Menu.Item as='a' style={{ width: '200px' }}>
