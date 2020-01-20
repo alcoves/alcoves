@@ -46,41 +46,39 @@ export default observer(props => {
     <Grid textAlign='center' style={{ marginTop: '50px' }} verticalAlign='middle'>
       <Grid.Column style={{ maxWidth: 450 }}>
         <Form size='large' onSubmit={handleSubmit}>
-          <Segment stacked>
-            <Form.Input
-              fluid
-              icon='mail'
-              name='email'
-              iconPosition='left'
-              value={state.email}
-              placeholder='E-mail address'
-              onChange={handleChange}
-            />
-            <Form.Input
-              fluid
-              icon='lock'
-              type='password'
-              name='password'
-              iconPosition='left'
-              placeholder='Password'
-              value={state.password}
-              onChange={handleChange}
-            />
-            <Grid>
-              <Grid.Column width={10}>
-                <Form.Button color='teal' fluid content='Login' />
-              </Grid.Column>
-              <Grid.Column width={6}>
-                <Button
-                  color='teal'
-                  basic
-                  fluid
-                  content='Or Register'
-                  onClick={() => history.push('/register')}
-                />
-              </Grid.Column>
-            </Grid>
-          </Segment>
+          <Form.Input
+            fluid
+            icon='mail'
+            name='email'
+            iconPosition='left'
+            value={state.email}
+            placeholder='E-mail address'
+            onChange={handleChange}
+          />
+          <Form.Input
+            fluid
+            icon='lock'
+            type='password'
+            name='password'
+            iconPosition='left'
+            placeholder='Password'
+            value={state.password}
+            onChange={handleChange}
+          />
+          <Grid>
+            <Grid.Column width={10}>
+              <Form.Button color='teal' fluid content='Login' />
+            </Grid.Column>
+            <Grid.Column width={6}>
+              <Button
+                color='teal'
+                basic
+                fluid
+                content='Or Register'
+                onClick={() => history.push('/register')}
+              />
+            </Grid.Column>
+          </Grid>
         </Form>
       </Grid.Column>
     </Grid>
