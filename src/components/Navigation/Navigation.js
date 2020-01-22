@@ -26,10 +26,6 @@ export default observer(props => {
       backgroundColor: '#efefef',
       justifyContent: 'space-between',
     },
-    menuCol: {
-      display: 'flex',
-      minWidth: '160px',
-    },
     logo: {
       display: 'flex',
       justifyContent: 'center',
@@ -50,7 +46,13 @@ export default observer(props => {
   return (
     <div>
       <div style={styles.menu}>
-        <div style={styles.menuCol}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-start',
+            minWidth: '150px',
+            flex: 1,
+          }}>
           <div style={styles.logo}>
             <Icon
               name='bars'
@@ -68,11 +70,18 @@ export default observer(props => {
             />
           </div>
         </div>
-        <div style={styles.menuCol}>
+        <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
           <SearchBar />
         </div>
         {user.isLoggedIn() ? (
-          <div style={styles.menuCol}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              minWidth: '150px',
+              paddingRight: '5px',
+              flex: 1,
+            }}>
             <div style={styles.menuItem}>
               <Button circular id='upload' icon='upload' onClick={handleClick} />
             </div>
@@ -90,7 +99,15 @@ export default observer(props => {
             </div>
           </div>
         ) : (
-          <div style={styles.menuCol}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              minWidth: '150px',
+              paddingRight: '5px',
+              flex: 1,
+              border: 'solid red 1px',
+            }}>
             <div style={styles.menuItem}>
               <Button circular id='login' icon='user' onClick={handleClick} />
             </div>
@@ -125,60 +142,3 @@ export default observer(props => {
     </div>
   );
 });
-
-// const SidebarNav = observer(() => {
-//   const history = useHistory();
-//   const state = useObservable({
-//     followings: [],
-//     loading: true,
-//   });
-
-//   const loadFollowings = async () => {
-//     try {
-//       api({
-//         method: 'get',
-//         url: `/followings`,
-//       }).then(res => {
-//         console.log(res.data.payload);
-//         state.followings = res.data.payload;
-//         state.loading = false;
-//       });
-//     } catch (error) {
-//       console.error(error);
-//     }
-//   };
-
-//   const styles = {
-//     container: {
-//       backgroundColor: '#171B24',
-//       width: '200px',
-//       height: 'calc(100vh - 50px)',
-//     },
-//   };
-
-//   if (state.loading) {
-//     loadFollowings();
-//     return <div style={styles.container}> loading </div>;
-//   } else {
-//     return (
-//       <div style={styles.container}>
-//         <div style={{ paddingLeft: '10px' }}>
-//           <h5>Following</h5>
-//         </div>
-//         {state.followings.map(following => {
-//           console.log('following', following.followee.displayName);
-//           return (
-//             <div
-//               onClick={() => {
-//                 history.push(`/users/${following.followee._id}`);
-//               }}
-//               key={following._id}
-//               className='followerMenuItem'>
-//               <p>{following.followee.displayName}</p>
-//             </div>
-//           );
-//         })}
-//       </div>
-//     );
-//   }
-// });

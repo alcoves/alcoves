@@ -1,10 +1,14 @@
+import dayjs from 'dayjs';
 import React from 'react';
 import api from '../../api/api';
 import useInterval from '../../lib/useInterval';
+import relativeTime from 'dayjs/plugin/relativeTime';
 
 import { useHistory } from 'react-router-dom';
 import { Loader, Container } from 'semantic-ui-react';
 import { observer, useObservable } from 'mobx-react-lite';
+
+dayjs.extend(relativeTime);
 
 const pickVideoUrl = files => {
   if (files['2160p'] && files['2160p'].link) return { format: '2160p', link: files['2160p'].link };
@@ -69,7 +73,7 @@ export default observer(props => {
             <div>
               <h2>{state.video.title}</h2>
               <p>
-                {state.video.views} views • {state.video.createdAt} •
+                {state.video.views} views • {dayjs(state.video.createdAt).fromNow()} •
                 {state.url.split('/')[state.url.split('/').length - 1].split('.')[0]}
               </p>
             </div>

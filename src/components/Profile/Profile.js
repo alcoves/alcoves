@@ -37,7 +37,7 @@ const styles = {
     width: '150px',
     height: '150px',
     borderRadius: '50%',
-    backgroundColor: '#1F2430',
+    backgroundColor: 'transparent',
     margin: '10px',
   },
   displayName: {
