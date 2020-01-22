@@ -144,31 +144,20 @@ export default observer(props => {
               backgroundSize: 'cover',
               backgroundPosition: 'center center',
               backgroundRepeat: 'no-repeat',
-              backgroundImage: `linear-gradient(15deg, #13547a 0%, #80d0c7 100%)`,
-            }}
-          />
-          <div
-            style={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              margin: '0px 20px 0px 20px',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              alignSelf: 'center',
-              flexDirection: 'column',
+              backgroundImage: `radial-gradient(circle, rgba(255,255,255,.1) 0%, rgba(0,0,0,.7) 100%)`,
             }}>
-            <img
-              src={state.user.avatar}
-              alt='avatar'
-              width='75px'
-              height='75px'
-              style={{ borderRadius: '50%' }}
-            />
-            <h2> {state.user.displayName} </h2>
-            <FollowButton followee={props.match.params.userId} />
+            <div
+              style={{
+                width: '100%',
+                height: '300px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <h2> {state.user.displayName} </h2>
+              <FollowButton followee={props.match.params.userId} />
+            </div>
           </div>
         </div>
         <div style={{ padding: '5px 20px 20px 20px' }}>
