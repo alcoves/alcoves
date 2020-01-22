@@ -1269,13 +1269,6 @@ diff-sequences@^24.9.0:
   resolved "https://registry.yarnpkg.com/diff-sequences/-/diff-sequences-24.9.0.tgz#5715d6244e2aa65f48bba0bc972db0b0b11e95b5"
   integrity sha512-Dj6Wk3tWyTE+Fo1rW8v0Xhwk80um6yFYKbuAxc9c3EZxIHFDYwbi34Uk42u1CdnIiVorvt4RmlSDjIPyzGC2ew==
 
-do-wrapper@3.25.4:
-  version "3.25.4"
-  resolved "https://registry.yarnpkg.com/do-wrapper/-/do-wrapper-3.25.4.tgz#83549f01e31367ef6a6f8be8e0ff478e98a6ca69"
-  integrity sha512-X06zJ9CU2fnPVc0tKIgpfXWoKvnUa+YBiIcCn95Fv02OXvEo/fXQPg9X5nreezPCEpuN96Vzw10PMoIsEV/W6A==
-  dependencies:
-    request "2.88.0"
-
 domexception@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/domexception/-/domexception-1.0.1.tgz#937442644ca6a31261ef36e3ec677fe805582c90"
@@ -3954,7 +3947,7 @@ request-promise-native@^1.0.5:
     stealthy-require "^1.1.1"
     tough-cookie "^2.3.3"
 
-request@2.88.0, request@^2.87.0:
+request@^2.87.0:
   version "2.88.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.88.0.tgz#9c2fca4f7d35b592efe57c7f0a55e81052124fef"
   integrity sha512-NAqBSrijGLZdM0WZNsInLJpkJokL72XYjUpnB0iwsRgxh7dB6COrHnTBNwN0E+lHDAJzu7kLAkDeY08z2/A0hg==

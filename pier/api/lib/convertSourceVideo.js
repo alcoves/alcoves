@@ -1,10 +1,12 @@
-const Do = require('do-wrapper').default;
-const api = new Do(process.env.DO_API_KEY, [50]);
+const doco = require('./do.js');
 
 module.exports = async ({ videoId }) => {
-  const { body } = await api.accountGetKeys();
+  const { data } = await doco({
+    method: 'get',
+    url: '/v2/account/keys',
+  });
 
-  const sshKeyIds = body.ssh_keys.map(({ id }) => {
+  const sshKeyIds = data.ssh_keys.map(({ id }) => {
     return id;
   });
 
@@ -30,18 +32,22 @@ module.exports = async ({ videoId }) => {
     - ${bashInit}
   `;
 
-  return api.dropletsCreate({
-    ipv6: true,
-    volumes: null,
-    region: 'nyc3',
-    backups: false,
-    tags: ['worker'],
-    monitoring: true,
-    ssh_keys: sshKeyIds,
-    size: '1gb',
-    user_data: cloudInit,
-    private_networking: null,
-    image: 57308931,
-    name: `worker`,
+  return doco({
+    method: 'post',
+    url: '/v2/droplets',
+    data: {
+      ipv6: true,
+      volumes: null,
+      region: 'nyc3',
+      backups: false,
+      tags: ['worker'],
+      monitoring: true,
+      ssh_keys: sshKeyIds,
+      size: '1gb',
+      user_data: cloudInit,
+      private_networking: null,
+      image: 57308931,
+      name: `worker`,
+    },
   });
 };
