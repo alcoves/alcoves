@@ -8,6 +8,7 @@
   "license": "GPL-3.0",
   "private": false,
   "scripts": {
+    "gql": "nodemon -r dotenv/config api/gql.js",
     "dev": "nodemon -r dotenv/config api/server.js",
     "start": "pm2 start api/server.js",
     "test": "jest --setupFiles dotenv/config --runInBand",
@@ -15,6 +16,7 @@
     "lint:fix": "prettier --write \"api/**/*.*\""
   },
   "dependencies": {
+    "apollo-server-express": "^2.9.16",
     "aws-sdk": "^2.608.0",
     "axios": "^0.19.1",
     "bcrypt": "^3.0.7",
