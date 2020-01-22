@@ -1,13 +1,13 @@
-const s3 = require('../config/s3');
+const s3 = require('../../src/config/s3');
 const mime = require('mime-types');
 const mongoose = require('mongoose');
 
 const Video = require('../models/video');
 const View = require('../models/view');
 
-const convertObjectToDotNotation = require('../lib/convertObjectToDotNotation');
+const convertObjectToDotNotation = require('../../src/lib/convertObjectToDotNotation');
 
-const { MEDIA_BUCKET_NAME } = require('../config/config');
+const { MEDIA_BUCKET_NAME } = require('../../src/config/config');
 
 const buildSourceFileKey = (id, fileType) => {
   return `videos/${id}/source.${mime.extension(fileType)}`;

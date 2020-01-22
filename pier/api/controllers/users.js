@@ -1,11 +1,11 @@
 const sharp = require('sharp');
 const mime = require('mime-types');
-const s3 = require('../config/s3');
+const s3 = require('../../src/config/s3');
 const User = require('../models/user');
 const Video = require('../models/video');
-const convertObjectToDotNotation = require('../lib/convertObjectToDotNotation');
+const convertObjectToDotNotation = require('../../src/lib/convertObjectToDotNotation');
 
-const { MEDIA_BUCKET_NAME } = require('../config/config');
+const { MEDIA_BUCKET_NAME } = require('../../src/config/config');
 
 exports.getUserById = async (req, res) => {
   try {

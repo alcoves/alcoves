@@ -1,9 +1,12 @@
-const s3 = require('../config/s3');
+const s3 = require('../../src/config/s3');
 const Video = require('../models/video');
-const convertSourceVideo = require('../lib/convertSourceVideo');
-const convertObjectToDotNotation = require('../lib/convertObjectToDotNotation');
+const convertSourceVideo = require('../../src/lib/convertSourceVideo');
+const convertObjectToDotNotation = require('../../src/lib/convertObjectToDotNotation');
 
-const { WASABI_ENDPOINT, MEDIA_BUCKET_NAME } = require('../config/config');
+const {
+  WASABI_ENDPOINT,
+  MEDIA_BUCKET_NAME,
+} = require('../../src/config/config');
 
 exports.getUploadUrl = async (req, res) => {
   try {

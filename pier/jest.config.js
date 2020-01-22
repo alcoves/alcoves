@@ -1,5 +1,6 @@
 module.exports = {
-  testEnvironment: 'node',
+  silent: false,
   collectCoverage: true,
-  silent: true,
+  testEnvironment: 'node',
+  setupFiles: ['dotenv/config'],
 };

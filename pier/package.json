@@ -8,17 +8,18 @@
   "license": "GPL-3.0",
   "private": false,
   "scripts": {
-    "gql": "nodemon -r dotenv/config api/gql.js",
+    "gql": "nodemon -r dotenv/config src/server.js",
     "dev": "nodemon -r dotenv/config api/server.js",
     "start": "pm2 start api/server.js",
-    "test": "jest --setupFiles dotenv/config --runInBand",
+    "test": "jest --runInBand ./src/",
     "lint": "prettier --check \"api/**/*.*\"",
     "lint:fix": "prettier --write \"api/**/*.*\""
   },
   "dependencies": {
     "apollo-server-express": "^2.9.16",
+    "apollo-server-testing": "^2.9.16",
     "aws-sdk": "^2.608.0",
-    "axios": "^0.19.1",
+    "axios": "^0.19.2",
     "bcrypt": "^3.0.7",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.4",
@@ -30,6 +31,7 @@
     "mongoose": "^5.8.7",
     "morgan": "^1.9.1",
     "multer": "^1.4.2",
+    "recursive-readdir-sync": "^1.0.6",
     "response-time": "^2.3.2",
     "sharp": "^0.24.0",
     "shortid": "^2.2.15"

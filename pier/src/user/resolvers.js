@@ -1,9 +1,8 @@
-const User = require('./models/user');
+const User = require('./model');
 
-module.exports.resolvers = {
+module.exports = {
   Query: {
-    hello: () => 'hi',
-    user: () => User.find(),
+    users: () => User.find(),
   },
   Mutation: {
     createUser: async (_, { displayName }) => {

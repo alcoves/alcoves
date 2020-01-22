@@ -1,4 +1,4 @@
-const doco = require('./do.js');
+const doco = require('./do');
 
 module.exports = async ({ videoId }) => {
   const { data } = await doco({
