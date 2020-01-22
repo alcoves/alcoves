@@ -15,7 +15,7 @@ export default observer(() => {
 
   return (
     <Input
-      style={{ minWidth: '200px' }}
+      style={{ maxWidth: '500px', minWidth: '100px' }}
       onKeyDown={handleChange}
       size='small'
       placeholder='Search'
