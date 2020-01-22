@@ -146,7 +146,7 @@ exports.deleteVideo = async (req, res) => {
       const viewDeleteRes = await View.deleteMany({ videoId: req.params.id });
       const videoDeleteRes = await Video.deleteOne({ _id: req.params.id });
 
-      res.status(400).send({
+      res.status(200).send({
         message: 'video was deleted',
         payload: {
           videosDeleted: videoDeleteRes.deletedCount,
