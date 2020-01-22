@@ -68,7 +68,8 @@ exports.deleteFollowing = async (req, res) => {
 
     await User.updateOne(
       { _id: req.body.followee },
-      { $inc: { followers: -1 } }
+      { $inc: { followers: -1 } },
+      { upsert: false }
     );
 
     res.status(200).send();
