@@ -14,6 +14,12 @@ const server = new ApolloServer({
   resolvers: getFiles('resolvers.js'),
 });
 
+// app.use('/graphql', bodyParser.json(), graphqlExpress({
+//   schema,
+//   context: {},
+//   tracing: true,
+// }));
+
 const app = express();
 server.applyMiddleware({ app });
 module.exports = app;

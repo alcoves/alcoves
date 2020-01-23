@@ -1,6 +1,10 @@
 const app = require('../app');
 const request = require('supertest');
 const mongoose = require('mongoose');
+const User = require('./model');
+const sid = require('shortid');
+
+const testAccountEmail = `${sid()}@bken.io`;
 
 beforeAll(async () => {
   await mongoose.connect(process.env.DB_CONNECTION_STRING, {
@@ -8,29 +12,75 @@ beforeAll(async () => {
     useUnifiedTopology: true,
     autoIndex: false,
   });
-  // await User.deleteOne({ email: 'jest@bken.io' });
+
+  await User.deleteOne({ email: testAccountEmail });
 });
 
 afterAll(async () => {
-  // await User.deleteOne({ email: 'jest@bken.io' });
+  await User.deleteOne({ email: testAccountEmail });
   await mongoose.connection.close();
 });
 
 describe('user tests', () => {
-  it('should return user', async () => {
+  it('should create a user', async () => {
+    const createUserQuery = `
+      mutation createUser {
+        createUser(
+          input: {
+            displayName: "Test User"
+            email: "${testAccountEmail}"
+            password: "password"
+          }
+        ) {
+          id
+          email
+          displayName
+        }
+      }
+    `;
+
     const res = await request(app)
       .post('/graphql')
-      .send({ query: `query{ users { id } }` });
+      .send({ query: createUserQuery });
+
+    expect(res.body.errors).toEqual(undefined);
+    expect(res.body.data.createUser).toMatchObject({
+      displayName: 'Test User',
+      email: testAccountEmail,
+    });
+  });
+
+  it('should return user', async () => {
+    const { _id } = await User.findOne({ email: testAccountEmail });
+    const id = _id.toString();
+
+    const userQuery = `
+      {
+        user(id: "${id}") {
+          id
+          email
+          avatar
+          followers
+          displayName
+        }
+      }
+    `;
+
+    const res = await request(app)
+      .post('/graphql')
+      .send({ query: userQuery });
     expect(res.body.data).toEqual({
-      users: [
-        { id: '5e0d5191ad6bac5cb92d808b' },
-        { id: '5e0f863cbcc3435c5de7de35' },
-        { id: '5e0f86cebcc3435c5de7de3d' },
-      ],
+      user: {
+        id,
+        email: testAccountEmail,
+        avatar:
+          'https://s3.us-east-2.wasabisys.com/media-bken/files/avatar.jpg',
+        followers: 0,
+        displayName: 'Test User',
+      },
     });
   });
 });
 
-// getUserById
 // getUserVideosByUserId
 // uploadUserAvatar
