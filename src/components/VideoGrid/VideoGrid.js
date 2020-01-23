@@ -52,14 +52,14 @@ export default observer(props => {
     <Grid centered doubling style={{ paddingTop: '30px' }}>
       {state.videos.map(video => {
         return (
-          <Grid.Column key={video._id} mobile={14} tablet={10} computer={4} style={styles.card}>
+          <Grid.Column key={video.id} mobile={14} tablet={10} computer={4} style={styles.card}>
             <img
               style={styles.image}
               alt='thumbnail'
               src={video.thumbnail}
-              onClick={() => history.push(`/videos/${video._id}`)}></img>
+              onClick={() => history.push(`/videos/${video.id}`)}></img>
             <div style={styles.meta}>
-              <div onClick={() => history.push(`/videos/${video._id}`)} style={styles.title}>
+              <div onClick={() => history.push(`/videos/${video.id}`)} style={styles.title}>
                 {video.title}
               </div>
               <div style={styles.cardFooter}>
@@ -68,7 +68,7 @@ export default observer(props => {
                     <Button
                       icon='setting'
                       onClick={() => {
-                        history.push(`/editor/videos/${video._id}`);
+                        history.push(`/editor/videos/${video.id}`);
                       }}
                     />
                   </Button.Group>
