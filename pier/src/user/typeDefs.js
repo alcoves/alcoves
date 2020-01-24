@@ -6,7 +6,7 @@ module.exports = gql`
     login(input: LoginInput!): LoginResponse!
   }
   type Mutation {
-    registerUser(input: RegisterUserInput): RegisterUserResponse!
+    register(input: RegisterInput): RegisterResponse!
     uploadAvatar(file: Upload!): Avatar!
   }
   type User {
@@ -26,10 +26,10 @@ module.exports = gql`
   type LoginResponse {
     accessToken: String!
   }
-  type RegisterUserResponse {
+  type RegisterResponse {
     accessToken: String!
   }
-  input RegisterUserInput {
+  input RegisterInput {
     email: String!
     password: String!
     displayName: String!

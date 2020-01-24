@@ -26,8 +26,8 @@ afterAll(async () => {
 describe('user tests', () => {
   it('should fail registration if beta code is invalid', async () => {
     const registerUserQuery = `
-      mutation registerUser {
-        registerUser(
+      mutation register {
+        register(
           input: {
             displayName: "Test User"
             email: "${testAccountEmail}"
@@ -48,8 +48,8 @@ describe('user tests', () => {
 
   it('should register user', async () => {
     const registerUserQuery = `
-      mutation registerUser {
-        registerUser(
+      mutation register {
+        register(
           input: {
             displayName: "Test User"
             email: "${testAccountEmail}"
@@ -67,13 +67,13 @@ describe('user tests', () => {
       .send({ query: registerUserQuery });
 
     expect(res.body.errors).toEqual(undefined);
-    expect(res.body.data.registerUser.accessToken).toBeDefined();
+    expect(res.body.data.register.accessToken).toBeDefined();
   });
 
   it('should fail registration if user exists', async () => {
     const registerUserQuery = `
-      mutation registerUser {
-        registerUser(
+      mutation register {
+        register(
           input: {
             displayName: "Test User"
             email: "${testAccountEmail}"
@@ -89,7 +89,6 @@ describe('user tests', () => {
     const res = await request(app)
       .post('/graphql')
       .send({ query: registerUserQuery });
-
     expect(res.body.errors[0].message).toEqual('user already exists');
   });
 

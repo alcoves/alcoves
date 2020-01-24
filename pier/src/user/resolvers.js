@@ -12,7 +12,7 @@ module.exports = {
     },
   },
   Mutation: {
-    registerUser: async (_, { input }) => {
+    register: async (_, { input }) => {
       return Register(input);
     },
     uploadAvatar: async (parent, { file }) => {
