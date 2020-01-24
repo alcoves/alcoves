@@ -1,130 +1,71 @@
 import React from 'react';
 import axios from 'axios';
-import api from '../../api/api';
+import chunkFile from '../../utils/chunkFile';
 
 import { useHistory } from 'react-router-dom';
-import { Button, Progress, Loader } from 'semantic-ui-react';
 import { useObservable, observer } from 'mobx-react-lite';
+import { Button, Progress, Loader } from 'semantic-ui-react';
+import { createMultipartUploadMutation, completedMultipartUploadMutation } from '../../lib/queries';
+
+import { useMutation } from '@apollo/react-hooks';
 
 export default observer(() => {
-  const history = useHistory();
+  // const history = useHistory();
   const state = useObservable({
     fileList: [],
-    uploadUrl: '',
-    queuing: false,
     uploading: false,
     bytesUploaded: 0,
   });
 
-  const completeVideoUpload = async ({ key, uploadId, parts }) => {
-    try {
-      console.log('completing video upload');
-      state.queuing = true;
-      const completeRes = await api({
-        method: 'post',
-        url: '/uploads',
-        data: {
-          key,
-          parts,
-          uploadId,
-        },
-      });
+  const [
+    startUpload,
+    { called: creCalled, loading: creLoading, data: creData, error: creError },
+  ] = useMutation(createMultipartUploadMutation);
 
-      console.log('upload complete!');
-      history.push(`/editor/videos/${completeRes.data.payload.videoId}`);
-    } catch (error) {
-      console.error('complete video upload error', error);
-    } finally {
-      state.queuing = false;
-    }
-  };
+  const [
+    completeUpload,
+    { called: comCalled, loading: comLoading, data: comData, error: comError },
+  ] = useMutation(completedMultipartUploadMutation);
 
-  const chunkFile = file => {
-    let start, end, blob;
+  if (creData && !state.uploading && !comCalled) {
+    state.uploading = true;
+    Promise.all(
+      chunkFile(state.fileList[0]).reduce((acc, blob, partIndex) => {
+        let lastBytesUploaded = 0;
+        console.log('getting called to upload');
+        acc.push(
+          axios.put(creData.createMultipartUpload.urls[partIndex], blob, {
+            headers: { 'Content-Type': state.fileList[0].type },
+            onUploadProgress: e => {
+              state.bytesUploaded += e.loaded - lastBytesUploaded;
+              lastBytesUploaded = e.loaded;
+            },
+          }),
+        );
 
-    const parts = [];
-    const fileSize = file.size;
-    const FILE_CHUNK_SIZE = 10000000 * 5; // 50MB
-    const NUM_CHUNKS = Math.floor(fileSize / FILE_CHUNK_SIZE) + 1;
-
-    for (let index = 1; index < NUM_CHUNKS + 1; index++) {
-      start = (index - 1) * FILE_CHUNK_SIZE;
-      end = index * FILE_CHUNK_SIZE;
-      blob = index < NUM_CHUNKS ? file.slice(start, end) : file.slice(start);
-      parts.push(blob);
-    }
-
-    return parts;
-  };
-
-  const uploadParts = async (file, { key, uploadId }) => {
-    try {
-      state.uploading = true;
-      const resolvedUploads = await Promise.all(
-        chunkFile(file).reduce((acc, blob, partIndex) => {
-          acc.push(
-            new Promise((resolve, reject) => {
-              api({
-                method: 'get',
-                url: '/uploads/url',
-                params: {
-                  key,
-                  uploadId,
-                  partNumber: partIndex + 1,
-                },
-              })
-                .then(({ data }) => {
-                  let lastBytesUploaded = 0;
-                  axios
-                    .put(data.payload.url, blob, {
-                      headers: { 'Content-Type': file.type },
-                      onUploadProgress: e => {
-                        state.bytesUploaded += e.loaded - lastBytesUploaded;
-                        lastBytesUploaded = e.loaded;
-                      },
-                    })
-                    .then(resolve)
-                    .catch(reject);
-                })
-                .catch(reject);
-            }),
-          );
-
-          return acc;
-        }, []),
-      );
-
-      const parts = resolvedUploads.reduce((acc, { headers }, i) => {
+        return acc;
+      }, []),
+    ).then(res => {
+      const parts = res.reduce((acc, { headers }, i) => {
         acc.push({ ETag: headers.etag, PartNumber: i + 1 });
         return acc;
       }, []);
 
-      return { key, parts, uploadId };
-    } catch (error) {
-      console.log('upload error', error);
-    } finally {
-      state.uploading = false;
-    }
-  };
+      const { objectId, key, uploadId } = creData.createMultipartUpload;
+      completeUpload({ variables: { input: { objectId, parts, key, uploadId } } });
+    });
+  }
 
-  const startUpload = async file => {
-    try {
-      console.log('starting upload');
-      const { data } = await api({
-        method: 'post',
-        url: '/videos',
-        data: {
-          fileName: file.name,
-          fileType: file.type,
-        },
-      });
+  if (creCalled) console.log('creCalled');
+  if (creLoading) console.log('creLoading');
+  if (comCalled) console.log('creCalled');
+  if (creError) console.log('creError', creError);
+  if (comError) console.log('comError', comError);
 
-      const completeVideoUploadObj = await uploadParts(file, data.payload);
-      await completeVideoUpload(completeVideoUploadObj);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  if (comData && comCalled && !comLoading) {
+    state.uploading = false;
+    console.log('i should be redirecting!', comData);
+  }
 
   let fileInputRef = React.createRef();
 
@@ -152,7 +93,7 @@ export default observer(() => {
             labelPosition='left'
             icon='video'
             fluid
-            disabled={state.uploading || state.queuing}
+            disabled={comLoading || creLoading}
             onClick={() => fileInputRef.current.click()}
           />
         </div>
@@ -165,21 +106,15 @@ export default observer(() => {
           type='file'
           hidden
           onChange={e => {
-            state.bytesUploaded = 0;
-            state.fileList = [e.target.files[0]];
+            if (!state.fileList.length) {
+              state.bytesUploaded = 0;
+              state.fileList = [e.target.files[0]];
+              const fileType = e.target.files[0].type;
+              const parts = chunkFile(e.target.files[0]).length;
+              startUpload({ variables: { input: { parts, fileType } } });
+            }
           }}
         />
-        <div style={{ margin: '10px 0px 10px 0px' }}>
-          <Button
-            fluid
-            onClick={() => startUpload(state.fileList[0])}
-            disabled={state.fileList.length === 0 || state.uploading || state.queuing}>
-            Upload
-          </Button>
-        </div>
-        <div style={{ margin: '10px 0px 10px 0px' }}>
-          {state.fileList.length ? <h3>{state.fileList[0].name}</h3> : null}
-        </div>
         <div style={{ margin: '10px 0px 10px 0px' }}>
           {state.bytesUploaded && state.fileList[0].size ? (
             <Progress
@@ -188,14 +123,14 @@ export default observer(() => {
               progress='percent'
             />
           ) : null}
+          {comLoading && (
+            <div style={{ margin: '10px 0px 10px 0px' }}>
+              <Loader active inline='centered'>
+                Completing upload...
+              </Loader>
+            </div>
+          )}
         </div>
-        {state.queuing ? (
-          <div style={{ margin: '10px 0px 10px 0px' }}>
-            <Loader active inline='centered'>
-              Completing upload...
-            </Loader>
-          </div>
-        ) : null}
       </div>
     </div>
   );

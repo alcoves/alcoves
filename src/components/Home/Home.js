@@ -4,7 +4,6 @@ import gql from 'graphql-tag';
 import React from 'react';
 
 import { Loader } from 'semantic-ui-react';
-import { observer, useObservable } from 'mobx-react-lite';
 import { useQuery } from '@apollo/react-hooks';
 import VideoGrid from '../VideoGrid/VideoGrid';
 
@@ -19,7 +18,7 @@ const GET_VIDEOS = gql`
   }
 `;
 
-export default observer(() => {
+export default () => {
   const { loading, data } = useQuery(GET_VIDEOS);
 
   if (loading) {
@@ -27,9 +26,8 @@ export default observer(() => {
   } else if (data) {
     return (
       <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <div>We are working on a new homepage!</div>
         <VideoGrid videos={data.videos} />
       </div>
     );
   }
-});
+};
