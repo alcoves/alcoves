@@ -39,6 +39,9 @@ export class User {
 
   async logout(refresh = false) {
     try {
+      // TODO :: Intergrate with apollo client client.resetStore()
+      // https://www.apollographql.com/docs/react/networking/authentication/
+
       console.log('Logging user out');
       await localStorage.removeItem('accessToken');
       if (refresh) window.location.reload();

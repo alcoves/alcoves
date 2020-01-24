@@ -106,7 +106,6 @@ export default observer(props => {
               minWidth: '150px',
               paddingRight: '5px',
               flex: 1,
-              border: 'solid red 1px',
             }}>
             <div style={styles.menuItem}>
               <Button circular id='login' icon='user' onClick={handleClick} />

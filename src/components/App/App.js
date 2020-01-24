@@ -3,11 +3,11 @@ import UserStore from '../../data/User';
 import React, { useContext } from 'react';
 
 import Home from '../Home/Home';
-import Login from '../Login/Login';
 import Video from '../Video/Video';
 import Upload from '../Upload/Upload';
 import Markup from '../Markup/Markup';
-import Profile from '../Profile/Profile';
+import Account from '../Account/Account';
+import LoginForm from '../Login/LoginForm';
 import Register from '../Register/Register';
 import NotFound from '../NotFound/NotFound';
 import SearchPage from '../SearchPage/SearchPage';
@@ -40,9 +40,9 @@ export default observer(p => {
       <Navigation {...p}>
         <Switch>
           <Route path='/' exact render={rp => <Home {...rp} {...p} />} />
-          <Route path='/login' exact render={rp => <Login {...rp} {...p} />} />
+          <Route path='/login' exact render={rp => <LoginForm {...rp} {...p} />} />
           <Route path='/register' exact render={rp => <Register {...rp} {...p} />} />
-          <Route path='/account' exact render={rp => <Profile {...rp} {...p} />} />
+          <Route path='/account' exact render={rp => <Account {...rp} {...p} />} />
           <Route path='/upload' exact render={rp => <Upload {...rp} {...p} />} />
           <Route path='/markup' exact render={rp => <Markup {...rp} {...p} />} />
           <Route path='/search*' exact render={rp => <SearchPage {...rp} {...p} />} />

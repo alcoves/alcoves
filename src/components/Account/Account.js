@@ -1,10 +1,10 @@
-import User from '../../data/User';
-import api from '../../api/api';
+import gql from 'graphql-tag';
+import UserStore from '../../data/User';
 import React, { useContext } from 'react';
 
-import { observer, useObservable } from 'mobx-react-lite';
-import { Button, Icon } from 'semantic-ui-react';
-import { useHistory } from 'react-router-dom';
+import { useQuery } from '@apollo/react-hooks';
+import { Button, Icon, Loader } from 'semantic-ui-react';
+import { Redirect } from 'react-router-dom';
 
 const styles = {
   container: {
@@ -57,63 +57,44 @@ const styles = {
   },
 };
 
-export default observer(() => {
-  const history = useHistory();
-  const user = useContext(User);
+const loginQuery = gql`
+  query user($id: ID!) {
+    user(id: $id) {
+      id
+      avatar
+      displayName
+    }
+  }
+`;
 
-  const state = useObservable({
-    user: {},
-    loading: true,
-    uploadLoading: false,
+export default () => {
+  const user = useContext(UserStore);
+
+  const { loading, data, error } = useQuery(loginQuery, {
+    variables: { id: user.id },
   });
 
-  const loadUser = async () => {
-    try {
-      state.user = {};
-      const res = await api({
-        method: 'get',
-        url: `/me`,
-      });
+  if (!user.isLoggedIn()) {
+    return <Redirect to='/login' />;
+  }
 
-      state.user = res.data.payload;
-      state.loading = false;
-    } catch (error) {
-      console.error();
-    }
-  };
+  if (loading) return <Loader active />;
 
-  const onChangeHandler = async event => {
-    try {
-      state.uploadLoading = true;
-      const data = new FormData();
-      data.append('avatar', event.target.files[0]);
-      await api({
-        data,
-        method: 'post',
-        url: `/users/${user.id}/avatars`,
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-      await loadUser();
-    } catch (error) {
-      console.error(error);
-    } finally {
-      state.uploadLoading = false;
-    }
-  };
+  if (error) {
+    console.log('error', error);
+    return <div> there was an error </div>;
+  }
 
-  const fileInputRef = React.createRef();
-
-  if (state.loading) {
-    loadUser();
-  } else if (user.isLoggedIn()) {
+  if (data) {
+    console.log('data', data);
     return (
       <div style={styles.container}>
         <div style={styles.card}>
           <div style={styles.avatarCircleContainer}>
-            {state.user.avatar ? (
+            {data.user.avatar ? (
               <img
                 alt='profile'
-                src={`${state.user.avatar}?${Date.now()}`}
+                src={`${data.user.avatar}?${Date.now()}`}
                 style={styles.avatarCircle}
               />
             ) : (
@@ -121,11 +102,11 @@ export default observer(() => {
             )}
           </div>
           <div>
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
+            {/* <div style={{ display: 'flex', justifyContent: 'center' }}>
               <Button
                 circular
                 basic
-                loading={state.uploadLoading}
+                loading={data.uploadLoading}
                 color='teal'
                 size='tiny'
                 onClick={() => fileInputRef.current.click()}>
@@ -139,24 +120,37 @@ export default observer(() => {
                 hidden
                 onChange={onChangeHandler}
               />
-            </div>
+            </div> */}
           </div>
-          <div style={styles.displayName}>{user.displayName}</div>
+          <div style={styles.displayName}>{data.user.displayName}</div>
           <div style={styles.profileFooter}>
-            <Button
-              basic
-              fluid
-              color='teal'
-              onClick={() => {
-                user.logout(true);
-              }}>
+            <Button basic fluid color='teal' onClick={() => user.logout(true)}>
               Logout
             </Button>
           </div>
         </div>
       </div>
     );
-  } else {
-    history.push('/login');
   }
-});
+};
+
+// const onChangeHandler = async event => {
+//   try {
+//     data.uploadLoading = true;
+//     const data = new FormData();
+//     data.append('avatar', event.target.files[0]);
+//     await api({
+//       data,
+//       method: 'post',
+//       url: `/users/${user.id}/avatars`,
+//       headers: { 'Content-Type': 'multipart/form-data' },
+//     });
+//     await loadUser();
+//   } catch (error) {
+//     console.error(error);
+//   } finally {
+//     data.uploadLoading = false;
+//   }
+// };
+
+// const fileInputRef = React.createRef();
