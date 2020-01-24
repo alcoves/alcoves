@@ -1,7 +1,6 @@
 const app = require('../app');
 const request = require('supertest');
 const mongoose = require('mongoose');
-const Video = require('./model');
 
 beforeAll(async () => {
   await mongoose.connect(process.env.DB_CONNECTION_STRING, {
@@ -23,16 +22,18 @@ afterAll(async () => {
 // Upload parts (client side put requests to signed urls)
 // Complete multipart upload (compeltes the upload then creates video record)
 
-describe('video tests', () => {
+describe('upload tests', () => {
   it('should start multipart upload', async () => {
     const registerUserQuery = `
       mutation createMultipartUpload {
         createMultipartUpload(
           input: {
-            title: "Test User"
+            parts: 50
           }
         ) {
-          accessToken
+          uploadId
+          key
+          urls
         }
       }
     `;
@@ -42,26 +43,4 @@ describe('video tests', () => {
       .send({ query: registerUserQuery });
     expect(res.body.errors[0].message).toEqual('bad beta code');
   });
-
-  // it('should get a video', async () => {
-  //   const registerUserQuery = `
-  //     mutation register {
-  //       register(
-  //         input: {
-  //           displayName: "Test User"
-  //           email: "${testAccountEmail}"
-  //           password: "${testAccountPassword}"
-  //           code: "123"
-  //         }
-  //       ) {
-  //         accessToken
-  //       }
-  //     }
-  //   `;
-
-  //   const res = await request(app)
-  //     .post('/graphql')
-  //     .send({ query: registerUserQuery });
-  //   expect(res.body.errors[0].message).toEqual('bad beta code');
-  // });
 });
