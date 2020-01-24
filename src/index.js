@@ -14,6 +14,14 @@ ReactGA.initialize('UA-77834417-2');
 
 const client = new ApolloClient({
   uri: 'http://localhost:4000/graphql',
+  request: operation => {
+    const token = localStorage.getItem('accessToken');
+    operation.setContext({
+      headers: {
+        authorization: token ? `Bearer ${token}` : '',
+      },
+    });
+  },
 });
 
 const Root = () => (

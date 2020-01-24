@@ -1,59 +1,42 @@
-import api from '../../api/api';
 import User from '../../data/User';
+import LoginAction from './LoginAction';
 import React, { useContext } from 'react';
 
-import { useHistory } from 'react-router-dom';
+import { useHistory, Redirect } from 'react-router-dom';
+import { Button, Form, Grid } from 'semantic-ui-react';
 import { observer, useObservable } from 'mobx-react-lite';
-import { Button, Form, Grid, Segment } from 'semantic-ui-react';
 
-export default observer(props => {
+export default observer(() => {
   const user = useContext(User);
   const history = useHistory();
-
   const state = useObservable({
     email: '',
     password: '',
-    displayName: '',
-    loading: false,
+    buttonClicked: false,
   });
 
   const handleChange = (e, { name, value }) => {
     state[name] = value;
   };
 
-  const handleSubmit = async () => {
-    try {
-      state.loading = true;
-      const { data } = await api({
-        method: 'post',
-        url: '/login',
-        data: {
-          email: state.email,
-          password: state.password,
-        },
-      });
+  if (user.isLoggedIn()) return <Redirect to='/account' />;
 
-      state.loading = false;
-      user.login(data.accessToken);
-      props.history.push('/');
-    } catch (error) {
-      console.log(error);
-      state.loading = false;
-    }
-  };
+  if (state.buttonClicked) {
+    return <LoginAction {...state} email={state.email} password={state.password} />;
+  }
 
   return (
     <Grid textAlign='center' style={{ marginTop: '50px' }} verticalAlign='middle'>
       <Grid.Column style={{ maxWidth: 450 }}>
-        <Form size='large' onSubmit={handleSubmit}>
+        <Form size='large' onSubmit={() => (state.buttonClicked = true)}>
           <Form.Input
             fluid
             icon='mail'
             name='email'
             iconPosition='left'
             value={state.email}
-            placeholder='E-mail address'
             onChange={handleChange}
+            placeholder='E-mail address'
           />
           <Form.Input
             fluid
@@ -71,9 +54,9 @@ export default observer(props => {
             </Grid.Column>
             <Grid.Column width={6}>
               <Button
-                color='teal'
                 basic
                 fluid
+                color='teal'
                 content='Or Register'
                 onClick={() => history.push('/register')}
               />
