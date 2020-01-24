@@ -4,7 +4,8 @@ const Register = require('./register');
 
 module.exports = {
   Query: {
-    user: async (_, { id }) => {
+    user: async (_, { id }, { user }) => {
+      if (!user) throw new Error('authorization failed');
       return User.findOne({ _id: id });
     },
   },

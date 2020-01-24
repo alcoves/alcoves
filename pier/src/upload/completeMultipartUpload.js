@@ -23,14 +23,13 @@ module.exports = async ({
     {
       $set: convertObjectToDotNotation({
         status: 'queueing',
-        media: {
-          source: data.Location.split('https://s3.us-east-2.wasabisys.com/')[1],
-        },
+        sourceFile: data.Location.split(
+          'https://s3.us-east-2.wasabisys.com/'
+        )[1],
       }),
     }
   );
 
-  console.log('data', data);
   // await convertSourceVideo({ objectId });
   return { completed: true };
 };

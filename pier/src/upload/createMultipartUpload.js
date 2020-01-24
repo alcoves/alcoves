@@ -1,17 +1,17 @@
 const mime = require('mime');
-const shortId = require('shortid');
 const s3 = require('../config/s3');
+const Video = require('../video/model');
 
 const { MEDIA_BUCKET_NAME } = require('../config/config');
 
-module.exports = async ({ parts, fileType }) => {
-  const objectId = shortId();
+module.exports = async ({ parts, fileType }, { user }) => {
+  const { _id } = await Video({ user: user.id }).save();
 
   const { UploadId, Key } = await s3
     .createMultipartUpload({
       ContentType: mime.getType(fileType),
       Bucket: MEDIA_BUCKET_NAME,
-      Key: `videos/${objectId}/source.${mime.getExtension(fileType)}`,
+      Key: `videos/${_id}/source.${mime.getExtension(fileType)}`,
     })
     .promise();
 
@@ -27,5 +27,5 @@ module.exports = async ({ parts, fileType }) => {
     );
   }
 
-  return { objectId, urls, key: Key, uploadId: UploadId };
+  return { objectId: _id, urls, key: Key, uploadId: UploadId };
 };

@@ -15,8 +15,8 @@ const fileSchema = new Schema({
 
 const videoSchema = new Schema(
   {
-    title: { type: String, required: true },
-    status: { type: String, required: true },
+    title: { type: String, required: true, default: shortid.generate },
+    status: { type: String, required: true, default: 'uploading' },
     sourceFile: { type: String, required: false },
     _id: { type: String, default: shortid.generate },
     user: {
