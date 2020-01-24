@@ -94,7 +94,7 @@ describe('user tests', () => {
 
   it('should login user', async () => {
     const loginUserQuery = `
-      {
+      mutation login {
         login(input: {
           email: "${testAccountEmail}"
           password: "${testAccountPassword}"

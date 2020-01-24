@@ -7,11 +7,11 @@ module.exports = {
     user: async (_, { id }) => {
       return User.findOne({ _id: id });
     },
+  },
+  Mutation: {
     login: async (_, { input }) => {
       return Login(input);
     },
-  },
-  Mutation: {
     register: async (_, { input }) => {
       return Register(input);
     },
