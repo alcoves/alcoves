@@ -1,14 +1,19 @@
 const User = require('./model');
+const Login = require('./login');
+const Register = require('./register');
 
 module.exports = {
   Query: {
     user: async (_, { id }) => {
       return User.findOne({ _id: id });
     },
+    login: async (_, { input }) => {
+      return Login(input);
+    },
   },
   Mutation: {
-    createUser: async (_, { input }) => {
-      return new User(input).save();
+    registerUser: async (_, { input }) => {
+      return Register(input);
     },
     uploadAvatar: async (parent, { file }) => {
       const { stream, filename, mimetype, encoding } = await file;

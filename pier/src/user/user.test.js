@@ -2,9 +2,11 @@ const app = require('../app');
 const request = require('supertest');
 const mongoose = require('mongoose');
 const User = require('./model');
-const sid = require('shortid');
 
-const testAccountEmail = `${sid()}@bken.io`;
+const testAccountEmail = `create-user@bken.io`;
+const testAccountPassword = Math.random()
+  .toString(36)
+  .slice(2);
 
 beforeAll(async () => {
   await mongoose.connect(process.env.DB_CONNECTION_STRING, {
@@ -22,32 +24,92 @@ afterAll(async () => {
 });
 
 describe('user tests', () => {
-  it('should create a user', async () => {
-    const createUserQuery = `
-      mutation createUser {
-        createUser(
+  it('should fail registration if beta code is invalid', async () => {
+    const registerUserQuery = `
+      mutation registerUser {
+        registerUser(
           input: {
             displayName: "Test User"
             email: "${testAccountEmail}"
-            password: "password"
+            password: "${testAccountPassword}"
+            code: "123"
           }
         ) {
-          id
-          email
-          displayName
+          accessToken
         }
       }
     `;
 
     const res = await request(app)
       .post('/graphql')
-      .send({ query: createUserQuery });
+      .send({ query: registerUserQuery });
+    expect(res.body.errors[0].message).toEqual('bad beta code');
+  });
+
+  it('should register user', async () => {
+    const registerUserQuery = `
+      mutation registerUser {
+        registerUser(
+          input: {
+            displayName: "Test User"
+            email: "${testAccountEmail}"
+            password: "${testAccountPassword}"
+            code: "${process.env.BETA_CODE}"
+          }
+        ) {
+          accessToken
+        }
+      }
+    `;
+
+    const res = await request(app)
+      .post('/graphql')
+      .send({ query: registerUserQuery });
 
     expect(res.body.errors).toEqual(undefined);
-    expect(res.body.data.createUser).toMatchObject({
-      displayName: 'Test User',
-      email: testAccountEmail,
-    });
+    expect(res.body.data.registerUser.accessToken).toBeDefined();
+  });
+
+  it('should fail registration if user exists', async () => {
+    const registerUserQuery = `
+      mutation registerUser {
+        registerUser(
+          input: {
+            displayName: "Test User"
+            email: "${testAccountEmail}"
+            password: "${testAccountPassword}"
+            code: "${process.env.BETA_CODE}"
+          }
+        ) {
+          accessToken
+        }
+      }
+    `;
+
+    const res = await request(app)
+      .post('/graphql')
+      .send({ query: registerUserQuery });
+
+    expect(res.body.errors[0].message).toEqual('user already exists');
+  });
+
+  it('should login user', async () => {
+    const loginUserQuery = `
+      {
+        login(input: {
+          email: "${testAccountEmail}"
+          password: "${testAccountPassword}"
+        }) {
+          accessToken
+        }
+      }
+    `;
+
+    const res = await request(app)
+      .post('/graphql')
+      .send({ query: loginUserQuery });
+    expect(res.body.errors).toEqual(undefined);
+    expect(res.body.data.login.accessToken).toBeDefined();
   });
 
   it('should return user', async () => {
@@ -81,6 +143,3 @@ describe('user tests', () => {
     });
   });
 });
-
-// getUserVideosByUserId
-// uploadUserAvatar

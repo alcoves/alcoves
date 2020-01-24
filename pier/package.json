@@ -8,12 +8,11 @@
   "license": "GPL-3.0",
   "private": false,
   "scripts": {
-    "gql": "nodemon -r dotenv/config src/server.js",
-    "dev": "nodemon -r dotenv/config api/server.js",
-    "start": "pm2 start api/server.js",
+    "dev": "nodemon -r dotenv/config src/server.js",
+    "start": "pm2 start src/server.js",
     "test": "jest ./src/",
-    "lint": "prettier --check \"api/**/*.*\"",
-    "lint:fix": "prettier --write \"api/**/*.*\""
+    "lint": "prettier --check \"src/**/*.*\"",
+    "lint:fix": "prettier --write \"src/**/*.*\""
   },
   "dependencies": {
     "apollo-server-express": "^2.9.16",
