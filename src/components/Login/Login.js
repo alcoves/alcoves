@@ -1,10 +1,19 @@
+import gql from 'graphql-tag';
 import User from '../../data/User';
-import LoginAction from './LoginAction';
 import React, { useContext } from 'react';
 
+import { useMutation } from 'react-apollo';
 import { useHistory, Redirect } from 'react-router-dom';
-import { Button, Form, Grid } from 'semantic-ui-react';
 import { observer, useObservable } from 'mobx-react-lite';
+import { Button, Form, Grid, Loader } from 'semantic-ui-react';
+
+const loginQuery = gql`
+  mutation login($input: LoginInput!) {
+    login(input: $input) {
+      accessToken
+    }
+  }
+`;
 
 export default observer(() => {
   const user = useContext(User);
@@ -21,14 +30,27 @@ export default observer(() => {
 
   if (user.isLoggedIn()) return <Redirect to='/account' />;
 
-  if (state.buttonClicked) {
-    return <LoginAction {...state} email={state.email} password={state.password} />;
+  const [login, { called, loading, data, error }] = useMutation(loginQuery, {
+    variables: { input: { email: state.email, password: state.password } },
+  });
+
+  if (error) {
+    return <div> there was an error logging you in </div>;
+  }
+
+  if (data) {
+    user.login(data.login.accessToken);
+    return <Redirect to='/' />;
+  }
+
+  if (called || loading) {
+    return <Loader active />;
   }
 
   return (
     <Grid textAlign='center' style={{ marginTop: '50px' }} verticalAlign='middle'>
       <Grid.Column style={{ maxWidth: 450 }}>
-        <Form size='large' onSubmit={() => (state.buttonClicked = true)}>
+        <Form size='large' onSubmit={login}>
           <Form.Input
             fluid
             icon='mail'
