@@ -6,23 +6,20 @@ module.exports = {
     videos: async (_, input) => {
       return Video.find();
     },
+    video: async (_, { id }) => {
+      return Video.findOne({ _id: id });
+    },
   },
   Mutation: {
-    updateVideo: async (_, { input }, { user }) => {
-      if (!user) throw new Error('authentication failed');
-
-      // only allow users that own the video to edit them
-      // allow system api keys to update videos
-
-      const videoUpdate = { ...input };
-      delete videoUpdate.id;
+    updateVideo: async (_, { id, input }, { user }) => {
+      // if (!user) throw new Error('authentication failed');
 
       await Video.updateOne(
-        { _id: input.id },
-        { $set: convertObjectToDotNotation(videoUpdate) }
+        { _id: id },
+        { $set: convertObjectToDotNotation(input) }
       );
 
-      return Video.findOne({ _id: input.id });
+      return Video.findOne({ _id: id });
     },
   },
 };

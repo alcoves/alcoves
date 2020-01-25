@@ -3,9 +3,10 @@ const { gql } = require('apollo-server-express');
 module.exports = gql`
   extend type Query {
     videos: [Video!]!
+    video(id: ID!): Video!
   }
   extend type Mutation {
-    updateVideo(input: UpdateVideoInput!): Video!
+    updateVideo(id: ID!, input: UpdateVideoInput!): Video!
   }
   type Video {
     id: ID!
@@ -17,9 +18,9 @@ module.exports = gql`
     thumbnail: String!
     createdAt: String!
     modifiedAt: String!
+    sourceFile: String!
   }
   input UpdateVideoInput {
-    id: ID!
     title: String
     thumbnail: String
     status: String
