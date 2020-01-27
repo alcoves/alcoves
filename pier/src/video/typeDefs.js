@@ -22,15 +22,20 @@ module.exports = gql`
     hd1080: VideoFile
     hd1440: VideoFile
     hd2160: VideoFile
+    highQuality: VideoFile
   }
   type VideoFile {
     link: String
     status: String!
+    createdAt: String
+    completedAt: String
     percentCompleted: Float!
   }
   input VideoFileInput {
     link: String
     status: String
+    createdAt: String
+    completedAt: String
     percentCompleted: Float
   }
   input UpdateVideoInput {
@@ -41,5 +46,6 @@ module.exports = gql`
     hd1080: VideoFileInput
     hd1440: VideoFileInput
     hd2160: VideoFileInput
+    highQuality: VideoFileInput
   }
 `;

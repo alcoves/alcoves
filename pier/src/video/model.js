@@ -7,6 +7,8 @@ const defaultThumbnail =
 
 const videoFile = new Schema({
   link: { type: String },
+  createdAt: { type: String },
+  completedAt: { type: String },
   status: { type: String, default: 'queueing', required: true },
   percentCompleted: { type: Number, default: 0, required: true },
 });
@@ -21,6 +23,7 @@ const videoSchema = new Schema(
     hd1080: { type: videoFile },
     hd1440: { type: videoFile },
     hd2160: { type: videoFile },
+    highQuality: { type: videoFile },
     thumbnail: { type: String, default: defaultThumbnail, required: true },
     views: { type: Number, default: 0, required: true },
     user: {
