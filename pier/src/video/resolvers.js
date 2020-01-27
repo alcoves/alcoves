@@ -4,10 +4,13 @@ const convertObjectToDotNotation = require('../lib/convertObjectToDotNotation');
 module.exports = {
   Query: {
     videos: async (_, input) => {
-      return Video.find();
+      return Video.find().populate('user', '_id avatar displayName');
     },
     video: async (_, { id }) => {
-      return Video.findOne({ _id: id });
+      return Video.findOne({ _id: id }).populate(
+        'user',
+        '_id avatar displayName'
+      );
     },
   },
   Mutation: {
@@ -18,7 +21,10 @@ module.exports = {
         { $set: convertObjectToDotNotation(input) }
       );
 
-      return Video.findOne({ _id: id });
+      return Video.findOne({ _id: id }).populate(
+        'user',
+        '_id avatar displayName'
+      );
     },
     updateVideoFile: async (_, { id, input }, { user }) => {
       const video = await Video.findOne({ _id: id });
@@ -29,7 +35,6 @@ module.exports = {
       });
 
       if (shouldUpdate) {
-        console.log('updating file instead of pushing');
         const convertedArrToDot = Object.entries(input).reduce(
           (acc, [k, v]) => {
             acc[`files.$.${k}`] = v;
@@ -38,19 +43,21 @@ module.exports = {
           {}
         );
 
-        console.log(`files.preset`, input.preset);
-        console.log('convertedArrToDot', convertedArrToDot);
+        // console.log(`files.preset`, input.preset);
+        // console.log('convertedArrToDot', convertedArrToDot);
 
         await Video.updateOne(
           { _id: id, 'files.preset': input.preset },
           { $set: convertedArrToDot }
         );
       } else {
-        console.log('pushing new file obj to array');
         await Video.updateOne({ _id: id }, { $push: { files: input } });
       }
 
-      return Video.findOne({ _id: id });
+      return Video.findOne({ _id: id }).populate(
+        'user',
+        '_id avatar displayName'
+      );
     },
   },
 };

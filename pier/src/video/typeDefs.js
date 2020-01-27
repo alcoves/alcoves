@@ -13,7 +13,7 @@ module.exports = gql`
     id: ID!
     views: Int!
     title: String!
-    user: String!
+    user: User!
     status: String!
     thumbnail: String!
     createdAt: String!
