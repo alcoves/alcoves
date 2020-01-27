@@ -5,13 +5,15 @@ const Schema = mongoose.Schema;
 const defaultThumbnail =
   'https://s3.us-east-2.wasabisys.com/media-bken/files/default-thumbnail-sm.jpg';
 
-const videoFile = new Schema({
-  link: { type: String },
-  createdAt: { type: String },
-  completedAt: { type: String },
-  status: { type: String, default: 'queueing', required: true },
-  percentCompleted: { type: Number, default: 0, required: true },
-});
+const videoFile = new Schema(
+  {
+    link: { type: String },
+    preset: { type: String, required: true, unique: true },
+    status: { type: String, default: 'queueing', required: true },
+    percentCompleted: { type: Number, default: 0, required: true },
+  },
+  { timestamps: true }
+);
 
 const videoSchema = new Schema(
   {
@@ -19,13 +21,9 @@ const videoSchema = new Schema(
     status: { type: String, required: true, default: 'uploading' },
     sourceFile: { type: String, required: false },
     _id: { type: String, default: shortid.generate },
-    hd720: { type: videoFile },
-    hd1080: { type: videoFile },
-    hd1440: { type: videoFile },
-    hd2160: { type: videoFile },
-    highQuality: { type: videoFile },
     thumbnail: { type: String, default: defaultThumbnail, required: true },
     views: { type: Number, default: 0, required: true },
+    files: [videoFile],
     user: {
       type: Schema.Types.ObjectId,
       ref: 'User',

@@ -7,6 +7,7 @@ module.exports = gql`
   }
   extend type Mutation {
     updateVideo(id: ID!, input: UpdateVideoInput!): Video!
+    updateVideoFile(id: ID!, input: UpdateVideoFileInput!): Video!
   }
   type Video {
     id: ID!
@@ -18,34 +19,27 @@ module.exports = gql`
     createdAt: String!
     modifiedAt: String!
     sourceFile: String!
-    hd720: VideoFile
-    hd1080: VideoFile
-    hd1440: VideoFile
-    hd2160: VideoFile
-    highQuality: VideoFile
+    files: [VideoFile!]
   }
   type VideoFile {
     link: String
     status: String!
+    preset: String!
     createdAt: String
-    completedAt: String
+    modifiedAt: String
     percentCompleted: Float!
-  }
-  input VideoFileInput {
-    link: String
-    status: String
-    createdAt: String
-    completedAt: String
-    percentCompleted: Float
   }
   input UpdateVideoInput {
     title: String
     thumbnail: String
     status: String
-    hd720: VideoFileInput
-    hd1080: VideoFileInput
-    hd1440: VideoFileInput
-    hd2160: VideoFileInput
-    highQuality: VideoFileInput
+  }
+  input UpdateVideoFileInput {
+    link: String
+    preset: String
+    status: String
+    createdAt: String
+    modifiedAt: String
+    percentCompleted: Float
   }
 `;
