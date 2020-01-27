@@ -5,11 +5,9 @@ const Schema = mongoose.Schema;
 const defaultThumbnail =
   'https://s3.us-east-2.wasabisys.com/media-bken/files/default-thumbnail-sm.jpg';
 
-const fileSchema = new Schema({
+const videoFile = new Schema({
   link: { type: String },
-  startedAt: { type: Date },
-  completedAt: { type: Date },
-  status: { type: String, required: true },
+  status: { type: String, default: 'queueing', required: true },
   percentCompleted: { type: Number, default: 0, required: true },
 });
 
@@ -19,21 +17,17 @@ const videoSchema = new Schema(
     status: { type: String, required: true, default: 'uploading' },
     sourceFile: { type: String, required: false },
     _id: { type: String, default: shortid.generate },
+    hd720: { type: videoFile },
+    hd1080: { type: videoFile },
+    hd1440: { type: videoFile },
+    hd2160: { type: videoFile },
+    thumbnail: { type: String, default: defaultThumbnail, required: true },
+    views: { type: Number, default: 0, required: true },
     user: {
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true,
       index: true,
-    },
-    thumbnail: { type: String, default: defaultThumbnail, required: true },
-    views: { type: Number, default: 0, required: true },
-    files: {
-      '480p': { type: fileSchema },
-      '720p': { type: fileSchema },
-      '1080p': { type: fileSchema },
-      '1440p': { type: fileSchema },
-      '2160p': { type: fileSchema },
-      highQuality: { type: fileSchema },
     },
   },
   { timestamps: true }

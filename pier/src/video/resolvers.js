@@ -13,7 +13,6 @@ module.exports = {
   Mutation: {
     updateVideo: async (_, { id, input }, { user }) => {
       // if (!user) throw new Error('authentication failed');
-
       await Video.updateOne(
         { _id: id },
         { $set: convertObjectToDotNotation(input) }
