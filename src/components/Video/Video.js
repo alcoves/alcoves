@@ -61,7 +61,6 @@ export default props => {
     };
 
     const link = pickUrl(data.video.files);
-    console.log(link);
 
     return (
       <div style={{ display: 'flex', flexDirection: 'column' }}>
