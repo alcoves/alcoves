@@ -4,7 +4,7 @@ import React, { useContext } from 'react';
 
 import Home from '../Home/Home';
 import Video from '../Video/Video';
-import Login from '../Login/login';
+import Login from '../Login/Login';
 import Upload from '../Upload/Upload';
 import Markup from '../Markup/Markup';
 import Account from '../Account/Account';
