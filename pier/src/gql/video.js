@@ -5,6 +5,7 @@ const { gql } = require('apollo-server-express');
 const typeDefs = gql`
   extend type Query {
     videos: [Video!]!
+    videosByUserId(id: ID!): [Video!]!
     video(id: ID!): Video!
   }
   extend type Mutation {
@@ -48,14 +49,22 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    videos: async (_, input) => {
-      return Video.find().populate('user', '_id avatar displayName');
-    },
     video: async (_, { id }) => {
       return Video.findOne({ _id: id }).populate(
         'user',
         '_id avatar displayName'
       );
+    },
+    // Deprecate? could be used to get homepage video feed
+    videos: async (_, input) => {
+      return Video.find()
+        .sort({ createdAt: -1 })
+        .populate('user', '_id avatar displayName');
+    },
+    videosByUserId: async (_, { id }) => {
+      return Video.find({ user: id })
+        .sort({ createdAt: -1 })
+        .populate('user', '_id avatar displayName followers');
     },
   },
   Mutation: {

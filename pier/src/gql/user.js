@@ -47,16 +47,8 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    // me: async (_, { id }, { user }) => {
-    //   if (!user) throw new Error('authorization failed');
-    //   return User.findOne({ _id: user.id });
-    // },
     user: async (_, { id }) => {
       return User.findOne({ _id: id });
-    },
-    userVideos: async (_, {}, { user }) => {
-      if (!user) throw new Error('authorization failed');
-      return Video.find({ user: user.id });
     },
   },
   Mutation: {
