@@ -1,5 +1,4 @@
 import React from 'react';
-import api from '../../api/api';
 import useInterval from '../../lib/useInterval';
 
 import { observer, useObservable } from 'mobx-react-lite';
