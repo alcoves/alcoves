@@ -11,7 +11,7 @@
     "lint": "prettier --check \"src/**/*.*\"",
     "lint:fix": "prettier --write \"src/**/*.*\"",
     "dev": "parcel public/index.html",
-    "build": "rm -rf dist/ && parcel build public/index.html && cp public/favicon.ico dist/ && echo '/* /index.html 200' > ./dist/_redirects"
+    "build": "NODE_ENV=production rm -rf dist/ && parcel build public/index.html && cp public/favicon.ico dist/ && echo '/* /index.html 200' > ./dist/_redirects"
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.3",
