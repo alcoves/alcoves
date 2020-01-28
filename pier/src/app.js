@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const recReadSync = require('recursive-readdir-sync');

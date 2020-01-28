@@ -111,7 +111,7 @@ describe('user tests', () => {
     expect(res.body.data.login.accessToken).toBeDefined();
   });
 
-  it('should return user', async () => {
+  it('should return public user profile', async () => {
     const { _id } = await User.findOne({ email: testAccountEmail });
     const id = _id.toString();
 
@@ -140,5 +140,36 @@ describe('user tests', () => {
         displayName: 'Test User',
       },
     });
+  });
+
+  it('should get user videos', async () => {
+    const loginUserQuery = `
+      mutation login {
+        login(input: {
+          email: "${testAccountEmail}"
+          password: "${testAccountPassword}"
+        }) {
+          accessToken
+        }
+      }
+    `;
+
+    const loginRes = await request(app)
+      .post('/graphql')
+      .send({ query: loginUserQuery });
+
+    const userQuery = `
+      {
+        userVideos {
+          id
+        }
+      }
+    `;
+
+    const res = await request(app)
+      .post('/graphql')
+      .set('Authorization', `Bearer ${loginRes.body.data.login.accessToken}`)
+      .send({ query: userQuery });
+    expect(res.body.data).toEqual({ userVideos: [] });
   });
 });

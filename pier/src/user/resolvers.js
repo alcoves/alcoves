@@ -1,12 +1,20 @@
 const User = require('./model');
 const Login = require('./login');
+const Video = require('../video/model');
 const Register = require('./register');
 
 module.exports = {
   Query: {
-    user: async (_, { id }, { user }) => {
-      if (!user) throw new Error('authorization failed');
+    // me: async (_, { id }, { user }) => {
+    //   if (!user) throw new Error('authorization failed');
+    //   return User.findOne({ _id: user.id });
+    // },
+    user: async (_, { id }) => {
       return User.findOne({ _id: id });
+    },
+    userVideos: async (_, {}, { user }) => {
+      if (!user) throw new Error('authorization failed');
+      return Video.find({ user: user.id });
     },
   },
   Mutation: {

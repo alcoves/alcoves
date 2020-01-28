@@ -3,6 +3,7 @@ const { gql } = require('apollo-server-express');
 module.exports = gql`
   type Query {
     user(id: ID!): User!
+    userVideos: [Video!]!
   }
   type Mutation {
     uploadAvatar(file: Upload!): Avatar!
