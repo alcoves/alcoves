@@ -14,6 +14,11 @@ const GET_VIDEOS = gql`
       title
       views
       thumbnail
+      user {
+        id
+        displayName
+        avatar
+      }
     }
   }
 `;
