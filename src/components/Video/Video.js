@@ -1,12 +1,10 @@
 import React from 'react';
 import moment from 'moment';
 import gql from 'graphql-tag';
-import useInterval from '../../lib/useInterval';
 
 import { useHistory } from 'react-router-dom';
 import { useQuery } from '@apollo/react-hooks';
 import { Loader, Container } from 'semantic-ui-react';
-import { observer, useObservable } from 'mobx-react-lite';
 
 const pickUrl = files => {
   let url;
@@ -107,7 +105,6 @@ export default props => {
                       display: 'flex',
                       alignItems: 'flex-end',
                       height: '50%',
-                      // border: 'blue solid 1px',
                     }}>
                     {data.video.user.displayName}
                   </div>
@@ -116,7 +113,6 @@ export default props => {
                       display: 'flex',
                       alignItems: 'flex-start',
                       height: '50%',
-                      // border: 'blue solid 1px',
                     }}>
                     {data.video.user.followers || '0'} followers
                   </div>
@@ -129,35 +125,3 @@ export default props => {
     );
   }
 };
-
-// export default observer(props => {
-//   const history = useHistory();
-//   const data.video = useObservable({
-//     video: {},
-//     url: '',
-//     loading: true,
-//   });
-
-//   const handleRefresh = () => {
-//     api({ url: `/videos/${props.id}`, method: 'get' }).then(({ data }) => {
-//       const quality = pickVideoUrl(data.payload.files);
-
-//       if (!quality) {
-//         data.video.loading = true;
-//       } else {
-//         data.video.video = data.payload;
-//         videoUrl = quality.link;
-//         data.video.loading = false;
-//       }
-//     });
-//   };
-
-//   if (data.video.loading === true) {
-//     handleRefresh();
-//   }
-
-//   useInterval(() => {
-//     if (data.video.loading) handleRefresh();
-//   }, 3000);
-
-// });

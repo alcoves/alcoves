@@ -1,98 +1,111 @@
 import React from 'react';
-import api from '../../api/api';
+import gql from 'graphql-tag';
 import ProcessingStatus from './ProcessingStatus';
 
-import { useHistory } from 'react-router-dom';
+import { useHistory, Redirect } from 'react-router-dom';
+import { useQuery, useMutation } from 'react-apollo';
 import { observer, useObservable } from 'mobx-react-lite';
 import { Button, Container, Input, Loader } from 'semantic-ui-react';
 
-export default observer(props => {
+const DeleteVideoButton = props => {
   const history = useHistory();
-  const state = useObservable({
-    video: {},
-    videoQueryLoading: true,
-    saveButtonLoading: false,
-    videoHasChanged: false,
+  const DELETE_VIDEO = gql`
+    mutation deleteVideo($id: ID!) {
+      deleteVideo(id: $id)
+    }
+  `;
+
+  const [deleteVideo, { loading, data }] = useMutation(DELETE_VIDEO, {
+    variables: {
+      id: props.id,
+    },
   });
 
-  const loadVideo = async () => {
-    try {
-      const { data } = await api({
-        method: 'get',
-        url: `/videos/${props.match.params.videoId}`,
-      });
+  if (data) return <Redirect to='/' />;
+  return (
+    <Button basic negative onClick={deleteVideo} loading={loading}>
+      Delete
+    </Button>
+  );
+};
 
-      state.video = data.payload;
-      state.videoQueryLoading = false;
-    } catch (error) {
-      console.error(error);
-      state.videoQueryLoading = false;
+export default observer(props => {
+  const history = useHistory();
+  const state = useObservable({ changes: {} });
+
+  const GET_VIDEO = gql`
+    {
+      video(id: "${props.match.params.videoId}") {
+        id
+        title
+        status
+        createdAt
+      }
     }
-  };
+  `;
 
-  const handleDelete = async e => {
-    try {
-      await api({
-        method: 'delete',
-        url: `/videos/${e.target.id}`,
-      });
-
-      history.push('/');
-    } catch (error) {
-      throw error;
+  const SAVE_VIDEO = gql`
+    mutation updateVideo($id: ID!, $input: UpdateVideoInput!) {
+      updateVideo(id: $id, input: $input) {
+        id
+      }
     }
-  };
+  `;
+
+  const { loading, data, error } = useQuery(GET_VIDEO);
+
+  const [saveVideo, { loading: saveLoading }] = useMutation(SAVE_VIDEO, {
+    variables: { id: props.match.params.videoId, input: state.changes },
+  });
 
   const handleChange = (e, { name, value }) => {
-    state.videoHasChanged = true;
-    state.video[name] = value;
+    state.changes[name] = value;
   };
 
-  const handleSave = async e => {
-    try {
-      await api({
-        method: 'patch',
-        url: `/videos/${state.video._id}`,
-        data: {
-          title: state.video.title,
-        },
-      });
-
-      state.videoHasChanged = false;
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  if (state.videoQueryLoading) {
-    loadVideo();
+  if (loading) {
     return <Loader active inline='centered' style={{ marginTop: '30px' }} />;
-  } else {
+  }
+
+  if (error) {
+    console.error('error here', error);
+    return <div> An error occured when loading the video </div>;
+  }
+
+  if (data) {
     return (
       <Container style={{ paddingTop: '50px' }}>
         <div>
-          <Input name='title' fluid size='huge' onChange={handleChange} value={state.video.title} />
+          <Input
+            name='title'
+            fluid
+            size='huge'
+            onChange={handleChange}
+            value={state.changes.title !== undefined ? state.changes.title : data.video.title}
+          />
         </div>
         <h3>
-          video id: {state.video._id} | status: {state.video.status}
+          video id: {data.video.id} | status: {data.video.status}
         </h3>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <ProcessingStatus videoId={props.match.params.videoId} />
+          {/* <ProcessingStatus videoId={props.match.params.videoId} /> */}
           <div>
-            <Button disabled={!state.videoHasChanged} basic color='teal' onClick={handleSave}>
+            <Button
+              loading={saveLoading}
+              disabled={!Object.keys(state.changes).length}
+              basic
+              color='teal'
+              onClick={saveVideo}>
               Save
             </Button>
             <Button
               basic
               color='teal'
               onClick={() => {
-                history.push(`/videos/${state.video._id}`);
+                history.push(`/videos/${data.video.id}`);
               }}>
               View
             </Button>
-            <Button basic negative onClick={handleDelete}>
-              Delete
-            </Button>
+            <DeleteVideoButton id={props.match.params.videoId} />
           </div>
         </div>
       </Container>
