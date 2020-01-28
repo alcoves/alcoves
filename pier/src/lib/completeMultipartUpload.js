@@ -1,6 +1,7 @@
 const s3 = require('../config/s3');
 const Video = require('../models/video');
 const { MEDIA_BUCKET_NAME } = require('../config/config');
+const convertSourceVideo = require('./convertSourceVideo');
 const convertObjectToDotNotation = require('./convertObjectToDotNotation');
 
 module.exports = async ({
