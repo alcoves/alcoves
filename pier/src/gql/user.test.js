@@ -1,7 +1,7 @@
 const app = require('../app');
 const request = require('supertest');
 const mongoose = require('mongoose');
-const User = require('./model');
+const User = require('../models/user');
 
 const testAccountEmail = `create-user@bken.io`;
 const testAccountPassword = Math.random()

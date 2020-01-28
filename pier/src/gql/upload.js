@@ -1,6 +1,9 @@
+const CreateMultipartUpload = require('../lib/createMultipartUpload');
+const CompleteMultipartUpload = require('../lib/completeMultipartUpload');
+
 const { gql } = require('apollo-server-express');
 
-module.exports = gql`
+const typeDefs = gql`
   extend type Mutation {
     createMultipartUpload(
       input: CreateMultipartUploadInput!
@@ -33,3 +36,18 @@ module.exports = gql`
     PartNumber: Int!
   }
 `;
+
+const resolvers = {
+  Mutation: {
+    createMultipartUpload: async (_, { input }, ctx) => {
+      if (!ctx.user) throw new Error('authentication failed');
+      return CreateMultipartUpload(input, ctx);
+    },
+    completeMultipartUpload: async (_, { input }, ctx) => {
+      if (!ctx.user) throw new Error('authentication failed');
+      return CompleteMultipartUpload(input, ctx);
+    },
+  },
+};
+
+module.exports = { typeDefs, resolvers };

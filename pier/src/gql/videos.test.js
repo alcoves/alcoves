@@ -1,7 +1,7 @@
 const app = require('../app');
 const request = require('supertest');
 const mongoose = require('mongoose');
-const Video = require('./model');
+const Video = require('../models/video');
 
 beforeAll(async () => {
   await mongoose.connect(process.env.DB_CONNECTION_STRING, {

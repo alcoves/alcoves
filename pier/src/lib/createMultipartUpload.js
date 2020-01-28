@@ -1,6 +1,6 @@
 const mime = require('mime');
 const s3 = require('../config/s3');
-const Video = require('../video/model');
+const Video = require('../models/video');
 
 const { MEDIA_BUCKET_NAME } = require('../config/config');
 
