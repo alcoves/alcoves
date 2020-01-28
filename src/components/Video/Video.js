@@ -1,16 +1,12 @@
-import dayjs from 'dayjs';
 import React from 'react';
+import moment from 'moment';
 import gql from 'graphql-tag';
-import api from '../../api/api';
 import useInterval from '../../lib/useInterval';
-import relativeTime from 'dayjs/plugin/relativeTime';
 
 import { useHistory } from 'react-router-dom';
 import { useQuery } from '@apollo/react-hooks';
 import { Loader, Container } from 'semantic-ui-react';
 import { observer, useObservable } from 'mobx-react-lite';
-
-dayjs.extend(relativeTime);
 
 const pickUrl = files => {
   let url;
@@ -28,26 +24,28 @@ const pickUrl = files => {
 };
 
 export default props => {
+  const history = useHistory();
   const GET_VIDEO = gql`
-  {
-    video(id: "${props.id}") {
-      id
-      title
-      views
-      status
-      user {
+    {
+      video(id: "${props.id}") {
         id
-        avatar
-        displayName
-      }
-      files {
-        link
+        title
+        views
         status
-        preset
+        createdAt
+        user {
+          id
+          avatar
+          displayName
+        }
+        files {
+          link
+          status
+          preset
+        }
       }
     }
-  }
-`;
+  `;
 
   const { loading, data } = useQuery(GET_VIDEO);
 
@@ -75,7 +73,7 @@ export default props => {
               <div>
                 <h2>{data.video.title}</h2>
                 <p>
-                  {data.video.views} views • {dayjs(data.video.createdAt).fromNow()}
+                  {data.video.views} views • {moment(parseInt(data.video.createdAt)).fromNow()}
                 </p>
               </div>
               <div
@@ -100,7 +98,7 @@ export default props => {
                       borderRadius: '50%',
                       cursor: 'pointer',
                     }}
-                    onClick={() => history.push(`/users/${data.video.user._id}`)}
+                    onClick={() => history.push(`/users/${data.video.user.id}`)}
                   />
                 </div>
                 <div style={{ height: '100%' }}>
@@ -120,7 +118,7 @@ export default props => {
                       height: '50%',
                       // border: 'blue solid 1px',
                     }}>
-                    {data.video.user.followers} followers
+                    {data.video.user.followers || '0'} followers
                   </div>
                 </div>
               </div>
