@@ -68,13 +68,13 @@ export default observer(props => {
                   flexDirection: 'row',
                   height: '30px',
                   cursor: 'pointer',
-                }}
-                onClick={() => history.push(`/users/${video.user.id}`)}>
+                }}>
                 <img
                   style={{ borderRadius: '50%' }}
                   src={video.user.avatar}
                   height={30}
                   width={30}
+                  onClick={() => history.push(`/users/${video.user.id}`)}
                 />
                 <div
                   style={{
@@ -87,22 +87,24 @@ export default observer(props => {
                     textTransform: 'uppercase',
                     fontSize: '.9em',
                     letterSpacing: '.05em',
-                  }}>
+                    flexGrow: 1,
+                  }}
+                  onClick={() => history.push(`/users/${video.user.id}`)}>
                   {video.user.displayName}
                 </div>
-              </div>
-
-              <div style={styles.cardFooter}>
-                {props.isEditor && (
-                  <Button.Group size='mini' color='teal' basic>
+                <div>
+                  {props.isEditor && (
                     <Button
                       icon='setting'
+                      size='mini'
+                      color='teal'
+                      basic
                       onClick={() => {
                         history.push(`/editor/videos/${video.id}`);
                       }}
                     />
-                  </Button.Group>
-                )}
+                  )}
+                </div>
               </div>
             </div>
           </Grid.Column>
