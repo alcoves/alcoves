@@ -46,7 +46,7 @@ module.exports = async ({ videoId }) => {
       size: '1gb',
       user_data: cloudInit,
       private_networking: null,
-      image: 57308931,
+      image: 58402576,
       name: `worker`,
     },
   });
