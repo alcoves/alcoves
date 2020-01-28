@@ -1,6 +1,7 @@
 const Video = require('../models/video');
 const convertObjectToDotNotation = require('../lib/convertObjectToDotNotation');
 const { gql } = require('apollo-server-express');
+const emptyS3Dir = require('../lib/emptyS3Dir');
 
 const typeDefs = gql`
   extend type Query {
@@ -9,6 +10,7 @@ const typeDefs = gql`
     video(id: ID!): Video!
   }
   extend type Mutation {
+    deleteVideo(id: ID!): Boolean!
     updateVideo(id: ID!, input: UpdateVideoInput!): Video!
     updateVideoFile(id: ID!, input: UpdateVideoFileInput!): Video!
   }
@@ -112,6 +114,13 @@ const resolvers = {
         'user',
         '_id avatar displayName'
       );
+    },
+    deleteVideo: async (_, { id }, { user }) => {
+      if (!user) throw new Error('authentication failed');
+      await emptyS3Dir(`videos/${id}`);
+      const deleteRes = await Video.deleteOne({ _id: id });
+      console.log(deleteRes);
+      return true;
     },
   },
 };
