@@ -30,6 +30,6 @@ module.exports = async ({
     }
   );
 
-  // await convertSourceVideo({ objectId });
+  await convertSourceVideo({ objectId });
   return { completed: true };
 };
