@@ -13,7 +13,10 @@ import { ApolloProvider } from '@apollo/react-hooks';
 ReactGA.initialize('UA-77834417-2');
 
 const client = new ApolloClient({
-  uri: 'http://localhost:4000/graphql',
+  uri:
+    process.env.NODE_ENV === 'production'
+      ? 'https://api.bken.io/graphql'
+      : 'http://localhost:4000/graphql',
   request: operation => {
     const token = localStorage.getItem('accessToken');
     operation.setContext({
