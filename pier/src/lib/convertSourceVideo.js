@@ -1,6 +1,6 @@
 const doco = require('./do');
 
-module.exports = async ({ videoId }) => {
+module.exports = async (videoId) => {
   const { data } = await doco({
     method: 'get',
     url: '/v2/account/keys',
