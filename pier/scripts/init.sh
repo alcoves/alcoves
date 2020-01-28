@@ -40,6 +40,8 @@ git clone https://github.com/bken-io/api
 # Download secrets and store them on disk
 # .env
 
+
+# vim /etc/nginx/nginx.conf
 # Forward 80 to application port
 user www-data;
 worker_processes auto;
@@ -65,12 +67,10 @@ http {
     include /etc/nginx/default.d/*.conf;
 
     location / {
-      proxy_pass  http://127.0.0.1:3000/;
+      proxy_pass  http://127.0.0.1:4000/;
     }
   }
 }
-
-
 
 # Start api server
 mv ~/.env api/.env
