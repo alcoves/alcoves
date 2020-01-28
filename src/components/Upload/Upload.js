@@ -59,11 +59,25 @@ export default observer(() => {
   if (creCalled) console.log('creCalled');
   if (creLoading) console.log('creLoading');
   if (comCalled) console.log('creCalled');
-  if (creError) console.log('creError', creError);
-  if (comError) console.log('comError', comError);
+
+  if (creError) {
+    state.fileList = [];
+    state.uploading = false;
+    state.bytesUploaded = 0;
+    console.log('creError', creError);
+  }
+
+  if (comError) {
+    state.fileList = [];
+    state.uploading = false;
+    state.bytesUploaded = 0;
+    console.log('comError', comError);
+  }
 
   if (comData && comCalled && !comLoading) {
+    state.fileList = [];
     state.uploading = false;
+    state.bytesUploaded = 0;
     console.log('i should be redirecting!', comData);
   }
 
@@ -93,7 +107,7 @@ export default observer(() => {
             labelPosition='left'
             icon='video'
             fluid
-            disabled={comLoading || creLoading}
+            disabled={comLoading || creLoading || state.uploading}
             onClick={() => fileInputRef.current.click()}
           />
         </div>

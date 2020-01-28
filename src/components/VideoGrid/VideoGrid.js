@@ -62,6 +62,36 @@ export default observer(props => {
               <div onClick={() => history.push(`/videos/${video.id}`)} style={styles.title}>
                 {video.title}
               </div>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  height: '30px',
+                  cursor: 'pointer',
+                }}
+                onClick={() => history.push(`/users/${video.user.id}`)}>
+                <img
+                  style={{ borderRadius: '50%' }}
+                  src={video.user.avatar}
+                  height={30}
+                  width={30}
+                />
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    height: '100%',
+                    paddingLeft: '5px',
+                    fontWeight: '600',
+                    opacity: '.6',
+                    textTransform: 'uppercase',
+                    fontSize: '.9em',
+                    letterSpacing: '.05em',
+                  }}>
+                  {video.user.displayName}
+                </div>
+              </div>
+
               <div style={styles.cardFooter}>
                 {props.isEditor && (
                   <Button.Group size='mini' color='teal' basic>
