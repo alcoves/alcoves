@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-import gql from 'graphql-tag';
+import { gql } from 'apollo-boost';
 
 import { useHistory } from 'react-router-dom';
 import { useQuery } from '@apollo/react-hooks';

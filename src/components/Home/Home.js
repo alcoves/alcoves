@@ -1,6 +1,6 @@
 import './Home.css';
 
-import gql from 'graphql-tag';
+import { gql } from 'apollo-boost';
 import React from 'react';
 
 import { Loader } from 'semantic-ui-react';

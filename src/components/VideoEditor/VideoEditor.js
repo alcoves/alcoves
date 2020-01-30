@@ -1,10 +1,10 @@
 import React from 'react';
-import gql from 'graphql-tag';
+import { gql } from 'apollo-boost';
 import ProcessingStatus from './ProcessingStatus';
 
 import { useHistory, Redirect } from 'react-router-dom';
-import { useQuery, useMutation } from 'react-apollo';
 import { observer, useObservable } from 'mobx-react-lite';
+import { useQuery, useMutation } from '@apollo/react-hooks';
 import { Button, Container, Input, Loader } from 'semantic-ui-react';
 
 const DeleteVideoButton = props => {

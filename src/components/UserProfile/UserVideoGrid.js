@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+import { gql } from 'apollo-boost';
 import UserStore from '../../data/User';
 import React, { useContext } from 'react';
 import VideoGrid from '../VideoGrid/VideoGrid';
