@@ -5,10 +5,9 @@ import ProcessingStatus from './ProcessingStatus';
 import { useHistory, Redirect } from 'react-router-dom';
 import { observer, useObservable } from 'mobx-react-lite';
 import { useQuery, useMutation } from '@apollo/react-hooks';
-import { Button, Container, Input, Loader } from 'semantic-ui-react';
+import { Button, Container, Input, Loader, Icon } from 'semantic-ui-react';
 
 const DeleteVideoButton = props => {
-  const history = useHistory();
   const DELETE_VIDEO = gql`
     mutation deleteVideo($id: ID!) {
       deleteVideo(id: $id)
@@ -24,6 +23,7 @@ const DeleteVideoButton = props => {
   if (data) return <Redirect to='/' />;
   return (
     <Button basic negative onClick={deleteVideo} loading={loading}>
+      <Icon name='trash' />
       Delete
     </Button>
   );
