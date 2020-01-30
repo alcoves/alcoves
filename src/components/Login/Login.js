@@ -1,8 +1,8 @@
-import gql from 'graphql-tag';
+import { gql } from 'apollo-boost';
 import User from '../../data/User';
 import React, { useContext } from 'react';
 
-import { useMutation } from 'react-apollo';
+import { useMutation } from '@apollo/react-hooks';
 import { useHistory, Redirect } from 'react-router-dom';
 import { observer, useObservable } from 'mobx-react-lite';
 import { Button, Form, Grid, Loader } from 'semantic-ui-react';
