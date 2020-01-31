@@ -1,7 +1,9 @@
 import ReactGA from 'react-ga';
-import UserStore from '../../data/User';
 import React, { useContext } from 'react';
-
+import { observer } from 'mobx-react-lite';
+import { createBrowserHistory } from 'history';
+import { Route, Router, Switch } from 'react-router-dom';
+import UserStore from '../../data/User';
 import Home from '../Home/Home';
 import Video from '../Video/Video';
 import Login from '../Login/Login';
@@ -14,10 +16,6 @@ import SearchPage from '../SearchPage/SearchPage';
 import Navigation from '../Navigation/Navigation';
 import UserProfile from '../UserProfile/UserProfile';
 import VideoEditor from '../VideoEditor/VideoEditor';
-
-import { observer } from 'mobx-react-lite';
-import { createBrowserHistory } from 'history';
-import { Router, Route, Switch } from 'react-router-dom';
 
 const history = createBrowserHistory();
 

@@ -1,5 +1,7 @@
 export default (file, chunkSize = 10000000 * 5) => {
-  let start, end, blob;
+  let end;
+  let blob;
+  let start;
 
   const parts = [];
   const fileSize = file.size;

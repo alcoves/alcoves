@@ -58,7 +58,8 @@ export default observer(props => {
               to={`/videos/${video.id}`}
               style={styles.image}
               alt='thumbnail'
-              src={video.thumbnail}></img>
+              src={video.thumbnail}
+            />
             <div style={styles.meta}>
               <Link to={`/videos/${video.id}`} style={styles.title}>
                 {video.title}
@@ -69,7 +70,8 @@ export default observer(props => {
                   flexDirection: 'row',
                   height: '30px',
                   cursor: 'pointer',
-                }}>
+                }}
+              >
                 <img
                   as={Link}
                   to={`/users/${video.user.id}`}
@@ -91,7 +93,8 @@ export default observer(props => {
                     letterSpacing: '.05em',
                     flexGrow: 1,
                   }}
-                  to={`/users/${video.user.id}`}>
+                  to={`/users/${video.user.id}`}
+                >
                   {video.user.displayName}
                 </Link>
                 <div>

@@ -1,10 +1,10 @@
 import { gql } from 'apollo-boost';
-import UserStore from '../../data/User';
 import React, { useContext } from 'react';
-import VideoGrid from '../VideoGrid/VideoGrid';
 
 import { useQuery } from '@apollo/react-hooks';
 import { Loader } from 'semantic-ui-react';
+import VideoGrid from '../VideoGrid/VideoGrid';
+import UserStore from '../../data/User';
 
 export default props => {
   const user = useContext(UserStore);

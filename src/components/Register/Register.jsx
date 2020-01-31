@@ -1,15 +1,15 @@
 import { gql } from 'apollo-boost';
-import User from '../../data/User';
 import React, { useContext } from 'react';
 
+import { useHistory, Redirect, Link } from 'react-router-dom';
 import { useMutation } from '@apollo/react-hooks';
-import { Redirect, Link } from 'react-router-dom';
-import { observer, useObservable } from 'mobx-react-lite';
 import { Button, Form, Grid, Loader } from 'semantic-ui-react';
+import { observer, useObservable } from 'mobx-react-lite';
+import User from '../../data/User';
 
-const loginQuery = gql`
-  mutation login($input: LoginInput!) {
-    login(input: $input) {
+const registerMutation = gql`
+  mutation register($input: RegisterInput!) {
+    register(input: $input) {
       accessToken
     }
   }
@@ -17,28 +17,35 @@ const loginQuery = gql`
 
 export default observer(() => {
   const user = useContext(User);
+  const history = useHistory();
   const state = useObservable({
+    code: '',
     email: '',
     password: '',
-    buttonClicked: false,
+    displayName: '',
   });
 
   const handleChange = (e, { name, value }) => {
     state[name] = value;
   };
 
-  if (user.isLoggedIn()) return <Redirect to='/account' />;
-
-  const [login, { called, loading, data, error }] = useMutation(loginQuery, {
-    variables: { input: { email: state.email, password: state.password } },
+  const [register, { called, loading, data, error }] = useMutation(registerMutation, {
+    variables: {
+      input: {
+        email: state.email,
+        password: state.password,
+        code: state.code,
+        displayName: state.displayName,
+      },
+    },
   });
 
   if (error) {
-    return <div> there was an error logging you in </div>;
+    return <div> there was an error registering you </div>;
   }
 
   if (data) {
-    user.login(data.login.accessToken);
+    user.login(data.register.accessToken);
     return <Redirect to='/' />;
   }
 
@@ -49,7 +56,16 @@ export default observer(() => {
   return (
     <Grid textAlign='center' style={{ marginTop: '50px' }} verticalAlign='middle'>
       <Grid.Column style={{ maxWidth: 450 }}>
-        <Form size='large' onSubmit={login}>
+        <Form size='large' onSubmit={register}>
+          <Form.Input
+            fluid
+            icon='user'
+            name='displayName'
+            iconPosition='left'
+            onChange={handleChange}
+            value={state.displayName}
+            placeholder='Display Name'
+          />
           <Form.Input
             fluid
             icon='mail'
@@ -69,12 +85,21 @@ export default observer(() => {
             value={state.password}
             onChange={handleChange}
           />
+          <Form.Input
+            fluid
+            icon='code'
+            name='code'
+            value={state.code}
+            iconPosition='left'
+            placeholder='Beta Code'
+            onChange={handleChange}
+          />
           <Grid>
             <Grid.Column width={10}>
-              <Form.Button color='teal' fluid content='Login' />
+              <Form.Button color='teal' fluid content='Register' />
             </Grid.Column>
             <Grid.Column width={6}>
-              <Button as={Link} to='/register' basic fluid color='teal' content='Or Register' />
+              <Button as={Link} to='/login' color='teal' basic fluid content='Or Login' />
             </Grid.Column>
           </Grid>
         </Form>

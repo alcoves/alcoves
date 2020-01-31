@@ -4,11 +4,12 @@ import './index.css';
 
 import React from 'react';
 import ReactGA from 'react-ga';
-import App from './components/App/App';
 import ApolloClient from 'apollo-boost';
 
 import { render } from 'react-dom';
 import { ApolloProvider } from '@apollo/react-hooks';
+
+import App from './components/App/App';
 
 ReactGA.initialize('UA-77834417-2');
 
