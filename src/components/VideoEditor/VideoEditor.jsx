@@ -1,11 +1,11 @@
 import React from 'react';
 import { gql } from 'apollo-boost';
-import ProcessingStatus from './ProcessingStatus';
 
 import { Redirect, Link } from 'react-router-dom';
 import { observer, useObservable } from 'mobx-react-lite';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import { Button, Container, Input, Loader, Icon } from 'semantic-ui-react';
+import ProcessingStatus from './ProcessingStatus';
 
 const DeleteVideoButton = props => {
   const DELETE_VIDEO = gql`
@@ -83,7 +83,13 @@ export default observer(props => {
           />
         </div>
         <h3>
-          video id: {data.video.id} | status: {data.video.status}
+          video id: 
+          {' '}
+          {data.video.id}
+          {' '}
+| status: 
+          {' '}
+          {data.video.status}
         </h3>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           {/* <ProcessingStatus videoId={props.match.params.videoId} /> */}
@@ -93,7 +99,8 @@ export default observer(props => {
               disabled={!Object.keys(state.changes).length}
               basic
               color='teal'
-              onClick={saveVideo}>
+              onClick={saveVideo}
+            >
               Save
             </Button>
             <Button as={Link} to={`/videos/${data.video.id}`} basic color='teal'>

@@ -1,8 +1,8 @@
 import React from 'react';
-import useInterval from '../../lib/useInterval';
 
 import { observer, useObservable } from 'mobx-react-lite';
 import { Label, Icon, Loader } from 'semantic-ui-react';
+import useInterval from '../../lib/useInterval';
 
 function timeConversion(startTime, completeTime) {
   const millisec = new Date(completeTime).getTime() - new Date(startTime).getTime();
@@ -12,14 +12,14 @@ function timeConversion(startTime, completeTime) {
   const days = (millisec / (1000 * 60 * 60 * 24)).toFixed(1);
 
   if (seconds < 60) {
-    return seconds + ' Sec';
-  } else if (minutes < 60) {
-    return minutes + ' Min';
-  } else if (hours < 24) {
-    return hours + ' Hrs';
-  } else {
-    return days + ' Days';
-  }
+    return `${seconds  } Sec`;
+  } if (minutes < 60) {
+    return `${minutes  } Min`;
+  } if (hours < 24) {
+    return `${hours  } Hrs`;
+  } 
+    return `${days  } Days`;
+  
 }
 
 export default observer(props => {
@@ -67,10 +67,12 @@ export default observer(props => {
               {quality}
               <Label.Detail>{`${fileObj.percentCompleted}%`}</Label.Detail>
               {fileObj.conversionStartTime && fileObj.conversionCompleteTime ? (
-                <Label.Detail>{`took ${timeConversion(
+                <Label.Detail>
+                  {`took ${timeConversion(
                   fileObj.conversionStartTime,
                   fileObj.conversionCompleteTime,
-                )}`}</Label.Detail>
+                )}`}
+                </Label.Detail>
               ) : null}
             </Label>
           </div>
@@ -81,7 +83,7 @@ export default observer(props => {
 
   if (state.queryLoading) {
     return <Loader active inline='centered' style={{ marginTop: '30px' }} />;
-  } else {
+  } 
     return <div>{renderFiles()}</div>;
-  }
+  
 });

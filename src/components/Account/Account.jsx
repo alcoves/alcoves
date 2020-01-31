@@ -1,10 +1,9 @@
 import { gql } from 'apollo-boost';
-import UserStore from '../../data/User';
-import React, { useContext } from 'react';
-
 import { useQuery } from '@apollo/react-hooks';
-import { Button, Icon, Loader } from 'semantic-ui-react';
+import React, { useContext } from 'react';
 import { Redirect } from 'react-router-dom';
+import { Button, Loader } from 'semantic-ui-react';
+import UserStore from '../../data/User';
 
 const styles = {
   container: {

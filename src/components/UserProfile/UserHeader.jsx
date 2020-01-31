@@ -1,9 +1,9 @@
 import { gql } from 'apollo-boost';
-import UserStore from '../../data/User';
 import React, { useContext } from 'react';
 
 import { useQuery } from '@apollo/react-hooks';
 import { Loader } from 'semantic-ui-react';
+import UserStore from '../../data/User';
 
 export default props => {
   const user = useContext(UserStore);
@@ -40,7 +40,8 @@ export default props => {
               backgroundPosition: 'center center',
               backgroundRepeat: 'no-repeat',
               backgroundImage: `radial-gradient(circle, rgba(255,255,255,.1) 0%, rgba(0,0,0,.7) 100%)`,
-            }}>
+            }}
+          >
             <div
               style={{
                 width: '100%',
@@ -49,8 +50,13 @@ export default props => {
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
-              }}>
-              <h2> {data.user.displayName} </h2>
+              }}
+            >
+              <h2> 
+                {' '}
+                {data.user.displayName}
+                {' '}
+              </h2>
             </div>
           </div>
         </div>

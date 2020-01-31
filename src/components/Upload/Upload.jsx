@@ -1,13 +1,13 @@
 import React from 'react';
 import axios from 'axios';
-import chunkFile from '../../utils/chunkFile';
 
 import { useHistory } from 'react-router-dom';
 import { useObservable, observer } from 'mobx-react-lite';
 import { Button, Progress, Loader } from 'semantic-ui-react';
+import { useMutation } from '@apollo/react-hooks';
 import { createMultipartUploadMutation, completedMultipartUploadMutation } from '../../lib/queries';
 
-import { useMutation } from '@apollo/react-hooks';
+import chunkFile from '../../utils/chunkFile';
 
 export default observer(() => {
   // const history = useHistory();
@@ -81,7 +81,7 @@ export default observer(() => {
     console.log('i should be redirecting!', comData);
   }
 
-  let fileInputRef = React.createRef();
+  const fileInputRef = React.createRef();
 
   return (
     <div
@@ -93,14 +93,16 @@ export default observer(() => {
         width: '100%',
         height: '100%',
         flexDirection: 'column',
-      }}>
+      }}
+    >
       <div
         style={{
           display: 'flex',
           justifyContent: 'center',
           flexDirection: 'column',
           width: '300px',
-        }}>
+        }}
+      >
         <div style={{ margin: '10px 0px 10px 0px' }}>
           <Button
             content='Select Video'

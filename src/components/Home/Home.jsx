@@ -2,7 +2,6 @@ import './Home.css';
 
 import { gql } from 'apollo-boost';
 import React from 'react';
-
 import { Loader } from 'semantic-ui-react';
 import { useQuery } from '@apollo/react-hooks';
 import VideoGrid from '../VideoGrid/VideoGrid';
@@ -28,7 +27,9 @@ export default () => {
 
   if (loading) {
     return <Loader active inline='centered' style={{ marginTop: '30px' }} />;
-  } else if (data) {
+  }
+
+  if (data) {
     return (
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <VideoGrid videos={data.videos} />
