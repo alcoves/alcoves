@@ -2,7 +2,7 @@ import { gql } from 'apollo-boost';
 import User from '../../data/User';
 import React, { useContext } from 'react';
 
-import { useHistory, Redirect } from 'react-router-dom';
+import { useHistory, Redirect, Link } from 'react-router-dom';
 import { useMutation } from '@apollo/react-hooks';
 import { Button, Form, Grid, Loader } from 'semantic-ui-react';
 import { observer, useObservable } from 'mobx-react-lite';
@@ -99,13 +99,7 @@ export default observer(() => {
               <Form.Button color='teal' fluid content='Register' />
             </Grid.Column>
             <Grid.Column width={6}>
-              <Button
-                color='teal'
-                basic
-                fluid
-                content='Or Login'
-                onClick={() => history.push('/login')}
-              />
+              <Button as={Link} to='/login' color='teal' basic fluid content='Or Login' />
             </Grid.Column>
           </Grid>
         </Form>

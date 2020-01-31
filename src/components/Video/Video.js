@@ -2,7 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import { gql } from 'apollo-boost';
 
-import { useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useQuery } from '@apollo/react-hooks';
 import { Loader, Container } from 'semantic-ui-react';
 
@@ -22,7 +22,6 @@ const pickUrl = files => {
 };
 
 export default props => {
-  const history = useHistory();
   const GET_VIDEO = gql`
     {
       video(id: "${props.id}") {
@@ -88,6 +87,8 @@ export default props => {
                     marginRight: '10px',
                   }}>
                   <img
+                    as={Link}
+                    to={`/users/${data.video.user.id}`}
                     width={50}
                     height={50}
                     alt='profile'
@@ -96,7 +97,6 @@ export default props => {
                       borderRadius: '50%',
                       cursor: 'pointer',
                     }}
-                    onClick={() => history.push(`/users/${data.video.user.id}`)}
                   />
                 </div>
                 <div style={{ height: '100%' }}>

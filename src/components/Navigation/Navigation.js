@@ -2,21 +2,16 @@ import UserStore from '../../data/User';
 import React, { useContext } from 'react';
 import SearchBar from '../SearchBar/SearchBar';
 
-import { useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { observer, useObservable } from 'mobx-react-lite';
-import { Button, Icon, Menu, Sidebar } from 'semantic-ui-react';
+import { Button, Icon, Sidebar } from 'semantic-ui-react';
 
 export default observer(props => {
-  const history = useHistory();
   const user = useContext(UserStore);
 
   const state = useObservable({
-    visible: true,
+    visible: false,
   });
-
-  const handleClick = e => {
-    history.push(`/${e.currentTarget.id}`);
-  };
 
   const styles = {
     menu: {
@@ -64,14 +59,8 @@ export default observer(props => {
               onClick={() => (state.visible = !state.visible)}
             />
           </div>
-          <div style={styles.logo}>
-            <img
-              id=''
-              style={{ cursor: 'pointer' }}
-              height={35}
-              src='https://bken.io/favicon.ico'
-              onClick={handleClick}
-            />
+          <div as={Link} to='/' style={styles.logo}>
+            <img style={{ cursor: 'pointer' }} height={35} src='https://bken.io/favicon.ico' />
           </div>
         </div>
         <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
@@ -87,19 +76,13 @@ export default observer(props => {
               flex: 1,
             }}>
             <div style={styles.menuItem}>
-              <Button circular id='upload' icon='upload' onClick={handleClick} />
+              <Button as={Link} to='/upload' circular icon='upload' />
             </div>
             <div style={styles.menuItem}>
-              <Button circular id={`users/${user.id}`} icon='video' onClick={handleClick} />
+              <Button as={Link} to={`users/${user.id}`} circular icon='video' />
             </div>
             <div style={styles.menuItem}>
-              <Button
-                circular
-                id='account'
-                onClick={handleClick}
-                icon='user'
-                onClick={handleClick}
-              />
+              <Button as={Link} to='/account' circular icon='user' />
             </div>
           </div>
         ) : (
@@ -112,7 +95,7 @@ export default observer(props => {
               flex: 1,
             }}>
             <div style={styles.menuItem}>
-              <Button circular id='login' icon='user' onClick={handleClick} />
+              <Button as={Link} to='/login' circular icon='user' />
             </div>
           </div>
         )}
