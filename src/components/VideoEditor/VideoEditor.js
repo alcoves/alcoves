@@ -2,7 +2,7 @@ import React from 'react';
 import { gql } from 'apollo-boost';
 import ProcessingStatus from './ProcessingStatus';
 
-import { useHistory, Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import { observer, useObservable } from 'mobx-react-lite';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import { Button, Container, Input, Loader, Icon } from 'semantic-ui-react';
@@ -30,7 +30,6 @@ const DeleteVideoButton = props => {
 };
 
 export default observer(props => {
-  const history = useHistory();
   const state = useObservable({ changes: {} });
 
   const GET_VIDEO = gql`
@@ -97,12 +96,7 @@ export default observer(props => {
               onClick={saveVideo}>
               Save
             </Button>
-            <Button
-              basic
-              color='teal'
-              onClick={() => {
-                history.push(`/videos/${data.video.id}`);
-              }}>
+            <Button as={Link} to={`/videos/${data.video.id}`} basic color='teal'>
               View
             </Button>
             <DeleteVideoButton id={props.match.params.videoId} />

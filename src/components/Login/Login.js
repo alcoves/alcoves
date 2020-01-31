@@ -3,7 +3,7 @@ import User from '../../data/User';
 import React, { useContext } from 'react';
 
 import { useMutation } from '@apollo/react-hooks';
-import { useHistory, Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import { observer, useObservable } from 'mobx-react-lite';
 import { Button, Form, Grid, Loader } from 'semantic-ui-react';
 
@@ -17,7 +17,6 @@ const loginQuery = gql`
 
 export default observer(() => {
   const user = useContext(User);
-  const history = useHistory();
   const state = useObservable({
     email: '',
     password: '',
@@ -75,13 +74,7 @@ export default observer(() => {
               <Form.Button color='teal' fluid content='Login' />
             </Grid.Column>
             <Grid.Column width={6}>
-              <Button
-                basic
-                fluid
-                color='teal'
-                content='Or Register'
-                onClick={() => history.push('/register')}
-              />
+              <Button as={Link} to='/register' basic fluid color='teal' content='Or Register' />
             </Grid.Column>
           </Grid>
         </Form>

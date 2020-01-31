@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import { Button, Grid } from 'semantic-ui-react';
 import { observer, useObservable } from 'mobx-react-lite';
 
@@ -54,14 +54,15 @@ export default observer(props => {
         return (
           <Grid.Column key={video.id} mobile={14} tablet={10} computer={4} style={styles.card}>
             <img
+              as={Link}
+              to={`/videos/${video.id}`}
               style={styles.image}
               alt='thumbnail'
-              src={video.thumbnail}
-              onClick={() => history.push(`/videos/${video.id}`)}></img>
+              src={video.thumbnail}></img>
             <div style={styles.meta}>
-              <div onClick={() => history.push(`/videos/${video.id}`)} style={styles.title}>
+              <Link to={`/videos/${video.id}`} style={styles.title}>
                 {video.title}
-              </div>
+              </Link>
               <div
                 style={{
                   display: 'flex',
@@ -70,13 +71,14 @@ export default observer(props => {
                   cursor: 'pointer',
                 }}>
                 <img
+                  as={Link}
+                  to={`/users/${video.user.id}`}
                   style={{ borderRadius: '50%' }}
                   src={video.user.avatar}
                   height={30}
                   width={30}
-                  onClick={() => history.push(`/users/${video.user.id}`)}
                 />
-                <div
+                <Link
                   style={{
                     display: 'flex',
                     alignItems: 'center',
@@ -89,19 +91,18 @@ export default observer(props => {
                     letterSpacing: '.05em',
                     flexGrow: 1,
                   }}
-                  onClick={() => history.push(`/users/${video.user.id}`)}>
+                  to={`/users/${video.user.id}`}>
                   {video.user.displayName}
-                </div>
+                </Link>
                 <div>
                   {props.isEditor && (
                     <Button
+                      as={Link}
+                      to={`/editor/videos/${video.id}`}
                       icon='setting'
                       size='mini'
                       color='teal'
                       basic
-                      onClick={() => {
-                        history.push(`/editor/videos/${video.id}`);
-                      }}
                     />
                   )}
                 </div>
