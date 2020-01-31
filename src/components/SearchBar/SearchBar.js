@@ -13,6 +13,7 @@ export default observer(() => {
     }
   };
 
+  return null;
   return (
     <Input
       style={{ maxWidth: '500px', minWidth: '100px' }}

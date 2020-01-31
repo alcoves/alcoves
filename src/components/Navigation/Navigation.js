@@ -11,7 +11,7 @@ export default observer(props => {
   const user = useContext(UserStore);
 
   const state = useObservable({
-    visible: false,
+    visible: true,
   });
 
   const handleClick = e => {
@@ -41,6 +41,10 @@ export default observer(props => {
       height: '50px',
       width: '50px',
     },
+  };
+
+  const handleItemClick = e => {
+    console.log('name', e.target);
   };
 
   return (
@@ -116,23 +120,31 @@ export default observer(props => {
       <Sidebar.Pushable style={{ height: 'calc(100vh - 50px)' }}>
         <Sidebar
           vertical
-          as={Menu}
           icon='labeled'
           animation='overlay'
+          style={{ background: 'white', width: '200px' }}
           onHide={() => (state.visible = false)}
           visible={state.visible}>
-          <Menu.Item as='a' style={{ width: '200px' }}>
-            <Icon name='home' />
-            Home
-          </Menu.Item>
-          <Menu.Item as='a'>
-            <Icon name='gamepad' />
-            Games
-          </Menu.Item>
-          <Menu.Item as='a'>
-            <Icon name='camera' />
-            Channels
-          </Menu.Item>
+          <div>
+            <div
+              value={`/users/${user.id}`}
+              style={{ margin: '10px 0px 10px 0px', cursor: 'pointer' }}
+              onClick={handleItemClick}>
+              Upload
+            </div>
+            <div
+              value={`/users/${user.id}`}
+              style={{ margin: '10px 0px 10px 0px', cursor: 'pointer' }}
+              onClick={handleItemClick}>
+              My Bken
+            </div>
+            <div
+              value={`/users/${user.id}`}
+              style={{ margin: '10px 0px 10px 0px', cursor: 'pointer' }}
+              onClick={handleItemClick}>
+              My Account
+            </div>
+          </div>
         </Sidebar>
         <Sidebar.Pusher>
           <div>{props.children}</div>
