@@ -48,7 +48,8 @@ export default props => {
 
   if (loading) {
     return <Loader active inline='centered' style={{ marginTop: '30px' }} />;
-  } if (data) {
+  }
+  if (data) {
     const outerDivStyle = {
       backgroundColor: '#000000',
       height: 'calc(100vh - 100px)',
@@ -70,10 +71,9 @@ export default props => {
               <div>
                 <h2>{data.video.title}</h2>
                 <p>
-                  {data.video.views}
-                  {' '}
-views •
-                  {moment(parseInt(data.video.createdAt)).fromNow()}
+                  {`${data.video.views} views • ${moment(
+                    parseInt(data.video.createdAt),
+                  ).fromNow()}`}
                 </p>
               </div>
               <div
@@ -81,16 +81,14 @@ views •
                   display: 'flex',
                   marginTop: '10px',
                   height: '75px',
-                }}
-              >
+                }}>
                 <div
                   style={{
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
                     marginRight: '10px',
-                  }}
-                >
+                  }}>
                   <img
                     as={Link}
                     to={`/users/${data.video.user.id}`}
@@ -110,8 +108,7 @@ views •
                       display: 'flex',
                       alignItems: 'flex-end',
                       height: '50%',
-                    }}
-                  >
+                    }}>
                     {data.video.user.displayName}
                   </div>
                   <div
@@ -119,11 +116,8 @@ views •
                       display: 'flex',
                       alignItems: 'flex-start',
                       height: '50%',
-                    }}
-                  >
-                    {data.video.user.followers || '0'}
-                    {' '}
-followers
+                    }}>
+                    {data.video.user.followers || '0'} followers
                   </div>
                 </div>
               </div>

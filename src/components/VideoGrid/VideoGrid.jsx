@@ -1,6 +1,5 @@
 import React from 'react';
-
-import { useHistory, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Button, Grid } from 'semantic-ui-react';
 import { observer, useObservable } from 'mobx-react-lite';
 
@@ -45,7 +44,6 @@ const styles = {
 };
 
 export default observer(props => {
-  const history = useHistory();
   const state = useObservable({ videos: props.videos });
 
   return (
@@ -69,9 +67,9 @@ export default observer(props => {
                   display: 'flex',
                   flexDirection: 'row',
                   height: '30px',
+                  marginTop: '10px',
                   cursor: 'pointer',
-                }}
-              >
+                }}>
                 <img
                   as={Link}
                   to={`/users/${video.user.id}`}
@@ -79,6 +77,7 @@ export default observer(props => {
                   src={video.user.avatar}
                   height={30}
                   width={30}
+                  alt='avatar'
                 />
                 <Link
                   style={{
@@ -93,8 +92,7 @@ export default observer(props => {
                     letterSpacing: '.05em',
                     flexGrow: 1,
                   }}
-                  to={`/users/${video.user.id}`}
-                >
+                  to={`/users/${video.user.id}`}>
                   {video.user.displayName}
                 </Link>
                 <div>

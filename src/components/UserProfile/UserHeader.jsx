@@ -40,8 +40,7 @@ export default props => {
               backgroundPosition: 'center center',
               backgroundRepeat: 'no-repeat',
               backgroundImage: `radial-gradient(circle, rgba(255,255,255,.1) 0%, rgba(0,0,0,.7) 100%)`,
-            }}
-          >
+            }}>
             <div
               style={{
                 width: '100%',
@@ -50,13 +49,8 @@ export default props => {
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
-              }}
-            >
-              <h2> 
-                {' '}
-                {data.user.displayName}
-                {' '}
-              </h2>
+              }}>
+              <h2> {data.user.displayName} </h2>
             </div>
           </div>
         </div>
