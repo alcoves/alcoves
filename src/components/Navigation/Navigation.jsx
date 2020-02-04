@@ -79,7 +79,7 @@ export default observer(props => {
               <Button as={Link} to='/upload' circular icon='upload' />
             </div>
             <div style={styles.menuItem}>
-              <Button as={Link} to={`users/${user.id}`} circular icon='video' />
+              <Button as={Link} to={`/users/${user.id}`} circular icon='video' />
             </div>
             <div style={styles.menuItem}>
               <Button as={Link} to='/account' circular icon='user' />
