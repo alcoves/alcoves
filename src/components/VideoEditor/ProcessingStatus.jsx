@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { observer, useObservable } from 'mobx-react-lite';
 import { Label, Icon, Loader } from 'semantic-ui-react';
 import useInterval from '../../lib/useInterval';
 
@@ -23,8 +22,8 @@ function timeConversion(startTime, completeTime) {
   return `${days} Days`;
 }
 
-export default observer(props => {
-  const state = useObservable({
+export default props => {
+  const [state, setState] = useState({
     video: {},
     queryLoading: true,
   });
@@ -86,4 +85,4 @@ export default observer(props => {
     return <Loader active inline='centered' style={{ marginTop: '30px' }} />;
   }
   return <div>{renderFiles()}</div>;
-});
+};
