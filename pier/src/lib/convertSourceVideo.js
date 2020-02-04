@@ -11,9 +11,7 @@ module.exports = async (videoId) => {
   });
 
   const bashInit = [
-    'cd /root/video',
-    'git pull',
-    'yarn',
+    'cd /root/video && git reset --hard origin/master && git pull && yarn',
     `echo "DO_SPACES_ACCESS_KEY_ID=${process.env.DO_SPACES_ACCESS_KEY_ID}" >> .env`,
     `echo "DO_SPACES_SECRET_ACCESS_KEY=${process.env.DO_SPACES_SECRET_ACCESS_KEY}" >> .env`,
     `echo "WASABI_ACCESS_KEY_ID=${process.env.WASABI_ACCESS_KEY_ID}" >> .env`,
