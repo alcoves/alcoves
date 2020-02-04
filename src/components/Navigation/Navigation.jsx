@@ -9,10 +9,6 @@ import UserStore from '../../data/User';
 export default observer(props => {
   const user = useContext(UserStore);
 
-  const state = useObservable({
-    visible: false,
-  });
-
   const styles = {
     menu: {
       height: '50px',
@@ -28,18 +24,6 @@ export default observer(props => {
       width: '50px',
       height: '50px',
     },
-    menuItem: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      color: 'white',
-      height: '50px',
-      width: '50px',
-    },
-  };
-
-  const handleItemClick = e => {
-    console.log('name', e.target);
   };
 
   return (
@@ -52,16 +36,9 @@ export default observer(props => {
             minWidth: '150px',
             flex: 1,
           }}>
-          <div style={styles.logo}>
-            <Icon
-              name='bars'
-              style={{ cursor: 'pointer' }}
-              onClick={() => (state.visible = !state.visible)}
-            />
-          </div>
-          <div as={Link} to='/' style={styles.logo}>
+          <Link to='/' style={styles.logo}>
             <img style={{ cursor: 'pointer' }} height={35} src='https://bken.io/favicon.ico' />
-          </div>
+          </Link>
         </div>
         <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
           <SearchBar />
@@ -76,13 +53,13 @@ export default observer(props => {
               flex: 1,
             }}>
             <div style={styles.menuItem}>
-              <Button as={Link} to='/upload' circular icon='upload' />
+              <Button as={Link} to='/upload' circular size='medium' icon='upload' />
             </div>
             <div style={styles.menuItem}>
-              <Button as={Link} to={`/users/${user.id}`} circular icon='video' />
+              <Button as={Link} to={`/users/${user.id}`} circular size='medium' icon='video' />
             </div>
             <div style={styles.menuItem}>
-              <Button as={Link} to='/account' circular icon='user' />
+              <Button as={Link} to='/account' circular size='medium' icon='user' />
             </div>
           </div>
         ) : (
@@ -100,38 +77,7 @@ export default observer(props => {
           </div>
         )}
       </div>
-      <Sidebar.Pushable style={{ height: 'calc(100vh - 50px)' }}>
-        <Sidebar
-          icon='labeled'
-          animation='overlay'
-          style={{ background: 'white', width: '200px' }}
-          onHide={() => (state.visible = false)}
-          visible={state.visible}>
-          <div>
-            <div
-              value={`/users/${user.id}`}
-              style={{ margin: '10px 0px 10px 0px', cursor: 'pointer' }}
-              onClick={handleItemClick}>
-              Upload
-            </div>
-            <div
-              value={`/users/${user.id}`}
-              style={{ margin: '10px 0px 10px 0px', cursor: 'pointer' }}
-              onClick={handleItemClick}>
-              My Bken
-            </div>
-            <div
-              value={`/users/${user.id}`}
-              style={{ margin: '10px 0px 10px 0px', cursor: 'pointer' }}
-              onClick={handleItemClick}>
-              My Account
-            </div>
-          </div>
-        </Sidebar>
-        <Sidebar.Pusher>
-          <div>{props.children}</div>
-        </Sidebar.Pusher>
-      </Sidebar.Pushable>
+      <div>{props.children}</div>
     </div>
   );
 });
