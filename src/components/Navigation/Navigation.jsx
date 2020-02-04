@@ -1,13 +1,14 @@
 import React, { useContext } from 'react';
 
 import { Link } from 'react-router-dom';
-import { observer, useObservable } from 'mobx-react-lite';
-import { Button, Icon, Sidebar } from 'semantic-ui-react';
+import { Button } from 'semantic-ui-react';
 import SearchBar from '../SearchBar/SearchBar';
-import UserStore from '../../data/User';
 
-export default observer(props => {
-  const user = useContext(UserStore);
+import User from '../../data/User';
+
+export default props => {
+  const user = useContext(User);
+  console.log(user);
 
   const styles = {
     menu: {
@@ -80,4 +81,4 @@ export default observer(props => {
       <div>{props.children}</div>
     </div>
   );
-});
+};

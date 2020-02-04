@@ -1,9 +1,7 @@
 import ReactGA from 'react-ga';
 import React, { useContext } from 'react';
-import { observer } from 'mobx-react-lite';
 import { createBrowserHistory } from 'history';
 import { Route, Router, Switch } from 'react-router-dom';
-import UserStore from '../../data/User';
 import Home from '../Home/Home';
 import Video from '../Video/Video';
 import Login from '../Login/Login';
@@ -17,6 +15,8 @@ import Navigation from '../Navigation/Navigation';
 import UserProfile from '../UserProfile/UserProfile';
 import VideoEditor from '../VideoEditor/VideoEditor';
 
+import User from '../../data/User';
+
 const history = createBrowserHistory();
 
 history.listen(location => {
@@ -24,8 +24,8 @@ history.listen(location => {
   ReactGA.pageview(location.pathname);
 });
 
-export default observer(p => {
-  const user = useContext(UserStore);
+export default p => {
+  const user = useContext(User);
   const accessToken = localStorage.getItem('accessToken');
   user.login(accessToken);
 
@@ -55,4 +55,4 @@ export default observer(p => {
       </Navigation>
     </Router>
   );
-});
+};
