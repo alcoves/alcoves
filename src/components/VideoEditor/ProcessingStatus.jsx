@@ -12,14 +12,15 @@ function timeConversion(startTime, completeTime) {
   const days = (millisec / (1000 * 60 * 60 * 24)).toFixed(1);
 
   if (seconds < 60) {
-    return `${seconds  } Sec`;
-  } if (minutes < 60) {
-    return `${minutes  } Min`;
-  } if (hours < 24) {
-    return `${hours  } Hrs`;
-  } 
-    return `${days  } Days`;
-  
+    return `${seconds} Sec`;
+  }
+  if (minutes < 60) {
+    return `${minutes} Min`;
+  }
+  if (hours < 24) {
+    return `${hours} Hrs`;
+  }
+  return `${days} Days`;
 }
 
 export default observer(props => {
@@ -69,9 +70,9 @@ export default observer(props => {
               {fileObj.conversionStartTime && fileObj.conversionCompleteTime ? (
                 <Label.Detail>
                   {`took ${timeConversion(
-                  fileObj.conversionStartTime,
-                  fileObj.conversionCompleteTime,
-                )}`}
+                    fileObj.conversionStartTime,
+                    fileObj.conversionCompleteTime,
+                  )}`}
                 </Label.Detail>
               ) : null}
             </Label>
@@ -83,7 +84,6 @@ export default observer(props => {
 
   if (state.queryLoading) {
     return <Loader active inline='centered' style={{ marginTop: '30px' }} />;
-  } 
-    return <div>{renderFiles()}</div>;
-  
+  }
+  return <div>{renderFiles()}</div>;
 });

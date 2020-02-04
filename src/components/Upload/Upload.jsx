@@ -93,16 +93,14 @@ export default observer(() => {
         width: '100%',
         height: '100%',
         flexDirection: 'column',
-      }}
-    >
+      }}>
       <div
         style={{
           display: 'flex',
           justifyContent: 'center',
           flexDirection: 'column',
           width: '300px',
-        }}
-      >
+        }}>
         <div style={{ margin: '10px 0px 10px 0px' }}>
           <Button
             content='Select Video'
