@@ -24,6 +24,15 @@ body {
   background: rgb(47, 55, 73);
 }
 
+a {
+  color: black;
+}
+
+a:hover {
+  color: black;
+  opacity: 0.7;
+}
+
 h1 {
   /* color: #abb0b6; */
   font-weight: 400;
