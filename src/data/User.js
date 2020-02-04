@@ -1,18 +1,68 @@
+import React, { useState } from 'react';
 import jwt from 'jsonwebtoken';
 
-import { createContext } from 'react';
-import { decorate, observable } from 'mobx';
+// const user = () => {
+//   const [user, setUser] = useState({});
 
-export class User {
-  id = '';
-  email = '';
-  displayName = '';
+//   const isLoggedIn = () => {
+//     return user.id ? true : false;
+//   };
 
-  isLoggedIn() {
-    return this.id ? true : false;
+//   const login = async accessToken => {
+//     try {
+//       if (accessToken) {
+//         const decoded = jwt.decode(accessToken, { complete: true });
+
+//         const isTokenExpired = token => {
+//           return token.payload.exp < Date.now() / 1000;
+//         };
+
+//         if (decoded && !isTokenExpired(decoded)) {
+//           localStorage.setItem('accessToken', accessToken);
+//           setUser({
+//             id: decoded.payload.id,
+//             email: decoded.payload.email,
+//             displayName: decoded.payload.displayName,
+//           });
+//         } else {
+//           logout();
+//         }
+//       }
+//     } catch (error) {
+//       logout();
+//       console.error(error);
+//       throw error;
+//     }
+//   };
+
+//   const logout = async (refresh = false) => {
+//     try {
+//       // TODO :: Intergrate with apollo client client.resetStore()
+//       // https://www.apollographql.com/docs/react/networking/authentication/
+
+//       console.log('Logging user out');
+//       setUser();
+//       await localStorage.removeItem('accessToken');
+//       if (refresh) window.location.reload();
+//     } catch (error) {
+//       console.error(error);
+//       throw error;
+//     }
+//   };
+// };
+
+class User {
+  constructor() {
+    this.id = '';
+    this.email = '';
+    this.displayName = '';
   }
 
-  async login(accessToken) {
+  isLoggedIn = () => {
+    return this.id ? true : false;
+  };
+
+  login = async accessToken => {
     try {
       if (accessToken) {
         const decoded = jwt.decode(accessToken, { complete: true });
@@ -35,9 +85,9 @@ export class User {
       console.error(error);
       throw error;
     }
-  }
+  };
 
-  async logout(refresh = false) {
+  logout = async (refresh = false) => {
     try {
       // TODO :: Intergrate with apollo client client.resetStore()
       // https://www.apollographql.com/docs/react/networking/authentication/
@@ -49,8 +99,7 @@ export class User {
       console.error(error);
       throw error;
     }
-  }
+  };
 }
 
-decorate(User, { user: observable });
-export default createContext(new User());
+export default React.createContext(new User());
