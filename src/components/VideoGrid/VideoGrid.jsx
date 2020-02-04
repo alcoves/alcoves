@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Grid } from 'semantic-ui-react';
-import { observer, useObservable } from 'mobx-react-lite';
 
 const styles = {
   card: {
@@ -43,21 +42,15 @@ const styles = {
   },
 };
 
-export default observer(props => {
-  const state = useObservable({ videos: props.videos });
-
+export default ({ videos, isEditor }) => {
   return (
     <Grid centered doubling style={{ paddingTop: '30px' }}>
-      {state.videos.map(video => {
+      {videos.map(video => {
         return (
           <Grid.Column key={video.id} mobile={14} tablet={10} computer={4} style={styles.card}>
-            <img
-              as={Link}
-              to={`/videos/${video.id}`}
-              style={styles.image}
-              alt='thumbnail'
-              src={video.thumbnail}
-            />
+            <Link to={`/videos/${video.id}`} style={styles.title}>
+              <img style={styles.image} alt='thumbnail' src={video.thumbnail} />
+            </Link>
             <div style={styles.meta}>
               <Link to={`/videos/${video.id}`} style={styles.title}>
                 {video.title}
@@ -70,15 +63,15 @@ export default observer(props => {
                   marginTop: '10px',
                   cursor: 'pointer',
                 }}>
-                <img
-                  as={Link}
-                  to={`/users/${video.user.id}`}
-                  style={{ borderRadius: '50%' }}
-                  src={video.user.avatar}
-                  height={30}
-                  width={30}
-                  alt='avatar'
-                />
+                <Link to={`/users/${video.user.id}`}>
+                  <img
+                    style={{ borderRadius: '50%' }}
+                    src={video.user.avatar}
+                    height={30}
+                    width={30}
+                    alt='avatar'
+                  />
+                </Link>
                 <Link
                   style={{
                     display: 'flex',
@@ -96,7 +89,7 @@ export default observer(props => {
                   {video.user.displayName}
                 </Link>
                 <div>
-                  {props.isEditor && (
+                  {isEditor && (
                     <Button
                       as={Link}
                       to={`/editor/videos/${video.id}`}
@@ -114,4 +107,4 @@ export default observer(props => {
       })}
     </Grid>
   );
-});
+};
