@@ -1,17 +1,14 @@
-import React from 'react';
 import axios from 'axios';
+import React, { useState } from 'react';
 
-import { useHistory } from 'react-router-dom';
-import { useObservable, observer } from 'mobx-react-lite';
-import { Button, Progress, Loader } from 'semantic-ui-react';
 import { useMutation } from '@apollo/react-hooks';
+import { Button, Progress, Loader } from 'semantic-ui-react';
 import { createMultipartUploadMutation, completedMultipartUploadMutation } from '../../lib/queries';
 
 import chunkFile from '../../utils/chunkFile';
 
-export default observer(() => {
-  // const history = useHistory();
-  const state = useObservable({
+export default () => {
+  const [state, setState] = useState({
     fileList: [],
     uploading: false,
     bytesUploaded: 0,
@@ -28,7 +25,7 @@ export default observer(() => {
   ] = useMutation(completedMultipartUploadMutation);
 
   if (creData && !state.uploading && !comCalled) {
-    state.uploading = true;
+    setState({ uploading: true });
     Promise.all(
       chunkFile(state.fileList[0]).reduce((acc, blob, partIndex) => {
         let lastBytesUploaded = 0;
@@ -61,23 +58,17 @@ export default observer(() => {
   if (comCalled) console.log('creCalled');
 
   if (creError) {
-    state.fileList = [];
-    state.uploading = false;
-    state.bytesUploaded = 0;
+    setState({ fileList: [], uploading: false, bytesUploaded: 0 });
     console.log('creError', creError);
   }
 
   if (comError) {
-    state.fileList = [];
-    state.uploading = false;
-    state.bytesUploaded = 0;
+    setState({ fileList: [], uploading: false, bytesUploaded: 0 });
     console.log('comError', comError);
   }
 
   if (comData && comCalled && !comLoading) {
-    state.fileList = [];
-    state.uploading = false;
-    state.bytesUploaded = 0;
+    setState({ fileList: [], uploading: false, bytesUploaded: 0 });
     console.log('i should be redirecting!', comData);
   }
 
@@ -121,8 +112,7 @@ export default observer(() => {
           hidden
           onChange={e => {
             if (!state.fileList.length) {
-              state.bytesUploaded = 0;
-              state.fileList = [e.target.files[0]];
+              setState({ fileList: [e.target.files[0]], uploading: false, bytesUploaded: 0 });
               const fileType = e.target.files[0].type;
               const parts = chunkFile(e.target.files[0]).length;
               startUpload({ variables: { input: { parts, fileType } } });
@@ -148,4 +138,4 @@ export default observer(() => {
       </div>
     </div>
   );
-});
+};

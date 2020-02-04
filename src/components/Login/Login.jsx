@@ -1,11 +1,9 @@
 import { gql } from 'apollo-boost';
-import React, { useContext } from 'react';
-
+import User from '../../data/User';
 import { useMutation } from '@apollo/react-hooks';
 import { Redirect, Link } from 'react-router-dom';
-import { observer, useObservable } from 'mobx-react-lite';
+import React, { useContext, useState } from 'react';
 import { Button, Form, Grid, Loader } from 'semantic-ui-react';
-import User from '../../data/User';
 
 const loginQuery = gql`
   mutation login($input: LoginInput!) {
@@ -15,16 +13,12 @@ const loginQuery = gql`
   }
 `;
 
-export default observer(() => {
+export default () => {
   const user = useContext(User);
-  const state = useObservable({
-    email: '',
-    password: '',
-    buttonClicked: false,
-  });
+  const [state, setState] = useState({ email: '', password: '', buttonClicked: false });
 
   const handleChange = (e, { name, value }) => {
-    state[name] = value;
+    setState({ ...state, [name]: value });
   };
 
   if (user.isLoggedIn()) return <Redirect to='/account' />;
@@ -81,4 +75,4 @@ export default observer(() => {
       </Grid.Column>
     </Grid>
   );
-});
+};

@@ -1,8 +1,5 @@
 import React from 'react';
 
-import { useHistory } from 'react-router-dom';
-import { observer, useObservable } from 'mobx-react-lite';
-
 const styles = {
   card: {
     width: '100%',

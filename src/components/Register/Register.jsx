@@ -1,11 +1,10 @@
 import { gql } from 'apollo-boost';
-import React, { useContext } from 'react';
+import User from '../../data/User';
+import React, { useContext, useState } from 'react';
 
-import { useHistory, Redirect, Link } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import { useMutation } from '@apollo/react-hooks';
 import { Button, Form, Grid, Loader } from 'semantic-ui-react';
-import { observer, useObservable } from 'mobx-react-lite';
-import User from '../../data/User';
 
 const registerMutation = gql`
   mutation register($input: RegisterInput!) {
@@ -15,10 +14,10 @@ const registerMutation = gql`
   }
 `;
 
-export default observer(() => {
+export default () => {
   const user = useContext(User);
-  const history = useHistory();
-  const state = useObservable({
+
+  const [state, setState] = useState({
     code: '',
     email: '',
     password: '',
@@ -26,7 +25,7 @@ export default observer(() => {
   });
 
   const handleChange = (e, { name, value }) => {
-    state[name] = value;
+    setState({ ...state, [name]: value });
   };
 
   const [register, { called, loading, data, error }] = useMutation(registerMutation, {
@@ -106,4 +105,4 @@ export default observer(() => {
       </Grid.Column>
     </Grid>
   );
-});
+};
