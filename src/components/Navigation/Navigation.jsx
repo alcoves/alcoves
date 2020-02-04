@@ -51,8 +51,7 @@ export default observer(props => {
             justifyContent: 'flex-start',
             minWidth: '150px',
             flex: 1,
-          }}
-        >
+          }}>
           <div style={styles.logo}>
             <Icon
               name='bars'
@@ -75,8 +74,7 @@ export default observer(props => {
               minWidth: '150px',
               paddingRight: '5px',
               flex: 1,
-            }}
-          >
+            }}>
             <div style={styles.menuItem}>
               <Button as={Link} to='/upload' circular icon='upload' />
             </div>
@@ -95,8 +93,7 @@ export default observer(props => {
               minWidth: '150px',
               paddingRight: '5px',
               flex: 1,
-            }}
-          >
+            }}>
             <div style={styles.menuItem}>
               <Button as={Link} to='/login' circular icon='user' />
             </div>
@@ -105,33 +102,28 @@ export default observer(props => {
       </div>
       <Sidebar.Pushable style={{ height: 'calc(100vh - 50px)' }}>
         <Sidebar
-          vertical
           icon='labeled'
           animation='overlay'
           style={{ background: 'white', width: '200px' }}
           onHide={() => (state.visible = false)}
-          visible={state.visible}
-        >
+          visible={state.visible}>
           <div>
             <div
               value={`/users/${user.id}`}
               style={{ margin: '10px 0px 10px 0px', cursor: 'pointer' }}
-              onClick={handleItemClick}
-            >
+              onClick={handleItemClick}>
               Upload
             </div>
             <div
               value={`/users/${user.id}`}
               style={{ margin: '10px 0px 10px 0px', cursor: 'pointer' }}
-              onClick={handleItemClick}
-            >
+              onClick={handleItemClick}>
               My Bken
             </div>
             <div
               value={`/users/${user.id}`}
               style={{ margin: '10px 0px 10px 0px', cursor: 'pointer' }}
-              onClick={handleItemClick}
-            >
+              onClick={handleItemClick}>
               My Account
             </div>
           </div>

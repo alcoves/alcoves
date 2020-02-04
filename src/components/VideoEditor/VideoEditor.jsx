@@ -1,13 +1,13 @@
 import React from 'react';
 import { gql } from 'apollo-boost';
-
 import { Redirect, Link } from 'react-router-dom';
-import { observer, useObservable } from 'mobx-react-lite';
 import { useQuery, useMutation } from '@apollo/react-hooks';
-import { Button, Container, Input, Loader, Icon } from 'semantic-ui-react';
+import { Button, Container, Loader, Icon } from 'semantic-ui-react';
+
+import Title from './Title';
 import ProcessingStatus from './ProcessingStatus';
 
-const DeleteVideoButton = props => {
+const DeleteVideoButton = ({ id }) => {
   const DELETE_VIDEO = gql`
     mutation deleteVideo($id: ID!) {
       deleteVideo(id: $id)
@@ -15,9 +15,7 @@ const DeleteVideoButton = props => {
   `;
 
   const [deleteVideo, { loading, data }] = useMutation(DELETE_VIDEO, {
-    variables: {
-      id: props.id,
-    },
+    variables: { id },
   });
 
   if (data) return <Redirect to='/' />;
@@ -29,12 +27,10 @@ const DeleteVideoButton = props => {
   );
 };
 
-export default observer(props => {
-  const state = useObservable({ changes: {} });
-
+export default ({ match }) => {
   const GET_VIDEO = gql`
     {
-      video(id: "${props.match.params.videoId}") {
+      video(id: "${match.params.videoId}") {
         id
         title
         status
@@ -43,23 +39,7 @@ export default observer(props => {
     }
   `;
 
-  const SAVE_VIDEO = gql`
-    mutation updateVideo($id: ID!, $input: UpdateVideoInput!) {
-      updateVideo(id: $id, input: $input) {
-        id
-      }
-    }
-  `;
-
   const { loading, data, error } = useQuery(GET_VIDEO);
-
-  const [saveVideo, { loading: saveLoading }] = useMutation(SAVE_VIDEO, {
-    variables: { id: props.match.params.videoId, input: state.changes },
-  });
-
-  const handleChange = (e, { name, value }) => {
-    state.changes[name] = value;
-  };
 
   if (loading) {
     return <Loader active inline='centered' style={{ marginTop: '30px' }} />;
@@ -73,43 +53,18 @@ export default observer(props => {
   if (data) {
     return (
       <Container style={{ paddingTop: '50px' }}>
-        <div>
-          <Input
-            name='title'
-            fluid
-            size='huge'
-            onChange={handleChange}
-            value={state.changes.title !== undefined ? state.changes.title : data.video.title}
-          />
-        </div>
-        <h3>
-          video id: 
-          {' '}
-          {data.video.id}
-          {' '}
-| status: 
-          {' '}
-          {data.video.status}
-        </h3>
+        <Title title={data.video.title} id={data.video.id} />
+        <h3>{`video id: ${data.video.id} | status: ${data.video.status}`}</h3>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           {/* <ProcessingStatus videoId={props.match.params.videoId} /> */}
           <div>
-            <Button
-              loading={saveLoading}
-              disabled={!Object.keys(state.changes).length}
-              basic
-              color='teal'
-              onClick={saveVideo}
-            >
-              Save
-            </Button>
             <Button as={Link} to={`/videos/${data.video.id}`} basic color='teal'>
               View
             </Button>
-            <DeleteVideoButton id={props.match.params.videoId} />
+            <DeleteVideoButton id={match.params.videoId} />
           </div>
         </div>
       </Container>
     );
   }
-});
+};
