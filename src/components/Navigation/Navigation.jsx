@@ -8,7 +8,6 @@ import User from '../../data/User';
 
 export default props => {
   const user = useContext(User);
-  console.log(user);
 
   const styles = {
     menu: {
