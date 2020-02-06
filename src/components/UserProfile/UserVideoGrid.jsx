@@ -1,5 +1,5 @@
 import { gql } from 'apollo-boost';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import { useQuery } from '@apollo/react-hooks';
 import { Loader } from 'semantic-ui-react';
@@ -30,7 +30,15 @@ export default props => {
     }
   `;
 
-  const { loading, data, error } = useQuery(GET_USER_VIDEOS);
+  const { loading, called, data, error, refetch } = useQuery(GET_USER_VIDEOS);
+
+  useEffect(() => {
+    console.log('use effect!');
+    if (!loading && called) {
+      console.log('refetching...');
+      refetch();
+    }
+  });
 
   if (loading) {
     return <Loader active> Loading user videos... </Loader>;
