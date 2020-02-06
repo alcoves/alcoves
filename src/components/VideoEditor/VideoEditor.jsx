@@ -1,7 +1,7 @@
 import React from 'react';
 import { gql } from 'apollo-boost';
+import { Link, useHistory } from 'react-router-dom';
 import { useQuery, useMutation } from '@apollo/react-hooks';
-import { Redirect, Link, useHistory } from 'react-router-dom';
 import { Button, Container, Loader, Icon } from 'semantic-ui-react';
 
 import Title from './Title';
@@ -57,7 +57,7 @@ export default ({ match }) => {
         <Title title={data.video.title} id={data.video.id} />
         <h3>{`video id: ${data.video.id} | status: ${data.video.status}`}</h3>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          {/* <ProcessingStatus videoId={props.match.params.videoId} /> */}
+          <ProcessingStatus id={match.params.videoId} />
           <div>
             <Button as={Link} to={`/videos/${data.video.id}`} basic color='teal'>
               View
