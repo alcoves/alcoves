@@ -7,18 +7,14 @@ import { useQuery } from '@apollo/react-hooks';
 import { Loader, Container } from 'semantic-ui-react';
 
 const pickUrl = files => {
-  let url;
   const loadOrder = ['2160p', '1440p', '1080p', '720p', 'highQuality'];
-  loadOrder.map(desiredPreset => {
-    files.map(({ preset, link }) => {
-      // console.log(desiredPreset, preset, link);
+  for (const desiredPreset of loadOrder) {
+    for (const { preset, link } of files) {
       if (desiredPreset === preset && link) {
-        url = link;
+        return link;
       }
-    });
-  });
-
-  return url;
+    }
+  }
 };
 
 export default props => {
@@ -57,6 +53,7 @@ export default props => {
     };
 
     const link = pickUrl(data.video.files);
+    console.log(link);
 
     return (
       <div style={{ display: 'flex', flexDirection: 'column' }}>
