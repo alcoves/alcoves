@@ -1,13 +1,14 @@
 import React from 'react';
 import { gql } from 'apollo-boost';
-import { Redirect, Link } from 'react-router-dom';
 import { useQuery, useMutation } from '@apollo/react-hooks';
+import { Redirect, Link, useHistory } from 'react-router-dom';
 import { Button, Container, Loader, Icon } from 'semantic-ui-react';
 
 import Title from './Title';
 import ProcessingStatus from './ProcessingStatus';
 
 const DeleteVideoButton = ({ id }) => {
+  const history = useHistory();
   const DELETE_VIDEO = gql`
     mutation deleteVideo($id: ID!) {
       deleteVideo(id: $id)
@@ -18,7 +19,7 @@ const DeleteVideoButton = ({ id }) => {
     variables: { id },
   });
 
-  if (data) return <Redirect to='/' />;
+  if (data) history.goBack();
   return (
     <Button basic negative onClick={deleteVideo} loading={loading}>
       <Icon name='trash' />
