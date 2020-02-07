@@ -1,7 +1,7 @@
 import './Home.css';
 
 import { gql } from 'apollo-boost';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Loader } from 'semantic-ui-react';
 import { useQuery } from '@apollo/react-hooks';
 import VideoGrid from '../VideoGrid/VideoGrid';
@@ -33,8 +33,8 @@ export default function Home() {
       {loading ? (
         <Loader active inline='centered' style={{ marginTop: '30px' }} />
       ) : (
-        <VideoGrid videos={data.videos} />
-      )}
+          <VideoGrid videos={data.videos} />
+        )}
     </div>
   );
 }

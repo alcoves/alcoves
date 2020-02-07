@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { gql } from 'apollo-boost';
 import { Link, useHistory } from 'react-router-dom';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import { Button, Container, Loader, Icon } from 'semantic-ui-react';
 
 import Title from './Title';
+import PublishStatus from './PublishStatus';
 import ProcessingStatus from './ProcessingStatus';
 
 const DeleteVideoButton = ({ id }) => {
@@ -36,11 +37,16 @@ export default ({ match }) => {
         title
         status
         createdAt
+        published
       }
     }
   `;
 
-  const { loading, data, error } = useQuery(GET_VIDEO);
+  const { called, loading, data, error, refetch } = useQuery(GET_VIDEO);
+
+  useEffect(() => {
+    if (called && !loading && data) refetch();
+  });
 
   if (loading) {
     return <Loader active inline='centered' style={{ marginTop: '30px' }} />;
@@ -52,17 +58,22 @@ export default ({ match }) => {
   }
 
   if (data) {
+    console.log('data.video.published', data.video.published);
     return (
       <Container style={{ paddingTop: '50px' }}>
         <Title title={data.video.title} id={data.video.id} />
+        <PublishStatus published={data.video.published} id={data.video.id} />
         <h3>{`video id: ${data.video.id} | status: ${data.video.status}`}</h3>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <ProcessingStatus id={match.params.videoId} />
+          <ProcessingStatus id={data.video.id} />
           <div>
+            <Button basic color='teal' onClick={() => refetch()}>
+              Refresh
+            </Button>
             <Button as={Link} to={`/videos/${data.video.id}`} basic color='teal'>
               View
             </Button>
-            <DeleteVideoButton id={match.params.videoId} />
+            <DeleteVideoButton id={data.video.id} />
           </div>
         </div>
       </Container>

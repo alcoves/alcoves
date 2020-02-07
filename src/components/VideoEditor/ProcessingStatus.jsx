@@ -1,5 +1,5 @@
+import React from 'react';
 import { gql } from 'apollo-boost';
-import React, { useEffect } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import { Label, Icon, Loader } from 'semantic-ui-react';
 
