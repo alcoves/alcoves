@@ -23,6 +23,7 @@ const typeDefs = gql`
   }
   input CreateMultipartUploadInput {
     parts: Int!
+    duration: Float!
     fileType: String!
   }
   input CompleteMultipartUploadInput {

@@ -4,8 +4,8 @@ const Video = require('../models/video');
 
 const { MEDIA_BUCKET_NAME } = require('../config/config');
 
-module.exports = async ({ parts, fileType }, { user }) => {
-  const { _id } = await Video({ user: user.id }).save();
+module.exports = async ({ parts, fileType, duration }, { user }) => {
+  const { _id } = await Video({ user: user.id, duration }).save();
 
   const { UploadId, Key } = await s3
     .createMultipartUpload({

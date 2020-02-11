@@ -17,13 +17,14 @@ const videoFile = new Schema(
 
 const videoSchema = new Schema(
   {
-    title: { type: String, required: true, default: shortid.generate },
-    status: { type: String, required: true, default: 'uploading' },
+    files: [videoFile],
+    duration: { type: Number, required: true },
     sourceFile: { type: String, required: false },
     _id: { type: String, default: shortid.generate },
-    thumbnail: { type: String, default: defaultThumbnail, required: true },
     views: { type: Number, default: 0, required: true },
-    files: [videoFile],
+    status: { type: String, required: true, default: 'uploading' },
+    title: { type: String, required: true, default: shortid.generate },
+    thumbnail: { type: String, default: defaultThumbnail, required: true },
     user: {
       type: Schema.Types.ObjectId,
       ref: 'User',

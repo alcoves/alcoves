@@ -8,7 +8,7 @@
   "license": "GPL-3.0",
   "private": false,
   "scripts": {
-    "dev": "nodemon -r dotenv/config src/server.js",
+    "dev": "NODE_ENV=test && nodemon -r dotenv/config src/server.js",
     "start": "pm2 start src/server.js",
     "test": "jest ./src/",
     "lint": "prettier --check \"src/**/*.*\"",

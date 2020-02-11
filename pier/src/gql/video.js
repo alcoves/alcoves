@@ -20,6 +20,7 @@ const typeDefs = gql`
     title: String!
     user: User!
     status: String!
+    duration: Float!
     thumbnail: String!
     createdAt: String!
     modifiedAt: String!
