@@ -85,7 +85,15 @@ export default () => {
       console.log('starting file upload process');
       const fileType = files[0].type;
       const parts = chunkFile(files[0]).length;
-      startUpload({ variables: { input: { parts, fileType } } });
+
+      // Load the video into the browser to get the duration
+      const video = document.createElement('video');
+      video.setAttribute('src', window.URL.createObjectURL(files[0]));
+      video.onloadeddata = event => {
+        const meta = event.srcElement;
+        console.log('Video metadata', meta);
+        startUpload({ variables: { input: { parts, fileType, duration: meta.duration } } });
+      };
     }
   }, [files]);
 

@@ -27,19 +27,21 @@ const styles = {
     cursor: 'pointer',
     height: '50px',
   },
-  image: {
-    objectFit: 'cover',
-    minHeight: '180px',
-    maxHeight: '180px',
-    width: '100%',
-    cursor: 'pointer',
-  },
   cardFooter: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
+};
+
+const videoDuration = duration => {
+  if (duration) {
+    const durationFmt = (duration / 100).toFixed(2).toString();
+    return durationFmt.replace('.', ':');
+  }
+
+  return null;
 };
 
 export default ({ videos, isEditor }) => {
@@ -49,7 +51,23 @@ export default ({ videos, isEditor }) => {
         return (
           <Grid.Column key={video.id} mobile={14} tablet={10} computer={4} style={styles.card}>
             <Link to={`/videos/${video.id}`} style={styles.title}>
-              <img style={styles.image} alt='thumbnail' src={video.thumbnail} />
+              <div
+                style={{
+                  width: '100%',
+                  cursor: 'pointer',
+                  minHeight: '180px',
+                  maxHeight: '180px',
+                  position: 'relative',
+                  backgroundColor: 'grey',
+                  backgroundSize: 'cover',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundImage: `url("${video.thumbnail}")`,
+                }}>
+                <div
+                  style={{ position: 'absolute', bottom: 0, right: 0, zIndex: 10, color: 'white' }}>
+                  {videoDuration(video.duration)}
+                </div>
+              </div>
             </Link>
             <div style={styles.meta}>
               <Link to={`/videos/${video.id}`} style={styles.title}>

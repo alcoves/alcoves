@@ -12,6 +12,7 @@ const GET_VIDEOS = gql`
       id
       title
       views
+      duration
       thumbnail
       user {
         id
