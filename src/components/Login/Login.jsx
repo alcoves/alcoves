@@ -33,7 +33,8 @@ export default () => {
 
   if (data) {
     user.login(data.login.accessToken);
-    return <Redirect to='/' />;
+    <Redirect to='/' />;
+    window.location.reload();
   }
 
   if (called || loading) {
