@@ -15,6 +15,7 @@ export default props => {
         title
         views
         status
+        duration
         thumbnail
         user {
           id

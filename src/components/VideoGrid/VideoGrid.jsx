@@ -1,6 +1,21 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Grid } from 'semantic-ui-react';
+import styled from 'styled-components';
+
+const Duration = styled.div`
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  position: absolute;
+  border-radius: 3px;
+  margin: 0px 3px 3px 0px;
+  padding: 0px 3px 0px 3px;
+  background: rgba(0, 0, 0, 0.7);
+`;
 
 const styles = {
   card: {
@@ -62,11 +77,9 @@ export default ({ videos, isEditor }) => {
                   backgroundSize: 'cover',
                   backgroundRepeat: 'no-repeat',
                   backgroundImage: `url("${video.thumbnail}")`,
+                  backgroundPosition: 'center',
                 }}>
-                <div
-                  style={{ position: 'absolute', bottom: 0, right: 0, zIndex: 10, color: 'white' }}>
-                  {videoDuration(video.duration)}
-                </div>
+                <Duration>{videoDuration(video.duration)}</Duration>
               </div>
             </Link>
             <div style={styles.meta}>
