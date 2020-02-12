@@ -1,6 +1,6 @@
-import React from 'react';
 import moment from 'moment';
 import { gql } from 'apollo-boost';
+import React, { useEffect } from 'react';
 
 import { Link } from 'react-router-dom';
 import { useQuery } from '@apollo/react-hooks';
@@ -40,7 +40,14 @@ export default props => {
     }
   `;
 
-  const { loading, data } = useQuery(GET_VIDEO);
+  useEffect(() => {
+    console.log('refetching video');
+    refetch();
+  }, []);
+
+  const { loading, data, refetch } = useQuery(GET_VIDEO, {
+    notifyOnNetworkStatusChange: true,
+  });
 
   if (loading) {
     return <Loader active inline='centered' style={{ marginTop: '30px' }} />;
