@@ -1,7 +1,8 @@
 const Video = require('../models/video');
-const convertObjectToDotNotation = require('../lib/convertObjectToDotNotation');
-const { gql } = require('apollo-server-express');
+const viewVideo = require('../lib/viewVideo');
 const emptyS3Dir = require('../lib/emptyS3Dir');
+const { gql } = require('apollo-server-express');
+const convertObjectToDotNotation = require('../lib/convertObjectToDotNotation');
 
 const typeDefs = gql`
   extend type Query {
@@ -52,11 +53,14 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    video: async (_, { id }) => {
-      return Video.findOne({ _id: id }).populate(
+    video: async (_, { id }, { user }) => {
+      const video = await Video.findOne({ _id: id }).populate(
         'user',
         '_id avatar displayName'
       );
+
+      if (user && user.id) await viewVideo(user.id, video);
+      return video;
     },
     // Deprecate? could be used to get homepage video feed
     videos: async (_, input) => {
