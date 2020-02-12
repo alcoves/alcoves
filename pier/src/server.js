@@ -9,7 +9,7 @@ const startServer = async () => {
   await mongoose.connect(process.env.DB_CONNECTION_STRING, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    autoIndex: false,
+    autoIndex: true,
   });
 
   app.listen({ port }, () =>

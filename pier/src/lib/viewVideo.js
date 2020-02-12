@@ -27,7 +27,7 @@ module.exports = async (userId, { duration, id: videoId }) => {
     }
   } else {
     console.log('first time user has viewed video');
-    await new View({
+    await View({
       user: userId,
       video: videoId,
     }).save();

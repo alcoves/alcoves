@@ -6,7 +6,10 @@ const avatarDefault =
 
 const userSchema = new Schema(
   {
-    _id: { type: Schema.Types.ObjectId, default: mongoose.Types.ObjectId() },
+    _id: {
+      auto: true,
+      type: Schema.Types.ObjectId,
+    },
     password: { type: String, required: true },
     displayName: { type: String, required: true },
     followers: { type: Number, required: true, default: 0 },
