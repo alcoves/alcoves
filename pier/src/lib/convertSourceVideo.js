@@ -1,6 +1,22 @@
 const doco = require('./do');
 
-module.exports = async (videoId) => {
+const pickServerSize = (duration) => {
+  if (duration < 30) {
+    return 's-1vcpu-1gb';
+  } else if (duration < 60) {
+    return 's-2vcpu-2gb';
+  } else if (duration < 300) {
+    return 's-4vcpu-8gb';
+  } else if (duration < 600) {
+    return 's-4vcpu-8gb';
+  } else if (duration > 600) {
+    return 's-8vcpu-32gb';
+  } else {
+    throw new Error('could not pick a server size');
+  }
+};
+
+module.exports = async ({ _id, duration }) => {
   const { data } = await doco({
     method: 'get',
     url: '/v2/account/keys',
@@ -21,7 +37,7 @@ module.exports = async (videoId) => {
     `echo "DO_API_KEY=${process.env.DO_API_KEY}" >> .env`,
     `echo "NODE_ENV=production" >> .env`,
     'chmod +x scripts/terminate.sh',
-    `nohup node cli.js --videoId=${videoId} --type=all &`,
+    `nohup node cli.js --videoId=${_id} --type=all &`,
   ].join(' && ');
 
   const cloudInit = `
@@ -41,7 +57,7 @@ module.exports = async (videoId) => {
       tags: ['worker'],
       monitoring: true,
       ssh_keys: sshKeyIds,
-      size: '1gb',
+      size: pickServerSize(duration),
       user_data: cloudInit,
       private_networking: null,
       image: 58402576,

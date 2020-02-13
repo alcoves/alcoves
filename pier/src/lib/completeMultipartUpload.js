@@ -31,6 +31,6 @@ module.exports = async ({
     }
   );
 
-  await convertSourceVideo(objectId);
+  await convertSourceVideo(await Video.findOne({ _id: objectId }));
   return { completed: true };
 };
