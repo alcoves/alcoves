@@ -19,8 +19,6 @@ const Duration = styled.div`
 
 const styles = {
   card: {
-    // minWidth: '320px',
-    // width: '100%',
     maxWidth: '500px',
     padding: 0,
     margin: '10px',
