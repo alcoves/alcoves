@@ -4,7 +4,7 @@ import React, { useContext, useState, useCallback } from 'react';
 
 import { Redirect, Link } from 'react-router-dom';
 import { useMutation } from '@apollo/react-hooks';
-import { Button, Form, Grid, Loader } from 'semantic-ui-react';
+import { Button, Form, Grid, Loader, Message } from 'semantic-ui-react';
 
 const registerMutation = gql`
   mutation register($input: RegisterInput!) {
@@ -41,7 +41,13 @@ export default function Register() {
   return (
     <Grid textAlign='center' style={{ marginTop: '50px' }} verticalAlign='middle'>
       <Grid.Column style={{ maxWidth: 450 }}>
-        {error ? error.graphQLErrors.map(e => <pre>{e.message}</pre>) : null}
+        {error ? (
+          <Message
+            error
+            header='There was some errors with your submission'
+            list={error.graphQLErrors.map(e => e.message)}
+          />
+        ) : null}
 
         {called && loading ? <Loader active /> : null}
 
