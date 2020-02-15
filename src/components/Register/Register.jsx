@@ -1,6 +1,6 @@
 import { gql } from 'apollo-boost';
 import User from '../../data/User';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useCallback } from 'react';
 
 import { Redirect, Link } from 'react-router-dom';
 import { useMutation } from '@apollo/react-hooks';
@@ -16,93 +16,72 @@ const registerMutation = gql`
 
 export default function Register() {
   const user = useContext(User);
+  const [register, { called, loading, data, error }] = useMutation(registerMutation);
 
-  const [state, setState] = useState({
-    code: '',
-    email: '',
-    password: '',
-    displayName: '',
-  });
+  const handleSubmit = useCallback(({ currentTarget }) => {
+    const form = new FormData(currentTarget);
 
-  const handleChange = (e, { name, value }) => {
-    setState({ ...state, [name]: value });
-  };
-
-  const [register, { called, loading, data, error }] = useMutation(registerMutation, {
-    variables: {
-      input: {
-        email: state.email,
-        password: state.password,
-        code: state.code,
-        displayName: state.displayName,
+    register({
+      variables: {
+        input: {
+          email: form.get('email'),
+          password: form.get('password'),
+          code: form.get('code'),
+          displayName: form.get('displayName'),
+        },
       },
-    },
+    });
   });
-
-  if (error) {
-    return <div> there was an error registering you </div>;
-  }
 
   if (data) {
     user.login(data.register.accessToken);
     return <Redirect to='/' />;
   }
 
-  if (called || loading) {
-    return <Loader active />;
-  }
-
   return (
     <Grid textAlign='center' style={{ marginTop: '50px' }} verticalAlign='middle'>
       <Grid.Column style={{ maxWidth: 450 }}>
-        <Form size='large' onSubmit={register}>
-          <Form.Input
-            fluid
-            icon='user'
-            name='displayName'
-            iconPosition='left'
-            onChange={handleChange}
-            value={state.displayName}
-            placeholder='Display Name'
-          />
-          <Form.Input
-            fluid
-            icon='mail'
-            name='email'
-            iconPosition='left'
-            value={state.email}
-            onChange={handleChange}
-            placeholder='E-mail address'
-          />
-          <Form.Input
-            fluid
-            icon='lock'
-            type='password'
-            name='password'
-            iconPosition='left'
-            placeholder='Password'
-            value={state.password}
-            onChange={handleChange}
-          />
-          <Form.Input
-            fluid
-            icon='code'
-            name='code'
-            value={state.code}
-            iconPosition='left'
-            placeholder='Beta Code'
-            onChange={handleChange}
-          />
-          <Grid>
-            <Grid.Column width={10}>
-              <Form.Button color='teal' fluid content='Register' />
-            </Grid.Column>
-            <Grid.Column width={6}>
-              <Button as={Link} to='/login' color='teal' basic fluid content='Or Login' />
-            </Grid.Column>
-          </Grid>
+        {error ? <div> there was an error registering you </div> : null}
+
+        {called && loading ? <Loader active /> : null}
+
+        <Form size='large' onSubmit={handleSubmit}>
+          <fieldset disabled={loading} style={{ padding: 'none', border: 'none' }}>
+            <Form.Input
+              fluid
+              icon='user'
+              name='displayName'
+              iconPosition='left'
+              placeholder='Display Name'
+            />
+            <Form.Input
+              fluid
+              icon='mail'
+              name='email'
+              iconPosition='left'
+              placeholder='E-mail address'
+            />
+            <Form.Input
+              fluid
+              icon='lock'
+              type='password'
+              name='password'
+              iconPosition='left'
+              placeholder='Password'
+            />
+            <Form.Input fluid icon='code' name='code' iconPosition='left' placeholder='Beta Code' />
+
+            <Grid>
+              <Grid.Column width={10}>
+                <Form.Button color='teal' fluid content='Register' />
+              </Grid.Column>
+              <Grid.Column width={6}>
+                <Button as={Link} to='/login' color='teal' basic fluid content='Or Login' />
+              </Grid.Column>
+            </Grid>
+          </fieldset>
         </Form>
       </Grid.Column>
     </Grid>
   );
-};
+}
