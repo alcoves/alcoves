@@ -48,16 +48,16 @@ const styles = {
   },
 };
 
-const videoDuration = duration => {
+function videoDuration(duration) {
   if (duration) {
     const durationFmt = (duration / 100).toFixed(2).toString();
     return durationFmt.replace('.', ':');
   }
 
   return null;
-};
+}
 
-export default ({ videos, isEditor }) => {
+export default function VideoGrid({ videos = [], isEditor }) {
   return (
     <Grid centered doubling style={{ paddingTop: '30px' }}>
       {videos.map(video => {
@@ -136,4 +136,4 @@ export default ({ videos, isEditor }) => {
       })}
     </Grid>
   );
-};
+}
