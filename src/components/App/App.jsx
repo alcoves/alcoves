@@ -24,7 +24,7 @@ history.listen(location => {
   ReactGA.pageview(location.pathname);
 });
 
-export default p => {
+export default function App(p) {
   const user = useContext(User);
   const accessToken = localStorage.getItem('accessToken');
   user.login(accessToken);
@@ -55,4 +55,4 @@ export default p => {
       </Navigation>
     </Router>
   );
-};
+}
