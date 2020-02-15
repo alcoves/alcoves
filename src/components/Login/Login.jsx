@@ -46,7 +46,7 @@ export default function Login() {
   return (
     <Grid textAlign='center' style={{ marginTop: '50px' }} verticalAlign='middle'>
       <Grid.Column style={{ maxWidth: 450 }}>
-        {error ? <div> there was an error logging you in </div> : null}
+        {error ? error.graphQLErrors.map(e => <pre>{e.message}</pre>) : null}
 
         {called && loading ? <Loader active /> : null}
 
