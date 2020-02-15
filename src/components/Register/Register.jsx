@@ -14,7 +14,7 @@ const registerMutation = gql`
   }
 `;
 
-export default () => {
+export default function Register() {
   const user = useContext(User);
 
   const [state, setState] = useState({

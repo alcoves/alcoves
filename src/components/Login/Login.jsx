@@ -13,7 +13,7 @@ const loginQuery = gql`
   }
 `;
 
-export default () => {
+export default function Login() {
   const user = useContext(User);
   const [state, setState] = useState({ email: '', password: '', buttonClicked: false });
 
