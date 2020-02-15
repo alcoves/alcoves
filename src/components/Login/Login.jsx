@@ -2,7 +2,7 @@ import { gql } from 'apollo-boost';
 import User from '../../data/User';
 import { useMutation } from '@apollo/react-hooks';
 import { Redirect, Link } from 'react-router-dom';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useCallback } from 'react';
 import { Button, Form, Grid, Loader } from 'semantic-ui-react';
 
 const loginQuery = gql`
@@ -15,20 +15,26 @@ const loginQuery = gql`
 
 export default function Login() {
   const user = useContext(User);
-  const [state, setState] = useState({ email: '', password: '', buttonClicked: false });
+  const [login, { called, loading, data, error }] = useMutation(loginQuery);
 
-  const handleChange = (e, { name, value }) => {
-    setState({ ...state, [name]: value });
-  };
+  const handleSubmit = useCallback(
+    ({ currentTarget }) => {
+      const form = new FormData(currentTarget);
 
-  if (user.isLoggedIn()) return <Redirect to='/account' />;
+      login({
+        variables: {
+          input: {
+            email: form.get('email'),
+            password: form.get('password'),
+          },
+        },
+      });
+    },
+    [login],
+  );
 
-  const [login, { called, loading, data, error }] = useMutation(loginQuery, {
-    variables: { input: { email: state.email, password: state.password } },
-  });
-
-  if (error) {
-    return <div> there was an error logging you in </div>;
+  if (user.isLoggedIn()) {
+    return <Redirect to='/account' />;
   }
 
   if (data) {
@@ -37,43 +43,42 @@ export default function Login() {
     window.location.reload();
   }
 
-  if (called || loading) {
-    return <Loader active />;
-  }
-
   return (
     <Grid textAlign='center' style={{ marginTop: '50px' }} verticalAlign='middle'>
       <Grid.Column style={{ maxWidth: 450 }}>
-        <Form size='large' onSubmit={login}>
-          <Form.Input
-            fluid
-            icon='mail'
-            name='email'
-            iconPosition='left'
-            value={state.email}
-            onChange={handleChange}
-            placeholder='E-mail address'
-          />
-          <Form.Input
-            fluid
-            icon='lock'
-            type='password'
-            name='password'
-            iconPosition='left'
-            placeholder='Password'
-            value={state.password}
-            onChange={handleChange}
-          />
-          <Grid>
-            <Grid.Column width={10}>
-              <Form.Button color='teal' fluid content='Login' />
-            </Grid.Column>
-            <Grid.Column width={6}>
-              <Button as={Link} to='/register' basic fluid color='teal' content='Or Register' />
-            </Grid.Column>
-          </Grid>
+        {error ? <div> there was an error logging you in </div> : null}
+
+        {called && loading ? <Loader active /> : null}
+
+        <Form size='large' onSubmit={handleSubmit}>
+          <fieldset disabled={loading} style={{ padding: 'none', border: 'none' }}>
+            <Form.Input
+              fluid
+              icon='mail'
+              name='email'
+              iconPosition='left'
+              placeholder='E-mail address'
+            />
+            <Form.Input
+              fluid
+              icon='lock'
+              type='password'
+              name='password'
+              iconPosition='left'
+              placeholder='Password'
+            />
+
+            <Grid>
+              <Grid.Column width={10}>
+                <Form.Button color='teal' fluid content='Login' />
+              </Grid.Column>
+              <Grid.Column width={6}>
+                <Button as={Link} to='/register' basic fluid color='teal' content='Or Register' />
+              </Grid.Column>
+            </Grid>
+          </fieldset>
         </Form>
       </Grid.Column>
     </Grid>
   );
-};
+}
