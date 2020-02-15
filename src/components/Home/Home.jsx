@@ -23,18 +23,18 @@ const GET_VIDEOS = gql`
   }
 `;
 
-export default () => {
-  const { loading, data } = useQuery(GET_VIDEOS);
+export default function Home() {
+  const { loading = true, data = {}, error = {} } = useQuery(GET_VIDEOS);
 
-  if (loading) {
-    return <Loader active inline='centered' style={{ marginTop: '30px' }} />;
-  }
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      {error.message ? <pre>{error.message}</pre> : null}
 
-  if (data) {
-    return (
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
+      {loading ? (
+        <Loader active inline='centered' style={{ marginTop: '30px' }} />
+      ) : (
         <VideoGrid videos={data.videos} />
-      </div>
-    );
-  }
-};
+      )}
+    </div>
+  );
+}
