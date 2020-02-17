@@ -102,8 +102,10 @@ export default () => {
   return (
     <div className='uploadContainer'>
       <div className='uploadRow'>
+        <h1> Uploading is currently disabled </h1>
         <Button
           fluid
+          disabled
           icon='video'
           labelPosition='left'
           content='Select Video'
