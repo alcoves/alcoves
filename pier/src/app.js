@@ -15,10 +15,10 @@ const server = new ApolloServer({
         if (!token.split('SERVICE ')[1] === process.env.CONVERSION_API_KEY) {
           throw new Error('invalid service api key');
         }
+      } else {
+        const user = jwt.verify(token.split(' ')[1], process.env.JWT_KEY);
+        return { user };
       }
-
-      const user = jwt.verify(token.split(' ')[1], process.env.JWT_KEY);
-      return { user };
     }
   },
   tracing: true,
