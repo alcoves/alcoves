@@ -8,7 +8,7 @@
   "repository": "git@github.com:bken-io/web.git",
   "description": "frontend for bken.io",
   "scripts": {
-    "dev": "parcel public/index.html",
+    "start:dev": "parcel public/index.html",
     "lint": "prettier --check \"src/**/*.*\"",
     "lint:fix": "prettier --write \"src/**/*.*\"",
     "build": "rm -rf dist/ && NODE_ENV=production parcel build public/index.html && cp public/favicon.ico dist/ && echo '/* /index.html 200' > ./dist/_redirects"
