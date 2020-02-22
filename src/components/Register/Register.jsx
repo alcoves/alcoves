@@ -15,6 +15,7 @@ const registerMutation = gql`
 `;
 
 export default function Register() {
+  const [email, setEmail] = useState('');
   const user = useContext(User);
   const [register, { called, loading, data, error }] = useMutation(registerMutation);
 
@@ -64,8 +65,10 @@ export default function Register() {
               fluid
               icon='mail'
               name='email'
+              value={email}
               iconPosition='left'
               placeholder='E-mail address'
+              onChange={(e, { value }) => setEmail(value)}
             />
             <Form.Input
               fluid

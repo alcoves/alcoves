@@ -14,6 +14,7 @@ const loginQuery = gql`
 `;
 
 export default function Login() {
+  const [email, setEmail] = useState('');
   const user = useContext(User);
   const [login, { called, loading, data, error }] = useMutation(loginQuery);
 
@@ -24,8 +25,8 @@ export default function Login() {
       login({
         variables: {
           input: {
-            email: form.get('email'),
             password: form.get('password'),
+            email: form.get('email').toLowerCase(),
           },
         },
       });
@@ -63,6 +64,10 @@ export default function Login() {
               icon='mail'
               name='email'
               iconPosition='left'
+              value={email}
+              onChange={(e, { value }) => {
+                setEmail(value.toLowerCase());
+              }}
               placeholder='E-mail address'
             />
             <Form.Input
