@@ -1,4 +1,7 @@
 const jwt = require('jsonwebtoken');
+
+const users = require('./loaders/users');
+const videos = require('./loaders/videos');
 const uploads = require('./loaders/uploads');
 
 module.exports = ({ req }) => {
@@ -16,6 +19,8 @@ module.exports = ({ req }) => {
 
   return {
     user,
+    users,
+    videos,
     uploads,
   };
 };

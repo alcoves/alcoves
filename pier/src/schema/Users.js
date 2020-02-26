@@ -1,7 +1,4 @@
-const Login = require('../lib/login');
 const User = require('../models/user');
-const Video = require('../models/video');
-const Register = require('../lib/register');
 const { gql } = require('apollo-server-express');
 
 const typeDefs = gql`
@@ -52,11 +49,11 @@ const resolvers = {
     },
   },
   Mutation: {
-    login: async (_, { input }) => {
-      return Login(input);
+    login: async (_, { input }, { users: { login } }) => {
+      return login(input);
     },
-    register: async (_, { input }) => {
-      return Register(input);
+    register: async (_, { input }, { users: { register } }) => {
+      return register(input);
     },
     // uploadAvatar: async (parent, { file }) => {
     //   const { stream, filename, mimetype, encoding } = await file;

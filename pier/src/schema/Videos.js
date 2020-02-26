@@ -1,5 +1,4 @@
 const Video = require('../models/video');
-const viewVideo = require('../lib/viewVideo');
 const emptyS3Dir = require('../lib/emptyS3Dir');
 const { gql } = require('apollo-server-express');
 const convertObjectToDotNotation = require('../lib/convertObjectToDotNotation');
@@ -53,7 +52,7 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    video: async (_, { id }, { user }) => {
+    video: async (_, { id }, { user, videos: { viewVideo } }) => {
       const video = await Video.findOne({ _id: id }).populate(
         'user',
         '_id avatar displayName'
@@ -103,9 +102,6 @@ const resolvers = {
           },
           {}
         );
-
-        // console.log(`files.preset`, input.preset);
-        // console.log('convertedArrToDot', convertedArrToDot);
 
         await Video.updateOne(
           { _id: id, 'files.preset': input.preset },

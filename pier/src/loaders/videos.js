@@ -1,16 +1,7 @@
 const View = require('../models/view');
 const Video = require('../models/video');
 
-/**
- * Views are counted in the following way
- * Logged in users clicks on a video that is 10 minutes long, the video gets 1 view
- * User then watches for a few miunutes and then clicks away.
- * User comes back after 5 minutes have elapsed since first view, this view is not counted
- * The next view to be counted is when the user comes back after the modification time on the
- * view record is greater than the duration of the video.
- */
-
-module.exports = async (userId, { duration, id: videoId }) => {
+const viewVideo = async function(userId, { duration, id: videoId }) {
   console.log('videoDuration', duration);
   const view = await View.findOne({ user: userId, video: videoId });
   if (view) {
@@ -32,4 +23,8 @@ module.exports = async (userId, { duration, id: videoId }) => {
       video: videoId,
     }).save();
   }
+};
+
+module.exports = {
+  viewVideo,
 };
