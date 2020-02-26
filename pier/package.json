@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "apollo-server-express": "^2.10.1",
-    "aws-sdk": "^2.624.0",
+    "aws-sdk": "^2.626.0",
     "axios": "^0.19.2",
     "bcrypt": "^4.0.0",
     "dotenv": "^8.2.0",

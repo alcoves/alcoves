@@ -1,6 +1,3 @@
-const CreateMultipartUpload = require('../lib/createMultipartUpload');
-const CompleteMultipartUpload = require('../lib/completeMultipartUpload');
-
 const { gql } = require('apollo-server-express');
 
 const typeDefs = gql`
@@ -40,13 +37,22 @@ const typeDefs = gql`
 
 const resolvers = {
   Mutation: {
-    createMultipartUpload: async (_, { input }, ctx) => {
-      if (!ctx.user) throw new Error('authentication failed');
-      return CreateMultipartUpload(input, ctx);
+    createMultipartUpload: async (
+      _,
+      { input },
+      { user, uploads: { createMultipartUpload } }
+    ) => {
+      if (!user) throw new Error('authentication failed');
+      console.log('user', user);
+      return createMultipartUpload(input, user);
     },
-    completeMultipartUpload: async (_, { input }, ctx) => {
-      if (!ctx.user) throw new Error('authentication failed');
-      return CompleteMultipartUpload(input, ctx);
+    completeMultipartUpload: async (
+      _,
+      { input },
+      { user, uploads: { completeMultipartUpload } }
+    ) => {
+      if (!user) throw new Error('authentication failed');
+      return completeMultipartUpload(input);
     },
   },
 };
