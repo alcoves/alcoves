@@ -8,10 +8,9 @@ on:
 
 jobs:
   deploy:
-    name: Deploy
     runs-on: ubuntu-latest
     steps:
-    - name: executing remote ssh commands using ssh key
+    - name: log into prod webserver and update from master
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOST }}
@@ -19,4 +18,7 @@ jobs:
         key: ${{ secrets.KEY }}
         port: ${{ secrets.PORT }}
         script: |
-          touch ~/i_was_here.txt
+          pkill node
+          cd web
+          git reset --hard origin/master && git pull
+          yarn && yarn start

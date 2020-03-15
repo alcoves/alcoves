@@ -8,6 +8,7 @@
   "repository": "git@github.com:bken-io/web.git",
   "description": "frontend for bken.io",
   "scripts": {
+    "start": "parcel public/index.html",
     "dev": "parcel public/index.html",
     "lint": "prettier --check \"src/**/*.*\"",
     "lint:fix": "prettier --write \"src/**/*.*\"",
