@@ -9,6 +9,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      BRANCH: ${GITHUB_REF##*/}
     steps:
     - name: log into prod webserver and update from master
       uses: appleboy/ssh-action@master
@@ -17,9 +19,9 @@ jobs:
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.KEY }}
         port: ${{ secrets.PORT }}
+        envs: BRANCH
         script: |
-          pkill node
           cd web
-          git fetch -p && git reset --hard origin/autoDeploy && git pull
-          yarn
-          yarn start &
+          git fetch -p && git reset --hard origin/$BRANCH && git pull
+          yarn build
+          pm2 reload all
