@@ -10,7 +10,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      BRANCH: ${GITHUB_REF##*/}
+      BRANCH: "${GITHUB_REF##*/}"
     steps:
     - name: log into prod webserver and update from master
       uses: appleboy/ssh-action@master
