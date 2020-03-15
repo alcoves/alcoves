@@ -10,7 +10,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      BRANCH: "${GITHUB_REF##*/}"
+      BRANCH: autoDeploy
     steps:
     - name: log into prod webserver and update from master
       uses: appleboy/ssh-action@master
@@ -21,8 +21,7 @@ jobs:
         port: ${{ secrets.PORT }}
         envs: BRANCH
         script: |
-          echo "Branch Name $BRANCH"
           cd web
-          git fetch -p && git reset --hard "origin/$BRANCH" && git pull
+          git fetch -p && git reset --hard origin/$BRANCH && git pull
           yarn build
           pm2 reload all
