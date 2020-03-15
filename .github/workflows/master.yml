@@ -21,4 +21,5 @@ jobs:
           pkill node
           cd web
           git fetch -p && git reset --hard origin/autoDeploy && git pull
-          yarn && yarn start
+          yarn
+          yarn start &
