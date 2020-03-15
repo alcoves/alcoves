@@ -1,11 +1,15 @@
 # https://github.com/appleboy/ssh-action
 
 name: Production Deployment
-on: [push]
+on:
+  push:
+    branches:
+      - autoDeploy
+
 jobs:
   deploy:
     name: Deploy
-    runs-on: autoDeploy
+    runs-on: ubuntu-latest
     steps:
     - name: executing remote ssh commands using ssh key
       uses: appleboy/ssh-action@master
