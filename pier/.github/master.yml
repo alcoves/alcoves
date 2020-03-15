@@ -1,0 +1,29 @@
+# https://github.com/appleboy/ssh-action
+
+name: Production Deployment
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      ENV: ${{ secrets.ENV }}
+    steps:
+    - name: log into prod webserver and update from master
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        port: ${{ secrets.PORT }}
+        envs: ENV
+        script: |
+          cd api
+          git fetch -p && git reset --hard origin/master && git pull
+          yarn
+          export NODE_ENV=production
+          echo "$ENV" > ./.env
+          pm2 reload all
