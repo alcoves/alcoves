@@ -20,5 +20,5 @@ jobs:
         script: |
           pkill node
           cd web
-          git reset --hard origin/master && git pull
+          git reset --hard origin/$GITHUB_REF && git pull
           yarn && yarn start
