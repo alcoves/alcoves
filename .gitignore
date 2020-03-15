@@ -1,11 +1,3 @@
-node_modules
-
-# Parcel
 dist
 .cache
-
-# Scripts
-*.sh
-
-# Github pages
-CNAME
+node_modules
