@@ -21,4 +21,4 @@ jobs:
           cd web
           git fetch -p && git reset --hard origin/master && git pull
           yarn build
-          pm2 reload all --update-env
+          yarn redeploy
