@@ -26,4 +26,4 @@ jobs:
           yarn
           export NODE_ENV=production
           echo "$ENV" > ./.env
-          pm2 reload all
+          pm2 reload all --update-env
