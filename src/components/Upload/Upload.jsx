@@ -29,7 +29,6 @@ export default () => {
     Promise.all(
       chunkFile(files[0]).reduce((acc, blob, partIndex) => {
         let lastBytesUploaded = 0;
-        console.log('getting called to upload');
         acc.push(
           axios.put(creData.createMultipartUpload.urls[partIndex], blob, {
             headers: { 'Content-Type': files[0].type },
@@ -102,10 +101,8 @@ export default () => {
   return (
     <div className='uploadContainer'>
       <div className='uploadRow'>
-        <h1> Uploading is currently disabled </h1>
         <Button
           fluid
-          disabled
           icon='video'
           labelPosition='left'
           content='Select Video'
