@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
-const login = async function({ email, password }) {
+const login = async function ({ email, password }) {
   const user = await User.findOne({ email });
   if (!user) throw new Error('authentication failed');
   const passwordsMatch = await bcrypt.compare(password, user.password);
@@ -13,7 +13,7 @@ const login = async function({ email, password }) {
   return { accessToken };
 };
 
-const register = async function({ email, password, displayName, code }) {
+const register = async function ({ email, password, displayName, code }) {
   const userExists = await User.find({ email });
   if (userExists.length >= 1) throw new Error('user already exists');
   if (code !== process.env.BETA_CODE) throw new Error('bad beta code');

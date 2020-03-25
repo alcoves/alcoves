@@ -1,7 +1,7 @@
 const View = require('../models/view');
 const Video = require('../models/video');
 
-const viewVideo = async function(userId, { duration, id: videoId }) {
+const viewVideo = async function (userId, { duration, id: videoId }) {
   console.log('videoDuration', duration);
   const view = await View.findOne({ user: userId, video: videoId });
   if (view) {

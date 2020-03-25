@@ -3,19 +3,20 @@ const s3 = require('../config/s3');
 const Video = require('../models/video');
 const convertObjectToDotNotation = require('../lib/convertObjectToDotNotation');
 
-const { MEDIA_BUCKET_NAME } = require('../config/config');
+const { UPLOAD_BUCKET_NAME } = require('../config/config');
 
-const completeMultipartUpload = async function({
+const completeMultipartUpload = async function ({
   objectId,
   key: Key,
   parts: Parts,
   uploadId: UploadId,
 }) {
+  console.log('completing multipart upload');
   const data = await s3
     .completeMultipartUpload({
       Key,
       UploadId,
-      Bucket: MEDIA_BUCKET_NAME,
+      Bucket: UPLOAD_BUCKET_NAME,
       MultipartUpload: { Parts },
     })
     .promise();
@@ -36,7 +37,7 @@ const completeMultipartUpload = async function({
   return { completed: true };
 };
 
-const createMultipartUpload = async function(
+const createMultipartUpload = async function (
   { parts, fileType, duration },
   { id }
 ) {
@@ -45,8 +46,8 @@ const createMultipartUpload = async function(
   const { UploadId, Key } = await s3
     .createMultipartUpload({
       ContentType: mime.getType(fileType),
-      Bucket: MEDIA_BUCKET_NAME,
-      Key: `videos/${_id}/source.${mime.getExtension(fileType)}`,
+      Bucket: UPLOAD_BUCKET_NAME,
+      Key: `sources/${_id}/source.${mime.getExtension(fileType)}`,
     })
     .promise();
 
@@ -57,7 +58,7 @@ const createMultipartUpload = async function(
         Key,
         UploadId,
         PartNumber: i,
-        Bucket: MEDIA_BUCKET_NAME,
+        Bucket: UPLOAD_BUCKET_NAME,
       })
     );
   }
@@ -65,7 +66,7 @@ const createMultipartUpload = async function(
   return { objectId: _id, urls, key: Key, uploadId: UploadId };
 };
 
-const userAvatar = async function() {
+const userAvatar = async function () {
   try {
     if (req.file.size / (1024 * 1024) > 1) {
       return res.status(413).end();
