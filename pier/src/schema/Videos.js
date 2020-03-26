@@ -118,7 +118,7 @@ const resolvers = {
     },
     deleteVideo: async (_, { id }, { user }) => {
       if (!user) throw new Error('authentication failed');
-      await emptyS3Dir(`sources/${id}`);
+      await emptyS3Dir(`uploads/${id}`);
       const { deletedCount } = await Video.deleteOne({ _id: id });
       return Boolean(deletedCount);
     },
