@@ -3,9 +3,9 @@ const { ApolloServer } = require('apollo-server-express');
 
 const server = new ApolloServer({
   modules: [
-    require('./schema/Users'),
+    // require('./schema/Users'),
     require('./schema/Videos'),
-    require('./schema/Uploads'),
+    // require('./schema/Uploads'),
   ],
   context: require('./context'),
   tracing: true,
