@@ -2,37 +2,49 @@ const app = require('../app');
 const request = require('supertest');
 
 describe('video tests', () => {
-  // it('should start multipart upload', async () => {
-  //   const registerUserQuery = `
-  //     mutation createMultipartUpload {
-  //       createMultipartUpload(
-  //         input: {
-  //           title: "Test User"
-  //         }
-  //       ) {
-  //         accessToken
-  //       }
-  //     }
-  //   `;
+  let videoId;
 
-  //   const res = await request(app)
-  //     .post('/graphql')
-  //     .send({ query: registerUserQuery });
-  //   expect(res.body.errors[0].message).toEqual('bad beta code');
-  // });
-
-  it('getVideo', async () => {
-    const getVideoQuery = `
-      query video {
-        video(id: "test") {
+  it('createVideo', async () => {
+    const createVideo = `
+      mutation {
+        createVideo(input: {
+          user: "test"
+          title: "Video"
+        }) {
+          id
+          user
           title
         }
       }
     `;
+    const res = await request(app)
+      .post('/graphql')
+      .send({ query: createVideo });
+    videoId = res.body.data.createVideo.id;
+    expect(res.body.data.createVideo.title).toEqual('Video');
+  });
 
+  it('getVideo', async () => {
+    const getVideoQuery = `
+      query {
+        video(id: "${videoId}") {
+          id
+          user
+          title
+        }
+      }
+    `;
     const res = await request(app)
       .post('/graphql')
       .send({ query: getVideoQuery });
-    expect(res.body).toEqual('test');
+    expect(res.body.data.video.title).toEqual('Video');
+  });
+
+  it('deleteVideo', async () => {
+    const deleteVideo = `mutation { deleteVideo(id: "${videoId}")}`;
+    const res = await request(app)
+      .post('/graphql')
+      .send({ query: deleteVideo });
+    expect(res.body.data.deleteVideo).toEqual(true);
   });
 });

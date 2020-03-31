@@ -1,9 +1,38 @@
 const mime = require('mime');
-const s3 = require('../config/s3');
-const Video = require('../models/video');
-const convertObjectToDotNotation = require('../lib/convertObjectToDotNotation');
+
+const AWS = require('aws-sdk')
+const s3 = new AWS.S3({ region: 'us-east-1' })
 
 const { UPLOAD_BUCKET_NAME } = require('../config/config');
+
+const createMultipartUpload = async function (
+  { parts, fileType, duration },
+  { id }
+) {
+  const { _id } = await Video({ user: id, duration }).save();
+
+  const { UploadId, Key } = await s3
+    .createMultipartUpload({
+      ContentType: mime.getType(fileType),
+      Bucket: UPLOAD_BUCKET_NAME,
+      Key: `uploads/${_id}/source.${mime.getExtension(fileType)}`,
+    })
+    .promise();
+
+  let urls = [];
+  for (let i = 1; i <= parts; i++) {
+    urls.push(
+      s3.getSignedUrl('uploadPart', {
+        Key,
+        UploadId,
+        PartNumber: i,
+        Bucket: UPLOAD_BUCKET_NAME,
+      })
+    );
+  }
+
+  return { objectId: _id, urls, key: Key, uploadId: UploadId };
+};
 
 const completeMultipartUpload = async function ({
   objectId,
@@ -33,37 +62,7 @@ const completeMultipartUpload = async function ({
     }
   );
 
-  // Enqueue upload in sqs
   return { completed: true };
-};
-
-const createMultipartUpload = async function (
-  { parts, fileType, duration },
-  { id }
-) {
-  const { _id } = await Video({ user: id, duration }).save();
-
-  const { UploadId, Key } = await s3
-    .createMultipartUpload({
-      ContentType: mime.getType(fileType),
-      Bucket: UPLOAD_BUCKET_NAME,
-      Key: `uploads/${_id}/source.${mime.getExtension(fileType)}`,
-    })
-    .promise();
-
-  let urls = [];
-  for (let i = 1; i <= parts; i++) {
-    urls.push(
-      s3.getSignedUrl('uploadPart', {
-        Key,
-        UploadId,
-        PartNumber: i,
-        Bucket: UPLOAD_BUCKET_NAME,
-      })
-    );
-  }
-
-  return { objectId: _id, urls, key: Key, uploadId: UploadId };
 };
 
 // const userAvatar = async function () {

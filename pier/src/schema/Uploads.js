@@ -43,7 +43,6 @@ const resolvers = {
       { user, uploads: { createMultipartUpload } }
     ) => {
       if (!user) throw new Error('authentication failed');
-      console.log('user', user);
       return createMultipartUpload(input, user);
     },
     completeMultipartUpload: async (

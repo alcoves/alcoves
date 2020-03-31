@@ -1,10 +1,8 @@
-const User = require('../models/user');
 const { gql } = require('apollo-server-express');
 
 const typeDefs = gql`
   extend type Query {
     user(id: ID!): User!
-    userVideos: [Video!]!
   }
   extend type Mutation {
     login(input: LoginInput!): LoginResponse!
@@ -18,11 +16,6 @@ const typeDefs = gql`
     displayName: String!
     createdAt: String
     modifiedAt: String
-  }
-  type Avatar {
-    filename: String!
-    mimetype: String!
-    encoding: String!
   }
   type LoginResponse {
     accessToken: String!
@@ -44,8 +37,8 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    user: async (_, { id }) => {
-      return User.findOne({ _id: id });
+    user: async (_, { id }, { users: { getUser } }) => {
+      return getUser(id)
     },
   },
   Mutation: {

@@ -1,175 +1,66 @@
-// const app = require('../app');
-// const request = require('supertest');
-// const mongoose = require('mongoose');
-// const User = require('../models/user');
+const app = require('../app');
+const shortid = require('shortid');
+const request = require('supertest');
 
-// const testAccountEmail = `create-user@bken.io`;
-// const testAccountPassword = Math.random()
-//   .toString(36)
-//   .slice(2);
+const AWS = require('aws-sdk');
+const db = new AWS.DynamoDB.DocumentClient({ region: 'us-east-1' })
 
-// beforeAll(async () => {
-//   await mongoose.connect(process.env.DB_CONNECTION_STRING, {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-//     autoIndex: false,
-//   });
+const deleteUser = async (testEmail) => {
+  const { Items } = await db.query({
+    TableName: 'users-dev',
+    IndexName: 'email-index',
+    KeyConditionExpression: '#email = :email',
+    ExpressionAttributeValues: { ':email': testEmail },
+    ExpressionAttributeNames: { '#email': 'email' }
+  }).promise()
 
-//   await User.deleteOne({ email: testAccountEmail });
-// });
+  if (Items.length) {
+    const id = Items[0].id
+    await db.delete({
+      Key: { id },
+      TableName: 'users-dev',
+    }).promise()
+  }
+}
 
-// afterAll(async () => {
-//   await User.deleteOne({ email: testAccountEmail });
-//   await mongoose.connection.close();
-// });
+describe('users', () => {
+  const testEmail = 'tests@bken.io'
+  const testPassword = shortid.generate()
+  beforeAll(() => deleteUser(testEmail))
 
-// describe('user tests', () => {
-//   it('should fail registration if beta code is invalid', async () => {
-//     const registerUserQuery = `
-//       mutation register {
-//         register(
-//           input: {
-//             displayName: "Test User"
-//             email: "${testAccountEmail}"
-//             password: "${testAccountPassword}"
-//             code: "123"
-//           }
-//         ) {
-//           accessToken
-//         }
-//       }
-//     `;
+  test('register test user', async () => {
+    const register = `
+      mutation {
+        register(input: {
+          email: "${testEmail}"
+          password: "${testPassword}"
+          displayName: "Test Account"
+          code: "${process.env.BETA_CODE}"
+        }) {
+          accessToken
+        }
+      }
+    `;
+    const res = await request(app)
+      .post('/graphql')
+      .send({ query: register });
+    expect(res.body.data.register.accessToken).toBeDefined();
+  })
 
-//     const res = await request(app)
-//       .post('/graphql')
-//       .send({ query: registerUserQuery });
-//     expect(res.body.errors[0].message).toEqual('bad beta code');
-//   });
-
-//   it('should register user', async () => {
-//     const registerUserQuery = `
-//       mutation register {
-//         register(
-//           input: {
-//             displayName: "Test User"
-//             email: "${testAccountEmail}"
-//             password: "${testAccountPassword}"
-//             code: "${process.env.BETA_CODE}"
-//           }
-//         ) {
-//           accessToken
-//         }
-//       }
-//     `;
-
-//     const res = await request(app)
-//       .post('/graphql')
-//       .send({ query: registerUserQuery });
-
-//     expect(res.body.errors).toEqual(undefined);
-//     expect(res.body.data.register.accessToken).toBeDefined();
-//   });
-
-//   it('should fail registration if user exists', async () => {
-//     const registerUserQuery = `
-//       mutation register {
-//         register(
-//           input: {
-//             displayName: "Test User"
-//             email: "${testAccountEmail}"
-//             password: "${testAccountPassword}"
-//             code: "${process.env.BETA_CODE}"
-//           }
-//         ) {
-//           accessToken
-//         }
-//       }
-//     `;
-
-//     const res = await request(app)
-//       .post('/graphql')
-//       .send({ query: registerUserQuery });
-//     expect(res.body.errors[0].message).toEqual('user already exists');
-//   });
-
-//   it('should login user', async () => {
-//     const loginUserQuery = `
-//       mutation login {
-//         login(input: {
-//           email: "${testAccountEmail}"
-//           password: "${testAccountPassword}"
-//         }) {
-//           accessToken
-//         }
-//       }
-//     `;
-
-//     const res = await request(app)
-//       .post('/graphql')
-//       .send({ query: loginUserQuery });
-//     expect(res.body.errors).toEqual(undefined);
-//     expect(res.body.data.login.accessToken).toBeDefined();
-//   });
-
-//   it('should return public user profile', async () => {
-//     const { _id } = await User.findOne({ email: testAccountEmail });
-//     const id = _id.toString();
-
-//     const userQuery = `
-//       {
-//         user(id: "${id}") {
-//           id
-//           email
-//           avatar
-//           followers
-//           displayName
-//         }
-//       }
-//     `;
-
-//     const res = await request(app)
-//       .post('/graphql')
-//       .send({ query: userQuery });
-//     expect(res.body.data).toEqual({
-//       user: {
-//         id,
-//         email: testAccountEmail,
-//         avatar:
-//           'https://s3.us-east-2.wasabisys.com/media-bken/files/avatar.jpg',
-//         followers: 0,
-//         displayName: 'Test User',
-//       },
-//     });
-//   });
-
-//   it('should get user videos', async () => {
-//     const loginUserQuery = `
-//       mutation login {
-//         login(input: {
-//           email: "${testAccountEmail}"
-//           password: "${testAccountPassword}"
-//         }) {
-//           accessToken
-//         }
-//       }
-//     `;
-
-//     const loginRes = await request(app)
-//       .post('/graphql')
-//       .send({ query: loginUserQuery });
-
-//     const userQuery = `
-//       {
-//         userVideos {
-//           id
-//         }
-//       }
-//     `;
-
-//     const res = await request(app)
-//       .post('/graphql')
-//       .set('Authorization', `Bearer ${loginRes.body.data.login.accessToken}`)
-//       .send({ query: userQuery });
-//     expect(res.body.data).toEqual({ userVideos: [] });
-//   });
-// });
+  test('login test user', async () => {
+    const login = `
+      mutation {
+        login(input: {
+          email: "${testEmail}"
+          password: "${testPassword}"
+        }) {
+          accessToken
+        }
+      }
+    `;
+    const res = await request(app)
+      .post('/graphql')
+      .send({ query: login });
+    expect(res.body.data.login.accessToken).toBeDefined();
+  })
+})
