@@ -1,6 +1,6 @@
 const { gql } = require('apollo-server-express');
 
-const typeDefs = gql`
+module.exports.typeDefs = gql`
   extend type Mutation {
     createMultipartUpload(
       input: CreateMultipartUploadInput!
@@ -35,7 +35,7 @@ const typeDefs = gql`
   }
 `;
 
-const resolvers = {
+module.exports.resolvers = {
   Mutation: {
     createMultipartUpload: async (
       _,
@@ -55,5 +55,3 @@ const resolvers = {
     },
   },
 };
-
-module.exports = { typeDefs, resolvers };

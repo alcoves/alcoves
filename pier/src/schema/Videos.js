@@ -9,9 +9,11 @@ module.exports.typeDefs = gql`
     createVideo(input: CreateVideoInput!): Video!
   }
   type Video {
-    user: ID!
     id: String!
+    user: User!
+    views: Int!
     title: String!
+    duration: Float!
     thumbnail: String!
     createdAt: String!
     modifiedAt: String!
@@ -32,17 +34,22 @@ module.exports.typeDefs = gql`
 `;
 
 module.exports.resolvers = {
+  Video: {
+    id: ({ id }) => id,
+    views: ({ views }) => views,
+    title: ({ title }) => title,
+    duration: ({ duration }) => duration,
+    thumbnail: ({ thumbnail }) => thumbnail,
+    createdAt: ({ createdAt }) => createdAt,
+    modifiedAt: ({ modifiedAt }) => modifiedAt,
+    user: function ({ user }, _, { users: { getUserById } }) { return getUserById(user) },
+    versions: function ({ id }, _, { videos: { getVideoVersionsById } }) { return getVideoVersionsById(id) },
+  },
   Query: {
-    video: async (_, { id }, { videos: { getVideo } }) => {
-      return getVideo(id)
-    },
+    video: function (_, { id }, { videos: { getVideoById } }) { return getVideoById(id) }
   },
   Mutation: {
-    createVideo: async (_, { input }, { videos: { createVideo } }) => {
-      return createVideo(input)
-    },
-    deleteVideo: async (_, { id }, { videos: { deleteVideo } }) => {
-      return deleteVideo(id);
-    }
+    createVideo: function (_, { input }, { videos: { createVideo } }) { return createVideo(input) },
+    deleteVideo: function (_, { id }, { videos: { deleteVideo } }) { return deleteVideo(id) }
   },
 };

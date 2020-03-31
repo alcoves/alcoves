@@ -12,7 +12,6 @@ describe('video tests', () => {
           title: "Video"
         }) {
           id
-          user
           title
         }
       }
@@ -24,12 +23,11 @@ describe('video tests', () => {
     expect(res.body.data.createVideo.title).toEqual('Video');
   });
 
-  it('getVideo', async () => {
+  it('getVideoById', async () => {
     const getVideoQuery = `
       query {
         video(id: "${videoId}") {
           id
-          user
           title
         }
       }

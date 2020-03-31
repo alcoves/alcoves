@@ -1,6 +1,6 @@
 const { gql } = require('apollo-server-express');
 
-const typeDefs = gql`
+module.exports.typeDefs = gql`
   extend type Query {
     user(id: ID!): User!
   }
@@ -10,9 +10,8 @@ const typeDefs = gql`
   }
   type User {
     id: ID!
-    followers: Int!
-    avatar: String!
     email: String!
+    avatar: String!
     displayName: String!
     createdAt: String
     modifiedAt: String
@@ -35,20 +34,12 @@ const typeDefs = gql`
   }
 `;
 
-const resolvers = {
+module.exports.resolvers = {
   Query: {
-    user: async (_, { id }, { users: { getUser } }) => {
-      return getUser(id)
-    },
+    user: async (_, { id }, { users: { getUserById } }) => getUserById(id),
   },
   Mutation: {
-    login: async (_, { input }, { users: { login } }) => {
-      return login(input);
-    },
-    register: async (_, { input }, { users: { register } }) => {
-      return register(input);
-    },
+    login: async (_, { input }, { users: { login } }) => login(input),
+    register: async (_, { input }, { users: { register } }) => register(input),
   },
 };
-
-module.exports = { typeDefs, resolvers };

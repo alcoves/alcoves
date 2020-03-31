@@ -7,7 +7,15 @@ const { USERS_TABLE } = require('../config/config')
 
 const db = new AWS.DynamoDB.DocumentClient({ region: 'us-east-1' })
 
-const login = async function ({ email, password }) {
+const getUserById = async function (id) {
+  const { Item } = await db.get({
+    Key: { id },
+    TableName: USERS_TABLE,
+  }).promise()
+  return Item
+}
+
+const getUserByEmail = async function (email) {
   const { Items } = await db.query({
     TableName: USERS_TABLE,
     IndexName: 'email-index',
@@ -15,41 +23,29 @@ const login = async function ({ email, password }) {
     ExpressionAttributeValues: { ':email': email },
     ExpressionAttributeNames: { '#email': 'email' }
   }).promise();
+  if (!Items.length) return null
+  if (Items.length > 1) throw new Error('system error, duplicate email detected')
+  return Items[0]
+}
 
-  if (Items.length > 1) throw new Error('system error, email collision detected')
-  if (!Items.length) throw new Error('authentication failed');
-
-  const user = Items[0];
+const login = async function ({ email, password }) {
+  const user = await getUserByEmail(email)
   const passwordsMatch = await bcrypt.compare(password, user.password);
   if (!passwordsMatch) throw new Error('authentication failed');
-
   const accessToken = jwt.sign({ id: user.id }, process.env.JWT_KEY, {
     expiresIn: '7d',
   });
-
   return { accessToken };
 };
 
 const register = async function ({ email, password, displayName, code }) {
-  const { Items: emailCheckItems } = await db.query({
-    TableName: USERS_TABLE,
-    IndexName: 'email-index',
-    KeyConditionExpression: '#email = :email',
-    ExpressionAttributeValues: { ':email': email },
-    ExpressionAttributeNames: { '#email': 'email' }
-  }).promise();
-
-  if (emailCheckItems.length) throw new Error('user already exists');
+  const userEmailCheck = await getUserByEmail(email)
+  if (userEmailCheck) throw new Error('email collision!')
   if (code !== process.env.BETA_CODE) throw new Error('bad beta code');
 
   const id = shortid.generate()
-
-  const { Item: idExists } = await db.get({
-    TableName: USERS_TABLE,
-    Key: { id }
-  }).promise()
-
-  if (idExists) throw new Error('userId collision!');
+  const userIdExists = await getUserById(id);
+  if (userIdExists) throw new Error('userId collision!');
 
   await db.put({
     TableName: USERS_TABLE,
@@ -57,23 +53,23 @@ const register = async function ({ email, password, displayName, code }) {
       id,
       email,
       displayName,
+      avatar: 'https://bken.io/favicon.ico',
       password: await bcrypt.hash(password, 10),
     }
   }).promise()
 
-  const { Item: user } = await db.get({
-    TableName: USERS_TABLE,
-    Key: { id }
-  }).promise()
+  const user = await getUserById(id);
 
-  const accessToken = jwt.sign({ id: user.id }, process.env.JWT_KEY, {
-    expiresIn: '7d',
-  });
-
-  return { accessToken };
+  return {
+    accessToken: jwt.sign({ id: user.id }, process.env.JWT_KEY, {
+      expiresIn: '7d',
+    })
+  };
 };
 
 module.exports = {
   login,
   register,
+  getUserById,
+  getUserByEmail,
 };

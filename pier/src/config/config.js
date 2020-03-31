@@ -6,7 +6,7 @@ if (BKEN_ENV !== 'dev' && BKEN_ENV !== 'prod') {
 
 module.exports = {
   USERS_TABLE: `users-${BKEN_ENV}`,
-  VIDEOS_TABLE: `users-${BKEN_ENV}`,
+  VIDEOS_TABLE: `videos-${BKEN_ENV}`,
   MEDIA_BUCKET_NAME: 'media-bken',
   UPLOAD_BUCKET_NAME: `tidal-bken-${BKEN_ENV}`,
   WASABI_ENDPOINT: 'https://s3.us-east-2.wasabisys.com',
