@@ -1,21 +1,25 @@
 const mime = require('mime');
-
 const AWS = require('aws-sdk')
-const s3 = new AWS.S3({ region: 'us-east-1' })
+
+const s3 = new AWS.S3({
+  region: 'us-east-1',
+  signatureVersion: 'v4', // Uploads will fail 403 without this
+});
 
 const { UPLOAD_BUCKET_NAME } = require('../config/config');
 
 const createMultipartUpload = async function (
   { parts, fileType, duration },
-  { id }
+  user,
+  createVideo
 ) {
-  const { _id } = await Video({ user: id, duration }).save();
+  const video = await createVideo({ duration, user: user.id, title: "New Upload" })
 
   const { UploadId, Key } = await s3
     .createMultipartUpload({
-      ContentType: mime.getType(fileType),
       Bucket: UPLOAD_BUCKET_NAME,
-      Key: `uploads/${_id}/source.${mime.getExtension(fileType)}`,
+      ContentType: mime.getType(fileType),
+      Key: `uploads/${video.id}/source.${mime.getExtension(fileType)}`,
     })
     .promise();
 
@@ -26,22 +30,22 @@ const createMultipartUpload = async function (
         Key,
         UploadId,
         PartNumber: i,
+        Expires: 43200,
         Bucket: UPLOAD_BUCKET_NAME,
       })
     );
   }
 
-  return { objectId: _id, urls, key: Key, uploadId: UploadId };
+  return { objectId: video.id, urls, key: Key, uploadId: UploadId };
 };
 
 const completeMultipartUpload = async function ({
-  objectId,
   key: Key,
   parts: Parts,
   uploadId: UploadId,
 }) {
   console.log('completing multipart upload');
-  const data = await s3
+  await s3
     .completeMultipartUpload({
       Key,
       UploadId,
@@ -49,19 +53,6 @@ const completeMultipartUpload = async function ({
       MultipartUpload: { Parts },
     })
     .promise();
-
-  await Video.updateOne(
-    { _id: objectId },
-    {
-      $set: convertObjectToDotNotation({
-        status: 'queueing',
-        sourceFile: data.Location.split(
-          'https://s3.us-east-2.wasabisys.com/'
-        )[1],
-      }),
-    }
-  );
-
   return { completed: true };
 };
 

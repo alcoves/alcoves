@@ -40,10 +40,10 @@ module.exports.resolvers = {
     createMultipartUpload: async (
       _,
       { input },
-      { user, uploads: { createMultipartUpload } }
+      { user, uploads: { createMultipartUpload }, videos: { createVideo } },
     ) => {
       if (!user) throw new Error('authentication failed');
-      return createMultipartUpload(input, user);
+      return createMultipartUpload(input, user, createVideo);
     },
     completeMultipartUpload: async (
       _,
