@@ -24,12 +24,26 @@ const getVideoById = async function (id) {
     Key: { id },
     TableName: VIDEOS_TABLE,
   }).promise();
+  if (!Item) throw new Error('video not found')
+  return Item
+}
 
-  if (Item) {
-    return Item
-  } else {
-    throw new Error('video not found')
-  }
+const getVideosByUserId = async function (id) {
+  const { Items } = await db.query({
+    IndexName: 'user-index',
+    TableName: VIDEOS_TABLE,
+    KeyConditionExpression: '#user = :user',
+    ExpressionAttributeValues: { ':user': id },
+    ExpressionAttributeNames: { '#user': 'user' },
+  }).promise()
+  return Items.length ? Items : []
+}
+
+const getVideos = async function () {
+  const { Items } = await db.scan({
+    TableName: VIDEOS_TABLE,
+  }).promise();
+  return Items.length ? Items : []
 }
 
 const createVideo = async function ({ user, title, duration }) {
@@ -60,8 +74,10 @@ const deleteVideo = async function (id) {
 }
 
 module.exports = {
+  getVideos,
   deleteVideo,
   createVideo,
   getVideoById,
+  getVideosByUserId,
   getVideoVersionsById
 }

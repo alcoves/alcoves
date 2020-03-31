@@ -2,7 +2,9 @@ const { gql } = require('apollo-server-express');
 
 module.exports.typeDefs = gql`
   extend type Query {
+    videos: [Video!]!
     video(id: String!): Video!
+    videosByUserId(id: String!): [Video!]!
   }
   extend type Mutation {
     deleteVideo(id: String!): Boolean!
@@ -46,7 +48,9 @@ module.exports.resolvers = {
     versions: function ({ id }, _, { videos: { getVideoVersionsById } }) { return getVideoVersionsById(id) },
   },
   Query: {
-    video: function (_, { id }, { videos: { getVideoById } }) { return getVideoById(id) }
+    videos: function (_, __, { videos: { getVideos } }) { return getVideos() },
+    video: function (_, { id }, { videos: { getVideoById } }) { return getVideoById(id) },
+    videosByUserId: function (_, { id }, { videos: { getVideosByUserId } }) { return getVideosByUserId(id) }
   },
   Mutation: {
     createVideo: function (_, { input }, { videos: { createVideo } }) { return createVideo(input) },
