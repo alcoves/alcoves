@@ -17,7 +17,7 @@ const client = new ApolloClient({
   uri:
     process.env.NODE_ENV === 'production'
       ? 'https://api.bken.io/graphql'
-      : 'http://localhost:4000/graphql',
+      : 'http://127.0.0.1:4000/graphql',
   request: operation => {
     const token = localStorage.getItem('accessToken');
     operation.setContext({
