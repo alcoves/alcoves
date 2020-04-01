@@ -15,7 +15,6 @@ export default props => {
       id
       title
       views
-      status
       duration
       thumbnail
       user {
@@ -23,7 +22,7 @@ export default props => {
         avatar
         displayName
       }
-      files {
+      versions {
         link
         status
         preset

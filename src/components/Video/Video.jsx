@@ -6,10 +6,10 @@ import { Link } from 'react-router-dom';
 import { useQuery } from '@apollo/react-hooks';
 import { Loader, Container } from 'semantic-ui-react';
 
-const pickUrl = files => {
-  const loadOrder = ['2160p', '1440p', '1080p', '720p', 'highQuality'];
+const pickUrl = ({ versions }) => {
+  const loadOrder = ['libx264-2160p', 'libx264-1440p', 'libx264-1080p', 'libx264-720p'];
   for (const desiredPreset of loadOrder) {
-    for (const { preset, link } of files) {
+    for (const { preset, link } of versions) {
       if (desiredPreset === preset && link) {
         return link;
       }
@@ -24,14 +24,13 @@ export default props => {
         id
         title
         views
-        status
         createdAt
         user {
           id
           avatar
           displayName
         }
-        files {
+        versions {
           link
           status
           preset
@@ -59,7 +58,7 @@ export default props => {
       maxHeight: 'calc((9 / 16) * 100vw',
     };
 
-    const link = pickUrl(data.video.files);
+    const link = pickUrl(data.video);
 
     return (
       <div style={{ display: 'flex', flexDirection: 'column' }}>
