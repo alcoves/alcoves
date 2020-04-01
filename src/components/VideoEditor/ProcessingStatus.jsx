@@ -28,8 +28,7 @@ export default props => {
       video(id: "${props.id}") {
         id
         status
-        files {
-          status,
+        versions {
           preset,
           createdAt,
           modifiedAt,
@@ -53,8 +52,8 @@ export default props => {
             {status === 'completed' ? (
               <Icon color='green' name='check circle outline' />
             ) : (
-              <Icon color='yellow' name='setting' />
-            )}
+                <Icon color='yellow' name='setting' />
+              )}
             {preset}
             <Label.Detail>{`${percentCompleted}%`}</Label.Detail>
             {createdAt && modifiedAt ? (
