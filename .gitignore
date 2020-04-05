@@ -3,3 +3,6 @@ live
 .cache
 node_modules
 jobs
+.terraform
+.tfstate
+.tfvars
