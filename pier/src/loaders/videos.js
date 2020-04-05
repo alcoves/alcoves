@@ -59,8 +59,19 @@ const createVideo = async function ({ user, title, duration }) {
       thumbnail: 'test',
       createdAt: Date.now(),
       modifiedAt: Date.now(),
-      versions: []
+      publishingStatus: 'unlisted',
     },
+  }).promise();
+  return getVideoById(id)
+}
+
+const updateVideoTitle = async function ({ id, title }) {
+  await db.update({
+    Key: { id },
+    TableName: VIDEOS_TABLE,
+    UpdateExpression: 'set #title = :title',
+    ExpressionAttributeValues: { ':title': title },
+    ExpressionAttributeNames: { '#title': 'title' },
   }).promise();
   return getVideoById(id)
 }
@@ -78,6 +89,7 @@ module.exports = {
   deleteVideo,
   createVideo,
   getVideoById,
+  updateVideoTitle,
   getVideosByUserId,
   getVideoVersionsById
 }

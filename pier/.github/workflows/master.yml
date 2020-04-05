@@ -1,29 +1,21 @@
-# https://github.com/appleboy/ssh-action
-
-name: Production Deployment
+name: Build and Push Docker
 on:
   push:
     branches:
+      - dev
       - master
-
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-    env:
-      ENV: ${{ secrets.ENV }}
     steps:
-    - name: log into prod webserver and update from master
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.KEY }}
-        port: ${{ secrets.PORT }}
-        envs: ENV
-        script: |
-          cd api
-          git fetch -p && git reset --hard origin/master && git pull
-          yarn
-          export NODE_ENV=production
-          echo "$ENV" > ./.env
-          pm2 reload all --update-env
+      - uses: actions/checkout@v2
+      - name: Build and Push docker image
+        uses: elgohr/Publish-Docker-Github-Action@master
+        env:
+          GIT_SHA: ${{ github.sha }}
+        with:
+          name: bken-io/api/api
+          username: ${{ github.actor }}
+          registry: docker.pkg.github.com
+          password: ${{ secrets.GITHUB_TOKEN }}
+          buildargs: GIT_SHA

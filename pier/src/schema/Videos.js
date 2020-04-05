@@ -9,6 +9,7 @@ module.exports.typeDefs = gql`
   extend type Mutation {
     deleteVideo(id: String!): Boolean!
     createVideo(input: CreateVideoInput!): Video!
+    updateVideoTitle(id: String!, title: String!): Video!
   }
   type Video {
     id: String!
@@ -19,6 +20,7 @@ module.exports.typeDefs = gql`
     thumbnail: String!
     createdAt: String!
     modifiedAt: String!
+    publishingStatus: String!
     versions: [VideoVersion!]
   }
   type VideoVersion {
@@ -27,7 +29,6 @@ module.exports.typeDefs = gql`
     preset: String!
     createdAt: String
     modifiedAt: String
-    percentCompleted: Float!
   }
   input CreateVideoInput {
     user: ID!
@@ -53,7 +54,8 @@ module.exports.resolvers = {
     videosByUserId: function (_, { id }, { videos: { getVideosByUserId } }) { return getVideosByUserId(id) }
   },
   Mutation: {
+    deleteVideo: function (_, { id }, { videos: { deleteVideo } }) { return deleteVideo(id) },
     createVideo: function (_, { input }, { videos: { createVideo } }) { return createVideo(input) },
-    deleteVideo: function (_, { id }, { videos: { deleteVideo } }) { return deleteVideo(id) }
+    updateVideoTitle: function (_, { id, title }, { videos: { updateVideoTitle } }) { return updateVideoTitle({ id, title }) },
   },
 };
