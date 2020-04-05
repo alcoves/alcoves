@@ -27,8 +27,8 @@ export default props => {
     {
       video(id: "${props.id}") {
         id
-        status
         versions {
+          status,
           preset,
           createdAt,
           modifiedAt,
@@ -44,8 +44,8 @@ export default props => {
   if (loading) return <Loader active />;
 
   if (data) {
-    if (data.video.status !== 'completed') startPolling(2000);
-    return data.video.files.map(({ status, preset, createdAt, modifiedAt, percentCompleted }) => {
+    startPolling(2000);
+    return data.video.versions.map(({ status, preset, createdAt, modifiedAt, percentCompleted }) => {
       return (
         <div key={preset} style={{ margin: '5px 0px 5px 0px' }}>
           <Label as='a' color='grey'>

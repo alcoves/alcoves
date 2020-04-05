@@ -4,8 +4,8 @@ import { Input } from 'semantic-ui-react';
 import { useMutation } from '@apollo/react-hooks';
 
 const SAVE_VIDEO = gql`
-  mutation updateVideo($id: ID!, $input: UpdateVideoInput!) {
-    updateVideo(id: $id, input: $input) {
+  mutation updateVideoTitle($id: String!, $title: String!) {
+    updateVideoTitle(id: $id, title: $title) {
       id
     }
   }
@@ -14,7 +14,7 @@ const SAVE_VIDEO = gql`
 export default ({ title: propTitle, id }) => {
   const [title, setTitle] = useState(propTitle);
   const [saveVideo, { loading: saveLoading, error }] = useMutation(SAVE_VIDEO, {
-    variables: { id, input: { title } },
+    variables: { id, title },
   });
 
   return (
