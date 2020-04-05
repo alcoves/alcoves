@@ -17,7 +17,10 @@ RUN git clone $REPO_URL
 
 WORKDIR "/root/web"
 RUN git reset --hard $GIT_SHA
-RUN yarn install --development
+
+RUN yarn global add parcel
+
+RUN yarn
 RUN yarn build
 
 EXPOSE 5000
