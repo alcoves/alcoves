@@ -9,9 +9,7 @@
   "description": "frontend for bken.io",
   "scripts": {
     "dev": "parcel public/index.html",
-    "redeploy": "rm -rf live && cp -r dist live",
-    "prestart": "yarn build",
-    "start": "pm2 serve live 5000 --watch --name web --spa",
+    "start": "pm2 serve dist 5000 --watch --name web --spa",
     "lint": "prettier --check \"src/**/*.*\"",
     "lint:fix": "prettier --write \"src/**/*.*\"",
     "prebuild": "rm -rf node_modules && rm -rf dist && rm -rf .cache && yarn",

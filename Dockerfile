@@ -18,6 +18,7 @@ RUN git clone $REPO_URL
 WORKDIR "/root/web"
 RUN git reset --hard $GIT_SHA
 RUN yarn
+RUN yarn build
 
 EXPOSE 5000
 CMD ["yarn", "start"]
