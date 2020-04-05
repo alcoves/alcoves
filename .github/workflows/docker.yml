@@ -8,16 +8,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v2
       - name: Build and Push docker image
-        run: |
-          ls /
         uses: elgohr/Publish-Docker-Github-Action@master
         env:
-          GITHUB_WORKSPACE: ${{ github.workspace }}
+          GIT_SHA: ${{ github.sha }}
         with:
           name: bken-io/web/web
           username: ${{ github.actor }}
           registry: docker.pkg.github.com
           password: ${{ secrets.GITHUB_TOKEN }}
-          buildargs: GITHUB_WORKSPACE
+          buildargs: GIT_SHA

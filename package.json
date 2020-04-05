@@ -31,6 +31,7 @@
     "react-dom": "^16.13.1",
     "react-ga": "^2.7.0",
     "react-router-dom": "^5.1.2",
+    "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.88.2",
     "styled-components": "^5.0.1"
   },
@@ -42,8 +43,7 @@
     "@babel/preset-react": "^7.9.4",
     "parcel-bundler": "^1.12.4",
     "parcel-plugin-bundle-visualiser": "^1.2.0",
-    "prettier": "^2.0.2",
-    "semantic-ui-css": "^2.4.1",
-    "serve": "^11.3.0"
+    "pm2": "^4.2.3",
+    "prettier": "^2.0.2"
   }
 }
