@@ -1,5 +1,5 @@
 FROM alpine:edge
-MAINTAINER  Brendan Kennedy <brenwken@gmail.com>
+LABEL author="Brendan Kennedy <brenwken@gmail.com>"
 
 ARG GIT_SHA
 
@@ -19,9 +19,10 @@ WORKDIR "/root/web"
 RUN git reset --hard $GIT_SHA
 
 RUN yarn global add parcel
+RUN yarn global add serve
 
 RUN yarn
 RUN yarn build
 
 EXPOSE 5000
-CMD ["yarn", "start"]
+CMD ["serve", "-p", "5000", "dist"]
