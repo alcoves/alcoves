@@ -39,7 +39,7 @@
     "@babel/plugin-proposal-decorators": "^7.8.3",
     "@babel/preset-env": "^7.9.0",
     "@babel/preset-react": "^7.9.4",
-    "parcel-bundler": "^1.12.4",
+    "parcel": "^1.12.4",
     "parcel-plugin-bundle-visualiser": "^1.2.0",
     "pm2": "^4.2.3",
     "prettier": "^2.0.2"
