@@ -2,3 +2,4 @@ dist
 live
 .cache
 node_modules
+jobs
