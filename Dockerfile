@@ -5,8 +5,6 @@ ARG GITHUB_WORKSPACE
 ENV NODE_ENV=production
 ENV GITHUB_WORKSPACE=$GITHUB_WORKSPACE
 
-RUN "echo $GITHUB_WORKSPACE"
-
 RUN apk add --update --no-cache \
   yarn \
   nodejs
