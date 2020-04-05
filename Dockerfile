@@ -24,5 +24,5 @@ RUN yarn global add serve
 RUN yarn
 RUN yarn build
 
-EXPOSE 80
-CMD ["serve", "-p", "80", "dist"]
+EXPOSE 8080
+CMD ["serve", "-p", "8080", "dist"]
