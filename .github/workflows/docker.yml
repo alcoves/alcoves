@@ -8,7 +8,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
-      - name: Printing
-      run: |
-      ls
+      - name: Build and Push docker image
+        uses: elgohr/Publish-Docker-Github-Action@master
+        with:
+          name: bken-io/web/web
+          username: ${{ github.actor }}
+          registry: docker.pkg.github.com
+          password: ${{ secrets.GITHUB_TOKEN }}
