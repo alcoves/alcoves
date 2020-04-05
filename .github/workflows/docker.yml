@@ -1,0 +1,23 @@
+name: Build and Push Docker
+on:
+  push:
+    branches:
+      - dev
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Printing
+      run: ls
+      # - name: Publish to GitHub
+      #   uses: elgohr/Publish-Docker-Github-Action@master
+      #   env:
+      #     GIT_SHA: ${{ github.sha }}
+      #   with:
+      #     name: bken-io/web/web
+      #     username: ${{ github.actor }}
+      #     registry: docker.pkg.github.com
+      #     password: ${{ secrets.GITHUB_TOKEN }}
+      #     buildargs: GIT_SHA
