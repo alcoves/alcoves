@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
 import { gql } from 'apollo-boost';
+import React, { useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import { Button, Container, Loader, Icon } from 'semantic-ui-react';
@@ -35,9 +35,8 @@ export default ({ match }) => {
       video(id: "${match.params.videoId}") {
         id
         title
-        status
         createdAt
-        published
+        publishingStatus
       }
     }
   `;
@@ -58,12 +57,12 @@ export default ({ match }) => {
   }
 
   if (data) {
-    console.log('data.video.published', data.video.published);
+    console.log('data.video.publishingStatus', data.video.publishingStatus);
     return (
       <Container style={{ paddingTop: '50px' }}>
         <Title title={data.video.title} id={data.video.id} />
         <PublishStatus published={data.video.published} id={data.video.id} />
-        <h3>{`video id: ${data.video.id} | status: ${data.video.status}`}</h3>
+        <h3>{`video id: ${data.video.id}`}</h3>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <ProcessingStatus id={data.video.id} />
           <div>
