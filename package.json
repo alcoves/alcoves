@@ -1,7 +1,7 @@
 {
   "name": "bken-web",
   "main": "index.js",
-  "license": "UNLICENSED",
+  "license": "MPL-2.0",
   "private": false,
   "version": "0.0.1",
   "author": "Brendan Kennedy <brenwken@gmail.com>",
@@ -9,7 +9,6 @@
   "description": "frontend for bken.io",
   "scripts": {
     "dev": "parcel public/index.html",
-    "start": "serve -p 5000 dist",
     "lint": "prettier --check \"src/**/*.*\"",
     "lint:fix": "prettier --write \"src/**/*.*\"",
     "prebuild": "rm -rf node_modules && rm -rf dist && rm -rf .cache && yarn",
