@@ -1,10 +1,11 @@
-name: Build, Push, Deploy
+name: Build, Apply, Deploy
 on:
   push:
     branches:
       - dev
 jobs:
   build:
+    name: Build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -20,7 +21,7 @@ jobs:
           buildargs: GIT_SHA
   terraform:
     needs: build
-    name: Terraform
+    name: Apply
     runs-on: ubuntu-latest
     env:
       AWS_DEFAULT_REGION: us-east-1
@@ -44,3 +45,13 @@ jobs:
           tf_actions_working_dir: stack/dev
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  deploy:
+    needs: terraform
+    name: Deploy
+    steps:
+      - uses: chrislennon/action-aws-cli@v1.1
+      - run: aws ecs update-service --service api-dev --force-new-deployment
+        env:
+          AWS_DEFAULT_REGION: us-east-1
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
