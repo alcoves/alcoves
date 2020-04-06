@@ -37,7 +37,7 @@ export default props => {
             flex: 1,
           }}>
           <Link to='/' style={styles.logo}>
-            <img style={{ cursor: 'pointer' }} height={35} src='https://bken.io/favicon.ico' />
+            <img style={{ cursor: 'pointer' }} height={35} src='./favicon.ico' />
           </Link>
         </div>
         <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
@@ -63,19 +63,19 @@ export default props => {
             </div>
           </div>
         ) : (
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              minWidth: '150px',
-              paddingRight: '5px',
-              flex: 1,
-            }}>
-            <div style={styles.menuItem}>
-              <Button as={Link} to='/login' circular icon='user' />
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                minWidth: '150px',
+                paddingRight: '5px',
+                flex: 1,
+              }}>
+              <div style={styles.menuItem}>
+                <Button as={Link} to='/login' circular icon='user' />
+              </div>
             </div>
-          </div>
-        )}
+          )}
       </div>
       <div>{props.children}</div>
     </div>
