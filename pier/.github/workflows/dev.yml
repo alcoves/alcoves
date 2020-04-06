@@ -52,4 +52,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: chrislennon/action-aws-cli@v1.1
-      - run: aws ecs update-service --service $ECS_SERVICE_NAME --force-new-deployment
+      - run: aws ecs update-service --cluster pier11 --service $ECS_SERVICE_NAME --force-new-deployment
