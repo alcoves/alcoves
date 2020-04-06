@@ -18,11 +18,7 @@ RUN git clone $REPO_URL
 WORKDIR "/root/web"
 RUN git reset --hard $GIT_SHA
 
-RUN yarn global add parcel
-RUN yarn global add serve
-
 RUN yarn
-RUN yarn build
 
 EXPOSE 80
-CMD ["serve", "-p", "80", "dist"]
+CMD ["yarn", "start"]
