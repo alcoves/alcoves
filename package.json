@@ -8,39 +8,36 @@
   "repository": "git@github.com:bken-io/web.git",
   "description": "frontend for bken.io",
   "scripts": {
-    "dev": "parcel public/index.html",
+    "dev": "next",
+    "build": "next build",
+    "start": "next start -p 80",
     "lint": "prettier --check \"src/**/*.*\"",
-    "lint:fix": "prettier --write \"src/**/*.*\"",
-    "prebuild": "rm -rf node_modules && rm -rf dist && rm -rf .cache && yarn",
-    "build": "NODE_ENV=production parcel build public/index.html",
-    "postbuild": "cp public/favicon.ico dist/"
+    "lint:fix": "prettier --write \"src/**/*.*\""
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.4",
-    "apollo-boost": "^0.4.7",
+    "@apollo/react-ssr": "^3.1.4",
+    "apollo-cache-inmemory": "^1.6.5",
+    "apollo-client": "^2.6.8",
+    "apollo-link-http": "^1.5.16",
     "axios": "^0.19.2",
     "dayjs": "^1.8.22",
     "graphql": "^15.0.0",
-    "history": "^4.10.1",
+    "isomorphic-unfetch": "^3.0.0",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.24.0",
+    "next": "^9.3.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-ga": "^2.7.0",
-    "react-router-dom": "^5.1.2",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.88.2",
     "styled-components": "^5.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
-    "@babel/plugin-proposal-class-properties": "^7.8.3",
-    "@babel/plugin-proposal-decorators": "^7.8.3",
     "@babel/preset-env": "^7.9.0",
     "@babel/preset-react": "^7.9.4",
-    "parcel": "^1.12.4",
-    "parcel-plugin-bundle-visualiser": "^1.2.0",
-    "prettier": "^2.0.2",
-    "serve": "^11.3.0"
+    "prettier": "^2.0.2"
   }
 }
