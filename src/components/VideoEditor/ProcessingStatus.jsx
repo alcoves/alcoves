@@ -32,7 +32,6 @@ export default props => {
           preset,
           createdAt,
           modifiedAt,
-          percentCompleted
         }
       }
     }
@@ -45,7 +44,7 @@ export default props => {
 
   if (data) {
     startPolling(2000);
-    return data.video.versions.map(({ status, preset, createdAt, modifiedAt, percentCompleted }) => {
+    return data.video.versions.map(({ status, preset, createdAt, modifiedAt }) => {
       return (
         <div key={preset} style={{ margin: '5px 0px 5px 0px' }}>
           <Label as='a' color='grey'>
@@ -55,7 +54,7 @@ export default props => {
                 <Icon color='yellow' name='setting' />
               )}
             {preset}
-            <Label.Detail>{`${percentCompleted}%`}</Label.Detail>
+            <Label.Detail>{`${status}`}</Label.Detail>
             {createdAt && modifiedAt ? (
               <Label.Detail>{`took ${timeConversion(createdAt, modifiedAt)}`}</Label.Detail>
             ) : null}
