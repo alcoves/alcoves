@@ -26,7 +26,7 @@ resource "aws_ecs_task_definition" "web" {
 resource "aws_ecs_service" "web" {
   desired_count   = 1
   launch_type     = "FARGATE"
-  name            = "${var.env}-web"
+  name            = "web-${var.env}"
   depends_on      = [aws_alb_target_group.web]
   cluster         = data.aws_ecs_cluster.pier11.id
   task_definition = aws_ecs_task_definition.web.arn
@@ -56,7 +56,7 @@ resource "aws_ecs_service" "web" {
 }
 
 resource "aws_cloudwatch_log_group" "web" {
-  name = "services/${var.env}/web"
+  name = "services/web-${var.env}"
 
   tags = {
     Environment = var.env
