@@ -33,3 +33,19 @@ resource "aws_alb_target_group" "api" {
   protocol    = "HTTP"
   vpc_id      = data.aws_vpc.bken1.id
 }
+
+resource "aws_alb_listener_rule" "api" {
+  priority     = 1
+  listener_arn = var.alb_listener_arn
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_alb_target_group.api.arn
+  }
+
+  condition {
+    path_pattern {
+      values = ["/api/*"]
+    }
+  }
+}

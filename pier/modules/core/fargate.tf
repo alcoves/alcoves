@@ -2,22 +2,43 @@ data "aws_ecs_cluster" "pier11" {
   cluster_name = "pier11"
 }
 
+data "aws_secretsmanager_secret_version" "wasabi_access_key_id" {
+  secret_id = "wasabi_access_key_id"
+}
+
+data "aws_secretsmanager_secret_version" "wasabi_secret_access_key" {
+  secret_id = "wasabi_secret_access_key"
+}
+
+data "aws_secretsmanager_secret_version" "jwt_key" {
+  secret_id = "jwt_key"
+}
+
+data "aws_secretsmanager_secret_version" "beta_code" {
+  secret_id = "beta_code"
+}
+
 data "template_file" "api_container_def" {
   template = file("${path.module}/templates/fargate_task.json")
 
   vars = {
-    credentials = "github_registry_login"
-    log_group   =  aws_cloudwatch_log_group.api.name
-    app_image   = "docker.pkg.github.com/bken-io/api/api:dev"
+    tidal_env                = var.env
+    app_image                = var.app_image
+    credentials              = var.registry_secrets_arn
+    log_group                = aws_cloudwatch_log_group.api.name
+    jwt_key                  = data.aws_secretsmanager_secret_version.jwt_key.secret_string
+    beta_code                = data.aws_secretsmanager_secret_version.beta_code.secret_string
+    wasabi_access_key_id     = data.aws_secretsmanager_secret_version.wasabi_access_key_id.secret_string
+    wasabi_secret_access_key = data.aws_secretsmanager_secret_version.wasabi_secret_access_key.secret_string
   }
 }
 
 resource "aws_ecs_task_definition" "api" {
   cpu                      = 256
   memory                   = 512
+  family                   = "api"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  family                   = "api"
   execution_role_arn       = "arn:aws:iam::594206825329:role/ecsTaskAll"
   task_role_arn            = "arn:aws:iam::594206825329:role/ecsTaskAll"
   container_definitions    = data.template_file.api_container_def.rendered
