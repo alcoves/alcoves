@@ -1,4 +1,9 @@
 name: Build, Apply, Deploy
+env:
+  ECS_SERVICE_NAME: api-dev
+  AWS_DEFAULT_REGION: us-east-1
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 on:
   push:
     branches:
@@ -23,10 +28,6 @@ jobs:
     needs: build
     name: Apply
     runs-on: ubuntu-latest
-    env:
-      AWS_DEFAULT_REGION: us-east-1
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     steps:
       - uses: actions/checkout@v2
       - name: Terraform Init
@@ -48,10 +49,7 @@ jobs:
   deploy:
     needs: terraform
     name: Deploy
+    runs-on: ubuntu-latest
     steps:
       - uses: chrislennon/action-aws-cli@v1.1
-      - run: aws ecs update-service --service api-dev --force-new-deployment
-        env:
-          AWS_DEFAULT_REGION: us-east-1
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - run: aws ecs update-service --service $ECS_SERVICE_NAME --force-new-deployment
