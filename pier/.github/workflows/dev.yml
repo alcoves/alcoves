@@ -1,4 +1,4 @@
-name: Build, Apply, Deploy
+name: Build/Push, Apply, Deploy
 env:
   ECS_SERVICE_NAME: api-dev
   AWS_DEFAULT_REGION: us-east-1
@@ -10,7 +10,7 @@ on:
       - dev
 jobs:
   build:
-    name: Build
+    name: Build/Push
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
