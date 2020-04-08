@@ -1,4 +1,3 @@
-import React from 'react';
 import jwt from 'jsonwebtoken';
 
 class User {
@@ -12,7 +11,7 @@ class User {
     return this.id ? true : false;
   };
 
-  login = async accessToken => {
+  login = async (accessToken = localStorage.getItem('accessToken')) => {
     try {
       if (accessToken) {
         const decoded = jwt.decode(accessToken, { complete: true });
@@ -52,4 +51,10 @@ class User {
   };
 }
 
-export default React.createContext(new User());
+const user = new User();
+
+export default user;
+
+export function useUser() {
+  return user;
+}
