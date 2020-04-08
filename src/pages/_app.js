@@ -2,18 +2,11 @@ import 'semantic-ui-css/semantic.min.css';
 import './index.css';
 
 import React from 'react';
-import App, { Container } from 'next/app';
+import { withApollo } from '../lib/apollo'
+// ReactGA.initialize('UA-77834417-2');
 
-class MyApp extends App {
-  render() {
-    const { Component, pageProps } = this.props;
-
-    return (
-      <Container>
-        <Component {...pageProps} />
-      </Container>
-    );
-  }
+function App({ Component, pageProps }) {
+  return <Component {...pageProps} />
 }
 
-export default MyApp;
+export default withApollo({ ssr: true })(App)

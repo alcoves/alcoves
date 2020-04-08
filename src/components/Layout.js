@@ -1,16 +1,18 @@
-import NavBar from "./NavBar"
 import Head from "next/head"
+import Navigation from "./Navigation"
 
-const Layout = (props) => {
+import { useUser } from '../data/User';
+
+export default function Layout(props) {
+  const user = useUser()
+  user.login()
   return (
     <div>
       <Head>
         <title>bken.io</title>
-        <NavBar />
-        {props.children}
       </Head>
+      <Navigation />
+      {props.children}
     </div>
   )
 }
-
-export default Layout

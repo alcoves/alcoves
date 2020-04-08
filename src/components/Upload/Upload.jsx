@@ -109,6 +109,7 @@ export default () => {
           onClick={() => fileInputRef.current.click()}
           disabled={comLoading || creLoading || uploading}
         />
+
         <input
           hidden
           type='file'
@@ -122,6 +123,7 @@ export default () => {
             }
           }}
         />
+
         <div className='uploadRow'>
           {bytesUploaded && files[0].size ? (
             <Progress
@@ -136,6 +138,7 @@ export default () => {
             </Loader>
           )}
         </div>
+
         <div className='uploadRow'>
           {comData && creData ? (
             <Button

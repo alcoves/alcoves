@@ -12,7 +12,7 @@ export default function createApolloClient(initialState, ctx) {
     link: new HttpLink({
       fetch,
       credentials: 'same-origin', // Additional fetch() options like `credentials` or `headers`
-      uri: 'http://localhost:4000/api/graphql', // Server URL (must be absolute)
+      uri: 'https://dev.bken.io/api/graphql' || 'http://localhost:4000/api/graphql', // Server URL (must be absolute)
     }),
     cache: new InMemoryCache().restore(initialState),
   })
