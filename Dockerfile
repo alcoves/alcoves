@@ -19,6 +19,7 @@ WORKDIR "/root/web"
 RUN git reset --hard $GIT_SHA
 
 RUN yarn
+RUN yarn build
 
 EXPOSE 80
 CMD ["yarn", "start"]
