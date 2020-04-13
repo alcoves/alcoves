@@ -2,8 +2,7 @@ import Link from 'next/link';
 import gql from 'graphql-tag';
 import Layout from '../components/Layout';
 
-import { useRouter } from 'next/router'
-import { useUser } from '../data/User';
+import { login } from '../utils/auth';
 import { useMutation } from '@apollo/react-hooks';
 import React, { useState, useCallback } from 'react';
 import { Button, Form, Grid, Loader, Message } from 'semantic-ui-react';
@@ -17,17 +16,14 @@ const QUERY = gql`
 `;
 
 export default function Login() {
-  const user = useUser();
-  const router = useRouter()
-
   const [email, setEmail] = useState('');
-  const [login, { called, loading, data, error }] = useMutation(QUERY);
+  const [loggingIn, setLoggingIn] = useState(false);
+  const [loginMutation, { called, loading, data, error }] = useMutation(QUERY);
 
   const handleSubmit = useCallback(
     ({ currentTarget }) => {
       const form = new FormData(currentTarget);
-
-      login({
+      loginMutation({
         variables: {
           input: {
             password: form.get('password'),
@@ -36,19 +32,13 @@ export default function Login() {
         },
       });
     },
-    [login],
+    [loginMutation],
   );
 
-
-  console.log('user is logged in', user.isLoggedIn());
-  if (user.isLoggedIn()) {
-    return router.push('/account')
-  }
-
-  if (data) {
-    user.login(data.login.accessToken);
-    router.push('/')
-    window.location.reload();
+  if (data && !loggingIn) {
+    console.log('login was successful, should call login now');
+    setLoggingIn(true)
+    login({ accessToken: data.login.accessToken })
   }
 
   return (

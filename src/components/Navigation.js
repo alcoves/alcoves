@@ -1,11 +1,8 @@
 import React from 'react';
 import Link from 'next/link';
-
-import { useUser } from '../data/User';
 import { Button } from 'semantic-ui-react';
 
-export default props => {
-  const user = useUser();
+function Navigation(props) {
 
   const styles = {
     menu: {
@@ -39,7 +36,7 @@ export default props => {
           </Link>
         </div>
 
-        {user.isLoggedIn() ? (
+        {props.user ? (
           <div
             style={{
               display: 'flex',
@@ -86,3 +83,5 @@ export default props => {
     </div>
   );
 };
+
+export default Navigation
