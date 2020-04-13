@@ -1,6 +1,12 @@
 const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
 
+const getOrigin = () => {
+  if (process.env.BKEN_ENV === 'prod') return 'https://bken.io'
+  if (process.env.BKEN_ENV === 'dev') return 'https://dev.bken.io'
+  return 'http://localhost:3000'
+}
+
 const server = new ApolloServer({
   modules: [
     require('./schema/Users'),
@@ -12,5 +18,12 @@ const server = new ApolloServer({
 });
 
 const app = express();
-server.applyMiddleware({ app, path: '/api/graphql' });
+
+server.applyMiddleware({
+  app, path: '/api/graphql', cors: {
+    credentials: true,
+    origin: getOrigin(),
+  }
+});
+
 module.exports = app;

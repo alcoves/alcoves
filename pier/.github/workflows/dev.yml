@@ -17,13 +17,14 @@ jobs:
       - name: Build and Push docker image
         uses: elgohr/Publish-Docker-Github-Action@master
         env:
+          BKEN_ENV: dev
           GIT_SHA: ${{ github.sha }}
         with:
           name: bken-io/api/api
           username: ${{ github.actor }}
           registry: docker.pkg.github.com
           password: ${{ secrets.GITHUB_TOKEN }}
-          buildargs: GIT_SHA
+          buildargs: GIT_SHA,BKEN_ENV
   terraform:
     needs: build
     name: Apply

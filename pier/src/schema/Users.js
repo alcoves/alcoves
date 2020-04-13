@@ -2,6 +2,7 @@ const { gql } = require('apollo-server-express');
 
 module.exports.typeDefs = gql`
   extend type Query {
+    me: User
     user(id: ID!): User!
   }
   extend type Mutation {
@@ -37,9 +38,10 @@ module.exports.typeDefs = gql`
 module.exports.resolvers = {
   Query: {
     user: async (_, { id }, { users: { getUserById } }) => getUserById(id),
+    me: async (_, __, { user, users: { getUserById } }) => getUserById(user.id),
   },
   Mutation: {
-    login: async (_, { input }, { users: { login } }) => login(input),
-    register: async (_, { input }, { users: { register } }) => register(input),
+    login: async (_, { input }, { res, users: { login } }) => login(input, res),
+    register: async (_, { input }, { res, users: { register } }) => register(input, res),
   },
 };

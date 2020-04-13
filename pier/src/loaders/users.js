@@ -8,11 +8,13 @@ const { USERS_TABLE } = require('../config/config')
 const db = new AWS.DynamoDB.DocumentClient({ region: 'us-east-1' })
 
 const getUserById = async function (id) {
-  const { Item } = await db.get({
-    Key: { id },
-    TableName: USERS_TABLE,
-  }).promise()
-  return Item
+  if (id) {
+    const { Item } = await db.get({
+      Key: { id },
+      TableName: USERS_TABLE,
+    }).promise()
+    return Item
+  }
 }
 
 const getUserByEmail = async function (email) {
@@ -28,17 +30,24 @@ const getUserByEmail = async function (email) {
   return Items[0]
 }
 
-const login = async function ({ email, password }) {
+const login = async function ({ email, password }, res) {
   const user = await getUserByEmail(email)
   const passwordsMatch = await bcrypt.compare(password, user.password);
   if (!passwordsMatch) throw new Error('authentication failed');
   const accessToken = jwt.sign({ id: user.id }, process.env.JWT_KEY, {
     expiresIn: '7d',
   });
+
+  res.cookie('accessToken', accessToken, {
+    httpOnly: true,
+    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+    secure: process.env.NODE_ENV === 'production'
+  })
+
   return { accessToken };
 };
 
-const register = async function ({ email, password, displayName, code }) {
+const register = async function ({ email, password, displayName, code }, res) {
   const userEmailCheck = await getUserByEmail(email)
   if (userEmailCheck) throw new Error('email collision!')
   if (code !== process.env.BETA_CODE) throw new Error('bad beta code');
@@ -60,11 +69,17 @@ const register = async function ({ email, password, displayName, code }) {
 
   const user = await getUserById(id);
 
-  return {
-    accessToken: jwt.sign({ id: user.id }, process.env.JWT_KEY, {
-      expiresIn: '7d',
-    })
-  };
+  const accessToken = jwt.sign({ id: user.id }, process.env.JWT_KEY, {
+    expiresIn: '7d',
+  })
+
+  res.cookie('accessToken', accessToken, {
+    httpOnly: true,
+    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+    secure: process.env.NODE_ENV === 'production'
+  })
+
+  return { accessToken };
 };
 
 module.exports = {
