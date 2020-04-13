@@ -2,10 +2,9 @@ import React from 'react';
 import gql from 'graphql-tag';
 import Layout from '../components/Layout';
 
-import { useUser } from '../data/User';
-import { useRouter } from 'next/router'
 import { useQuery } from '@apollo/react-hooks';
 import { Button, Loader } from 'semantic-ui-react';
+import { withAuthSync, logout } from '../utils/auth';
 
 const styles = {
   container: {
@@ -68,15 +67,9 @@ const QUERY = gql`
   }
 `;
 
-function Account() {
-  const user = useUser();
-  const router = useRouter();
+function Account(props) {
+  const { loading, data, error } = useQuery(QUERY, { variables: { id: props.user.id } });
 
-  const { loading, data, error } = useQuery(QUERY, {
-    variables: { id: user.id },
-  });
-
-  if (!user.isLoggedIn()) router.push('/login')
   if (loading) return <Loader active />;
   if (error) return <div> there was an error </div>;
 
@@ -101,7 +94,7 @@ function Account() {
             </div>
             <div style={styles.displayName}>{data.user.displayName}</div>
             <div style={styles.profileFooter}>
-              <Button basic fluid color='teal' onClick={() => user.logout(true)}>
+              <Button basic fluid color='teal' onClick={() => logout()}>
                 Logout
             </Button>
             </div>
@@ -109,9 +102,9 @@ function Account() {
         </div>
       </Layout>
     );
-  } else {
-    return <div> Nothing found here </div>
   }
+
+  return <div> Nothing found here </div>
 };
 
-export default Account
+export default withAuthSync(Account)
