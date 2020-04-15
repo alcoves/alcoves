@@ -25,7 +25,6 @@ resource "aws_ecs_task_definition" "web" {
 
 resource "aws_ecs_service" "web" {
   desired_count    = 1
-  platform_version = 1.40
   launch_type      = "FARGATE"
   name             = "web-${var.env}"
   depends_on       = [aws_alb_target_group.web]
