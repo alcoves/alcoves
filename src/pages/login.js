@@ -33,7 +33,7 @@ function Login() {
           },
         },
       });
-      window.location.href = '/'
+      // window.location.href = '/'
     },
     [loginMutation],
   );
@@ -94,4 +94,4 @@ function Login() {
   )
 }
 
-export default withApollo({ ssr: true })(Login)
+export default withApollo({ ssr: false })(Login)
