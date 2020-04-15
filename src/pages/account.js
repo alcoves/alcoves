@@ -1,6 +1,5 @@
 import React from 'react';
 import gql from 'graphql-tag';
-import Layout from '../components/Layout';
 
 import { useQuery } from '@apollo/react-hooks';
 import { Button, Loader } from 'semantic-ui-react';
@@ -74,33 +73,30 @@ function Account(props) {
   if (error) return <div> there was an error </div>;
 
   if (data) {
-    console.log('data', data);
     return (
-      <Layout>
-        <div style={styles.container}>
-          <div style={styles.card}>
-            <div style={styles.avatarCircleContainer}>
-              {data.user.avatar ? (
-                <img
-                  alt='profile'
-                  src={`${data.user.avatar}?${Date.now()}`}
-                  style={styles.avatarCircle}
-                />
-              ) : (
-                  <div style={styles.avatarCircle} />
-                )}
-            </div>
-            <div>
-            </div>
-            <div style={styles.displayName}>{data.user.displayName}</div>
-            <div style={styles.profileFooter}>
-              <Button basic fluid color='teal' onClick={() => logout()}>
-                Logout
+      <div style={styles.container}>
+        <div style={styles.card}>
+          <div style={styles.avatarCircleContainer}>
+            {data.user.avatar ? (
+              <img
+                alt='profile'
+                src={`${data.user.avatar}?${Date.now()}`}
+                style={styles.avatarCircle}
+              />
+            ) : (
+                <div style={styles.avatarCircle} />
+              )}
+          </div>
+          <div>
+          </div>
+          <div style={styles.displayName}>{data.user.displayName}</div>
+          <div style={styles.profileFooter}>
+            <Button basic fluid color='teal' onClick={() => logout()}>
+              Logout
             </Button>
-            </div>
           </div>
         </div>
-      </Layout>
+      </div>
     );
   }
 
