@@ -1,9 +1,14 @@
 const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
 
+const {
+  NODE_ENV,
+  BKEN_ENV
+} = process.env
+
 const getOrigin = () => {
-  if (process.env.BKEN_ENV === 'prod') return 'https://bken.io'
-  if (process.env.BKEN_ENV === 'dev') return 'https://dev.bken.io'
+  if (BKEN_ENV === 'prod' && NODE_ENV === 'production') return 'https://bken.io'
+  if (BKEN_ENV === 'dev' && NODE_ENV === 'production') return 'https://dev.bken.io'
   return 'http://localhost:3000'
 }
 
