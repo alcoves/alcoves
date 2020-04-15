@@ -46,7 +46,6 @@ resource "aws_ecs_task_definition" "api" {
 
 resource "aws_ecs_service" "api" {
   desired_count    = 1
-  platform_version = 1.40
   launch_type      = "FARGATE"
   name             = "api-${var.env}"
   depends_on       = [aws_alb_target_group.api]
