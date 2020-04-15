@@ -1,8 +1,34 @@
 import React from 'react'
 import App from 'next/app'
 import Head from 'next/head'
+import fetch from 'isomorphic-unfetch'
+import { HttpLink } from 'apollo-link-http'
+import { ApolloClient } from 'apollo-client'
 import { ApolloProvider } from '@apollo/react-hooks'
-import createApolloClient from '../apolloClient'
+import { InMemoryCache } from 'apollo-cache-inmemory'
+
+const getServerUrl = () => {
+  if (process.env.BKEN_ENV === 'dev') return 'https://dev.bken.io/api/graphql'
+  if (process.env.BKEN_ENV === 'prod') return 'https://bken.io/api/graphql'
+  return 'http://localhost:4000/api/graphql'
+}
+
+function createApolloClient(initialState, ctx) {
+  // The `ctx` (NextPageContext) will only be present on the server.
+  // use it to extract auth headers (ctx.req) or similar.
+  return new ApolloClient({
+    ssrMode: Boolean(ctx),
+    link: new HttpLink({
+      fetch,
+      uri: getServerUrl(), // Server URL (must be absolute)
+      credentials: 'include', // Additional fetch() options like `credentials` or `headers`
+      headers: {
+        cookie: ctx && ctx.req ? ctx.req.headers.cookie : undefined
+      }
+    }),
+    cache: new InMemoryCache().restore(initialState),
+  })
+}
 
 // On the client, we store the Apollo Client in the following variable.
 // This prevents the client from reinitializing between page transitions.
@@ -79,7 +105,7 @@ const initApolloClient = (initialState, ctx) => {
  * @param  {Boolean} [withApolloOptions.ssr=false]
  * @returns {(PageComponent: ReactNode) => ReactNode}
  */
-export const withApollo = ({ ssr = false } = {}) => PageComponent => {
+const withApollo = ({ ssr = false } = {}) => PageComponent => {
   const WithApollo = ({ apolloClient, apolloState, ...pageProps }) => {
     let client
     if (apolloClient) {
@@ -174,3 +200,5 @@ export const withApollo = ({ ssr = false } = {}) => PageComponent => {
 
   return WithApollo
 }
+
+export default withApollo

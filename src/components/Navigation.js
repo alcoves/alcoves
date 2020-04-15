@@ -1,11 +1,12 @@
 import React from 'react';
 import Link from 'next/link';
 
-import { withAuthSync } from '../utils/auth'
+import withMe from '../lib/withMe';
 import { Button } from 'semantic-ui-react';
+import withApollo from '../lib/withApollo'
 
-function Navigation(props) {
-  console.log('user from nav', props.user);
+function Navigation() {
+  const me = withMe();
 
   const styles = {
     menu: {
@@ -39,7 +40,7 @@ function Navigation(props) {
           </Link>
         </div>
 
-        {props.user ? (
+        {me ? (
           <div
             style={{
               display: 'flex',
@@ -54,7 +55,7 @@ function Navigation(props) {
               </Link>
             </div>
             <div style={styles.menuItem}>
-              <Link href={`/users/${user.id}`}>
+              <Link href={`/users/${me.id}`}>
                 <Button as='a' circular size='medium' icon='video' />
               </Link>
             </div>
@@ -85,4 +86,4 @@ function Navigation(props) {
   );
 };
 
-export default withAuthSync(Navigation)
+export default withApollo({ ssr: true })(Navigation)

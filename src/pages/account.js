@@ -1,9 +1,13 @@
 import React from 'react';
 import gql from 'graphql-tag';
+import withMe from '../lib/withMe';
+import withApollo from '../lib/withApollo'
+import Layout from '../components/Layout';
+import Navigation from '../components/Navigation';
 
+import { logout } from '../utils/auth';
 import { useQuery } from '@apollo/react-hooks';
 import { Button, Loader } from 'semantic-ui-react';
-import { withAuthSync, logout } from '../utils/auth';
 
 const styles = {
   container: {
@@ -66,11 +70,8 @@ const QUERY = gql`
   }
 `;
 
-function Account(props) {
-  const { loading, data, error } = useQuery(QUERY, { variables: { id: props.user.id } });
-
-  if (loading) return <Loader active />;
-  if (error) return <div> there was an error </div>;
+function Account({ id }) {
+  const { loading, data, error } = useQuery(QUERY, { variables: { id } });
 
   if (data) {
     return (
@@ -93,14 +94,29 @@ function Account(props) {
           <div style={styles.profileFooter}>
             <Button basic fluid color='teal' onClick={() => logout()}>
               Logout
-            </Button>
+          </Button>
           </div>
         </div>
       </div>
-    );
+    )
   }
 
-  return <div> Nothing found here </div>
+  return <div />
+}
+
+function AccountWrapper() {
+  const me = withMe();
+  if (me) {
+    return (
+      <div>
+        <Layout>
+          <Navigation />
+          <Account id={me.id} />
+        </Layout>
+      </div>
+    );
+  }
+  return <div />
 };
 
-export default withAuthSync(Account)
+export default withApollo({ ssr: true })(AccountWrapper)
