@@ -1,8 +1,8 @@
-import { useEffect } from 'react'
-import Router from 'next/router'
-import nextCookie from 'next-cookies'
 import cookie from 'js-cookie'
 import jwt from 'jsonwebtoken'
+import Router from 'next/router'
+import { useEffect } from 'react'
+import nextCookie from 'next-cookies'
 
 export const login = ({ accessToken }) => {
   cookie.set('accessToken', accessToken, { expires: 1 })
@@ -42,7 +42,6 @@ export const withAuthSync = WrappedComponent => {
 
     useEffect(() => {
       window.addEventListener('storage', syncLogout)
-
       return () => {
         window.removeEventListener('storage', syncLogout)
         window.localStorage.removeItem('logout')
@@ -54,8 +53,8 @@ export const withAuthSync = WrappedComponent => {
 
   Wrapper.getInitialProps = async ctx => {
     const token = auth(ctx)
-
-    const user = jwt.decode(token)
+    let user = {};
+    user = jwt.decode(token)
     console.log('user', user);
 
     const componentProps =

@@ -3,9 +3,14 @@ import './index.css';
 
 import React from 'react';
 import { withApollo } from '../lib/apollo'
+import Layout from '../components/Layout';
 
 function App({ Component, pageProps }) {
-  return <Component {...pageProps} />
+  return (
+    <Layout>
+      <Component {...pageProps} />
+    </Layout>
+  )
 }
 
 export default withApollo({ ssr: true })(App)

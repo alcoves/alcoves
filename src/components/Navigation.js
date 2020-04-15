@@ -1,8 +1,11 @@
 import React from 'react';
 import Link from 'next/link';
+
+import { withAuthSync } from '../utils/auth'
 import { Button } from 'semantic-ui-react';
 
 function Navigation(props) {
+  console.log('user from nav', props.user);
 
   const styles = {
     menu: {
@@ -78,10 +81,8 @@ function Navigation(props) {
             </div>
           )}
       </div>
-
-      <div>{props.children}</div>
     </div>
   );
 };
 
-export default Navigation
+export default withAuthSync(Navigation)

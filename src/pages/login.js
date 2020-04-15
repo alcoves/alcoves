@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import gql from 'graphql-tag';
-import Layout from '../components/Layout';
 
 import { login } from '../utils/auth';
 import { useMutation } from '@apollo/react-hooks';
@@ -42,55 +41,52 @@ export default function Login() {
   }
 
   return (
-    <Layout>
-      <Grid textAlign='center' style={{ marginTop: '50px' }} verticalAlign='middle'>
-        <Grid.Column style={{ maxWidth: 450 }}>
-          {error ? (
-            <Message
-              error
-              header='There was some errors with your submission'
-              list={error.graphQLErrors.map(e => e.message)}
+    <Grid textAlign='center' style={{ marginTop: '50px' }} verticalAlign='middle'>
+      <Grid.Column style={{ maxWidth: 450 }}>
+        {error ? (
+          <Message
+            error
+            header='There was some errors with your submission'
+            list={error.graphQLErrors.map(e => e.message)}
+          />
+        ) : null}
+
+        {called && loading ? <Loader active /> : null}
+
+        <Form size='large' onSubmit={handleSubmit}>
+          <fieldset disabled={loading} style={{ padding: 'none', border: 'none' }}>
+            <Form.Input
+              fluid
+              icon='mail'
+              name='email'
+              iconPosition='left'
+              value={email}
+              onChange={(e, { value }) => {
+                setEmail(value.toLowerCase());
+              }}
+              placeholder='E-mail address'
             />
-          ) : null}
-
-          {called && loading ? <Loader active /> : null}
-
-          <Form size='large' onSubmit={handleSubmit}>
-            <fieldset disabled={loading} style={{ padding: 'none', border: 'none' }}>
-              <Form.Input
-                fluid
-                icon='mail'
-                name='email'
-                iconPosition='left'
-                value={email}
-                onChange={(e, { value }) => {
-                  setEmail(value.toLowerCase());
-                }}
-                placeholder='E-mail address'
-              />
-              <Form.Input
-                fluid
-                icon='lock'
-                type='password'
-                name='password'
-                iconPosition='left'
-                placeholder='Password'
-              />
-
-              <Grid>
-                <Grid.Column width={10}>
-                  <Form.Button color='teal' fluid content='Login' />
-                </Grid.Column>
-                <Grid.Column width={6}>
-                  <Link href='/register'>
-                    <Button as='a' to='/register' basic fluid color='teal' content='Or Register' />
-                  </Link>
-                </Grid.Column>
-              </Grid>
-            </fieldset>
-          </Form>
-        </Grid.Column>
-      </Grid>
-    </Layout>
+            <Form.Input
+              fluid
+              icon='lock'
+              type='password'
+              name='password'
+              iconPosition='left'
+              placeholder='Password'
+            />
+            <Grid>
+              <Grid.Column width={10}>
+                <Form.Button color='teal' fluid content='Login' />
+              </Grid.Column>
+              <Grid.Column width={6}>
+                <Link href='/register'>
+                  <Button as='a' to='/register' basic fluid color='teal' content='Or Register' />
+                </Link>
+              </Grid.Column>
+            </Grid>
+          </fieldset>
+        </Form>
+      </Grid.Column>
+    </Grid>
   )
 }
