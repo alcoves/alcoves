@@ -4,7 +4,7 @@ import gql from 'graphql-tag';
 
 import { Link } from 'next/link';
 import { useRouter } from 'next/router'
-import { withApollo } from '../../lib/apollo'
+import withApollo from '../../lib/withApollo'
 import { useQuery } from '@apollo/react-hooks'
 import { Loader, Container } from 'semantic-ui-react';
 
@@ -54,7 +54,6 @@ function Video() {
       height: 'calc(100vh - 100px)',
       maxHeight: 'calc((9 / 16) * 100vw',
     };
-
 
     const link = pickUrl(data.video);
 

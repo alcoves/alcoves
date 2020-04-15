@@ -1,5 +1,5 @@
 import Head from "next/head"
-import Navigation from "./Navigation"
+import Navigation from './Navigation';
 
 export default function Layout({ children }) {
   return (
@@ -7,7 +7,6 @@ export default function Layout({ children }) {
       <Head>
         <title>bken.io</title>
       </Head>
-      <Navigation />
       {children}
     </div>
   )
