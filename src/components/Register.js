@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost';
+const gql = require('graphql-tag');
 import User from '../../data/User';
 import React, { useContext, useState, useCallback } from 'react';
 
@@ -6,9 +6,9 @@ import { Redirect, Link } from 'react-router-dom';
 import { useMutation } from '@apollo/react-hooks';
 import { Button, Form, Grid, Loader, Message } from 'semantic-ui-react';
 
-const registerMutation = gql`
-  mutation register($input: RegisterInput!) {
-    register(input: $input) {
+const REGISTER = gql`
+  mutation Register($data: RegisterInput!) {
+    register(data: $data) {
       accessToken
     }
   }

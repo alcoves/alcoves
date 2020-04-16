@@ -1,15 +1,31 @@
-import './Upload.css';
 import axios from 'axios';
-import chunkFile from '../../utils/chunkFile';
-import React, { useState, useEffect } from 'react';
+import gql from 'graphql-tag';
+import chunkFile from '../utils/chunkFile';
 
-import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/react-hooks';
+import React, { useState, useEffect } from 'react';
 import { Button, Progress, Loader } from 'semantic-ui-react';
-import { createMultipartUploadMutation, completedMultipartUploadMutation } from '../../lib/queries';
 
-export default () => {
-  const history = useHistory();
+const CREATE_MULTIPART_UPLOAD = gql`
+  mutation createMultipartUpload($input: CreateMultipartUploadInput!) {
+    createMultipartUpload(input: $input) {
+      key
+      urls
+      uploadId
+      objectId
+    }
+  }
+`;
+
+const COMPLETE_MULTIPART_UPLOAD = gql`
+  mutation completeMultipartUpload($input: CompleteMultipartUploadInput!) {
+    completeMultipartUpload(input: $input) {
+      completed
+    }
+  }
+`;
+
+function Uploader() {
   const [files, setFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
   let [bytesUploaded, setBytesUploaded] = useState(0);
@@ -17,12 +33,12 @@ export default () => {
   const [
     startUpload,
     { called: creCalled, loading: creLoading, data: creData, error: creError },
-  ] = useMutation(createMultipartUploadMutation);
+  ] = useMutation(CREATE_MULTIPART_UPLOAD);
 
   const [
     completeUpload,
     { called: comCalled, loading: comLoading, data: comData, error: comError },
-  ] = useMutation(completedMultipartUploadMutation);
+  ] = useMutation(COMPLETE_MULTIPART_UPLOAD);
 
   if (creData && !uploading && !comCalled) {
     setUploading(true);
@@ -100,6 +116,23 @@ export default () => {
 
   return (
     <div className='uploadContainer'>
+      <style jsx global>
+        {`
+          .uploadContainer {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            padding: 10px 5px 5px 5px;
+            justify-content: flex-start;
+          }
+          .uploadRow {
+            margin: 10px 0px 10px 0px;
+            width: 300px;
+          }
+        `}
+      </style>
       <div className='uploadRow'>
         <Button
           fluid
@@ -145,7 +178,7 @@ export default () => {
               fluid
               positive
               onClick={() => {
-                history.push(`/editor/videos/${creData.createMultipartUpload.objectId}`);
+                // history.push(`/editor/videos/${creData.createMultipartUpload.objectId}`);
               }}>
               View In Editor
             </Button>
@@ -154,4 +187,6 @@ export default () => {
       </div>
     </div>
   );
-};
+}
+
+export default Uploader;

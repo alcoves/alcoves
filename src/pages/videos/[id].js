@@ -3,10 +3,12 @@ import moment from 'moment';
 import gql from 'graphql-tag';
 
 import { Link } from 'next/link';
-import { useRouter } from 'next/router'
-import withApollo from '../../lib/withApollo'
-import { useQuery } from '@apollo/react-hooks'
+import { useRouter } from 'next/router';
+import withApollo from '../../lib/withApollo';
+import { useQuery } from '@apollo/react-hooks';
 import { Loader, Container } from 'semantic-ui-react';
+import Layout from '../../components/Layout';
+import Navigation from '../../components/Navigation';
 
 const QUERY = gql`
   query getVideo($id: String!) {
@@ -42,7 +44,10 @@ const pickUrl = ({ versions }) => {
 
 function Video() {
   const router = useRouter();
-  const { data, error, loading } = useQuery(QUERY, { notifyOnNetworkStatusChange: true, variables: { id: router.query.id } });
+  const { data, error, loading } = useQuery(QUERY, {
+    notifyOnNetworkStatusChange: true,
+    variables: { id: router.query.id },
+  });
 
   if (loading) {
     return <Loader active inline='centered' style={{ marginTop: '30px' }} />;
@@ -58,74 +63,77 @@ function Video() {
     const link = pickUrl(data.video);
 
     return (
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <div>
-          <div style={outerDivStyle}>
-            <video width='100%' height='100%' controls autoPlay>
-              <source src={link} type='video/mp4' />
-            </video>
-          </div>
+      <Layout>
+        <Navigation />
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
           <div>
-            <Container style={{ marginTop: '20px' }}>
-              <div>
-                <h2>{data.video.title}</h2>
-                <p>
-                  {`${data.video.views} views • ${moment(
-                    parseInt(data.video.createdAt),
-                  ).fromNow()}`}
-                </p>
-              </div>
-              <div
-                style={{
-                  display: 'flex',
-                  marginTop: '10px',
-                  height: '75px',
-                }}>
+            <div style={outerDivStyle}>
+              <video width='100%' height='100%' controls autoPlay>
+                <source src={link} type='video/mp4' />
+              </video>
+            </div>
+            <div>
+              <Container style={{ marginTop: '20px' }}>
+                <div>
+                  <h2>{data.video.title}</h2>
+                  <p>
+                    {`${data.video.views} views • ${moment(
+                      parseInt(data.video.createdAt),
+                    ).fromNow()}`}
+                  </p>
+                </div>
                 <div
                   style={{
                     display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginRight: '10px',
+                    marginTop: '10px',
+                    height: '75px',
                   }}>
-                  <img
-                    as={Link}
-                    to={`/users/${data.video.user.id}`}
-                    width={50}
-                    height={50}
-                    alt='profile'
-                    src={data.video.user.avatar}
-                    style={{
-                      borderRadius: '50%',
-                      cursor: 'pointer',
-                    }}
-                  />
-                </div>
-                <div style={{ height: '100%' }}>
                   <div
                     style={{
                       display: 'flex',
-                      alignItems: 'flex-end',
-                      height: '50%',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      marginRight: '10px',
                     }}>
-                    {data.video.user.displayName}
+                    <img
+                      as={Link}
+                      to={`/users/${data.video.user.id}`}
+                      width={50}
+                      height={50}
+                      alt='profile'
+                      src={data.video.user.avatar}
+                      style={{
+                        borderRadius: '50%',
+                        cursor: 'pointer',
+                      }}
+                    />
                   </div>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'flex-start',
-                      height: '50%',
-                    }}>
-                    {data.video.user.followers || '0'} followers
+                  <div style={{ height: '100%' }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'flex-end',
+                        height: '50%',
+                      }}>
+                      {data.video.user.displayName}
+                    </div>
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        height: '50%',
+                      }}>
+                      {data.video.user.followers || '0'} followers
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Container>
+              </Container>
+            </div>
           </div>
         </div>
-      </div>
+      </Layout>
     );
   }
 }
 
-export default withApollo({ ssr: true })(Video)
+export default withApollo({ ssr: true })(Video);

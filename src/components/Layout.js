@@ -1,5 +1,4 @@
-import Head from "next/head"
-import Navigation from './Navigation';
+import Head from 'next/head';
 
 export default function Layout({ children }) {
   return (
@@ -9,5 +8,5 @@ export default function Layout({ children }) {
       </Head>
       {children}
     </div>
-  )
+  );
 }

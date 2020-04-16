@@ -1,17 +1,17 @@
-import React from 'react'
-import App from 'next/app'
-import Head from 'next/head'
-import fetch from 'isomorphic-unfetch'
-import { HttpLink } from 'apollo-link-http'
-import { ApolloClient } from 'apollo-client'
-import { ApolloProvider } from '@apollo/react-hooks'
-import { InMemoryCache } from 'apollo-cache-inmemory'
+import React from 'react';
+import App from 'next/app';
+import Head from 'next/head';
+import fetch from 'isomorphic-unfetch';
+import { HttpLink } from 'apollo-link-http';
+import { ApolloClient } from 'apollo-client';
+import { ApolloProvider } from '@apollo/react-hooks';
+import { InMemoryCache } from 'apollo-cache-inmemory';
 
 const getServerUrl = () => {
-  if (process.env.BKEN_ENV === 'dev') return 'https://dev.bken.io/api/graphql'
-  if (process.env.BKEN_ENV === 'prod') return 'https://bken.io/api/graphql'
-  return 'http://localhost:4000/api/graphql'
-}
+  if (process.env.BKEN_ENV === 'dev') return 'https://dev.bken.io/api/graphql';
+  if (process.env.BKEN_ENV === 'prod') return 'https://bken.io/api/graphql';
+  return 'http://localhost:4000/api/graphql';
+};
 
 function createApolloClient(initialState, ctx) {
   // The `ctx` (NextPageContext) will only be present on the server.
@@ -23,16 +23,16 @@ function createApolloClient(initialState, ctx) {
       uri: getServerUrl(), // Server URL (must be absolute)
       credentials: 'include', // Additional fetch() options like `credentials` or `headers`
       headers: {
-        cookie: ctx && ctx.req ? ctx.req.headers.cookie : undefined
-      }
+        cookie: ctx && ctx.req ? ctx.req.headers.cookie : undefined,
+      },
     }),
     cache: new InMemoryCache().restore(initialState),
-  })
+  });
 }
 
 // On the client, we store the Apollo Client in the following variable.
 // This prevents the client from reinitializing between page transitions.
-let globalApolloClient = null
+let globalApolloClient = null;
 
 /**
  * Installs the Apollo Client on NextPageContext
@@ -41,7 +41,7 @@ let globalApolloClient = null
  * @param {NextPageContext | NextAppContext} ctx
  */
 export const initOnContext = ctx => {
-  const inAppContext = Boolean(ctx.ctx)
+  const inAppContext = Boolean(ctx.ctx);
 
   // We consider installing `withApollo({ ssr: true })` on global App level
   // as antipattern since it disables project wide Automatic Static Optimization.
@@ -49,32 +49,31 @@ export const initOnContext = ctx => {
     if (inAppContext) {
       console.warn(
         'Warning: You have opted-out of Automatic Static Optimization due to `withApollo` in `pages/_app`.\n' +
-        'Read more: https://err.sh/next.js/opt-out-auto-static-optimization\n'
-      )
+          'Read more: https://err.sh/next.js/opt-out-auto-static-optimization\n',
+      );
     }
   }
 
   // Initialize ApolloClient if not already done
   const apolloClient =
-    ctx.apolloClient ||
-    initApolloClient(ctx.apolloState || {}, inAppContext ? ctx.ctx : ctx)
+    ctx.apolloClient || initApolloClient(ctx.apolloState || {}, inAppContext ? ctx.ctx : ctx);
 
   // We send the Apollo Client as a prop to the component to avoid calling initApollo() twice in the server.
   // Otherwise, the component would have to call initApollo() again but this
   // time without the context. Once that happens, the following code will make sure we send
   // the prop as `null` to the browser.
-  apolloClient.toJSON = () => null
+  apolloClient.toJSON = () => null;
 
   // Add apolloClient to NextPageContext & NextAppContext.
   // This allows us to consume the apolloClient inside our
   // custom `getInitialProps({ apolloClient })`.
-  ctx.apolloClient = apolloClient
+  ctx.apolloClient = apolloClient;
   if (inAppContext) {
-    ctx.ctx.apolloClient = apolloClient
+    ctx.ctx.apolloClient = apolloClient;
   }
 
-  return ctx
-}
+  return ctx;
+};
 
 /**
  * Always creates a new apollo client on the server
@@ -86,16 +85,16 @@ const initApolloClient = (initialState, ctx) => {
   // Make sure to create a new client for every server-side request so that data
   // isn't shared between connections (which would be bad)
   if (typeof window === 'undefined') {
-    return createApolloClient(initialState, ctx)
+    return createApolloClient(initialState, ctx);
   }
 
   // Reuse client on the client-side
   if (!globalApolloClient) {
-    globalApolloClient = createApolloClient(initialState, ctx)
+    globalApolloClient = createApolloClient(initialState, ctx);
   }
 
-  return globalApolloClient
-}
+  return globalApolloClient;
+};
 
 /**
  * Creates a withApollo HOC
@@ -107,49 +106,48 @@ const initApolloClient = (initialState, ctx) => {
  */
 const withApollo = ({ ssr = false } = {}) => PageComponent => {
   const WithApollo = ({ apolloClient, apolloState, ...pageProps }) => {
-    let client
+    let client;
     if (apolloClient) {
       // Happens on: getDataFromTree & next.js ssr
-      client = apolloClient
+      client = apolloClient;
     } else {
       // Happens on: next.js csr
-      client = initApolloClient(apolloState, undefined)
+      client = initApolloClient(apolloState, undefined);
     }
 
     return (
       <ApolloProvider client={client}>
         <PageComponent {...pageProps} />
       </ApolloProvider>
-    )
-  }
+    );
+  };
 
   // Set the correct displayName in development
   if (process.env.NODE_ENV !== 'production') {
-    const displayName =
-      PageComponent.displayName || PageComponent.name || 'Component'
-    WithApollo.displayName = `withApollo(${displayName})`
+    const displayName = PageComponent.displayName || PageComponent.name || 'Component';
+    WithApollo.displayName = `withApollo(${displayName})`;
   }
 
   if (ssr || PageComponent.getInitialProps) {
     WithApollo.getInitialProps = async ctx => {
-      const inAppContext = Boolean(ctx.ctx)
-      const { apolloClient } = initOnContext(ctx)
+      const inAppContext = Boolean(ctx.ctx);
+      const { apolloClient } = initOnContext(ctx);
 
       // Run wrapped getInitialProps methods
-      let pageProps = {}
+      let pageProps = {};
       if (PageComponent.getInitialProps) {
-        pageProps = await PageComponent.getInitialProps(ctx)
+        pageProps = await PageComponent.getInitialProps(ctx);
       } else if (inAppContext) {
-        pageProps = await App.getInitialProps(ctx)
+        pageProps = await App.getInitialProps(ctx);
       }
 
       // Only on the server:
       if (typeof window === 'undefined') {
-        const { AppTree } = ctx
+        const { AppTree } = ctx;
         // When redirecting, the response is finished.
         // No point in continuing to render
         if (ctx.res && ctx.res.finished) {
-          return pageProps
+          return pageProps;
         }
 
         // Only if dataFromTree is enabled
@@ -157,15 +155,15 @@ const withApollo = ({ ssr = false } = {}) => PageComponent => {
           try {
             // Import `@apollo/react-ssr` dynamically.
             // We don't want to have this in our client bundle.
-            const { getDataFromTree } = await import('@apollo/react-ssr')
+            const { getDataFromTree } = await import('@apollo/react-ssr');
 
             // Since AppComponents and PageComponents have different context types
             // we need to modify their props a little.
-            let props
+            let props;
             if (inAppContext) {
-              props = { ...pageProps, apolloClient }
+              props = { ...pageProps, apolloClient };
             } else {
-              props = { pageProps: { ...pageProps, apolloClient } }
+              props = { pageProps: { ...pageProps, apolloClient } };
             }
 
             // Take the Next.js AppTree, determine which queries are needed to render,
@@ -173,17 +171,17 @@ const withApollo = ({ ssr = false } = {}) => PageComponent => {
             // your entire AppTree once for every query. Check out apollo fragments
             // if you want to reduce the number of rerenders.
             // https://www.apollographql.com/docs/react/data/fragments/
-            await getDataFromTree(<AppTree {...props} />)
+            await getDataFromTree(<AppTree {...props} />);
           } catch (error) {
             // Prevent Apollo Client GraphQL errors from crashing SSR.
             // Handle them in components via the data.error prop:
             // https://www.apollographql.com/docs/react/api/react-apollo.html#graphql-query-data-error
-            console.error('Error while running `getDataFromTree`', error)
+            console.error('Error while running `getDataFromTree`', error);
           }
 
           // getDataFromTree does not call componentWillUnmount
           // head side effect therefore need to be cleared manually
-          Head.rewind()
+          Head.rewind();
         }
       }
 
@@ -194,11 +192,11 @@ const withApollo = ({ ssr = false } = {}) => PageComponent => {
         // Provide the client for ssr. As soon as this payload
         // gets JSON.stringified it will remove itself.
         apolloClient: ctx.apolloClient,
-      }
-    }
+      };
+    };
   }
 
-  return WithApollo
-}
+  return WithApollo;
+};
 
-export default withApollo
+export default withApollo;
