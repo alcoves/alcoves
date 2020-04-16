@@ -7,10 +7,20 @@ import { ApolloClient } from 'apollo-client';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 
-const getServerUrl = () => {
-  if (process.env.BKEN_ENV === 'dev') return 'https://dev.bken.io/api/graphql';
-  if (process.env.BKEN_ENV === 'prod') return 'https://bken.io/api/graphql';
-  return 'http://localhost:4000/api/graphql';
+const getServerUrl = apiUrl => {
+  switch (process.env.BKEN_ENV) {
+    case 'dev':
+      apiUrl = 'https://dev.bken.io/api/graphql';
+      break;
+    case 'prod':
+      apiUrl = 'https://bken.io/api/graphql';
+      break;
+    default:
+      apiUrl = 'http://localhost:4000/api/graphql';
+  }
+
+  console.log(`apiUrl: ${apiUrl}`);
+  return apiUrl;
 };
 
 function createApolloClient(initialState, ctx) {
