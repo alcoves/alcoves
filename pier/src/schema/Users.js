@@ -6,6 +6,7 @@ module.exports.typeDefs = gql`
     user(id: ID!): User!
   }
   extend type Mutation {
+    logout: LogoutResponse!
     login(input: LoginInput!): LoginResponse!
     register(input: RegisterInput!): RegisterResponse!
   }
@@ -19,6 +20,9 @@ module.exports.typeDefs = gql`
   }
   type LoginResponse {
     accessToken: String!
+  }
+  type LogoutResponse {
+    success: Boolean!
   }
   type RegisterResponse {
     accessToken: String!
@@ -41,6 +45,7 @@ module.exports.resolvers = {
     me: async (_, __, { user, users: { getUserById } }) => getUserById(user.id),
   },
   Mutation: {
+    logout: async (_, __, { res, users: { logout } }) => logout(res),
     login: async (_, { input }, { res, users: { login } }) => login(input, res),
     register: async (_, { input }, { res, users: { register } }) =>
       register(input, res),

@@ -52,6 +52,17 @@ const login = async function ({ email, password }, res) {
   return { accessToken };
 };
 
+const logout = async function (res) {
+  // When we set the cookies to 0, the user is logged out
+  res.cookie('accessToken', 'removed', {
+    maxAge: 0,
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+  });
+
+  return { success: true };
+};
+
 const register = async function ({ email, password, displayName, code }, res) {
   const userEmailCheck = await getUserByEmail(email);
   if (userEmailCheck) throw new Error('email collision!');
@@ -91,6 +102,7 @@ const register = async function ({ email, password, displayName, code }, res) {
 
 module.exports = {
   login,
+  logout,
   register,
   getUserById,
   getUserByEmail,
