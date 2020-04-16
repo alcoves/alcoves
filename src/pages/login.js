@@ -32,10 +32,13 @@ function Login() {
           },
         },
       });
-      // window.location.href = '/'
     },
     [loginMutation],
   );
+
+  if (data && called && !loading && !error) {
+    window.location.href = '/';
+  }
 
   return (
     <div>

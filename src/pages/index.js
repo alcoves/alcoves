@@ -15,7 +15,13 @@ function Index() {
       </Layout>
     );
   }
-  return <div>loading</div>;
+
+  return (
+    <Layout>
+      <Navigation />
+      <h1>Please sign in</h1>
+    </Layout>
+  );
 }
 
 export default withApollo({ ssr: true })(Index);
