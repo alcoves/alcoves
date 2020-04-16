@@ -1,7 +1,7 @@
-const { BKEN_ENV } = process.env
+const { BKEN_ENV } = process.env;
 
 if (BKEN_ENV !== 'dev' && BKEN_ENV !== 'prod') {
-  throw new Error(`process.env.BKEN_ENV must be dev or prod, got ${BKEN_ENV}`)
+  throw new Error(`process.env.BKEN_ENV must be dev or prod, got ${BKEN_ENV}`);
 }
 
 module.exports = {

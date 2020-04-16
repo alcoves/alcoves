@@ -6,9 +6,9 @@ const uploads = require('./loaders/uploads');
 
 module.exports = ({ res, req }) => {
   let user = {};
-  const { cookie = '' } = req.headers
-  const token = cookie.split('accessToken=')[1]
-  if (token) user = jwt.verify(token, process.env.JWT_KEY)
+  const { cookie = '' } = req.headers;
+  const token = cookie.split('accessToken=')[1];
+  if (token) user = jwt.verify(token, process.env.JWT_KEY);
 
   return {
     res,

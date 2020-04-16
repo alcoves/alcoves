@@ -1,5 +1,5 @@
 const mime = require('mime');
-const AWS = require('aws-sdk')
+const AWS = require('aws-sdk');
 
 const s3 = new AWS.S3({
   region: 'us-east-1',
@@ -13,7 +13,11 @@ const createMultipartUpload = async function (
   user,
   createVideo
 ) {
-  const video = await createVideo({ duration, user: user.id, title: "New Upload" })
+  const video = await createVideo({
+    duration,
+    user: user.id,
+    title: 'New Upload',
+  });
   const { UploadId, Key } = await s3
     .createMultipartUpload({
       Bucket: UPLOAD_BUCKET_NAME,

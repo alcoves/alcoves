@@ -42,6 +42,7 @@ module.exports.resolvers = {
   },
   Mutation: {
     login: async (_, { input }, { res, users: { login } }) => login(input, res),
-    register: async (_, { input }, { res, users: { register } }) => register(input, res),
+    register: async (_, { input }, { res, users: { register } }) =>
+      register(input, res),
   },
 };

@@ -3,12 +3,12 @@ const request = require('supertest');
 
 describe('upload tests', () => {
   test('createMultipartUpload', () => {
-    expect(true).toBe(true)
-  })
+    expect(true).toBe(true);
+  });
 
   test('completeMultipartUpload', () => {
-    expect(true).toBe(true)
-  })
+    expect(true).toBe(true);
+  });
 
   // it('should start multipart upload', async () => {
   //   const registerUserQuery = `

@@ -45,17 +45,37 @@ module.exports.resolvers = {
     thumbnail: ({ thumbnail }) => thumbnail,
     createdAt: ({ createdAt }) => createdAt,
     modifiedAt: ({ modifiedAt }) => modifiedAt,
-    user: function ({ user }, _, { users: { getUserById } }) { return getUserById(user) },
-    versions: function ({ id }, _, { videos: { getVideoVersionsById } }) { return getVideoVersionsById(id) },
+    user: function ({ user }, _, { users: { getUserById } }) {
+      return getUserById(user);
+    },
+    versions: function ({ id }, _, { videos: { getVideoVersionsById } }) {
+      return getVideoVersionsById(id);
+    },
   },
   Query: {
-    videos: function (_, __, { videos: { getVideos } }) { return getVideos() },
-    video: function (_, { id }, { videos: { getVideoById } }) { return getVideoById(id) },
-    videosByUserId: function (_, { id }, { videos: { getVideosByUserId } }) { return getVideosByUserId(id) }
+    videos: function (_, __, { videos: { getVideos } }) {
+      return getVideos();
+    },
+    video: function (_, { id }, { videos: { getVideoById } }) {
+      return getVideoById(id);
+    },
+    videosByUserId: function (_, { id }, { videos: { getVideosByUserId } }) {
+      return getVideosByUserId(id);
+    },
   },
   Mutation: {
-    deleteVideo: function (_, { id }, { videos: { deleteVideo } }) { return deleteVideo(id) },
-    createVideo: function (_, { input }, { videos: { createVideo } }) { return createVideo(input) },
-    updateVideoTitle: function (_, { id, title }, { videos: { updateVideoTitle } }) { return updateVideoTitle({ id, title }) },
+    deleteVideo: function (_, { id }, { videos: { deleteVideo } }) {
+      return deleteVideo(id);
+    },
+    createVideo: function (_, { input }, { videos: { createVideo } }) {
+      return createVideo(input);
+    },
+    updateVideoTitle: function (
+      _,
+      { id, title },
+      { videos: { updateVideoTitle } }
+    ) {
+      return updateVideoTitle({ id, title });
+    },
   },
 };
