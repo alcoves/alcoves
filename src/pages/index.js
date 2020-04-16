@@ -1,5 +1,3 @@
-console.log(process.env.BKEN_ENV);
-
 import React from 'react';
 import withMe from '../lib/withMe';
 import withApollo from '../lib/withApollo';
