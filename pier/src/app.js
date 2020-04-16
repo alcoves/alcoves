@@ -34,7 +34,7 @@ server.applyMiddleware({
   path: '/api/graphql',
   cors: {
     credentials: true,
-    origin: '*' || getOrigin(),
+    origin: getOrigin(),
   },
 });
 
