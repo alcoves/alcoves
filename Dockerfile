@@ -21,7 +21,7 @@ WORKDIR "/root/web"
 RUN git reset --hard $GIT_SHA
 
 RUN yarn
-RUN BKEN_ENV='dev' yarn build
+RUN yarn build
 
 EXPOSE 80
-CMD ["yarn", "start"]
+CMD ["sh", "-c", "BKEN_ENV=dev yarn start"]
