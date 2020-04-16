@@ -31,11 +31,12 @@ const app = express();
 
 server.applyMiddleware({
   app,
+  cors: false,
   path: '/api/graphql',
-  cors: {
-    credentials: true,
-    origin: getOrigin(),
-  },
+  // cors: {
+  //   credentials: true,
+  //   origin: getOrigin(),
+  // },
 });
 
 module.exports = app;
