@@ -3,11 +3,10 @@ import gql from 'graphql-tag';
 import withMe from '../lib/withMe';
 import withApollo from '../lib/withApollo';
 import Layout from '../components/Layout';
+import Logout from '../components/Logout';
 import Navigation from '../components/Navigation';
 
-import { logout } from '../utils/auth';
 import { useQuery } from '@apollo/react-hooks';
-import { Button, Loader } from 'semantic-ui-react';
 
 const styles = {
   container: {
@@ -91,9 +90,7 @@ function Account({ id }) {
           <div></div>
           <div style={styles.displayName}>{data.user.displayName}</div>
           <div style={styles.profileFooter}>
-            <Button basic fluid color='teal' onClick={() => logout()}>
-              Logout
-            </Button>
+            <Logout />
           </div>
         </div>
       </div>
@@ -107,15 +104,19 @@ function AccountWrapper() {
   const me = withMe();
   if (me) {
     return (
-      <div>
-        <Layout>
-          <Navigation />
-          <Account id={me.id} />
-        </Layout>
-      </div>
+      <Layout>
+        <Navigation />
+        <Account id={me.id} />
+      </Layout>
     );
   }
-  return <div />;
+
+  return (
+    <Layout>
+      <Navigation />
+      <h1>Hey you need an account!</h1>
+    </Layout>
+  );
 }
 
 export default withApollo({ ssr: true })(AccountWrapper);

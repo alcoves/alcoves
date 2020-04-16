@@ -1,4 +1,3 @@
-import cookie from 'js-cookie';
 import Router from 'next/router';
 import nextCookie from 'next-cookies';
 
@@ -19,9 +18,4 @@ export const auth = ctx => {
   }
 
   return accessToken;
-};
-
-export const logout = () => {
-  cookie.remove('accessToken');
-  Router.push('/login');
 };
