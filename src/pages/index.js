@@ -1,15 +1,14 @@
+console.log(process.env.BKEN_ENV);
+
 import React from 'react';
+import withMe from '../lib/withMe';
+import withApollo from '../lib/withApollo';
 
 import Layout from '../components/Layout';
 import Navigation from '../components/Navigation';
 
-import withMe from '../lib/withMe';
-import withApollo from '../lib/withApollo';
-
 function Index() {
   const me = withMe();
-  console.log('me', me);
-
   if (me) {
     return (
       <Layout>
@@ -18,7 +17,6 @@ function Index() {
       </Layout>
     );
   }
-
   return <div>loading</div>;
 }
 
