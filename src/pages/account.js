@@ -1,7 +1,7 @@
 import React from 'react';
 import gql from 'graphql-tag';
 import withMe from '../lib/withMe';
-import withApollo from '../lib/withApollo'
+import withApollo from '../lib/withApollo';
 import Layout from '../components/Layout';
 import Navigation from '../components/Navigation';
 
@@ -85,23 +85,22 @@ function Account({ id }) {
                 style={styles.avatarCircle}
               />
             ) : (
-                <div style={styles.avatarCircle} />
-              )}
+              <div style={styles.avatarCircle} />
+            )}
           </div>
-          <div>
-          </div>
+          <div></div>
           <div style={styles.displayName}>{data.user.displayName}</div>
           <div style={styles.profileFooter}>
             <Button basic fluid color='teal' onClick={() => logout()}>
               Logout
-          </Button>
+            </Button>
           </div>
         </div>
       </div>
-    )
+    );
   }
 
-  return <div />
+  return <div />;
 }
 
 function AccountWrapper() {
@@ -116,7 +115,7 @@ function AccountWrapper() {
       </div>
     );
   }
-  return <div />
-};
+  return <div />;
+}
 
-export default withApollo({ ssr: true })(AccountWrapper)
+export default withApollo({ ssr: true })(AccountWrapper);

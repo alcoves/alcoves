@@ -51,8 +51,8 @@ export default props => {
             {status === 'completed' ? (
               <Icon color='green' name='check circle outline' />
             ) : (
-                <Icon color='yellow' name='setting' />
-              )}
+              <Icon color='yellow' name='setting' />
+            )}
             {preset}
             <Label.Detail>{`${status}`}</Label.Detail>
             {createdAt && modifiedAt ? (

@@ -11,8 +11,8 @@ const QUERY = gql`
 
 function withMe() {
   const { data } = useQuery(QUERY);
-  if (data) return data.me
-  return {}
+  if (data) return data.me;
+  return {};
 }
 
-export default withMe
+export default withMe;

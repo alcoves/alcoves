@@ -1,15 +1,14 @@
-import { gql } from 'apollo-boost';
-import React, { useContext } from 'react';
+import React from 'react';
+import gql from 'graphql-tag';
 
 import { useQuery } from '@apollo/react-hooks';
 import { Loader } from 'semantic-ui-react';
-import UserStore from '../../data/User';
 
-export default props => {
-  const user = useContext(UserStore);
-  const GET_USER = gql`
-  {
-    user(id: "${props.match.params.userId}") {
+import Router from 'next/router';
+
+const GET_USER = gql`
+  query getUser($id: ID!) {
+    user(id: $id) {
       id
       avatar
       displayName
@@ -17,7 +16,8 @@ export default props => {
   }
 `;
 
-  const { loading, data, error } = useQuery(GET_USER);
+function UserHeader() {
+  const { loading, data, error } = useQuery(GET_USER, { variables: { id: Router.query.id } });
 
   if (loading) {
     return <Loader active> Loading the banner... </Loader>;
@@ -57,4 +57,6 @@ export default props => {
       </div>
     );
   }
-};
+}
+
+export default UserHeader;

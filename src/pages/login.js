@@ -1,4 +1,3 @@
-
 import gql from 'graphql-tag';
 import withApollo from '../lib/withApollo';
 
@@ -81,7 +80,14 @@ function Login() {
                   </Grid.Column>
                   <Grid.Column width={6}>
                     <Link href='/register'>
-                      <Button as='a' to='/register' basic fluid color='teal' content='Or Register' />
+                      <Button
+                        as='a'
+                        to='/register'
+                        basic
+                        fluid
+                        color='teal'
+                        content='Or Register'
+                      />
                     </Link>
                   </Grid.Column>
                 </Grid>
@@ -91,7 +97,7 @@ function Login() {
         </Grid>
       </Layout>
     </div>
-  )
+  );
 }
 
-export default withApollo({ ssr: false })(Login)
+export default withApollo({ ssr: false })(Login);

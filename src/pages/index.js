@@ -7,7 +7,7 @@ import withMe from '../lib/withMe';
 import withApollo from '../lib/withApollo';
 
 function Index() {
-  const me = withMe()
+  const me = withMe();
   console.log('me', me);
 
   if (me) {
@@ -16,10 +16,10 @@ function Index() {
         <Navigation />
         <h1>Welcome {me.id}</h1>
       </Layout>
-    )
+    );
   }
 
-  return <div>loading</div>
+  return <div>loading</div>;
 }
 
-export default withApollo({ ssr: true })(Index)
+export default withApollo({ ssr: true })(Index);

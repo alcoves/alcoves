@@ -1,7 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Button, Grid } from 'semantic-ui-react';
+import Link from 'next/link';
 import styled from 'styled-components';
+
+import { Button, Grid } from 'semantic-ui-react';
 
 const Duration = styled.div`
   right: 0;
@@ -63,7 +64,7 @@ export default function VideoGrid({ videos = [], isEditor }) {
       {videos.map(video => {
         return (
           <Grid.Column key={video.id} mobile={14} tablet={10} computer={4} style={styles.card}>
-            <Link to={`/videos/${video.id}`} style={styles.title}>
+            <Link href={`/videos/${video.id}`}>
               <div
                 style={{
                   width: '100%',
@@ -81,9 +82,7 @@ export default function VideoGrid({ videos = [], isEditor }) {
               </div>
             </Link>
             <div style={styles.meta}>
-              <Link to={`/videos/${video.id}`} style={styles.title}>
-                {video.title}
-              </Link>
+              <Link href={`/videos/${video.id}`}>{video.title}</Link>
               <div
                 style={{
                   display: 'flex',
@@ -92,7 +91,7 @@ export default function VideoGrid({ videos = [], isEditor }) {
                   marginTop: '10px',
                   cursor: 'pointer',
                 }}>
-                <Link to={`/users/${video.user.id}`}>
+                <Link href={`/users/${video.user.id}`}>
                   <img
                     style={{ borderRadius: '50%' }}
                     src={video.user.avatar}
@@ -101,32 +100,12 @@ export default function VideoGrid({ videos = [], isEditor }) {
                     alt='avatar'
                   />
                 </Link>
-                <Link
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    height: '100%',
-                    paddingLeft: '5px',
-                    fontWeight: '600',
-                    opacity: '.6',
-                    textTransform: 'uppercase',
-                    fontSize: '.9em',
-                    letterSpacing: '.05em',
-                    flexGrow: 1,
-                  }}
-                  to={`/users/${video.user.id}`}>
-                  {video.user.displayName}
-                </Link>
+                <Link href={`/users/${video.user.id}`}>{video.user.displayName}</Link>
                 <div>
                   {isEditor && (
-                    <Button
-                      as={Link}
-                      to={`/editor/videos/${video.id}`}
-                      icon='setting'
-                      size='mini'
-                      color='teal'
-                      basic
-                    />
+                    <Link href={`/editor/videos/${video.id}`}>
+                      <Button icon='setting' size='mini' color='teal' basic />
+                    </Link>
                   )}
                 </div>
               </div>

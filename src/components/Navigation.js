@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 import withMe from '../lib/withMe';
 import { Button } from 'semantic-ui-react';
-import withApollo from '../lib/withApollo'
+import withApollo from '../lib/withApollo';
 
 function Navigation() {
   const me = withMe();
@@ -36,7 +36,7 @@ function Navigation() {
             flex: 1,
           }}>
           <Link href='/'>
-            <img style={{ ...styles.logo, cursor: 'pointer' }} height={35} src='./favicon.ico' />
+            <img style={{ ...styles.logo, cursor: 'pointer' }} height={35} src='../favicon.ico' />
           </Link>
         </div>
 
@@ -66,24 +66,24 @@ function Navigation() {
             </div>
           </div>
         ) : (
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'flex-end',
-                minWidth: '150px',
-                paddingRight: '5px',
-                flex: 1,
-              }}>
-              <div style={styles.menuItem}>
-                <Link href='/login'>
-                  <Button as="a" circular icon='user' />
-                </Link>
-              </div>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              minWidth: '150px',
+              paddingRight: '5px',
+              flex: 1,
+            }}>
+            <div style={styles.menuItem}>
+              <Link href='/login'>
+                <Button as='a' circular icon='user' />
+              </Link>
             </div>
-          )}
+          </div>
+        )}
       </div>
     </div>
   );
-};
+}
 
-export default withApollo({ ssr: true })(Navigation)
+export default withApollo({ ssr: true })(Navigation);
