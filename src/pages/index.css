@@ -11,17 +11,17 @@ body {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #1f2430;
+  background: #ffffff;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #272d3c;
+  background: #d6d6d6;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: rgb(47, 55, 73);
+  background: #d6d6d6cb;
 }
 
 a {
@@ -91,20 +91,6 @@ p {
 video {
   outline: none;
 }
-
-/* input {
-  background-color: #171b24 !important;
-} */
-
-/* .ui.input.focus > input,
-.ui.input > input:focus {
-  color: #e2eeee;
-}
-
-.ui.form .field .ui.input input,
-.ui.form .fields .field .ui.input input {
-  color: #e2eeee;
-} */
 
 .ui.stacked.segment {
   background-color: transparent;
