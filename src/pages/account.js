@@ -70,7 +70,9 @@ const QUERY = gql`
 `;
 
 function Account({ id }) {
-  const { loading, data, error } = useQuery(QUERY, { variables: { id } });
+  const { data, error } = useQuery(QUERY, { variables: { id } });
+
+  if (error) console.error(error);
 
   if (data) {
     return (
@@ -78,11 +80,7 @@ function Account({ id }) {
         <div style={styles.card}>
           <div style={styles.avatarCircleContainer}>
             {data.user.avatar ? (
-              <img
-                alt='profile'
-                src={`${data.user.avatar}?${Date.now()}`}
-                style={styles.avatarCircle}
-              />
+              <img alt='profile' src={data.user.avatar} style={styles.avatarCircle} />
             ) : (
               <div style={styles.avatarCircle} />
             )}
@@ -102,7 +100,7 @@ function Account({ id }) {
 
 function AccountWrapper() {
   const me = withMe();
-  if (me) {
+  if (me.id) {
     return (
       <Layout>
         <Navigation />
