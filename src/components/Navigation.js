@@ -6,7 +6,7 @@ import { Button } from 'semantic-ui-react';
 import withApollo from '../lib/withApollo';
 
 function Navigation() {
-  const me = withMe();
+  const { me } = withMe();
 
   const styles = {
     menu: {
@@ -39,48 +39,48 @@ function Navigation() {
             <img style={{ ...styles.logo, cursor: 'pointer' }} height={35} src='../favicon.ico' />
           </Link>
         </div>
-
-        {me ? (
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              minWidth: '150px',
-              paddingRight: '5px',
-              flex: 1,
-            }}>
-            <div style={styles.menuItem}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            minWidth: '150px',
+            paddingRight: '5px',
+            flex: 1,
+          }}>
+          <div style={styles.menuItem}>
+            {me ? (
               <Link href='/upload'>
                 <Button as='a' circular size='medium' icon='upload' />
               </Link>
-            </div>
-            <div style={styles.menuItem}>
-              <Link href={`/users/${me.id}`}>
+            ) : (
+              <Link href='/login'>
+                <Button as='a' circular size='medium' icon='upload' />
+              </Link>
+            )}
+          </div>
+          <div style={styles.menuItem}>
+            {me && me.sub ? (
+              <Link href={`/users/${me.sub}`}>
                 <Button as='a' circular size='medium' icon='video' />
               </Link>
-            </div>
-            <div style={styles.menuItem}>
-              <Link href='/account'>
+            ) : (
+              <Link href={`/login`}>
+                <Button as='a' circular size='medium' icon='video' />
+              </Link>
+            )}
+          </div>
+          <div style={styles.menuItem}>
+            {me ? (
+              <Link href={`/account`}>
                 <Button as='a' circular size='medium' icon='user' />
               </Link>
-            </div>
-          </div>
-        ) : (
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              minWidth: '150px',
-              paddingRight: '5px',
-              flex: 1,
-            }}>
-            <div style={styles.menuItem}>
-              <Link href='/login'>
-                <Button as='a' circular icon='user' />
+            ) : (
+              <Link href={`/login`}>
+                <Button as='a' circular size='medium' icon='user' />
               </Link>
-            </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

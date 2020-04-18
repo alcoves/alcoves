@@ -82,7 +82,9 @@ export default function VideoGrid({ videos = [], isEditor }) {
               </div>
             </Link>
             <div style={styles.meta}>
-              <Link href={`/videos/${video.id}`}>{video.title}</Link>
+              <Link href={`/videos/${video.id}`}>
+                <a>{video.title}</a>
+              </Link>
               <div
                 style={{
                   display: 'flex',
@@ -100,7 +102,9 @@ export default function VideoGrid({ videos = [], isEditor }) {
                     alt='avatar'
                   />
                 </Link>
-                <Link href={`/users/${video.user.id}`}>{video.user.displayName}</Link>
+                <Link href={`/users/${video.user.id}`}>
+                  <a>{video.user.username}</a>
+                </Link>
                 <div>
                   {isEditor && (
                     <Link href={`/editor/videos/${video.id}`}>

@@ -11,7 +11,7 @@ const GET_USER = gql`
     user(id: $id) {
       id
       avatar
-      displayName
+      username
     }
   }
 `;
@@ -50,7 +50,7 @@ function UserHeader() {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <h2> {data.user.displayName} </h2>
+              <h2> {data.user.username} </h2>
             </div>
           </div>
         </div>

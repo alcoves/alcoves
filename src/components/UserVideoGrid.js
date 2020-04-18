@@ -1,5 +1,6 @@
 import gql from 'graphql-tag';
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
+import withMe from '../lib/withMe';
 import VideoGrid from './VideoGrid';
 
 import React, { useEffect } from 'react';
@@ -17,7 +18,7 @@ const GET_USER_VIDEOS = gql`
       user {
         id
         avatar
-        displayName
+        username
       }
       versions {
         link
@@ -28,9 +29,12 @@ const GET_USER_VIDEOS = gql`
   }
 `;
 
-export default ({ me }) => {
+function UserVideoGrid() {
+  const router = useRouter();
+  const { me } = withMe();
+
   const { loading, called, data, error, refetch } = useQuery(GET_USER_VIDEOS, {
-    variables: { id: Router.query.id },
+    variables: { id: router.query.id },
   });
 
   useEffect(() => {
@@ -42,9 +46,13 @@ export default ({ me }) => {
   });
 
   if (error) console.log(error);
-  if (data) {
-    return <VideoGrid videos={data.videosByUserId} isEditor={Boolean(Router.query.id === me.id)} />;
+  if (data && router.query.id && me) {
+    return (
+      <VideoGrid videos={data.videosByUserId} isEditor={Boolean(router.query.id === me.sub)} />
+    );
   }
 
   return <Loader active> Loading user videos... </Loader>;
-};
+}
+
+export default UserVideoGrid;

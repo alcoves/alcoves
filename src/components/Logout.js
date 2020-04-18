@@ -1,26 +1,20 @@
 import React from 'react';
-import gql from 'graphql-tag';
+import userPool from '../lib/userPool';
 
+import { useRouter } from 'next/router';
 import { Button } from 'semantic-ui-react';
-import { useMutation } from '@apollo/react-hooks';
-
-const LOGOUT = gql`
-  mutation logout {
-    logout {
-      success
-    }
-  }
-`;
 
 function Logout() {
-  const [logout, { loading, data, called, error }] = useMutation(LOGOUT);
+  const router = useRouter();
 
-  if (data && called && !loading && !error) {
-    window.location.href = '/';
-  }
+  const logout = () => {
+    const user = userPool.getCurrentUser();
+    if (user) user.signOut();
+    router.replace('/');
+  };
 
   return (
-    <Button basic fluid color='teal' loading={loading} onClick={() => logout()}>
+    <Button basic fluid color='teal' onClick={logout}>
       Logout
     </Button>
   );

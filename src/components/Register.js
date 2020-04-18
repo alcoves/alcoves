@@ -28,7 +28,7 @@ export default function Register() {
           email: form.get('email'),
           password: form.get('password'),
           code: form.get('code'),
-          displayName: form.get('displayName'),
+          username: form.get('username'),
         },
       },
     });
@@ -57,7 +57,7 @@ export default function Register() {
             <Form.Input
               fluid
               icon='user'
-              name='displayName'
+              name='username'
               iconPosition='left'
               placeholder='Display Name'
             />

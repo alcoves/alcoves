@@ -132,10 +132,10 @@ const withApollo = ({ ssr = false } = {}) => PageComponent => {
     );
   };
 
-  // Set the correct displayName in development
+  // Set the correct username in development
   if (process.env.NODE_ENV !== 'production') {
-    const displayName = PageComponent.displayName || PageComponent.name || 'Component';
-    WithApollo.displayName = `withApollo(${displayName})`;
+    const username = PageComponent.username || PageComponent.name || 'Component';
+    WithApollo.username = `withApollo(${username})`;
   }
 
   if (ssr || PageComponent.getInitialProps) {

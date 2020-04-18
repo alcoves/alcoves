@@ -19,3 +19,10 @@ export const auth = ctx => {
 
   return accessToken;
 };
+
+// export default function Auth() {
+//   return new Promise((resolve, reject) => {
+//     // authenticates the user client side or server side
+//     // cookies, they could come from client or server
+//   });
+// }
