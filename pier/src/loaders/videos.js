@@ -68,7 +68,7 @@ const createVideo = async function ({ user, title, duration }) {
         thumbnail: 'test',
         createdAt: Date.now(),
         modifiedAt: Date.now(),
-        publishingStatus: 'unlisted',
+        visability: 'unlisted',
       },
     })
     .promise();

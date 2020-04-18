@@ -20,7 +20,7 @@ module.exports.typeDefs = gql`
     thumbnail: String!
     createdAt: String!
     modifiedAt: String!
-    publishingStatus: String!
+    visability: String!
     versions: [VideoVersion!]
   }
   type VideoVersion {
