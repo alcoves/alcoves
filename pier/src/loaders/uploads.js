@@ -15,7 +15,7 @@ const createMultipartUpload = async function (
 ) {
   const video = await createVideo({
     duration,
-    user: user.id,
+    user: user.sub,
     title: 'New Upload',
   });
   const { UploadId, Key } = await s3

@@ -6,9 +6,21 @@ const uploads = require('./loaders/uploads');
 
 module.exports = ({ res, req }) => {
   let user = {};
-  const { cookie = '' } = req.headers;
-  const token = cookie.split('accessToken=')[1];
-  if (token) user = jwt.verify(token, process.env.JWT_KEY);
+
+  if (req.headers.cookie) {
+    const cookies = req.headers.cookie.split(';');
+
+    const { idToken } = cookies.reduce((acc, c) => {
+      if (c.includes('idToken=')) acc['idToken'] = c.split('idToken=')[1];
+      if (c.includes('accessToken='))
+        acc['accessToken'] = c.split('accessToken=')[1];
+      if (c.includes('refreshToken='))
+        acc['refreshToken'] = c.split('refreshToken=')[1];
+      return acc;
+    }, {});
+
+    if (idToken) user = jwt.decode(idToken);
+  }
 
   return {
     res,
