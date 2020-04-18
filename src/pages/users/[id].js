@@ -1,5 +1,4 @@
 import React from 'react';
-import withMe from '../../lib/withMe';
 import withApollo from '../../lib/withApollo';
 
 import Layout from '../../components/Layout';
@@ -8,22 +7,13 @@ import Navigation from '../../components/Navigation';
 import UserVideoGrid from '../../components/UserVideoGrid';
 
 function User() {
-  const me = withMe();
-  if (me.id) {
-    return (
-      <Layout>
-        <Navigation />
-        <UserHeader />
-        <UserVideoGrid me={me} />
-      </Layout>
-    );
-  }
-
   return (
     <Layout>
       <Navigation />
+      {/* <UserHeader /> */}
+      <UserVideoGrid />
     </Layout>
   );
 }
 
-export default withApollo({ ssr: false })(User);
+export default withApollo({ ssr: true })(User);

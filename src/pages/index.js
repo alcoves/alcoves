@@ -6,12 +6,13 @@ import Layout from '../components/Layout';
 import Navigation from '../components/Navigation';
 
 function Index() {
-  const me = withMe();
+  const { me } = withMe();
+
   if (me) {
     return (
       <Layout>
         <Navigation />
-        <h1>Welcome {me.id}</h1>
+        <h1>Welcome {me.email}</h1>
       </Layout>
     );
   }
