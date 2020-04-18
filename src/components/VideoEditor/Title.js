@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost';
+import gql from 'graphql-tag';
 import React, { useState } from 'react';
 import { Input } from 'semantic-ui-react';
 import { useMutation } from '@apollo/react-hooks';
