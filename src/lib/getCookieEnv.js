@@ -15,7 +15,4 @@ if (BKEN_ENV === 'prod' && NODE_ENV === 'production') {
   domain = 'localhost';
 }
 
-exports = {
-  secure,
-  domain,
-};
+export { secure, domain };
