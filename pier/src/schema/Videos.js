@@ -10,6 +10,7 @@ module.exports.typeDefs = gql`
     deleteVideo(id: String!): Boolean!
     createVideo(input: CreateVideoInput!): Video!
     updateVideoTitle(id: String!, title: String!): Video!
+    setVideoVisability(id: String!, visability: String!): Video!
   }
   type Video {
     id: String!
@@ -76,6 +77,13 @@ module.exports.resolvers = {
       { videos: { updateVideoTitle } }
     ) {
       return updateVideoTitle({ id, title });
+    },
+    setVideoVisability: function (
+      _,
+      { id, visability },
+      { videos: { setVideoVisability } }
+    ) {
+      return setVideoVisability({ id, visability });
     },
   },
 };

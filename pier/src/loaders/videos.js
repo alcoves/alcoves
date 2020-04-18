@@ -1,7 +1,13 @@
 const AWS = require('aws-sdk');
 const shortid = require('shortid');
 
-const { VIDEOS_TABLE } = require('../config/config');
+const { ws3 } = require('../config/s3');
+
+const {
+  VIDEOS_TABLE,
+  TIDAL_TABLE,
+  WASABI_CDN_BUCKET,
+} = require('../config/config');
 
 const db = new AWS.DynamoDB.DocumentClient({ region: 'us-east-1' });
 
@@ -88,13 +94,70 @@ const updateVideoTitle = async function ({ id, title }) {
   return getVideoById(id);
 };
 
+const setVideoVisability = async function ({ id, visability }) {
+  await db
+    .update({
+      Key: { id },
+      TableName: VIDEOS_TABLE,
+      UpdateExpression: 'set #visability = :visability',
+      ExpressionAttributeValues: { ':visability': visability },
+      ExpressionAttributeNames: { '#visability': 'visability' },
+    })
+    .promise();
+  return getVideoById(id);
+};
+
 const deleteVideo = async function (id) {
+  // Delete from videos table
   await db
     .delete({
       Key: { id },
       TableName: VIDEOS_TABLE,
     })
     .promise();
+
+  // NOTE :: tidal buckets auto expire so we don't have to worry about cleaning them up
+
+  // Delete all versions from tidal db
+  const { Items } = await db
+    .query({
+      TableName: TIDAL_TABLE,
+      KeyConditionExpression: '#id = :id',
+      ExpressionAttributeValues: { ':id': id },
+      ExpressionAttributeNames: { '#id': 'id' },
+    })
+    .promise();
+
+  await Promise.all(
+    Items.map(({ id, preset }) => {
+      return db
+        .delete({
+          Key: { id, preset },
+          TableName: TIDAL_TABLE,
+        })
+        .promise();
+    })
+  );
+
+  // Delete versions from cdn bucket
+  const { Contents } = await ws3
+    .listObjectsV2({
+      Prefix: `v/${id}`,
+      Bucket: WASABI_CDN_BUCKET,
+    })
+    .promise();
+
+  await Promise.all(
+    Contents.map(({ Key }) => {
+      return ws3
+        .deleteObject({
+          Key,
+          Bucket: WASABI_CDN_BUCKET,
+        })
+        .promise();
+    })
+  );
+
   return true;
 };
 
@@ -105,5 +168,6 @@ module.exports = {
   getVideoById,
   updateVideoTitle,
   getVideosByUserId,
+  setVideoVisability,
   getVideoVersionsById,
 };
