@@ -4,11 +4,11 @@ import gql from 'graphql-tag';
 
 import { Link } from 'next/link';
 import { useRouter } from 'next/router';
+import Layout from '../../components/Layout';
 import withApollo from '../../lib/withApollo';
 import { useQuery } from '@apollo/react-hooks';
-import { Loader, Container } from 'semantic-ui-react';
-import Layout from '../../components/Layout';
 import Navigation from '../../components/Navigation';
+import { Loader, Container } from 'semantic-ui-react';
 
 const QUERY = gql`
   query getVideo($id: String!) {
@@ -68,9 +68,23 @@ function Video() {
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <div>
             <div style={outerDivStyle}>
-              <video width='100%' height='100%' controls autoPlay>
-                <source src={link} type='video/mp4' />
-              </video>
+              {link ? (
+                <video width='100%' height='100%' controls autoPlay>
+                  <source src={link} type='video/mp4' />
+                </video>
+              ) : (
+                <div
+                  style={{
+                    height: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: 'white',
+                    flexDirection: 'column',
+                  }}>
+                  <Loader inline active />
+                </div>
+              )}
             </div>
             <div>
               <Container style={{ marginTop: '20px' }}>

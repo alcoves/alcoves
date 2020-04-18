@@ -107,7 +107,7 @@ export default function VideoGrid({ videos = [], isEditor }) {
                 </Link>
                 <div>
                   {isEditor && (
-                    <Link href={`/editor/videos/${video.id}`}>
+                    <Link href={`/edit/${video.id}`}>
                       <Button icon='setting' size='mini' color='teal' basic />
                     </Link>
                   )}

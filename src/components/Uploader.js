@@ -5,6 +5,7 @@ import chunkFile from '../utils/chunkFile';
 import { useMutation } from '@apollo/react-hooks';
 import React, { useState, useEffect } from 'react';
 import { Button, Progress, Loader } from 'semantic-ui-react';
+import { useRouter } from 'next/router';
 
 const CREATE_MULTIPART_UPLOAD = gql`
   mutation createMultipartUpload($input: CreateMultipartUploadInput!) {
@@ -26,6 +27,7 @@ const COMPLETE_MULTIPART_UPLOAD = gql`
 `;
 
 function Uploader() {
+  const router = useRouter();
   const [files, setFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
   let [bytesUploaded, setBytesUploaded] = useState(0);
@@ -178,7 +180,7 @@ function Uploader() {
               fluid
               positive
               onClick={() => {
-                // history.push(`/editor/videos/${creData.createMultipartUpload.objectId}`);
+                router.push(`/edit/${creData.createMultipartUpload.objectId}`);
               }}>
               View In Editor
             </Button>
