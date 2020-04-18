@@ -5,6 +5,7 @@ import Navigation from '../components/Navigation';
 
 import { useRouter } from 'next/router';
 import React, { useState, useCallback } from 'react';
+import { domain, secure } from '../lib/getCookieEnv';
 import { Button, Form, Grid, Loader, Message } from 'semantic-ui-react';
 import { CognitoUser, AuthenticationDetails, CookieStorage } from 'amazon-cognito-identity-js';
 
@@ -21,7 +22,7 @@ function Login() {
     const user = new CognitoUser({
       Pool: UserPool,
       Username: form.get('username'),
-      Storage: new CookieStorage({ domain: 'localhost', secure: false }),
+      Storage: new CookieStorage({ domain, secure }),
     });
 
     const authDetails = new AuthenticationDetails({
