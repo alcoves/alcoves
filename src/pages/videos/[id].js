@@ -1,12 +1,12 @@
 import React from 'react';
 import moment from 'moment';
+import Head from 'next/head';
 import gql from 'graphql-tag';
 
 import { Link } from 'next/link';
 import { useRouter } from 'next/router';
-import Layout from '../../components/Layout';
 import withApollo from '../../lib/withApollo';
-import { useQuery } from '@apollo/react-hooks';
+import { useLazyQuery } from '@apollo/react-hooks';
 import Navigation from '../../components/Navigation';
 import { Loader, Container } from 'semantic-ui-react';
 
@@ -44,14 +44,12 @@ const pickUrl = ({ versions }) => {
 
 function Video() {
   const router = useRouter();
-  const { data, error, loading } = useQuery(QUERY, {
+  const [getVideo, { called, data, error, loading }] = useLazyQuery(QUERY, {
     notifyOnNetworkStatusChange: true,
     variables: { id: router.query.id },
   });
 
-  if (loading) {
-    return <Loader active inline='centered' style={{ marginTop: '30px' }} />;
-  }
+  if (!called && router.query.id) getVideo();
 
   if (data) {
     const outerDivStyle = {
@@ -63,7 +61,21 @@ function Video() {
     const link = pickUrl(data.video);
 
     return (
-      <Layout>
+      <div>
+        <Head>
+          <title>{data.video.title}</title>
+          <meta name='description' content='bken.io is a simple video sharing platform' />
+          <meta property='og:title' content={data.video.title} />
+          <meta property='og:url' content='https://dev.bken.io' />
+          <meta property='og:title' content={data.video.title} />
+
+          <meta property='og:video' content={link} />
+          <meta property='og:video:url' content={link} />
+          <meta property='og:video:secure_url' content={link} />
+          <meta property='og:video:type' content='video/mp4' />
+          <meta property='og:video:width' content='1920' />
+          <meta property='og:video:height' content='1080' />
+        </Head>
         <Navigation />
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <div>
@@ -145,9 +157,11 @@ function Video() {
             </div>
           </div>
         </div>
-      </Layout>
+      </div>
     );
   }
+
+  return <Loader active inline='centered' style={{ marginTop: '30px' }} />;
 }
 
 export default withApollo({ ssr: true })(Video);
