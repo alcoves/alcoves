@@ -7,20 +7,12 @@
     },
     "environment": [
       {
-        "name": "JWT_KEY",
-        "value": "${jwt_key}"
-      },
-      {
         "name": "WASABI_ACCESS_KEY_ID",
         "value": "${wasabi_access_key_id}"
       },
       {
         "name": "WASABI_SECRET_ACCESS_KEY",
         "value": "${wasabi_secret_access_key}"
-      },
-      {
-        "name": "BETA_CODE",
-        "value": "${beta_code}"
       },
       {
         "name": "BKEN_ENV",

@@ -10,14 +10,6 @@ data "aws_secretsmanager_secret_version" "wasabi_secret_access_key" {
   secret_id = "wasabi_secret_access_key"
 }
 
-data "aws_secretsmanager_secret_version" "jwt_key" {
-  secret_id = "jwt_key"
-}
-
-data "aws_secretsmanager_secret_version" "beta_code" {
-  secret_id = "beta_code"
-}
-
 data "template_file" "api_container_def" {
   template = file("${path.module}/templates/fargate_task.json")
 
@@ -26,8 +18,6 @@ data "template_file" "api_container_def" {
     app_image                = var.app_image
     credentials              = var.registry_secrets_arn
     log_group                = aws_cloudwatch_log_group.api.name
-    jwt_key                  = data.aws_secretsmanager_secret_version.jwt_key.secret_string
-    beta_code                = data.aws_secretsmanager_secret_version.beta_code.secret_string
     wasabi_access_key_id     = data.aws_secretsmanager_secret_version.wasabi_access_key_id.secret_string
     wasabi_secret_access_key = data.aws_secretsmanager_secret_version.wasabi_secret_access_key.secret_string
   }
