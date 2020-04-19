@@ -15,34 +15,31 @@
     "lint:fix": "prettier --write \"src/**/*.*\""
   },
   "dependencies": {
-    "@apollo/react-hooks": "^3.1.4",
-    "@apollo/react-ssr": "^3.1.4",
+    "@apollo/react-hooks": "^3.1.5",
+    "@apollo/react-ssr": "^3.1.5",
     "amazon-cognito-identity-js": "^4.2.1",
     "apollo-cache-inmemory": "^1.6.5",
     "apollo-client": "^2.6.8",
-    "apollo-link-http": "^1.5.16",
+    "apollo-link-http": "^1.5.17",
     "axios": "^0.19.2",
-    "cookie": "^0.4.0",
-    "dayjs": "^1.8.22",
+    "dayjs": "^1.8.24",
     "graphql": "^15.0.0",
     "graphql-tag": "^2.10.3",
     "isomorphic-unfetch": "^3.0.0",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.24.0",
-    "next": "^9.3.4",
-    "next-cookies": "^2.0.3",
-    "next-with-apollo": "^5.0.1",
+    "next": "^9.3.5",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-ga": "^2.7.0",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.88.2",
-    "styled-components": "^5.0.1"
+    "styled-components": "^5.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
-    "@babel/preset-env": "^7.9.0",
+    "@babel/preset-env": "^7.9.5",
     "@babel/preset-react": "^7.9.4",
-    "prettier": "^2.0.2"
+    "prettier": "^2.0.4"
   }
 }
