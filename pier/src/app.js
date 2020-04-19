@@ -25,6 +25,8 @@ const server = new ApolloServer({
   ],
   context: require('./context'),
   tracing: true,
+  playground: true,
+  introspection: true,
 });
 
 const app = express();
