@@ -19,9 +19,7 @@ module.exports = ({ res, req }) => {
       return acc;
     }, {});
 
-    console.log('idToken', idToken);
     if (idToken) user = jwt.decode(idToken);
-    console.log('user', user);
   }
 
   return {
