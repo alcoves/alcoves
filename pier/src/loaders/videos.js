@@ -1,7 +1,7 @@
 const AWS = require('aws-sdk');
 const shortid = require('shortid');
 
-const { ws3 } = require('../config/s3');
+// const { ws3 } = require('../config/s3');
 
 const {
   VIDEOS_TABLE,
@@ -140,23 +140,23 @@ const deleteVideo = async function (id) {
   );
 
   // Delete versions from cdn bucket
-  const { Contents } = await ws3
-    .listObjectsV2({
-      Prefix: `v/${id}`,
-      Bucket: WASABI_CDN_BUCKET,
-    })
-    .promise();
+  // const { Contents } = await ws3
+  //   .listObjectsV2({
+  //     Prefix: `v/${id}`,
+  //     Bucket: WASABI_CDN_BUCKET,
+  //   })
+  //   .promise();
 
-  await Promise.all(
-    Contents.map(({ Key }) => {
-      return ws3
-        .deleteObject({
-          Key,
-          Bucket: WASABI_CDN_BUCKET,
-        })
-        .promise();
-    })
-  );
+  // await Promise.all(
+  //   Contents.map(({ Key }) => {
+  //     return ws3
+  //       .deleteObject({
+  //         Key,
+  //         Bucket: WASABI_CDN_BUCKET,
+  //       })
+  //       .promise();
+  //   })
+  // );
 
   return true;
 };
