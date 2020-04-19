@@ -54,15 +54,28 @@ function Video({ data }) {
     <div>
       <Head>
         <title>{data.video.title}</title>
-        <meta name='description' content='bken.io is a simple video sharing platform' />
+
+        <meta property='og:site_name' content='bken' />
         <meta property='og:title' content={data.video.title} />
-        <meta property='og:url' content='https://dev.bken.io' />
+        <meta name='description' content='bken is a simple video sharing platform' />
+        <link rel='shortcut icon' href='./favicon.ico' />
+
+        <meta
+          property='og:image'
+          content='https://s3.us-east-2.wasabisys.com/dev-cdn.bken.io/static/default-thumbnail-sm.jpg'
+        />
+        <meta
+          property='og:image:secure_url'
+          content='https://s3.us-east-2.wasabisys.com/dev-cdn.bken.io/static/default-thumbnail-sm.jpg'
+        />
+        <meta property='og:image:type' content='image/jpeg' />
+
+        <meta property='og:type' content='video.other' />
+        <meta property='og:url' content={`https://dev.bken.io/videos/${data.video.id}`} />
         <meta property='og:video' content={link} />
         <meta property='og:video:url' content={link} />
         <meta property='og:video:secure_url' content={link} />
         <meta property='og:video:type' content='video/mp4' />
-        <meta property='og:video:width' content='1920' />
-        <meta property='og:video:height' content='1080' />
       </Head>
       <Navigation />
       <div style={{ display: 'flex', flexDirection: 'column' }}>
