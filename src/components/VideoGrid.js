@@ -103,7 +103,7 @@ export default function VideoGrid({ videos = [], isEditor }) {
                   />
                 </Link>
                 <Link href={`/users/${video.user.id}`}>
-                  <a>{video.user.username}</a>
+                  <a>{video.user.userName}</a>
                 </Link>
                 <div>
                   {isEditor && (

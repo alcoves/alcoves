@@ -18,16 +18,16 @@ function Login() {
     setLoading(true);
     const form = new FormData(currentTarget);
 
-    const username = form.get('username');
+    const userName = form.get('userName');
     const password = form.get('password');
 
     const email = form.get('email').toLowerCase();
     const attributeEmail = new CognitoUserAttribute({ Name: 'email', Value: email });
 
-    UserPool.signUp(username, password, [attributeEmail], null, (err, data) => {
+    UserPool.signUp(userName, password, [attributeEmail], null, (err, data) => {
       setLoading(false);
       if (err) return setError(err.message || JSON.stringify(err));
-      router.push(`/confirm?username=${username}`);
+      router.push(`/confirm?userName=${userName}`);
     });
   });
 
@@ -45,7 +45,7 @@ function Login() {
                 <Form.Input
                   fluid
                   icon='user'
-                  name='username'
+                  name='userName'
                   iconPosition='left'
                   placeholder='Username'
                 />

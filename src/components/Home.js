@@ -16,7 +16,7 @@ const GET_VIDEOS = gql`
       thumbnail
       user {
         id
-        username
+        userName
         avatar
       }
     }

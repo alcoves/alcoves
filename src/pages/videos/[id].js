@@ -19,7 +19,7 @@ const QUERY = gql`
       user {
         id
         avatar
-        username
+        userName
       }
       versions {
         link
@@ -142,7 +142,7 @@ function Video({ data }) {
                       alignItems: 'flex-end',
                       height: '50%',
                     }}>
-                    {data.video.user.username}
+                    {data.video.user.userName}
                   </div>
                   <div
                     style={{

@@ -9,7 +9,7 @@ import { Card, Input, Loader } from 'semantic-ui-react';
 
 function Confirm() {
   const router = useRouter();
-  const { code: queryCode, username } = router.query;
+  const { code: queryCode, userName } = router.query;
 
   const [code, setCode] = useState('');
 
@@ -20,7 +20,7 @@ function Confirm() {
   const confirmUser = () => {
     const cognitoUser = new CognitoUser({
       Pool: userPool,
-      Username: username,
+      Username: userName,
     });
 
     cognitoUser.confirmRegistration(code, true, (err, result) => {
@@ -30,7 +30,7 @@ function Confirm() {
     });
   };
 
-  if (!username) {
+  if (!userName) {
     return (
       <Layout>
         <Navigation />
@@ -44,7 +44,7 @@ function Confirm() {
         <div style={{ display: 'flex', justifyContent: 'center', marginTop: '50px' }}>
           <Card>
             <Card.Content>
-              <Card.Header style={{ padding: '5px 0px 5px 0px' }}>Hey {username}!</Card.Header>
+              <Card.Header style={{ padding: '5px 0px 5px 0px' }}>Hey {userName}!</Card.Header>
               <Card.Content style={{ padding: '5px 0px 5px 0px' }}>
                 <Input
                   action={{

@@ -21,12 +21,12 @@ function Login() {
 
     const user = new CognitoUser({
       Pool: UserPool,
-      Username: form.get('username'),
+      Username: form.get('userName'),
       Storage: new CookieStorage({ domain, secure }),
     });
 
     const authDetails = new AuthenticationDetails({
-      Username: form.get('username'),
+      Username: form.get('userName'),
       Password: form.get('password'),
     });
 
@@ -58,7 +58,7 @@ function Login() {
                 <Form.Input
                   fluid
                   icon='user'
-                  name='username'
+                  name='userName'
                   iconPosition='left'
                   placeholder='Username'
                 />
