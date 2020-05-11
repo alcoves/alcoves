@@ -1,4 +1,4 @@
-const { gql } = require('apollo-server-express');
+const { gql } = require('apollo-server-lambda');
 
 module.exports.typeDefs = gql`
   extend type Query {
