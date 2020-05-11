@@ -9,28 +9,17 @@ on:
     branches:
       - dev
 jobs:
-  build:
-    name: Build/Push
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Build and Push docker image
-        uses: elgohr/Publish-Docker-Github-Action@master
-        env:
-          BKEN_ENV: dev
-          GIT_SHA: ${{ github.sha }}
-        with:
-          name: bken-io/api/api
-          username: ${{ github.actor }}
-          registry: docker.pkg.github.com
-          password: ${{ secrets.GITHUB_TOKEN }}
-          buildargs: GIT_SHA,BKEN_ENV
   terraform:
     needs: build
     name: Apply
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - run: cd modules/api && yarn install
       - name: Terraform Init
         uses: hashicorp/terraform-github-actions@master
         with:
@@ -47,10 +36,3 @@ jobs:
           tf_actions_working_dir: stack/dev
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  deploy:
-    needs: terraform
-    name: Deploy
-    runs-on: ubuntu-latest
-    steps:
-      - uses: chrislennon/action-aws-cli@v1.1
-      - run: aws ecs update-service --cluster pier11 --service $ECS_SERVICE_NAME --force-new-deployment
