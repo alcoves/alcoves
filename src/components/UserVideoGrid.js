@@ -18,7 +18,6 @@ const GET_USER_VIDEOS = gql`
       user {
         id
         avatar
-        userName
       }
       versions {
         link
