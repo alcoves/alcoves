@@ -6,3 +6,10 @@ coverage
 .terraform
 .tfvars
 .tfstate
+
+dist
+
+#Added by cargo
+
+bootstrap
+/target
