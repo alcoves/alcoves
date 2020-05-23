@@ -1,0 +1,29 @@
+service: bken-api
+
+plugins:
+  - serverless-domain-manager
+
+custom:
+  customDomain:
+    domainName: api.bken.io
+    basePath: ''
+    stage: ${opt:stage}
+    createRoute53Record: true
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: ${opt:stage}
+  endpointType: REGIONAL
+functions:
+  graphql:
+    handler: src/index.handler
+    events:
+      - http:
+          path: /api
+          cors: true
+          method: post
+      - http:
+          path: /api
+          cors: true
+          method: get
