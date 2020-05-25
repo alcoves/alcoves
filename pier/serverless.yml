@@ -1,14 +1,14 @@
 service: bken-api
 
-plugins:
-  - serverless-domain-manager
+# plugins:
+#   - serverless-domain-manager
 
-custom:
-  customDomain:
-    domainName: api.bken.io
-    basePath: ''
-    stage: ${opt:stage}
-    createRoute53Record: true
+# custom:
+#   customDomain:
+#     domainName: api.bken.io
+#     basePath: ''
+#     stage: ${opt:stage}
+#     createRoute53Record: true
 
 provider:
   name: aws
