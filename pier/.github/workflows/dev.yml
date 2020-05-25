@@ -17,20 +17,14 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
-      - run: cd modules/api/lambda && yarn install --production
-      - name: Terraform Init
-        uses: hashicorp/terraform-github-actions@master
+      - name: npm install
+        uses: actions/npm@master
         with:
-          tf_actions_version: 0.12.24
-          tf_actions_subcommand: init
-          tf_actions_working_dir: stack/dev
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Terraform Deploy
-        uses: hashicorp/terraform-github-actions@master
+          args: install
+      - name: serverless deploy
+        uses: serverless/github-action@master
         with:
-          tf_actions_version: 0.12.24
-          tf_actions_subcommand: apply
-          tf_actions_working_dir: stack/dev
+          args: deploy
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
