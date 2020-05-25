@@ -13,14 +13,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js 12.x
+      - name: node
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
-      - name: npm install
-        uses: actions/npm@master
+      - name: yarn
+        uses: borales/actions-yarn@v2.0.0
         with:
-          args: install
+          cmd: install --production
       - name: serverless deploy
         uses: serverless/github-action@master
         with:
