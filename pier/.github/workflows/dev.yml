@@ -20,7 +20,7 @@ jobs:
       - name: yarn
         uses: borales/actions-yarn@v2.0.0
         with:
-          cmd: install --production
+          cmd: install
       - name: serverless deploy
         uses: serverless/github-action@master
         with:
