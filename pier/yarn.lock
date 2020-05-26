@@ -4008,6 +4008,11 @@ natural-compare@^1.4.0:
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
   integrity sha1-Sr6/7tdUHywnrPspvbvRXI1bpPc=
 
+nco@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/nco/-/nco-1.0.1.tgz#868de423b4f45f8c05555f1ccb28aa788be06c52"
+  integrity sha1-ho3kI7T0X4wFVV8cyyiqeIvgbFI=
+
 negotiator@0.6.2:
   version "0.6.2"
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.2.tgz#feacf7ccf525a77ae9634436a64883ffeca346fb"
@@ -4786,6 +4791,11 @@ semver-diff@^3.1.1:
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.7.1.tgz#a954f931aeba508d307bbf069eff0c01c96116f7"
   integrity sha512-sauaDf/PZdVgrLTNYHRtpXa1iRiKcaebiKQ1BJdpQlWH2lCvexQdX55snPFyK7QzpudqbCI0qXFfOasHdyNDGQ==
 
+semver@5.4.1:
+  version "5.4.1"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-5.4.1.tgz#e059c09d8571f0540823733433505d3a2f00b18e"
+  integrity sha512-WfG/X9+oATh81XtllIo/I8gOiY9EXRdv1cQdyykeXK17YcUW3EXUAi2To4pcH6nZtJPr7ZOpM5OMyWJZm+8Rsg==
+
 semver@^6.0.0, semver@^6.2.0, semver@^6.3.0:
   version "6.3.0"
   resolved "https://registry.yarnpkg.com/semver/-/semver-6.3.0.tgz#ee0a64c8af5e8ceea67687b133761e1becbd1d3d"
@@ -4832,6 +4842,14 @@ serverless-domain-manager@^4.1.1:
   dependencies:
     aws-sdk "^2.490.0"
     chalk "^2.4.1"
+
+serverless-plugin-log-retention@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/serverless-plugin-log-retention/-/serverless-plugin-log-retention-2.0.0.tgz#da0b5b6d01a5b19c6fd6d3e0e36642f1fc5739ad"
+  integrity sha512-TXKMfLdVxhamyaDbqr+gwjIeiqSnDw3z+bZQy0W2ctRpcedUY8hg58wwMZqAFyMS3QekHT9srCe4Qv7lfPwkGw==
+  dependencies:
+    nco "1.0.1"
+    semver "5.4.1"
 
 set-blocking@^2.0.0, set-blocking@~2.0.0:
   version "2.0.0"

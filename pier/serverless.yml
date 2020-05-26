@@ -1,7 +1,8 @@
 service: bken-api
 
-# plugins:
-#   - serverless-domain-manager
+plugins:
+  - serverless-plugin-log-retention
+  - serverless-domain-manager
 
 # custom:
 #   customDomain:
