@@ -19,8 +19,6 @@ jobs:
           node-version: 12.x
       - name: yarn
         uses: borales/actions-yarn@v2.0.0
-        with:
-          cmd: install
       - name: serverless deploy
         uses: serverless/github-action@master
         with:
