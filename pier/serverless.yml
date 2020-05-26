@@ -17,6 +17,7 @@ provider:
   endpointType: REGIONAL
 functions:
   graphql:
+    logRetentionInDays: 7
     handler: src/index.handler
     events:
       - http:
