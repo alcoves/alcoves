@@ -11,7 +11,7 @@ const server = new ApolloServer({
     require('./schema/Videos'),
     require('./schema/Uploads'),
   ],
-  context: require('./context'),
+  // context: require('./context'),
   tracing: true,
   playground: true,
   introspection: true,

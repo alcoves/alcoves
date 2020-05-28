@@ -13,16 +13,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: node
+      - name: Use Node.js 12.x
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
-      - name: yarn
-        uses: borales/actions-yarn@v2.0.0
-      - name: serverless deploy
-        uses: serverless/github-action@master
+      - run: cd server && yarn install --production
+      - name: Terraform Init
+        uses: hashicorp/terraform-github-actions@master
         with:
-          args: deploy --stage dev
+          tf_actions_version: 0.12.24
+          tf_actions_subcommand: init
+          tf_actions_working_dir: stack/dev
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Terraform Deploy
+        uses: hashicorp/terraform-github-actions@master
+        with:
+          tf_actions_version: 0.12.24
+          tf_actions_subcommand: apply
+          tf_actions_working_dir: stack/dev
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
