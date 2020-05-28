@@ -7,3 +7,5 @@ jobs
 .tfstate
 .tfvars
 .next
+.serverless
+.serverless_nextjs
