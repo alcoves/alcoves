@@ -1,0 +1,10 @@
+nextApp:
+  component: 'serverless-next.js'
+  inputs:
+    name: bken-web-dev
+    bucketName: bken-web-dev
+    nextConfigDir: ../../
+    nextStaticDir: ../../
+    build:
+      cwd: ../../
+      env: dev
