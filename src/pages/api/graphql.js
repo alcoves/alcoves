@@ -15,12 +15,15 @@ const resolvers = {
 const apolloServer = new ApolloServer({
   typeDefs,
   resolvers,
+  tracing: true,
+  introspection: true,
+  playground: { endpoint: '/api/graphql' },
   context: () => {
     return {};
   },
 });
 
-const handler = apolloServer.createHandler();
+const handler = apolloServer.createHandler({ path: '/api/graphql' });
 
 export const config = {
   api: {
