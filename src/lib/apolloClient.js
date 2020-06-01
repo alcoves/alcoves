@@ -9,11 +9,11 @@ const getServerUrl = apiUrl => {
   const NODE_ENV = process.env.NODE_ENV;
 
   if (BKEN_ENV === 'dev' && NODE_ENV === 'production') {
-    apiUrl = 'https://api.bken.io/dev/graphql';
+    apiUrl = 'https://dev.bken.io/api/graphql';
   } else if (BKEN_ENV === 'prod' && NODE_ENV === 'production') {
-    apiUrl = 'https://api.bken.io/graphql';
+    apiUrl = 'https://bken.io/api/graphql';
   } else {
-    apiUrl = 'http://localhost:4000/graphql';
+    apiUrl = 'http://localhost:3000/api/graphql';
   }
 
   console.log(`apiUrl: ${apiUrl}`);
