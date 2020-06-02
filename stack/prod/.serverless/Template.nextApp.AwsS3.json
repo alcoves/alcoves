@@ -1,0 +1,6 @@
+{
+  "name": "bken-web-prod",
+  "region": "us-east-1",
+  "accelerated": true,
+  "url": "https://bken-web-prod.s3.amazonaws.com"
+}
