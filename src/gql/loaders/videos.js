@@ -3,12 +3,7 @@ const shortid = require('shortid');
 
 // const { ws3 } = require('../config/s3');
 
-const {
-  VIDEOS_TABLE,
-  TIDAL_TABLE,
-  WASABI_CDN_BUCKET,
-} = require('../config/config');
-
+const { VIDEOS_TABLE, TIDAL_TABLE, WASABI_CDN_BUCKET } = require('../../config/config');
 const db = new AWS.DynamoDB.DocumentClient({ region: 'us-east-1' });
 
 const getVideoVersionsById = async function (id) {
@@ -136,7 +131,7 @@ const deleteVideo = async function (id) {
           TableName: TIDAL_TABLE,
         })
         .promise();
-    })
+    }),
   );
 
   // Delete versions from cdn bucket
