@@ -1,4 +1,4 @@
-const app = require('../app');
+const app = require('../graphql');
 const request = require('supertest');
 
 describe('video tests', () => {
@@ -16,9 +16,7 @@ describe('video tests', () => {
         }
       }
     `;
-    const res = await request(app)
-      .post('/graphql')
-      .send({ query: createVideo });
+    const res = await request(app).post('/graphql').send({ query: createVideo });
     videoId = res.body.data.createVideo.id;
     expect(res.body.data.createVideo.title).toEqual('Video');
   });
@@ -32,17 +30,13 @@ describe('video tests', () => {
         }
       }
     `;
-    const res = await request(app)
-      .post('/graphql')
-      .send({ query: getVideoQuery });
+    const res = await request(app).post('/graphql').send({ query: getVideoQuery });
     expect(res.body.data.video.title).toEqual('Video');
   });
 
   it('deleteVideo', async () => {
     const deleteVideo = `mutation { deleteVideo(id: "${videoId}")}`;
-    const res = await request(app)
-      .post('/graphql')
-      .send({ query: deleteVideo });
+    const res = await request(app).post('/graphql').send({ query: deleteVideo });
     expect(res.body.data.deleteVideo).toEqual(true);
   });
 });

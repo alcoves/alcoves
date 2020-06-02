@@ -1,4 +1,4 @@
-const app = require('../app');
+const app = require('../graphql');
 const request = require('supertest');
 
 describe('upload tests', () => {
