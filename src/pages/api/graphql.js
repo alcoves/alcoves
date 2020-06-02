@@ -6,9 +6,6 @@ const apolloServer = new ApolloServer({
   tracing: true,
   introspection: true,
   playground: { endpoint: '/api/graphql' },
-  context: () => {
-    return {};
-  },
 });
 
 const handler = apolloServer.createHandler({ path: '/api/graphql' });
