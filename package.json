@@ -8,7 +8,7 @@
   "repository": "git@github.com:bken-io/web.git",
   "description": "frontend for bken.io",
   "scripts": {
-    "dev": "next",
+    "dev": "BKEN_ENV=dev AWS_PROFILE=bken next",
     "build": "next build",
     "start": "next start -p 80",
     "lint": "prettier --check \"src/**/*.*\"",
