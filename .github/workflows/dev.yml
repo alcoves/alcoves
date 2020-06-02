@@ -10,8 +10,8 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - uses: actions/setup-node@v1
-      with:
-        node-version: '12'
+        with:
+          node-version: '12'
       - run: npm install
       - name: cd
         run: cd stack/dev
