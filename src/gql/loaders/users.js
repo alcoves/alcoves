@@ -1,6 +1,6 @@
 const AWS = require('aws-sdk');
 
-const { USERS_TABLE } = require('../config/config');
+const { USERS_TABLE } = require('../../config/config');
 
 const db = new AWS.DynamoDB.DocumentClient({ region: 'us-east-1' });
 

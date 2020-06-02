@@ -1,4 +1,4 @@
-const app = require('../graphql');
+const app = require('../../pages/api/graphql');
 const request = require('supertest');
 
 describe('video tests', () => {

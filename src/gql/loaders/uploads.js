@@ -6,13 +6,9 @@ const s3 = new AWS.S3({
   signatureVersion: 'v4', // Uploads will fail 403 without this
 });
 
-const { UPLOAD_BUCKET_NAME } = require('../config/config');
+const { UPLOAD_BUCKET_NAME } = require('../../config/config');
 
-const createMultipartUpload = async function (
-  { parts, fileType, duration },
-  user,
-  createVideo
-) {
+const createMultipartUpload = async function ({ parts, fileType, duration }, user, createVideo) {
   const video = await createVideo({
     duration,
     user: user.sub,
@@ -35,17 +31,13 @@ const createMultipartUpload = async function (
         PartNumber: i,
         Expires: 43200,
         Bucket: UPLOAD_BUCKET_NAME,
-      })
+      }),
     );
   }
   return { objectId: video.id, urls, key: Key, uploadId: UploadId };
 };
 
-const completeMultipartUpload = async function ({
-  key: Key,
-  parts: Parts,
-  uploadId: UploadId,
-}) {
+const completeMultipartUpload = async function ({ key: Key, parts: Parts, uploadId: UploadId }) {
   await s3
     .completeMultipartUpload({
       Key,

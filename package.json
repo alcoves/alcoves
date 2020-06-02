@@ -9,8 +9,8 @@
   "description": "frontend for bken.io",
   "scripts": {
     "dev": "BKEN_ENV=dev AWS_PROFILE=bken next",
-    "build": "next build",
-    "start": "next start -p 80",
+    "build": "BKEN_ENV=dev next build",
+    "start": "next start -p 8080",
     "lint": "prettier --check \"src/**/*.*\"",
     "lint:fix": "prettier --write \"src/**/*.*\""
   },

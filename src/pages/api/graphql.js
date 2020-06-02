@@ -1,8 +1,12 @@
 import { ApolloServer } from 'apollo-server-micro';
 
 const apolloServer = new ApolloServer({
-  modules: [require('./schema/Users'), require('./schema/Videos'), require('./schema/Uploads')],
-  context: require('./context'),
+  modules: [
+    require('../../gql/schema/Users'),
+    require('../../gql/schema/Videos'),
+    require('../../gql/schema/Uploads'),
+  ],
+  context: require('../../gql/context'),
   tracing: true,
   introspection: true,
   playground: { endpoint: '/api/graphql' },
