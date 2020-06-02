@@ -12,13 +12,10 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '12'
-      - run: npm install
-      - name: cd
-        run: cd stack/dev
-      - name: serverless deploy
-        uses: serverless/github-action@master
-        with:
-          args: deploy
+        run: npm install
+        run: npm i -g serverless
+      - name: deploy
+        run: cd stack/dev && serverless
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
