@@ -1,0 +1,12 @@
+{
+  "name": "vv38imi-8ryvf2j",
+  "arn": "arn:aws:iam::594206825329:role/vv38imi-8ryvf2j",
+  "service": [
+    "lambda.amazonaws.com",
+    "edgelambda.amazonaws.com"
+  ],
+  "policy": {
+    "arn": "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+  },
+  "region": "us-east-1"
+}
