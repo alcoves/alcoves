@@ -5,7 +5,7 @@ const videos = require('./loaders/videos');
 const uploads = require('./loaders/uploads');
 
 module.exports = event => {
-  console.log('event', event);
+  // console.log('event', event);
   let user = {};
 
   // if (event.headers && event.headers.cookie) {
