@@ -15,4 +15,5 @@ if (BKEN_ENV === 'prod' && NODE_ENV === 'production') {
   domain = 'localhost';
 }
 
+console.log({ secure, domain });
 export { secure, domain };
