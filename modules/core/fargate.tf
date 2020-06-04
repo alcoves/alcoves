@@ -49,7 +49,7 @@ resource "aws_ecs_service" "web" {
 }
 
 resource "aws_cloudwatch_log_group" "web" {
-  name = "aws/fargate/bken-web-${var.env}"
+  name = "fargate/bken/web-${var.env}"
 
   tags = {
     Environment = var.env
