@@ -10,7 +10,8 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start -p 8080",
+    "start": "next start -p $PORT",
+    "heroku-postbuild": "npm run build",
     "lint": "prettier --check \"src/**/*.*\"",
     "lint:fix": "prettier --write \"src/**/*.*\""
   },
