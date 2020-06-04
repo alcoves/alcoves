@@ -23,11 +23,12 @@ resource "aws_ecs_task_definition" "web" {
 }
 
 resource "aws_ecs_service" "web" {
-  desired_count   = 1
-  launch_type     = "FARGATE"
-  name            = "web-${var.env}"
-  cluster         = data.aws_ecs_cluster.bken.id
-  task_definition = aws_ecs_task_definition.web.arn
+  desired_count    = 1
+  platform_version = "1.4.0"
+  launch_type      = "FARGATE"
+  name             = "web-${var.env}"
+  cluster          = data.aws_ecs_cluster.bken.id
+  task_definition  = aws_ecs_task_definition.web.arn
 
   network_configuration {
     assign_public_ip = true

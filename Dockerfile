@@ -13,7 +13,6 @@ COPY . .
 
 RUN yarn
 RUN yarn build
-RUN rm -rf node_modules
 
 EXPOSE 80
 CMD ["sh", "-c", "yarn start"]
