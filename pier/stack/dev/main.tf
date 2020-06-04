@@ -26,7 +26,7 @@ data "archive_file" "tidal_api_zip" {
 
 resource "aws_lambda_function" "tidal_api" {
   timeout          = 30
-  memory_size      = 512
+  memory_size      = 1536
   runtime          = "nodejs12.x"
   handler          = "src/index.handler"
   function_name    = local.function_name
