@@ -2,9 +2,6 @@
   {
     "name": "web",
     "image": "${app_image}",
-    "repositoryCredentials": {
-      "credentialsParameter": "${credentials}"
-    },
     "cpu": 128,
     "memory": 448,
     "portMappings": [
