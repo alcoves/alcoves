@@ -28,11 +28,15 @@ module.exports.typeDefs = gql`
     link: String
     status: String!
     preset: String!
-    createdAt: String
-    modifiedAt: String
+    segments: VideoSegments!
+  }
+  type VideoSegments {
+    done: Int!
+    total: Int!
+    percentCompleted: Int!
   }
   input CreateVideoInput {
-    user: ID!
+    user: String!
     title: String!
   }
 `;
@@ -51,6 +55,20 @@ module.exports.resolvers = {
     },
     versions: function ({ id }, _, { videos: { getVideoVersionsById } }) {
       return getVideoVersionsById(id);
+    },
+  },
+  VideoVersion: {
+    segments: ({ segments }) => {
+      const total = Object.keys(segments).length;
+      const { percentCompleted, done } = Object.values(segments).reduce(
+        (acc, cv, i, arr) => {
+          if (cv) acc.done++;
+          acc.percentCompleted = parseInt((acc.done / arr.length) * 100);
+          return acc;
+        },
+        { done: 0, processing: 0, percentCompleted: 0 }
+      );
+      return { done, total, percentCompleted };
     },
   },
   Query: {
