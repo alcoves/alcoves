@@ -27,17 +27,32 @@ jobs:
     name: Deploy
     needs: ecr_docker_push
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: stack/dev
     steps:
       - uses: actions/checkout@v2
+      - uses: hashicorp/setup-terraform@v1
+
+      - name: Terraform fmt
+        id: fmt
+        run: terraform fmt
+        continue-on-error: false
+
       - name: Terraform Init
-        uses: hashicorp/terraform-github-actions@master
-        with:
-          tf_actions_version: 0.12.24
-          tf_actions_subcommand: init
-          tf_actions_working_dir: stack/dev
+        id: init
+        run: terraform init
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -no-color
+        continue-on-error: true
+
       - name: Terraform Apply
-        uses: hashicorp/terraform-github-actions@master
-        with:
-          tf_actions_version: 0.12.24
-          tf_actions_subcommand: apply
-          tf_actions_working_dir: stack/dev
+        id: apply
+        run: terraform apply -auto-approve -no-color
+        continue-on-error: true

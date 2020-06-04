@@ -7,16 +7,16 @@ data "template_file" "web_container_def" {
 
   vars = {
     log_group = aws_cloudwatch_log_group.web.name
-    app_image = "docker.pkg.github.com/bken-io/web/web:dev"
+    app_image = "594206825329.dkr.ecr.us-east-1.amazonaws.com/bken/web:dev"
   }
 }
 
 resource "aws_ecs_task_definition" "web" {
   cpu                      = 256
   memory                   = 512
+  family                   = "web"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  family                   = "web"
   execution_role_arn       = "arn:aws:iam::594206825329:role/ecsTaskAll"
   task_role_arn            = "arn:aws:iam::594206825329:role/ecsTaskAll"
   container_definitions    = data.template_file.web_container_def.rendered
@@ -43,19 +43,13 @@ resource "aws_ecs_service" "web" {
     ]
   }
 
-  # load_balancer {
-  #   container_port   = 80
-  #   container_name   = "web"
-  #   target_group_arn = aws_alb_target_group.web.arn
-  # }
-
   lifecycle {
     create_before_destroy = true
   }
 }
 
 resource "aws_cloudwatch_log_group" "web" {
-  name = "services/web-${var.env}"
+  name = "aws/fargate/bken-web-${var.env}"
 
   tags = {
     Environment = var.env

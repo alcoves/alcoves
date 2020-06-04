@@ -1,5 +1,5 @@
 resource "aws_ecr_repository" "repo" {
-  name                 = "web"
+  name                 = "bken/web"
   image_tag_mutability = "MUTABLE"
 
   image_scanning_configuration {
