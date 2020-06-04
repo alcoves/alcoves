@@ -25,15 +25,10 @@ jobs:
           extra_build_args: '--build-arg BKEN_ENV=dev'
   deploy:
     name: Deploy
+    needs: ecr_docker_push
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: borales/actions-yarn@v2.0.0
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 12
-      - name: Install deps
-        run: yarn
       - name: Terraform Init
         uses: hashicorp/terraform-github-actions@master
         with:
