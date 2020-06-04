@@ -14,7 +14,7 @@ data "template_file" "web_container_def" {
 resource "aws_ecs_task_definition" "web" {
   cpu                      = 256
   memory                   = 512
-  family                   = "web"
+  family                   = "web-${var.env}"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   execution_role_arn       = "arn:aws:iam::594206825329:role/ecsTaskAll"

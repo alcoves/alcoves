@@ -33,6 +33,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 0.12.24
 
       - name: Terraform fmt
         id: fmt
@@ -42,17 +44,19 @@ jobs:
       - name: Terraform Init
         id: init
         run: terraform init
+        continue-on-error: false
 
       - name: Terraform Validate
         id: validate
         run: terraform validate -no-color
+        continue-on-error: false
 
       - name: Terraform Plan
         id: plan
         run: terraform plan -no-color
-        continue-on-error: true
+        continue-on-error: false
 
       - name: Terraform Apply
         id: apply
-        run: terraform apply -auto-approve -no-color
-        continue-on-error: true
+        run: terraform destroy -auto-approve -no-color
+        continue-on-error: false
