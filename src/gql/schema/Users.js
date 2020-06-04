@@ -20,8 +20,5 @@ module.exports.resolvers = {
   Query: {
     user: async (_, { id }, { users: { getUserById } }) => getUserById(id),
     me: async (_, __, { user, users: { getUserById } }) => getUserById(user.sub),
-    helloWorld: async (_, __, { user }) => {
-      return 'hello from graphql!';
-    },
   },
 };

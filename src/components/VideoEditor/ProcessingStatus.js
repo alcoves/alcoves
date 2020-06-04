@@ -1,7 +1,7 @@
 import React from 'react';
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
-import { Label, Icon, Loader } from 'semantic-ui-react';
+import { Icon, Loader, Progress, Segment, Popup, Container } from 'semantic-ui-react';
 
 function timeConversion(startTime, completeTime) {
   const millisec = new Date(completeTime).getTime() - new Date(startTime).getTime();
@@ -30,8 +30,10 @@ export default props => {
         versions {
           status,
           preset,
-          createdAt,
-          modifiedAt,
+          segments {
+            done
+            total
+          }
         }
       }
     }
@@ -44,21 +46,50 @@ export default props => {
 
   if (data) {
     startPolling(2000);
-    return data.video.versions.map(({ status, preset, createdAt, modifiedAt }) => {
+    return data.video.versions.map(({ status, preset, segments: { done, total } }) => {
       return (
         <div key={preset} style={{ margin: '5px 0px 5px 0px' }}>
-          <Label as='a' color='grey'>
-            {status === 'completed' ? (
-              <Icon color='green' name='check circle outline' />
-            ) : (
-              <Icon color='yellow' name='setting' />
-            )}
-            {preset}
-            <Label.Detail>{`${status}`}</Label.Detail>
-            {createdAt && modifiedAt ? (
-              <Label.Detail>{`took ${timeConversion(createdAt, modifiedAt)}`}</Label.Detail>
-            ) : null}
-          </Label>
+          <Segment>
+            <div style={{ margin: '0px 0px 5px 0px' }}>{preset}</div>
+
+            {/* <Popup
+              header={preset}
+              content='Uploaded to our backend'
+              trigger={<Icon color='yellow' name='upload' />}
+            />
+
+            <Popup
+              header={preset}
+              content='Split into segments'
+              trigger={<Icon color='yellow' name='film' />}
+            />
+
+            <Popup
+              header={preset}
+              content='Segments have been transcoded'
+              trigger={<Icon color='yellow' name='cog' />}
+            />
+
+            <Popup
+              header={preset}
+              content='Segments have been recombined'
+              trigger={<Icon color='yellow' name='filter' />}
+            />
+
+            <Popup
+              header={preset}
+              content='Published to our CDN'
+              trigger={<Icon color='yellow' name='globe' />}
+            /> */}
+
+            <Progress
+              attached='bottom'
+              color={status === 'completed' ? 'green' : 'yellow'}
+              value={done}
+              total={total}
+              size='tiny'
+            />
+          </Segment>
         </div>
       );
     });

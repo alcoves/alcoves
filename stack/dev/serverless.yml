@@ -7,4 +7,5 @@ nextApp:
     nextStaticDir: ../../
     build:
       cwd: ../../
-      env: dev
+      env:
+        BKEN_ENV: dev
