@@ -33,9 +33,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 0.12.24
 
-        # with:
-        #   terraform_version: 0.12.24
       - name: Terraform fmt
         id: fmt
         run: terraform fmt
@@ -58,5 +58,5 @@ jobs:
 
       - name: Terraform Apply
         id: apply
-        run: terraform destroy -auto-approve -no-color
+        run: terraform apply -auto-approve -no-color
         continue-on-error: false
