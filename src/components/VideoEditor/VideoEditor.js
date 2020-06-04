@@ -14,7 +14,6 @@ const GET_VIDEO = gql`
     video(id: $id) {
       id
       title
-      createdAt
       visability
     }
   }
