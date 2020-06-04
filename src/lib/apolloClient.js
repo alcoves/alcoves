@@ -9,11 +9,11 @@ const getServerUrl = apiUrl => {
   const NODE_ENV = process.env.NODE_ENV;
 
   if (BKEN_ENV === 'dev' && NODE_ENV === 'production') {
-    apiUrl = 'https://api.bken.io/dev/graphql';
+    apiUrl = 'https://tf8lrfozkk.execute-api.us-east-1.amazonaws.com/dev/graphql';
   } else if (BKEN_ENV === 'prod' && NODE_ENV === 'production') {
-    apiUrl = 'https://api.bken.io/graphql';
+    apiUrl = 'https://tf8lrfozkk.execute-api.us-east-1.amazonaws.com/graphql';
   } else {
-    apiUrl = 'http://localhost:4000/graphql';
+    apiUrl = 'https://tf8lrfozkk.execute-api.us-east-1.amazonaws.com/dev/graphql';
   }
 
   console.log(`apiUrl: ${apiUrl}`);
@@ -28,7 +28,7 @@ export default function createApolloClient(initialState, ctx) {
     link: new HttpLink({
       fetch,
       uri: getServerUrl(), // Server URL (must be absolute)
-      credentials: 'include', // Additional fetch() options like `credentials` or `headers`
+      // credentials: 'include', // Additional fetch() options like `credentials` or `headers`
       headers: {
         cookie: ctx && ctx.req ? ctx.req.headers.cookie : undefined,
       },

@@ -24,26 +24,21 @@
     "apollo-cache-inmemory": "^1.6.6",
     "apollo-client": "^2.6.10",
     "apollo-link-http": "^1.5.17",
-    "apollo-server-micro": "^2.14.1",
-    "aws-sdk": "^2.689.0",
     "axios": "^0.19.2",
     "dayjs": "^1.8.28",
     "graphql": "^15.0.0",
     "graphql-tag": "^2.10.3",
     "isomorphic-unfetch": "^3.0.0",
-    "jsonwebtoken": "^8.5.1",
     "mime": "^2.4.6",
     "moment": "^2.26.0",
     "next": "^9.4.4",
     "prettier": "^2.0.5",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-ga": "^2.7.0",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.88.2",
     "serverless-next.js": "^1.12.0-alpha.8",
     "shortid": "^2.2.15",
-    "styled-components": "^5.1.1",
-    "supertest": "^4.0.2"
+    "styled-components": "^5.1.1"
   }
 }
