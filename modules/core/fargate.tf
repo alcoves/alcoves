@@ -38,7 +38,9 @@ resource "aws_ecs_service" "web" {
   }
 
   network_configuration {
-    assign_public_ip = false
+    // If false, fargate fails to pull image
+    // TODO :: Add egress from IGW or NAT so that this can be false
+    assign_public_ip = true
     security_groups  = [aws_security_group.web_security_group.id]
     subnets = [
       data.aws_subnet.sub1.id,
