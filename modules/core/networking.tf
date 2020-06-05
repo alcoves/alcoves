@@ -4,9 +4,18 @@ resource "aws_security_group" "web_security_group" {
   vpc_id      = data.aws_vpc.bken1.id
 }
 
-resource "aws_security_group_rule" "web_ingress" {
+resource "aws_security_group_rule" "app" {
   from_port         = 3000
   to_port           = 3000
+  protocol          = "tcp"
+  type              = "ingress"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.web_security_group.id
+}
+
+resource "aws_security_group_rule" "http" {
+  from_port         = 80
+  to_port           = 80
   protocol          = "tcp"
   type              = "ingress"
   cidr_blocks       = ["0.0.0.0/0"]
