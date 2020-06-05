@@ -6,8 +6,8 @@ data "template_file" "web_container_def" {
   template = file("${path.module}/templates/fargate_task.json")
 
   vars = {
+    app_image = var.fargate_image
     log_group = aws_cloudwatch_log_group.web.name
-    app_image = "594206825329.dkr.ecr.us-east-1.amazonaws.com/bken/web:dev"
   }
 }
 
@@ -29,6 +29,10 @@ resource "aws_ecs_service" "web" {
   name             = "web-${var.env}"
   cluster          = data.aws_ecs_cluster.bken.id
   task_definition  = aws_ecs_task_definition.web.arn
+
+  service_registries {
+    registry_arn = ""
+  }
 
   network_configuration {
     assign_public_ip = true
