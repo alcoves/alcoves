@@ -23,6 +23,8 @@ module.exports = (event) => {
     if (idToken) user = jwt.decode(idToken);
   }
 
+  console.log('user', user);
+
   return {
     user,
     users,
