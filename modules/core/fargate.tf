@@ -23,15 +23,21 @@ resource "aws_ecs_task_definition" "web" {
 }
 
 resource "aws_ecs_service" "web" {
-  desired_count    = 1
-  platform_version = "1.4.0"
-  launch_type      = "FARGATE"
-  name             = "web-${var.env}"
-  cluster          = data.aws_ecs_cluster.bken.id
-  task_definition  = aws_ecs_task_definition.web.arn
+  health_check_grace_period_seconds = 0
+  desired_count                     = 1
+  platform_version                  = "1.4.0"
+  launch_type                       = "FARGATE"
+  name                              = "web-${var.env}"
+  cluster                           = data.aws_ecs_cluster.bken.id
+  task_definition                   = aws_ecs_task_definition.web.arn
 
   service_registries {
-    registry_arn = ""
+    container_port = 3000
+    container_name = "web"
+    # container_port = 3000 // The port value, already specified in the task definition, to be used for your service discovery service. If the task definition your service task specifies uses the bridge or host network mode, you must specify a containerName and containerPort combination from the task definition. If the task definition your service task specifies uses the awsvpc network mode and a type SRV DNS record is used, you must specify either a containerName and containerPort combination or a port value, but not both.
+    # container_name = "web" // The container name value, already specified in the task definition, to be used for your service discovery service. If the task definition that your service task specifies uses the bridge or host network mode, you must specify a containerName and containerPort combination from the task definition. If the task definition that your service task specifies uses the awsvpc network mode and a type SRV DNS record is used, you must specify either a containerName and containerPort combination or a port value, but not both.
+    # port         = 3000 // The port value used if your service discovery service specified an SRV record. This field may be used if both the awsvpc network mode and SRV records are used.
+    registry_arn = "arn:aws:servicediscovery:us-east-1:594206825329:service/srv-twtystbnuv6kl5iq"
   }
 
   network_configuration {
@@ -43,7 +49,6 @@ resource "aws_ecs_service" "web" {
       data.aws_subnet.sub3.id,
       data.aws_subnet.sub4.id,
       data.aws_subnet.sub5.id,
-      data.aws_subnet.sub6.id,
     ]
   }
 

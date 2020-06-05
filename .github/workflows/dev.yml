@@ -53,7 +53,7 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan -no-color
+        run: terraform plan -no-color -var fargate_image="594206825329.dkr.ecr.us-east-1.amazonaws.com/bken/web:${{ github.sha }}"
         continue-on-error: false
 
       - name: Terraform Apply
