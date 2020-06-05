@@ -11,9 +11,6 @@ jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: stack/dev
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js 12.x
@@ -24,6 +21,9 @@ jobs:
       - uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: 0.12.24
+
+      - name: Change Dir
+      - run: cd stack/dev
 
       - name: Terraform fmt
         id: fmt
