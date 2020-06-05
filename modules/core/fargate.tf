@@ -34,14 +34,11 @@ resource "aws_ecs_service" "web" {
   service_registries {
     container_port = 3000
     container_name = "web"
-    # container_port = 3000 // The port value, already specified in the task definition, to be used for your service discovery service. If the task definition your service task specifies uses the bridge or host network mode, you must specify a containerName and containerPort combination from the task definition. If the task definition your service task specifies uses the awsvpc network mode and a type SRV DNS record is used, you must specify either a containerName and containerPort combination or a port value, but not both.
-    # container_name = "web" // The container name value, already specified in the task definition, to be used for your service discovery service. If the task definition that your service task specifies uses the bridge or host network mode, you must specify a containerName and containerPort combination from the task definition. If the task definition that your service task specifies uses the awsvpc network mode and a type SRV DNS record is used, you must specify either a containerName and containerPort combination or a port value, but not both.
-    # port         = 3000 // The port value used if your service discovery service specified an SRV record. This field may be used if both the awsvpc network mode and SRV records are used.
-    registry_arn = "arn:aws:servicediscovery:us-east-1:594206825329:service/srv-twtystbnuv6kl5iq"
+    registry_arn   = "arn:aws:servicediscovery:us-east-1:594206825329:service/srv-twtystbnuv6kl5iq"
   }
 
   network_configuration {
-    assign_public_ip = true
+    assign_public_ip = false
     security_groups  = [aws_security_group.web_security_group.id]
     subnets = [
       data.aws_subnet.sub1.id,

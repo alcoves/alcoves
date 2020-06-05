@@ -5,8 +5,8 @@ resource "aws_security_group" "web_security_group" {
 }
 
 resource "aws_security_group_rule" "web_ingress" {
-  from_port         = 80
-  to_port           = 80
+  from_port         = 3000
+  to_port           = 3000
   protocol          = "tcp"
   type              = "ingress"
   cidr_blocks       = ["0.0.0.0/0"]
