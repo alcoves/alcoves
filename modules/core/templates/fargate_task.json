@@ -6,7 +6,7 @@
     "memory": 448,
     "portMappings": [
       {
-        "containerPort": 80
+        "containerPort": 3000
       }
     ],
     "logConfiguration": {
