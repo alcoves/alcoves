@@ -58,5 +58,5 @@ jobs:
 
       - name: Terraform Apply
         id: apply
-        run: terraform apply -auto-approve -no-color
+        run: terraform apply -auto-approve -no-color -var fargate_image="594206825329.dkr.ecr.us-east-1.amazonaws.com/bken/web:${{ github.sha }}"
         continue-on-error: false
