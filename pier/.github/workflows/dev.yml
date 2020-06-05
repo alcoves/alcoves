@@ -23,7 +23,7 @@ jobs:
           terraform_version: 0.12.24
 
       - name: Change Dir
-      - run: cd stack/dev
+        run: cd stack/dev
 
       - name: Terraform fmt
         id: fmt
