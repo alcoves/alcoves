@@ -27,7 +27,7 @@ module.exports = (event) => {
   }
 
   console.log('user', user);
-  if (!Object.keys(user).length) throw new error('failed to authenticate user');
+  if (!Object.keys(user).length) throw new Error('failed to authenticate user');
 
   return {
     user,
