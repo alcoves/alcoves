@@ -116,6 +116,10 @@ function Uploader() {
 
   const fileInputRef = React.createRef();
 
+  if (comData && creData) {
+    return router.push(`/edit/${creData.createMultipartUpload.objectId}`);
+  }
+
   return (
     <div className='uploadContainer'>
       <style jsx global>
@@ -172,19 +176,6 @@ function Uploader() {
               Completing upload...
             </Loader>
           )}
-        </div>
-
-        <div className='uploadRow'>
-          {comData && creData ? (
-            <Button
-              fluid
-              positive
-              onClick={() => {
-                router.push(`/edit/${creData.createMultipartUpload.objectId}`);
-              }}>
-              View In Editor
-            </Button>
-          ) : null}
         </div>
       </div>
     </div>
