@@ -26,7 +26,8 @@ module.exports = (event) => {
     if (idToken) user = jwt.decode(idToken);
   }
 
-  // console.log('user', user);
+  console.log('user', user);
+  if (!Object.keys(user).length) throw new error('failed to authenticate user');
 
   return {
     user,
