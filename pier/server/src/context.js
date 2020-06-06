@@ -9,8 +9,9 @@ module.exports = (event) => {
   let user = {};
 
   // Handles local server
-  if (event.req) event = event.req;
+  // if (event.req) event = event.req;
 
+  console.log('event.headers', event.headers);
   console.log('event.headers.cookie', event.headers.cookie);
   if (event.headers && event.headers.cookie) {
     const cookies = event.headers.cookie.split(';');
