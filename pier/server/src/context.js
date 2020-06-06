@@ -14,9 +14,6 @@ module.exports = (event) => {
     event = event.req;
   }
 
-  // Handles local server
-  // if (event.req) event = event.req;
-
   console.log('event.headers', event.headers);
   console.log('event.headers.cookie', event.headers.cookie);
   if (event.headers && event.headers.cookie) {
