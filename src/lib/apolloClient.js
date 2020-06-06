@@ -28,7 +28,7 @@ export default function createApolloClient(initialState, ctx) {
     link: new HttpLink({
       fetch,
       uri: getServerUrl(), // Server URL (must be absolute)
-      // credentials: 'include', // Additional fetch() options like `credentials` or `headers`
+      credentials: 'include', // Additional fetch() options like `credentials` or `headers`
       headers: {
         cookie: ctx && ctx.req ? ctx.req.headers.cookie : undefined,
       },
