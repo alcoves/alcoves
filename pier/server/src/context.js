@@ -5,16 +5,16 @@ const videos = require('./loaders/videos');
 const uploads = require('./loaders/uploads');
 
 module.exports = (event) => {
-  console.log('event', event);
+  console.log('event', event.event);
   let user = {};
 
   // Handles local server
   // if (event.req) event = event.req;
 
-  console.log('event.headers', event.headers);
-  console.log('event.headers.cookie', event.headers.cookie);
-  if (event.headers && event.headers.cookie) {
-    const cookies = event.headers.cookie.split(';');
+  console.log('event.headers', event.event.headers);
+  console.log('event.event.headers.cookie', event.event.headers.cookie);
+  if (event.event.headers && event.event.headers.cookie) {
+    const cookies = event.event.headers.cookie.split(';');
     console.log('cookies', cookies);
 
     const tokens = cookies.reduce((acc, c) => {
