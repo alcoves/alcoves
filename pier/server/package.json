@@ -9,7 +9,7 @@
   "private": false,
   "scripts": {
     "test": "jest ./src/",
-    "start": "NODE_ENV=test nodemon -r dotenv/config local.js",
+    "start": "NODE_ENV=test nodemon -r dotenv/config src/local.js",
     "lint": "prettier --check \"src/**/*.*\"",
     "lint:fix": "prettier --write \"src/**/*.*\""
   },

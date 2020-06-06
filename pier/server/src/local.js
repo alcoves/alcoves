@@ -11,7 +11,7 @@ const server = new ApolloServer({
     require('./schema/Videos'),
     require('./schema/Uploads'),
   ],
-  // context: require('./context'),
+  context: require('./context'),
   tracing: true,
   playground: true,
   introspection: true,
@@ -20,10 +20,6 @@ const server = new ApolloServer({
 server.applyMiddleware({
   app,
   path: '/api',
-  cors: {
-    credentials: true,
-    origin: 'http://localhost:3000',
-  },
 });
 
 app.listen({ port: 4000 }, () =>

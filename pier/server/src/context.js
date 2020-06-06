@@ -8,8 +8,11 @@ module.exports = (event) => {
   console.log('event', event);
   let user = {};
 
+  // Handles local server
+  if (event.req) event = event.req;
+
   if (event.headers && event.headers.cookie) {
-    const cookies = headers.cookie.split(';');
+    const cookies = event.headers.cookie.split(';');
 
     const { idToken } = cookies.reduce((acc, c) => {
       if (c.includes('idToken=')) acc['idToken'] = c.split('idToken=')[1];
@@ -23,7 +26,7 @@ module.exports = (event) => {
     if (idToken) user = jwt.decode(idToken);
   }
 
-  console.log('user', user);
+  // console.log('user', user);
 
   return {
     user,
