@@ -11,10 +11,12 @@ module.exports = (event) => {
   // Handles local server
   if (event.req) event = event.req;
 
+  console.log('event.headers.cookie', event.headers.cookie);
   if (event.headers && event.headers.cookie) {
     const cookies = event.headers.cookie.split(';');
+    console.log('cookies', cookies);
 
-    const { idToken } = cookies.reduce((acc, c) => {
+    const tokens = cookies.reduce((acc, c) => {
       if (c.includes('idToken=')) acc['idToken'] = c.split('idToken=')[1];
       if (c.includes('accessToken='))
         acc['accessToken'] = c.split('accessToken=')[1];
@@ -23,7 +25,8 @@ module.exports = (event) => {
       return acc;
     }, {});
 
-    if (idToken) user = jwt.decode(idToken);
+    console.log('tokens', tokens);
+    if (idToken) user = jwt.decode(tokens.idToken);
   }
 
   console.log('user', user);
