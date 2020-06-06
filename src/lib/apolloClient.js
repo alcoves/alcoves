@@ -16,7 +16,7 @@ const getServerUrl = apiUrl => {
     apiUrl = 'http://localhost:4000';
   }
 
-  console.log(`apiUrl: ${apiUrl}`);
+  // console.log(`apiUrl: ${apiUrl}`);
   return apiUrl;
 };
 
