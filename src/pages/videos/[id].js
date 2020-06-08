@@ -44,7 +44,7 @@ const pickUrl = ({ versions }) => {
 function Video({ data }) {
   const outerDivStyle = {
     backgroundColor: '#000000',
-    height: 'calc(100vh - 100px)',
+    height: 'calc(100vh - 300px)',
     maxHeight: 'calc((9 / 16) * 100vw',
   };
 
