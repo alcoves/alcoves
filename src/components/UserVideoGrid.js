@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
-import Router, { useRouter } from 'next/router';
 import withMe from '../lib/withMe';
 import VideoGrid from './VideoGrid';
 
+import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import { Loader } from 'semantic-ui-react';
 import { useQuery } from '@apollo/react-hooks';
