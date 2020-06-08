@@ -6,7 +6,7 @@ ARG BKEN_ENV
 ENV BKEN_ENV=$BKEN_ENV
 ENV NODE_ENV=production
 
-RUN apk add --no-cache yarn nodejs
+RUN apk add --no-cache yarn nodejs curl
 
 WORKDIR "/root"
 COPY . .

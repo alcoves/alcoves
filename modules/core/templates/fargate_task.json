@@ -4,6 +4,8 @@
     "image": "${app_image}",
     "cpu": 256,
     "memory": 512,
+    "stopTimeout": 10,
+    "startTimeout": 10,
     "portMappings": [
       {
         "containerPort": 3000
