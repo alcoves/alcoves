@@ -5,7 +5,7 @@ import VideoGrid from './VideoGrid';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import { Loader } from 'semantic-ui-react';
-import { useQuery } from '@apollo/react-hooks';
+import { useLazyQuery } from '@apollo/react-hooks';
 
 const GET_USER_VIDEOS = gql`
   query videosByUserId($id: String!) {
@@ -32,9 +32,11 @@ function UserVideoGrid() {
   const router = useRouter();
   const { me } = withMe();
 
-  const { loading, called, data, error, refetch } = useQuery(GET_USER_VIDEOS, {
+  const [getVideos, { loading, called, data, error, refetch }] = useLazyQuery(GET_USER_VIDEOS, {
     variables: { id: router.query.id },
   });
+
+  if (router.query.id && !loading && !called) getVideos();
 
   useEffect(() => {
     console.log('use effect!');
