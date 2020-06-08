@@ -20,8 +20,19 @@ function AccountWrapper() {
     return (
       <Layout>
         <Navigation />
-        <div> you are logged in as {me.email}</div>
-        <Logout />
+        <div
+          style={{
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            flexDirection: 'column',
+            justifyContent: 'center',
+          }}>
+          <div style={{ width: 400, margin: 20 }}>
+            <div> you are logged in as {me.email}</div>
+            <Logout />
+          </div>
+        </div>
       </Layout>
     );
   }
