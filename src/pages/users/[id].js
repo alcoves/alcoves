@@ -16,4 +16,4 @@ function User() {
   );
 }
 
-export default withApollo({ ssr: true })(User);
+export default withApollo({ ssr: false })(User);

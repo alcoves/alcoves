@@ -86,4 +86,4 @@ function Navigation() {
   );
 }
 
-export default withApollo({ ssr: true })(Navigation);
+export default withApollo({ ssr: false })(Navigation);
