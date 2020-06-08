@@ -12,8 +12,8 @@ data "template_file" "web_container_def" {
 }
 
 resource "aws_ecs_task_definition" "web" {
-  cpu                      = 256
-  memory                   = 512
+  cpu                      = 512
+  memory                   = 1024
   family                   = "web-${var.env}"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
