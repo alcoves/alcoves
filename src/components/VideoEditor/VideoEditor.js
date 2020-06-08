@@ -64,12 +64,16 @@ export default () => {
         <Title title={data.video.title} id={data.video.id} />
         <PublishStatus visability={data.video.visability} id={data.video.id} />
         <h3>{`video id: ${data.video.id}`}</h3>
-        {data.video.versions &&
-          data.video.versions[0].link(
-            <div>
-              <video controls height='400px' src={data.video.versions[0].link} />
-            </div>,
-          )}
+        {Boolean(data.video.versions && data.video.versions[0].link) && (
+          <div>
+            <video
+              controls
+              width='100%'
+              style={{ maxHeight: 410, background: 'black' }}
+              src={data.video.versions[0].link}
+            />
+          </div>
+        )}
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <ProcessingStatus id={data.video.id} />
           <div>
