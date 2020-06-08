@@ -12,8 +12,8 @@ data "template_file" "web_container_def" {
 }
 
 resource "aws_ecs_task_definition" "web" {
-  cpu                      = 1024
-  memory                   = 1024
+  cpu                      = 256
+  memory                   = 512
   family                   = "web-${var.env}"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
@@ -23,13 +23,12 @@ resource "aws_ecs_task_definition" "web" {
 }
 
 resource "aws_ecs_service" "web" {
-  health_check_grace_period_seconds = 0
-  desired_count                     = 1
-  platform_version                  = "1.4.0"
-  launch_type                       = "FARGATE"
-  name                              = "web-${var.env}"
-  cluster                           = data.aws_ecs_cluster.bken.id
-  task_definition                   = aws_ecs_task_definition.web.arn
+  desired_count    = 1
+  platform_version = "1.4.0"
+  launch_type      = "FARGATE"
+  name             = "web-${var.env}"
+  cluster          = data.aws_ecs_cluster.bken.id
+  task_definition  = aws_ecs_task_definition.web.arn
 
   service_registries {
     container_port = 3000
