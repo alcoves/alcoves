@@ -10,6 +10,10 @@ const server = new ApolloServer({
   tracing: true,
   playground: true,
   introspection: true,
+  cors: {
+    origin: true,
+    credentials: true,
+  },
 });
 
 module.exports.handler = server.createHandler();

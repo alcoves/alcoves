@@ -20,6 +20,10 @@ const server = new ApolloServer({
 server.applyMiddleware({
   app,
   path: '/api',
+  cors: {
+    origin: true,
+    credentials: true,
+  },
 });
 
 app.listen({ port: 4000 }, () =>
