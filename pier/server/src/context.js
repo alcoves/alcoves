@@ -29,12 +29,12 @@ module.exports = (event) => {
       return acc;
     }, {});
 
-    console.log('tokens', tokens);
+    // console.log('tokens', tokens);
     if (tokens.idToken) user = jwt.decode(tokens.idToken);
   }
 
   console.log('user', user);
-  if (!Object.keys(user).length) throw new Error('failed to authenticate user');
+  // if (!Object.keys(user).length) throw new Error('failed to authenticate user');
 
   return {
     user,
