@@ -2,8 +2,8 @@
   {
     "name": "web",
     "image": "${app_image}",
-    "cpu": 128,
-    "memory": 448,
+    "cpu": 512,
+    "memory": 1024,
     "portMappings": [
       {
         "containerPort": 3000
@@ -17,17 +17,5 @@
         "awslogs-stream-prefix": "ecs"
       }
     }
-  },
-  {
-    "name": "xray-daemon",
-    "image": "amazon/aws-xray-daemon",
-    "cpu": 32,
-    "memory": 64,
-    "portMappings": [
-      {
-        "containerPort": 2000,
-        "protocol": "udp"
-      }
-    ]
   }
 ]
