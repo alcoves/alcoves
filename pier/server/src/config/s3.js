@@ -1,7 +1,12 @@
 const AWS = require('aws-sdk');
-// const WAWS = require('aws-sdk');
+const WAWS = require('aws-sdk');
 
-// const { WASABI_ENDPOINT } = require('./config');
+const { WASABI_ENDPOINT } = require('./config');
+
+const { WASABI_ACCESS_KEY_ID, WASABI_SECRET_ACCESS_KEY } = process.env;
+
+// var credentials = new WAWS.SharedIniFileCredentials({ accessKeyId: 'wasabi' });
+// WAWS.config.credentials = credentials;
 
 // WAWS.config.update({
 //   accessKeyId: process.env.WASABI_ACCESS_KEY_ID,
@@ -21,8 +26,6 @@ const AWS = require('aws-sdk');
 
 AWS.config.update({
   region: 'us-east-1',
-  accessKeyId: process.env.AWS_ACCESS_KEY,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   maxRetries: 4,
   httpOptions: {
     timeout: 5000,
@@ -35,4 +38,4 @@ const s3 = new AWS.S3({
   signatureVersion: 'v4',
 });
 
-module.exports = { s3 };
+module.exports = { s3, ws3: true };

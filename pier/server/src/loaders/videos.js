@@ -1,13 +1,14 @@
 const AWS = require('aws-sdk');
 const shortid = require('shortid');
 
-// const { ws3 } = require('../config/s3');
-
+const { ws3, s3 } = require('../config/s3');
 const {
   VIDEOS_TABLE,
   TIDAL_TABLE,
+  TIDAL_BUCKET,
   WASABI_CDN_BUCKET,
 } = require('../config/config');
+
 const db = new AWS.DynamoDB.DocumentClient({ region: 'us-east-1' });
 
 const getVideoVersionsById = async function (id) {
@@ -107,6 +108,44 @@ const setVideoVisability = async function ({ id, visability }) {
 };
 
 const deleteVideo = async function (id) {
+  // Delete versions from cdn bucket
+  const { Contents } = await ws3
+    .listObjectsV2({
+      Prefix: `v/${id}`,
+      Bucket: WASABI_CDN_BUCKET,
+    })
+    .promise();
+
+  await Promise.all(
+    Contents.map(({ Key }) => {
+      return ws3
+        .deleteObject({
+          Key,
+          Bucket: WASABI_CDN_BUCKET,
+        })
+        .promise();
+    })
+  );
+
+  // Delete source video from tidal-uploads bucket
+  const { Contents: tidalContents } = await s3
+    .listObjectsV2({
+      Prefix: `uploads/${id}`,
+      Bucket: TIDAL_BUCKET,
+    })
+    .promise();
+
+  await Promise.all(
+    tidalContents.map(({ Key }) => {
+      return s3
+        .deleteObject({
+          Key,
+          Bucket: TIDAL_BUCKET,
+        })
+        .promise();
+    })
+  );
+
   // Delete from videos table
   await db
     .delete({
@@ -114,8 +153,6 @@ const deleteVideo = async function (id) {
       TableName: VIDEOS_TABLE,
     })
     .promise();
-
-  // NOTE :: tidal buckets auto expire so we don't have to worry about cleaning them up
 
   // Delete all versions from tidal db
   const { Items } = await db
@@ -137,25 +174,6 @@ const deleteVideo = async function (id) {
         .promise();
     })
   );
-
-  // Delete versions from cdn bucket
-  // const { Contents } = await ws3
-  //   .listObjectsV2({
-  //     Prefix: `v/${id}`,
-  //     Bucket: WASABI_CDN_BUCKET,
-  //   })
-  //   .promise();
-
-  // await Promise.all(
-  //   Contents.map(({ Key }) => {
-  //     return ws3
-  //       .deleteObject({
-  //         Key,
-  //         Bucket: WASABI_CDN_BUCKET,
-  //       })
-  //       .promise();
-  //   })
-  // );
 
   return true;
 };

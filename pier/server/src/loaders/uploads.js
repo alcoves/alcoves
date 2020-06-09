@@ -6,7 +6,7 @@ const s3 = new AWS.S3({
   signatureVersion: 'v4', // Uploads will fail 403 without this
 });
 
-const { UPLOAD_BUCKET_NAME } = require('../config/config');
+const { TIDAL_BUCKET } = require('../config/config');
 
 const createMultipartUpload = async function (
   { parts, fileType, duration },
@@ -20,7 +20,7 @@ const createMultipartUpload = async function (
   });
   const { UploadId, Key } = await s3
     .createMultipartUpload({
-      Bucket: UPLOAD_BUCKET_NAME,
+      Bucket: TIDAL_BUCKET,
       ContentType: mime.getType(fileType),
       Key: `uploads/${video.id}/source.${mime.getExtension(fileType)}`,
     })
@@ -34,7 +34,7 @@ const createMultipartUpload = async function (
         UploadId,
         PartNumber: i,
         Expires: 43200,
-        Bucket: UPLOAD_BUCKET_NAME,
+        Bucket: TIDAL_BUCKET,
       })
     );
   }
@@ -50,7 +50,7 @@ const completeMultipartUpload = async function ({
     .completeMultipartUpload({
       Key,
       UploadId,
-      Bucket: UPLOAD_BUCKET_NAME,
+      Bucket: TIDAL_BUCKET,
       MultipartUpload: { Parts },
     })
     .promise();
