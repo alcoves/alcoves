@@ -1,7 +1,7 @@
 import React from 'react';
-import Link from 'next/link';
 import styled from 'styled-components';
 
+import { Link } from 'react-router-dom';
 import { Button, Grid } from 'semantic-ui-react';
 
 const Duration = styled.div`
@@ -64,7 +64,7 @@ export default function VideoGrid({ videos = [], isEditor }) {
       {videos.map(video => {
         return (
           <Grid.Column key={video.id} mobile={14} tablet={10} computer={4} style={styles.card}>
-            <Link href={`/videos/${video.id}`}>
+            <Link to={`/videos/${video.id}`}>
               <div
                 style={{
                   width: '100%',
@@ -82,7 +82,7 @@ export default function VideoGrid({ videos = [], isEditor }) {
               </div>
             </Link>
             <div style={styles.meta}>
-              <Link href={`/videos/${video.id}`}>
+              <Link to={`/videos/${video.id}`}>
                 <a>{video.title}</a>
               </Link>
               <div
@@ -93,7 +93,7 @@ export default function VideoGrid({ videos = [], isEditor }) {
                   marginTop: '10px',
                   cursor: 'pointer',
                 }}>
-                <Link href={`/users/${video.user.id}`}>
+                <Link to={`/users/${video.user.id}`}>
                   <img
                     style={{ borderRadius: '50%' }}
                     src={video.user.avatar}
@@ -102,12 +102,12 @@ export default function VideoGrid({ videos = [], isEditor }) {
                     alt='avatar'
                   />
                 </Link>
-                <Link href={`/users/${video.user.id}`}>
+                <Link to={`/users/${video.user.id}`}>
                   <a>{video.user.userName}</a>
                 </Link>
                 <div>
                   {isEditor && (
-                    <Link href={`/edit/${video.id}`}>
+                    <Link to={`/edit/${video.id}`}>
                       <Button icon='setting' size='mini' color='teal' basic />
                     </Link>
                   )}

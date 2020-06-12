@@ -8,14 +8,15 @@
   "repository": "git@github.com:bken-io/web.git",
   "description": "frontend for bken.io",
   "scripts": {
-    "dev": "parcel src/public/index.html",
-    "build": "parcel build src/public/index.html",
+    "dev": "parcel public/index.html",
+    "build": "parcel build public/index.html",
     "start": "",
     "lint": "prettier --check \"src/**/*.*\"",
     "lint:fix": "prettier --write \"src/**/*.*\""
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.5",
+    "@apollo/react-ssr": "^3.1.5",
     "amazon-cognito-identity-js": "^4.3.1",
     "apollo-boost": "^0.4.9",
     "dayjs": "^1.8.28",
@@ -24,15 +25,16 @@
     "moment": "^2.26.0",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
+    "react-is": ">= 16.8.0",
     "react-router-dom": "^5.2.0",
     "semantic-ui-css": "^2.4.1",
-    "semantic-ui-react": "^0.88.2"
+    "semantic-ui-react": "^0.88.2",
+    "styled-components": "^5.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.10.2",
     "@babel/preset-env": "^7.10.2",
     "@babel/preset-react": "^7.10.1",
-    "next": "^9.4.4",
     "parcel-bundler": "^1.12.4",
     "prettier": "^2.0.5"
   }

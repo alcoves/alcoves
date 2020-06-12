@@ -4,14 +4,6 @@ body {
   font-family: 'Montserrat', sans-serif;
 }
 
-/* html {
-  filter: invert(100%);
-}
-
-html img {
-  filter: invert(100%);
-} */
-
 /* width */
 ::-webkit-scrollbar {
   width: 17px;
