@@ -3,9 +3,9 @@ import ApolloClient from 'apollo-boost';
 
 function serverUrl() {
   if (process.env.BKEN_ENV === 'dev') {
-    return 'https://api.bken.io/dev/graphql';
+    return 'https://tf8lrfozkk.execute-api.us-east-1.amazonaws.com/dev/graphql';
   } else if (process.env.BKEN_ENV === 'prod') {
-    return 'https://api.bken.io/graphql';
+    return 'https://tf8lrfozkk.execute-api.us-east-1.amazonaws.com/graphql';
   } else {
     return 'http://localhost:4000/graphql';
   }
