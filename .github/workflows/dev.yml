@@ -3,30 +3,13 @@ env:
   AWS_DEFAULT_REGION: us-east-1
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  IMAGE_NAME: '594206825329.dkr.ecr.us-east-1.amazonaws.com/bken/web:${{ github.sha }}'
 on:
   push:
     branches:
       - dev
 jobs:
-  ecr_docker_push:
-    name: ECR Docker Push
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@master
-      - uses: kciter/aws-ecr-action@v1
-        with:
-          access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          account_id: ${{ secrets.AWS_ACCOUNT_ID }}
-          repo: bken/web
-          region: us-east-1
-          tags: dev,${{ github.sha }}
-          create_repo: false
-          extra_build_args: '--build-arg BKEN_ENV=dev'
-  deploy:
-    name: Deploy
-    needs: ecr_docker_push
+  deploy-infrastructure:
+    name: Deploy Infrastructure
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -54,10 +37,31 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan -no-color -var fargate_image=$IMAGE_NAME
+        run: terraform plan -no-color
         continue-on-error: false
 
       - name: Terraform Apply
         id: apply
-        run: terraform apply -auto-approve -no-color -var fargate_image=$IMAGE_NAME
+        run: terraform apply -auto-approve -no-color
         continue-on-error: false
+
+  deploy-site:
+    needs: deploy-infrastructure
+    name: Deploy Site
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: chrislennon/action-aws-cli@v1.1
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+
+      - name: Install dependencies
+        run: yarn
+
+      - name: Build App
+        run: yarn build
+
+      - name: Deploy to s3
+        run: aws s3 cp ./build/ s3://dev.bken.io/ --recursive
