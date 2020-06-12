@@ -64,4 +64,4 @@ jobs:
         run: yarn build
 
       - name: Deploy to s3
-        run: aws s3 cp ./build/ s3://dev.bken.io/ --recursive
+        run: aws s3 cp ./dist/ s3://dev.bken.io/ --recursive
