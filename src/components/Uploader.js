@@ -1,11 +1,11 @@
 import axios from 'axios';
-import gql from 'graphql-tag';
 import chunkFile from '../utils/chunkFile';
 
+import { gql } from 'apollo-boost';
+import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/react-hooks';
 import React, { useState, useEffect } from 'react';
 import { Button, Progress, Loader } from 'semantic-ui-react';
-import { useRouter } from 'next/router';
 
 const CREATE_MULTIPART_UPLOAD = gql`
   mutation createMultipartUpload($input: CreateMultipartUploadInput!) {
@@ -27,7 +27,7 @@ const COMPLETE_MULTIPART_UPLOAD = gql`
 `;
 
 function Uploader() {
-  const router = useRouter();
+  const history = useHistory();
   const [files, setFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
   let [bytesUploaded, setBytesUploaded] = useState(0);
@@ -117,7 +117,7 @@ function Uploader() {
   const fileInputRef = React.createRef();
 
   if (comData && creData) {
-    return router.push(`/edit/${creData.createMultipartUpload.objectId}`);
+    return history.push(`/editor/${creData.createMultipartUpload.objectId}`);
   }
 
   return (

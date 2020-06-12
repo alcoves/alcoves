@@ -1,5 +1,5 @@
 import React from 'react';
-import gql from 'graphql-tag';
+import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
 import { Icon, Loader, Progress, Segment, Popup, Container } from 'semantic-ui-react';
 

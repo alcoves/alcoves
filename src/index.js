@@ -1,17 +1,17 @@
 import 'semantic-ui-css/semantic.min.css';
 import './index.css';
 
+import App from './app';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Routes from './components/index';
 import ApolloClient from './lib/apollo';
 
 import { ApolloProvider } from '@apollo/react-hooks';
 
-const App = () => (
+const Index = () => (
   <ApolloProvider client={ApolloClient}>
-    <Routes />
+    <App />
   </ApolloProvider>
 );
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<Index />, document.getElementById('root'));

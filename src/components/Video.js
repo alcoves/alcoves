@@ -1,12 +1,9 @@
 import React from 'react';
 import moment from 'moment';
-import Head from 'next/head';
-import gql from 'graphql-tag';
-import withApollo from '../../lib/withApollo';
-import Navigation from '../../components/Navigation';
 
-import { Link } from 'next/link';
+import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
+import { Link, useParams } from 'react-router-dom';
 import { Loader, Container } from 'semantic-ui-react';
 
 const QUERY = gql`
@@ -52,32 +49,6 @@ function Video({ data }) {
 
   return (
     <div>
-      <Head>
-        <title>{data.video.title}</title>
-
-        <meta property='og:site_name' content='bken' />
-        <meta property='og:title' content={data.video.title} />
-        <meta name='description' content='bken is a simple video sharing platform' />
-        <link rel='shortcut icon' href='./favicon.ico' />
-
-        <meta
-          property='og:image'
-          content='https://s3.us-east-2.wasabisys.com/dev-cdn.bken.io/static/default-thumbnail-sm.jpg'
-        />
-        <meta
-          property='og:image:secure_url'
-          content='https://s3.us-east-2.wasabisys.com/dev-cdn.bken.io/static/default-thumbnail-sm.jpg'
-        />
-        <meta property='og:image:type' content='image/jpeg' />
-
-        <meta property='og:type' content='video.other' />
-        <meta property='og:url' content={`https://dev.bken.io/videos/${data.video.id}`} />
-        <meta property='og:video' content={link} />
-        <meta property='og:video:url' content={link} />
-        <meta property='og:video:secure_url' content={link} />
-        <meta property='og:video:type' content='video/mp4' />
-      </Head>
-      <Navigation />
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <div>
           <div style={outerDivStyle}>
@@ -162,8 +133,9 @@ function Video({ data }) {
   );
 }
 
-function VideoWrapper({ id }) {
-  const { called, data, error, loading } = useQuery(QUERY, {
+function VideoWrapper() {
+  const { id } = useParams();
+  const { data } = useQuery(QUERY, {
     notifyOnNetworkStatusChange: true,
     variables: { id },
   });
@@ -179,9 +151,4 @@ function VideoWrapper({ id }) {
   );
 }
 
-VideoWrapper.getInitialProps = ctx => {
-  console.log('query id', ctx.query.id);
-  return { id: ctx.query.id };
-};
-
-export default withApollo({ ssr: true })(VideoWrapper);
+export default VideoWrapper;
