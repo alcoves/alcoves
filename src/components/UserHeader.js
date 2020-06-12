@@ -1,10 +1,8 @@
 import React from 'react';
-import gql from 'graphql-tag';
+import { gql } from 'apollo-boost';
 
 import { useQuery } from '@apollo/react-hooks';
 import { Loader } from 'semantic-ui-react';
-
-import Router from 'next/router';
 
 const GET_USER = gql`
   query getUser($id: ID!) {
@@ -17,7 +15,7 @@ const GET_USER = gql`
 `;
 
 function UserHeader() {
-  const { loading, data, error } = useQuery(GET_USER, { variables: { id: Router.query.id } });
+  const { loading, data, error } = useQuery(GET_USER, { variables: { id: history.query.id } });
 
   if (loading) {
     return <Loader active> Loading the banner... </Loader>;

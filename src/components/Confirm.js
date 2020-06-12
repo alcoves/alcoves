@@ -2,7 +2,7 @@ import userPool from '../lib/userPool';
 import Layout from '../components/Layout';
 import Navigation from '../components/Navigation';
 
-import { useRouter } from 'next/router';
+import { useHistory } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { CognitoUser } from 'amazon-cognito-identity-js';
 import { Card, Input, Loader } from 'semantic-ui-react';

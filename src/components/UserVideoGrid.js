@@ -1,10 +1,10 @@
-import gql from 'graphql-tag';
 import withMe from '../lib/withMe';
 import VideoGrid from './VideoGrid';
 
-import { useRouter } from 'next/router';
+import { gql } from 'apollo-boost';
 import React, { useEffect } from 'react';
 import { Loader } from 'semantic-ui-react';
+import { useParams } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/react-hooks';
 
 const GET_USER_VIDEOS = gql`
@@ -29,14 +29,14 @@ const GET_USER_VIDEOS = gql`
 `;
 
 function UserVideoGrid() {
-  const router = useRouter();
+  const { id } = useParams();
   const { me } = withMe();
 
   const [getVideos, { loading, called, data, error, refetch }] = useLazyQuery(GET_USER_VIDEOS, {
-    variables: { id: router.query.id },
+    variables: { id },
   });
 
-  if (router.query.id && !loading && !called) getVideos();
+  if (id && !loading && !called) getVideos();
 
   useEffect(() => {
     console.log('use effect!');
@@ -47,12 +47,8 @@ function UserVideoGrid() {
   });
 
   if (error) console.log(error);
-  if (data && router.query.id && me) {
-    return (
-      <VideoGrid videos={data.videosByUserId} isEditor={Boolean(router.query.id === me.sub)} />
-    );
-  }
-
+  if (data && id && me)
+    return <VideoGrid videos={data.videosByUserId} isEditor={Boolean(id === me.sub)} />;
   return <Loader active> Loading user videos... </Loader>;
 }
 

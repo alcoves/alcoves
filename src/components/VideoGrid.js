@@ -82,9 +82,7 @@ export default function VideoGrid({ videos = [], isEditor }) {
               </div>
             </Link>
             <div style={styles.meta}>
-              <Link to={`/videos/${video.id}`}>
-                <a>{video.title}</a>
-              </Link>
+              <Link to={`/videos/${video.id}`}>{video.title}</Link>
               <div
                 style={{
                   display: 'flex',
@@ -102,12 +100,10 @@ export default function VideoGrid({ videos = [], isEditor }) {
                     alt='avatar'
                   />
                 </Link>
-                <Link to={`/users/${video.user.id}`}>
-                  <a>{video.user.userName}</a>
-                </Link>
+                <Link to={`/users/${video.user.id}`}>{video.user.userName}</Link>
                 <div>
                   {isEditor && (
-                    <Link to={`/edit/${video.id}`}>
+                    <Link to={`/editor/${video.id}`}>
                       <Button icon='setting' size='mini' color='teal' basic />
                     </Link>
                   )}

@@ -1,11 +1,10 @@
+import React from 'react';
 import Title from './Title';
-import Link from 'next/link';
-import gql from 'graphql-tag';
 import PublishStatus from './PublishStatus';
 import ProcessingStatus from './ProcessingStatus';
 
-import React from 'react';
-import { useRouter } from 'next/router';
+import { gql } from 'apollo-boost';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import { useLazyQuery, useMutation } from '@apollo/react-hooks';
 import { Button, Container, Loader, Icon } from 'semantic-ui-react';
 
@@ -29,14 +28,15 @@ const DELETE_VIDEO = gql`
   }
 `;
 
-export default () => {
-  const router = useRouter();
+function Editor() {
+  const { id } = useParams();
+  const history = useHistory();
 
   const [getVideo, { called, loading, data, error, refetch }] = useLazyQuery(GET_VIDEO, {
-    variables: { id: router.query.id },
+    variables: { id },
   });
 
-  if (router.query.id && !called) getVideo();
+  if (id && !called) getVideo();
 
   if (error) {
     console.error('error here', error);
@@ -48,7 +48,7 @@ export default () => {
       variables: { id },
     });
 
-    if (data) router.replace('/');
+    if (data) history.replace('/');
 
     return (
       <Button basic negative onClick={deleteVideo} loading={loading}>
@@ -80,11 +80,9 @@ export default () => {
             <Button loading={loading} basic color='teal' onClick={() => refetch()}>
               Refresh
             </Button>
-            <Link href={`/videos/${data.video.id}`}>
-              <Button basic color='teal'>
-                View
-              </Button>
-            </Link>
+            <Button as={Link} to={`/videos/${data.video.id}`} basic color='teal'>
+              View
+            </Button>
             <DeleteVideoButton id={data.video.id} />
           </div>
         </div>
@@ -93,4 +91,6 @@ export default () => {
   }
 
   return <Loader active inline='centered' style={{ marginTop: '30px' }} />;
-};
+}
+
+export default Editor;
