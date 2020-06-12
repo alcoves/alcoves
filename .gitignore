@@ -1,13 +1,9 @@
 dist
-live
 .cache
 node_modules
-jobs
 .terraform
 .tfstate
 .tfvars
-.next
-.serverless_nextjs
 
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
@@ -18,10 +14,6 @@ jobs
 
 # testing
 /coverage
-
-# next.js
-/.next/
-/out/
 
 # production
 /build
