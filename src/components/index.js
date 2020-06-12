@@ -1,4 +1,7 @@
 import React from 'react';
+
+import Currency from './currency';
+
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 
 export default function App() {
@@ -16,6 +19,9 @@ export default function App() {
             <li>
               <Link to='/users'>Users</Link>
             </li>
+            <li>
+              <Link to='/currency'>Currency</Link>
+            </li>
           </ul>
         </nav>
 
@@ -27,6 +33,9 @@ export default function App() {
           </Route>
           <Route path='/users'>
             <Users />
+          </Route>
+          <Route path='/currency'>
+            <Currency />
           </Route>
           <Route path='/'>
             <Home />
