@@ -1,59 +1,36 @@
 import React from 'react';
 
-import Currency from './currency';
+import Home from './home';
+import Login from './login';
+import Account from './account';
+import Navigation from './navigation';
 
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
-export default function App() {
+function NoMatch() {
+  return <h2>404</h2>;
+}
+
+function AppRouter() {
   return (
     <Router>
-      <div>
-        <nav>
-          <ul>
-            <li>
-              <Link to='/'>Home</Link>
-            </li>
-            <li>
-              <Link to='/about'>About</Link>
-            </li>
-            <li>
-              <Link to='/users'>Users</Link>
-            </li>
-            <li>
-              <Link to='/currency'>Currency</Link>
-            </li>
-          </ul>
-        </nav>
-
-        {/* A <Switch> looks through its children <Route>s and
-            renders the first one that matches the current URL. */}
-        <Switch>
-          <Route path='/about'>
-            <About />
-          </Route>
-          <Route path='/users'>
-            <Users />
-          </Route>
-          <Route path='/currency'>
-            <Currency />
-          </Route>
-          <Route path='/'>
-            <Home />
-          </Route>
-        </Switch>
-      </div>
+      <Navigation />
+      <Switch>
+        <Route exact path='/'>
+          <Home />
+        </Route>
+        <Route exact path='/login'>
+          <Login />
+        </Route>
+        <Route path='/account'>
+          <Account />
+        </Route>
+        <Route component={NoMatch} />
+      </Switch>
     </Router>
   );
 }
 
-function Home() {
-  return <h2>Home</h2>;
-}
-
-function About() {
-  return <h2>About</h2>;
-}
-
-function Users() {
-  return <h2>Users</h2>;
+export default function App({ children }) {
+  return <AppRouter>{children}</AppRouter>;
 }
