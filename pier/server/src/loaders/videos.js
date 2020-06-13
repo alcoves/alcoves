@@ -113,7 +113,7 @@ const deleteVideo = async function (id) {
   const ws3 = ws3Init();
 
   // Delete versions from cdn bucket
-  const { Contents } = await ws3
+  const { Contents: cdnVideos } = await ws3
     .listObjectsV2({
       Prefix: `v/${id}`,
       Bucket: WASABI_CDN_BUCKET,
@@ -121,7 +121,26 @@ const deleteVideo = async function (id) {
     .promise();
 
   await Promise.all(
-    Contents.map(({ Key }) => {
+    cdnVideos.map(({ Key }) => {
+      return ws3
+        .deleteObject({
+          Key,
+          Bucket: WASABI_CDN_BUCKET,
+        })
+        .promise();
+    })
+  );
+
+  // Delete thumbnails
+  const { Contents: cdnThumbs } = await ws3
+    .listObjectsV2({
+      Prefix: `i/${id}`,
+      Bucket: WASABI_CDN_BUCKET,
+    })
+    .promise();
+
+  await Promise.all(
+    cdnThumbs.map(({ Key }) => {
       return ws3
         .deleteObject({
           Key,
