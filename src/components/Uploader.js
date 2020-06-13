@@ -1,4 +1,5 @@
 import axios from 'axios';
+import styled from 'styled-components';
 import chunkFile from '../utils/chunkFile';
 
 import { gql } from 'apollo-boost';
@@ -24,6 +25,21 @@ const COMPLETE_MULTIPART_UPLOAD = gql`
       completed
     }
   }
+`;
+
+const UploadContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: 10px 5px 5px 5px;
+  justify-content: flex-start;
+`;
+
+const UploadRow = styled.div`
+  margin: 10px 0px 10px 0px;
+  width: 300px;
 `;
 
 function Uploader() {
@@ -117,29 +133,12 @@ function Uploader() {
   const fileInputRef = React.createRef();
 
   if (comData && creData) {
-    return history.push(`/editor/${creData.createMultipartUpload.objectId}`);
+    history.push(`/editor/${creData.createMultipartUpload.objectId}`);
   }
 
   return (
-    <div className='uploadContainer'>
-      <style jsx global>
-        {`
-          .uploadContainer {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            flex-direction: column;
-            padding: 10px 5px 5px 5px;
-            justify-content: flex-start;
-          }
-          .uploadRow {
-            margin: 10px 0px 10px 0px;
-            width: 300px;
-          }
-        `}
-      </style>
-      <div className='uploadRow'>
+    <UploadContainer>
+      <UploadRow>
         <Button
           fluid
           icon='video'
@@ -163,7 +162,7 @@ function Uploader() {
           }}
         />
 
-        <div className='uploadRow'>
+        <UploadRow>
           {bytesUploaded && files[0].size ? (
             <Progress
               size='small'
@@ -176,9 +175,9 @@ function Uploader() {
               Completing upload...
             </Loader>
           )}
-        </div>
-      </div>
-    </div>
+        </UploadRow>
+      </UploadRow>
+    </UploadContainer>
   );
 }
 
