@@ -4,6 +4,7 @@ import Home from './components/Home';
 import Login from './components/Login';
 import Video from './components/Video';
 import Account from './components/Account';
+import Confirm from './components/Confirm';
 import Register from './components/Register';
 import Uploader from './components/Uploader';
 import Editor from './components/Editor/Editor';
@@ -23,6 +24,7 @@ function AppRouter() {
       <Switch>
         <Route exact path='/' children={<Home />} />
         <Route exact path='/login' children={<Login />} />
+        <Route exact path='/confirm' children={<Confirm />} />
         <Route exact path='/account' children={<Account />} />
         <Route exact path='/upload' children={<Uploader />} />
         <Route exact path='/videos/:id' children={<Video />} />
