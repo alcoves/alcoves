@@ -1,7 +1,9 @@
+const _ = require('lodash');
 const AWS = require('aws-sdk');
 const shortid = require('shortid');
+const ws3Init = require('../config/wasabi');
 
-const { ws3, s3 } = require('../config/s3');
+const { s3 } = require('../config/s3');
 const {
   VIDEOS_TABLE,
   TIDAL_TABLE,
@@ -48,7 +50,7 @@ const getVideosByUserId = async function (id) {
       ExpressionAttributeNames: { '#user': 'user' },
     })
     .promise();
-  return Items.length ? Items : [];
+  return Items.length ? _.orderBy(Items, 'createdAt', 'desc') : [];
 };
 
 const getVideos = async function () {
@@ -57,7 +59,7 @@ const getVideos = async function () {
       TableName: VIDEOS_TABLE,
     })
     .promise();
-  return Items.length ? Items : [];
+  return Items.length ? _.orderBy(Items, 'createdAt', 'desc') : [];
 };
 
 const createVideo = async function ({ user, title, duration }) {
@@ -108,6 +110,8 @@ const setVideoVisability = async function ({ id, visability }) {
 };
 
 const deleteVideo = async function (id) {
+  const ws3 = ws3Init();
+
   // Delete versions from cdn bucket
   const { Contents } = await ws3
     .listObjectsV2({

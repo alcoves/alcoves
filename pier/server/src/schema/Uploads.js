@@ -20,6 +20,7 @@ module.exports.typeDefs = gql`
   }
   input CreateMultipartUploadInput {
     parts: Int!
+    title: String!
     duration: Float!
     fileType: String!
   }

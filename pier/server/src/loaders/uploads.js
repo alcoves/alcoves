@@ -9,14 +9,14 @@ const s3 = new AWS.S3({
 const { TIDAL_BUCKET } = require('../config/config');
 
 const createMultipartUpload = async function (
-  { parts, fileType, duration },
+  { parts, fileType, duration, title },
   user,
   createVideo
 ) {
   const video = await createVideo({
+    title,
     duration,
     user: user.sub,
-    title: 'New Upload',
   });
   const { UploadId, Key } = await s3
     .createMultipartUpload({
