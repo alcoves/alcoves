@@ -74,11 +74,7 @@ function Video({ data }) {
             <Container style={{ marginTop: '20px' }}>
               <div>
                 <h2>{data.video.title}</h2>
-                <p>
-                  {`${data.video.views} views • ${moment(
-                    parseInt(data.video.createdAt),
-                  ).fromNow()}`}
-                </p>
+                <p>{`${moment(parseInt(data.video.createdAt)).fromNow()}`}</p>
               </div>
               <div
                 style={{
@@ -93,36 +89,35 @@ function Video({ data }) {
                     alignItems: 'center',
                     marginRight: '10px',
                   }}>
-                  <img
-                    as={Link}
-                    to={`/users/${data.video.user.id}`}
-                    width={50}
-                    height={50}
-                    alt='profile'
-                    src={data.video.user.avatar}
-                    style={{
-                      borderRadius: '50%',
-                      cursor: 'pointer',
-                    }}
-                  />
+                  <Link to={`/users/${data.video.user.id}`}>
+                    <img
+                      alt=''
+                      width={50}
+                      height={50}
+                      src={data.video.user.avatar}
+                      style={{
+                        borderRadius: '50%',
+                        cursor: 'pointer',
+                      }}
+                    />
+                  </Link>
                 </div>
                 <div style={{ height: '100%' }}>
-                  <div
+                  <Link
+                    to={`/users/${data.video.user.id}`}
                     style={{
                       display: 'flex',
                       alignItems: 'flex-end',
                       height: '50%',
                     }}>
                     {data.video.user.userName}
-                  </div>
+                  </Link>
                   <div
                     style={{
                       display: 'flex',
                       alignItems: 'flex-start',
                       height: '50%',
-                    }}>
-                    {data.video.user.followers || '0'} followers
-                  </div>
+                    }}></div>
                 </div>
               </div>
             </Container>
