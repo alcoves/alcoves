@@ -9,12 +9,10 @@ function withMe() {
     if (cognitoUser !== null) {
       cognitoUser.getSession(function (err, session) {
         if (err) setMe({ error: err.message || JSON.stringify(err) });
-        console.log('session validity: ' + session.isValid());
         cognitoUser.getUserAttributes(function (err, attributes) {
           if (err) {
             setMe({ error: err.message || JSON.stringify(err) });
           } else {
-            console.log('attributes', attributes);
             setMe({
               loading: false,
               me: attributes.reduce((acc, { Name, Value }) => {

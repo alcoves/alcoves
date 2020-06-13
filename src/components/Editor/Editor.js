@@ -48,7 +48,7 @@ function Editor() {
       variables: { id },
     });
 
-    if (data) history.replace('/');
+    if (data) history.goBack();
 
     return (
       <Button basic negative onClick={deleteVideo} loading={loading}>

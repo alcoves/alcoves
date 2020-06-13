@@ -115,8 +115,9 @@ function Uploader() {
 
   useEffect(() => {
     if (files.length) {
-      console.log('starting file upload process');
+      console.log('starting file upload process', files[0]);
       const fileType = files[0].type;
+      const fileName = files[0].name;
       const parts = chunkFile(files[0]).length;
 
       // Load the video into the browser to get the duration
@@ -125,7 +126,11 @@ function Uploader() {
       video.onloadeddata = event => {
         const meta = event.srcElement;
         console.log('Video metadata', meta);
-        startUpload({ variables: { input: { parts, fileType, duration: meta.duration } } });
+        startUpload({
+          variables: {
+            input: { parts, fileType, duration: meta.duration, title: fileName },
+          },
+        });
       };
     }
   }, [files]);
