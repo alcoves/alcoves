@@ -64,7 +64,11 @@ function Editor() {
         <Title title={data.video.title} id={data.video.id} />
         <PublishStatus visability={data.video.visability} id={data.video.id} />
         <h3>{`video id: ${data.video.id}`}</h3>
-        {Boolean(data.video.versions && data.video.versions[0].link) && (
+        {Boolean(
+          data.video.versions &&
+            data.video.versions[0] &&
+            Object.keys(data.video.versions[0]).length,
+        ) && (
           <div>
             <video
               controls
