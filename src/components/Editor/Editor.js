@@ -28,9 +28,24 @@ const DELETE_VIDEO = gql`
   }
 `;
 
+function DeleteVideoButton({ id }) {
+  const [deleteVideo, { loading, data }] = useMutation(DELETE_VIDEO, {
+    variables: { id },
+  });
+
+  const history = useHistory();
+  if (data) history.goBack();
+
+  return (
+    <Button basic negative onClick={deleteVideo} loading={loading}>
+      <Icon name='trash' />
+      Delete
+    </Button>
+  );
+}
+
 function Editor() {
   const { id } = useParams();
-  const history = useHistory();
 
   const [getVideo, { called, loading, data, error, refetch }] = useLazyQuery(GET_VIDEO, {
     variables: { id },
@@ -42,21 +57,6 @@ function Editor() {
     console.error('error here', error);
     return <div> An error occured when loading the video </div>;
   }
-
-  const DeleteVideoButton = ({ id }) => {
-    const [deleteVideo, { loading, data }] = useMutation(DELETE_VIDEO, {
-      variables: { id },
-    });
-
-    if (data) history.goBack();
-
-    return (
-      <Button basic negative onClick={deleteVideo} loading={loading}>
-        <Icon name='trash' />
-        Delete
-      </Button>
-    );
-  };
 
   if (data) {
     return (
