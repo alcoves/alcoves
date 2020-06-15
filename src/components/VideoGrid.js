@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 import styled from 'styled-components';
 
 import { Link } from 'react-router-dom';
@@ -49,13 +50,12 @@ const styles = {
   },
 };
 
-function videoDuration(duration) {
-  if (duration) {
-    const durationFmt = (duration / 100).toFixed(2).toString();
-    return durationFmt.replace('.', ':');
+function videoDuration(d) {
+  if (d > 3600) {
+    return moment.utc(d * 1000).format('H:mm:ss');
+  } else {
+    return moment.utc(d * 1000).format('m:ss');
   }
-
-  return null;
 }
 
 export default function VideoGrid({ videos = [], isEditor }) {
