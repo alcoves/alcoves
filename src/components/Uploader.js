@@ -120,18 +120,23 @@ function Uploader() {
       const fileName = files[0].name;
       const parts = chunkFile(files[0]).length;
 
-      // Load the video into the browser to get the duration
-      const video = document.createElement('video');
-      video.setAttribute('src', window.URL.createObjectURL(files[0]));
-      video.onloadeddata = event => {
-        const meta = event.srcElement;
-        console.log('Video metadata', meta);
-        startUpload({
-          variables: {
-            input: { parts, fileType, duration: meta.duration, title: fileName },
-          },
-        });
-      };
+      const maxAllowedSize = 400 * 1024 * 1024; // 400mb
+      if (files[0].size > maxAllowedSize) {
+        alert('videos must be under 400mb right now');
+      } else {
+        // Load the video into the browser to get the duration
+        const video = document.createElement('video');
+        video.setAttribute('src', window.URL.createObjectURL(files[0]));
+        video.onloadeddata = event => {
+          const meta = event.srcElement;
+          console.log('Video metadata', meta);
+          startUpload({
+            variables: {
+              input: { parts, fileType, duration: meta.duration, title: fileName },
+            },
+          });
+        };
+      }
     }
   }, [files]);
 
