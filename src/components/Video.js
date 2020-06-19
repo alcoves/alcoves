@@ -29,11 +29,16 @@ const QUERY = gql`
 
 const pickUrl = ({ versions }, override) => {
   const loadOrder = [
+    'libvpx_vp9-2160p',
     'libx264-2160p',
+    'libvpx_vp9-1440p',
     'libx264-1440p',
     'libvpx_vp9-1080p',
     'libx264-1080p',
+    'libvpx_vp9-720p',
     'libx264-720p',
+    'libvpx_vp9-480p',
+    'libx264-480p',
   ];
   for (const desiredPreset of loadOrder) {
     for (const v of versions) {
