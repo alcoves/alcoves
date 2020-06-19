@@ -1,10 +1,10 @@
-import React from 'react';
 import moment from 'moment';
+import React, { useState, useEffect } from 'react';
 
 import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
 import { Link, useParams } from 'react-router-dom';
-import { Loader, Container } from 'semantic-ui-react';
+import { Loader, Container, Dropdown } from 'semantic-ui-react';
 
 const QUERY = gql`
   query getVideo($id: String!) {
@@ -27,13 +27,18 @@ const QUERY = gql`
   }
 `;
 
-const pickUrl = ({ versions }) => {
-  const loadOrder = ['libx264-2160p', 'libx264-1440p', 'libx264-1080p', 'libx264-720p'];
+const pickUrl = ({ versions }, override) => {
+  const loadOrder = [
+    'libx264-2160p',
+    'libx264-1440p',
+    'libvpx_vp9-1080p',
+    'libx264-1080p',
+    'libx264-720p',
+  ];
   for (const desiredPreset of loadOrder) {
-    for (const { preset, link } of versions) {
-      if (desiredPreset === preset && link) {
-        return link;
-      }
+    for (const v of versions) {
+      if (override && override === v.preset && v.link) return v;
+      if (desiredPreset === v.preset && v.link) return v;
     }
   }
 };
@@ -45,16 +50,25 @@ function Video({ data }) {
     maxHeight: 'calc((9 / 16) * 100vw',
   };
 
-  const link = pickUrl(data.video);
+  const [version, setVersion] = useState(pickUrl(data.video));
+  console.log('version', version, version.link);
+
+  useEffect(() => {
+    const video = document.getElementById('bkenVideoPlayer');
+    const currentTime = video.currentTime;
+    video.src = version.link;
+    video.play();
+    video.currentTime = currentTime;
+  }, [version]);
 
   return (
     <div>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <div>
           <div style={outerDivStyle}>
-            {link ? (
-              <video width='100%' height='100%' controls autoPlay>
-                <source src={link} type='video/mp4' />
+            {version.link ? (
+              <video id='bkenVideoPlayer' width='100%' height='100%' controls autoPlay>
+                <source src={version.link} type='video/mp4' />
               </video>
             ) : (
               <div
@@ -73,7 +87,35 @@ function Video({ data }) {
           <div>
             <Container style={{ marginTop: '20px' }}>
               <div>
-                <h2>{data.video.title}</h2>
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    alignContent: 'center',
+                    justifyContent: 'space-between',
+                  }}>
+                  <div style={{ fontSize: '1.4em', fontWeight: '400' }}>{data.video.title}</div>
+                  <Dropdown
+                    upward
+                    item
+                    button
+                    floating
+                    value={version.preset}
+                    onChange={(e, { value }) => {
+                      console.log('changing quality', e, value);
+                      setVersion(pickUrl(data.video, value));
+                    }}
+                    options={data.video.versions.map(v => {
+                      return {
+                        key: v.preset,
+                        text: v.preset,
+                        value: v.preset,
+                      };
+                    })}
+                  />
+                </div>
+
                 <p>{`${moment(parseInt(data.video.createdAt)).fromNow()}`}</p>
               </div>
               <div
