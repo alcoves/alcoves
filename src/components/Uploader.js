@@ -120,9 +120,9 @@ function Uploader() {
       const fileName = files[0].name;
       const parts = chunkFile(files[0]).length;
 
-      const maxAllowedSize = 400 * 1024 * 1024; // 400mb
+      const maxAllowedSize = 3000 * 1024 * 1024; // 3gb
       if (files[0].size > maxAllowedSize) {
-        alert('videos must be under 400mb right now');
+        alert(`videos must be under ${maxAllowedSize} bytes right now`);
       } else {
         // Load the video into the browser to get the duration
         const video = document.createElement('video');
