@@ -64,23 +64,27 @@ const getVideos = async function () {
 
 const createVideo = async function ({ user, title, duration }) {
   const id = shortid();
-  await db
-    .put({
-      TableName: VIDEOS_TABLE,
-      Item: {
-        id,
-        user,
-        title,
-        views: 0,
-        duration,
-        thumbnail: 'test',
-        createdAt: Date.now(),
-        modifiedAt: Date.now(),
-        visability: 'unlisted',
-      },
-    })
-    .promise();
-  return getVideoById(id);
+  if (user && title && duration) {
+    await db
+      .put({
+        TableName: VIDEOS_TABLE,
+        Item: {
+          id,
+          user,
+          title,
+          views: 0,
+          duration,
+          thumbnail: 'test',
+          createdAt: Date.now(),
+          modifiedAt: Date.now(),
+          visability: 'unlisted',
+        },
+      })
+      .promise();
+    return getVideoById(id);
+  }
+
+  throw new Error('failed to create video');
 };
 
 const updateVideoTitle = async function ({ id, title }) {
