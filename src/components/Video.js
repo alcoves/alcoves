@@ -111,16 +111,19 @@ function Video({ data }) {
                       console.log('changing quality', e, value);
                       setVersion(pickUrl(data.video, value));
                     }}
-                    options={data.video.versions.map(v => {
-                      return {
-                        key: v.preset,
-                        text: v.preset,
-                        value: v.preset,
-                      };
-                    })}
+                    options={data.video.versions.reduce((acc, v) => {
+                      if (v.link) {
+                        acc.push({
+                          key: v.preset,
+                          text: v.preset,
+                          value: v.preset,
+                        });
+                      }
+
+                      return acc;
+                    }, [])}
                   />
                 </div>
-
                 <p>{`${moment(parseInt(data.video.createdAt)).fromNow()}`}</p>
               </div>
               <div
