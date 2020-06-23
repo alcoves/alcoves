@@ -115,7 +115,7 @@ function Video({ data }) {
                       if (v.link) {
                         acc.push({
                           key: v.preset,
-                          text: v.preset,
+                          text: v.preset.split('-')[1],
                           value: v.preset,
                         });
                       }
