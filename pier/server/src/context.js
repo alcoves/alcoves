@@ -19,7 +19,7 @@ module.exports = (event) => {
     if (token) user = jwt.decode(token);
   }
 
-  console.log('user', user);
+  console.log(`request from user: ${user.sub}`);
 
   return {
     user,

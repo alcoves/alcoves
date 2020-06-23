@@ -23,7 +23,11 @@ const getVideoVersionsById = async function (id) {
         ExpressionAttributeValues: { ':id': id },
       })
       .promise();
-    return Items;
+    return Items.sort((a, b) =>
+      parseInt(a.preset.split('-')[1]) < parseInt(b.preset.split('-')[1])
+        ? 1
+        : -1
+    );
   } else {
     return [];
   }
