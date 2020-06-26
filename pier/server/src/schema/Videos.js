@@ -58,8 +58,7 @@ module.exports.resolvers = {
     },
   },
   VideoVersion: {
-    segments: ({ segments }) => {
-      const total = Object.keys(segments).length;
+    segments: ({ segments, segmentCount }) => {
       const { percentCompleted, done } = Object.values(segments).reduce(
         (acc, cv, i, arr) => {
           if (cv) acc.done++;
@@ -68,7 +67,7 @@ module.exports.resolvers = {
         },
         { done: 0, processing: 0, percentCompleted: 0 }
       );
-      return { done, total, percentCompleted };
+      return { done, segmentCount, percentCompleted };
     },
   },
   Query: {
