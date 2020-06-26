@@ -58,16 +58,16 @@ module.exports.resolvers = {
     },
   },
   VideoVersion: {
-    segments: ({ segments, segmentCount }) => {
+    segments: ({ segments, segmentCount = 0 }) => {
       const { percentCompleted, done } = Object.values(segments).reduce(
-        (acc, cv, i, arr) => {
+        (acc, cv) => {
           if (cv) acc.done++;
-          acc.percentCompleted = parseInt((acc.done / arr.length) * 100);
+          acc.percentCompleted = parseInt((acc.done / segmentCount) * 100);
           return acc;
         },
         { done: 0, processing: 0, percentCompleted: 0 }
       );
-      return { done, segmentCount, percentCompleted };
+      return { done, total: segmentCount, percentCompleted };
     },
   },
   Query: {
