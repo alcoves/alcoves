@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Home from './components/Home';
+import Dash from './components/Dash';
 import Login from './components/Login';
 import Video from './components/Video';
 import Account from './components/Account';
@@ -24,6 +25,7 @@ function AppRouter() {
       <Switch>
         <Route exact path='/' children={<Home />} />
         <Route exact path='/login' children={<Login />} />
+        <Route exact path='/dash' children={<Dash />} />
         <Route exact path='/confirm' children={<Confirm />} />
         <Route exact path='/account' children={<Account />} />
         <Route exact path='/upload' children={<Uploader />} />

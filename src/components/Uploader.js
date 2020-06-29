@@ -120,9 +120,9 @@ function Uploader() {
       const fileName = files[0].name;
       const parts = chunkFile(files[0]).length;
 
-      const maxAllowedSize = 3000 * 1024 * 1024; // 3gb
-      if (files[0].size > maxAllowedSize) {
-        alert(`videos must be under ${maxAllowedSize} bytes right now`);
+      const mbMaxAllowed = 1000;
+      if (files[0].size > mbMaxAllowed * 1024 * 1024) {
+        alert(`videos must be under ${mbMaxAllowed} mb right now`);
       } else {
         // Load the video into the browser to get the duration
         const video = document.createElement('video');
@@ -163,7 +163,7 @@ function Uploader() {
           type='file'
           name='video'
           type='file'
-          accept='video/mp4'
+          accept='video/mp4,video/x-matroska,video/webm'
           ref={fileInputRef}
           onChange={e => {
             if (!files.length) {
