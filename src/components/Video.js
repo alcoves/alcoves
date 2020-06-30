@@ -4,7 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
 import { Link, useParams } from 'react-router-dom';
-import { Loader, Container, Dropdown } from 'semantic-ui-react';
+import { Container, Dropdown } from 'semantic-ui-react';
+import { Typography, CircularProgress } from '@material-ui/core';
 
 const QUERY = gql`
   query getVideo($id: String!) {
@@ -85,7 +86,7 @@ function Video({ data }) {
                   backgroundColor: 'white',
                   flexDirection: 'column',
                 }}>
-                <Loader inline active />
+                <CircularProgress inline active />
               </div>
             )}
           </div>
@@ -100,7 +101,7 @@ function Video({ data }) {
                     alignContent: 'center',
                     justifyContent: 'space-between',
                   }}>
-                  <div style={{ fontSize: '1.4em', fontWeight: '400' }}>{data.video.title}</div>
+                  <Typography variant='h6'>{data.video.title}</Typography>
                   <Dropdown
                     upward
                     item
@@ -124,7 +125,9 @@ function Video({ data }) {
                     }, [])}
                   />
                 </div>
-                <p>{`${moment(parseInt(data.video.createdAt)).fromNow()}`}</p>
+                <Typography variant='body2'>{`${moment(
+                  parseInt(data.video.createdAt),
+                ).fromNow()}`}</Typography>
               </div>
               <div
                 style={{
@@ -190,7 +193,7 @@ function VideoWrapper() {
       {data ? (
         <Video data={data} />
       ) : (
-        <Loader active inline='centered' style={{ marginTop: '30px' }} />
+        <CircularProgress active inline='centered' style={{ marginTop: '30px' }} />
       )}
     </div>
   );

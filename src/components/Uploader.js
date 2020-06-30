@@ -6,7 +6,8 @@ import { gql } from 'apollo-boost';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/react-hooks';
 import React, { useState, useEffect } from 'react';
-import { Button, Progress, Loader } from 'semantic-ui-react';
+import { Button, Progress } from 'semantic-ui-react';
+import { CircularProgress } from '@material-ui/core';
 
 const CREATE_MULTIPART_UPLOAD = gql`
   mutation createMultipartUpload($input: CreateMultipartUploadInput!) {
@@ -120,7 +121,7 @@ function Uploader() {
       const fileName = files[0].name;
       const parts = chunkFile(files[0]).length;
 
-      const mbMaxAllowed = 1000;
+      const mbMaxAllowed = 10000;
       if (files[0].size > mbMaxAllowed * 1024 * 1024) {
         alert(`videos must be under ${mbMaxAllowed} mb right now`);
       } else {
@@ -181,9 +182,9 @@ function Uploader() {
             />
           ) : null}
           {comLoading && (
-            <Loader active inline='centered'>
+            <CircularProgress active inline='centered'>
               Completing upload...
-            </Loader>
+            </CircularProgress>
           )}
         </UploadRow>
       </UploadRow>

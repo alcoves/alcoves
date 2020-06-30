@@ -1,31 +1,32 @@
 import UserPool from '../lib/userPool';
 
+import React, { useState } from 'react';
 import { useHistory, Link } from 'react-router-dom';
-import React, { useState, useCallback } from 'react';
-import { Button, Form, Grid, Loader, Message } from 'semantic-ui-react';
 import { CognitoUser, AuthenticationDetails } from 'amazon-cognito-identity-js';
+import { Button, Container, Box, TextField, LinearProgress, Typography } from '@material-ui/core';
 
 function Login() {
   const history = useHistory();
-
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState({
+    username: '',
+    password: '',
+  });
 
-  const handleSubmit = useCallback(({ currentTarget }) => {
+  const handleSubmit = () => {
     setLoading(true);
-    const form = new FormData(currentTarget);
-
-    const user = new CognitoUser({
+    const cogUser = new CognitoUser({
       Pool: UserPool,
-      Username: form.get('userName'),
+      Username: user.username,
     });
 
     const authDetails = new AuthenticationDetails({
-      Username: form.get('userName'),
-      Password: form.get('password'),
+      Username: user.username,
+      Password: user.password,
     });
 
-    user.authenticateUser(authDetails, {
+    cogUser.authenticateUser(authDetails, {
       onSuccess: data => {
         console.log('onSuccess:', data);
         history.push('/account');
@@ -37,45 +38,51 @@ function Login() {
         setLoading(false);
       },
     });
-  });
+  };
+
+  const handleChange = ({ target: { id, value } }) => {
+    setUser(prevUser => ({
+      ...prevUser,
+      [id]: value,
+    }));
+  };
 
   return (
-    <div>
-      <Grid textAlign='center' style={{ marginTop: '50px' }} verticalAlign='middle'>
-        <Grid.Column style={{ maxWidth: 450 }}>
-          {error ? <Message error header='Error while logging in' content={error} /> : null}
-          {loading ? <Loader active /> : null}
-
-          <Form size='large' onSubmit={handleSubmit}>
-            <fieldset disabled={loading} style={{ border: 'none' }}>
-              <Form.Input
-                fluid
-                icon='user'
-                name='userName'
-                iconPosition='left'
-                placeholder='Username'
-              />
-              <Form.Input
-                fluid
-                icon='lock'
-                type='password'
-                name='password'
-                iconPosition='left'
-                placeholder='Password'
-              />
-              <Grid>
-                <Grid.Column width={10}>
-                  <Form.Button color='teal' fluid content='Login' />
-                </Grid.Column>
-                <Grid.Column width={6}>
-                  <Button as={Link} to='/register' basic fluid color='teal' content='Or Register' />
-                </Grid.Column>
-              </Grid>
-            </fieldset>
-          </Form>
-        </Grid.Column>
-      </Grid>
-    </div>
+    <Container size='xs' style={{ width: 400 }}>
+      <Box p={1}>
+        <TextField
+          fullWidth
+          size='small'
+          id='username'
+          label='Username'
+          value={user.username}
+          onChange={handleChange}
+        />
+      </Box>
+      <Box p={1}>
+        <TextField
+          type='password'
+          fullWidth
+          size='small'
+          id='password'
+          label='Password'
+          value={user.password}
+          onChange={handleChange}
+        />
+      </Box>
+      <Box>
+        <Box p={1} display='flex' flexDirection='row'>
+          <Button fullWidth onClick={handleSubmit} color='primary' variant='contained'>
+            Login
+          </Button>
+          <Button fullWidth component={Link} to='/register' color='primary'>
+            Or Register
+          </Button>
+        </Box>
+      </Box>
+      <Box p={1}>{loading && <LinearProgress />}</Box>
+      <Box p={1}>{error && <Typography variant='body1'>{JSON.stringify(error)}</Typography>}</Box>
+    </Container>
   );
 }
 

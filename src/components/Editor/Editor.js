@@ -6,7 +6,8 @@ import ProcessingStatus from './ProcessingStatus';
 import { gql } from 'apollo-boost';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { useLazyQuery, useMutation } from '@apollo/react-hooks';
-import { Button, Container, Loader, Icon } from 'semantic-ui-react';
+import { Button, Container, Icon } from 'semantic-ui-react';
+import { CircularProgress } from '@material-ui/core';
 
 const GET_VIDEO = gql`
   query video($id: String!) {
@@ -94,7 +95,7 @@ function Editor() {
     );
   }
 
-  return <Loader active inline='centered' style={{ marginTop: '30px' }} />;
+  return <CircularProgress active inline='centered' style={{ marginTop: '30px' }} />;
 }
 
 export default Editor;

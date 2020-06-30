@@ -2,7 +2,7 @@ import React from 'react';
 import { gql } from 'apollo-boost';
 
 import { useQuery } from '@apollo/react-hooks';
-import { Loader } from 'semantic-ui-react';
+import { CircularProgress } from '@material-ui/core';
 
 const GET_USER = gql`
   query getUser($id: ID!) {
@@ -18,7 +18,7 @@ function UserHeader() {
   const { loading, data, error } = useQuery(GET_USER, { variables: { id: history.query.id } });
 
   if (loading) {
-    return <Loader active> Loading the banner... </Loader>;
+    return <CircularProgress active> Loading the banner... </CircularProgress>;
   }
 
   if (error) {

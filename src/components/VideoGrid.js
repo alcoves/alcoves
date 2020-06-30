@@ -3,7 +3,7 @@ import moment from 'moment';
 import styled from 'styled-components';
 
 import { Link } from 'react-router-dom';
-import { Button, Grid } from 'semantic-ui-react';
+import { Typography, Button, ButtonGroup, Grid, Paper, Avatar, Box } from '@material-ui/core';
 
 const Duration = styled.div`
   right: 0;
@@ -19,37 +19,6 @@ const Duration = styled.div`
   background: rgba(0, 0, 0, 0.7);
 `;
 
-const styles = {
-  card: {
-    maxWidth: '500px',
-    padding: 0,
-    margin: '10px',
-    borderRadius: '5px',
-    overflow: 'hidden',
-    backgroundColor: '#fff',
-    WebkitBoxShadow: '3px 8px 42px -8px rgba(0,0,0,0.48)',
-    MozBoxShadow: '3px 8px 42px -8px rgba(0,0,0,0.48)',
-    boxShadow: '3px 8px 42px -8px rgba(0,0,0,0.48)',
-  },
-  meta: {
-    height: '100px',
-    padding: '10px',
-    whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis',
-  },
-  title: {
-    fontSize: '1.1em',
-    cursor: 'pointer',
-    height: '50px',
-  },
-  cardFooter: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-};
-
 function videoDuration(d) {
   if (d > 3600) {
     return moment.utc(d * 1000).format('H:mm:ss');
@@ -60,57 +29,58 @@ function videoDuration(d) {
 
 export default function VideoGrid({ videos = [], isEditor }) {
   return (
-    <Grid centered doubling style={{ paddingTop: '30px' }}>
+    <Grid container spacing={2} justify='center' style={{ paddingTop: '30px' }}>
       {videos.map(video => {
         return (
-          <Grid.Column key={video.id} mobile={14} tablet={10} computer={4} style={styles.card}>
-            <Link to={`/videos/${video.id}`}>
-              <div
-                style={{
-                  width: '100%',
-                  cursor: 'pointer',
-                  minHeight: '180px',
-                  maxHeight: '180px',
-                  position: 'relative',
-                  backgroundColor: 'grey',
-                  backgroundSize: 'cover',
-                  backgroundRepeat: 'no-repeat',
-                  backgroundImage: `url("${video.thumbnail}")`,
-                  backgroundPosition: 'center',
-                }}>
-                <Duration>{videoDuration(video.duration)}</Duration>
-              </div>
-            </Link>
-            <div style={styles.meta}>
-              <Link to={`/videos/${video.id}`}>{video.title}</Link>
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  height: '30px',
-                  marginTop: '10px',
-                  cursor: 'pointer',
-                }}>
-                <Link to={`/users/${video.user.id}`}>
-                  <img
-                    style={{ borderRadius: '50%' }}
-                    src={video.user.avatar}
-                    height={30}
-                    width={30}
-                    alt='avatar'
-                  />
-                </Link>
-                <Link to={`/users/${video.user.id}`}>{video.user.userName}</Link>
-                <div>
-                  {isEditor && (
-                    <Link to={`/editor/${video.id}`}>
-                      <Button icon='setting' size='mini' color='teal' basic />
-                    </Link>
-                  )}
+          <Grid item key={video.id}>
+            <Paper elevation={3} style={{ width: 500 }}>
+              <Link to={`/videos/${video.id}`}>
+                <div
+                  style={{
+                    width: '100%',
+                    cursor: 'pointer',
+                    minHeight: '180px',
+                    maxHeight: '180px',
+                    position: 'relative',
+                    backgroundColor: 'grey',
+                    backgroundSize: 'cover',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundImage: `url("${video.thumbnail}")`,
+                    backgroundPosition: 'center',
+                  }}>
+                  <Duration>{videoDuration(video.duration)}</Duration>
                 </div>
-              </div>
-            </div>
-          </Grid.Column>
+              </Link>
+              <Grid container spacing={1} style={{ padding: 10 }}>
+                <Grid item xs={2}>
+                  <Avatar alt='avatar' src={video.user.avatar} />
+                </Grid>
+                <Grid item xs={10}>
+                  <Box style={{ overflow: 'hidden' }}>
+                    <Link to={`/videos/${video.id}`}>
+                      <Typography className='block-ellipsis' varient='subtitle2'>
+                        {video.title}
+                      </Typography>
+                    </Link>
+                  </Box>
+                  <Box display='flex'>
+                    <Box flexGrow={1}>
+                      <Link to={`/users/${video.user.id}`}>{video.user.userName}</Link>
+                    </Box>
+                  </Box>
+                </Grid>
+              </Grid>
+              <Grid item>
+                {isEditor && (
+                  <ButtonGroup size='small' fullWidth variant='text'>
+                    <Button component={Link} to={`/editor/${video.id}`}>
+                      Edit
+                    </Button>
+                  </ButtonGroup>
+                )}
+              </Grid>
+            </Paper>
+          </Grid>
         );
       })}
     </Grid>

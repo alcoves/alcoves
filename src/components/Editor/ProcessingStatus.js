@@ -1,7 +1,8 @@
 import React from 'react';
 import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
-import { Icon, Loader, Progress, Segment, Popup, Container } from 'semantic-ui-react';
+import { Progress, Segment } from 'semantic-ui-react';
+import { CircularProgress } from '@material-ui/core';
 
 function timeConversion(startTime, completeTime) {
   const millisec = new Date(completeTime).getTime() - new Date(startTime).getTime();
@@ -42,7 +43,7 @@ export default props => {
   const { loading, data, error, startPolling } = useQuery(GET_VIDEO);
 
   if (error) console.log(error);
-  if (loading) return <Loader active />;
+  if (loading) return <CircularProgress active />;
 
   if (data) {
     startPolling(2000);
