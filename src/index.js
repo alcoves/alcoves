@@ -15,9 +15,7 @@ const Index = () => (
   <RecoilRoot>
     <ThemeProvider theme={Theme}>
       <ApolloProvider client={ApolloClient}>
-        <React.Suspense fallback={<div />}>
-          <App />
-        </React.Suspense>
+        <App />
       </ApolloProvider>
     </ThemeProvider>
   </RecoilRoot>

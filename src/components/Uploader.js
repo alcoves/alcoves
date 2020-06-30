@@ -181,11 +181,7 @@ function Uploader() {
               percent={((bytesUploaded / files[0].size) * 100).toFixed(0)}
             />
           ) : null}
-          {comLoading && (
-            <CircularProgress active inline='centered'>
-              Completing upload...
-            </CircularProgress>
-          )}
+          {comLoading && <CircularProgress>Completing upload...</CircularProgress>}
         </UploadRow>
       </UploadRow>
     </UploadContainer>

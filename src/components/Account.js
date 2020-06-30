@@ -1,24 +1,23 @@
 import React from 'react';
 import Logout from './Logout';
-import withMe from '../lib/withMe';
+import userAtom from '../lib/withUser';
 
+import { useRecoilValue } from 'recoil';
 import { CircularProgress, Typography, Container } from '@material-ui/core';
 
 export default function Account() {
-  const { loading, me } = withMe();
+  const user = useRecoilValue(userAtom);
 
-  if (loading) return <CircularProgress />;
-
-  if (me) {
+  if (user) {
     return (
       <Container maxWidth='xs'>
         <Typography
           varient='subtitle2'
-          style={{ margin: 10 }}>{`you are logged in as ${me.email}`}</Typography>
+          style={{ margin: 10 }}>{`you are logged in as ${user.email}`}</Typography>
         <Logout />
       </Container>
     );
   }
 
-  return <div>Error</div>;
+  return <CircularProgress />;
 }

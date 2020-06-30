@@ -1,11 +1,15 @@
+import userAtom, { init } from '../lib/withUser';
 import UserPool from '../lib/userPool';
 
 import React, { useState } from 'react';
+import { useSetRecoilState } from 'recoil';
 import { useHistory, Link } from 'react-router-dom';
 import { CognitoUser, AuthenticationDetails } from 'amazon-cognito-identity-js';
 import { Button, Container, Box, TextField, LinearProgress, Typography } from '@material-ui/core';
 
 function Login() {
+  const setUserRecoil = useSetRecoilState(userAtom);
+
   const history = useHistory();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -27,8 +31,12 @@ function Login() {
     });
 
     cogUser.authenticateUser(authDetails, {
-      onSuccess: data => {
+      onSuccess: async data => {
         console.log('onSuccess:', data);
+        const cogUser = await init();
+        console.log('cogUser', cogUser);
+        setUserRecoil(() => cogUser);
+
         history.push('/account');
       },
 
