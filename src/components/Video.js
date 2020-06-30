@@ -5,7 +5,7 @@ import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
 import { Link, useParams } from 'react-router-dom';
 import { Container, Dropdown } from 'semantic-ui-react';
-import { Typography, CircularProgress } from '@material-ui/core';
+import { Typography, CircularProgress, Menu, MenuItem } from '@material-ui/core';
 
 const QUERY = gql`
   query getVideo($id: String!) {
@@ -50,6 +50,16 @@ const pickUrl = ({ versions }, override) => {
 };
 
 function Video({ data }) {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = event => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   const outerDivStyle = {
     backgroundColor: '#000000',
     height: 'calc(100vh - 300px)',
@@ -57,128 +67,147 @@ function Video({ data }) {
   };
 
   const [version, setVersion] = useState(pickUrl(data.video));
-  console.log('version', version, version.link);
+  console.log('version', version);
 
   useEffect(() => {
     const video = document.getElementById('bkenVideoPlayer');
-    const currentTime = video.currentTime;
-    video.src = version.link;
-    video.play();
-    video.currentTime = currentTime;
+
+    if (video) {
+      const currentTime = video.currentTime;
+      video.src = version.link;
+      video.play();
+      video.currentTime = currentTime;
+    }
   }, [version]);
 
-  return (
-    <div>
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <div>
-          <div style={outerDivStyle}>
-            {version.link ? (
-              <video id='bkenVideoPlayer' width='100%' height='100%' controls autoPlay>
-                <source src={version.link} type='video/mp4' />
-              </video>
-            ) : (
-              <div
-                style={{
-                  height: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  backgroundColor: 'white',
-                  flexDirection: 'column',
-                }}>
-                <CircularProgress inline active />
-              </div>
-            )}
-          </div>
+  if (version) {
+    return (
+      <div>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
           <div>
-            <Container style={{ marginTop: '20px' }}>
-              <div>
+            <div style={outerDivStyle}>
+              {version.link ? (
+                <video id='bkenVideoPlayer' width='100%' height='100%' controls autoPlay>
+                  <source src={version.link} type='video/mp4' />
+                </video>
+              ) : (
                 <div
                   style={{
+                    height: '100%',
                     display: 'flex',
-                    flexDirection: 'row',
                     alignItems: 'center',
-                    alignContent: 'center',
-                    justifyContent: 'space-between',
-                  }}>
-                  <Typography variant='h6'>{data.video.title}</Typography>
-                  <Dropdown
-                    upward
-                    item
-                    button
-                    floating
-                    value={version.preset}
-                    onChange={(e, { value }) => {
-                      console.log('changing quality', e, value);
-                      setVersion(pickUrl(data.video, value));
-                    }}
-                    options={data.video.versions.reduce((acc, v) => {
-                      if (v.link) {
-                        acc.push({
-                          key: v.preset,
-                          text: v.preset.split('-')[1],
-                          value: v.preset,
-                        });
-                      }
-
-                      return acc;
-                    }, [])}
-                  />
-                </div>
-                <Typography variant='body2'>{`${moment(
-                  parseInt(data.video.createdAt),
-                ).fromNow()}`}</Typography>
-              </div>
-              <div
-                style={{
-                  display: 'flex',
-                  marginTop: '10px',
-                  height: '75px',
-                }}>
-                <div
-                  style={{
-                    display: 'flex',
                     justifyContent: 'center',
-                    alignItems: 'center',
-                    marginRight: '10px',
+                    backgroundColor: 'white',
+                    flexDirection: 'column',
                   }}>
-                  <Link to={`/users/${data.video.user.id}`}>
-                    <img
-                      alt=''
-                      width={50}
-                      height={50}
-                      src={data.video.user.avatar}
-                      style={{
-                        borderRadius: '50%',
-                        cursor: 'pointer',
-                      }}
-                    />
-                  </Link>
+                  <CircularProgress inline active />
                 </div>
-                <div style={{ height: '100%' }}>
-                  <Link
-                    to={`/users/${data.video.user.id}`}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'flex-end',
-                      height: '50%',
-                    }}>
-                    {data.video.user.userName}
-                  </Link>
+              )}
+            </div>
+            <div>
+              <Container style={{ marginTop: '20px' }}>
+                <div>
                   <div
                     style={{
                       display: 'flex',
-                      alignItems: 'flex-start',
-                      height: '50%',
-                    }}></div>
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      alignContent: 'center',
+                      justifyContent: 'space-between',
+                    }}>
+                    <Typography variant='h6'>{data.video.title}</Typography>
+
+                    <Menu
+                      id='simple-menu'
+                      anchorEl={anchorEl}
+                      keepMounted
+                      open={Boolean(anchorEl)}
+                      onClose={handleClose}>
+                      <MenuItem onClick={handleClose}>Profile</MenuItem>
+                      <MenuItem onClick={handleClose}>My account</MenuItem>
+                      <MenuItem onClick={handleClose}>Logout</MenuItem>
+                    </Menu>
+
+                    <Dropdown
+                      upward
+                      item
+                      button
+                      floating
+                      value={version.preset}
+                      onChange={(e, { value }) => {
+                        console.log('changing quality', e, value);
+                        setVersion(pickUrl(data.video, value));
+                      }}
+                      options={data.video.versions.reduce((acc, v) => {
+                        if (v.link) {
+                          acc.push({
+                            key: v.preset,
+                            text: v.preset.split('-')[1],
+                            value: v.preset,
+                          });
+                        }
+
+                        return acc;
+                      }, [])}
+                    />
+                  </div>
+                  <Typography variant='body2'>{`${moment(
+                    parseInt(data.video.createdAt),
+                  ).fromNow()}`}</Typography>
                 </div>
-              </div>
-            </Container>
+                <div
+                  style={{
+                    display: 'flex',
+                    marginTop: '10px',
+                    height: '75px',
+                  }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      marginRight: '10px',
+                    }}>
+                    <Link to={`/users/${data.video.user.id}`}>
+                      <img
+                        alt=''
+                        width={50}
+                        height={50}
+                        src={data.video.user.avatar}
+                        style={{
+                          borderRadius: '50%',
+                          cursor: 'pointer',
+                        }}
+                      />
+                    </Link>
+                  </div>
+                  <div style={{ height: '100%' }}>
+                    <Link
+                      to={`/users/${data.video.user.id}`}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'flex-end',
+                        height: '50%',
+                      }}>
+                      {data.video.user.userName}
+                    </Link>
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        height: '50%',
+                      }}></div>
+                  </div>
+                </div>
+              </Container>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
+
+  return <CircularProgress />;
 }
 
 function VideoWrapper() {
@@ -188,7 +217,7 @@ function VideoWrapper() {
     variables: { id },
   });
 
-  return <div>{data ? <Video data={data} /> : <CircularProgress />}</div>;
+  return <div>{data ? <Video data={data} /> : <div />}</div>;
 }
 
 export default VideoWrapper;
