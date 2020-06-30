@@ -1,13 +1,13 @@
 import axios from 'axios';
 import styled from 'styled-components';
 import chunkFile from '../utils/chunkFile';
+import VideoIcon from '@material-ui/icons/MovieOutlined';
 
 import { gql } from 'apollo-boost';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/react-hooks';
 import React, { useState, useEffect } from 'react';
-import { Button, Progress } from 'semantic-ui-react';
-import { CircularProgress } from '@material-ui/core';
+import { Button, CircularProgress, LinearProgress } from '@material-ui/core';
 
 const CREATE_MULTIPART_UPLOAD = gql`
   mutation createMultipartUpload($input: CreateMultipartUploadInput!) {
@@ -151,13 +151,15 @@ function Uploader() {
     <UploadContainer>
       <UploadRow>
         <Button
-          fluid
-          icon='video'
-          labelPosition='left'
-          content='Select Video'
+          fullWidth
+          size='large'
+          color='primary'
+          variant='contained'
+          startIcon={<VideoIcon />}
           onClick={() => fileInputRef.current.click()}
-          disabled={comLoading || creLoading || uploading}
-        />
+          disabled={comLoading || creLoading || uploading}>
+          Select Video
+        </Button>
 
         <input
           hidden
@@ -175,10 +177,10 @@ function Uploader() {
 
         <UploadRow>
           {bytesUploaded && files[0].size ? (
-            <Progress
-              size='small'
-              progress='percent'
-              percent={((bytesUploaded / files[0].size) * 100).toFixed(0)}
+            <LinearProgress
+              color='primary'
+              variant='determinate'
+              value={((bytesUploaded / files[0].size) * 100).toFixed(0)}
             />
           ) : null}
           {comLoading && <CircularProgress>Completing upload...</CircularProgress>}
