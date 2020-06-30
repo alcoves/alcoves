@@ -43,7 +43,7 @@ export default props => {
   const { loading, data, error, startPolling } = useQuery(GET_VIDEO);
 
   if (error) console.log(error);
-  if (loading) return <CircularProgress active />;
+  if (loading) return <CircularProgress />;
 
   if (data) {
     startPolling(2000);

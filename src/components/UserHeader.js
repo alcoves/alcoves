@@ -18,7 +18,7 @@ function UserHeader() {
   const { loading, data, error } = useQuery(GET_USER, { variables: { id: history.query.id } });
 
   if (loading) {
-    return <CircularProgress active> Loading the banner... </CircularProgress>;
+    return <CircularProgress> Loading the banner... </CircularProgress>;
   }
 
   if (error) {

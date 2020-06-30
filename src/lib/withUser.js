@@ -1,12 +1,12 @@
+import { atom } from 'recoil';
 import userPool from './userPool';
-import { atom, selector } from 'recoil';
 
-// const userState = atom({
-//   key: 'user',
-//   default: null,
-// });
+const userAtom = atom({
+  key: 'user',
+  default: null,
+});
 
-const init = () => {
+export const init = () => {
   return new Promise((resolve, reject) => {
     const cognitoUser = userPool.getCurrentUser();
     if (cognitoUser !== null) {
@@ -27,14 +27,4 @@ const init = () => {
   });
 };
 
-const userAtom = atom({
-  key: 'userInit',
-  default: null,
-});
-
-const selectorUser = selector({
-  key: 'user',
-  get: async () => init(),
-});
-
-export default selectorUser;
+export default userAtom;

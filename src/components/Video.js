@@ -188,15 +188,7 @@ function VideoWrapper() {
     variables: { id },
   });
 
-  return (
-    <div>
-      {data ? (
-        <Video data={data} />
-      ) : (
-        <CircularProgress active inline='centered' style={{ marginTop: '30px' }} />
-      )}
-    </div>
-  );
+  return <div>{data ? <Video data={data} /> : <CircularProgress />}</div>;
 }
 
 export default VideoWrapper;

@@ -3,7 +3,7 @@ body {
   padding: 0;
   background-color: #2f3438;
   font-family: 'Montserrat', sans-serif;
-  /* overflow-y: scroll; */
+  overflow-y: scroll;
 }
 
 .block-ellipsis {
@@ -28,7 +28,7 @@ a:hover {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #2f3438;
+  background: #2c3135;
 }
 
 /* Handle */

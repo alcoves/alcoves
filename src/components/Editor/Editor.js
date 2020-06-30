@@ -95,7 +95,7 @@ function Editor() {
     );
   }
 
-  return <CircularProgress active inline='centered' style={{ marginTop: '30px' }} />;
+  return <CircularProgress />;
 }
 
 export default Editor;
