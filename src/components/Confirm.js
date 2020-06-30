@@ -4,7 +4,7 @@ import userPool from '../lib/userPool';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { CognitoUser } from 'amazon-cognito-identity-js';
-import { Card, Input, Loader } from 'semantic-ui-react';
+import { Box, Input, CircularProgress, Button, Typography, Container } from '@material-ui/core';
 
 function Confirm() {
   const { username } = qs.parse(window.location.search.substring(1));
@@ -25,36 +25,32 @@ function Confirm() {
 
   if (!username) {
     return (
-      <div>
-        <Loader active />
-      </div>
+      <Box style={{ padding: 30 }} display='flex' justifyContent='center'>
+        <CircularProgress />
+      </Box>
     );
   } else {
     return (
-      <div>
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '50px' }}>
-          <Card>
-            <Card.Content>
-              <Card.Header style={{ padding: '5px 0px 5px 0px' }}>Hey {username}!</Card.Header>
-              <Card.Content style={{ padding: '5px 0px 5px 0px' }}>
-                <Input
-                  action={{
-                    icon: 'code',
-                    color: 'teal',
-                    content: 'Confirm',
-                    onClick: confirmUser,
-                    labelPosition: 'right',
-                  }}
-                  fluid
-                  value={code}
-                  placeholder='Code'
-                  onChange={(e, { value }) => setCode(value)}
-                />
-              </Card.Content>
-            </Card.Content>
-          </Card>
-        </div>
-      </div>
+      <Container maxWidth='xs'>
+        <Box display='flex' flexDirection='column'>
+          <Box p={1}>
+            <Typography variant='h6'>Hey {username}!</Typography>
+          </Box>
+          <Box p={1}>
+            <Input
+              fullWidth
+              value={code}
+              placeholder='Please enter your welcome code'
+              onChange={(e, { value }) => setCode(value)}
+            />
+          </Box>
+          <Box p={1}>
+            <Button variant='outlined' fullWidth onClick={confirmUser}>
+              Confirm
+            </Button>
+          </Box>
+        </Box>
+      </Container>
     );
   }
 }

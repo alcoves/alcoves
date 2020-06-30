@@ -1,7 +1,24 @@
 body {
   margin: 0;
   padding: 0;
+  background-color: #2f3438;
   font-family: 'Montserrat', sans-serif;
+  /* overflow-y: scroll; */
+}
+
+.block-ellipsis {
+  height: 3em; /* exactly three lines */
+  text-overflow: -o-ellipsis-lastline;
+}
+
+a {
+  color: #b3b5bd;
+  transition: 0.1s;
+}
+
+a:hover {
+  color: #b3b5bd;
+  opacity: 0.85;
 }
 
 /* width */
@@ -11,95 +28,19 @@ body {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #ffffff;
+  background: #2f3438;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #d6d6d6;
+  background: #23272a;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #d6d6d6cb;
-}
-
-a {
-  color: black;
-  transition: 0.1s;
-}
-
-a:hover {
-  color: black;
-  opacity: 0.85;
-}
-
-h1 {
-  color: #2f353f;
-  font-weight: 400;
-  font-size: 2em;
-  letter-spacing: 0em;
-  line-height: 1em;
-}
-
-h2 {
-  color: #2f353f;
-  font-weight: 400;
-  font-size: 1.7em;
-  letter-spacing: 0em;
-  line-height: 1em;
-}
-
-h3 {
-  color: #2f353f;
-  font-weight: 400;
-  font-size: 1.17em;
-  letter-spacing: 0em;
-}
-
-h4 {
-  color: #2f353f;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  font-size: 1em;
-}
-
-h5 {
-  color: #2f353f;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  font-size: 0.9em;
-}
-
-h6 {
-  color: #2f353f;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  font-size: 0.8em;
-}
-
-p {
-  color: #2f353f;
-  font-weight: 400;
-  font-size: 1em;
-  line-height: 1.5em;
+  background: #23272a;
 }
 
 video {
   outline: none;
-}
-
-.ui.stacked.segment {
-  background-color: transparent;
-}
-
-.ui.tabular.menu {
-  border-bottom: none;
-}
-
-.item {
-  border: none;
 }

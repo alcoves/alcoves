@@ -3,18 +3,26 @@ import withMe from '../lib/withMe';
 import favicon from '../../public/favicon.ico';
 
 import { Link } from 'react-router-dom';
-import { Button } from 'semantic-ui-react';
+import { IconButton } from '@material-ui/core';
+
+import UploadIcon from '@material-ui/icons/PublishOutlined';
+import PersonOutlinedIcon from '@material-ui/icons/PersonOutlined';
+import VideoLibraryIcon from '@material-ui/icons/VideoLibraryOutlined';
+
+import userAtom from '../lib/withUser';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 export default function Navigation() {
-  const { me } = withMe();
-  console.log('me', me);
+  const user = useRecoilValue(userAtom);
+  const setUser = useSetRecoilState(userAtom);
+  console.log('User Here!', user, setUser);
 
   const styles = {
     menu: {
       height: '50px',
       display: 'flex',
       alignItems: 'center',
-      backgroundColor: '#efefef',
+      backgroundColor: '#23272a',
       justifyContent: 'space-between',
     },
     logo: {
@@ -50,20 +58,32 @@ export default function Navigation() {
             justifyContent: 'flex-end',
           }}>
           <div>
-            {me ? <Button as={Link} to='/upload' circular size='medium' icon='upload' /> : <div />}
-          </div>
-          <div>
-            {me && me.sub ? (
-              <Button as={Link} to={`/users/${me.sub}`} circular size='medium' icon='video' />
+            {user ? (
+              <IconButton component={Link} to='/upload' color='secondary'>
+                <UploadIcon />
+              </IconButton>
             ) : (
               <div />
             )}
           </div>
           <div>
-            {me ? (
-              <Button to='/account' as={Link} circular size='medium' icon='user' />
+            {user && user.sub ? (
+              <IconButton component={Link} to={`/users/${user.sub}`} color='secondary'>
+                <VideoLibraryIcon />
+              </IconButton>
             ) : (
-              <Button to='/login' as={Link} circular size='medium' icon='user' />
+              <div />
+            )}
+          </div>
+          <div>
+            {user ? (
+              <IconButton to='/account' component={Link} color='secondary'>
+                <PersonOutlinedIcon />
+              </IconButton>
+            ) : (
+              <IconButton to='/login' component={Link} color='secondary'>
+                <PersonOutlinedIcon />
+              </IconButton>
             )}
           </div>
         </div>

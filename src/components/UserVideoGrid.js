@@ -3,9 +3,9 @@ import VideoGrid from './VideoGrid';
 
 import { gql } from 'apollo-boost';
 import React, { useEffect } from 'react';
-import { Loader } from 'semantic-ui-react';
 import { useParams } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/react-hooks';
+import { CircularProgress } from '@material-ui/core';
 
 const GET_USER_VIDEOS = gql`
   query videosByUserId($id: String!) {
@@ -18,6 +18,7 @@ const GET_USER_VIDEOS = gql`
       user {
         id
         avatar
+        userName
       }
       versions {
         link
@@ -49,7 +50,7 @@ function UserVideoGrid() {
   if (error) console.log(error);
   if (data && id && me)
     return <VideoGrid videos={data.videosByUserId} isEditor={Boolean(id === me.sub)} />;
-  return <Loader active> Loading user videos... </Loader>;
+  return <CircularProgress active> Loading user videos... </CircularProgress>;
 }
 
 export default UserVideoGrid;
