@@ -2,8 +2,8 @@ import React from 'react';
 import VideoGrid from './VideoGrid';
 
 import { gql } from 'apollo-boost';
-import { CircularProgress } from '@material-ui/core';
 import { useQuery } from '@apollo/react-hooks';
+import { CircularProgress } from '@material-ui/core';
 
 const GET_VIDEOS = gql`
   {
@@ -13,10 +13,11 @@ const GET_VIDEOS = gql`
       views
       duration
       thumbnail
+      createdAt
       user {
         id
-        userName
         avatar
+        userName
       }
     }
   }

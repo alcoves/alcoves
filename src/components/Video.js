@@ -4,8 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
 import { Link, useParams } from 'react-router-dom';
-import { Container, Dropdown } from 'semantic-ui-react';
-import { Typography, CircularProgress, Menu, MenuItem } from '@material-ui/core';
+import { Typography, CircularProgress, Menu, MenuItem, Container } from '@material-ui/core';
 
 const QUERY = gql`
   query getVideo($id: String!) {
@@ -128,7 +127,7 @@ function Video({ data }) {
                       <MenuItem onClick={handleClose}>Logout</MenuItem>
                     </Menu>
 
-                    <Dropdown
+                    {/* <Dropdown
                       upward
                       item
                       button
@@ -149,7 +148,7 @@ function Video({ data }) {
 
                         return acc;
                       }, [])}
-                    />
+                    /> */}
                   </div>
                   <Typography variant='body2'>{`${moment(
                     parseInt(data.video.createdAt),

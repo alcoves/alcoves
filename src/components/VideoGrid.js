@@ -15,7 +15,6 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActionArea from '@material-ui/core/CardActionArea';
 
 import { Link } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
 
 const Duration = styled.div`
   right: 0;
@@ -39,14 +38,7 @@ function videoDuration(d) {
   }
 }
 
-const useStyles = makeStyles({
-  root: {
-    width: 500,
-  },
-});
-
 function VideoCard({ video, isEditor }) {
-  const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = event => {
@@ -58,12 +50,12 @@ function VideoCard({ video, isEditor }) {
   };
 
   return (
-    <Card className={classes.root}>
+    <Card elevation={4}>
       <Link to={`/videos/${video.id}`}>
         <CardActionArea>
           <div
             style={{
-              width: 500,
+              width: '100%',
               cursor: 'pointer',
               minHeight: '180px',
               maxHeight: '180px',
@@ -90,7 +82,6 @@ function VideoCard({ video, isEditor }) {
             <IconButton onClick={handleClick} aria-label='settings'>
               <MoreVertIcon />
             </IconButton>
-
             <Menu
               id='simple-menu'
               anchorEl={anchorEl}
@@ -106,7 +97,7 @@ function VideoCard({ video, isEditor }) {
           </div>
         }
         title={video.user.userName}
-        subheader={video.createdAt}
+        subheader={moment(parseInt(video.createdAt)).fromNow()}
       />
     </Card>
   );
@@ -114,10 +105,20 @@ function VideoCard({ video, isEditor }) {
 
 export default function VideoGrid({ videos = [], isEditor }) {
   return (
-    <Grid container spacing={2} justify='center' style={{ paddingTop: '30px' }}>
+    <Grid
+      container
+      spacing={2}
+      direction='row'
+      style={{
+        width: '100%',
+        margin: '0px',
+        padding: '15px',
+      }}
+      justify='flex-start'
+      alignItems='flex-start'>
       {videos.map(video => {
         return (
-          <Grid item key={video.id}>
+          <Grid xs={12} sm={12} md={6} lg={4} xl={3} item key={video.id}>
             <VideoCard video={video} isEditor={isEditor} />
           </Grid>
         );

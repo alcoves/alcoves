@@ -1,8 +1,7 @@
 import React from 'react';
 import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
-import { Progress, Segment } from 'semantic-ui-react';
-import { CircularProgress } from '@material-ui/core';
+import { CircularProgress, Grid, LinearProgress } from '@material-ui/core';
 
 function timeConversion(startTime, completeTime) {
   const millisec = new Date(completeTime).getTime() - new Date(startTime).getTime();
@@ -50,7 +49,7 @@ export default props => {
     return data.video.versions.map(({ status, preset, segments: { done, total } }) => {
       return (
         <div key={preset} style={{ margin: '5px 0px 5px 0px' }}>
-          <Segment>
+          <Grid>
             <div style={{ margin: '0px 0px 5px 0px' }}>{preset}</div>
 
             {/* <Popup
@@ -83,14 +82,8 @@ export default props => {
               trigger={<Icon color='yellow' name='globe' />}
             /> */}
 
-            <Progress
-              attached='bottom'
-              color={status === 'completed' ? 'green' : 'yellow'}
-              value={done}
-              total={total}
-              size='tiny'
-            />
-          </Segment>
+            <LinearProgress value={done} total={total} />
+          </Grid>
         </div>
       );
     });

@@ -19,7 +19,7 @@ export default ({ visability: vis, id }) => {
 
   return (
     <div>
-      <Dropdown
+      {/* <Dropdown
         fluid
         selection
         value={visability}
@@ -30,7 +30,7 @@ export default ({ visability: vis, id }) => {
             variables: { id, visability: value },
           });
         }}
-      />
+      /> */}
     </div>
   );
 };
