@@ -16,6 +16,7 @@ const GET_USER_VIDEOS = gql`
       views
       duration
       thumbnail
+      createdAt
       user {
         id
         avatar
