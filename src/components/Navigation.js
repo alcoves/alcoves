@@ -1,13 +1,12 @@
-import React, { useEffect } from 'react';
 import favicon from '../../public/favicon.ico';
 
-import { Link } from 'react-router-dom';
-import { IconButton } from '@material-ui/core';
-
+import IconButton from '@material-ui/core/IconButton';
 import UploadIcon from '@material-ui/icons/PublishOutlined';
 import PersonOutlinedIcon from '@material-ui/icons/PersonOutlined';
 import VideoLibraryIcon from '@material-ui/icons/VideoLibraryOutlined';
 
+import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
 import userAtom, { init } from '../lib/withUser';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
