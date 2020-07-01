@@ -47,7 +47,7 @@ export default createMuiTheme({
       main: '#00897b',
     },
     secondary: {
-      main: '#00897b',
+      main: '#bf1e2e',
     },
   },
 });

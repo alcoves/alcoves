@@ -1,13 +1,15 @@
 import React from 'react';
 import Title from './Title';
 import PublishStatus from './PublishStatus';
+import Button from '@material-ui/core/Button';
 import ProcessingStatus from './ProcessingStatus';
+import DeleteVideoButton from './DeleteVideoButton';
+import Container from '@material-ui/core/Container';
 
 import { gql } from 'apollo-boost';
-import { Link, useHistory, useParams } from 'react-router-dom';
-import { useLazyQuery, useMutation } from '@apollo/react-hooks';
-import { Button, Container, Icon } from 'semantic-ui-react';
-import { CircularProgress } from '@material-ui/core';
+import { Link, useParams } from 'react-router-dom';
+import { useLazyQuery } from '@apollo/react-hooks';
+import { CircularProgress, Grid } from '@material-ui/core';
 
 const GET_VIDEO = gql`
   query video($id: String!) {
@@ -22,28 +24,6 @@ const GET_VIDEO = gql`
     }
   }
 `;
-
-const DELETE_VIDEO = gql`
-  mutation deleteVideo($id: String!) {
-    deleteVideo(id: $id)
-  }
-`;
-
-function DeleteVideoButton({ id }) {
-  const [deleteVideo, { loading, data }] = useMutation(DELETE_VIDEO, {
-    variables: { id },
-  });
-
-  const history = useHistory();
-  if (data) history.goBack();
-
-  return (
-    <Button basic negative onClick={deleteVideo} loading={loading}>
-      <Icon name='trash' />
-      Delete
-    </Button>
-  );
-}
 
 function Editor() {
   const { id } = useParams();
@@ -61,36 +41,37 @@ function Editor() {
 
   if (data) {
     return (
-      <Container style={{ paddingTop: '50px' }}>
+      <Container maxWidth='md' style={{ paddingTop: '50px' }}>
         <Title title={data.video.title} id={data.video.id} />
         <PublishStatus visability={data.video.visability} id={data.video.id} />
-        <h3>{`video id: ${data.video.id}`}</h3>
         {Boolean(
           data.video.versions &&
             data.video.versions[0] &&
             Object.keys(data.video.versions[0]).length,
         ) && (
-          <div>
-            <video
-              controls
-              width='100%'
-              style={{ maxHeight: 410, background: 'black' }}
-              src={data.video.versions[0].link}
-            />
-          </div>
+          <video
+            controls
+            width='100%'
+            style={{ maxHeight: 410, background: 'black' }}
+            src={data.video.versions[0].link}
+          />
         )}
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <ProcessingStatus id={data.video.id} />
-          <div>
-            <Button loading={loading} basic color='teal' onClick={() => refetch()}>
+        <ProcessingStatus id={data.video.id} />
+        <Grid container spacing={1} direction='row' justify='flex-end'>
+          <Grid item>
+            <DeleteVideoButton id={data.video.id} />
+          </Grid>
+          <Grid item>
+            <Button color='primary' disabled={loading} variant='outlined' onClick={() => refetch()}>
               Refresh
             </Button>
-            <Button as={Link} to={`/videos/${data.video.id}`} basic color='teal'>
+          </Grid>
+          <Grid item>
+            <Button variant='outlined' as={Link} to={`/videos/${data.video.id}`} color='primary'>
               View
             </Button>
-            <DeleteVideoButton id={data.video.id} />
-          </div>
-        </div>
+          </Grid>
+        </Grid>
       </Container>
     );
   }
