@@ -80,11 +80,11 @@ function Login() {
       </Box>
       <Box>
         <Box p={1} display='flex' flexDirection='row'>
-          <Button fullWidth onClick={handleSubmit} color='primary' variant='contained'>
-            Login
-          </Button>
           <Button fullWidth component={Link} to='/register' color='primary'>
             Or Register
+          </Button>
+          <Button fullWidth onClick={handleSubmit} color='primary' variant='contained'>
+            Login
           </Button>
         </Box>
       </Box>

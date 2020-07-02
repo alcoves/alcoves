@@ -29,7 +29,7 @@ function Register() {
     UserPool.signUp(user.username, user.confirmPassword, [attributeEmail], null, (err, data) => {
       setLoading(false);
       if (err) return setError(err.message || JSON.stringify(err));
-      history.push(`/confirm?userName=${userName}`);
+      history.push(`/confirm?username=${username}`);
     });
   };
 
@@ -101,6 +101,9 @@ function Register() {
         </Box>
       </Box>
       <Box p={1} display='flex' flexDirection='row'>
+        <Button fullWidth component={Link} to='/login' color='primary'>
+          Or Login
+        </Button>
         <Button
           fullWidth
           disabled={validateInputs()}
@@ -108,9 +111,6 @@ function Register() {
           color='primary'
           variant='contained'>
           Register
-        </Button>
-        <Button fullWidth component={Link} to='/login' color='primary'>
-          Or Login
         </Button>
       </Box>
       <Box p={1}>{loading && <LinearProgress />}</Box>
