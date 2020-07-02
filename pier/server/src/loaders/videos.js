@@ -78,10 +78,10 @@ const createVideo = async function ({ user, title, duration }) {
           title,
           views: 0,
           duration,
-          thumbnail: 'test',
           createdAt: Date.now(),
           modifiedAt: Date.now(),
           visability: 'unlisted',
+          thumbnail: 'https://cdn.bken.io/static/default-thumbnail-sm.jpg',
         },
       })
       .promise();
