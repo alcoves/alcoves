@@ -31,6 +31,21 @@ const GET_VIDEO = gql`
   }
 `;
 
+function VideoPlayer({ versions }) {
+  const playableLinks = versions.filter(v => {
+    return Boolean(v.link);
+  });
+
+  return (
+    <video
+      controls
+      width='100%'
+      style={{ maxHeight: 410, background: 'black' }}
+      src={playableLinks[0].link}
+    />
+  );
+}
+
 function Editor() {
   const { id } = useParams();
 
@@ -51,18 +66,16 @@ function Editor() {
       <Container maxWidth='md' style={{ paddingTop: '15px' }}>
         <Title id={data.video.id} />
         {/* <PublishStatus visability={data.video.visability} id={data.video.id} /> */}
-        {Boolean(
-          data.video.versions &&
-            data.video.versions[0] &&
-            Object.keys(data.video.versions[0]).length,
-        ) && (
-          <video
-            controls
-            width='100%'
-            style={{ maxHeight: 410, background: 'black' }}
-            src={data.video.versions[0].link}
+
+        {data.video.thumbnail && (
+          <img
+            style={{ borderRadius: '5px', margin: '10px 0px 10px 0px' }}
+            width='25%'
+            src={data.video.thumbnail}
           />
         )}
+
+        <VideoPlayer versions={data.video.versions} />
         <ProcessingStatus versions={data.video.versions} />
         <Grid
           container
