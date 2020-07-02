@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, LinearProgress } from '@material-ui/core';
+import { Grid, LinearProgress, Paper, Typography } from '@material-ui/core';
 
 function timeConversion(startTime, completeTime) {
   const millisec = new Date(completeTime).getTime() - new Date(startTime).getTime();
@@ -21,14 +21,19 @@ function timeConversion(startTime, completeTime) {
 }
 
 export default ({ versions }) => {
-  return versions.map(({ status, preset, segments: { done, total } }) => {
-    return (
-      <div key={preset} style={{ margin: '5px 0px 5px 0px' }}>
-        <Grid>
-          <div style={{ margin: '0px 0px 5px 0px' }}>{preset}</div>
-          <LinearProgress value={(done / total) * 100} variant='determinate' />
-        </Grid>
-      </div>
-    );
-  });
+  return (
+    <Grid spacing={1} container>
+      {versions.map(({ status, preset, segments: { done, total } }) => {
+        return (
+          <Grid xs={6} item key={preset}>
+            <Paper style={{ padding: '10px' }}>
+              <Typography variant='subtitle1'>{preset}</Typography>
+              <Typography variant='body2'>{status}</Typography>
+            </Paper>
+            <LinearProgress value={total ? (done / total) * 100 : 0} variant='determinate' />
+          </Grid>
+        );
+      })}
+    </Grid>
+  );
 };

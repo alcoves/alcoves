@@ -64,7 +64,12 @@ function Editor() {
           />
         )}
         <ProcessingStatus versions={data.video.versions} />
-        <Grid container spacing={1} direction='row' justify='flex-end'>
+        <Grid
+          container
+          spacing={1}
+          direction='row'
+          justify='space-between'
+          style={{ marginTop: '5px' }}>
           <Grid item>
             <DeleteVideoButton id={data.video.id} />
           </Grid>
