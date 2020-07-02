@@ -33,17 +33,21 @@ const GET_VIDEO = gql`
 
 function VideoPlayer({ versions }) {
   const playableLinks = versions.filter(v => {
-    return Boolean(v.link);
+    return Boolean(v && v.link);
   });
 
-  return (
-    <video
-      controls
-      width='100%'
-      style={{ maxHeight: 410, background: 'black' }}
-      src={playableLinks[0].link}
-    />
-  );
+  if (playableLinks[0] && playableLinks[0].link) {
+    return (
+      <video
+        controls
+        width='100%'
+        style={{ maxHeight: 410, background: 'black' }}
+        src={playableLinks[0].link}
+      />
+    );
+  }
+
+  return <div />;
 }
 
 function Editor() {
