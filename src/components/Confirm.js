@@ -41,7 +41,7 @@ function Confirm() {
               fullWidth
               value={code}
               placeholder='Please enter your welcome code'
-              onChange={(e, { value }) => setCode(value)}
+              onChange={e => setCode(e.target.value)}
             />
           </Box>
           <Box p={1}>
