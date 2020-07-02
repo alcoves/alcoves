@@ -1,7 +1,5 @@
 import React from 'react';
-import { gql } from 'apollo-boost';
-import { useQuery } from '@apollo/react-hooks';
-import { CircularProgress, Grid, LinearProgress } from '@material-ui/core';
+import { Grid, LinearProgress } from '@material-ui/core';
 
 function timeConversion(startTime, completeTime) {
   const millisec = new Date(completeTime).getTime() - new Date(startTime).getTime();
@@ -22,70 +20,15 @@ function timeConversion(startTime, completeTime) {
   return `${days} Days`;
 }
 
-export default props => {
-  const GET_VIDEO = gql`
-    {
-      video(id: "${props.id}") {
-        id
-        versions {
-          status,
-          preset,
-          segments {
-            done
-            total
-          }
-        }
-      }
-    }
-  `;
-
-  const { loading, data, error, startPolling } = useQuery(GET_VIDEO);
-
-  if (error) console.log(error);
-  if (loading) return <CircularProgress />;
-
-  if (data) {
-    startPolling(2000);
-    return data.video.versions.map(({ status, preset, segments: { done, total } }) => {
-      return (
-        <div key={preset} style={{ margin: '5px 0px 5px 0px' }}>
-          <Grid>
-            <div style={{ margin: '0px 0px 5px 0px' }}>{preset}</div>
-
-            {/* <Popup
-              header={preset}
-              content='Uploaded to our backend'
-              trigger={<Icon color='yellow' name='upload' />}
-            />
-
-            <Popup
-              header={preset}
-              content='Split into segments'
-              trigger={<Icon color='yellow' name='film' />}
-            />
-
-            <Popup
-              header={preset}
-              content='Segments have been transcoded'
-              trigger={<Icon color='yellow' name='cog' />}
-            />
-
-            <Popup
-              header={preset}
-              content='Segments have been recombined'
-              trigger={<Icon color='yellow' name='filter' />}
-            />
-
-            <Popup
-              header={preset}
-              content='Published to our CDN'
-              trigger={<Icon color='yellow' name='globe' />}
-            /> */}
-
-            <LinearProgress value={done} total={total} />
-          </Grid>
-        </div>
-      );
-    });
-  }
+export default ({ versions }) => {
+  return versions.map(({ status, preset, segments: { done, total } }) => {
+    return (
+      <div key={preset} style={{ margin: '5px 0px 5px 0px' }}>
+        <Grid>
+          <div style={{ margin: '0px 0px 5px 0px' }}>{preset}</div>
+          <LinearProgress value={(done / total) * 100} variant='determinate' />
+        </Grid>
+      </div>
+    );
+  });
 };
