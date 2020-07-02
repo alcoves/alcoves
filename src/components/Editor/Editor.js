@@ -16,10 +16,16 @@ const GET_VIDEO = gql`
     video(id: $id) {
       id
       title
+      thumbnail
       visability
       versions {
         link
+        status
         preset
+        segments {
+          done
+          total
+        }
       }
     }
   }
@@ -28,7 +34,7 @@ const GET_VIDEO = gql`
 function Editor() {
   const { id } = useParams();
 
-  const [getVideo, { called, loading, data, error, refetch }] = useLazyQuery(GET_VIDEO, {
+  const [getVideo, { called, loading, data, error, startPolling }] = useLazyQuery(GET_VIDEO, {
     variables: { id },
   });
 
@@ -40,10 +46,11 @@ function Editor() {
   }
 
   if (data) {
+    startPolling(3000);
     return (
-      <Container maxWidth='md' style={{ paddingTop: '50px' }}>
-        <Title title={data.video.title} id={data.video.id} />
-        <PublishStatus visability={data.video.visability} id={data.video.id} />
+      <Container maxWidth='md' style={{ paddingTop: '15px' }}>
+        <Title id={data.video.id} />
+        {/* <PublishStatus visability={data.video.visability} id={data.video.id} /> */}
         {Boolean(
           data.video.versions &&
             data.video.versions[0] &&
@@ -56,18 +63,17 @@ function Editor() {
             src={data.video.versions[0].link}
           />
         )}
-        <ProcessingStatus id={data.video.id} />
+        <ProcessingStatus versions={data.video.versions} />
         <Grid container spacing={1} direction='row' justify='flex-end'>
           <Grid item>
             <DeleteVideoButton id={data.video.id} />
           </Grid>
           <Grid item>
-            <Button color='primary' disabled={loading} variant='outlined' onClick={() => refetch()}>
-              Refresh
-            </Button>
-          </Grid>
-          <Grid item>
-            <Button variant='outlined' as={Link} to={`/videos/${data.video.id}`} color='primary'>
+            <Button
+              color='primary'
+              component={Link}
+              variant='outlined'
+              to={`/videos/${data.video.id}`}>
               View
             </Button>
           </Grid>
@@ -76,7 +82,7 @@ function Editor() {
     );
   }
 
-  return <CircularProgress />;
+  return <CircularProgress disabled={loading} />;
 }
 
 export default Editor;

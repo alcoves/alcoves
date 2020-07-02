@@ -60,6 +60,9 @@ function Video({ data }) {
   };
 
   const outerDivStyle = {
+    margin: 0,
+    lineHeight: 0,
+    overflow: 'hidden',
     backgroundColor: '#000000',
     height: 'calc(100vh - 300px)',
     maxHeight: 'calc((9 / 16) * 100vw',
@@ -86,9 +89,14 @@ function Video({ data }) {
           <div>
             <div style={outerDivStyle}>
               {version.link ? (
-                <video id='bkenVideoPlayer' width='100%' height='100%' controls autoPlay>
-                  <source src={version.link} type='video/mp4' />
-                </video>
+                <video
+                  controls
+                  autoPlay
+                  width='100%'
+                  height='100%'
+                  src={version.link}
+                  id='bkenVideoPlayer'
+                  type='video/mp4'></video>
               ) : (
                 <div
                   style={{

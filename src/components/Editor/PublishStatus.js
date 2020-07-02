@@ -1,6 +1,5 @@
 import { gql } from 'apollo-boost';
 import React, { useState } from 'react';
-import { Dropdown } from 'semantic-ui-react';
 import { useMutation } from '@apollo/react-hooks';
 
 const SAVE_VIDEO = gql`
