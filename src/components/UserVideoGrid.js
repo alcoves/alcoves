@@ -50,8 +50,7 @@ function UserVideoGrid() {
   });
 
   if (error) console.log(error);
-  if (data && id && user)
-    return <VideoGrid videos={data.videosByUserId} isEditor={Boolean(id === user.sub)} />;
+  if (data && id && user) return <VideoGrid videos={data.videosByUserId} />;
   return <CircularProgress> Loading user videos... </CircularProgress>;
 }
 

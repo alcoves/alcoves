@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import userAtom from '../lib/withUser';
 import styled from 'styled-components';
 
 import Menu from '@material-ui/core/Menu';
@@ -15,6 +16,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActionArea from '@material-ui/core/CardActionArea';
 
 import { Link } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
 
 const Duration = styled.div`
   right: 0;
@@ -38,7 +40,8 @@ function videoDuration(d) {
   }
 }
 
-function VideoCard({ video, isEditor }) {
+function VideoCard({ video }) {
+  const user = useRecoilValue(userAtom);
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = event => {
@@ -88,7 +91,7 @@ function VideoCard({ video, isEditor }) {
               keepMounted
               open={Boolean(anchorEl)}
               onClose={handleClose}>
-              {isEditor && (
+              {user.sub === video.user.id && (
                 <MenuItem onClick={handleClose} component={Link} to={`/editor/${video.id}`}>
                   Edit
                 </MenuItem>
@@ -103,7 +106,7 @@ function VideoCard({ video, isEditor }) {
   );
 }
 
-export default function VideoGrid({ videos = [], isEditor }) {
+export default function VideoGrid({ videos = [] }) {
   return (
     <Grid
       container
@@ -119,7 +122,7 @@ export default function VideoGrid({ videos = [], isEditor }) {
       {videos.map(video => {
         return (
           <Grid xs={12} sm={12} md={6} lg={4} xl={3} item key={video.id}>
-            <VideoCard video={video} isEditor={isEditor} />
+            <VideoCard video={video} />
           </Grid>
         );
       })}
