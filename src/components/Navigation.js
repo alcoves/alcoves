@@ -61,7 +61,10 @@ export default function Navigation() {
           </Box>
           <Box>
             {user && user.sub && (
-              <IconButton component={Link} to={`/users/${user.sub}`} color='primary'>
+              <IconButton
+                component={Link}
+                to={`/users/${user.nickname.toLowerCase()}`}
+                color='primary'>
                 <VideoLibraryIcon />
               </IconButton>
             )}
