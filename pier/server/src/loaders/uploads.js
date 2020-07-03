@@ -2,7 +2,7 @@ const mime = require('mime');
 const AWS = require('aws-sdk');
 
 const s3 = new AWS.S3({
-  region: 'us-east-1',
+  region: 'us-east-2',
   signatureVersion: 'v4', // Uploads will fail 403 without this
 });
 

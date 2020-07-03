@@ -11,7 +11,7 @@ const {
   WASABI_CDN_BUCKET,
 } = require('../config/config');
 
-const db = new AWS.DynamoDB.DocumentClient({ region: 'us-east-1' });
+const db = new AWS.DynamoDB.DocumentClient({ region: 'us-east-2' });
 
 const getVideoVersionsById = async function (id) {
   if (id) {

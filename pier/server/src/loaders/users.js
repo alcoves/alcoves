@@ -2,20 +2,17 @@ const AWS = require('aws-sdk');
 
 const { USERS_TABLE } = require('../config/config');
 
-const db = new AWS.DynamoDB.DocumentClient({ region: 'us-east-1' });
+const db = new AWS.DynamoDB.DocumentClient({ region: 'us-east-2' });
 
 const getUserById = async function (id) {
   if (id) {
-    const { Items } = await db
-      .query({
-        IndexName: 'id-index',
+    const { Item } = await db
+      .get({
+        Key: { id },
         TableName: USERS_TABLE,
-        KeyConditionExpression: '#id = :id',
-        ExpressionAttributeNames: { '#id': 'id' },
-        ExpressionAttributeValues: { ':id': id },
       })
       .promise();
-    return Items[0];
+    return Item;
   }
 };
 

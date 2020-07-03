@@ -9,7 +9,8 @@ module.exports.typeDefs = gql`
     id: ID!
     email: String!
     avatar: String!
-    userName: String!
+    username: String!
+    nickname: String!
     createdAt: String
     modifiedAt: String
   }

@@ -3,7 +3,7 @@ const shortid = require('shortid');
 const request = require('supertest');
 
 const AWS = require('aws-sdk');
-const db = new AWS.DynamoDB.DocumentClient({ region: 'us-east-1' });
+const db = new AWS.DynamoDB.DocumentClient({ region: 'us-east-2' });
 
 const deleteUser = async (testEmail) => {
   const { Items } = await db

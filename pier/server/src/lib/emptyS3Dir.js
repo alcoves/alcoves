@@ -1,6 +1,6 @@
 const AWS = require('aws-sdk');
 
-const s3 = new AWS.S3({ region: 'us-east-1' });
+const s3 = new AWS.S3({ region: 'us-east-2' });
 const { TIDAL_BUCKET } = require('../config/config');
 
 module.exports = async (Prefix) => {

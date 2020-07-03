@@ -1,7 +1,7 @@
 const AWS = require('aws-sdk');
 
 AWS.config.update({
-  region: 'us-east-1',
+  region: 'us-east-2',
   maxRetries: 4,
   httpOptions: {
     timeout: 5000,
