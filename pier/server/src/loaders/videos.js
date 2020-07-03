@@ -9,6 +9,7 @@ const {
   TIDAL_TABLE,
   TIDAL_BUCKET,
   WASABI_CDN_BUCKET,
+  USERS_TABLE,
 } = require('../config/config');
 
 const db = new AWS.DynamoDB.DocumentClient({ region: 'us-east-2' });
@@ -44,16 +45,30 @@ const getVideoById = async function (id) {
   return Item;
 };
 
-const getVideosByUserId = async function (id) {
-  const { Items } = await db
+const getVideosByUsername = async function (username) {
+  const { Items: users } = await db
     .query({
-      IndexName: 'user-index',
-      TableName: VIDEOS_TABLE,
-      KeyConditionExpression: '#user = :user',
-      ExpressionAttributeValues: { ':user': id },
-      ExpressionAttributeNames: { '#user': 'user' },
+      TableName: USERS_TABLE,
+      IndexName: 'username-index',
+      KeyConditionExpression: '#username = :username',
+      ExpressionAttributeValues: { ':username': username },
+      ExpressionAttributeNames: { '#username': 'username' },
     })
     .promise();
+
+  console.log(users);
+
+  const { Items } = await db
+    .query({
+      TableName: VIDEOS_TABLE,
+      IndexName: 'user-index',
+      KeyConditionExpression: '#user = :user',
+      ExpressionAttributeNames: { '#user': 'user' },
+      ExpressionAttributeValues: { ':user': users[0].id },
+    })
+    .promise();
+
+  console.log('Items', Items);
   return Items.length ? _.orderBy(Items, 'createdAt', 'desc') : [];
 };
 
@@ -215,7 +230,7 @@ module.exports = {
   createVideo,
   getVideoById,
   updateVideoTitle,
-  getVideosByUserId,
   setVideoVisability,
+  getVideosByUsername,
   getVideoVersionsById,
 };

@@ -4,7 +4,7 @@ module.exports.typeDefs = gql`
   extend type Query {
     videos: [Video!]!
     video(id: String!): Video!
-    videosByUserId(id: String!): [Video!]!
+    videosByUsername(username: String!): [Video!]!
   }
   extend type Mutation {
     deleteVideo(id: String!): Boolean!
@@ -77,8 +77,13 @@ module.exports.resolvers = {
     video: function (_, { id }, { videos: { getVideoById } }) {
       return getVideoById(id);
     },
-    videosByUserId: function (_, { id }, { videos: { getVideosByUserId } }) {
-      return getVideosByUserId(id);
+    videosByUsername: function (
+      _,
+      { username },
+      { videos: { getVideosByUsername } }
+    ) {
+      console.log('username', username);
+      return getVideosByUsername(username);
     },
   },
   Mutation: {
