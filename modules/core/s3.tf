@@ -1,5 +1,5 @@
 locals {
-  bucket_name = "${var.env}.bken.io"
+  bucket_name = "${var.env === "prod" ? "" : "dev."}bken.io"
 }
 
 resource "aws_s3_bucket" "bken" {
