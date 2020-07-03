@@ -22,7 +22,7 @@
     "amazon-cognito-identity-js": "^4.3.2",
     "apollo-boost": "^0.4.9",
     "axios": "^0.19.2",
-    "dayjs": "^1.8.28",
+    "dayjs": "^1.8.29",
     "graphql": "^15.2.0",
     "mime": "^2.4.6",
     "moment": "^2.27.0",
