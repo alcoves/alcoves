@@ -1,20 +1,20 @@
 name: Deploy
 env:
-  BKEN_ENV: 'dev'
+  BKEN_ENV: 'prod'
   AWS_DEFAULT_REGION: us-east-2
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 on:
   push:
     branches:
-      - dev
+      - master
 jobs:
   deploy-infrastructure:
     name: Deploy Infrastructure
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: stack/dev
+        working-directory: stack/prod
     steps:
       - uses: actions/checkout@v2
       - uses: hashicorp/setup-terraform@v1
@@ -65,4 +65,4 @@ jobs:
         run: yarn build
 
       - name: Deploy to s3
-        run: aws s3 cp ./dist/ s3://dev.bken.io/ --recursive
+        run: aws s3 cp ./dist/ s3://prod.bken.io/ --recursive
