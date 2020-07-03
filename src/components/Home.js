@@ -17,7 +17,7 @@ const GET_VIDEOS = gql`
       user {
         id
         avatar
-        userName
+        username
       }
     }
   }

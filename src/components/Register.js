@@ -25,12 +25,21 @@ function Register() {
 
   const handleSubmit = () => {
     setLoading(true);
+
     const attributeEmail = new CognitoUserAttribute({ Name: 'email', Value: user.email });
-    UserPool.signUp(user.username, user.confirmPassword, [attributeEmail], null, (err, data) => {
-      setLoading(false);
-      if (err) return setError(err.message || JSON.stringify(err));
-      history.push(`/confirm?username=${username}`);
-    });
+    const attributeNickname = new CognitoUserAttribute({ Name: 'nickname', Value: user.username });
+
+    UserPool.signUp(
+      user.username,
+      user.confirmPassword,
+      [attributeEmail, attributeNickname],
+      null,
+      (err, data) => {
+        setLoading(false);
+        if (err) return setError(err.message || JSON.stringify(err));
+        history.push(`/confirm?username=${user.username}`);
+      },
+    );
   };
 
   const handleChange = ({ target: { id, value } }) => {
