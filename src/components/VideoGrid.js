@@ -91,7 +91,7 @@ function VideoCard({ video }) {
               keepMounted
               open={Boolean(anchorEl)}
               onClose={handleClose}>
-              {user.sub === video.user.id && (
+              {user && user.sub === video.user.id && (
                 <MenuItem onClick={handleClose} component={Link} to={`/editor/${video.id}`}>
                   Edit
                 </MenuItem>
