@@ -1,9 +1,9 @@
 locals {
-  bucket_name = "${var.env === "prod" ? "" : "dev."}bken.io"
+  bucket_name = "${var.env == "prod" ? "" : "dev."}bken.io"
 }
 
 resource "aws_s3_bucket" "bken" {
-  bucket =  local.bucket_name
+  bucket = local.bucket_name
   acl    = "public-read"
 
   policy = <<POLICY
