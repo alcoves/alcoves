@@ -25,7 +25,7 @@ export default ({ versions }) => {
     <Grid spacing={1} container>
       {versions.map(({ status, preset, segments: { done, total } }) => {
         return (
-          <Grid xs={6} item key={preset}>
+          <Grid xs={12} sm={6} item key={preset}>
             <Paper style={{ padding: '10px' }}>
               <Typography variant='subtitle1'>{preset}</Typography>
               <Typography variant='body2'>{status}</Typography>
