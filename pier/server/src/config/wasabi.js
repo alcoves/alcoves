@@ -1,13 +1,21 @@
-function init() {
-  const AWS = require('aws-sdk');
+const AWS = require('aws-sdk');
+const { WASABI_ENDPOINT } = require('./config');
 
-  const { WASABI_ENDPOINT } = require('./config');
-  const { WASABI_ACCESS_KEY_ID, WASABI_SECRET_ACCESS_KEY } = process.env;
+const db = new AWS.DynamoDB.DocumentClient({ region: 'us-east-2' });
+
+async function init() {
+  const { Item: WASABI_ACCESS_KEY_ID } = await db
+    .get({ TableName: 'config', Key: { id: 'WASABI_ACCESS_KEY_ID' } })
+    .promise();
+
+  const { Item: WASABI_SECRET_ACCESS_KEY } = await db
+    .get({ TableName: 'config', Key: { id: 'WASABI_SECRET_ACCESS_KEY' } })
+    .promise();
 
   AWS.config.update({
     credentials: new AWS.Credentials({
-      accessKeyId: WASABI_ACCESS_KEY_ID,
-      secretAccessKey: WASABI_SECRET_ACCESS_KEY,
+      accessKeyId: WASABI_ACCESS_KEY_ID.value,
+      secretAccessKey: WASABI_SECRET_ACCESS_KEY.value,
     }),
     region: 'us-east-2',
     maxRetries: 4,

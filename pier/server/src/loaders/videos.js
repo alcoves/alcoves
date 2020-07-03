@@ -133,7 +133,7 @@ const setVideoVisability = async function ({ id, visability }) {
 };
 
 const deleteVideo = async function (id) {
-  const ws3 = ws3Init();
+  const ws3 = await ws3Init();
 
   // Delete versions from cdn bucket
   const { Contents: cdnVideos } = await ws3
