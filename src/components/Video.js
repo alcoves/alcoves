@@ -175,7 +175,7 @@ function Video({ data }) {
                       alignItems: 'center',
                       marginRight: '10px',
                     }}>
-                    <Link to={`/users/${data.video.user.id}`}>
+                    <Link to={`/users/${data.video.user.username}`}>
                       <img
                         alt=''
                         width={50}
@@ -190,7 +190,7 @@ function Video({ data }) {
                   </div>
                   <div style={{ height: '100%' }}>
                     <Link
-                      to={`/users/${data.video.user.id}`}
+                      to={`/users/${data.video.user.username}`}
                       style={{
                         display: 'flex',
                         alignItems: 'flex-end',

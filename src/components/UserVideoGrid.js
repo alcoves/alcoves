@@ -9,8 +9,8 @@ import { useLazyQuery } from '@apollo/react-hooks';
 import { CircularProgress } from '@material-ui/core';
 
 const GET_USER_VIDEOS = gql`
-  query videosByUserId($id: String!) {
-    videosByUserId(id: $id) {
+  query videosByUsername($username: String!) {
+    videosByUsername(username: $username) {
       id
       title
       views
@@ -32,14 +32,14 @@ const GET_USER_VIDEOS = gql`
 `;
 
 function UserVideoGrid() {
-  const { id } = useParams();
+  const { username } = useParams();
   const user = useRecoilValue(userAtom);
 
   const [getVideos, { loading, called, data, error, refetch }] = useLazyQuery(GET_USER_VIDEOS, {
-    variables: { id },
+    variables: { username },
   });
 
-  if (id && !loading && !called) getVideos();
+  if (username && !loading && !called) getVideos();
 
   useEffect(() => {
     console.log('use effect!');
@@ -50,7 +50,7 @@ function UserVideoGrid() {
   });
 
   if (error) console.log(error);
-  if (data && id && user) return <VideoGrid videos={data.videosByUserId} />;
+  if (data && username && user) return <VideoGrid videos={data.videosByUsername} />;
   return <CircularProgress> Loading user videos... </CircularProgress>;
 }
 
