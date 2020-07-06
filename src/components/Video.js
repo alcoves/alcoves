@@ -1,10 +1,19 @@
 import moment from 'moment';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
 import { Link, useParams } from 'react-router-dom';
-import { Typography, CircularProgress, Menu, MenuItem, Container } from '@material-ui/core';
+import {
+  Typography,
+  CircularProgress,
+  MenuItem,
+  Container,
+  InputLabel,
+  FormControl,
+} from '@material-ui/core';
+
+import Select from '@material-ui/core/Select';
 
 const QUERY = gql`
   query getVideo($id: String!) {
@@ -49,16 +58,6 @@ const pickUrl = ({ versions }, override) => {
 };
 
 function Video({ data }) {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const handleClick = event => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
   const outerDivStyle = {
     margin: 0,
     lineHeight: 0,
@@ -70,17 +69,6 @@ function Video({ data }) {
 
   const [version, setVersion] = useState(pickUrl(data.video));
   console.log('version', version);
-
-  useEffect(() => {
-    const video = document.getElementById('bkenVideoPlayer');
-
-    if (video) {
-      const currentTime = video.currentTime;
-      video.src = version.link;
-      video.play();
-      video.currentTime = currentTime;
-    }
-  }, [version]);
 
   if (version) {
     return (
@@ -123,40 +111,33 @@ function Video({ data }) {
                       justifyContent: 'space-between',
                     }}>
                     <Typography variant='h6'>{data.video.title}</Typography>
+                    <FormControl>
+                      <InputLabel id='quality-selector'>Quality</InputLabel>
+                      <Select
+                        labelId='quality-selector'
+                        id='demo-simple-select'
+                        value={version}
+                        onChange={e => {
+                          const video = document.getElementById('bkenVideoPlayer');
+                          setVersion(pickUrl(data.video, e.target.value.preset));
 
-                    <Menu
-                      id='simple-menu'
-                      anchorEl={anchorEl}
-                      keepMounted
-                      open={Boolean(anchorEl)}
-                      onClose={handleClose}>
-                      <MenuItem onClick={handleClose}>Profile</MenuItem>
-                      <MenuItem onClick={handleClose}>My account</MenuItem>
-                      <MenuItem onClick={handleClose}>Logout</MenuItem>
-                    </Menu>
-
-                    {/* <Dropdown
-                      upward
-                      item
-                      button
-                      floating
-                      value={version.preset}
-                      onChange={(e, { value }) => {
-                        console.log('changing quality', e, value);
-                        setVersion(pickUrl(data.video, value));
-                      }}
-                      options={data.video.versions.reduce((acc, v) => {
-                        if (v.link) {
-                          acc.push({
-                            key: v.preset,
-                            text: v.preset.split('-')[1],
-                            value: v.preset,
-                          });
-                        }
-
-                        return acc;
-                      }, [])}
-                    /> */}
+                          // WARNING :: play() request was interrupted by a new load request.
+                          if (video) {
+                            const currentTime = video.currentTime;
+                            video.src = version.link;
+                            video.play();
+                            video.currentTime = currentTime;
+                          }
+                        }}>
+                        {data.video.versions.map(v => {
+                          return (
+                            <MenuItem key={v.preset} value={v}>
+                              {v.preset.split('-')[1]}
+                            </MenuItem>
+                          );
+                        })}
+                      </Select>
+                    </FormControl>
                   </div>
                   <Typography variant='body2'>{`${moment(
                     parseInt(data.video.createdAt),
@@ -213,8 +194,6 @@ function Video({ data }) {
       </div>
     );
   }
-
-  return <CircularProgress />;
 }
 
 function VideoWrapper() {
