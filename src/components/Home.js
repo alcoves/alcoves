@@ -3,7 +3,7 @@ import VideoGrid from './VideoGrid';
 
 import { gql } from 'apollo-boost';
 import { useQuery } from '@apollo/react-hooks';
-import { CircularProgress } from '@material-ui/core';
+import { LinearProgress } from '@material-ui/core';
 
 const GET_VIDEOS = gql`
   {
@@ -30,10 +30,10 @@ export default function Home() {
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       {error.message ? <pre>{error.message}</pre> : null}
       {loading ? (
-        <CircularProgress style={{ marginTop: '30px' }} />
+        <LinearProgress />
       ) : (
-        <VideoGrid videos={data.videos} />
-      )}
+          <VideoGrid videos={data.videos} />
+        )}
     </div>
   );
 }

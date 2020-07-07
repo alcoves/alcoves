@@ -1,12 +1,13 @@
 import VideoGrid from './VideoGrid';
 import userAtom from '../lib/withUser';
 
+import LinearProgress from '@material-ui/core/LinearProgress';
+
 import { gql } from 'apollo-boost';
 import { useRecoilValue } from 'recoil';
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/react-hooks';
-import { CircularProgress } from '@material-ui/core';
 
 const GET_USER_VIDEOS = gql`
   query videosByUsername($username: String!) {
@@ -49,9 +50,10 @@ function UserVideoGrid() {
     }
   });
 
+
   if (error) console.log(error);
   if (data && username && user) return <VideoGrid videos={data.videosByUsername} />;
-  return <CircularProgress> Loading user videos... </CircularProgress>;
+  return <LinearProgress> Loading user videos... </LinearProgress>;
 }
 
 export default UserVideoGrid;

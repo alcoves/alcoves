@@ -6,6 +6,7 @@ import { useQuery } from '@apollo/react-hooks';
 import { Link, useParams } from 'react-router-dom';
 import {
   Typography,
+  LinearProgress,
   CircularProgress,
   MenuItem,
   Container,
@@ -86,18 +87,18 @@ function Video({ data }) {
                   id='bkenVideoPlayer'
                   type='video/mp4'></video>
               ) : (
-                <div
-                  style={{
-                    height: '100%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    backgroundColor: 'white',
-                    flexDirection: 'column',
-                  }}>
-                  <CircularProgress inline active />
-                </div>
-              )}
+                  <div
+                    style={{
+                      height: '100%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      backgroundColor: 'white',
+                      flexDirection: 'column',
+                    }}>
+                    <CircularProgress inline active />
+                  </div>
+                )}
             </div>
             <div>
               <Container style={{ marginTop: '20px' }}>
@@ -203,7 +204,8 @@ function VideoWrapper() {
     variables: { id },
   });
 
-  return <div>{data ? <Video data={data} /> : <div />}</div>;
+  if (data) return <Video data={data} />
+  return <LinearProgress />
 }
 
 export default VideoWrapper;

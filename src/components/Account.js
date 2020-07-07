@@ -3,7 +3,7 @@ import Logout from './Logout';
 import userAtom from '../lib/withUser';
 
 import { useRecoilValue } from 'recoil';
-import { CircularProgress, Typography, Container } from '@material-ui/core';
+import { LinearProgress, Typography, Container } from '@material-ui/core';
 
 export default function Account() {
   const user = useRecoilValue(userAtom);
@@ -19,5 +19,5 @@ export default function Account() {
     );
   }
 
-  return <CircularProgress />;
+  return <LinearProgress />;
 }
