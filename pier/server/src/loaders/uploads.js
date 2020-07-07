@@ -26,7 +26,7 @@ const createMultipartUpload = async function (
     })
     .promise();
 
-  let urls = [];
+  const urls = [];
   for (let i = 1; i <= parts; i++) {
     urls.push(
       s3.getSignedUrl('uploadPart', {
