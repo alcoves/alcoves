@@ -20,8 +20,8 @@ const getVideoVersionsById = async function (id) {
       .query({
         TableName: 'tidal-dev',
         KeyConditionExpression: '#id = :id',
-        ExpressionAttributeNames: { '#id': 'id' },
         ExpressionAttributeValues: { ':id': id },
+        ExpressionAttributeNames: { '#id': 'id' },
       })
       .promise();
     return Items.sort((a, b) =>
