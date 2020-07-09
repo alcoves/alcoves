@@ -18,7 +18,7 @@ const getVideoVersionsById = async function (id) {
   if (id) {
     const { Items } = await db
       .query({
-        TableName: 'tidal-dev',
+        TableName: TIDAL_TABLE,
         KeyConditionExpression: '#id = :id',
         ExpressionAttributeValues: { ':id': id },
         ExpressionAttributeNames: { '#id': 'id' },
