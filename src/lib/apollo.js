@@ -3,9 +3,9 @@ import ApolloClient from 'apollo-boost';
 
 function serverUrl() {
   if (window.location.hostname === 'dev.bken.io') {
-    return 'https://yuyqovofb3.execute-api.us-east-2.amazonaws.com/dev/graphql';
-  } else if (window.location.hostname === 'bken.io') {
     return 'https://yuyqovofb3.execute-api.us-east-2.amazonaws.com/graphql';
+  } else if (window.location.hostname === 'bken.io') {
+    return 'https://1y7s6s24t2.execute-api.us-east-2.amazonaws.com/graphql';
   } else {
     return 'http://localhost:4000/graphql';
   }
