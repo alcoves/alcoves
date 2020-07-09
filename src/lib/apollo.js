@@ -2,9 +2,9 @@ import userPool from '../lib/userPool';
 import ApolloClient from 'apollo-boost';
 
 function serverUrl() {
-  if (process.env.BKEN_ENV === 'dev') {
+  if (window.location.hostname === 'dev.bken.io') {
     return 'https://yuyqovofb3.execute-api.us-east-2.amazonaws.com/dev/graphql';
-  } else if (process.env.BKEN_ENV === 'prod') {
+  } else if (window.location.hostname === 'bken.io') {
     return 'https://yuyqovofb3.execute-api.us-east-2.amazonaws.com/graphql';
   } else {
     return 'http://localhost:4000/graphql';
