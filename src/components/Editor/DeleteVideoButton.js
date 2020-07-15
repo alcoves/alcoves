@@ -2,9 +2,8 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import DeleteIcon from '@material-ui/icons/DeleteForever';
 
-import { gql } from 'apollo-boost';
 import { useHistory } from 'react-router-dom';
-import { useMutation } from '@apollo/react-hooks';
+import { gql, useMutation } from '@apollo/client';
 
 const DELETE_VIDEO = gql`
   mutation deleteVideo($id: String!) {

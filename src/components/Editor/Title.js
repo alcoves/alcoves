@@ -2,9 +2,8 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
-import { gql } from 'apollo-boost';
 import React, { useState } from 'react';
-import { useMutation, useQuery } from '@apollo/react-hooks';
+import { gql, useMutation, useQuery } from '@apollo/client';
 
 const GET_VIDEO = gql`
   query video($id: String!) {

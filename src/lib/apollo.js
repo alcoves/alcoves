@@ -1,5 +1,5 @@
 import userPool from '../lib/userPool';
-import ApolloClient from 'apollo-boost';
+import { ApolloClient, InMemoryCache } from '@apollo/client';
 
 function serverUrl() {
   if (window.location.hostname === 'dev.bken.io') {
@@ -12,6 +12,8 @@ function serverUrl() {
 }
 
 const client = new ApolloClient({
+  // https://www.apollographql.com/blog/announcing-the-release-of-apollo-client-3-0/
+  cache: new InMemoryCache(),
   uri: serverUrl(),
   request: operation => {
     const cognitoUser = userPool.getCurrentUser();

@@ -3,9 +3,8 @@ import styled from 'styled-components';
 import chunkFile from '../utils/chunkFile';
 import VideoIcon from '@material-ui/icons/MovieOutlined';
 
-import { gql } from 'apollo-boost';
 import { useHistory } from 'react-router-dom';
-import { useMutation } from '@apollo/react-hooks';
+import { gql, useMutation } from '@apollo/client';
 import React, { useState, useEffect } from 'react';
 import { Button, CircularProgress, LinearProgress } from '@material-ui/core';
 

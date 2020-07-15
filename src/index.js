@@ -7,7 +7,7 @@ import ReactDOM from 'react-dom';
 import ApolloClient from './lib/apollo';
 
 import { RecoilRoot } from 'recoil';
-import { ApolloProvider } from '@apollo/react-hooks';
+import { ApolloProvider } from '@apollo/client';
 import { ThemeProvider } from '@material-ui/styles';
 
 const Index = () => (

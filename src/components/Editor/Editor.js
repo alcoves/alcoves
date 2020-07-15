@@ -6,9 +6,8 @@ import ProcessingStatus from './ProcessingStatus';
 import DeleteVideoButton from './DeleteVideoButton';
 import Container from '@material-ui/core/Container';
 
-import { gql } from 'apollo-boost';
 import { Link, useParams } from 'react-router-dom';
-import { useLazyQuery } from '@apollo/react-hooks';
+import { gql, useLazyQuery } from '@apollo/client';
 import { CircularProgress, Grid } from '@material-ui/core';
 
 const GET_VIDEO = gql`

@@ -3,11 +3,10 @@ import userAtom from '../lib/withUser';
 
 import LinearProgress from '@material-ui/core/LinearProgress';
 
-import { gql } from 'apollo-boost';
 import { useRecoilValue } from 'recoil';
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useLazyQuery } from '@apollo/react-hooks';
+import { gql, useLazyQuery } from '@apollo/client';
 
 const GET_USER_VIDEOS = gql`
   query videosByUsername($username: String!) {
