@@ -1,8 +1,7 @@
 import React from 'react';
 import VideoGrid from './VideoGrid';
 
-import { gql } from 'apollo-boost';
-import { useQuery } from '@apollo/react-hooks';
+import { gql, useQuery } from '@apollo/client';
 import { LinearProgress } from '@material-ui/core';
 
 const GET_VIDEOS = gql`

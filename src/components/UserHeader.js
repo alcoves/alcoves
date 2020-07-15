@@ -1,7 +1,6 @@
 import React from 'react';
-import { gql } from 'apollo-boost';
 
-import { useQuery } from '@apollo/react-hooks';
+import { gql, useQuery } from '@apollo/client';
 import { CircularProgress } from '@material-ui/core';
 
 const GET_USER = gql`
