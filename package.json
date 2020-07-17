@@ -10,12 +10,11 @@
   "scripts": {
     "dev": "parcel public/index.html",
     "build": "parcel build public/index.html && cp public/favicon.ico dist/favicon.ico",
-    "start": "",
     "lint": "prettier --check \"src/**/*.*\"",
     "lint:fix": "prettier --write \"src/**/*.*\""
   },
   "dependencies": {
-    "@apollo/client": "^3.0.1",
+    "@apollo/client": "^3.0.2",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
     "amazon-cognito-identity-js": "^4.3.3",
