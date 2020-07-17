@@ -1,5 +1,6 @@
 import userPool from '../lib/userPool';
-import { ApolloClient, InMemoryCache } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
+import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client';
 
 function serverUrl() {
   if (window.location.hostname === 'dev.bken.io') {
@@ -11,29 +12,36 @@ function serverUrl() {
   }
 }
 
+const httpLink = createHttpLink({
+  uri: serverUrl(),
+});
+
+const authLink = setContext((_, { headers }) => {
+  let token;
+  const cognitoUser = userPool.getCurrentUser();
+
+  if (cognitoUser) {
+    cognitoUser.getSession(function (err, session) {
+      if (err) console.error('failed to get token from cognito user session');
+      if (session.isValid()) {
+        token = session.accessToken.jwtToken;
+      }
+    });
+  }
+
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : "",
+    }
+  }
+});
+
+
 const client = new ApolloClient({
   // https://www.apollographql.com/blog/announcing-the-release-of-apollo-client-3-0/
   cache: new InMemoryCache(),
-  uri: serverUrl(),
-  request: operation => {
-    const cognitoUser = userPool.getCurrentUser();
-
-    if (cognitoUser) {
-      cognitoUser.getSession(function (err, session) {
-        if (err) console.error('failed to get token from cognito user session');
-        if (session.isValid()) {
-          const token = session.accessToken.jwtToken;
-          operation.setContext({
-            headers: {
-              authorization: token ? `Bearer ${token}` : '',
-            },
-          });
-        } else {
-          console.error('invalid user session');
-        }
-      });
-    }
-  },
+  link: authLink.concat(httpLink),
 });
 
 export default client;
