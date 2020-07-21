@@ -18,7 +18,7 @@ jobs:
         with:
           node-version: 12.x
       - run: cd server && yarn install --production
-      - run: yarn test
+      - run: cd server && yarn test
   deploy:
     name: Deploy
     needs: test
