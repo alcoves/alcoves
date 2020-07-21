@@ -1,5 +1,9 @@
 ## API
 
+![Production](https://github.com/bken-io/api/workflows/Deploy/badge.svg?branch=master)
+
+![Development](https://github.com/bken-io/api/workflows/Deploy/badge.svg?branch=dev)
+
 The api is written in graphql and node. It is deployed on AWS Lambda and is availible through AWS HTTP API Gateway endpoints.
 
 ### Endpoints
