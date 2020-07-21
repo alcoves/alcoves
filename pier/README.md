@@ -1,24 +1,13 @@
-### Routes
+## API
 
-No Auth
+The api is written in graphql and node. It is deployed on AWS Lambda and is availible through AWS HTTP API Gateway endpoints.
 
-POST /login
-POST /register
+### Endpoints
 
-GET /videos/:videoId (gets video by id, if public, return some data, if authed user is owner return all)
+https://api.bken.io/graphql
+https://api.bken.io/graphql
 
-Authed Endpoints
 
-GET /uploads/url return a signed url for uploading a part
-POST /uploads () completes multipart upload
+### Can I use it?
 
-GET /videos (returns all the videos for authenticated user)
-POST /videos (starts multipart upload, creates video record)
-PATCH /videos/:videoId (edits video record)
-DELETE /videos/:videoId (delete video from s3 and then database)
-
-GET /me (returns user record)
-
-### Notes
-
-Populate can be used to do joins based on refs we add
+The api is currently limited to requests coming from https://bken.io. We may open up the API to third-party use as the community grows.

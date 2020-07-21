@@ -8,8 +8,20 @@ on:
     branches:
       - dev
 jobs:
+  test:
+    name: test
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - run: cd server && yarn install --production
+      - run: yarn test
   deploy:
     name: Deploy
+    needs:
+      - test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
