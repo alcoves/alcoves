@@ -1,5 +1,6 @@
 name: Deploy
 env:
+  BKEN_ENV: dev
   AWS_DEFAULT_REGION: us-east-2
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -8,6 +9,16 @@ on:
     branches:
       - dev
 jobs:
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - run: cd server && yarn && yarn test
   deploy:
     name: Deploy
     needs: test
