@@ -6,7 +6,7 @@ const uploads = require('./loaders/uploads');
 
 module.exports = (event) => {
   // console.log('event', event);
-  let user = {};
+  let user = null;
 
   if (event.event) {
     event = event.event;
