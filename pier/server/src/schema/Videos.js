@@ -28,11 +28,6 @@ module.exports.typeDefs = gql`
     link: String
     status: String!
     preset: String!
-    segments: VideoSegments!
-  }
-  type VideoSegments {
-    done: Int!
-    total: Int!
     percentCompleted: Int!
   }
   input CreateVideoInput {
@@ -53,21 +48,20 @@ module.exports.resolvers = {
     user: function ({ user }, _, { users: { getUserById } }) {
       return getUserById(user);
     },
-    versions: function ({ id }, _, { videos: { getVideoVersionsById } }) {
-      return getVideoVersionsById(id);
-    },
-  },
-  VideoVersion: {
-    segments: ({ segments, segmentCount = 0 }) => {
-      const { percentCompleted, done } = Object.values(segments).reduce(
-        (acc, cv) => {
-          if (cv) acc.done++;
-          acc.percentCompleted = parseInt((acc.done / segmentCount) * 100);
-          return acc;
-        },
-        { done: 0, processing: 0, percentCompleted: 0 }
-      );
-      return { done, total: segmentCount, percentCompleted };
+    versions: async function ({ id }, _, { videos: { getTidalVideoById } }) {
+      const video = await getTidalVideoById(id);
+      if (video) {
+        return Object.entries(video.versions).map(([k, v]) => {
+          return {
+            link: v.link || null,
+            status: v.status || null,
+            preset: v.preset || null,
+            percentCompleted: parseInt((v.segmentsCompleted || 0 / video.segmentCount || 0) * 100),
+          };
+        });
+      }
+
+      return [];
     },
   },
   Query: {

@@ -14,24 +14,15 @@ const {
 
 const db = new AWS.DynamoDB.DocumentClient({ region: 'us-east-2' });
 
-const getVideoVersionsById = async function (id) {
-  if (id) {
-    const { Items } = await db
-      .query({
-        TableName: TIDAL_TABLE,
-        KeyConditionExpression: '#id = :id',
-        ExpressionAttributeValues: { ':id': id },
-        ExpressionAttributeNames: { '#id': 'id' },
-      })
-      .promise();
-    return Items.sort((a, b) =>
-      parseInt(a.preset.split('-')[1]) < parseInt(b.preset.split('-')[1])
-        ? 1
-        : -1
-    );
-  } else {
-    return [];
-  }
+const getTidalVideoById = async function (id) {
+  if (!id) throw new Error('ID cannot be null');
+  const { Item } = await db
+    .get({
+      Key: { id },
+      TableName: TIDAL_TABLE,
+    })
+    .promise();
+  return Item;
 };
 
 const getVideoById = async function (id) {
@@ -200,26 +191,13 @@ const deleteVideo = async function (id) {
     })
     .promise();
 
-  // Delete all versions from tidal db
-  const { Items } = await db
-    .query({
+  // Delete from tidal db
+  await db
+    .delete({
+      Key: { id },
       TableName: TIDAL_TABLE,
-      KeyConditionExpression: '#id = :id',
-      ExpressionAttributeValues: { ':id': id },
-      ExpressionAttributeNames: { '#id': 'id' },
     })
     .promise();
-
-  await Promise.all(
-    Items.map(({ id, preset }) => {
-      return db
-        .delete({
-          Key: { id, preset },
-          TableName: TIDAL_TABLE,
-        })
-        .promise();
-    })
-  );
 
   return true;
 };
@@ -230,7 +208,7 @@ module.exports = {
   createVideo,
   getVideoById,
   updateVideoTitle,
+  getTidalVideoById,
   setVideoVisability,
   getVideosByUsername,
-  getVideoVersionsById,
 };
