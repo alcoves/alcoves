@@ -28,7 +28,7 @@ module.exports.typeDefs = gql`
     link: String
     status: String!
     preset: String!
-    percentCompleted: Int!
+    percentCompleted: Float!
   }
   input CreateVideoInput {
     user: String!
@@ -52,11 +52,12 @@ module.exports.resolvers = {
       const video = await getTidalVideoById(id);
       if (video) {
         return Object.entries(video.versions).map(([k, v]) => {
+          const percentCompleted = (v.segmentsCompleted / video.segmentCount) * 100;
           return {
             link: v.link || null,
             status: v.status || null,
             preset: v.preset || null,
-            percentCompleted: parseInt((v.segmentsCompleted || 0 / video.segmentCount || 0) * 100),
+            percentCompleted: isNaN(percentCompleted) ? 0 : percentCompleted,
           };
         });
       }
