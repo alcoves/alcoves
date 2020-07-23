@@ -23,14 +23,14 @@ function timeConversion(startTime, completeTime) {
 export default ({ versions }) => {
   return (
     <Grid spacing={1} container>
-      {versions.map(({ status, preset, segments: { done, total } }) => {
+      {versions.map(({ status, preset, percentCompleted }) => {
         return (
           <Grid xs={12} sm={6} item key={preset}>
             <Paper style={{ padding: '10px' }}>
               <Typography variant='subtitle1'>{preset}</Typography>
               <Typography variant='body2'>{status}</Typography>
             </Paper>
-            <LinearProgress value={total ? (done / total) * 100 : 0} variant='determinate' />
+            <LinearProgress value={percentCompleted} variant='determinate' />
           </Grid>
         );
       })}

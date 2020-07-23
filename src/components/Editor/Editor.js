@@ -21,10 +21,7 @@ const GET_VIDEO = gql`
         link
         status
         preset
-        segments {
-          done
-          total
-        }
+        percentCompleted
       }
     }
   }
