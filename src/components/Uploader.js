@@ -81,7 +81,11 @@ function Uploader() {
 
       const { objectId, key, uploadId } = creData.createMultipartUpload;
       console.log('--- COMPLETING VIDEO UPLOAD ---');
-      completeUpload({ variables: { input: { objectId, parts, key, uploadId } } });
+      completeUpload({
+        variables: {
+          input: { objectId, parts, key, uploadId },
+        },
+      });
     });
   }
 
@@ -130,7 +134,12 @@ function Uploader() {
           console.log('Video metadata', meta);
           startUpload({
             variables: {
-              input: { parts, fileType, duration: meta.duration, title: fileName },
+              input: {
+                parts,
+                fileType,
+                duration: meta.duration,
+                title: fileName,
+              },
             },
           });
         };

@@ -72,7 +72,7 @@ function VideoCard({ video }) {
             <Duration>{videoDuration(video.duration)}</Duration>
           </div>
           <CardContent>
-            <Typography gutterBottom variant='h6' noWrap>
+            <Typography gutterBottom variant='h4' noWrap>
               {video.title}
             </Typography>
           </CardContent>

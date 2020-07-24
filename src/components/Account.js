@@ -11,9 +11,7 @@ export default function Account() {
   if (user) {
     return (
       <Container maxWidth='xs'>
-        <Typography
-          varient='subtitle2'
-          style={{ margin: 10 }}>{`you are logged in as ${user.email}`}</Typography>
+        <Typography varient='subtitle2'>{`you are logged in as ${user.email}`}</Typography>
         <Logout />
       </Container>
     );

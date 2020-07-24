@@ -32,11 +32,10 @@ const authLink = setContext((_, { headers }) => {
   return {
     headers: {
       ...headers,
-      authorization: token ? `Bearer ${token}` : "",
-    }
-  }
+      authorization: token ? `Bearer ${token}` : '',
+    },
+  };
 });
-
 
 const client = new ApolloClient({
   // https://www.apollographql.com/blog/announcing-the-release-of-apollo-client-3-0/

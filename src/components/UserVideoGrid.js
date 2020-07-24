@@ -49,7 +49,6 @@ function UserVideoGrid() {
     }
   });
 
-
   if (error) console.log(error);
   if (data && username && user) return <VideoGrid videos={data.videosByUsername} />;
   return <LinearProgress> Loading user videos... </LinearProgress>;

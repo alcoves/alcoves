@@ -73,7 +73,11 @@ function Video({ data }) {
   if (version) {
     return (
       <div>
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+          }}>
           <div>
             <div style={outerDivStyle}>
               {version.link ? (
@@ -86,18 +90,18 @@ function Video({ data }) {
                   id='bkenVideoPlayer'
                   type='video/mp4'></video>
               ) : (
-                  <div
-                    style={{
-                      height: '100%',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      backgroundColor: 'white',
-                      flexDirection: 'column',
-                    }}>
-                    <CircularProgress inline active />
-                  </div>
-                )}
+                <div
+                  style={{
+                    height: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: 'white',
+                    flexDirection: 'column',
+                  }}>
+                  <CircularProgress inline active />
+                </div>
+              )}
             </div>
             <div>
               <Container style={{ marginTop: '20px' }}>
@@ -110,7 +114,7 @@ function Video({ data }) {
                       alignContent: 'center',
                       justifyContent: 'space-between',
                     }}>
-                    <Typography variant='h6'>{data.video.title}</Typography>
+                    <Typography variant='h4'>{data.video.title}</Typography>
                     <FormControl>
                       <InputLabel id='quality-selector'>Quality</InputLabel>
                       <Select
@@ -193,6 +197,8 @@ function Video({ data }) {
         </div>
       </div>
     );
+  } else {
+    return <LinearProgress />;
   }
 }
 
@@ -203,8 +209,8 @@ function VideoWrapper() {
     variables: { id },
   });
 
-  if (data) return <Video data={data} />
-  return <LinearProgress />
+  if (data) return <Video data={data} />;
+  return <LinearProgress />;
 }
 
 export default VideoWrapper;

@@ -3,36 +3,60 @@ import { createMuiTheme } from '@material-ui/core/styles';
 export default createMuiTheme({
   typography: {
     h1: {
-      color: '#b3b5bd',
+      color: '#fcfcfd',
+      fontSize: '2em',
+      fontWeight: 700,
     },
     h2: {
-      color: '#b3b5bd',
+      color: '#fcfcfd',
+      fontSize: '1.8em',
+      fontWeight: 700,
     },
     h3: {
-      color: '#b3b5bd',
+      color: '#fcfcfd',
+      fontSize: '1.6em',
+      fontWeight: 700,
     },
     h4: {
-      color: '#b3b5bd',
+      color: '#fcfcfd',
+      fontSize: '1.4em',
+      fontWeight: 700,
     },
     h5: {
-      color: '#b3b5bd',
+      color: '#fcfcfd',
+      fontSize: '1.2em',
+      fontWeight: 400,
     },
     h6: {
-      color: '#b3b5bd',
+      color: '#fcfcfd',
+      fontSize: '1em',
+      fontWeight: 400,
     },
     subtitle1: {
-      color: '#b3b5bd',
+      color: '#a9b1b7',
+      fontSize: '.9em',
+      fontWeight: 800,
+      letterSpacing: '.02em',
+      textTransform: 'uppercase',
     },
     subtitle2: {
-      color: '#b3b5bd',
+      color: '#a9b1b7',
+      fontSize: '.7em',
+      fontWeight: 800,
+      letterSpacing: '.02em',
+      textTransform: 'uppercase',
     },
     body1: {
-      color: '#b3b5bd',
+      color: '#a9b1b7',
+      fontSize: '1.1em',
+      fontWeight: 400,
     },
     body2: {
-      color: '#b3b5bd',
+      color: '#a9b1b7',
+      fontSize: '1em',
+      fontWeight: 400,
     },
-    fontFamily: 'Montserrat',
+    fontFamily: 'Nunito',
   },
   overrides: {
     MuiPaper: {

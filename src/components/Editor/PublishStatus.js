@@ -13,7 +13,13 @@ export default ({ visability: vis, id }) => {
   const [visability, setVisability] = useState(vis);
   const [saveVideo] = useMutation(SAVE_VIDEO);
 
-  const visabilityOptions = [{ key: 'unlisted', value: 'unlisted', text: 'Unlisted' }];
+  const visabilityOptions = [
+    {
+      key: 'unlisted',
+      value: 'unlisted',
+      text: 'Unlisted',
+    },
+  ];
 
   return (
     <div>
