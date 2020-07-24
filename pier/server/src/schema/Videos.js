@@ -73,7 +73,6 @@ module.exports.resolvers = {
       { username },
       { videos: { getVideosByUsername } }
     ) {
-      console.log('username', username);
       return getVideosByUsername(username);
     },
   },
