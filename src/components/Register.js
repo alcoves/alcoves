@@ -26,8 +26,14 @@ function Register() {
   const handleSubmit = () => {
     setLoading(true);
 
-    const attributeEmail = new CognitoUserAttribute({ Name: 'email', Value: user.email });
-    const attributeNickname = new CognitoUserAttribute({ Name: 'nickname', Value: user.username });
+    const attributeEmail = new CognitoUserAttribute({
+      Name: 'email',
+      Value: user.email,
+    });
+    const attributeNickname = new CognitoUserAttribute({
+      Name: 'nickname',
+      Value: user.username,
+    });
 
     UserPool.signUp(
       user.username,

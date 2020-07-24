@@ -14,7 +14,9 @@ const GET_USER = gql`
 `;
 
 function UserHeader() {
-  const { loading, data, error } = useQuery(GET_USER, { variables: { id: history.query.id } });
+  const { loading, data, error } = useQuery(GET_USER, {
+    variables: { id: history.query.id },
+  });
 
   if (loading) {
     return <CircularProgress> Loading the banner... </CircularProgress>;
@@ -27,7 +29,11 @@ function UserHeader() {
 
   if (data) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+        }}>
         <div style={{ position: 'relative' }}>
           <div
             style={{

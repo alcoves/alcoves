@@ -75,10 +75,10 @@ export default function Navigation() {
                 <PersonOutlinedIcon />
               </IconButton>
             ) : (
-                <IconButton to='/login' component={Link} color='primary'>
-                  <PersonOutlinedIcon />
-                </IconButton>
-              )}
+              <IconButton to='/login' component={Link} color='primary'>
+                <PersonOutlinedIcon />
+              </IconButton>
+            )}
           </Box>
         </Grid>
       </Grid>

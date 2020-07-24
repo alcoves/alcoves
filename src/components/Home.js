@@ -1,38 +1,25 @@
 import React from 'react';
-import VideoGrid from './VideoGrid';
 
-import { gql, useQuery } from '@apollo/client';
-import { LinearProgress } from '@material-ui/core';
-
-const GET_VIDEOS = gql`
-  {
-    videos {
-      id
-      title
-      views
-      duration
-      thumbnail
-      createdAt
-      user {
-        id
-        avatar
-        username
-      }
-    }
-  }
-`;
+import { Container, Typography } from '@material-ui/core';
 
 export default function Home() {
-  const { loading = true, data = {}, error = {} } = useQuery(GET_VIDEOS);
-
   return (
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
-      {error.message ? <pre>{error.message}</pre> : null}
-      {loading ? (
-        <LinearProgress />
-      ) : (
-          <VideoGrid videos={data.videos} />
-        )}
-    </div>
+    <Container>
+      <Typography variant='h2' gutterBottom>
+        Welcome
+      </Typography>
+      <Typography variant='body1' gutterBottom>
+        bken.io is an open source video sharing platform.
+      </Typography>
+      <Typography variant='h4' gutterBottom>
+        Features
+      </Typography>
+      <Typography variant='subtitle1' gutterBottom>
+        Parallel Encoding
+      </Typography>
+      <Typography variant='body1' gutterBottom>
+        We've built a custom chunk based encoder that offers faster processing than others.
+      </Typography>
+    </Container>
   );
 }

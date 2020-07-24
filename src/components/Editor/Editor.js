@@ -68,7 +68,11 @@ function Editor() {
           <Grid item xs={12} sm={4}>
             {data.video.thumbnail && (
               <img
-                style={{ borderRadius: '5px', margin: '10px 0px 10px 0px', background: 'grey' }}
+                style={{
+                  borderRadius: '5px',
+                  margin: '10px 0px 10px 0px',
+                  background: 'grey',
+                }}
                 width='100%'
                 src={data.video.thumbnail}
               />
