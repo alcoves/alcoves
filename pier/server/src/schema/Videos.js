@@ -2,7 +2,6 @@ const { gql } = require('apollo-server-lambda');
 
 module.exports.typeDefs = gql`
   extend type Query {
-    videos: [Video!]!
     video(id: String!): Video!
     videosByUsername(username: String!): [Video!]!
   }
@@ -66,9 +65,6 @@ module.exports.resolvers = {
     },
   },
   Query: {
-    videos: function (_, __, { videos: { getVideos } }) {
-      return getVideos();
-    },
     video: function (_, { id }, { videos: { getVideoById } }) {
       return getVideoById(id);
     },

@@ -47,8 +47,6 @@ const getVideosByUsername = async function (username) {
     })
     .promise();
 
-  console.log(users);
-
   const { Items } = await db
     .query({
       TableName: VIDEOS_TABLE,
@@ -59,16 +57,6 @@ const getVideosByUsername = async function (username) {
     })
     .promise();
 
-  console.log('Items', Items);
-  return Items.length ? _.orderBy(Items, 'createdAt', 'desc') : [];
-};
-
-const getVideos = async function () {
-  const { Items } = await db
-    .scan({
-      TableName: VIDEOS_TABLE,
-    })
-    .promise();
   return Items.length ? _.orderBy(Items, 'createdAt', 'desc') : [];
 };
 
@@ -203,7 +191,6 @@ const deleteVideo = async function (id) {
 };
 
 module.exports = {
-  getVideos,
   deleteVideo,
   createVideo,
   getVideoById,
