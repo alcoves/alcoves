@@ -10,6 +10,7 @@
   "scripts": {
     "test": "jest ./src/",
     "start": "NODE_ENV=test nodemon -r dotenv/config src/local.js",
+    "flame": ". ./.env && NODE_ENV=test 0x src/local.js",
     "lint": "prettier --check \"src/**/*.*\"",
     "lint:fix": "prettier --write \"src/**/*.*\""
   },
@@ -24,6 +25,7 @@
     "shortid": "^2.2.15"
   },
   "devDependencies": {
+    "0x": "^4.9.1",
     "apollo-server-express": "^2.16.0",
     "aws-sdk": "^2.719.0",
     "body-parser": "^1.19.0",

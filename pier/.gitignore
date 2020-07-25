@@ -8,3 +8,4 @@ coverage
 .tfstate
 dist
 .serverless
+*.0x
