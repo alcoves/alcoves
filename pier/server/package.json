@@ -27,7 +27,7 @@
   "devDependencies": {
     "0x": "^4.9.1",
     "apollo-server-express": "^2.16.0",
-    "aws-sdk": "^2.719.0",
+    "aws-sdk": "^2.720.0",
     "body-parser": "^1.19.0",
     "eslint": "^7.5.0",
     "eslint-config-standard": "^14.1.1",
