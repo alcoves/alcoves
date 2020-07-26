@@ -41,7 +41,10 @@ module.exports.resolvers = {
     views: ({ views }) => views,
     title: ({ title }) => title,
     duration: ({ duration }) => duration,
-    thumbnail: ({ thumbnail }) => thumbnail,
+    thumbnail: async function ({ id }, _, { videos: { getTidalVideoById } }) {
+      const { thumbnail } = await getTidalVideoById(id);
+      return thumbnail;
+    },
     createdAt: ({ createdAt }) => createdAt,
     modifiedAt: ({ modifiedAt }) => modifiedAt,
     user: function ({ user }, _, { users: { getUserById } }) {
@@ -51,7 +54,8 @@ module.exports.resolvers = {
       const video = await getTidalVideoById(id);
       if (video) {
         return Object.entries(video.versions).map(([k, v]) => {
-          const percentCompleted = (v.segmentsCompleted / video.segmentCount) * 100;
+          const percentCompleted =
+            (v.segmentsCompleted / video.segmentCount) * 100;
           return {
             link: v.link || null,
             status: v.status || null,

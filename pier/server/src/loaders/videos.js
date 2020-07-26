@@ -75,7 +75,6 @@ const createVideo = async function ({ user, title, duration }) {
           createdAt: Date.now(),
           modifiedAt: Date.now(),
           visability: 'unlisted',
-          thumbnail: 'https://cdn.bken.io/static/default-thumbnail-sm.jpg',
         },
       })
       .promise();
