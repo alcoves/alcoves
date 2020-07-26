@@ -106,6 +106,14 @@ function Uploader() {
     setFiles([]);
     console.log('creError', creError);
     console.log('comError', comError);
+
+    return (
+      <div>
+        There was an error, please try again
+        {JSON.stringify(creError)}
+        {JSON.stringify(comError)}
+      </div>
+    );
   }
 
   if (comData && comCalled && !comLoading && uploading) {
