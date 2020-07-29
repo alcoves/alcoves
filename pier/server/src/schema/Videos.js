@@ -42,8 +42,9 @@ module.exports.resolvers = {
     title: ({ title }) => title,
     duration: ({ duration }) => duration,
     thumbnail: async function ({ id }, _, { videos: { getTidalVideoById } }) {
-      const { thumbnail } = await getTidalVideoById(id);
-      return thumbnail;
+      const video = await getTidalVideoById(id);
+      if (video && video.thumbnail) return video.thumbnail;
+      return 'https://cdn.bken.io/static/default-thumbnail-sm.jpg';
     },
     createdAt: ({ createdAt }) => createdAt,
     modifiedAt: ({ modifiedAt }) => modifiedAt,
