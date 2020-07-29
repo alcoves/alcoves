@@ -1,6 +1,5 @@
 const _ = require('lodash');
 const AWS = require('aws-sdk');
-const shortid = require('shortid');
 const ws3Init = require('../config/wasabi');
 
 const { s3 } = require('../config/s3');
@@ -14,53 +13,7 @@ const {
 
 const db = new AWS.DynamoDB.DocumentClient({ region: 'us-east-2' });
 
-const getTidalVideoById = async function (id) {
-  if (!id) throw new Error('ID cannot be null');
-  const { Item } = await db
-    .get({
-      Key: { id },
-      TableName: TIDAL_TABLE,
-    })
-    .promise();
-  return Item;
-};
-
-const getVideoById = async function (id) {
-  const { Item } = await db
-    .get({
-      Key: { id },
-      TableName: VIDEOS_TABLE,
-    })
-    .promise();
-  if (!Item) throw new Error('video not found');
-  return Item;
-};
-
-const getVideosByUsername = async function (username) {
-  const { Items: users } = await db
-    .query({
-      TableName: USERS_TABLE,
-      IndexName: 'username-index',
-      KeyConditionExpression: '#username = :username',
-      ExpressionAttributeValues: { ':username': username },
-      ExpressionAttributeNames: { '#username': 'username' },
-    })
-    .promise();
-
-  const { Items } = await db
-    .query({
-      TableName: VIDEOS_TABLE,
-      IndexName: 'user-index',
-      KeyConditionExpression: '#user = :user',
-      ExpressionAttributeNames: { '#user': 'user' },
-      ExpressionAttributeValues: { ':user': users[0].id },
-    })
-    .promise();
-
-  return Items.length ? _.orderBy(Items, 'createdAt', 'desc') : [];
-};
-
-const createVideo = async function ({ user, title, duration }) {
+async function createVideo({ user, title, duration }) {
   const id = shortid();
   if (user && title && duration) {
     await db
@@ -82,9 +35,78 @@ const createVideo = async function ({ user, title, duration }) {
   }
 
   throw new Error('failed to create video');
-};
+}
 
-const updateVideoTitle = async function ({ id, title }) {
+async function getTidalVideoById(id) {
+  if (!id) throw new Error('ID cannot be null');
+  const { Item } = await db
+    .get({
+      Key: { id },
+      TableName: TIDAL_TABLE,
+    })
+    .promise();
+  return Item;
+}
+
+async function getTidalVersions({ id }) {
+  const video = await getTidalVideoById(id);
+  if (video) {
+    return Object.entries(video.versions).map(([k, v]) => {
+      const percentCompleted = (v.segmentsCompleted / video.segmentCount) * 100;
+      return {
+        link: v.link || null,
+        status: v.status || null,
+        preset: v.preset || null,
+        percentCompleted: isNaN(percentCompleted) ? 0 : percentCompleted,
+      };
+    });
+  }
+
+  return [];
+}
+
+async function getTidalThumbnail({ id }) {
+  const video = await getTidalVideoById(id);
+  if (video && video.thumbnail) return video.thumbnail;
+  return 'https://cdn.bken.io/static/default-thumbnail-sm.jpg';
+}
+
+async function getVideoById(id) {
+  const { Item } = await db
+    .get({
+      Key: { id },
+      TableName: VIDEOS_TABLE,
+    })
+    .promise();
+  if (!Item) throw new Error('video not found');
+  return Item;
+}
+
+async function getVideosByUsername(username) {
+  const { Items: users } = await db
+    .query({
+      TableName: USERS_TABLE,
+      IndexName: 'username-index',
+      KeyConditionExpression: '#username = :username',
+      ExpressionAttributeValues: { ':username': username },
+      ExpressionAttributeNames: { '#username': 'username' },
+    })
+    .promise();
+
+  const { Items } = await db
+    .query({
+      TableName: VIDEOS_TABLE,
+      IndexName: 'user-index',
+      KeyConditionExpression: '#user = :user',
+      ExpressionAttributeNames: { '#user': 'user' },
+      ExpressionAttributeValues: { ':user': users[0].id },
+    })
+    .promise();
+
+  return Items.length ? _.orderBy(Items, 'createdAt', 'desc') : [];
+}
+
+async function updateVideoTitle({ id, title }) {
   await db
     .update({
       Key: { id },
@@ -95,9 +117,9 @@ const updateVideoTitle = async function ({ id, title }) {
     })
     .promise();
   return getVideoById(id);
-};
+}
 
-const setVideoVisability = async function ({ id, visability }) {
+async function setVideoVisability({ id, visability }) {
   await db
     .update({
       Key: { id },
@@ -108,9 +130,9 @@ const setVideoVisability = async function ({ id, visability }) {
     })
     .promise();
   return getVideoById(id);
-};
+}
 
-const deleteVideo = async function (id) {
+async function deleteVideo(id) {
   const ws3 = await ws3Init();
 
   // Delete versions from cdn bucket
@@ -187,13 +209,15 @@ const deleteVideo = async function (id) {
     .promise();
 
   return true;
-};
+}
 
 module.exports = {
   deleteVideo,
   createVideo,
   getVideoById,
+  getTidalVersions,
   updateVideoTitle,
+  getTidalThumbnail,
   getTidalVideoById,
   setVideoVisability,
   getVideosByUsername,
