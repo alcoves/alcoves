@@ -8,7 +8,7 @@
   "license": "MPL-2.0",
   "private": false,
   "scripts": {
-    "test": "jest ./src/",
+    "test": ". ./.env && jest ./src/",
     "start": "NODE_ENV=test nodemon -r dotenv/config src/local.js",
     "flame": ". ./.env && NODE_ENV=test 0x src/local.js",
     "lint": "prettier --check \"src/**/*.*\"",
