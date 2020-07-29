@@ -2,7 +2,7 @@ const { gql } = require('apollo-server-lambda');
 
 module.exports.typeDefs = gql`
   extend type Query {
-    me: User
+    me: User!
     user(id: ID!): User!
   }
   type User {
@@ -11,8 +11,6 @@ module.exports.typeDefs = gql`
     avatar: String!
     username: String!
     nickname: String!
-    createdAt: String
-    modifiedAt: String
   }
 `;
 
