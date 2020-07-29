@@ -1,27 +1,10 @@
-const { S3 } = require('aws-sdk');
-
-jest.mock('aws-sdk');
-
-S3.mockImplementation(() => ({
-  completeMultipartUpload: jest.fn().mockReturnValue({
-    promise: jest.fn().mockResolvedValue({
-      ETag: '1234',
-      Key: 'test/key',
-      Bucket: 'tidal-bken-dev',
-      Location: 'https://tidal-bken-dev.s3.us-east-2.amazonaws.com/test/key',
-    }),
-  }),
-}));
-
 const app = require('../local');
 const request = require('supertest');
+const login = require('../lib/testLogin');
 
 describe('upload tests', () => {
-  test('createMultipartUpload', () => {
-    expect(true).toBe(true);
-  });
-
-  test('no auth: createMultipartUpload', async () => {
+  test('createMultipartUpload', async () => {
+    const token = await login();
     const completeMultipartUpload = `mutation completeMultipartUpload {
       completeMultipartUpload(input: {
         key: "test/key"
@@ -38,7 +21,10 @@ describe('upload tests', () => {
       }
     }`;
 
-    const res = await request(app).post('/graphql').send({ query: completeMultipartUpload });
+    const res = await request(app)
+      .post('/graphql')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ query: completeMultipartUpload });
     expect(res.body.errors).toBeUndefined();
     expect(res.body.data).toEqual({
       completeMultipartUpload: {
@@ -48,6 +34,7 @@ describe('upload tests', () => {
   });
 
   test('completeMultipartUpload', async () => {
+    const token = await login();
     const completeMultipartUpload = `mutation completeMultipartUpload {
       completeMultipartUpload(input: {
         key: "test/key"
@@ -64,7 +51,10 @@ describe('upload tests', () => {
       }
     }`;
 
-    const res = await request(app).post('/graphql').send({ query: completeMultipartUpload });
+    const res = await request(app)
+      .post('/graphql')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ query: completeMultipartUpload });
     expect(res.body.errors).toBeUndefined();
     expect(res.body.data).toEqual({
       completeMultipartUpload: {
