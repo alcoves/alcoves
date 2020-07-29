@@ -41,32 +41,16 @@ module.exports.resolvers = {
     views: ({ views }) => views,
     title: ({ title }) => title,
     duration: ({ duration }) => duration,
-    thumbnail: async function ({ id }, _, { videos: { getTidalVideoById } }) {
-      const video = await getTidalVideoById(id);
-      if (video && video.thumbnail) return video.thumbnail;
-      return 'https://cdn.bken.io/static/default-thumbnail-sm.jpg';
+    thumbnail: async function ({ id }, _, { videos: { getTidalThumbnail } }) {
+      return getTidalThumbnail(id);
     },
     createdAt: ({ createdAt }) => createdAt,
     modifiedAt: ({ modifiedAt }) => modifiedAt,
     user: function ({ user }, _, { users: { getUserById } }) {
       return getUserById(user);
     },
-    versions: async function ({ id }, _, { videos: { getTidalVideoById } }) {
-      const video = await getTidalVideoById(id);
-      if (video) {
-        return Object.entries(video.versions).map(([k, v]) => {
-          const percentCompleted =
-            (v.segmentsCompleted / video.segmentCount) * 100;
-          return {
-            link: v.link || null,
-            status: v.status || null,
-            preset: v.preset || null,
-            percentCompleted: isNaN(percentCompleted) ? 0 : percentCompleted,
-          };
-        });
-      }
-
-      return [];
+    versions: async function ({ id }, _, { videos: { getTidalVersions } }) {
+      return getTidalVersions({ id });
     },
   },
   Query: {
