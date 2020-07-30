@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const AWS = require('aws-sdk');
+const shortid = require('shortid');
 const ws3Init = require('../config/wasabi');
 
 const { s3 } = require('../config/s3');
