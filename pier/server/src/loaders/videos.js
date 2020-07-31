@@ -11,6 +11,7 @@ const {
   WASABI_CDN_BUCKET,
   USERS_TABLE,
 } = require('../config/config');
+const { ApolloError } = require('apollo-server-lambda');
 
 const db = new AWS.DynamoDB.DocumentClient({ region: 'us-east-2' });
 
@@ -134,6 +135,12 @@ async function setVideoVisability({ id, visability }) {
 }
 
 async function deleteVideo(id) {
+  const video = await getTidalVideoById(id);
+
+  if (video.status !== 'completed') {
+    throw new ApolloError('video is still processing', 400);
+  }
+
   const ws3 = await ws3Init();
 
   // Delete versions from cdn bucket
