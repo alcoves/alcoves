@@ -1,4 +1,8 @@
 const { gql } = require('apollo-server-lambda');
+const {
+  createMultipartUpload,
+  completeMultipartUpload,
+} = require('../loaders/uploads');
 
 module.exports.typeDefs = gql`
   extend type Mutation {
@@ -38,19 +42,11 @@ module.exports.typeDefs = gql`
 
 module.exports.resolvers = {
   Mutation: {
-    createMultipartUpload: async (
-      _,
-      { input },
-      { user, uploads: { createMultipartUpload }, videos: { createVideo } }
-    ) => {
+    async createMultipartUpload(_, { input }, { user }) {
       if (!user) throw new Error('authentication failed');
-      return createMultipartUpload(input, user, createVideo);
+      return createMultipartUpload(input, user);
     },
-    completeMultipartUpload: async (
-      _,
-      { input },
-      { user, uploads: { completeMultipartUpload } }
-    ) => {
+    completeMultipartUpload: async (_, { input }, { user }) => {
       if (!user) throw new Error('authentication failed');
       return completeMultipartUpload(input);
     },

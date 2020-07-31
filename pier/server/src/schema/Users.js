@@ -1,4 +1,5 @@
 const { gql } = require('apollo-server-lambda');
+const { getUserById } = require('../loaders/users');
 
 module.exports.typeDefs = gql`
   extend type Query {
@@ -16,8 +17,11 @@ module.exports.typeDefs = gql`
 
 module.exports.resolvers = {
   Query: {
-    user: async (_, { id }, { users: { getUserById } }) => getUserById(id),
-    me: async (_, __, { user, users: { getUserById } }) =>
-      getUserById(user.sub),
+    async user(_, { id }) {
+      return getUserById(id);
+    },
+    async me(_, __, { user }) {
+      return getUserById(user.sub);
+    },
   },
 };

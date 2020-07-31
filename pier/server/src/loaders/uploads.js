@@ -6,18 +6,19 @@ const s3 = new AWS.S3({
   signatureVersion: 'v4', // Uploads will fail 403 without this
 });
 
+const { createVideo } = require('./videos');
 const { TIDAL_BUCKET } = require('../config/config');
 
 const createMultipartUpload = async function (
   { parts, fileType, duration, title },
-  user,
-  createVideo
+  user
 ) {
   const video = await createVideo({
     title,
     duration,
     user: user.sub,
   });
+
   const { UploadId, Key } = await s3
     .createMultipartUpload({
       Bucket: TIDAL_BUCKET,
@@ -38,6 +39,7 @@ const createMultipartUpload = async function (
       })
     );
   }
+
   return { objectId: video.id, urls, key: Key, uploadId: UploadId };
 };
 
