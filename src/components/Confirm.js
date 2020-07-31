@@ -49,7 +49,7 @@ function Confirm() {
               Confirm
             </Button>
             <Box style={{ padding: 30 }} display='flex' justifyContent='center'>
-              <Link to='/reset'>Request a new code</Link>
+              <Link to='/reset/code'>Request a new code</Link>
             </Box>
             <Typography variant='body1'></Typography>
           </Box>
