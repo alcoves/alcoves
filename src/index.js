@@ -7,15 +7,18 @@ import ReactDOM from 'react-dom';
 import ApolloClient from './lib/apollo';
 
 import { RecoilRoot } from 'recoil';
+import { SnackbarProvider } from 'notistack';
 import { ApolloProvider } from '@apollo/client';
 import { ThemeProvider } from '@material-ui/styles';
 
 const Index = () => (
   <RecoilRoot>
     <ThemeProvider theme={Theme}>
-      <ApolloProvider client={ApolloClient}>
-        <App />
-      </ApolloProvider>
+      <SnackbarProvider maxSnack={3}>
+        <ApolloProvider client={ApolloClient}>
+          <App />
+        </ApolloProvider>
+      </SnackbarProvider>
     </ThemeProvider>
   </RecoilRoot>
 );
