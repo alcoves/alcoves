@@ -2,9 +2,9 @@ import qs from 'qs';
 import userPool from '../lib/userPool';
 
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { CognitoUser } from 'amazon-cognito-identity-js';
-import { Box, Input, CircularProgress, Button, Typography, Container } from '@material-ui/core';
+import { Box, Input, Button, Typography, Container } from '@material-ui/core';
 
 function Confirm() {
   const { username } = qs.parse(window.location.search.substring(1));
@@ -17,7 +17,7 @@ function Confirm() {
       Username: username,
     });
 
-    cognitoUser.confirmRegistration(code, true, (err, result) => {
+    cognitoUser.confirmRegistration(code, true, err => {
       if (err) return alert(err.message || JSON.stringify(err));
       history.push(`/login`);
     });
@@ -26,7 +26,7 @@ function Confirm() {
   if (!username) {
     return (
       <Box style={{ padding: 30 }} display='flex' justifyContent='center'>
-        <CircularProgress />
+        <Typography variant='body1'>Invalid username</Typography>
       </Box>
     );
   } else {
@@ -34,7 +34,7 @@ function Confirm() {
       <Container maxWidth='xs'>
         <Box display='flex' flexDirection='column'>
           <Box p={1}>
-            <Typography variant='h6'>Hey {username}!</Typography>
+            <Typography variant='h4'>Hey {username}!</Typography>
           </Box>
           <Box p={1}>
             <Input
@@ -48,6 +48,10 @@ function Confirm() {
             <Button variant='outlined' fullWidth onClick={confirmUser}>
               Confirm
             </Button>
+            <Box style={{ padding: 30 }} display='flex' justifyContent='center'>
+              <Link to='/reset'>Request a new code</Link>
+            </Box>
+            <Typography variant='body1'></Typography>
           </Box>
         </Box>
       </Container>
