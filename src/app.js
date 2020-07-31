@@ -12,6 +12,8 @@ import Uploader from './components/Uploader';
 import Editor from './components/Editor/Editor';
 import Navigation from './components/Navigation';
 import UserVideoGrid from './components/UserVideoGrid';
+import ResetPassword from './components/ResetPassword';
+import ResendActivationCode from './components/ResendActivationCode';
 
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { Typography } from '@material-ui/core';
@@ -31,15 +33,17 @@ function AppRouter() {
       <Content>
         <Switch>
           <Route exact path='/' children={<Home />} />
-          <Route exact path='/login' children={<Login />} />
           <Route exact path='/dash' children={<Dash />} />
+          <Route exact path='/login' children={<Login />} />
           <Route exact path='/confirm' children={<Confirm />} />
           <Route exact path='/account' children={<Account />} />
           <Route exact path='/upload' children={<Uploader />} />
           <Route exact path='/videos/:id' children={<Video />} />
           <Route exact path='/register' children={<Register />} />
           <Route exact path='/editor/:id' children={<Editor />} />
+          <Route exact path='/reset/password' children={<ResetPassword />} />
           <Route exact path='/users/:username' children={<UserVideoGrid />} />
+          <Route exact path='/reset/code' children={<ResendActivationCode />} />
           <Route component={NoMatch} />
         </Switch>
       </Content>
