@@ -11,14 +11,8 @@ export default function Home() {
       <Typography variant='body1' gutterBottom>
         bken.io is an open source video sharing platform.
       </Typography>
-      <Typography variant='h4' gutterBottom>
-        Features
-      </Typography>
-      <Typography variant='subtitle1' gutterBottom>
-        Parallel Encoding
-      </Typography>
       <Typography variant='body1' gutterBottom>
-        We've built a custom chunk based encoder that offers faster processing than others.
+        We're still in alpha. Expect more by the end of 2020
       </Typography>
     </Container>
   );
