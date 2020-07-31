@@ -49,7 +49,7 @@ async function getTidalVideoById(id) {
   return Item;
 }
 
-async function getTidalVersions({ id }) {
+async function getTidalVersions(id) {
   const video = await getTidalVideoById(id);
   if (video) {
     return Object.entries(video.versions).map(([k, v]) => {
@@ -66,7 +66,7 @@ async function getTidalVersions({ id }) {
   return [];
 }
 
-async function getTidalThumbnail({ id }) {
+async function getTidalThumbnail(id) {
   const video = await getTidalVideoById(id);
   if (video && video.thumbnail) return video.thumbnail;
   return 'https://cdn.bken.io/static/default-thumbnail-sm.jpg';
@@ -219,7 +219,6 @@ module.exports = {
   getTidalVersions,
   updateVideoTitle,
   getTidalThumbnail,
-  getTidalVideoById,
   setVideoVisability,
   getVideosByUsername,
 };

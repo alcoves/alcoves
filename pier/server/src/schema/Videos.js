@@ -1,4 +1,15 @@
 const { gql } = require('apollo-server-lambda');
+const { getUserById } = require('../loaders/users');
+const {
+  deleteVideo,
+  createVideo,
+  getVideoById,
+  updateVideoTitle,
+  getTidalVersions,
+  getTidalThumbnail,
+  setVideoVisability,
+  getVideosByUsername,
+} = require('../loaders/videos');
 
 module.exports.typeDefs = gql`
   extend type Query {
@@ -37,53 +48,35 @@ module.exports.typeDefs = gql`
 
 module.exports.resolvers = {
   Video: {
-    id: ({ id }) => id,
-    views: ({ views }) => views,
-    title: ({ title }) => title,
-    duration: ({ duration }) => duration,
-    thumbnail: async function ({ id }, _, { videos: { getTidalThumbnail } }) {
+    async thumbnail({ id }) {
       return getTidalThumbnail(id);
     },
-    createdAt: ({ createdAt }) => createdAt,
-    modifiedAt: ({ modifiedAt }) => modifiedAt,
-    user: function ({ user }, _, { users: { getUserById } }) {
+    user({ user }) {
       return getUserById(user);
     },
-    versions: async function ({ id }, _, { videos: { getTidalVersions } }) {
-      return getTidalVersions({ id });
+    async versions({ id }) {
+      return getTidalVersions(id);
     },
   },
   Query: {
-    video: function (_, { id }, { videos: { getVideoById } }) {
+    video(_, { id }) {
       return getVideoById(id);
     },
-    videosByUsername: function (
-      _,
-      { username },
-      { videos: { getVideosByUsername } }
-    ) {
+    videosByUsername(_, { username }) {
       return getVideosByUsername(username);
     },
   },
   Mutation: {
-    deleteVideo: function (_, { id }, { videos: { deleteVideo } }) {
+    deleteVideo(_, { id }) {
       return deleteVideo(id);
     },
-    createVideo: function (_, { input }, { videos: { createVideo } }) {
+    createVideo(_, { input }) {
       return createVideo(input);
     },
-    updateVideoTitle: function (
-      _,
-      { id, title },
-      { videos: { updateVideoTitle } }
-    ) {
+    updateVideoTitle(_, { id, title }) {
       return updateVideoTitle({ id, title });
     },
-    setVideoVisability: function (
-      _,
-      { id, visability },
-      { videos: { setVideoVisability } }
-    ) {
+    setVideoVisability() {
       return setVideoVisability({ id, visability });
     },
   },
