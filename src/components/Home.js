@@ -4,7 +4,7 @@ import { Container, Typography } from '@material-ui/core';
 
 export default function Home() {
   return (
-    <Container>
+    <Container style={{ paddingTop: '20px' }}>
       <Typography variant='h2' gutterBottom>
         Welcome
       </Typography>
