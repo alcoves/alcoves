@@ -47,30 +47,27 @@ async function getTidalVideoById(id) {
       TableName: TIDAL_TABLE,
     })
     .promise();
-  return Item;
-}
 
-async function getTidalVersions(id) {
-  const video = await getTidalVideoById(id);
-  if (video) {
-    return Object.entries(video.versions).map(([k, v]) => {
-      const percentCompleted = (v.segmentsCompleted / video.segmentCount) * 100;
-      return {
-        link: v.link || null,
-        status: v.status || null,
-        preset: v.preset || null,
-        percentCompleted: isNaN(percentCompleted) ? 0 : percentCompleted,
-      };
-    });
+  if (Item) {
+    if (!Item.thumbnail)
+      Item.thumbnail = 'https://cdn.bken.io/static/default-thumbnail-sm.jpg';
+
+    if (Item.versions) {
+      Item.versions = Object.entries(Item.versions).map(([k, v]) => {
+        const percentCompleted =
+          (v.segmentsCompleted / Item.segmentCount) * 100;
+        return {
+          link: v.link || null,
+          status: v.status || null,
+          preset: v.preset || null,
+          percentCompleted: isNaN(percentCompleted) ? 0 : percentCompleted,
+        };
+      });
+    }
+
+    return Item;
   }
-
-  return [];
-}
-
-async function getTidalThumbnail(id) {
-  const video = await getTidalVideoById(id);
-  if (video && video.thumbnail) return video.thumbnail;
-  return 'https://cdn.bken.io/static/default-thumbnail-sm.jpg';
+  return null;
 }
 
 async function getVideoById(id) {
@@ -223,9 +220,8 @@ module.exports = {
   deleteVideo,
   createVideo,
   getVideoById,
-  getTidalVersions,
   updateVideoTitle,
-  getTidalThumbnail,
+  getTidalVideoById,
   setVideoVisability,
   getVideosByUsername,
 };

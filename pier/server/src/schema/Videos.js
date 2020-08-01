@@ -5,8 +5,7 @@ const {
   createVideo,
   getVideoById,
   updateVideoTitle,
-  getTidalVersions,
-  getTidalThumbnail,
+  getTidalVideoById,
   setVideoVisability,
   getVideosByUsername,
 } = require('../loaders/videos');
@@ -28,13 +27,17 @@ module.exports.typeDefs = gql`
     views: Int!
     title: String!
     duration: Float!
-    thumbnail: String!
     createdAt: String!
     modifiedAt: String!
     visability: String!
-    versions: [VideoVersion!]
+    tidal: TidalVideo
   }
-  type VideoVersion {
+  type TidalVideo {
+    status: String!
+    thumbnail: String!
+    versions: [TidalVersion!]!
+  }
+  type TidalVersion {
     link: String
     status: String!
     preset: String!
@@ -48,14 +51,11 @@ module.exports.typeDefs = gql`
 
 module.exports.resolvers = {
   Video: {
-    async thumbnail({ id }) {
-      return getTidalThumbnail(id);
+    async tidal({ id }) {
+      return getTidalVideoById(id);
     },
     user({ user }) {
       return getUserById(user);
-    },
-    async versions({ id }) {
-      return getTidalVersions(id);
     },
   },
   Query: {
