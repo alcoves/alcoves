@@ -27,32 +27,36 @@ const QUERY = gql`
         avatar
         username
       }
-      versions {
-        link
-        status
-        preset
+      tidal {
+        versions {
+          link
+          status
+          preset
+        }
       }
     }
   }
 `;
 
 const pickUrl = ({ versions }, override) => {
-  const loadOrder = [
-    'libvpx_vp9-2160p',
-    'libx264-2160p',
-    'libvpx_vp9-1440p',
-    'libx264-1440p',
-    'libvpx_vp9-1080p',
-    'libx264-1080p',
-    'libvpx_vp9-720p',
-    'libx264-720p',
-    'libvpx_vp9-480p',
-    'libx264-480p',
-  ];
-  for (const desiredPreset of loadOrder) {
-    for (const v of versions) {
-      if (override && override === v.preset && v.link) return v;
-      if (desiredPreset === v.preset && v.link) return v;
+  if (versions) {
+    const loadOrder = [
+      'libvpx_vp9-2160p',
+      'libx264-2160p',
+      'libvpx_vp9-1440p',
+      'libx264-1440p',
+      'libvpx_vp9-1080p',
+      'libx264-1080p',
+      'libvpx_vp9-720p',
+      'libx264-720p',
+      'libvpx_vp9-480p',
+      'libx264-480p',
+    ];
+    for (const desiredPreset of loadOrder) {
+      for (const v of versions) {
+        if (override && override === v.preset && v.link) return v;
+        if (desiredPreset === v.preset && v.link) return v;
+      }
     }
   }
 };
@@ -67,7 +71,7 @@ function Video({ data }) {
     maxHeight: 'calc((9 / 16) * 100vw',
   };
 
-  const [version, setVersion] = useState(pickUrl(data.video));
+  const [version, setVersion] = useState(pickUrl(data.video.tidal));
   console.log('version', version);
 
   if (version) {
@@ -133,7 +137,7 @@ function Video({ data }) {
                             video.currentTime = currentTime;
                           }
                         }}>
-                        {data.video.versions.map(v => {
+                        {data.video.tidal.versions.map(v => {
                           return (
                             <MenuItem key={v.preset} value={v}>
                               {v.preset.split('-')[1]}
