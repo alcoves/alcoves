@@ -15,17 +15,20 @@ const GET_USER_VIDEOS = gql`
       title
       views
       duration
-      thumbnail
+
       createdAt
       user {
         id
         avatar
         username
       }
-      versions {
-        link
-        status
-        preset
+      tidal {
+        thumbnail
+        versions {
+          link
+          status
+          preset
+        }
       }
     }
   }

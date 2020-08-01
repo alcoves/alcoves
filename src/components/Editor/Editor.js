@@ -1,8 +1,9 @@
 import React from 'react';
 import Title from './Title';
+import VideoStatus from './VideoStatus';
 import PublishStatus from './PublishStatus';
+import VersionStatus from './VersionStatus';
 import Button from '@material-ui/core/Button';
-import ProcessingStatus from './ProcessingStatus';
 import DeleteVideoButton from './DeleteVideoButton';
 import Container from '@material-ui/core/Container';
 
@@ -15,32 +16,37 @@ const GET_VIDEO = gql`
     video(id: $id) {
       id
       title
-      thumbnail
       visability
-      versions {
-        link
+      tidal {
         status
-        preset
-        percentCompleted
+        thumbnail
+        versions {
+          link
+          status
+          preset
+          percentCompleted
+        }
       }
     }
   }
 `;
 
 function VideoPlayer({ versions }) {
-  const playableLinks = versions.filter(v => {
-    return Boolean(v && v.link);
-  });
+  if (versions) {
+    const playableLinks = versions.filter(v => {
+      return Boolean(v && v.link);
+    });
 
-  if (playableLinks[0] && playableLinks[0].link) {
-    return (
-      <video
-        controls
-        width='100%'
-        style={{ maxHeight: 410, background: 'black' }}
-        src={playableLinks[0].link}
-      />
-    );
+    if (playableLinks[0] && playableLinks[0].link) {
+      return (
+        <video
+          controls
+          width='100%'
+          style={{ maxHeight: 410, background: 'black' }}
+          src={playableLinks[0].link}
+        />
+      );
+    }
   }
 
   return <div />;
@@ -66,7 +72,7 @@ function Editor() {
       <Container maxWidth='md' style={{ paddingTop: '15px' }}>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={4}>
-            {data.video.thumbnail && (
+            {data.video?.tidal?.thumbnail && (
               <img
                 style={{
                   borderRadius: '5px',
@@ -74,7 +80,7 @@ function Editor() {
                   background: 'grey',
                 }}
                 width='100%'
-                src={data.video.thumbnail}
+                src={data.video.tidal.thumbnail}
               />
             )}
           </Grid>
@@ -83,8 +89,13 @@ function Editor() {
           </Grid>
         </Grid>
         {/* <PublishStatus visability={data.video.visability} id={data.video.id} /> */}
-        <VideoPlayer versions={data.video.versions} />
-        <ProcessingStatus versions={data.video.versions} />
+        {data.video.tidal && (
+          <div>
+            <VideoPlayer versions={data.video.tidal.versions} />
+            <VideoStatus status={data.video?.tidal?.status} />
+            <VersionStatus versions={data.video.tidal.versions} />
+          </div>
+        )}
         <Grid
           container
           spacing={1}

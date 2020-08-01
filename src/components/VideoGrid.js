@@ -66,7 +66,7 @@ function VideoCard({ video }) {
               backgroundColor: 'grey',
               backgroundSize: 'cover',
               backgroundRepeat: 'no-repeat',
-              backgroundImage: `url("${video.thumbnail}")`,
+              backgroundImage: `url("${video.tidal ? video.tidal.thumbnail : ''}")`,
               backgroundPosition: 'center',
             }}>
             <Duration>{videoDuration(video.duration)}</Duration>
