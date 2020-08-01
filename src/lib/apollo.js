@@ -4,9 +4,9 @@ import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client';
 
 function serverUrl() {
   if (window.location.hostname === 'dev.bken.io') {
-    return 'https://yuyqovofb3.execute-api.us-east-2.amazonaws.com/graphql';
+    return 'https://dev-api.bken.io/graphql';
   } else if (window.location.hostname === 'bken.io') {
-    return 'https://1y7s6s24t2.execute-api.us-east-2.amazonaws.com/graphql';
+    return 'https://api.bken.io/graphql';
   } else {
     return 'http://localhost:4000/graphql';
   }
