@@ -87,8 +87,10 @@ function Editor() {
           <Grid item xs={12} sm={8}>
             <Title id={data.video.id} />
           </Grid>
+          <Grid item xs={12} sm={4}>
+            <PublishStatus visibility={data.video.visibility} id={data.video.id} />
+          </Grid>
         </Grid>
-        <PublishStatus visibility={data.video.visibility} id={data.video.id} />
         {data.video.tidal && (
           <div>
             <VideoPlayer versions={data.video.tidal.versions} />
