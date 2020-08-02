@@ -6,7 +6,7 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 
 const SAVE_VIDEO = gql`
-  mutation setVideoVisibility($id: String!, $visibility: String!) {
+  mutation setVideoVisibility($id: String!, $visibility: VisibilityOption!) {
     setVideoVisibility(id: $id, visibility: $visibility) {
       id
     }
@@ -20,11 +20,11 @@ export default ({ visibility: vis, id }) => {
 
   useEffect(() => {
     if (called && !loading) {
-      enqueueSnackbar('visibility saved', { variant: 'success', persist: false });
-    }
-
-    if (called && !loading && error) {
-      enqueueSnackbar(error.message, { variant: 'error', persist: false });
+      if (error) {
+        enqueueSnackbar(error.message, { variant: 'error', persist: false });
+      } else {
+        enqueueSnackbar('visibility saved', { variant: 'success', persist: false });
+      }
     }
   }, [error, called, loading]);
 
