@@ -19,7 +19,7 @@ module.exports.typeDefs = gql`
     deleteVideo(id: String!): Boolean!
     createVideo(input: CreateVideoInput!): Video!
     updateVideoTitle(id: String!, title: String!): Video!
-    setVideoVisibility(id: String!, visibility: String!): Video!
+    setVideoVisibility(id: String!, visibility: VisibilityOption!): Video!
   }
   type Video {
     id: String!
@@ -42,6 +42,11 @@ module.exports.typeDefs = gql`
     status: String!
     preset: String!
     percentCompleted: Float!
+  }
+  enum VisibilityOption {
+    public
+    private
+    unlisted
   }
   input CreateVideoInput {
     user: String!
