@@ -29,7 +29,7 @@ async function createVideo({ user, title, duration }) {
           duration,
           createdAt: Date.now(),
           modifiedAt: Date.now(),
-          visability: 'unlisted',
+          visibility: 'unlisted',
         },
       })
       .promise();
@@ -118,14 +118,14 @@ async function updateVideoTitle({ id, title }) {
   return getVideoById(id);
 }
 
-async function setVideoVisability({ id, visability }) {
+async function setVideoVisibility({ id, visibility }) {
   await db
     .update({
       Key: { id },
       TableName: VIDEOS_TABLE,
-      UpdateExpression: 'set #visability = :visability',
-      ExpressionAttributeValues: { ':visability': visability },
-      ExpressionAttributeNames: { '#visability': 'visability' },
+      UpdateExpression: 'set #visibility = :visibility',
+      ExpressionAttributeValues: { ':visibility': visibility },
+      ExpressionAttributeNames: { '#visibility': 'visibility' },
     })
     .promise();
   return getVideoById(id);
@@ -222,6 +222,6 @@ module.exports = {
   getVideoById,
   updateVideoTitle,
   getTidalVideoById,
-  setVideoVisability,
+  setVideoVisibility,
   getVideosByUsername,
 };

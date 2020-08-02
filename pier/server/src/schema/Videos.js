@@ -6,7 +6,7 @@ const {
   getVideoById,
   updateVideoTitle,
   getTidalVideoById,
-  setVideoVisability,
+  setVideoVisibility,
   getVideosByUsername,
 } = require('../loaders/videos');
 
@@ -19,7 +19,7 @@ module.exports.typeDefs = gql`
     deleteVideo(id: String!): Boolean!
     createVideo(input: CreateVideoInput!): Video!
     updateVideoTitle(id: String!, title: String!): Video!
-    setVideoVisability(id: String!, visability: String!): Video!
+    setVideoVisibility(id: String!, visibility: String!): Video!
   }
   type Video {
     id: String!
@@ -29,7 +29,7 @@ module.exports.typeDefs = gql`
     duration: Float!
     createdAt: String!
     modifiedAt: String!
-    visability: String!
+    visibility: String!
     tidal: TidalVideo
   }
   type TidalVideo {
@@ -76,8 +76,8 @@ module.exports.resolvers = {
     updateVideoTitle(_, { id, title }) {
       return updateVideoTitle({ id, title });
     },
-    setVideoVisability() {
-      return setVideoVisability({ id, visability });
+    setVideoVisibility() {
+      return setVideoVisibility({ id, visibility });
     },
   },
 };
