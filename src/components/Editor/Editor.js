@@ -16,7 +16,7 @@ const GET_VIDEO = gql`
     video(id: $id) {
       id
       title
-      visability
+      visibility
       tidal {
         status
         thumbnail
@@ -88,7 +88,7 @@ function Editor() {
             <Title id={data.video.id} />
           </Grid>
         </Grid>
-        {/* <PublishStatus visability={data.video.visability} id={data.video.id} /> */}
+        <PublishStatus visibility={data.video.visibility} id={data.video.id} />
         {data.video.tidal && (
           <div>
             <VideoPlayer versions={data.video.tidal.versions} />

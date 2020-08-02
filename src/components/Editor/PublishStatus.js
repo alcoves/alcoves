@@ -2,18 +2,18 @@ import React, { useState } from 'react';
 import { gql, useMutation } from '@apollo/client';
 
 const SAVE_VIDEO = gql`
-  mutation setVideoVisability($id: String!, $visability: String!) {
-    setVideoVisability(id: $id, visability: $visability) {
+  mutation setVideoVisibility($id: String!, $visibility: String!) {
+    setVideoVisibility(id: $id, visibility: $visibility) {
       id
     }
   }
 `;
 
-export default ({ visability: vis, id }) => {
-  const [visability, setVisability] = useState(vis);
+export default ({ visibility: vis, id }) => {
+  const [visibility, setVisibility] = useState(vis);
   const [saveVideo] = useMutation(SAVE_VIDEO);
 
-  const visabilityOptions = [
+  const VisibilityOptions = [
     {
       key: 'unlisted',
       value: 'unlisted',
@@ -26,12 +26,12 @@ export default ({ visability: vis, id }) => {
       {/* <Dropdown
         fluid
         selection
-        value={visability}
-        options={visabilityOptions}
+        value={visibility}
+        options={VisibilityOptions}
         onChange={(e, { value }) => {
-          setVisability(value);
+          setVisibility(value);
           saveVideo({
-            variables: { id, visability: value },
+            variables: { id, visibility: value },
           });
         }}
       /> */}
