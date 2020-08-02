@@ -76,7 +76,7 @@ module.exports.resolvers = {
     updateVideoTitle(_, { id, title }) {
       return updateVideoTitle({ id, title });
     },
-    setVideoVisibility() {
+    setVideoVisibility(_, { id, visibility }) {
       return setVideoVisibility({ id, visibility });
     },
   },
