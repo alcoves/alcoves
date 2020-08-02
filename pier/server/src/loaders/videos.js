@@ -27,9 +27,9 @@ async function createVideo({ user, title, duration }) {
           title,
           views: 0,
           duration,
-          createdAt: Date.now(),
-          modifiedAt: Date.now(),
           visibility: 'unlisted',
+          createdAt: new Date().toISOString(),
+          modifiedAt: new Date().toISOString(),
         },
       })
       .promise();
@@ -79,6 +79,20 @@ async function getVideoById(id) {
     .promise();
   if (!Item) throw new Error('video not found');
   return Item;
+}
+
+async function getLatestVideos() {
+  const { Items } = await db
+    .query({
+      IndexName: 'createdAt-index',
+      ExpressionAttributeValue: { ':today': '2020-08-02' },
+      KeyConditionExpression: '#date begins_with(#createdAt, :today)',
+      ExpressionAttributeNames: { '#date': 'date', '#createdAt': 'createdAt' },
+      TableName: VIDEOS_TABLE,
+      Limit: 30,
+    })
+    .promise();
+  return Items;
 }
 
 async function getVideosByUsername(username) {
@@ -220,6 +234,7 @@ module.exports = {
   deleteVideo,
   createVideo,
   getVideoById,
+  getLatestVideos,
   updateVideoTitle,
   getTidalVideoById,
   setVideoVisibility,
