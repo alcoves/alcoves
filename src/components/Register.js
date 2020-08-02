@@ -115,6 +115,12 @@ function Register() {
           />
         </Box>
       </Box>
+      <Box p={1}>
+        <Typography variant='body1'>Password must have numbers</Typography>
+        <Typography variant='body1'>Password must special character</Typography>
+        <Typography variant='body1'>Password must uppercase letters</Typography>
+        <Typography variant='body1'>Password must lowercase letters</Typography>
+      </Box>
       <Box p={1} display='flex' flexDirection='row'>
         <Button fullWidth component={Link} to='/login' color='primary'>
           Or Login
