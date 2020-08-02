@@ -39,6 +39,8 @@ const QUERY = gql`
 `;
 
 const pickUrl = ({ versions }, override) => {
+  console.log('pickUrl versions', versions);
+
   if (versions) {
     const loadOrder = [
       'libvpx_vp9-2160p',
@@ -127,7 +129,7 @@ function Video({ data }) {
                         value={version}
                         onChange={e => {
                           const video = document.getElementById('bkenVideoPlayer');
-                          setVersion(pickUrl(data.video, e.target.value.preset));
+                          setVersion(pickUrl(data.video.tidal, e.target.value.preset));
 
                           // WARNING :: play() request was interrupted by a new load request.
                           if (video) {
