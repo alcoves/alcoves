@@ -15,7 +15,6 @@ const GET_USER_VIDEOS = gql`
       title
       views
       duration
-
       createdAt
       user {
         id
