@@ -84,10 +84,14 @@ async function getVideoById(id) {
 async function getLatestVideos() {
   const { Items } = await db
     .query({
-      IndexName: 'createdAt-index',
-      ExpressionAttributeValue: { ':today': '2020-08-02' },
-      KeyConditionExpression: '#date begins_with(#createdAt, :today)',
-      ExpressionAttributeNames: { '#date': 'date', '#createdAt': 'createdAt' },
+      IndexName: 'visibility-createdAt-index',
+      ExpressionAttributeValues: { ':today': '2020-08', ':public': 'public' },
+      KeyConditionExpression:
+        '#visibility = :public and begins_with(#createdAt, :today)',
+      ExpressionAttributeNames: {
+        '#createdAt': 'createdAt',
+        '#visibility': 'visibility',
+      },
       TableName: VIDEOS_TABLE,
       Limit: 30,
     })

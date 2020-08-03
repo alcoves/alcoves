@@ -4,6 +4,7 @@ const {
   deleteVideo,
   createVideo,
   getVideoById,
+  getLatestVideos,
   updateVideoTitle,
   getTidalVideoById,
   setVideoVisibility,
@@ -12,6 +13,7 @@ const {
 
 module.exports.typeDefs = gql`
   extend type Query {
+    latestVideos: [Video!]!
     video(id: String!): Video!
     videosByUsername(username: String!): [Video!]!
   }
@@ -64,6 +66,9 @@ module.exports.resolvers = {
     },
   },
   Query: {
+    latestVideos() {
+      return getLatestVideos();
+    },
     video(_, { id }) {
       return getVideoById(id);
     },
