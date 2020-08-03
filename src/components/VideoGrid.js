@@ -100,7 +100,7 @@ function VideoCard({ video }) {
           </div>
         }
         title={<Link to={`/users/${video.user.username}`}>{video.user.username}</Link>}
-        subheader={moment(parseInt(video.createdAt)).fromNow()}
+        subheader={moment(video.createdAt).fromNow()}
       />
     </Card>
   );

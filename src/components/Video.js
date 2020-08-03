@@ -150,7 +150,7 @@ function Video({ data }) {
                     </FormControl>
                   </div>
                   <Typography variant='body2'>{`${moment(
-                    parseInt(data.video.createdAt),
+                    data.video.createdAt,
                   ).fromNow()}`}</Typography>
                 </div>
                 <div
