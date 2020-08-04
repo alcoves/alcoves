@@ -4,7 +4,6 @@ const {
   deleteVideo,
   createVideo,
   getVideoById,
-  getLatestVideos,
   updateVideoTitle,
   getTidalVideoById,
   setVideoVisibility,
@@ -13,7 +12,6 @@ const {
 
 module.exports.typeDefs = gql`
   extend type Query {
-    latestVideos: [Video!]!
     video(id: String!): Video!
     authenticatedQuery: String!
     videosByUsername(username: String!): [Video!]!
@@ -67,17 +65,15 @@ module.exports.resolvers = {
     },
   },
   Query: {
-    latestVideos() {
-      return getLatestVideos();
-    },
     video(_, { id }) {
       return getVideoById(id);
     },
-    authenticatedQuery(_, { username }, { isAuthenticated }) {
+    authenticatedQuery(_, { username }, { auth: { isAuthenticated } }) {
       if (!isAuthenticated) throw new AuthenticationError('Auth failure');
       return 'you are authenticated!';
     },
-    videosByUsername(_, { username }, { isAuthenticated }) {
+    videosByUsername(_, { username }, { auth: { isAuthenticated } }) {
+      console.log('videos by username', username);
       return getVideosByUsername(username);
     },
   },

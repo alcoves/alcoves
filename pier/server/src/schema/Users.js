@@ -20,7 +20,7 @@ module.exports.resolvers = {
     async user(_, { id }) {
       return getUserById(id);
     },
-    async me(_, __, { user }) {
+    async me(_, __, { auth: { user } }) {
       return getUserById(user.sub);
     },
   },

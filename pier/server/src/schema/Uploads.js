@@ -42,12 +42,12 @@ module.exports.typeDefs = gql`
 
 module.exports.resolvers = {
   Mutation: {
-    async createMultipartUpload(_, { input }, { user }) {
-      if (!user) throw new Error('authentication failed');
+    async createMultipartUpload(_, { input }, { auth }) {
+      if (!auth.isAuthenticated) throw new Error('authentication failed');
       return createMultipartUpload(input, user);
     },
-    completeMultipartUpload: async (_, { input }, { user }) => {
-      if (!user) throw new Error('authentication failed');
+    completeMultipartUpload: async (_, { input }, { auth }) => {
+      if (!auth.isAuthenticated) throw new Error('authentication failed');
       return completeMultipartUpload(input);
     },
   },

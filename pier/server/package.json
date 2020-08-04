@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "0x": "^4.9.1",
+    "@prisma/cli": "^2.3.0",
     "apollo-server-express": "^2.16.0",
     "aws-sdk": "^2.720.0",
     "body-parser": "^1.19.0",

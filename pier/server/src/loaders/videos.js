@@ -81,24 +81,6 @@ async function getVideoById(id) {
   return Item;
 }
 
-async function getLatestVideos() {
-  const { Items } = await db
-    .query({
-      IndexName: 'visibility-createdAt-index',
-      ExpressionAttributeValues: { ':today': '2020-08', ':public': 'public' },
-      KeyConditionExpression:
-        '#visibility = :public and begins_with(#createdAt, :today)',
-      ExpressionAttributeNames: {
-        '#createdAt': 'createdAt',
-        '#visibility': 'visibility',
-      },
-      TableName: VIDEOS_TABLE,
-      Limit: 30,
-    })
-    .promise();
-  return Items;
-}
-
 async function getVideosByUsername(username) {
   const { Items: users } = await db
     .query({
@@ -238,7 +220,6 @@ module.exports = {
   deleteVideo,
   createVideo,
   getVideoById,
-  getLatestVideos,
   updateVideoTitle,
   getTidalVideoById,
   setVideoVisibility,
