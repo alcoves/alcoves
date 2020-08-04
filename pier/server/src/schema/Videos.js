@@ -7,14 +7,14 @@ const {
   updateVideoTitle,
   getTidalVideoById,
   setVideoVisibility,
-  getVideosByUsername,
+  getVideosByNickname,
 } = require('../loaders/videos');
 
 module.exports.typeDefs = gql`
   extend type Query {
     video(id: String!): Video!
     authenticatedQuery: String!
-    videosByUsername(username: String!): [Video!]!
+    videosByNickname(username: String!): [Video!]!
   }
   extend type Mutation {
     deleteVideo(id: String!): Boolean!
@@ -72,8 +72,8 @@ module.exports.resolvers = {
       if (!isAuthenticated) throw new AuthenticationError('Auth failure');
       return 'you are authenticated!';
     },
-    videosByUsername(_, { username }, { auth: { isAuthenticated } }) {
-      return getVideosByUsername(username);
+    videosByNickname(_, { username }, { auth: { isAuthenticated } }) {
+      return getVideosByNickname(username);
     },
   },
   Mutation: {

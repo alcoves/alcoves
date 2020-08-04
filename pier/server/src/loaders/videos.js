@@ -81,7 +81,7 @@ async function getVideoById(id) {
   return Item;
 }
 
-async function getVideosByUsername(username) {
+async function getVideosByNickname(username) {
   const { Items: users } = await db
     .query({
       TableName: USERS_TABLE,
@@ -223,5 +223,5 @@ module.exports = {
   updateVideoTitle,
   getTidalVideoById,
   setVideoVisibility,
-  getVideosByUsername,
+  getVideosByNickname,
 };
