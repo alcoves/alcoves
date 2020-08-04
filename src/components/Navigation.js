@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Grid from '@material-ui/core/Grid';
 import favicon from '../../public/favicon.ico';
 import IconButton from '@material-ui/core/IconButton';
@@ -8,10 +8,10 @@ import VideoLibraryIcon from '@material-ui/icons/VideoLibraryOutlined';
 
 import { Link } from 'react-router-dom';
 import { Box } from '@material-ui/core';
-import { useAuth0 } from '@auth0/auth0-react';
+import { CognitoContext } from '../contexts/CognitoContext';
 
 export default function Navigation() {
-  const { isLoading, isAuthenticated, error, user, loginWithRedirect } = useAuth0();
+  const { user, login } = useContext(CognitoContext);
 
   const styles = {
     menu: {
@@ -60,7 +60,7 @@ export default function Navigation() {
                 <PersonOutlinedIcon />
               </IconButton>
             ) : (
-              <IconButton onClick={loginWithRedirect} color='primary'>
+              <IconButton onClick={login} color='primary'>
                 <PersonOutlinedIcon />
               </IconButton>
             )}

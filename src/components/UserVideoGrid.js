@@ -1,10 +1,10 @@
 import VideoGrid from './VideoGrid';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
-import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useAuth0 } from '@auth0/auth0-react';
 import { gql, useLazyQuery } from '@apollo/client';
+import React, { useEffect, useContext } from 'react';
+import { CognitoContext } from '../contexts/CognitoContext';
 
 const GET_USER_VIDEOS = gql`
   query videosByNickname($username: String!) {
@@ -32,7 +32,7 @@ const GET_USER_VIDEOS = gql`
 `;
 
 function UserVideoGrid() {
-  const { user } = useAuth0();
+  const { user } = useContext(CognitoContext);
   const { username } = useParams();
 
   const [getVideos, { loading, called, data, error, refetch }] = useLazyQuery(GET_USER_VIDEOS, {
