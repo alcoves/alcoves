@@ -68,12 +68,11 @@ module.exports.resolvers = {
     video(_, { id }) {
       return getVideoById(id);
     },
-    authenticatedQuery(_, { username }, { auth: { isAuthenticated } }) {
+    authenticatedQuery(_, __, { auth: { isAuthenticated } }) {
       if (!isAuthenticated) throw new AuthenticationError('Auth failure');
       return 'you are authenticated!';
     },
     videosByUsername(_, { username }, { auth: { isAuthenticated } }) {
-      console.log('videos by username', username);
       return getVideosByUsername(username);
     },
   },
