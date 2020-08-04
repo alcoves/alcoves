@@ -27,4 +27,4 @@ jobs:
         run: yarn build
 
       - name: Deploy to Cloudflare
-        run: npx wrangler publish --env prod
+        run: npx wrangler publish

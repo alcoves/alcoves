@@ -1,15 +1,10 @@
-name = "dev"
+name = "prod"
 type = "webpack"
 workers_dev = false
-route = "dev.bken.io/*"
+route = "bken.io/*"
 zone_id = "6e67083f9212a4132d3acd963a41a27f"
 account_id = "e21f44b031d6fff5225928542df5573a"
 
 [site]
 bucket = "./dist"
 entry-point = "workers"
-
-[env.prod]
-name = "prod"
-workers_dev= false
-route = "bken.io/*"

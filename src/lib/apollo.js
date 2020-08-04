@@ -4,9 +4,7 @@ import { setContext } from '@apollo/client/link/context';
 import { ApolloClient, createHttpLink, InMemoryCache, ApolloProvider } from '@apollo/client';
 
 function serverUrl() {
-  if (window.location.hostname === 'dev.bken.io') {
-    return 'https://dev-api.bken.io/graphql';
-  } else if (window.location.hostname === 'bken.io') {
+  if (window.location.hostname === 'bken.io') {
     return 'https://api.bken.io/graphql';
   } else {
     return 'http://localhost:4000/graphql';
