@@ -1,29 +1,17 @@
-import favicon from '../../public/favicon.ico';
-
+import React from 'react';
 import Grid from '@material-ui/core/Grid';
+import favicon from '../../public/favicon.ico';
 import IconButton from '@material-ui/core/IconButton';
 import UploadIcon from '@material-ui/icons/PublishOutlined';
 import PersonOutlinedIcon from '@material-ui/icons/PersonOutlined';
 import VideoLibraryIcon from '@material-ui/icons/VideoLibraryOutlined';
 
 import { Link } from 'react-router-dom';
-import React, { useEffect } from 'react';
 import { Box } from '@material-ui/core';
-import userAtom, { init } from '../lib/withUser';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useAuth0 } from '@auth0/auth0-react';
 
 export default function Navigation() {
-  const user = useRecoilValue(userAtom);
-  const setUser = useSetRecoilState(userAtom);
-
-  useEffect(() => {
-    async function login() {
-      const user = await init();
-      setUser(() => user);
-    }
-
-    login();
-  }, []);
+  const { isLoading, isAuthenticated, error, user, loginWithRedirect } = useAuth0();
 
   const styles = {
     menu: {
@@ -75,7 +63,7 @@ export default function Navigation() {
                 <PersonOutlinedIcon />
               </IconButton>
             ) : (
-              <IconButton to='/login' component={Link} color='primary'>
+              <IconButton onClick={loginWithRedirect} color='primary'>
                 <PersonOutlinedIcon />
               </IconButton>
             )}
