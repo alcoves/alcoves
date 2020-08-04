@@ -11,10 +11,10 @@ const server = new ApolloServer({
     require('./schema/Videos'),
     require('./schema/Uploads'),
   ],
-  context: require('./context'),
   tracing: true,
   playground: true,
   introspection: true,
+  context: require('./context'),
 });
 
 server.applyMiddleware({

@@ -1,32 +1,28 @@
-const jwt = require('jsonwebtoken');
+const verifyToken = require('./lib/verifyToken');
 
-const users = require('./loaders/users');
-const videos = require('./loaders/videos');
-const uploads = require('./loaders/uploads');
+module.exports = async (event) => {
+  let isAuthenticated = false;
 
-module.exports = (event) => {
-  // console.log('event', event);
-  let user = null;
-
+  // this supports local server and lambda
   if (event.event) {
     event = event.event;
   } else if (event.req) {
     event = event.req;
   }
 
-  if (event.headers && event.headers.authorization) {
-    const token = event.headers.authorization.split('Bearer ')[1];
-    if (token) user = jwt.decode(token);
+  try {
+    const authHeader = event.headers.authorization || '';
+
+    if (authHeader) {
+      const token = authHeader.split(' ')[1];
+      const payload = await verifyToken(token);
+      isAuthenticated = payload ? true : false;
+      console.log('isAuthenticated', isAuthenticated);
+      // go get the user from the database
+    }
+  } catch (error) {
+    console.error(error);
   }
 
-  if (user) {
-    console.log(`request from user: ${user.sub}`);
-  }
-
-  return {
-    user,
-    users,
-    videos,
-    uploads,
-  };
+  return { isAuthenticated };
 };

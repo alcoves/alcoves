@@ -1,4 +1,4 @@
-const { gql } = require('apollo-server-lambda');
+const { gql, AuthenticationError } = require('apollo-server-lambda');
 const { getUserById } = require('../loaders/users');
 const {
   deleteVideo,
@@ -15,6 +15,7 @@ module.exports.typeDefs = gql`
   extend type Query {
     latestVideos: [Video!]!
     video(id: String!): Video!
+    authenticatedQuery: String!
     videosByUsername(username: String!): [Video!]!
   }
   extend type Mutation {
@@ -72,7 +73,11 @@ module.exports.resolvers = {
     video(_, { id }) {
       return getVideoById(id);
     },
-    videosByUsername(_, { username }) {
+    authenticatedQuery(_, { username }, { isAuthenticated }) {
+      if (!isAuthenticated) throw new AuthenticationError('Auth failure');
+      return 'you are authenticated!';
+    },
+    videosByUsername(_, { username }, { isAuthenticated }) {
       return getVideosByUsername(username);
     },
   },
