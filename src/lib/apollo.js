@@ -1,6 +1,7 @@
-import userPool from '../lib/userPool';
+import { useAuth0 } from '@auth0/auth0-react';
+import React, { useState, useEffect } from 'react';
 import { setContext } from '@apollo/client/link/context';
-import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client';
+import { ApolloClient, createHttpLink, InMemoryCache, ApolloProvider } from '@apollo/client';
 
 function serverUrl() {
   if (window.location.hostname === 'dev.bken.io') {
@@ -12,35 +13,38 @@ function serverUrl() {
   }
 }
 
-const httpLink = createHttpLink({
-  uri: serverUrl(),
-});
+export default function ApolloWrapper({ children }) {
+  const { isAuthenticated, getAccessTokenSilently } = useAuth0();
+  const [bearerToken, setBearerToken] = useState('');
 
-const authLink = setContext((_, { headers }) => {
-  let token;
-  const cognitoUser = userPool.getCurrentUser();
+  useEffect(() => {
+    const getToken = async () => {
+      const token = isAuthenticated ? await getAccessTokenSilently() : '';
+      setBearerToken(token);
+    };
+    getToken();
+  }, [getAccessTokenSilently, isAuthenticated]);
 
-  if (cognitoUser) {
-    cognitoUser.getSession(function (err, session) {
-      if (err) console.error('failed to get token from cognito user session');
-      if (session.isValid()) {
-        token = session.accessToken.jwtToken;
-      }
-    });
-  }
+  const httpLink = createHttpLink({
+    uri: serverUrl(),
+  });
 
-  return {
-    headers: {
-      ...headers,
-      authorization: token ? `Bearer ${token}` : '',
-    },
-  };
-});
+  const authLink = setContext((_, { headers, ...rest }) => {
+    if (!bearerToken) return { headers, ...rest };
 
-const client = new ApolloClient({
-  // https://www.apollographql.com/blog/announcing-the-release-of-apollo-client-3-0/
-  cache: new InMemoryCache(),
-  link: authLink.concat(httpLink),
-});
+    return {
+      ...rest,
+      headers: {
+        ...headers,
+        authorization: `Bearer ${bearerToken}`,
+      },
+    };
+  });
 
-export default client;
+  const client = new ApolloClient({
+    cache: new InMemoryCache(),
+    link: authLink.concat(httpLink),
+  });
+
+  return <ApolloProvider client={client}>{children}</ApolloProvider>;
+}

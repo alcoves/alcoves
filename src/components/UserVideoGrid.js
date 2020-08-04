@@ -1,11 +1,9 @@
 import VideoGrid from './VideoGrid';
-import userAtom from '../lib/withUser';
-
 import LinearProgress from '@material-ui/core/LinearProgress';
 
-import { useRecoilValue } from 'recoil';
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { useAuth0 } from '@auth0/auth0-react';
 import { gql, useLazyQuery } from '@apollo/client';
 
 const GET_USER_VIDEOS = gql`
@@ -34,8 +32,8 @@ const GET_USER_VIDEOS = gql`
 `;
 
 function UserVideoGrid() {
+  const { user } = useAuth0();
   const { username } = useParams();
-  const user = useRecoilValue(userAtom);
 
   const [getVideos, { loading, called, data, error, refetch }] = useLazyQuery(GET_USER_VIDEOS, {
     variables: { username },

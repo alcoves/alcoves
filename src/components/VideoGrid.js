@@ -1,6 +1,5 @@
 import React from 'react';
 import moment from 'moment';
-import userAtom from '../lib/withUser';
 import styled from 'styled-components';
 
 import Menu from '@material-ui/core/Menu';
@@ -16,7 +15,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActionArea from '@material-ui/core/CardActionArea';
 
 import { Link } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
+import { useAuth0 } from '@auth0/auth0-react';
 
 const Duration = styled.div`
   right: 0;
@@ -41,7 +40,7 @@ function videoDuration(d) {
 }
 
 function VideoCard({ video }) {
-  const user = useRecoilValue(userAtom);
+  const { user } = useAuth0();
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = event => {
