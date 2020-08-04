@@ -1,18 +1,29 @@
-import React from 'react';
-
-import { useAuth0 } from '@auth0/auth0-react';
+import React, { useContext } from 'react';
+import { useHistory } from 'react-router-dom';
+import { CognitoContext } from '../contexts/CognitoContext';
 import { Button, LinearProgress, Typography, Container } from '@material-ui/core';
 
 export default function Account() {
-  const { isLoading, isAuthenticated, error, user, loginWithRedirect, logout } = useAuth0();
+  const history = useHistory();
+  const { loading, authenticated, user, actions } = useContext(CognitoContext);
 
-  if (user) {
+  if (authenticated) {
     return (
       <Container maxWidth='xs'>
         <Typography varient='subtitle2'>{`you are logged in as ${user.email}`}</Typography>
-        <Button onClick={logout}>Logout</Button>
+        <Button
+          onClick={() => {
+            actions.signOut();
+            history.push('/');
+          }}>
+          Sign Out
+        </Button>
       </Container>
     );
+  }
+
+  if (!loading && !authenticated) {
+    return history.push('/login');
   }
 
   return <LinearProgress />;

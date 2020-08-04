@@ -1,6 +1,6 @@
-import { useAuth0 } from '@auth0/auth0-react';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { setContext } from '@apollo/client/link/context';
+import { CognitoContext } from '../contexts/CognitoContext';
 import { ApolloClient, createHttpLink, InMemoryCache, ApolloProvider } from '@apollo/client';
 
 function serverUrl() {
@@ -12,23 +12,24 @@ function serverUrl() {
 }
 
 export default function ApolloWrapper({ children }) {
-  const { isAuthenticated, getAccessTokenSilently } = useAuth0();
+  const { pool } = useContext(CognitoContext);
   const [bearerToken, setBearerToken] = useState('');
-
-  useEffect(() => {
-    const getToken = async () => {
-      const token = isAuthenticated ? await getAccessTokenSilently() : '';
-      setBearerToken(token);
-    };
-    getToken();
-  }, [getAccessTokenSilently, isAuthenticated]);
 
   const httpLink = createHttpLink({
     uri: serverUrl(),
   });
 
   const authLink = setContext((_, { headers, ...rest }) => {
-    if (!bearerToken) return { headers, ...rest };
+    const cognitoUser = pool.getCurrentUser();
+
+    if (cognitoUser) {
+      cognitoUser.getSession(function (err, session) {
+        if (err) console.error('failed to get token from cognito user session');
+        if (session.isValid()) {
+          setBearerToken(session.accessToken.jwtToken);
+        }
+      });
+    }
 
     return {
       ...rest,
