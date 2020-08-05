@@ -7,8 +7,8 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { gql, useLazyQuery } from '@apollo/client';
 
 const GET_USER_VIDEOS = gql`
-  query videosByUsername($username: String!) {
-    videosByUsername(username: $username) {
+  query videosByNickname($username: String!) {
+    videosByNickname(username: $username) {
       id
       title
       views
@@ -50,7 +50,7 @@ function UserVideoGrid() {
   });
 
   if (error) console.log(error);
-  if (data && username && user) return <VideoGrid videos={data.videosByUsername} />;
+  if (data && username && user) return <VideoGrid videos={data.videosByNickname} />;
   return <LinearProgress> Loading user videos... </LinearProgress>;
 }
 
