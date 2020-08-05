@@ -8,7 +8,6 @@ import Account from './components/Account';
 import Uploader from './components/Uploader';
 import Editor from './components/Editor/Editor';
 import Navigation from './components/Navigation';
-import Maintenance from './components/Maintenance';
 import UserVideoGrid from './components/UserVideoGrid';
 
 import { Switch, Route } from 'react-router-dom';
@@ -28,9 +27,6 @@ function AppRouter() {
       <Navigation />
       <Content>
         <Switch>
-          {/* Maintenence mode enabled */}
-          <Route exact path='/*' children={<Maintenance />} />
-
           <Route exact path='/' children={<Home />} />
           <Route exact path='/dash' children={<Dash />} />
           <Route exact path='/account' children={<Account />} />
