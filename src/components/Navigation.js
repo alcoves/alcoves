@@ -60,7 +60,7 @@ export default function Navigation() {
                 <PersonOutlinedIcon />
               </IconButton>
             ) : (
-              <IconButton onClick={loginWithRedirect} color='primary'>
+              <IconButton disabled onClick={loginWithRedirect} color='primary'>
                 <PersonOutlinedIcon />
               </IconButton>
             )}
