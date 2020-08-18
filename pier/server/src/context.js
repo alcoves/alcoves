@@ -17,8 +17,8 @@ module.exports = async (event) => {
     if (authHeader) {
       const token = authHeader.split(' ')[1];
       const payload = await verifyToken(token);
-      user = payload ? payload : null;
-      isAuthenticated = payload ? true : false;
+      user = payload || null;
+      isAuthenticated = !!payload;
     }
   } catch (error) {
     console.error(error);

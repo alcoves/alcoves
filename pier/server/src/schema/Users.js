@@ -3,14 +3,12 @@ const { getUserById } = require('../loaders/users');
 
 module.exports.typeDefs = gql`
   extend type Query {
-    me: User!
-    user(id: ID!): User!
+    user(id: String!): User!
   }
   type User {
-    id: ID!
+    id: String!
     email: String!
-    avatar: String!
-    username: String!
+    picture: String!
     nickname: String!
   }
 `;
@@ -19,9 +17,6 @@ module.exports.resolvers = {
   Query: {
     async user(_, { id }) {
       return getUserById(id);
-    },
-    async me(_, __, { auth: { user } }) {
-      return getUserById(user.sub);
     },
   },
 };

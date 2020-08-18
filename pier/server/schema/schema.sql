@@ -1,12 +1,11 @@
-create table "User" (
+create table "users" (
   id varchar(256) primary key not null,
   email varchar(256) not null,
-  avatar text not null,
-  nickname varchar(128) not null,
-  username varchar(128) not null
+  picture text not null,
+  nickname varchar(128) not null
 );
 
-create table "Video" (
+create table "videos" (
   id bigserial primary key not null,
   title varchar(255) not null,
   "createdat" timestamp not null default now(),
@@ -21,7 +20,7 @@ create table "Video" (
   thumbnail text not null
 );
 
-create table "Version" (
+create table "versions" (
   id bigserial primary key not null,
   foreign key ("videoId") references "bken"."videos"(id),
   cmd text not null,
