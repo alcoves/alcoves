@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "apollo-server-lambda": "^2.16.1",
-    "axios": "^0.19.2",
+    "axios": "^0.20.0",
     "dotenv": "^8.2.0",
     "graphql-tools": "^6.0.18",
     "jsonwebtoken": "^8.5.1",
@@ -29,7 +29,7 @@
   "devDependencies": {
     "0x": "^4.9.1",
     "apollo-server-express": "^2.16.1",
-    "aws-sdk": "^2.736.0",
+    "aws-sdk": "^2.738.0",
     "body-parser": "^1.19.0",
     "eslint": "^7.7.0",
     "eslint-config-standard": "^14.1.1",
@@ -39,7 +39,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "express": "^4.17.1",
-    "jest": "^26.4.0",
+    "jest": "^26.4.2",
     "nodemon": "^2.0.4",
     "prettier": "^2.0.5",
     "supertest": "^4.0.2"
