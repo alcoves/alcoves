@@ -9,15 +9,14 @@
   "private": false,
   "scripts": {
     "test": ". ./.env && jest ./src/",
-    "start": "NODE_ENV=test nodemon -r dotenv/config src/local.js",
-    "flame": ". ./.env && NODE_ENV=test 0x src/local.js",
     "lint": "prettier --check \"src/**/*.*\"",
-    "lint:fix": "prettier --write \"src/**/*.*\""
+    "lint:fix": "prettier --write \"src/**/*.*\"",
+    "start": "NODE_ENV=test nodemon -r dotenv/config src/index.js"
   },
   "dependencies": {
-    "apollo-server-lambda": "^2.16.1",
     "axios": "^0.20.0",
     "dotenv": "^8.2.0",
+    "express": "^4.17.1",
     "graphql-tools": "^6.0.18",
     "jsonwebtoken": "^8.5.1",
     "jwks-rsa": "^1.9.0",
@@ -27,9 +26,7 @@
     "shortid": "^2.2.15"
   },
   "devDependencies": {
-    "0x": "^4.9.1",
     "apollo-server-express": "^2.16.1",
-    "aws-sdk": "^2.738.0",
     "body-parser": "^1.19.0",
     "eslint": "^7.7.0",
     "eslint-config-standard": "^14.1.1",
@@ -38,10 +35,9 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
-    "express": "^4.17.1",
     "jest": "^26.4.2",
     "nodemon": "^2.0.4",
-    "prettier": "^2.0.5",
+    "prettier": "^2.1.0",
     "supertest": "^4.0.2"
   }
 }

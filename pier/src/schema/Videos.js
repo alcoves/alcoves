@@ -1,5 +1,10 @@
-const { gql, AuthenticationError } = require('apollo-server-lambda');
-const { getUserById } = require('../loaders/users');
+const {
+  gql,
+  AuthenticationError
+} = require('apollo-server-express');
+const {
+  getUserById
+} = require('../loaders/users');
 const {
   deleteVideo,
   createVideo,
@@ -10,7 +15,7 @@ const {
   getVideosByNickname,
 } = require('../loaders/videos');
 
-module.exports.typeDefs = gql`
+module.exports.typeDefs = gql `
   extend type Query {
     video(id: String!): Video!
     authenticatedQuery: String!
@@ -57,37 +62,69 @@ module.exports.typeDefs = gql`
 
 module.exports.resolvers = {
   Video: {
-    async tidal({ id }) {
+    async tidal({
+      id
+    }) {
       return getTidalVideoById(id);
     },
-    user({ user }) {
+    user({
+      user
+    }) {
       return getUserById(user);
     },
   },
   Query: {
-    video(_, { id }) {
+    video(_, {
+      id
+    }) {
       return getVideoById(id);
     },
-    authenticatedQuery(_, __, { auth: { isAuthenticated } }) {
+    authenticatedQuery(_, __, {
+      auth: {
+        isAuthenticated
+      }
+    }) {
       if (!isAuthenticated) throw new AuthenticationError('Auth failure');
       return 'you are authenticated!';
     },
-    videosByNickname(_, { username }, { auth: { isAuthenticated } }) {
+    videosByNickname(_, {
+      username
+    }, {
+      auth: {
+        isAuthenticated
+      }
+    }) {
       return getVideosByNickname(username);
     },
   },
   Mutation: {
-    deleteVideo(_, { id }) {
+    deleteVideo(_, {
+      id
+    }) {
       return deleteVideo(id);
     },
-    createVideo(_, { input }) {
+    createVideo(_, {
+      input
+    }) {
       return createVideo(input);
     },
-    updateVideoTitle(_, { id, title }) {
-      return updateVideoTitle({ id, title });
+    updateVideoTitle(_, {
+      id,
+      title
+    }) {
+      return updateVideoTitle({
+        id,
+        title
+      });
     },
-    setVideoVisibility(_, { id, visibility }) {
-      return setVideoVisibility({ id, visibility });
+    setVideoVisibility(_, {
+      id,
+      visibility
+    }) {
+      return setVideoVisibility({
+        id,
+        visibility
+      });
     },
   },
 };
