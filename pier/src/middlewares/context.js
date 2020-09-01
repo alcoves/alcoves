@@ -1,4 +1,4 @@
-const verifyToken = require('./utils/verifyToken');
+const verifyToken = require('../utils/verifyToken');
 
 module.exports = async (event) => {
   let user = null;

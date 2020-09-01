@@ -10,7 +10,7 @@ const server = new ApolloServer({
   tracing: true,
   playground: true,
   introspection: true,
-  context: require('./context'),
+  context: require('./middlewares/context'),
 });
 
 server.applyMiddleware({
