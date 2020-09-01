@@ -1,4 +1,4 @@
-const db = require('../lib/db');
+const db = require('../config/db');
 
 const getUserById = async function (id) {
   const queryCmd = `select * from users where id = '${id}';`;
