@@ -1,19 +1,10 @@
-const {
-  gql
-} = require('apollo-server-express');
-const {
-  createMultipartUpload,
-  completeMultipartUpload,
-} = require('../loaders/uploads');
+const { gql } = require('apollo-server-express');
+const { createMultipartUpload, completeMultipartUpload } = require('../loaders/uploads');
 
-module.exports.typeDefs = gql `
+module.exports.typeDefs = gql`
   extend type Mutation {
-    createMultipartUpload(
-      input: CreateMultipartUploadInput!
-    ): CreateMultipartUploadResponse!
-    completeMultipartUpload(
-      input: CompleteMultipartUploadInput!
-    ): CompleteMultipartUploadResponse!
+    createMultipartUpload(input: CreateMultipartUploadInput!): CreateMultipartUploadResponse!
+    completeMultipartUpload(input: CompleteMultipartUploadInput!): CompleteMultipartUploadResponse!
   }
   type CreateMultipartUploadResponse {
     key: String!
@@ -44,19 +35,11 @@ module.exports.typeDefs = gql `
 
 module.exports.resolvers = {
   Mutation: {
-    async createMultipartUpload(_, {
-      input
-    }, {
-      auth
-    }) {
+    async createMultipartUpload(_, { input }, { auth }) {
       if (!auth.isAuthenticated) throw new Error('authentication failed');
       return createMultipartUpload(input, user);
     },
-    completeMultipartUpload: async (_, {
-      input
-    }, {
-      auth
-    }) => {
+    completeMultipartUpload: async (_, { input }, { auth }) => {
       if (!auth.isAuthenticated) throw new Error('authentication failed');
       return completeMultipartUpload(input);
     },

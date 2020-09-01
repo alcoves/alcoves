@@ -1,20 +1,12 @@
 require('dotenv').config();
 
-console.log(process.env.PG_CONNECTION_STRING);
-
 const express = require('express');
-const {
-  ApolloServer
-} = require('apollo-server-express');
+const { ApolloServer } = require('apollo-server-express');
 
 const app = express();
 
 const server = new ApolloServer({
-  modules: [
-    require('./schema/Users'),
-    require('./schema/Videos'),
-    require('./schema/Uploads'),
-  ],
+  modules: [require('./schema/Users'), require('./schema/Videos'), require('./schema/Uploads')],
   tracing: true,
   playground: true,
   introspection: true,
@@ -31,10 +23,11 @@ server.applyMiddleware({
 });
 
 if (!module.parent) {
-  app.listen({
-      port: process.env.PORT || 4000
-    }, () =>
-    console.log('🚀 Server ready at http://localhost:4000/graphql')
+  app.listen(
+    {
+      port: process.env.PORT || 4000,
+    },
+    () => console.log('🚀 Server ready at http://localhost:4000/graphql')
   );
 }
 

@@ -1,9 +1,8 @@
-const {
-  Client
-} = require('pg');
+const mongoose = require('mongoose');
 
-const client = new Client(process.env.PG_CONNECTION_STRING);
-
-client.connect();
-
-module.exports = client;
+module.exports = mongoose.connect(process.env.DB_CONNECTION_STRING, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false,
+  useCreateIndex: true,
+});

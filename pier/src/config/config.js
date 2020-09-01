@@ -1,14 +1,15 @@
-const { BKEN_ENV } = process.env;
+const { WASABI_ENDPOINT, WASABI_CDN_BUCKET } = process.env;
 
-if (BKEN_ENV !== 'dev' && BKEN_ENV !== 'prod') {
-  throw new Error(`process.env.BKEN_ENV must be dev or prod, got ${BKEN_ENV}`);
+if (!WASABI_ENDPOINT) {
+  throw new Error(`process.env.WASABI_ENDPOINT must be defined, got ${WASABI_ENDPOINT}`);
+}
+
+if (!WASABI_CDN_BUCKET) {
+  throw new Error(`process.env.WASABI_CDN_BUCKET must be defined, got ${WASABI_CDN_BUCKET}`);
 }
 
 module.exports = {
-  USERS_TABLE: `users-${BKEN_ENV}`,
-  TIDAL_TABLE: `tidal-${BKEN_ENV}`,
-  VIDEOS_TABLE: `videos-${BKEN_ENV}`,
-  TIDAL_BUCKET: `tidal-bken-${BKEN_ENV}`,
-  WASABI_ENDPOINT: 'https://s3.us-east-2.wasabisys.com',
-  WASABI_CDN_BUCKET: `${BKEN_ENV === 'dev' ? 'dev-' : ''}cdn.bken.io`,
+  TIDAL_BUCKET: 'tidal',
+  WASABI_ENDPOINT,
+  WASABI_CDN_BUCKET,
 };

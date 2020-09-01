@@ -14,9 +14,7 @@ describe('users', () => {
       }
     }`;
 
-    const res = await request(app)
-      .post('/graphql')
-      .send({ query: completeMultipartUpload });
+    const res = await request(app).post('/graphql').send({ query: completeMultipartUpload });
     expect(res.body.errors).toBeUndefined();
     expect(res.body.data).toEqual({
       user: {
@@ -38,9 +36,7 @@ describe('users', () => {
       }`,
       })
       .then((res) => {
-        expect(res.body.errors[0].message).toEqual(
-          "Cannot read property 'sub' of null"
-        );
+        expect(res.body.errors[0].message).toEqual("Cannot read property 'sub' of null");
       });
   });
 
@@ -57,12 +53,9 @@ describe('users', () => {
       }
     }`;
 
-    const res = await request(app)
-      .post('/graphql')
-      .set('Authorization', `Bearer ${token}`)
-      .send({
-        query: completeMultipartUpload,
-      });
+    const res = await request(app).post('/graphql').set('Authorization', `Bearer ${token}`).send({
+      query: completeMultipartUpload,
+    });
     expect(res.body.errors).toBeUndefined();
     expect(res.body.data).toEqual({
       me: {
