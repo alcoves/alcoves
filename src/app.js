@@ -7,7 +7,7 @@ import Login from './components/Auth/Login';
 import Footer from './components/Footer';
 import Confirm from './components/Auth/Confirm';
 import Account from './components/Account';
-import Register from './components/Auth/Register';
+import Register from './components/Register';
 import Uploader from './components/Uploader';
 import Editor from './components/Editor/Editor';
 import Navigation from './components/Navigation';
