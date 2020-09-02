@@ -1,7 +1,11 @@
 require('dotenv').config();
 
 const express = require('express');
+const mongoose = require('mongoose');
 const { ApolloServer } = require('apollo-server-express');
+
+const { DB_CONNECTION_STRING } = process.env;
+if (!DB_CONNECTION_STRING) throw new Error('DB_CONNECTION_STRING is undefined');
 
 const app = express();
 
@@ -23,6 +27,13 @@ server.applyMiddleware({
 });
 
 if (!module.parent) {
+  mongoose.connect(DB_CONNECTION_STRING, {
+    useCreateIndex: true,
+    useNewUrlParser: true,
+    useFindAndModify: false,
+    useUnifiedTopology: true,
+  });
+
   app.listen(
     {
       port: process.env.PORT || 4000,

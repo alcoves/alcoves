@@ -1,11 +1,25 @@
-const db = require('../config/db');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
 
-const getUserById = async function (id) {
-  const queryCmd = `select * from users where id = '${id}';`;
-  const res = await db.query(queryCmd);
-  return res.rows[0];
-};
+async function login({ username, password }) {
+  const user = await User.findOne({ username });
+  if (!user) throw new Error('authentication failed');
+  const passwordsMatch = await bcrypt.compare(password, user.password);
+  if (!passwordsMatch) throw new Error('authentication failed');
+  const token = jwt.sign({ id: user.id }, process.env.JWT_KEY, {
+    expiresIn: '7d',
+  });
+  return { token };
+}
+
+async function register({ email, username, password }) {
+  const hashedPassword = await bcrypt.hash(password, 10);
+  await new User({ email, username, password: hashedPassword }).save();
+  return login({ username, password });
+}
 
 module.exports = {
-  getUserById,
+  login,
+  register,
 };
