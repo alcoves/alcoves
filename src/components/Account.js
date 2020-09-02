@@ -1,19 +1,19 @@
 import React, { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
-import { CognitoContext } from '../contexts/CognitoContext';
+import { UserContext } from '../contexts/UserContext';
 import { Button, LinearProgress, Typography, Container } from '@material-ui/core';
 
 export default function Account() {
   const history = useHistory();
-  const { loading, authenticated, user, actions } = useContext(CognitoContext);
+  const { user, logout } = useContext(UserContext);
 
-  if (authenticated) {
+  if (user) {
     return (
       <Container maxWidth='xs'>
         <Typography varient='subtitle2'>{`you are logged in as ${user.email}`}</Typography>
         <Button
           onClick={() => {
-            actions.signOut();
+            logout();
             history.push('/');
           }}>
           Sign Out
@@ -22,9 +22,6 @@ export default function Account() {
     );
   }
 
-  if (!loading && !authenticated) {
-    return history.push('/login');
-  }
-
+  if (!user) return history.push('/login');
   return <LinearProgress />;
 }

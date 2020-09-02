@@ -15,7 +15,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActionArea from '@material-ui/core/CardActionArea';
 
 import { Link } from 'react-router-dom';
-import { CognitoContext } from '../contexts/CognitoContext';
+import { UserContext } from '../contexts/UserContext';
 
 const Duration = styled.div`
   right: 0;
@@ -40,7 +40,7 @@ function videoDuration(d) {
 }
 
 function VideoCard({ video }) {
-  const { user } = useContext(CognitoContext);
+  const { user } = useContext(UserContext);
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = event => {

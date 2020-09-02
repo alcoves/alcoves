@@ -8,10 +8,10 @@ import VideoLibraryIcon from '@material-ui/icons/VideoLibraryOutlined';
 
 import { Link } from 'react-router-dom';
 import { Box } from '@material-ui/core';
-import { CognitoContext } from '../contexts/CognitoContext';
+import { UserContext } from '../contexts/UserContext';
 
 export default function Navigation() {
-  const { user, login } = useContext(CognitoContext);
+  const { user } = useContext(UserContext);
 
   const styles = {
     menu: {
@@ -60,7 +60,7 @@ export default function Navigation() {
                 <PersonOutlinedIcon />
               </IconButton>
             ) : (
-              <IconButton onClick={login} color='primary'>
+              <IconButton to='/login' component={Link} color='primary'>
                 <PersonOutlinedIcon />
               </IconButton>
             )}
