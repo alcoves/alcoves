@@ -4,7 +4,7 @@ env:
   DO_API_KEY: ${{ secrets.DO_API_KEY }}
   DO_ACCESS_KEY_ID: ${{ secrets.DO_ACCESS_KEY_ID }}
   DO_SECRET_ACCESS_KEY: ${{ secrets.DO_SECRET_ACCESS_KEY }}
-  DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }} # mongodb://localhost:27017
+  DB_CONNECTION_STRING: mongodb://localhost:27017 # ${{ secrets.DB_CONNECTION_STRING }}
   WASABI_ACCESS_KEY_ID: ${{ secrets.WASABI_ACCESS_KEY_ID }}
   WASABI_SECRET_ACCESS_KEY: ${{ secrets.WASABI_SECRET_ACCESS_KEY }}
 on:
