@@ -1,6 +1,4 @@
 require('dotenv').config();
-const { DB_CONNECTION_STRING } = process.env;
-if (!DB_CONNECTION_STRING) throw new Error('DB_CONNECTION_STRING is undefined');
 
 const app = require('../index');
 const request = require('supertest');
@@ -9,7 +7,7 @@ const User = require('../models/User');
 
 describe('users', () => {
   beforeAll(async () => {
-    await mongoose.connect(DB_CONNECTION_STRING, {
+    await mongoose.connect(process.env.DB_CONNECTION_STRING, {
       useCreateIndex: true,
       useNewUrlParser: true,
       useFindAndModify: false,
@@ -39,9 +37,21 @@ describe('users', () => {
       .post('/graphql')
       // .set('Authorization', `Bearer ${token}`)
       .send({ query: register });
-
-    console.log(res.body.data);
-    console.log(res.body.errors);
     expect(Object.keys(res.body.data.register)).toEqual(['token']);
+  });
+
+  test('login', async () => {
+    const login = `
+      mutation login {
+        login(input: {
+          username: "testing"
+          password: "1234567890"
+        }) {
+          token
+        }
+      }
+    `;
+    const res = await request(app).post('/graphql').send({ query: login });
+    expect(Object.keys(res.body.data.login)).toEqual(['token']);
   });
 });

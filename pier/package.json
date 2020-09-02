@@ -8,7 +8,7 @@
   "license": "MPL-2.0",
   "private": false,
   "scripts": {
-    "test": ". ./.env && jest ./src/",
+    "test": ". ./.env && jest ./src/ --runInBand",
     "lint": "prettier --check \"src/**/*.*\"",
     "lint:fix": "prettier --write \"src/**/*.*\"",
     "start": "NODE_ENV=test nodemon -r dotenv/config src/index.js"
