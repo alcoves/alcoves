@@ -2,9 +2,9 @@ name: Deploy
 env:
   JWT_KEY: ${{ secrets.JWT_KEY }}
   DO_API_KEY: ${{ secrets.DO_API_KEY }}
+  DB_CONNECTION_STRING: mongodb://localhost:27017
   DO_ACCESS_KEY_ID: ${{ secrets.DO_ACCESS_KEY_ID }}
   DO_SECRET_ACCESS_KEY: ${{ secrets.DO_SECRET_ACCESS_KEY }}
-  DB_CONNECTION_STRING: mongodb://localhost:27017 # ${{ secrets.DB_CONNECTION_STRING }}
   WASABI_ACCESS_KEY_ID: ${{ secrets.WASABI_ACCESS_KEY_ID }}
   WASABI_SECRET_ACCESS_KEY: ${{ secrets.WASABI_SECRET_ACCESS_KEY }}
 on:
