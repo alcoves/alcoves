@@ -3,9 +3,7 @@
 // const shortid = require('shortid');
 // const ws3Init = require('../config/wasabi');
 
-// const {
-//   s3,
-// } = require('../config/s3');
+// const { s3 } = require('../config/s3');
 // const {
 //   VIDEOS_TABLE,
 //   TIDAL_TABLE,
@@ -13,19 +11,13 @@
 //   WASABI_CDN_BUCKET,
 //   USERS_TABLE,
 // } = require('../config/config');
-// const {
-//   ApolloError,
-// } = require('apollo-server-express');
+// const { ApolloError } = require('apollo-server-express');
 
 // const db = new AWS.DynamoDB.DocumentClient({
 //   region: 'us-east-2',
 // });
 
-// async function createVideo({
-//   user,
-//   title,
-//   duration,
-// }) {
+// async function createVideo({ user, title, duration }) {
 //   const id = shortid();
 //   if (user && title && duration) {
 //     await db
@@ -51,9 +43,7 @@
 
 // async function getTidalVideoById(id) {
 //   if (!id) throw new Error('ID cannot be null');
-//   const {
-//     Item,
-//   } = await db
+//   const { Item } = await db
 //     .get({
 //       Key: {
 //         id,
@@ -69,8 +59,7 @@
 
 //     if (Item.versions) {
 //       Item.versions = Object.entries(Item.versions).map(([k, v]) => {
-//         const percentCompleted =
-//           (v.segmentsCompleted / Item.segmentCount) * 100;
+//         const percentCompleted = (v.segmentsCompleted / Item.segmentCount) * 100;
 //         return {
 //           link: v.link || null,
 //           status: v.status || null,
@@ -86,9 +75,7 @@
 // }
 
 // async function getVideoById(id) {
-//   const {
-//     Item,
-//   } = await db
+//   const { Item } = await db
 //     .get({
 //       Key: {
 //         id,
@@ -101,9 +88,7 @@
 // }
 
 // async function getVideosByNickname(username) {
-//   const {
-//     Items: users,
-//   } = await db
+//   const { Items: users } = await db
 //     .query({
 //       TableName: USERS_TABLE,
 //       IndexName: 'username-index',
@@ -117,9 +102,7 @@
 //     })
 //     .promise();
 
-//   const {
-//     Items,
-//   } = await db
+//   const { Items } = await db
 //     .query({
 //       TableName: VIDEOS_TABLE,
 //       IndexName: 'user-index',
@@ -136,10 +119,7 @@
 //   return Items.length ? _.orderBy(Items, 'createdAt', 'desc') : [];
 // }
 
-// async function updateVideoTitle({
-//   id,
-//   title,
-// }) {
+// async function updateVideoTitle({ id, title }) {
 //   await db
 //     .update({
 //       Key: {
@@ -158,10 +138,7 @@
 //   return getVideoById(id);
 // }
 
-// async function setVideoVisibility({
-//   id,
-//   visibility,
-// }) {
+// async function setVideoVisibility({ id, visibility }) {
 //   await db
 //     .update({
 //       Key: {
@@ -190,9 +167,7 @@
 //   const ws3 = await ws3Init();
 
 //   // Delete versions from cdn bucket
-//   const {
-//     Contents: cdnVideos,
-//   } = await ws3
+//   const { Contents: cdnVideos } = await ws3
 //     .listObjectsV2({
 //       Prefix: `v/${id}`,
 //       Bucket: WASABI_CDN_BUCKET,
@@ -200,9 +175,7 @@
 //     .promise();
 
 //   await Promise.all(
-//     cdnVideos.map(({
-//       Key,
-//     }) => {
+//     cdnVideos.map(({ Key }) => {
 //       return ws3
 //         .deleteObject({
 //           Key,
@@ -213,9 +186,7 @@
 //   );
 
 //   // Delete thumbnails
-//   const {
-//     Contents: cdnThumbs,
-//   } = await ws3
+//   const { Contents: cdnThumbs } = await ws3
 //     .listObjectsV2({
 //       Prefix: `i/${id}`,
 //       Bucket: WASABI_CDN_BUCKET,
@@ -223,9 +194,7 @@
 //     .promise();
 
 //   await Promise.all(
-//     cdnThumbs.map(({
-//       Key,
-//     }) => {
+//     cdnThumbs.map(({ Key }) => {
 //       return ws3
 //         .deleteObject({
 //           Key,
@@ -236,9 +205,7 @@
 //   );
 
 //   // Delete source video from tidal-uploads bucket
-//   const {
-//     Contents: tidalContents,
-//   } = await s3
+//   const { Contents: tidalContents } = await s3
 //     .listObjectsV2({
 //       Prefix: `uploads/${id}`,
 //       Bucket: TIDAL_BUCKET,
@@ -246,9 +213,7 @@
 //     .promise();
 
 //   await Promise.all(
-//     tidalContents.map(({
-//       Key,
-//     }) => {
+//     tidalContents.map(({ Key }) => {
 //       return s3
 //         .deleteObject({
 //           Key,

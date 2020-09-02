@@ -4,9 +4,10 @@ const User = require('../models/User');
 
 async function login({ username, password }) {
   const user = await User.findOne({ username });
-  if (!user) throw new Error('authentication failed');
   const passwordsMatch = await bcrypt.compare(password, user.password);
-  if (!passwordsMatch) throw new Error('authentication failed');
+
+  if (!user || !passwordsMatch) throw new Error('authentication failed');
+
   const token = jwt.sign({ id: user.id }, process.env.JWT_KEY, {
     expiresIn: '7d',
   });

@@ -4,11 +4,10 @@
 
 ![Development](https://github.com/bken-io/api/workflows/Deploy/badge.svg?branch=dev)
 
-The api is written in graphql and node. It is deployed on AWS Lambda and is availible through AWS HTTP API Gateway endpoints.
+The api is written in graphql and node. It is deployed on digitalocean, proxied through cloudflare, and availible via https endpoints.
 
 ### Endpoints
 
-https://api.bken.io/graphql
 https://api.bken.io/graphql
 
 

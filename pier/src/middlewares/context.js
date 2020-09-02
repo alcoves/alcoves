@@ -1,4 +1,4 @@
-module.exports = async (event) => {
+module.exports = async event => {
   const user = null;
   const isAuthenticated = false;
 
