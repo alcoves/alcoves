@@ -5,7 +5,7 @@ import React from 'react';
 import Theme from './theme';
 import ReactDOM from 'react-dom';
 import ApolloWrapper from './lib/apollo';
-import CognitoContextProvider from './contexts/CognitoContext';
+import UserContextProvider from './contexts/UserContext';
 
 import { SnackbarProvider } from 'notistack';
 import { ThemeProvider } from '@material-ui/styles';
@@ -13,7 +13,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 const Index = () => (
   <Router>
-    <CognitoContextProvider>
+    <UserContextProvider>
       <ThemeProvider theme={Theme}>
         <SnackbarProvider maxSnack={3}>
           <ApolloWrapper>
@@ -21,7 +21,7 @@ const Index = () => (
           </ApolloWrapper>
         </SnackbarProvider>
       </ThemeProvider>
-    </CognitoContextProvider>
+    </UserContextProvider>
   </Router>
 );
 

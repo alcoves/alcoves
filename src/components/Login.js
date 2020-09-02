@@ -1,20 +1,24 @@
-import login from '../gql/login';
+import loginQuery from '../gql/login';
 import styled from 'styled-components';
-import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
-import { Typography, Button, TextField, Container } from '@material-ui/core';
+import React, { useState, useContext } from 'react';
+import { Link, useHistory } from 'react-router-dom';
+import { UserContext } from '../contexts/UserContext';
+import { LinearProgress, Typography, Button, TextField, Container } from '@material-ui/core';
 
 const Spacer = styled.div`
   margin: 10px 0px 10px 0px;
 `;
 
-export default function Register() {
+export default function Login() {
+  const { login } = useContext(UserContext);
+  const history = useHistory();
   const [state, setState] = useState({
     username: '',
     password: '',
   });
 
-  const [registerQuery, { loading, error }] = useMutation(login);
+  const [registerQuery, { loading, error, data }] = useMutation(loginQuery);
 
   function handleChange({ target: { value, name } }) {
     setState({
@@ -34,13 +38,17 @@ export default function Register() {
     });
   }
 
-  if (loading) {
-    return <div>logging you in....</div>;
+  if (loading) return <LinearProgress />;
+
+  if (data) {
+    login(data.login.token);
+    history.push('/');
   }
 
   return (
     <Container maxWidth='xs' style={{ paddingTop: '20px' }}>
       <Typography variant='h3'>Login</Typography>
+      <Link to='/register'>Or Register</Link>
       <Spacer />
       <TextField
         fullWidth
@@ -61,11 +69,11 @@ export default function Register() {
         onChange={handleChange}
       />
       <Spacer />
-      <Button fullWidth onClick={handleSubmit} variant='contained'>
+      <Button fullWidth onClick={handleSubmit} variant='contained' color='primary'>
         Login
       </Button>
       <Spacer />
-      {error && <Typography variant='body'>{JSON.stringify(error)} </Typography>}
+      {error && <Typography variant='body1'>{JSON.stringify(error)} </Typography>}
     </Container>
   );
 }
