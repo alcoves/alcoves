@@ -1,7 +1,6 @@
 import React from 'react';
 
 import Home from './components/Home';
-import Dash from './components/Dash';
 import Video from './components/Video';
 import Login from './components/Login';
 import Footer from './components/Footer';
@@ -12,8 +11,8 @@ import Editor from './components/Editor/Editor';
 import Navigation from './components/Navigation';
 import UserVideoGrid from './components/UserVideoGrid';
 
-import { Switch, Route } from 'react-router-dom';
 import { Typography } from '@material-ui/core';
+import { Switch, Route } from 'react-router-dom';
 
 function NoMatch() {
   return <Typography variant='h2'>404</Typography>;
@@ -34,7 +33,6 @@ function AppRouter() {
           <Route exact path='/login' children={<Login />} />
           <Route exact path='/register' children={<Register />} />
 
-          <Route exact path='/dash' children={<Dash />} />
           <Route exact path='/account' children={<Account />} />
           <Route exact path='/upload' children={<Uploader />} />
           <Route exact path='/videos/:id' children={<Video />} />
