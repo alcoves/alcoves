@@ -11,16 +11,14 @@ function serverUrl() {
 }
 
 export default function ApolloWrapper({ children }) {
-  const [bearerToken, setBearerToken] = useState('');
   const httpLink = createHttpLink({ uri: serverUrl() });
 
   const authLink = setContext((_, { headers, ...rest }) => {
-    setBearerToken(localStorage.getItem('token'));
     return {
       ...rest,
       headers: {
         ...headers,
-        authorization: `Bearer ${bearerToken}`,
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
     };
   });

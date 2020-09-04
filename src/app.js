@@ -33,11 +33,11 @@ function AppRouter() {
           <Route exact path='/login' children={<Login />} />
           <Route exact path='/register' children={<Register />} />
 
+          <Route exact path='/v/:id' children={<Video />} />
           <Route exact path='/account' children={<Account />} />
           <Route exact path='/upload' children={<Uploader />} />
-          <Route exact path='/videos/:id' children={<Video />} />
           <Route exact path='/editor/:id' children={<Editor />} />
-          <Route exact path='/users/:username' children={<UserVideoGrid />} />
+          <Route exact path='/u/:username' children={<UserVideoGrid />} />
           <Route component={NoMatch} />
         </Switch>
       </Content>
