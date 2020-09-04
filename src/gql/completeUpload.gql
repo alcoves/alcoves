@@ -1,0 +1,5 @@
+mutation completeUpload($input: CompleteUploadInput!) {
+  completeUpload(input: $input) {
+    id
+  }
+}
