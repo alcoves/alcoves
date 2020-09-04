@@ -1,9 +1,6 @@
 // const _ = require('lodash');
-// const AWS = require('aws-sdk');
-// const shortid = require('shortid');
-// const ws3Init = require('../config/wasabi');
+// const { nanoid } = require('nanoid');
 
-// const { s3 } = require('../config/s3');
 // const {
 //   VIDEOS_TABLE,
 //   TIDAL_TABLE,
@@ -12,34 +9,7 @@
 //   USERS_TABLE,
 // } = require('../config/config');
 // const { ApolloError } = require('apollo-server-express');
-
-// const db = new AWS.DynamoDB.DocumentClient({
-//   region: 'us-east-2',
-// });
-
-// async function createVideo({ user, title, duration }) {
-//   const id = shortid();
-//   if (user && title && duration) {
-//     await db
-//       .put({
-//         TableName: VIDEOS_TABLE,
-//         Item: {
-//           id,
-//           user,
-//           title,
-//           views: 0,
-//           duration,
-//           visibility: 'unlisted',
-//           createdAt: new Date().toISOString(),
-//           modifiedAt: new Date().toISOString(),
-//         },
-//       })
-//       .promise();
-//     return getVideoById(id);
-//   }
-
-//   throw new Error('failed to create video');
-// }
+const Video = require('../models/Video');
 
 // async function getTidalVideoById(id) {
 //   if (!id) throw new Error('ID cannot be null');
@@ -245,13 +215,3 @@
 
 //   return true;
 // }
-
-// module.exports = {
-//   deleteVideo,
-//   createVideo,
-//   getVideoById,
-//   updateVideoTitle,
-//   getTidalVideoById,
-//   setVideoVisibility,
-//   getVideosByNickname,
-// };

@@ -1,47 +1,76 @@
 const { gql } = require('apollo-server-express');
-const { createMultipartUpload, completeMultipartUpload } = require('../loaders/uploads');
+const { createUpload, completeUpload } = require('../loaders/uploads');
 
 module.exports.typeDefs = gql`
   extend type Mutation {
-    createMultipartUpload(input: CreateMultipartUploadInput!): CreateMultipartUploadResponse!
-    completeMultipartUpload(input: CompleteMultipartUploadInput!): CompleteMultipartUploadResponse!
+    createUpload(input: CreateUploadInput!): CreateUploadResponse!
+    completeUpload(input: CompleteUploadInput!): CompleteUploadResponse!
   }
-  type CreateMultipartUploadResponse {
-    key: String!
-    urls: [String!]
-    uploadId: String!
-    objectId: String!
+  type CreateUploadResponse {
+    id: String!
+    url: String!
   }
-  type CompleteMultipartUploadResponse {
-    completed: Boolean!
+  type CompleteUploadResponse {
+    id: String!
   }
-  input CreateMultipartUploadInput {
-    parts: Int!
-    title: String!
-    duration: Float!
+  input CreateUploadInput {
     fileType: String!
   }
-  input CompleteMultipartUploadInput {
-    parts: [Part!]!
-    key: String!
-    objectId: String!
-    uploadId: String!
-  }
-  input Part {
-    ETag: String!
-    PartNumber: Int!
+  input CompleteUploadInput {
+    id: String!
+    title: String!
+    duration: Float!
   }
 `;
 
 module.exports.resolvers = {
   Mutation: {
-    async createMultipartUpload(_, { input }, { auth }) {
-      if (!auth.isAuthenticated) throw new Error('authentication failed');
-      return createMultipartUpload(input, user);
+    async createUpload(_, { input }, { isAuthenticated }) {
+      if (!isAuthenticated) throw new Error('authentication failed');
+      return createUpload(input);
     },
-    completeMultipartUpload: async (_, { input }, { auth }) => {
-      if (!auth.isAuthenticated) throw new Error('authentication failed');
-      return completeMultipartUpload(input);
+    async completeUpload(_, { input }, { user, isAuthenticated }) {
+      if (!isAuthenticated) throw new Error('authentication failed');
+      return completeUpload({ user, ...input });
     },
   },
 };
+
+// createMultipartUpload(input: CreateMultipartUploadInput!): CreateMultipartUploadResponse!
+// completeMultipartUpload(input: CompleteMultipartUploadInput!): CompleteMultipartUploadResponse!
+
+// type CreateMultipartUploadResponse {
+//   key: String!
+//   urls: [String!]
+//   uploadId: String!
+//   objectId: String!
+// }
+// type CompleteMultipartUploadResponse {
+//   completed: Boolean!
+// }
+
+// input CreateMultipartUploadInput {
+//   parts: Int!
+//   title: String!
+//   duration: Float!
+//   fileType: String!
+// }
+// input CompleteMultipartUploadInput {
+//   parts: [Part!]!
+//   key: String!
+//   objectId: String!
+//   uploadId: String!
+// }
+// input Part {
+//   ETag: String!
+//   PartNumber: Int!
+// }
+
+// async createMultipartUpload(_, { input }, { user, isAuthenticated }) {
+//   if (!isAuthenticated) throw new Error('authentication failed');
+//   return createMultipartUpload(input, user);
+// },
+// completeMultipartUpload: async (_, { input }, { isAuthenticated }) => {
+//   if (!isAuthenticated) throw new Error('authentication failed');
+//   return completeMultipartUpload(input);
+// },

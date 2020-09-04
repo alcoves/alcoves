@@ -1,14 +1,13 @@
+const { nanoid } = require('nanoid');
 const mongoose = require('mongoose');
-const shortid = require('shortid');
+
 const Schema = mongoose.Schema;
+const defaultThumbnail = 'https://cdn.bken.io/files/default-thumbnail-sm.jpg';
 
-const defaultThumbnail =
-  'https://s3.us-east-2.wasabisys.com/media-bken/files/default-thumbnail-sm.jpg';
-
-const videoFile = new Schema(
+const version = new Schema(
   {
     link: { type: String },
-    preset: { type: String, required: true, unique: true },
+    preset: { type: String, required: true },
     status: { type: String, default: 'queueing', required: true },
     percentCompleted: { type: Number, default: 0, required: true },
   },
@@ -17,19 +16,18 @@ const videoFile = new Schema(
 
 const videoSchema = new Schema(
   {
-    files: [videoFile],
+    versions: [version],
+    _id: { type: String, default: nanoid },
     duration: { type: Number, required: true },
-    sourceFile: { type: String, required: false },
-    _id: { type: String, default: shortid.generate },
     views: { type: Number, default: 0, required: true },
+    title: { type: String, required: true, default: nanoid },
     status: { type: String, required: true, default: 'uploading' },
-    title: { type: String, required: true, default: shortid.generate },
     thumbnail: { type: String, default: defaultThumbnail, required: true },
     user: {
-      type: Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
       index: true,
+      required: true,
+      type: Schema.Types.ObjectId,
     },
   },
   { timestamps: true }

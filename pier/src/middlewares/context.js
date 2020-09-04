@@ -1,19 +1,20 @@
+const jwt = require('jsonwebtoken');
+
 module.exports = async event => {
-  const user = null;
-  const isAuthenticated = false;
+  let user = null;
+  let isAuthenticated = false;
 
-  // try {
-  //   const authHeader = event.headers.authorization || '';
+  try {
+    const authHeader = event.req.headers.authorization || '';
+    if (authHeader) {
+      const token = authHeader.split(' ')[1];
+      const payload = jwt.verify(token, process.env.JWT_KEY);
+      user = payload || null;
+      isAuthenticated = !!user;
+    }
+  } catch (error) {
+    console.error(error);
+  }
 
-  //   if (authHeader) {
-  //     const token = authHeader.split(' ')[1];
-  //     const payload = ''; // Verify token
-  //     user = payload || null;
-  //     isAuthenticated = !!payload;
-  //   }
-  // } catch (error) {
-  //   console.error(error);
-  // }
-
-  return { auth: { isAuthenticated, user } };
+  return { user, isAuthenticated };
 };
