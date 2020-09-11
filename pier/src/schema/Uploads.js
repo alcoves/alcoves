@@ -20,6 +20,7 @@ module.exports.typeDefs = gql`
     id: String!
     title: String!
     duration: Float!
+    fileType: String!
   }
 `;
 

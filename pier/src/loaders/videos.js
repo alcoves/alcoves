@@ -1,10 +1,25 @@
 const _ = require('lodash');
-const Video = require('../models/Video');
 const ds3 = require('../config/ds3');
 const ws3 = require('../config/ws3');
+const User = require('../models/User');
+const Video = require('../models/Video');
 
 function getVideoById(id) {
   return Video.findById(id);
+}
+
+async function getTidalThumbnailsById(id) {
+  const res = await ws3.listObjectsV2({ Bucket: 'cdn.bken.io', Prefix: `i/${id}/t/` }).promise();
+  if (!res.Contents.length) return ['https://cdn.bken.io/files/default-thumbnail-sm.jpg'];
+  return res.Contents.reduce((acc, { Key }) => {
+    if (!Key.endsWith('/')) acc.push(`https://cdn.bken.io/${Key}`);
+    return acc;
+  }, []);
+}
+
+async function getVideosByUsername(username) {
+  const user = await User.findOne({ username });
+  return Video.find({ user: user.id });
 }
 
 async function getTidalVersionsById(id) {
@@ -52,5 +67,7 @@ async function getTidalVersionsById(id) {
 
 module.exports = {
   getVideoById,
+  getVideosByUsername,
   getTidalVersionsById,
+  getTidalThumbnailsById,
 };

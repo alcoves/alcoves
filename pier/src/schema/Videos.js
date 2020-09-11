@@ -6,14 +6,16 @@ const {
   // updateVideoTitle,
   // setVideoVisibility,
   // getVideosByNickname,
+  getVideosByUsername,
   getTidalVersionsById,
+  getTidalThumbnailsById,
 } = require('../loaders/videos');
 
 module.exports.typeDefs = gql`
   extend type Query {
     video(id: String!): Video!
     authenticatedQuery: String!
-    videosByNickname(username: String!): [Video!]!
+    videosByUsername(username: String!): [Video!]!
   }
   extend type Mutation {
     deleteVideo(id: String!): Boolean!
@@ -30,6 +32,7 @@ module.exports.typeDefs = gql`
     createdAt: String!
     modifiedAt: String!
     visibility: String!
+    thumbnails: [String]!
     versions: [Version!]!
   }
   type Version {
@@ -56,19 +59,17 @@ module.exports.resolvers = {
     user({ user }) {
       return getUserById(user);
     },
-    thumbnail({ id }) {
-      // TODO :: Go get thumbnail from cdn
-      const defaultThumbnail = 'https://cdn.bken.io/files/default-thumbnail-sm.jpg';
-      return defaultThumbnail;
+    thumbnails({ id }) {
+      return getTidalThumbnailsById(id);
     },
   },
   Query: {
     video(_, { id }) {
       return getVideoById(id);
     },
-    // videosByNickname(_, { username }, { isAuthenticated }) {
-    //   return getVideosByNickname(username);
-    // },
+    videosByUsername(_, { username }, { isAuthenticated }) {
+      return getVideosByUsername(username);
+    },
   },
   Mutation: {
     // deleteVideo(_, { id }) {
