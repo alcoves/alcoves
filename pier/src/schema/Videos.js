@@ -1,7 +1,7 @@
 const { gql, AuthenticationError } = require('apollo-server-express');
 const { getUserById } = require('../loaders/users');
 const {
-  // deleteVideo,
+  deleteVideo,
   getVideoById,
   // updateVideoTitle,
   // setVideoVisibility,
@@ -72,9 +72,9 @@ module.exports.resolvers = {
     },
   },
   Mutation: {
-    // deleteVideo(_, { id }) {
-    //   return deleteVideo(id);
-    // },
+    deleteVideo(_, { id }) {
+      return deleteVideo(id);
+    },
     // updateVideoTitle(_, { id, title }) {
     //   return updateVideoTitle({
     //     id,

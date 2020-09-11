@@ -65,7 +65,31 @@ async function getTidalVersionsById(id) {
   });
 }
 
+async function deleteVideo(id) {
+  // TODO :: make sure that tidal is not processing before deleting
+
+  const Bucket = 'cdn.bken.io';
+  const [imageRes, videoRes] = await Promise.all([
+    ws3.listObjectsV2({ Bucket, Prefix: `i/${id}` }).promise(),
+    ws3.listObjectsV2({ Bucket, Prefix: `v/${id}` }).promise(),
+  ]);
+
+  const itemsToDelete = _.union(imageRes.Contents, videoRes.Contents);
+  console.log('itemsToDelete', itemsToDelete);
+
+  await Promise.all(
+    itemsToDelete.map(({ Key }) => {
+      console.log('deleting', Key);
+      return ws3.deleteObject({ Bucket, Key }).promise();
+    })
+  );
+
+  await Video.findByIdAndDelete(id);
+  return true;
+}
+
 module.exports = {
+  deleteVideo,
   getVideoById,
   getVideosByUsername,
   getTidalVersionsById,
