@@ -34,9 +34,11 @@ function UploadProgress({ id, url, file }) {
         const video = document.createElement('video');
         video.setAttribute('src', window.URL.createObjectURL(file));
         video.onloadeddata = event => {
-          const meta = event.srcElement;
+          const meta = event.srcElement; // TODO :: This is deprecated
           completeUpload({
-            variables: { input: { id, title: file.name, duration: meta.duration } },
+            variables: {
+              input: { id, title: file.name, duration: meta.duration, fileType: file.type },
+            },
           });
         };
       });
