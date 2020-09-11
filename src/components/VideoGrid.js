@@ -90,7 +90,7 @@ function VideoCard({ video }) {
               keepMounted
               open={Boolean(anchorEl)}
               onClose={handleClose}>
-              {user && user.sub === video.user.id && (
+              {user && user.id === video.user.id && (
                 <MenuItem onClick={handleClose} component={Link} to={`/editor/${video.id}`}>
                   Edit
                 </MenuItem>
@@ -99,7 +99,7 @@ function VideoCard({ video }) {
           </div>
         }
         title={<Link to={`/users/${video.user.username}`}>{video.user.username}</Link>}
-        subheader={moment(video.createdAt).fromNow()}
+        subheader={moment(parseInt(video.createdAt)).fromNow()}
       />
     </Card>
   );

@@ -137,17 +137,19 @@ function Video({ data }) {
                           }
                         }}>
                         {data.video.versions.map(v => {
-                          return (
-                            <MenuItem key={v.preset} value={v}>
-                              {v.preset.split('-')[1]}
-                            </MenuItem>
-                          );
+                          if (v.link) {
+                            return (
+                              <MenuItem key={v.preset} value={v}>
+                                {v.preset.split('-')[1]}
+                              </MenuItem>
+                            );
+                          }
                         })}
                       </Select>
                     </FormControl>
                   </div>
                   <Typography variant='body2'>{`${moment(
-                    data.video.createdAt,
+                    parseInt(data.video.createdAt),
                   ).fromNow()}`}</Typography>
                 </div>
                 <div
