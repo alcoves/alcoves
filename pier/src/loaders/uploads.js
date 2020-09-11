@@ -1,10 +1,10 @@
 const mime = require('mime');
-const { nanoid } = require('nanoid');
+const ds3 = require('../config/ds3');
 const Video = require('../models/Video');
 
-const { s3 } = require('../config/do');
+const { nanoid } = require('nanoid');
 
-const DIGITAL_OCEAN_TIDAL_BUCKET = 'bken';
+const DIGITAL_OCEAN_TIDAL_BUCKET = 'tidal';
 
 // async function createMultipartUpload({ parts, fileType, duration, title }, user) {
 //   const video = await createVideo({
@@ -13,7 +13,7 @@ const DIGITAL_OCEAN_TIDAL_BUCKET = 'bken';
 //     user: user.id,
 //   });
 
-//   const { UploadId, Key } = await s3
+//   const { UploadId, Key } = await ds3
 //     .createMultipartUpload({
 //       Bucket: DIGITAL_OCEAN_TIDAL_BUCKET,
 //       ContentType: mime.getType(fileType),
@@ -24,7 +24,7 @@ const DIGITAL_OCEAN_TIDAL_BUCKET = 'bken';
 //   const urls = [];
 //   for (let i = 1; i <= parts; i++) {
 //     urls.push(
-//       s3.getSignedUrl('uploadPart', {
+//       ds3.getSignedUrl('uploadPart', {
 //         Key,
 //         UploadId,
 //         PartNumber: i,
@@ -38,7 +38,7 @@ const DIGITAL_OCEAN_TIDAL_BUCKET = 'bken';
 // }
 
 // async function completeMultipartUpload({ key: Key, parts: Parts, uploadId: UploadId }) {
-//   await s3
+//   await ds3
 //     .completeMultipartUpload({
 //       Key,
 //       UploadId,
@@ -52,10 +52,10 @@ const DIGITAL_OCEAN_TIDAL_BUCKET = 'bken';
 async function createUpload({ fileType }) {
   const id = nanoid();
 
-  const url = s3.getSignedUrl('putObject', {
+  const url = ds3.getSignedUrl('putObject', {
     Expires: 3600,
     Bucket: DIGITAL_OCEAN_TIDAL_BUCKET,
-    Key: `sources/${id}/source.${mime.getExtension(fileType)}`,
+    Key: `source/${id}/source.${mime.getExtension(fileType)}`,
   });
 
   return { id, url };
@@ -70,6 +70,8 @@ async function completeUpload({ id, title, duration, user }) {
     user: user.id,
     visibility: 'unlisted',
   }).save();
+
+  // Dispatch upload to nomad
 }
 
 module.exports = {

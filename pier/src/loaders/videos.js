@@ -1,217 +1,56 @@
-// const _ = require('lodash');
-// const { nanoid } = require('nanoid');
-
-// const {
-//   VIDEOS_TABLE,
-//   TIDAL_TABLE,
-//   TIDAL_BUCKET,
-//   WASABI_CDN_BUCKET,
-//   USERS_TABLE,
-// } = require('../config/config');
-// const { ApolloError } = require('apollo-server-express');
+const _ = require('lodash');
 const Video = require('../models/Video');
+const ds3 = require('../config/ds3');
+const ws3 = require('../config/ws3');
 
-// async function getTidalVideoById(id) {
-//   if (!id) throw new Error('ID cannot be null');
-//   const { Item } = await db
-//     .get({
-//       Key: {
-//         id,
-//       },
-//       TableName: TIDAL_TABLE,
-//     })
-//     .promise();
+function getVideoById(id) {
+  return Video.findById(id);
+}
 
-//   if (Item) {
-//     if (!Item.thumbnail) {
-//       Item.thumbnail = 'https://cdn.bken.io/static/default-thumbnail-sm.jpg';
-//     }
+async function getTidalVersionsById(id) {
+  const [res, res2] = await Promise.all([
+    ds3
+      .listObjectsV2({
+        Bucket: 'tidal',
+        Delimiter: '/',
+        Prefix: `segments/${id}/`,
+      })
+      .promise(),
+    ws3
+      .listObjectsV2({
+        Bucket: 'cdn.bken.io',
+        Prefix: `v/${id}`,
+      })
+      .promise(),
+  ]);
 
-//     if (Item.versions) {
-//       Item.versions = Object.entries(Item.versions).map(([k, v]) => {
-//         const percentCompleted = (v.segmentsCompleted / Item.segmentCount) * 100;
-//         return {
-//           link: v.link || null,
-//           status: v.status || null,
-//           preset: v.preset || null,
-//           percentCompleted: isNaN(percentCompleted) ? 0 : percentCompleted,
-//         };
-//       });
-//     }
+  const inProgressPresets = res.CommonPrefixes.map(
+    ({ Prefix }) => Prefix.split('/')[2].split('/')[0]
+  );
+  const cdnPresets = res2.Contents.map(({ Key }) => Key.split('/')[2].split('.')[0]);
+  const presets = _.union(cdnPresets, inProgressPresets);
 
-//     return Item;
-//   }
-//   return null;
-// }
+  // console.log('res', res);
+  // console.log('res2', res2);
+  // console.log('cdnPresets', cdnPresets);
+  // console.log('inProgressPresets', inProgressPresets);
+  // console.log('presets', presets);
 
-// async function getVideoById(id) {
-//   const { Item } = await db
-//     .get({
-//       Key: {
-//         id,
-//       },
-//       TableName: VIDEOS_TABLE,
-//     })
-//     .promise();
-//   if (!Item) throw new Error('video not found');
-//   return Item;
-// }
+  const finalPresets = presets.reduce((acc, cv) => {
+    acc.push({
+      preset: cv,
+      status: cdnPresets.includes(cv) ? 'completed' : 'processing',
+      link: cdnPresets.includes(cv) ? `https://cdn.bken.io/v/${id}/${cv}.mp4` : '',
+    });
+    return acc;
+  }, []);
 
-// async function getVideosByNickname(username) {
-//   const { Items: users } = await db
-//     .query({
-//       TableName: USERS_TABLE,
-//       IndexName: 'username-index',
-//       KeyConditionExpression: '#username = :username',
-//       ExpressionAttributeValues: {
-//         ':username': username,
-//       },
-//       ExpressionAttributeNames: {
-//         '#username': 'username',
-//       },
-//     })
-//     .promise();
+  return finalPresets.filter(({ preset }) => {
+    return preset !== 'source';
+  });
+}
 
-//   const { Items } = await db
-//     .query({
-//       TableName: VIDEOS_TABLE,
-//       IndexName: 'user-index',
-//       KeyConditionExpression: '#user = :user',
-//       ExpressionAttributeNames: {
-//         '#user': 'user',
-//       },
-//       ExpressionAttributeValues: {
-//         ':user': users[0].id,
-//       },
-//     })
-//     .promise();
-
-//   return Items.length ? _.orderBy(Items, 'createdAt', 'desc') : [];
-// }
-
-// async function updateVideoTitle({ id, title }) {
-//   await db
-//     .update({
-//       Key: {
-//         id,
-//       },
-//       TableName: VIDEOS_TABLE,
-//       UpdateExpression: 'set #title = :title',
-//       ExpressionAttributeValues: {
-//         ':title': title,
-//       },
-//       ExpressionAttributeNames: {
-//         '#title': 'title',
-//       },
-//     })
-//     .promise();
-//   return getVideoById(id);
-// }
-
-// async function setVideoVisibility({ id, visibility }) {
-//   await db
-//     .update({
-//       Key: {
-//         id,
-//       },
-//       TableName: VIDEOS_TABLE,
-//       UpdateExpression: 'set #visibility = :visibility',
-//       ExpressionAttributeValues: {
-//         ':visibility': visibility,
-//       },
-//       ExpressionAttributeNames: {
-//         '#visibility': 'visibility',
-//       },
-//     })
-//     .promise();
-//   return getVideoById(id);
-// }
-
-// async function deleteVideo(id) {
-//   const video = await getTidalVideoById(id);
-
-//   if (video.status !== 'completed') {
-//     throw new ApolloError('video is still processing', 400);
-//   }
-
-//   const ws3 = await ws3Init();
-
-//   // Delete versions from cdn bucket
-//   const { Contents: cdnVideos } = await ws3
-//     .listObjectsV2({
-//       Prefix: `v/${id}`,
-//       Bucket: WASABI_CDN_BUCKET,
-//     })
-//     .promise();
-
-//   await Promise.all(
-//     cdnVideos.map(({ Key }) => {
-//       return ws3
-//         .deleteObject({
-//           Key,
-//           Bucket: WASABI_CDN_BUCKET,
-//         })
-//         .promise();
-//     })
-//   );
-
-//   // Delete thumbnails
-//   const { Contents: cdnThumbs } = await ws3
-//     .listObjectsV2({
-//       Prefix: `i/${id}`,
-//       Bucket: WASABI_CDN_BUCKET,
-//     })
-//     .promise();
-
-//   await Promise.all(
-//     cdnThumbs.map(({ Key }) => {
-//       return ws3
-//         .deleteObject({
-//           Key,
-//           Bucket: WASABI_CDN_BUCKET,
-//         })
-//         .promise();
-//     })
-//   );
-
-//   // Delete source video from tidal-uploads bucket
-//   const { Contents: tidalContents } = await s3
-//     .listObjectsV2({
-//       Prefix: `uploads/${id}`,
-//       Bucket: TIDAL_BUCKET,
-//     })
-//     .promise();
-
-//   await Promise.all(
-//     tidalContents.map(({ Key }) => {
-//       return s3
-//         .deleteObject({
-//           Key,
-//           Bucket: TIDAL_BUCKET,
-//         })
-//         .promise();
-//     })
-//   );
-
-//   // Delete from videos table
-//   await db
-//     .delete({
-//       Key: {
-//         id,
-//       },
-//       TableName: VIDEOS_TABLE,
-//     })
-//     .promise();
-
-//   // Delete from tidal db
-//   await db
-//     .delete({
-//       Key: {
-//         id,
-//       },
-//       TableName: TIDAL_TABLE,
-//     })
-//     .promise();
-
-//   return true;
-// }
+module.exports = {
+  getVideoById,
+  getTidalVersionsById,
+};

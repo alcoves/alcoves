@@ -1,8 +1,7 @@
 const AWS = require('aws-sdk');
+const { DO_ENDPOINT, DO_ACCESS_KEY_ID, DO_SECRET_ACCESS_KEY } = process.env;
 
-const { DO_ACCESS_KEY_ID, DO_SECRET_ACCESS_KEY } = process.env;
-
-if (!DO_ACCESS_KEY_ID || !DO_SECRET_ACCESS_KEY) {
+if (!DO_ENDPOINT || !DO_ACCESS_KEY_ID || !DO_SECRET_ACCESS_KEY) {
   throw new Error('Failed to setup digitalocean s3 configuration');
 }
 
@@ -11,9 +10,7 @@ const s3 = new AWS.S3({
   signatureVersion: 'v4',
   accessKeyId: DO_ACCESS_KEY_ID,
   secretAccessKey: DO_SECRET_ACCESS_KEY,
-  endpoint: new AWS.Endpoint('nyc3.digitaloceanspaces.com'),
+  endpoint: new AWS.Endpoint(DO_ENDPOINT),
 });
 
-module.exports = {
-  s3,
-};
+module.exports = s3;
