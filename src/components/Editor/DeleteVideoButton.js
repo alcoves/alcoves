@@ -15,7 +15,7 @@ function DeleteVideoButton({ id }) {
   const { enqueueSnackbar } = useSnackbar();
   const [deleteVideo, { loading, data, error }] = useMutation(DELETE_VIDEO, {
     variables: { id },
-    refetchQueries: ['videosByNickname'],
+    refetchQueries: ['videosByUsername'],
   });
 
   useEffect(() => {

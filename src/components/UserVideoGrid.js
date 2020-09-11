@@ -7,25 +7,23 @@ import React, { useEffect, useContext } from 'react';
 import { UserContext } from '../contexts/UserContext';
 
 const GET_USER_VIDEOS = gql`
-  query videosByNickname($username: String!) {
-    videosByNickname(username: $username) {
+  query videosByUsername($username: String!) {
+    videosByUsername(username: $username) {
       id
       title
       views
       duration
       createdAt
+      thumbnails
       user {
         id
         avatar
         username
       }
-      tidal {
-        thumbnail
-        versions {
-          link
-          status
-          preset
-        }
+      versions {
+        link
+        status
+        preset
       }
     }
   }
@@ -50,7 +48,7 @@ function UserVideoGrid() {
   });
 
   if (error) console.log(error);
-  if (data && username && user) return <VideoGrid videos={data.videosByNickname} />;
+  if (data && username && user) return <VideoGrid videos={data.videosByUsername} />;
   return <LinearProgress> Loading user videos... </LinearProgress>;
 }
 
