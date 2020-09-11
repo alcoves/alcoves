@@ -27,18 +27,16 @@ const QUERY = gql`
         avatar
         username
       }
-      tidal {
-        versions {
-          link
-          status
-          preset
-        }
+      versions {
+        link
+        status
+        preset
       }
     }
   }
 `;
 
-const pickUrl = ({ versions }, override) => {
+const pickUrl = (versions, override) => {
   console.log('pickUrl versions', versions);
 
   if (versions) {
@@ -73,7 +71,7 @@ function Video({ data }) {
     maxHeight: 'calc((9 / 16) * 100vw',
   };
 
-  const [version, setVersion] = useState(pickUrl(data.video.tidal));
+  const [version, setVersion] = useState(pickUrl(data.video.versions));
   console.log('version', version);
 
   if (version) {
@@ -129,8 +127,7 @@ function Video({ data }) {
                         value={version}
                         onChange={e => {
                           const video = document.getElementById('bkenVideoPlayer');
-                          setVersion(pickUrl(data.video.tidal, e.target.value.preset));
-
+                          setVersion(pickUrl(data.video.versions, e.target.value.preset));
                           // WARNING :: play() request was interrupted by a new load request.
                           if (video) {
                             const currentTime = video.currentTime;
@@ -139,7 +136,7 @@ function Video({ data }) {
                             video.currentTime = currentTime;
                           }
                         }}>
-                        {data.video.tidal.versions.map(v => {
+                        {data.video.versions.map(v => {
                           return (
                             <MenuItem key={v.preset} value={v}>
                               {v.preset.split('-')[1]}
