@@ -56,6 +56,11 @@ module.exports.resolvers = {
     user({ user }) {
       return getUserById(user);
     },
+    thumbnail({ id }) {
+      // TODO :: Go get thumbnail from cdn
+      const defaultThumbnail = 'https://cdn.bken.io/files/default-thumbnail-sm.jpg';
+      return defaultThumbnail;
+    },
   },
   Query: {
     video(_, { id }) {

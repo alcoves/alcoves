@@ -9,6 +9,7 @@ module.exports.typeDefs = gql`
   type User {
     id: String!
     email: String!
+    avatar: String!
     username: String!
   }
   type LoginResponse {

@@ -2,7 +2,6 @@ const { nanoid } = require('nanoid');
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
-const defaultThumbnail = 'https://cdn.bken.io/files/default-thumbnail-sm.jpg';
 
 const videoSchema = new Schema(
   {
@@ -10,8 +9,6 @@ const videoSchema = new Schema(
     duration: { type: Number, required: true },
     views: { type: Number, default: 0, required: true },
     title: { type: String, required: true, default: nanoid },
-    status: { type: String, required: true, default: 'uploading' },
-    thumbnail: { type: String, default: defaultThumbnail, required: true },
     user: {
       ref: 'User',
       index: true,

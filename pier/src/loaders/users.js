@@ -24,7 +24,12 @@ async function register({ email, username, password }) {
   return login({ username, password });
 }
 
+async function getUserById(id) {
+  return User.findById(id);
+}
+
 module.exports = {
   login,
   register,
+  getUserById,
 };
