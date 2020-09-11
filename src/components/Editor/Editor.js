@@ -16,16 +16,12 @@ const GET_VIDEO = gql`
     video(id: $id) {
       id
       title
+      thumbnails
       visibility
-      tidal {
+      versions {
+        link
         status
-        thumbnail
-        versions {
-          link
-          status
-          preset
-          percentCompleted
-        }
+        preset
       }
     }
   }
@@ -72,7 +68,7 @@ function Editor() {
       <Container maxWidth='md' style={{ paddingTop: '15px' }}>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={4}>
-            {data.video?.tidal?.thumbnail && (
+            {data.video?.thumbnails && (
               <img
                 style={{
                   borderRadius: '5px',
@@ -80,7 +76,7 @@ function Editor() {
                   background: 'grey',
                 }}
                 width='100%'
-                src={data.video.tidal.thumbnail}
+                src={data.video.thumbnails[0]}
               />
             )}
           </Grid>
@@ -108,11 +104,7 @@ function Editor() {
             <DeleteVideoButton id={data.video.id} />
           </Grid>
           <Grid item>
-            <Button
-              color='primary'
-              component={Link}
-              variant='outlined'
-              to={`/videos/${data.video.id}`}>
+            <Button color='primary' component={Link} variant='outlined' to={`/v/${data.video.id}`}>
               View
             </Button>
           </Grid>

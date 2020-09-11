@@ -53,7 +53,7 @@ function VideoCard({ video }) {
 
   return (
     <Card elevation={4}>
-      <Link to={`/videos/${video.id}`}>
+      <Link to={`/v/${video.id}`}>
         <CardActionArea>
           <div
             style={{
