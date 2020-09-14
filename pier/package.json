@@ -11,7 +11,8 @@
     "test": ". ./.env && jest ./src/ --runInBand",
     "lint": "prettier --check \"src/**/*.*\"",
     "lint:fix": "prettier --write \"src/**/*.*\"",
-    "start": "NODE_ENV=test nodemon -r dotenv/config src/index.js"
+    "dev": "NODE_ENV=test nodemon -r dotenv/config src/index.js",
+    "start": "node src/index.js"
   },
   "dependencies": {
     "apollo-server-express": "^2.17.0",
