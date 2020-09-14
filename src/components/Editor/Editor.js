@@ -18,10 +18,14 @@ const GET_VIDEO = gql`
       title
       thumbnails
       visibility
-      versions {
-        link
+      tidal {
         status
-        preset
+        versions {
+          link
+          status
+          preset
+          percentCompleted
+        }
       }
     }
   }
@@ -89,9 +93,9 @@ function Editor() {
         </Grid>
         {data.video.tidal && (
           <div>
-            <VideoPlayer versions={data.video.tidal.versions} />
+            <VideoPlayer versions={data.video?.tidal?.versions} />
             <VideoStatus status={data.video?.tidal?.status} />
-            <VersionStatus versions={data.video.tidal.versions} />
+            <VersionStatus versions={data.video?.tidal?.versions} />
           </div>
         )}
         <Grid

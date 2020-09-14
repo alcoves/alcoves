@@ -20,10 +20,12 @@ const GET_USER_VIDEOS = gql`
         avatar
         username
       }
-      versions {
-        link
-        status
-        preset
+      tidal {
+        versions {
+          link
+          status
+          preset
+        }
       }
     }
   }
