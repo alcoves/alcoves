@@ -1,3 +1,12 @@
 .github
 coverage
 node_modules
+.eslintrc.json
+.git
+.gitignore
+.prettierrc
+Dockerfile
+jest.config.js
+LICENSE
+README.md
+yarn.lock
