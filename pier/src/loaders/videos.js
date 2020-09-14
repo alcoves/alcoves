@@ -19,50 +19,75 @@ async function getTidalThumbnailsById(id) {
 
 async function getVideosByUsername(username) {
   const user = await User.findOne({ username });
-  return Video.find({ user: user.id });
+  return Video.find({ user: user.id }).sort({ createdAt: -1 });
 }
 
 async function getTidalVersionsById(id) {
-  const [res, res2] = await Promise.all([
+  // Should fetch more items, 1000 limit right now
+  const [tidalPresets, totalSegments, cdnPresets] = await Promise.all([
     ds3
       .listObjectsV2({
         Bucket: 'tidal',
         Delimiter: '/',
         Prefix: `segments/${id}/`,
       })
-      .promise(),
+      .promise()
+      .then(({ CommonPrefixes }) => {
+        return CommonPrefixes.map(({ Prefix }) => Prefix.split('/')[2].split('/')[0]);
+      }),
+    ds3
+      .listObjectsV2({
+        Bucket: 'tidal',
+        Prefix: `segments/${id}/source/`,
+      })
+      .promise()
+      .then(({ Contents }) => {
+        return Contents.length;
+      }),
     ws3
       .listObjectsV2({
         Bucket: 'cdn.bken.io',
         Prefix: `v/${id}`,
       })
-      .promise(),
+      .promise()
+      .then(({ Contents }) => {
+        return Contents.map(({ Key }) => Key.split('/')[2].split('.')[0]);
+      }),
   ]);
 
-  const inProgressPresets = res.CommonPrefixes.map(
-    ({ Prefix }) => Prefix.split('/')[2].split('/')[0]
+  const versions = await Promise.all(
+    _.union(tidalPresets, cdnPresets)
+      .filter(preset => {
+        return preset !== 'source';
+      })
+      .map(async preset => {
+        const { KeyCount: completedSegments } = await ds3
+          .listObjectsV2({ Bucket: 'tidal', Prefix: `segments/${id}/${preset}` })
+          .promise();
+
+        return {
+          preset,
+          percentCompleted: (completedSegments / totalSegments) * 100,
+          status: cdnPresets.includes(preset) ? 'completed' : 'processing',
+          link: cdnPresets.includes(preset) ? `https://cdn.bken.io/v/${id}/${preset}.mp4` : '',
+        };
+      })
   );
-  const cdnPresets = res2.Contents.map(({ Key }) => Key.split('/')[2].split('.')[0]);
-  const presets = _.union(cdnPresets, inProgressPresets);
 
-  // console.log('res', res);
-  // console.log('res2', res2);
-  // console.log('cdnPresets', cdnPresets);
-  // console.log('inProgressPresets', inProgressPresets);
-  // console.log('presets', presets);
+  const status = versions.reduce((acc, cv) => {
+    if (cv.percentCompleted !== 100) {
+      acc = 'transcoding';
+    } else {
+      acc = 'completed';
+    }
 
-  const finalPresets = presets.reduce((acc, cv) => {
-    acc.push({
-      preset: cv,
-      status: cdnPresets.includes(cv) ? 'completed' : 'processing',
-      link: cdnPresets.includes(cv) ? `https://cdn.bken.io/v/${id}/${cv}.mp4` : '',
-    });
     return acc;
-  }, []);
+  }, 'uploaded');
 
-  return finalPresets.filter(({ preset }) => {
-    return preset !== 'source';
-  });
+  return {
+    status,
+    versions,
+  };
 }
 
 async function deleteVideo(id) {

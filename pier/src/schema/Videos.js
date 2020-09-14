@@ -29,16 +29,21 @@ module.exports.typeDefs = gql`
     views: Int!
     title: String!
     duration: Float!
+    tidal: TidalVideo!
     createdAt: String!
     modifiedAt: String!
     visibility: String!
     thumbnails: [String]!
+  }
+  type TidalVideo {
+    status: String!
     versions: [Version!]!
   }
   type Version {
     link: String!
     status: String!
     preset: String!
+    percentCompleted: Float!
   }
   enum VisibilityOption {
     public
@@ -53,7 +58,7 @@ module.exports.typeDefs = gql`
 
 module.exports.resolvers = {
   Video: {
-    versions({ id }) {
+    tidal({ id }) {
       return getTidalVersionsById(id);
     },
     user({ user }) {
