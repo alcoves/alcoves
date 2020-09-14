@@ -44,7 +44,7 @@ jobs:
         run: doctl registry login
         
       - name: Build and push
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v1.1.1
         with:
           push: true
           tags: api/api:latest
