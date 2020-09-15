@@ -1,16 +1,18 @@
 job "api" {
+  priority    = 100
   datacenters = ["dc1"]
+  type        = "service"
 
   group "services" {
     task "api" {
       driver = "docker"
 
       config {
-        image = "registry.digitalocean.com/bken/api:latest"
+        image = "docker.pkg.github.com/bken-io/api/api:latest"
 
         auth {
-          username = "bken"
-          password = "dockerhub_password"
+          username = "rustyguts"
+          password = "${NOMAD_META_GITHUB_ACCESS_TOKEN}"
         }
       }
 
@@ -18,6 +20,24 @@ job "api" {
         "DB_USER" = "web"
         "DB_PASS" = "loremipsum"
         "DB_HOST" = "db01.example.com"
+      }
+
+      service {
+        # https://www.nomadproject.io/docs/job-specification/service
+
+        tags = ["api"]
+        port = "http"
+
+        meta {
+          meta = "for your service"
+        }
+
+        check {
+          type     = "tcp"
+          port     = "http"
+          interval = "10s"
+          timeout  = "2s"
+        }
       }
 
       resources {
