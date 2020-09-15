@@ -1,5 +1,4 @@
 const { gql } = require('apollo-server-express');
-const { login, register } = require('../loaders/users');
 
 module.exports.typeDefs = gql`
   extend type Mutation {
@@ -25,14 +24,3 @@ module.exports.typeDefs = gql`
     username: String!
   }
 `;
-
-module.exports.resolvers = {
-  Mutation: {
-    async register(_, { input }) {
-      return register(input);
-    },
-    async login(_, { input }) {
-      return login(input);
-    },
-  },
-};

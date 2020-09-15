@@ -1,6 +1,10 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const User = require('../models/user');
+const User = require('./model');
+
+async function getUserById(id) {
+  return User.findById(id);
+}
 
 async function login({ username, password }) {
   const user = await User.findOne({ username });
@@ -24,12 +28,20 @@ async function register({ email, username, password }) {
   return login({ username, password });
 }
 
-async function getUserById(id) {
-  return User.findById(id);
-}
+const resolvers = {
+  Mutation: {
+    async register(_, { input }) {
+      return register(input);
+    },
+    async login(_, { input }) {
+      return login(input);
+    },
+  },
+};
 
 module.exports = {
   login,
   register,
+  resolvers,
   getUserById,
 };

@@ -9,8 +9,8 @@
   "private": false,
   "scripts": {
     "test": ". ./.env && jest ./src/ --runInBand",
-    "lint": "prettier --check \"src/**/*.*\"",
-    "lint:fix": "prettier --write \"src/**/*.*\"",
+    "lint": "eslint ./src/**",
+    "lint:fix": "eslint ./src/** --fix",
     "dev": "NODE_ENV=test nodemon -r dotenv/config src/index.js",
     "start": "node src/index.js"
   },
@@ -31,15 +31,13 @@
   },
   "devDependencies": {
     "eslint": "^7.9.0",
-    "eslint-config-standard": "^14.1.1",
+    "eslint-config-airbnb": "^18.2.0",
+    "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-import": "^2.22.0",
-    "eslint-plugin-jest": "^24.0.1",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.1",
+    "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-react": "^7.20.6",
     "jest": "^26.4.2",
     "nodemon": "^2.0.4",
-    "prettier": "^2.1.1",
     "supertest": "^4.0.2"
   }
 }

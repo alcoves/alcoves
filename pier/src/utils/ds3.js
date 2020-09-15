@@ -1,4 +1,5 @@
 const AWS = require('aws-sdk');
+
 const { DO_ENDPOINT, DO_ACCESS_KEY_ID, DO_SECRET_ACCESS_KEY } = process.env;
 
 if (!DO_ENDPOINT || !DO_ACCESS_KEY_ID || !DO_SECRET_ACCESS_KEY) {

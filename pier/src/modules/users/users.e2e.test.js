@@ -1,9 +1,9 @@
 require('dotenv').config();
 
-const app = require('../index');
 const request = require('supertest');
 const mongoose = require('mongoose');
-const User = require('../models/User');
+const app = require('../../index');
+const User = require('./model');
 
 describe('users', () => {
   beforeAll(async () => {

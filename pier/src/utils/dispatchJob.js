@@ -7,7 +7,7 @@ module.exports = async function (job, Meta) {
   if (NOMAD_ADDRESS.includes('localhost')) {
     // bypass production tokens
     return axios.post(nomadAddr, { Meta });
-  } else {
+  } 
     return axios.post(
       nomadAddr,
       { Meta },
@@ -18,5 +18,5 @@ module.exports = async function (job, Meta) {
         },
       }
     );
-  }
+  
 };

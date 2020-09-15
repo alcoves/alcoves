@@ -1,41 +1,45 @@
 {
   "extends": [
-    "standard"
+    "airbnb",
+    "prettier"
   ],
   "env": {
-    "browser": true,
-    "commonjs": true,
-    "es6": true,
     "jest": true,
     "node": true
   },
+  "plugins": [
+    "import"
+  ],
   "rules": {
-    "indent": [
-      "error",
-      2
-    ],
     "linebreak-style": [
       "error",
       "unix"
-    ],
-    "quotes": [
-      "error",
-      "single"
-    ],
-    "semi": [
-      "error",
-      "always"
-    ],
-    "comma-dangle": [
-      "error",
-      {
-        "arrays": "always-multiline",
-        "objects": "always-multiline",
-        "imports": "always",
-        "exports": "never",
-        "functions": "never"
-      }
-    ],
-    "no-unused-vars": "off"
+    ]
   }
+  // "rules": {
+  //   "space-before-function-paren": ["error", "never"],
+  //   "indent": [
+  //     "error",
+  //     2
+  //   ],
+  //   "quotes": [
+  //     "error",
+  //     "single"
+  //   ],
+  //   "semi": [
+  //     "error",
+  //     "always"
+  //   ],
+  //   "comma-dangle": [
+  //     "error",
+  //     {
+  //       "arrays": "always-multiline",
+  //       "objects": "always-multiline",
+  //       "imports": "always",
+  //       "exports": "never",
+  //       "functions": "never"
+  //     }
+  //   ],
+  //   "no-unused-vars": "off"
+  // }
 }

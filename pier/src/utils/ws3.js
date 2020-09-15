@@ -1,4 +1,5 @@
 const AWS = require('aws-sdk');
+
 const { WASABI_ENDPOINT, WASABI_ACCESS_KEY_ID, WASABI_SECRET_ACCESS_KEY } = process.env;
 
 if (!WASABI_ENDPOINT || !WASABI_ACCESS_KEY_ID || !WASABI_SECRET_ACCESS_KEY) {
