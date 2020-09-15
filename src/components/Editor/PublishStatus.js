@@ -6,8 +6,8 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 
 const SAVE_VIDEO = gql`
-  mutation setVideoVisibility($id: String!, $visibility: VisibilityOption!) {
-    setVideoVisibility(id: $id, visibility: $visibility) {
+  mutation updateVideoVisibility($id: String!, $visibility: VisibilityOption!) {
+    updateVideoVisibility(id: $id, visibility: $visibility) {
       id
     }
   }
