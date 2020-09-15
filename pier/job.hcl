@@ -7,12 +7,21 @@ job "api" {
     task "api" {
       driver = "docker"
 
+      template {
+        data = <<EOH
+          DO_API_KEY = "{{key "secrets/DO_API_KEY"}}"
+        EOH
+        
+        env         = true
+        destination = "secrets/do.env"
+      }
+
       config {
-        image = "docker.pkg.github.com/bken-io/api/api:latest"
+        image = "registry.digitalocean.com/bken/api:latest"
 
         auth {
-          username = "rustyguts"
-          password = "${NOMAD_META_GITHUB_ACCESS_TOKEN}"
+          username = "${DO_API_KEY}"
+          password = "${DO_API_KEY}"
         }
       }
 
