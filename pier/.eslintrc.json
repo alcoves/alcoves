@@ -14,32 +14,29 @@
     "linebreak-style": [
       "error",
       "unix"
-    ]
+    ],
+    "indent": [
+      "error",
+      2
+    ],
+    "semi": [
+      "error",
+      "always"
+    ],
+    "quotes": [
+      "error",
+      "single"
+    ],
+    "comma-dangle": [
+      "error",
+      {
+        "arrays": "always-multiline",
+        "objects": "always-multiline",
+        "imports": "always",
+        "exports": "never",
+        "functions": "never"
+      }
+    ],
+    "no-unused-vars": "error"
   }
-  // "rules": {
-  //   "space-before-function-paren": ["error", "never"],
-  //   "indent": [
-  //     "error",
-  //     2
-  //   ],
-  //   "quotes": [
-  //     "error",
-  //     "single"
-  //   ],
-  //   "semi": [
-  //     "error",
-  //     "always"
-  //   ],
-  //   "comma-dangle": [
-  //     "error",
-  //     {
-  //       "arrays": "always-multiline",
-  //       "objects": "always-multiline",
-  //       "imports": "always",
-  //       "exports": "never",
-  //       "functions": "never"
-  //     }
-  //   ],
-  //   "no-unused-vars": "off"
-  // }
 }

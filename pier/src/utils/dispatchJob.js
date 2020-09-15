@@ -8,15 +8,15 @@ module.exports = async function (job, Meta) {
     // bypass production tokens
     return axios.post(nomadAddr, { Meta });
   } 
-    return axios.post(
-      nomadAddr,
-      { Meta },
-      {
-        timeout: 1000 * 30,
-        headers: {
-          'X-Nomad-Token': NOMAD_TOKEN,
-        },
-      }
-    );
+  return axios.post(
+    nomadAddr,
+    { Meta },
+    {
+      timeout: 1000 * 30,
+      headers: {
+        'X-Nomad-Token': NOMAD_TOKEN,
+      },
+    }
+  );
   
 };
