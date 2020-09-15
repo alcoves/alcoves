@@ -1,8 +1,8 @@
 const _ = require('lodash');
 const ds3 = require('../config/ds3');
 const ws3 = require('../config/ws3');
-const User = require('../models/User');
-const Video = require('../models/Video');
+const User = require('../models/user');
+const Video = require('../models/video');
 
 function getVideoById(id) {
   return Video.findById(id);

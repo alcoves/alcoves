@@ -1,6 +1,6 @@
 const mime = require('mime');
 const ds3 = require('../config/ds3');
-const Video = require('../models/Video');
+const Video = require('../models/video');
 const dispatchJob = require('../utils/dispatchJob');
 
 const { nanoid } = require('nanoid');
