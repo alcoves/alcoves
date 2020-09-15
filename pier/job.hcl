@@ -1,12 +1,12 @@
 job "api" {
   datacenters = ["dc1"]
 
-  group "api" {
+  group "services" {
     task "api" {
       driver = "docker"
 
       config {
-        image = "registry.digitalocean.com/bken/api"
+        image = "registry.digitalocean.com/bken/api:latest"
 
         auth {
           username = "bken"
