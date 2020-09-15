@@ -25,7 +25,6 @@ async function completeUpload({ id, title, duration, user, fileType }) {
     views: 0,
     duration,
     user: user.id,
-    visibility: 'unlisted',
   }).save();
 
   await dispatchJob('uploading', {

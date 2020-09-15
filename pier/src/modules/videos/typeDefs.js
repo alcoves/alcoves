@@ -22,8 +22,8 @@ module.exports.typeDefs = gql`
     tidal: TidalVideo!
     createdAt: String!
     modifiedAt: String!
-    visibility: String!
     thumbnails: [String]!
+    visibility: VisibilityOption!
   }
 
   type TidalVideo {
