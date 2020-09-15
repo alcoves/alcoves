@@ -17,7 +17,8 @@ job "api" {
       }
 
       config {
-        image = "registry.digitalocean.com/bken/api:latest"
+        force_pull = true
+        image      = "registry.digitalocean.com/bken/api:latest"
 
         auth {
           username = "${DO_API_KEY}"

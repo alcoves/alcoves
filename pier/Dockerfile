@@ -4,10 +4,10 @@ RUN mkdir -p api
 
 WORKDIR /api
 
-COPY package.json ./
+COPY . .
 
 RUN yarn install --production
 
 EXPOSE 4000
 
-CMD [ "node", "/api/src/index.js" ]
+CMD [ "yarn", "start" ]
