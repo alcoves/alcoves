@@ -56,7 +56,7 @@ async function createUpload({ fileType }) {
   const url = ds3.getSignedUrl('putObject', {
     Expires: 3600,
     Bucket: DIGITAL_OCEAN_TIDAL_BUCKET,
-    Key: `source/${id}/source.${mime.getExtension(fileType)}`,
+    Key: `${id}/source.${mime.getExtension(fileType)}`,
   });
 
   return { id, url };
@@ -73,13 +73,13 @@ async function completeUpload({ id, title, duration, user, fileType }) {
   }).save();
 
   await dispatchJob('uploading', {
-    s3_in: `s3://${DIGITAL_OCEAN_TIDAL_BUCKET}/source/${id}/source.${mime.getExtension(fileType)}`,
+    s3_in: `s3://${DIGITAL_OCEAN_TIDAL_BUCKET}/${id}/source.${mime.getExtension(fileType)}`,
   });
 
   await dispatchJob('thumbnail', {
     s3_out: `s3://cdn.bken.io/i/${id}/t/thumb.webp`,
     cmd: '-vf scale=854:480:force_original_aspect_ratio=increase,crop=854:480 -vframes 1 -q:v 50',
-    s3_in: `s3://${DIGITAL_OCEAN_TIDAL_BUCKET}/source/${id}/source.${mime.getExtension(fileType)}`,
+    s3_in: `s3://${DIGITAL_OCEAN_TIDAL_BUCKET}/${id}/source.${mime.getExtension(fileType)}`,
   });
 
   return video;

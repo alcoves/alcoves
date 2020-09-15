@@ -29,7 +29,7 @@ async function getTidalVersionsById(id) {
       .listObjectsV2({
         Bucket: 'tidal',
         Delimiter: '/',
-        Prefix: `segments/${id}/`,
+        Prefix: `${id}/versions/`,
       })
       .promise()
       .then(({ CommonPrefixes }) => {
@@ -38,7 +38,7 @@ async function getTidalVersionsById(id) {
     ds3
       .listObjectsV2({
         Bucket: 'tidal',
-        Prefix: `segments/${id}/source/`,
+        Prefix: `${id}/segments/`,
       })
       .promise()
       .then(({ Contents }) => {
@@ -56,38 +56,34 @@ async function getTidalVersionsById(id) {
   ]);
 
   const versions = await Promise.all(
-    _.union(tidalPresets, cdnPresets)
-      .filter(preset => {
-        return preset !== 'source';
-      })
-      .map(async preset => {
-        const { KeyCount: completedSegments } = await ds3
-          .listObjectsV2({ Bucket: 'tidal', Prefix: `segments/${id}/${preset}` })
-          .promise();
+    _.union(tidalPresets, cdnPresets).map(async preset => {
+      const completedSegments = await ds3
+        .listObjectsV2({ Bucket: 'tidal', Prefix: `${id}/versions/${preset}/` })
+        .promise()
+        .then(({ Contents }) => Contents.filter(({ Key }) => !Key.endsWith('/')));
 
-        return {
-          preset,
-          percentCompleted: (completedSegments / totalSegments) * 100,
-          status: cdnPresets.includes(preset) ? 'completed' : 'processing',
-          link: cdnPresets.includes(preset) ? `https://cdn.bken.io/v/${id}/${preset}.mp4` : '',
-        };
-      })
+      return {
+        preset,
+        percentCompleted: (completedSegments.length / totalSegments) * 100,
+        status: cdnPresets.includes(preset) ? 'completed' : 'processing',
+        link: cdnPresets.includes(preset) ? `https://cdn.bken.io/v/${id}/${preset}.mp4` : '',
+      };
+    })
   );
 
-  const status = versions.reduce((acc, cv) => {
-    if (cv.percentCompleted !== 100) {
-      acc = 'transcoding';
-    } else {
-      acc = 'completed';
-    }
+  let status;
 
-    return acc;
-  }, 'uploaded');
+  if (!versions.filter(({ percentCompleted }) => percentCompleted).length) {
+    status = 'segmenting';
+  } else if (
+    versions.filter(({ percentCompleted }) => percentCompleted === 100).length === versions.length
+  ) {
+    status = 'completed';
+  } else {
+    status = 'transcoding';
+  }
 
-  return {
-    status,
-    versions,
-  };
+  return { status, versions };
 }
 
 async function deleteVideo(id) {
