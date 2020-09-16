@@ -1,0 +1,3 @@
+mutation resendCode($input: ResendCodeInput!) {
+  resendCode(input: $input)
+}

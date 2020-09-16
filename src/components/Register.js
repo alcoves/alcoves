@@ -1,7 +1,7 @@
 import register from '../gql/register';
 import styled from 'styled-components';
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { Typography, Button, TextField, Container } from '@material-ui/core';
 
@@ -10,6 +10,7 @@ const Spacer = styled.div`
 `;
 
 export default function Register() {
+  const history = useHistory();
   const [state, setState] = useState({
     email: '',
     username: '',
@@ -54,7 +55,8 @@ export default function Register() {
 
   if (data) {
     console.log('registered successfully, logging the user in....');
-    return <div>logging you in....</div>;
+    history.push(`/confirm?username=${state.username}`);
+    return <div />;
   }
 
   return (
