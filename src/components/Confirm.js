@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import queryString from 'query-string';
 import { useMutation } from '@apollo/client';
 import { Button, TextField } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import resendCodeMut from '../gql/resendCode';
 import confirmAccountMut from '../gql/confirmAccount';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 
 const Container = styled.div`
   width: 100%;
@@ -26,8 +25,8 @@ const Row = styled.div`
 
 export default function confirm() {
   const history = useHistory();
+  const { code, username } = useParams();
   const { enqueueSnackbar } = useSnackbar();
-  const qs = queryString.parse(window.location.search);
   const [state, setState] = useState({
     code: qs.code || '',
     username: qs.username || '',
