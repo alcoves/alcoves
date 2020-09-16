@@ -4,7 +4,7 @@ import App from './app';
 import React from 'react';
 import Theme from './theme';
 import ReactDOM from 'react-dom';
-import ApolloWrapper from './lib/apollo';
+import ApolloWrapper from './utils/apollo';
 import UserContextProvider from './contexts/UserContext';
 
 import { SnackbarProvider } from 'notistack';
