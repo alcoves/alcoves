@@ -1,5 +1,3 @@
 mutation register($input: RegisterInput!) {
-  register(input: $input) {
-    token
-  }
+  register(input: $input)
 }

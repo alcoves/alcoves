@@ -5,6 +5,7 @@ import Video from './components/Video';
 import Login from './components/Login';
 import Footer from './components/Footer';
 import Account from './components/Account';
+import Confirm from './components/Confirm';
 import Register from './components/Register';
 import Uploader from './components/Uploader';
 import Editor from './components/Editor/Editor';
@@ -34,6 +35,7 @@ function AppRouter() {
           <Route exact path='/register' children={<Register />} />
 
           <Route exact path='/v/:id' children={<Video />} />
+          <Route exact path='/confirm' children={<Confirm />} />
           <Route exact path='/account' children={<Account />} />
           <Route exact path='/upload' children={<Uploader />} />
           <Route exact path='/editor/:id' children={<Editor />} />
