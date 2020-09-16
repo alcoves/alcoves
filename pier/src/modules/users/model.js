@@ -8,6 +8,7 @@ const userSchema = new Schema(
     code: { type: String },
     password: { type: String, required: true },
     nickname: { type: String, required: false },
+    plan: { type: String, required: true, default: 'free' },
     username: { type: String, required: true, lowercase: true },
     emailVerified: { type: Boolean, required: true, default: false },
     avatar: { type: String, required: true, default: 'https://cdn.bken.io/files/favicon.png' },
