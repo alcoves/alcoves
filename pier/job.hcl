@@ -19,6 +19,8 @@ job "api" {
           DO_SECRET_ACCESS_KEY = "{{key "secrets/DO_SECRET_ACCESS_KEY"}}"
           DO_ENDPOINT = "{{key "secrets/DO_ENDPOINT"}}"
 
+          MG_API_KEY = "{{key "secrets/MG_API_KEY"}}"
+
           NOMAD_TOKEN = "{{key "secrets/NOMAD_TOKEN"}}"
           NOMAD_ADDRESS = "{{key "secrets/NOMAD_ADDRESS"}}"
 
