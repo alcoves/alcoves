@@ -40,6 +40,10 @@ job "api" {
           username = "${DO_API_KEY}"
           password = "${DO_API_KEY}"
         }
+
+        port_map {
+          http = 4000
+        }
       }
 
       service {
@@ -66,7 +70,7 @@ job "api" {
           mbits = 100
 
           port "http" {
-            static = "4000"
+            static = "80"
           }
         }
       }
