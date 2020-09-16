@@ -39,12 +39,12 @@ if (!module.parent) {
     useUnifiedTopology: true,
   });
 
-  app.listen(
-    {
-      port: process.env.PORT || 4000,
-    },
-    () => console.info('🚀 Server ready at http://localhost:4000/graphql')
-  );
+  const port = process.env.PORT || 4000;
+
+  app.listen({ port }, () =>  {
+    // eslint-disable-next-line
+    console.info(`⚓ http://localhost:${port} ⚓`);
+  });
 }
 
 module.exports = app;
