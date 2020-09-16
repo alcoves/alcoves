@@ -2,6 +2,7 @@ const { gql } = require('apollo-server-express');
 
 module.exports.typeDefs = gql`
   extend type Query {
+    getRecentVideos: [Video!]!
     video(id: String!): Video!
     videosByUsername(username: String!): [Video!]!
   }

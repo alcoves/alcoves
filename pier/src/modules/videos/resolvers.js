@@ -114,6 +114,9 @@ const resolvers =  {
     video(__, { id }) {
       return getVideoById(id);
     },
+    getRecentVideos(__, ___) {
+      return Video.find({ visibility: 'public' }).sort({ createdAt: -1 });
+    },
     videosByUsername(__, { username }) {
       return getVideosByUsername(username);
     },
