@@ -5,9 +5,11 @@ const { Schema } = mongoose;
 const userSchema = new Schema(
   {
     _id: { auto: true, type: Schema.Types.ObjectId },
+    code: { type: String },
     password: { type: String, required: true },
-    username: { type: String, required: true, lowercase: true },
     nickname: { type: String, required: false },
+    username: { type: String, required: true, lowercase: true },
+    emailVerified: { type: Boolean, required: true, default: false },
     avatar: { type: String, required: true, default: 'https://cdn.bken.io/files/favicon.png' },
     email: {
       type: String,

@@ -10,10 +10,24 @@ job "api" {
       template {
         data = <<EOH
           DO_API_KEY = "{{key "secrets/DO_API_KEY"}}"
+
+          WASABI_ACCESS_KEY_ID = "{{key "secrets/WASABI_ACCESS_KEY_ID"}}"
+          WASABI_SECRET_ACCESS_KEY = "{{key "secrets/WASABI_SECRET_ACCESS_KEY"}}"
+          WASABI_ENDPOINT = "{{key "secrets/WASABI_ENDPOINT"}}"
+
+          DO_ACCESS_KEY_ID = "{{key "secrets/DO_ACCESS_KEY_ID"}}"
+          DO_SECRET_ACCESS_KEY = "{{key "secrets/DO_SECRET_ACCESS_KEY"}}"
+          DO_ENDPOINT = "{{key "secrets/DO_ENDPOINT"}}"
+
+          NOMAD_TOKEN = "{{key "secrets/NOMAD_TOKEN"}}"
+          NOMAD_ADDRESS = "{{key "secrets/NOMAD_ADDRESS"}}"
+
+          JWT_KEY = "{{key "secrets/JWT_KEY"}}"
+          DB_CONNECTION_STRING = "{{key "secrets/DB_CONNECTION_STRING"}}"
         EOH
         
         env         = true
-        destination = "secrets/do.env"
+        destination = ".env"
       }
 
       config {
@@ -26,20 +40,12 @@ job "api" {
         }
       }
 
-      env {
-        "DB_USER" = "web"
-        "DB_PASS" = "loremipsum"
-        "DB_HOST" = "db01.example.com"
-      }
-
       service {
-        # https://www.nomadproject.io/docs/job-specification/service
-
         tags = ["api"]
         port = "http"
 
-        meta {
-          meta = "for your service"
+        connect {
+          sidecar_service {}
         }
 
         check {

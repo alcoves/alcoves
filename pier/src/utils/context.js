@@ -13,7 +13,7 @@ module.exports = async event => {
       isAuthenticated = !!user;
     }
   } catch (error) {
-    console.error(error);
+    console.error('Error decoding token');
   }
 
   return { user, isAuthenticated };

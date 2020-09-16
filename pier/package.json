@@ -25,6 +25,7 @@
     "graphql-tools": "^6.2.2",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.20",
+    "mailgun-js": "^0.22.0",
     "mime": "^2.4.6",
     "mongoose": "^5.10.5",
     "nanoid": "^3.1.12"
