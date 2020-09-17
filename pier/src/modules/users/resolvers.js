@@ -35,10 +35,10 @@ async function register({ email, username, password }) {
     template: 'account_confirmation',
     from: 'Bken <no-reply@bken.io>',
     subject: 'Activate Your bken.io Account',
-    'h:X-Mailgun-Variables': JSON.stringify({ userId: user.id, code }),
+    'h:X-Mailgun-Variables': JSON.stringify({ username: user.username, code }),
   });
 
-  return user.id;
+  return true;
 }
 
 const resolvers = {
@@ -49,18 +49,19 @@ const resolvers = {
     async login(_, { input }) {
       return login(input);
     },
-    async resendCode(_, { input: { userId } }) {
-      const user = await User.findById(userId);
+    async resendCode(_, { input: { username } }) {
+      const user = await User.findOne({ username });
       if (!user.emailVerified) {
         const newCode = nanoid(4);
-        await User.findByIdAndUpdate(user.id, { code: newCode });
+        user.code = newCode;
+        await user.save();
 
         await send({
           to: user.email,
           template: 'account_confirmation',
           from: 'Bken <no-reply@bken.io>',
           subject: 'Activate Your bken.io Account',
-          'h:X-Mailgun-Variables': JSON.stringify({ userId: user.id, code: newCode }),
+          'h:X-Mailgun-Variables': JSON.stringify({ username: user.username, code: newCode }),
         });
 
         return true;
@@ -68,11 +69,13 @@ const resolvers = {
 
       throw new Error('account is already verified');
     },
-    async confirmAccount(_, { input: { userId, code } }) {
-      const user = await User.findById(userId);
+    async confirmAccount(_, { input: { username, code } }) {
+      const user = await User.findOne({ username });
       if (user.emailVerified) throw new Error('account is already verified');
       if (code === user.code) {
-        await User.findByIdAndUpdate(user.id, { emailVerified: true});
+        user.emailVerified = true;
+        await user.save();
+
         await send({
           to: user.email,
           from: 'Bken <no-reply@bken.io>',
