@@ -54,7 +54,7 @@ export default function Register() {
   }
 
   if (data) {
-    history.push(`/confirm?userId=${data.register}`);
+    history.push(`/confirm?username=${state.username}`);
     return <div />;
   }
 
