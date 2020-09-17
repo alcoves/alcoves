@@ -31,21 +31,21 @@ export default function confirm() {
   const qs = queryString.parse(window.location.search);
   const [state, setState] = useState({
     code: qs.code || '',
-    userId: qs.userId || '',
+    username: qs.username || '',
   });
 
   const [
     resendCode,
     { loading: resendLoading, data: resendData, error: resendError },
   ] = useMutation(resendCodeMut, {
-    variables: { input: { userId: state.userId } },
+    variables: { input: { username: state.username } },
   });
 
   const [
     confirmAccount,
     { loading: confirmLoading, data: confirmData, error: confirmError },
   ] = useMutation(confirmAccountMut, {
-    variables: { input: { userId: state.userId, code: state.code } },
+    variables: { input: { username: state.username, code: state.code } },
   });
 
   useEffect(() => {
@@ -69,16 +69,18 @@ export default function confirm() {
     setState({ ...state, [e.target.name]: e.target.value });
   }
 
-  if (!state.userId) {
-    return (
-      <Container>
-        <Typography variant='body1'>Please follow the link from your email</Typography>
-      </Container>
-    );
-  }
-
   return (
     <Container>
+      <Row>
+        <TextField
+          fullWidth
+          name='username'
+          placeholder='Username'
+          value={state.username}
+          onChange={handleChange}
+          disabled={resendLoading || confirmLoading}
+        />
+      </Row>
       <Row>
         <TextField
           fullWidth
