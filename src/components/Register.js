@@ -54,8 +54,7 @@ export default function Register() {
   }
 
   if (data) {
-    console.log('registered successfully, logging the user in....');
-    history.push(`/confirm?username=${state.username}`);
+    history.push(`/confirm?userId=${data.register}`);
     return <div />;
   }
 

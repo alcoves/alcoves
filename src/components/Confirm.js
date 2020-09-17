@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import queryString from 'query-string';
 import { useMutation } from '@apollo/client';
-import { Button, TextField } from '@material-ui/core';
+import { Typography, Button, TextField } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import resendCodeMut from '../gql/resendCode';
 import confirmAccountMut from '../gql/confirmAccount';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 const Container = styled.div`
   width: 100%;
@@ -18,6 +19,7 @@ const Container = styled.div`
 const Row = styled.div`
   margin: 10px;
   display: flex;
+  min-width: 250px;
   align-items: center;
   flex-direction: row;
   justify-content: center;
@@ -25,25 +27,25 @@ const Row = styled.div`
 
 export default function confirm() {
   const history = useHistory();
-  const { code, username } = useParams();
   const { enqueueSnackbar } = useSnackbar();
+  const qs = queryString.parse(window.location.search);
   const [state, setState] = useState({
     code: qs.code || '',
-    username: qs.username || '',
+    userId: qs.userId || '',
   });
 
   const [
     resendCode,
     { loading: resendLoading, data: resendData, error: resendError },
   ] = useMutation(resendCodeMut, {
-    variables: { input: { username: state.username } },
+    variables: { input: { userId: state.userId } },
   });
 
   const [
     confirmAccount,
     { loading: confirmLoading, data: confirmData, error: confirmError },
   ] = useMutation(confirmAccountMut, {
-    variables: { input: { username: state.username, code: state.code } },
+    variables: { input: { userId: state.userId, code: state.code } },
   });
 
   useEffect(() => {
@@ -67,18 +69,16 @@ export default function confirm() {
     setState({ ...state, [e.target.name]: e.target.value });
   }
 
+  if (!state.userId) {
+    return (
+      <Container>
+        <Typography variant='body1'>Please follow the link from your email</Typography>
+      </Container>
+    );
+  }
+
   return (
     <Container>
-      <Row>
-        <TextField
-          fullWidth
-          name='username'
-          placeholder='Username'
-          value={state.username}
-          onChange={handleChange}
-          disabled={resendLoading || confirmLoading}
-        />
-      </Row>
       <Row>
         <TextField
           fullWidth
