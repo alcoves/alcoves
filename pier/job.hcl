@@ -3,6 +3,12 @@ job "api" {
   datacenters = ["dc1"]
   type        = "service"
 
+  constraint {
+    operator  = "regexp"
+    value     = "[/app/]"
+    attribute = "${attr.unique.hostname}"
+  }
+
   group "services" {
     task "api" {
       driver = "docker"
@@ -47,7 +53,7 @@ job "api" {
       }
 
       service {
-        tags = ["api"]
+        tags = ["api", "urlprefix-/api"]
         port = "http"
 
         connect {
@@ -55,23 +61,22 @@ job "api" {
         }
 
         check {
+          name     = "alive"
           type     = "tcp"
           port     = "http"
+          timeout  = "5s"
           interval = "10s"
-          timeout  = "2s"
+          path     = "/graphql"
         }
       }
 
       resources {
-        cpu    = 100
-        memory = 300
+        memory = 200
+        cpu    = 200
 
         network {
           mbits = 100
-
-          port "http" {
-            static = "80"
-          }
+          port "http" {}
         }
       }
     }
