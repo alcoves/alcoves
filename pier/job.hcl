@@ -53,8 +53,8 @@ job "api" {
       }
 
       service {
-        tags = ["api", "urlprefix-/api"]
         port = "http"
+        tags = ["urlprefix-/api"]
 
         connect {
           sidecar_service {}
