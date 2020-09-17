@@ -26,18 +26,19 @@ async function login({ username, password }) {
 }
 
 async function register({ email, username, password }) {
-  const code = nanoid();
+  const code = nanoid(4);
   const hashedPassword = await bcrypt.hash(password, 10);
-  await new User({ email, username, code, password: hashedPassword }).save();
+  const user = await new User({ email, username, code, password: hashedPassword }).save();
 
   await send({
     to: email,
-    from: 'No Reply <no-reply@bken.io>',
+    template: 'account_confirmation',
+    from: 'Bken <no-reply@bken.io>',
     subject: 'Activate Your bken.io Account',
-    text: `Hi, you signed up. Your code: ${code}`,
+    'h:X-Mailgun-Variables': JSON.stringify({ userId: user.id, code }),
   });
 
-  return true;
+  return user.id;
 }
 
 const resolvers = {
@@ -48,17 +49,18 @@ const resolvers = {
     async login(_, { input }) {
       return login(input);
     },
-    async resendCode(_, { input }) {
-      const user = await User.findOne({ username: input.username });
+    async resendCode(_, { input: { userId } }) {
+      const user = await User.findById(userId);
       if (!user.emailVerified) {
-        const newCode = nanoid();
+        const newCode = nanoid(4);
         await User.findByIdAndUpdate(user.id, { code: newCode });
 
         await send({
           to: user.email,
-          from: 'No Reply <no-reply@bken.io>',
+          template: 'account_confirmation',
+          from: 'Bken <no-reply@bken.io>',
           subject: 'Activate Your bken.io Account',
-          text: `You forgot your code, here it is. Your code: ${newCode}`,
+          'h:X-Mailgun-Variables': JSON.stringify({ userId: user.id, code: newCode }),
         });
 
         return true;
@@ -66,20 +68,22 @@ const resolvers = {
 
       throw new Error('account is already verified');
     },
-    async confirmAccount(_, { input }) {
-      const user = await User.findOne({ username: input.username });
+    async confirmAccount(_, { input: { userId, code } }) {
+      const user = await User.findById(userId);
       if (user.emailVerified) throw new Error('account is already verified');
-      if (input.code === user.code) {
+      if (code === user.code) {
         await User.findByIdAndUpdate(user.id, { emailVerified: true});
         await send({
           to: user.email,
-          from: 'No Reply <no-reply@bken.io>',
+          from: 'Bken <no-reply@bken.io>',
           subject: 'Account Confirmed, Welcome!',
           text: 'Your account has been confirmed, welcome to bken.io!',
         });
 
         return true;
       }
+
+      throw new Error('failed to confirm account');
     },
   },
 };

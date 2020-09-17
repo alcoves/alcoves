@@ -3,7 +3,7 @@ const { gql } = require('apollo-server-express');
 module.exports.typeDefs = gql`
   extend type Mutation {
     login(input: LoginInput!): LoginResponse!
-    register(input: RegisterInput!): Boolean!
+    register(input: RegisterInput!): String!
     resendCode(input: ResendCodeInput!): Boolean!
     confirmAccount(input: ConfirmAccountInput!): Boolean!
   }
@@ -21,7 +21,7 @@ module.exports.typeDefs = gql`
     password: String!
   }
   input ResendCodeInput {
-    username: String!
+    userId: String!
   }
   input RegisterInput {
     email: String!
@@ -30,6 +30,6 @@ module.exports.typeDefs = gql`
   }
   input ConfirmAccountInput {
     code: String!
-    username: String!
+    userId: String!
   }
 `;
