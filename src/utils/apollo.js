@@ -4,9 +4,9 @@ import { ApolloClient, createHttpLink, InMemoryCache, ApolloProvider } from '@ap
 
 function serverUrl() {
   if (window.location.hostname === 'bken.io') {
-    return 'https://api.bken.io/graphql';
+    return 'https://helm.bken.io/api/graphql';
   } else {
-    return 'http://localhost:4000/graphql';
+    return 'http://localhost:4000/api/graphql';
   }
 }
 
