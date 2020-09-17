@@ -14,13 +14,16 @@ export default function ApolloWrapper({ children }) {
   const httpLink = createHttpLink({ uri: serverUrl() });
 
   const authLink = setContext((_, { headers, ...rest }) => {
-    return {
+    const token = localStorage.getItem('token');
+    const link = {
       ...rest,
       headers: {
         ...headers,
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
     };
+
+    if (token) link.headers.Authorization = `Bearer ${token}`;
+    return link;
   });
 
   const client = new ApolloClient({
