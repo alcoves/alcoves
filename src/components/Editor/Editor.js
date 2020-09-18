@@ -9,7 +9,7 @@ import Container from '@material-ui/core/Container';
 
 import { Link, useParams } from 'react-router-dom';
 import { gql, useLazyQuery } from '@apollo/client';
-import { CircularProgress, Grid } from '@material-ui/core';
+import { Grid, LinearProgress } from '@material-ui/core';
 
 const GET_VIDEO = gql`
   query video($id: String!) {
@@ -67,7 +67,7 @@ function Editor() {
   }
 
   if (data) {
-    startPolling(3000);
+    startPolling(5000);
     return (
       <Container maxWidth='md' style={{ paddingTop: '15px' }}>
         <Grid container spacing={2}>
@@ -86,8 +86,6 @@ function Editor() {
           </Grid>
           <Grid item xs={12} sm={8}>
             <Title id={data.video.id} />
-          </Grid>
-          <Grid item xs={12} sm={4}>
             <PublishStatus visibility={data.video.visibility} id={data.video.id} />
           </Grid>
         </Grid>
@@ -117,7 +115,7 @@ function Editor() {
     );
   }
 
-  return <CircularProgress disabled={loading} />;
+  return <LinearProgress />;
 }
 
 export default Editor;
