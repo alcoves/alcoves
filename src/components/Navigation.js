@@ -35,16 +35,16 @@ export default function Navigation() {
 
   return (
     <GridCon container>
-      <Grid item>
+      <Grid item xs={2}>
         <Link to='/'>
           <Logo src={favicon} />
         </Link>
       </Grid>
-      <Grid item>
+      <Grid item xs={2}>
         <SearchBar />
       </Grid>
-      <Grid item>
-        <Grid container>
+      <Grid item xs={2}>
+        <Grid container justify='flex-end'>
           <Box>
             {user && (
               <IconButton component={Link} to='/upload' color='primary'>
