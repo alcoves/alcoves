@@ -40,10 +40,12 @@ export default function Navigation() {
           <Logo src={favicon} />
         </Link>
       </Grid>
-      <Grid item xs={2}>
-        <SearchBar />
+      <Grid item xs>
+        <Grid container justify='center' >
+          <SearchBar />
+        </Grid>
       </Grid>
-      <Grid item xs={2}>
+      <Grid item xs={2} style={{ minWidth: '150px' }}>
         <Grid container justify='flex-end'>
           <Box>
             {user && (
