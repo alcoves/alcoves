@@ -77,10 +77,9 @@ const pickUrl = (versions, override) => {
 function Video({ data }) {
   useEffect(() => {
     const { t } = qs.parse(window.location.search);
-    if (t) {
-      const video = document.getElementById('bkenVideoPlayer');
-      video.currentTime = t
-    }
+    const video = document.getElementById('bkenVideoPlayer');
+    if (t) video.currentTime = t
+    video.muted = false;
   }, [])
 
   const [version, setVersion] = useState(pickUrl(data.video.tidal.versions));
@@ -97,6 +96,7 @@ function Video({ data }) {
             <Wrapper>
               {version.link ? (
                 <video
+                  muted
                   controls
                   autoPlay
                   width='100%'
@@ -143,8 +143,8 @@ function Video({ data }) {
                           if (video) {
                             const currentTime = video.currentTime;
                             video.src = version.link;
-                            video.play();
                             video.currentTime = currentTime;
+                            video.play();
                           }
                         }}>
                         {data.video.tidal.versions.map(v => {
