@@ -9,7 +9,7 @@ const API_PATH='/api/graphql';
 
 describe('users', () => {
   beforeAll(async () => {
-    await mongoose.connect(process.env.DEV_DB_CONNECTION_STRING, {
+    await mongoose.connect( process.env.DEV_DB_CONNECTION_STRING || '', {
       useCreateIndex: true,
       useNewUrlParser: true,
       useFindAndModify: false,
@@ -60,7 +60,7 @@ describe('users', () => {
     `;
 
     const res = await request(app).post(API_PATH).send({ query: login });
-    
+
     expect(res.body.errors).toBe(undefined);
     expect(Object.keys(res.body.data.login)).toEqual(['token']);
   });
