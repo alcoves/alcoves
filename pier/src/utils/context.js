@@ -9,8 +9,8 @@ module.exports = async function context({ req }) {
     throw new AuthenticationError('authentication failed');
   }
 
-  function authorize(authField) {
-    if (authField && user && user[authField] === authField) return true;
+  function authorize(ownerId) {
+    if (user && ownerId.toString() === user.id) return true;
     throw new AuthenticationError('authorization failed');
   }
 

@@ -146,17 +146,16 @@ const resolvers =  {
       return true;
     },
     async updateVideoTitle(__, { input: { id, title } }, { authorize, authenticate }) {
-      // authorize();
+      authenticate();
       const video = await Video.findById(id);
-      // authenticate(video.user.id);
+      authorize(video.user);
       video.title = title;
       return video.save();
     },
     async updateVideoVisibility(__, { id, visibility }, { authorize, authenticate }) {
-      authorize();
+      authenticate();
       const video = await Video.findById(id);
-      console.log('video', video);
-      authenticate(video.user.id);
+      authorize(video.user);
       video.visibility = visibility;
       return video.save();
     },

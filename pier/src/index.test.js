@@ -10,6 +10,9 @@ const User = require('./modules/users/model');
 const Video = require('./modules/videos/model');
 
 describe('end-to-end', () => {
+  let token = null;
+  let user = {};
+
   beforeAll(async () => {
     await mongoose.connect(process.env.DEV_DB_CONNECTION_STRING || 'mongodb://localhost:27017/test', {
       useCreateIndex: true,
@@ -45,7 +48,7 @@ describe('end-to-end', () => {
       expect(res.body.data.register).toEqual(true);
   
       // Manually verify account
-      const user = await User.findOne({ username: 'testing' });
+      user = await User.findOne({ username: 'testing' });
       user.emailVerified = true;
       await user.save();
     });
@@ -66,6 +69,7 @@ describe('end-to-end', () => {
   
       expect(res.body.errors).toBe(undefined);
       expect(Object.keys(res.body.data.login)).toEqual(['token']);
+      token = res.body.data.login.token;
     });
   });
 
@@ -74,7 +78,7 @@ describe('end-to-end', () => {
       const newTitle = 'new title';
       const testVideo = await new Video({
         duration: 60,
-        user: '5f639770a438d1107e2816d8',
+        user: user.id,
       }).save();
   
       const updateVideoTitle = `
@@ -91,6 +95,7 @@ describe('end-to-end', () => {
   
       const res = await request(app)
         .post(API_PATH)
+        .set('Authorization', `Bearer ${token}`)
         .send({ query: updateVideoTitle });
       
       expect(res.body.errors).toBe(undefined);
