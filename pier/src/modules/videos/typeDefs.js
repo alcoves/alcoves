@@ -11,7 +11,7 @@ module.exports.typeDefs = gql`
   extend type Mutation {
     deleteVideo(id: String!): Boolean!
     createVideo(input: CreateVideoInput!): Video!
-    updateVideoTitle(id: String!, title: String!): Video!
+    updateVideoTitle(input: UpdateVideoTitleInput!): Video!
     updateVideoVisibility(id: String!, visibility: VisibilityOption!): Video!
   }
 
@@ -48,6 +48,11 @@ module.exports.typeDefs = gql`
 
   input CreateVideoInput {
     user: String!
+    title: String!
+  }
+
+  input UpdateVideoTitleInput {
+    id: String!
     title: String!
   }
 `;

@@ -145,11 +145,20 @@ const resolvers =  {
       await Video.findByIdAndDelete(id);
       return true;
     },
-    async updateVideoTitle(__, { id, title }) {
-      return Video.findByIdAndUpdate(id, { title });
+    async updateVideoTitle(__, { input: { id, title } }, { authorize, authenticate }) {
+      // authorize();
+      const video = await Video.findById(id);
+      // authenticate(video.user.id);
+      video.title = title;
+      return video.save();
     },
-    updateVideoVisibility(__, { id, visibility }) {
-      return Video.findByIdAndUpdate(id, { visibility });
+    async updateVideoVisibility(__, { id, visibility }, { authorize, authenticate }) {
+      authorize();
+      const video = await Video.findById(id);
+      console.log('video', video);
+      authenticate(video.user.id);
+      video.visibility = visibility;
+      return video.save();
     },
   },
 };

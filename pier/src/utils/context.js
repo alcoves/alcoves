@@ -4,9 +4,14 @@ const { AuthenticationError } = require('apollo-server-express');
 module.exports = async function context({ req }) {
   let user = null;
 
-  function requireAuth() {
-    if  (!user)  throw new AuthenticationError('authentication required');
-    return true;
+  function authenticate() {
+    if (user) return true;
+    throw new AuthenticationError('authentication failed');
+  }
+
+  function authorize(authField) {
+    if (authField && user && user[authField] === authField) return true;
+    throw new AuthenticationError('authorization failed');
   }
 
   try {
@@ -23,5 +28,5 @@ module.exports = async function context({ req }) {
     console.error('Error decoding token', error);
   }
 
-  return { user, requireAuth };
+  return { user, authenticate, authorize };
 };
