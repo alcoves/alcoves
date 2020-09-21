@@ -78,11 +78,16 @@ function Video({ data }) {
   useEffect(() => {
     const { t } = qs.parse(window.location.search);
     const video = document.getElementById('bkenVideoPlayer');
-    if (t) video.currentTime = t
-    video.muted = false;
+
+    if (video) {
+      if (t) video.currentTime = t
+      video.muted = false;
+    }
   }, [])
 
   const [version, setVersion] = useState(pickUrl(data.video.tidal.versions));
+
+  if (!version) return <div> unable to load video </div>
 
   if (version) {
     return (
