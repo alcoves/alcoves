@@ -9,7 +9,7 @@ const videoSchema = new Schema(
     duration: { type: Number, required: true },
     title: { type: String, required: true, default: nanoid },
     views: { type: Number, default: 0, required: true, index: true },
-    visibility: { type: String, required: true, default: 'private', index: true },
+    visibility: { type: String, required: true, default: 'unlisted', index: true },
     user: {
       ref: 'User',
       index: true,
