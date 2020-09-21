@@ -81,7 +81,7 @@ function Video({ data }) {
 
     if (video) {
       if (t) video.currentTime = t
-      video.muted = false;
+      video.play()
     }
   }, [])
 
@@ -101,9 +101,7 @@ function Video({ data }) {
             <Wrapper>
               {version.link ? (
                 <video
-                  muted
                   controls
-                  autoPlay
                   width='100%'
                   height='100%'
                   src={version.link}
