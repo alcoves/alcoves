@@ -3,12 +3,15 @@ name: Deploy
 env:
   JWT_KEY: ${{ secrets.JWT_KEY }}
   DO_API_KEY: ${{ secrets.DO_API_KEY }}
+  DO_ENDPOINT: nyc3.digitaloceanspaces.com
   DO_ACCESS_KEY_ID: ${{ secrets.DO_ACCESS_KEY_ID }}
   DO_SECRET_ACCESS_KEY: ${{ secrets.DO_SECRET_ACCESS_KEY }}
   DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
+  WASABI_ENDPOINT: us-east-2.wasabisys.com
   WASABI_ACCESS_KEY_ID: ${{ secrets.WASABI_ACCESS_KEY_ID }}
   WASABI_SECRET_ACCESS_KEY: ${{ secrets.WASABI_SECRET_ACCESS_KEY }}
-
+  NOMAD_TOKEN: ${{ secrets.NOMAD_TOKEN }}
+  NOMAD_ADDRESS: ${{ secrets.NOMAD_ADDRESS }}
 on:
   push:
     branches:
