@@ -5,9 +5,11 @@ const mongoose = require('mongoose');
 const app = require('../../index');
 const User = require('./model');
 
+const API_PATH='/api/graphql';
+
 describe('users', () => {
   beforeAll(async () => {
-    await mongoose.connect(process.env.DB_CONNECTION_STRING, {
+    await mongoose.connect(process.env.DEV_DB_CONNECTION_STRING, {
       useCreateIndex: true,
       useNewUrlParser: true,
       useFindAndModify: false,
@@ -28,16 +30,20 @@ describe('users', () => {
           username: "testing"
           password: "1234567890"
           email: "testing@bken.io"
-        }) {
-          token
-        }
+        })
       }
     `;
     const res = await request(app)
-      .post('/graphql')
-      // .set('Authorization', `Bearer ${token}`)
+      .post(API_PATH)
       .send({ query: register });
-    expect(Object.keys(res.body.data.register)).toEqual(['token']);
+    
+    expect(res.body.errors).toBe(undefined);
+    expect(res.body.data.register).toEqual(true);
+
+    // Manually verify account
+    const user = await User.findOne({ username: 'testing' });
+    user.emailVerified = true;
+    await user.save();
   });
 
   test('login', async () => {
@@ -51,7 +57,8 @@ describe('users', () => {
         }
       }
     `;
-    const res = await request(app).post('/graphql').send({ query: login });
+    const res = await request(app).post(API_PATH).send({ query: login });
+    expect(res.body.errors).toBe(undefined);
     expect(Object.keys(res.body.data.login)).toEqual(['token']);
   });
 });

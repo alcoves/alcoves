@@ -8,9 +8,6 @@ const uploads = require('./modules/uploads/index');
 const videos = require('./modules/videos/index');
 const context = require('./utils/context');
 
-const { DB_CONNECTION_STRING } = process.env;
-if (!DB_CONNECTION_STRING) throw new Error('DB_CONNECTION_STRING is undefined');
-
 const app = express();
 
 const server = new ApolloServer({
@@ -19,7 +16,6 @@ const server = new ApolloServer({
   playground: true,
   introspection: true,
   modules: [users, videos, uploads],
-  // modules: [require('./modules/users/index'), require('./modules/uploads/index'), require('./modules/videos/index')]
 });
 
 server.applyMiddleware({
@@ -32,6 +28,9 @@ server.applyMiddleware({
 });
 
 if (!module.parent) {
+  const { DB_CONNECTION_STRING } = process.env;
+  if (!DB_CONNECTION_STRING) throw new Error('DB_CONNECTION_STRING is undefined');
+
   mongoose.connect(DB_CONNECTION_STRING, {
     useCreateIndex: true,
     useNewUrlParser: true,

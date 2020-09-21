@@ -8,7 +8,7 @@
   "license": "MPL-2.0",
   "private": false,
   "scripts": {
-    "test": ". ./.env && jest ./src/ --runInBand",
+    "test": ". ./.env && jest ./src/",
     "lint": "eslint ./src/**",
     "lint:fix": "eslint ./src/** --fix",
     "dev": "NODE_ENV=test nodemon -r dotenv/config src/index.js",
