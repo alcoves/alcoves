@@ -19,6 +19,7 @@ export default function search() {
 
   return <SearchBox >
     <InputBase
+      fullWidth
       value={localSearch}
       placeholder='Search'
       onChange={(e) => { setLocalSearch(e.target.value) }}
