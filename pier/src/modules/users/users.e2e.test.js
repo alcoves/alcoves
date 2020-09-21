@@ -9,7 +9,7 @@ const API_PATH='/api/graphql';
 
 describe('users', () => {
   beforeAll(async () => {
-    await mongoose.connect( process.env.DEV_DB_CONNECTION_STRING || '', {
+    await mongoose.connect(process.env.DEV_DB_CONNECTION_STRING || '', {
       useCreateIndex: true,
       useNewUrlParser: true,
       useFindAndModify: false,

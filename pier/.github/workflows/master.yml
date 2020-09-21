@@ -27,7 +27,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
-      - run: yarn test
+      - run: touch ./.env && yarn test
   deploy:
     name: Deploy
     needs: test
