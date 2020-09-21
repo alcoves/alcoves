@@ -1,3 +1,4 @@
+import SearchBar from './SearchBar';
 import React, { useContext } from 'react';
 import Grid from '@material-ui/core/Grid';
 import favicon from '../../public/favicon.ico';
@@ -39,6 +40,9 @@ export default function Navigation() {
         </Link>
       </Grid>
       <Grid item>
+        <SearchBar />
+      </Grid>
+      <Grid item>
         <Grid container>
           <Box>
             {user && (
@@ -60,10 +64,10 @@ export default function Navigation() {
                 <PersonOutlinedIcon />
               </IconButton>
             ) : (
-              <IconButton to='/login' component={Link} color='primary'>
-                <PersonOutlinedIcon />
-              </IconButton>
-            )}
+                <IconButton to='/login' component={Link} color='primary'>
+                  <PersonOutlinedIcon />
+                </IconButton>
+              )}
           </Box>
         </Grid>
       </Grid>

@@ -96,18 +96,18 @@ function Video({ data }) {
                   id='bkenVideoPlayer'
                   type='video/mp4'></video>
               ) : (
-                <div
-                  style={{
-                    height: '100%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    backgroundColor: 'white',
-                    flexDirection: 'column',
-                  }}>
-                  <CircularProgress inline active />
-                </div>
-              )}
+                  <div
+                    style={{
+                      height: '100%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      backgroundColor: 'white',
+                      flexDirection: 'column',
+                    }}>
+                    <CircularProgress inline active />
+                  </div>
+                )}
             </div>
             <div>
               <Container style={{ marginTop: '20px' }}>
