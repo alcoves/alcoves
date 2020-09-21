@@ -14,8 +14,6 @@ env:
   NOMAD_ADDRESS: ${{ secrets.NOMAD_ADDRESS }}
 on:
   push:
-    branches:
-      - master
 
 jobs:
   test:
