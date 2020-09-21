@@ -33,6 +33,7 @@ describe('users', () => {
         })
       }
     `;
+
     const res = await request(app)
       .post(API_PATH)
       .send({ query: register });
@@ -57,7 +58,9 @@ describe('users', () => {
         }
       }
     `;
+
     const res = await request(app).post(API_PATH).send({ query: login });
+    
     expect(res.body.errors).toBe(undefined);
     expect(Object.keys(res.body.data.login)).toEqual(['token']);
   });

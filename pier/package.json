@@ -1,18 +1,18 @@
 {
   "name": "api",
+  "private": false,
   "version": "0.0.0",
+  "license": "MPL-2.0",
+  "main": "src/index.js",
   "description": "api for bken.io",
-  "main": "app.js",
   "repository": "git@github.com:bken-io/api.git",
   "author": "Brendan Kennedy <brenwken@gmail.com>",
-  "license": "MPL-2.0",
-  "private": false,
   "scripts": {
-    "test": ". ./.env && jest ./src/",
     "lint": "eslint ./src/**",
+    "start": "node src/index.js",
     "lint:fix": "eslint ./src/** --fix",
-    "dev": "NODE_ENV=test nodemon -r dotenv/config src/index.js",
-    "start": "node src/index.js"
+    "test": ". ./.env && jest ./src/ --runInBand",
+    "dev": "NODE_ENV=test nodemon -r dotenv/config src/index.js"
   },
   "dependencies": {
     "apollo-server-express": "^2.17.0",
