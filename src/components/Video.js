@@ -1,19 +1,29 @@
 import moment from 'moment';
-import React, { useState } from 'react';
+import qs from 'query-string';
+import styled from 'styled-components';
+import React, { useState, useEffect } from 'react';
 
 import { gql, useQuery } from '@apollo/client';
 import { Link, useParams } from 'react-router-dom';
 import {
-  Typography,
-  LinearProgress,
-  CircularProgress,
+  Select,
   MenuItem,
   Container,
   InputLabel,
+  Typography,
   FormControl,
+  LinearProgress,
+  CircularProgress,
 } from '@material-ui/core';
 
-import Select from '@material-ui/core/Select';
+const Wrapper = styled.div`
+  margin: 0px;
+  line-height: 0px;
+  overflow: hidden;
+  background-color: #000000;
+  height: calc(100vh - 300px);
+  maxHeight: calc((9 /  16) * 100vw);
+`
 
 const QUERY = gql`
   query getVideo($id: String!) {
@@ -21,6 +31,7 @@ const QUERY = gql`
       id
       title
       views
+      visibility
       createdAt
       user {
         id
@@ -64,17 +75,15 @@ const pickUrl = (versions, override) => {
 };
 
 function Video({ data }) {
-  const outerDivStyle = {
-    margin: 0,
-    lineHeight: 0,
-    overflow: 'hidden',
-    backgroundColor: '#000000',
-    height: 'calc(100vh - 300px)',
-    maxHeight: 'calc((9 / 16) * 100vw',
-  };
+  useEffect(() => {
+    const { t } = qs.parse(window.location.search);
+    if (t) {
+      const video = document.getElementById('bkenVideoPlayer');
+      video.currentTime = t
+    }
+  }, [])
 
   const [version, setVersion] = useState(pickUrl(data.video.tidal.versions));
-  console.log('version', version);
 
   if (version) {
     return (
@@ -85,7 +94,7 @@ function Video({ data }) {
             flexDirection: 'column',
           }}>
           <div>
-            <div style={outerDivStyle}>
+            <Wrapper>
               {version.link ? (
                 <video
                   controls
@@ -108,7 +117,7 @@ function Video({ data }) {
                     <CircularProgress inline active />
                   </div>
                 )}
-            </div>
+            </Wrapper>
             <div>
               <Container style={{ marginTop: '20px' }}>
                 <div>
@@ -153,6 +162,7 @@ function Video({ data }) {
                   <Typography variant='body2'>{`${moment(
                     parseInt(data.video.createdAt),
                   ).fromNow()}`}</Typography>
+                  <Typography variant='subtitle2'>{data.video.visibility}</Typography>
                 </div>
                 <div
                   style={{

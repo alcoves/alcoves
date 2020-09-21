@@ -1,4 +1,5 @@
 import SearchBar from './SearchBar';
+import styled from 'styled-components';
 import React, { useContext } from 'react';
 import Grid from '@material-ui/core/Grid';
 import favicon from '../../public/favicon.ico';
@@ -11,32 +12,32 @@ import { Link } from 'react-router-dom';
 import { Box } from '@material-ui/core';
 import { UserContext } from '../contexts/UserContext';
 
+const GridCon = styled(Grid)`
+  height: 50px;
+  display: flex;
+  align-items: center;
+  background-color: #23272a;
+  justify-content: space-between;
+`;
+
+const Logo = styled.img`
+  width: 50px;
+  height: auto;
+  display: flex;
+  cursor: pointer;
+  object-fit: cover;
+  align-items: center;
+  justify-content: center;
+`;
+
 export default function Navigation() {
   const { user } = useContext(UserContext);
 
-  const styles = {
-    menu: {
-      height: '50px',
-      display: 'flex',
-      alignItems: 'center',
-      backgroundColor: '#23272a',
-      justifyContent: 'space-between',
-    },
-    logo: {
-      width: '50px',
-      height: 'auto',
-      display: 'flex',
-      objectFit: 'cover',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-  };
-
   return (
-    <Grid style={styles.menu} container>
+    <GridCon container>
       <Grid item>
         <Link to='/'>
-          <img src={favicon} style={{ ...styles.logo, cursor: 'pointer' }} />
+          <Logo src={favicon} />
         </Link>
       </Grid>
       <Grid item>
@@ -71,6 +72,6 @@ export default function Navigation() {
           </Box>
         </Grid>
       </Grid>
-    </Grid>
+    </GridCon>
   );
 }
