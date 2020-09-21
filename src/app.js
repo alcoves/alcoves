@@ -10,6 +10,7 @@ import Register from './components/Register';
 import Uploader from './components/Uploader';
 import Editor from './components/Editor/Editor';
 import Navigation from './components/Navigation';
+import SearchResults from './components/SearchResults';
 import UserVideoGrid from './components/UserVideoGrid';
 
 import { Typography } from '@material-ui/core';
@@ -30,6 +31,7 @@ function AppRouter() {
       <Content>
         <Switch>
           <Route exact path='/' children={<Home />} />
+          <Route exact path='/search' children={<SearchResults />} />
 
           <Route exact path='/login' children={<Login />} />
           <Route exact path='/register' children={<Register />} />
@@ -40,6 +42,7 @@ function AppRouter() {
           <Route exact path='/upload' children={<Uploader />} />
           <Route exact path='/editor/:id' children={<Editor />} />
           <Route exact path='/u/:username' children={<UserVideoGrid />} />
+
           <Route component={NoMatch} />
         </Switch>
       </Content>
