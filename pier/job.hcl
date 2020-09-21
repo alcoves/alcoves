@@ -10,6 +10,12 @@ job "api" {
   }
 
   group "services" {
+    update {
+      max_parallel     = 1
+      healthy_deadline = "2m"
+      min_healthy_time = "30s"
+    }
+
     task "api" {
       driver = "docker"
 
