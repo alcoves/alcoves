@@ -9,7 +9,7 @@
   "description": "frontend for bken.io",
   "scripts": {
     "dev": "export REACT_APP_GIT_SHA=$(git rev-parse --short HEAD) && parcel public/index.html --no-autoinstall",
-    "build": "export REACT_APP_GIT_SHA=$(git rev-parse --short HEAD) && parcel build public/index.html --no-source-maps && cp public/favicon.ico dist/favicon.ico --no-autoinstall",
+    "build": "export REACT_APP_GIT_SHA=$(git rev-parse --short HEAD) && parcel build public/index.html --no-source-maps --no-autoinstall && cp public/favicon.ico dist/favicon.ico",
     "lint": "prettier --check \"src/**/*.*\"",
     "lint:fix": "prettier --write \"src/**/*.*\""
   },
