@@ -114,6 +114,9 @@ const resolvers =  {
     video(__, { id }) {
       return getVideoById(id);
     },
+    async videos(_, { title }) {
+      return Video.find({ visibility: 'public', '$text': {'$search': title} }).sort({ createdAt: -1 });
+    },
     getRecentVideos() {
       return Video.find({ visibility: 'public' }).sort({ createdAt: -1 });
     },

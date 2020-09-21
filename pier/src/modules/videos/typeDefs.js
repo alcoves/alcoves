@@ -4,6 +4,7 @@ module.exports.typeDefs = gql`
   extend type Query {
     getRecentVideos: [Video!]!
     video(id: String!): Video!
+    videos(title: String!): [Video!]!
     videosByUsername(username: String!): [Video!]!
   }
 
