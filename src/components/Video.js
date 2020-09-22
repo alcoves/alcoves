@@ -22,7 +22,7 @@ const Wrapper = styled.div`
   overflow: hidden;
   background-color: #000000;
   height: calc(100vh - 300px);
-  maxHeight: calc((9 /  16) * 100vw);
+  max-height: calc((9 /  16) * 100vw);
 `
 
 const QUERY = gql`
@@ -106,7 +106,7 @@ function Video({ data }) {
                   height='100%'
                   src={version.link}
                   id='bkenVideoPlayer'
-                  type='video/mp4'></video>
+                  type='video/mp4' />
               ) : (
                   <div
                     style={{
