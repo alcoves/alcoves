@@ -8,8 +8,8 @@ const { DIGITAL_OCEAN_TIDAL_BUCKET } = require('../../utils/config');
 
 const resolvers = {
   Mutation: {
-    async createUpload(_, { input }, { requireAuth }) {
-      requireAuth();
+    async createUpload(_, { input }, { authenticate }) {
+      authenticate();
 
       const id = nanoid();
       const url = ds3.getSignedUrl('putObject', {
@@ -19,8 +19,8 @@ const resolvers = {
       });
       return { id, url };
     },
-    async completeUpload(_, { input: { id, title, duration, fileType } }, { user, requireAuth }) {
-      requireAuth();
+    async completeUpload(_, { input: { id, title, duration, fileType } }, { user, authenticate }) {
+      authenticate();
 
       const video = await new Video({
         title,
