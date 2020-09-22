@@ -21,24 +21,28 @@ async function getTidalThumbnailsById(id) {
   }, []);
 }
 
-async function deleteVideo({ id }) {
+async function deleteVideoById(id) {
+  if (id) {
   // TODO :: make sure that tidal is not processing before deleting
-  const Bucket = 'cdn.bken.io';
-  const [imageRes, videoRes] = await Promise.all([
-    ws3.listObjectsV2({ Bucket, Prefix: `i/${id}` }).promise(),
-    ws3.listObjectsV2({ Bucket, Prefix: `v/${id}` }).promise(),
-  ]);
+    const Bucket = 'cdn.bken.io';
+    const [imageRes, videoRes] = await Promise.all([
+      ws3.listObjectsV2({ Bucket, Prefix: `i/${id}` }).promise(),
+      ws3.listObjectsV2({ Bucket, Prefix: `v/${id}` }).promise(),
+    ]);
     
-  const itemsToDelete = _.union(imageRes.Contents, videoRes.Contents);
+    const itemsToDelete = _.union(imageRes.Contents, videoRes.Contents);
     
-  await Promise.all(
-    itemsToDelete.map(({ Key }) => {
-      return ws3.deleteObject({ Bucket, Key }).promise();
-    })
-  );
+    await Promise.all(
+      itemsToDelete.map(({ Key }) => {
+        return ws3.deleteObject({ Bucket, Key }).promise();
+      })
+    );
     
-  await Video.deleteOne({ _id: id });
-  return true;
+    await Video.deleteOne({ _id: id });
+    return true;
+  }
+  
+  return null;
 }
 
 async function getTidalVersionsById(id) {
@@ -113,7 +117,7 @@ async function getTidalVersionsById(id) {
 }
 
 module.exports = {
-  deleteVideo,
+  deleteVideoById,
   getVideosByUsername,
   getTidalVersionsById,
   getTidalThumbnailsById,

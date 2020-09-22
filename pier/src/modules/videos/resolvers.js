@@ -1,6 +1,6 @@
 const Video = require('./model');
 const { getUserById } = require('../users/resolvers');
-const { getVideosByUsername, getTidalVersionsById, deleteVideo, getTidalThumbnailsById } = require('./loaders');
+const { getVideosByUsername, getTidalVersionsById, deleteVideoById, getTidalThumbnailsById } = require('./loaders');
 
 const resolvers =  {
   Video: {
@@ -31,8 +31,8 @@ const resolvers =  {
   Mutation: {
     async deleteVideo(__, { id }, { user, authenticate }) {
       authenticate();
-      const video = await Video.find({ _id: id, user: user.id });
-      return video ? deleteVideo(video) : null;
+      const { id: vid } = await Video.findOne({ _id: id, user: user.id });
+      return deleteVideoById(vid);
     },
     async updateVideoTitle(__, { input: { id, title } }, { user, authenticate }) {
       authenticate();
