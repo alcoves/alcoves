@@ -4,6 +4,8 @@ const { AuthenticationError } = require('apollo-server-express');
 module.exports = async function context({ req }) {
   let user = null;
 
+  // Schema Directives may be the best way to enforce authentication
+  // https://www.apollographql.com/docs/apollo-server/schema/creating-directives/
   function authenticate() {
     if (user) return true;
     throw new AuthenticationError('authentication failed');

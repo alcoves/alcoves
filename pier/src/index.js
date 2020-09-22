@@ -3,10 +3,10 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const { ApolloServer } = require('apollo-server-express');
-const users = require('./modules/users/index');
-const uploads = require('./modules/uploads/index');
-const videos = require('./modules/videos/index');
 const context = require('./utils/context');
+const users = require('./modules/users/index');
+const videos = require('./modules/videos/index');
+const uploads = require('./modules/uploads/index');
 
 const app = express();
 
