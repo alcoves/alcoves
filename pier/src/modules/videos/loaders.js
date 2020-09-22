@@ -83,7 +83,7 @@ async function getTidalVersionsById(id) {
   const versions = await Promise.all(
     _.union(tidalPresets, cdnPresets).map(async (preset) => {
       const completedSegments = await ds3
-        .listObjectsV2({ Bucket: 'tidal', Prefix: `${id}/versions/${preset}/` })
+        .listObjectsV2({ Bucket: 'tidal', Prefix: `${id}/versions/${preset}/segments/` })
         .promise()
         .then(({ Contents }) =>
           Contents.filter(({ Key }) => !Key.endsWith('/'))
@@ -91,7 +91,7 @@ async function getTidalVersionsById(id) {
   
       return {
         preset,
-        percentCompleted: (completedSegments.length / totalSegments) * 100,
+        percentCompleted: cdnPresets.includes(preset) ? 100 : (completedSegments.length / totalSegments) * 100,
         status: cdnPresets.includes(preset) ? 'completed' : 'processing',
         link: cdnPresets.includes(preset)
           ? `https://cdn.bken.io/v/${id}/${preset}.mp4`
