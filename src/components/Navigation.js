@@ -20,14 +20,18 @@ const GridCon = styled(Grid)`
   justify-content: space-between;
 `;
 
-const Logo = styled.img`
+const LogoCon = styled.div`
   width: 50px;
-  height: auto;
+  height: 50px;
   display: flex;
-  cursor: pointer;
-  object-fit: cover;
   align-items: center;
   justify-content: center;
+`
+
+const Logo = styled.img`
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
 `;
 
 export default function Navigation() {
@@ -36,9 +40,11 @@ export default function Navigation() {
   return (
     <GridCon container>
       <Grid item xs={2}>
-        <Link to='/'>
-          <Logo src={favicon} />
-        </Link>
+        <LogoCon>
+          <Link to='/'>
+            <Logo src={favicon} />
+          </Link>
+        </LogoCon>
       </Grid>
       <Grid item xs>
         <Grid container justify='center' >
