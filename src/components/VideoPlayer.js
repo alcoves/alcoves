@@ -1,7 +1,7 @@
 import qs from 'query-string';
 import React, { useEffect, useRef, useState } from 'react';
 import { Fade, Menu, MenuItem, IconButton, Slider, LinearProgress, Typography } from '@material-ui/core';
-import { PauseOutlined, PlayArrowOutlined, VolumeUpOutlined, VolumeDownOutlined, VolumeOffOutlined, SettingsOutlined, FullscreenOutlined } from '@material-ui/icons';
+import { PauseOutlined, PlayArrowOutlined, VolumeUpOutlined, VolumeDownOutlined, VolumeOffOutlined, SettingsOutlined, FullscreenOutlined, PictureInPictureAltOutlined } from '@material-ui/icons';
 
 import styled from 'styled-components';
 
@@ -230,6 +230,11 @@ export default function VideoPlayer({ versions }) {
                       </MenuItem>
                     ))}
                   </Menu>
+                  <IconButton size='small' onClick={(e) => {
+                    vRef.current.requestPictureInPicture()
+                  }}>
+                    <PictureInPictureAltOutlined />
+                  </IconButton>
                   <IconButton size='small' onClick={(e) => {
                     vRef.current.requestFullscreen();
                   }}>
