@@ -87,7 +87,10 @@ export default function VideoPlayer({ versions }) {
           src={version.link}
           onLoadedMetadata={() => {
             const { t } = qs.parse(window.location.search);
-            if (t) vRef.current.currentTime = t;
+            if (t) {
+              vRef.current.currentTime = t;
+              window.location.search = '';
+            }
           }}
           onTimeUpdate={(e) => {
             const positionUpdate = (e.target.currentTime / e.target.duration) * 100
