@@ -13,9 +13,9 @@ const GET_VIDEO = gql`
   }
 `;
 
-const SAVE_VIDEO = gql`
-  mutation updateVideoTitle($id: String!, $title: String!) {
-    updateVideoTitle(id: $id, title: $title) {
+const UPDATE_VIDEO_TITLE = gql`
+  mutation updateVideoTitle($input: UpdateVideoTitleInput!) {
+    updateVideoTitle(input: $input) {
       id
     }
   }
@@ -28,21 +28,17 @@ export default ({ id }) => {
     variables: { id },
   });
 
-  const [saveVideo, { loading }] = useMutation(SAVE_VIDEO, {
-    variables: { id, title },
-  });
-
-  if (data && data.video && data.video.title && !title) {
-    setTitle(data.video.title);
-  }
+  const [saveVideo, { loading }] = useMutation(UPDATE_VIDEO_TITLE)
 
   return (
     <Grid container alignItems='flex-end' spacing={1} style={{ margin: '10px 0px 10px 0px' }}>
       <Grid item xs={10}>
-        <TextField fullWidth name='title' value={title} onChange={e => setTitle(e.target.value)} />
+        <TextField fullWidth name='title' defaultValue={data?.video?.title} onChange={e => setTitle(e.target.value)} />
       </Grid>
       <Grid item xs={2}>
-        <Button color='primary' fullWidth disabled={loading} onClick={saveVideo}>
+        <Button color='primary' fullWidth disabled={loading} onClick={() => {
+          saveVideo({ variables: { input: { id, title } } })
+        }}>
           Save
         </Button>
       </Grid>
