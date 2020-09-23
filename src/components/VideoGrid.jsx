@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, } from 'react';
 import moment from 'moment';
 import styled from 'styled-components';
 
@@ -14,8 +14,8 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import CardContent from '@material-ui/core/CardContent';
 import CardActionArea from '@material-ui/core/CardActionArea';
 
-import { Link } from 'react-router-dom';
-import { UserContext } from '../contexts/UserContext';
+import { Link, } from 'react-router-dom';
+import { UserContext, } from '../contexts/UserContext';
 
 const Duration = styled.div`
   right: 0;
@@ -34,9 +34,9 @@ const Duration = styled.div`
 function videoDuration(d) {
   if (d > 3600) {
     return moment.utc(d * 1000).format('H:mm:ss');
-  } else {
-    return moment.utc(d * 1000).format('m:ss');
-  }
+  } 
+  return moment.utc(d * 1000).format('m:ss');
+  
 }
 
 function VideoCard({ video }) {
@@ -67,7 +67,8 @@ function VideoCard({ video }) {
               backgroundRepeat: 'no-repeat',
               backgroundImage: `url("${video.thumbnails ? video.thumbnails[0] : ''}")`,
               backgroundPosition: 'center',
-            }}>
+            }}
+          >
             <Duration>{videoDuration(video.duration)}</Duration>
           </div>
           <CardContent>
@@ -79,7 +80,7 @@ function VideoCard({ video }) {
       </Link>
       <CardHeader
         avatar={<Avatar aria-label='avatar' src={video.user.avatar} />}
-        action={
+        action={(
           <div>
             <IconButton onClick={handleClick} aria-label='settings'>
               <MoreVertIcon />
@@ -89,7 +90,8 @@ function VideoCard({ video }) {
               anchorEl={anchorEl}
               keepMounted
               open={Boolean(anchorEl)}
-              onClose={handleClose}>
+              onClose={handleClose}
+            >
               {user && user.id === video.user.id && (
                 <MenuItem onClick={handleClose} component={Link} to={`/editor/${video.id}`}>
                   Edit
@@ -97,7 +99,7 @@ function VideoCard({ video }) {
               )}
             </Menu>
           </div>
-        }
+        )}
         title={<Link to={`/u/${video.user.username}`}>{video.user.username}</Link>}
         subheader={moment(parseInt(video.createdAt)).fromNow()}
       />
@@ -117,7 +119,8 @@ export default function VideoGrid({ videos = [] }) {
         padding: '15px',
       }}
       justify='flex-start'
-      alignItems='flex-start'>
+      alignItems='flex-start'
+    >
       {videos.map(video => {
         return (
           <Grid xs={12} sm={12} md={6} lg={4} xl={3} item key={video.id}>

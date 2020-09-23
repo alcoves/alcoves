@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
-import { useHistory } from 'react-router-dom';
-import { UserContext } from '../contexts/UserContext';
-import { Button, LinearProgress, Typography, Container } from '@material-ui/core';
+import React, { useContext, } from 'react';
+import { useHistory, } from 'react-router-dom';
+import { Button, LinearProgress, Typography, Container, } from '@material-ui/core';
+import { UserContext, } from '../contexts/UserContext';
 
 export default function Account() {
   const history = useHistory();
@@ -15,7 +15,8 @@ export default function Account() {
           onClick={() => {
             logout();
             history.push('/');
-          }}>
+          }}
+        >
           Sign Out
         </Button>
       </Container>

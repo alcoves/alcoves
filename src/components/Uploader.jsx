@@ -1,13 +1,13 @@
 import axios from 'axios';
 import VideoIcon from '@material-ui/icons/MovieOutlined';
 
-import { useHistory } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
-import React, { useState, useEffect } from 'react';
-import { Button, LinearProgress, Container, CircularProgress } from '@material-ui/core';
+import { useHistory, } from 'react-router-dom';
+import { useMutation, } from '@apollo/client';
+import React, { useState, useEffect, } from 'react';
+import { Button, LinearProgress, Container, CircularProgress, } from '@material-ui/core';
 
-const createUploadQuery = require('../gql/createUpload');
-const completeUploadQuery = require('../gql/completeUpload');
+import createUploadQuery from '../gql/createUpload';
+import completeUploadQuery from '../gql/completeUpload';
 
 function UploadProgress({ id, url, file }) {
   const history = useHistory();
@@ -67,7 +67,8 @@ function SimpleUploader() {
         variant='contained'
         startIcon={<VideoIcon />}
         disabled={called || loading}
-        onClick={() => fileInputRef.current.click()}>
+        onClick={() => fileInputRef.current.click()}
+      >
         Select Video
       </Button>
       <input
