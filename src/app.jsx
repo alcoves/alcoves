@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { Typography, } from '@material-ui/core';
+import { Switch, Route, } from 'react-router-dom';
 import Home from './components/Home';
 import Video from './components/Video';
 import Login from './components/Login';
@@ -13,15 +15,12 @@ import Navigation from './components/Navigation';
 import SearchResults from './components/SearchResults';
 import UserVideoGrid from './components/UserVideoGrid';
 
-import { Typography } from '@material-ui/core';
-import { Switch, Route } from 'react-router-dom';
-
 function NoMatch() {
   return <Typography variant='h2'>404</Typography>;
 }
 
-function Content(props) {
-  return <div style={{ minHeight: 'calc(100vh - 100px)' }}>{props.children}</div>;
+function Content({ children }) {
+  return <div style={{ minHeight: 'calc(100vh - 100px)' }}>{children}</div>;
 }
 
 function AppRouter() {
@@ -30,8 +29,8 @@ function AppRouter() {
       <Navigation />
       <Content>
         <Switch>
-          <Route exact path='/' children={<Home />} />
-          <Route exact path='/search' children={<SearchResults />} />
+          <Route exact path='/'><Home /></Route>
+          <Route exact path='/search'><SearchResults /></Route>
 
           <Route exact path='/login' children={<Login />} />
           <Route exact path='/register' children={<Register />} />

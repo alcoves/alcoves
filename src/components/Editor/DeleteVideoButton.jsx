@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, } from 'react';
 import Button from '@material-ui/core/Button';
 
-import { useSnackbar } from 'notistack';
-import { useHistory } from 'react-router-dom';
-import { gql, useMutation } from '@apollo/client';
+import { useSnackbar, } from 'notistack';
+import { useHistory, } from 'react-router-dom';
+import { gql, useMutation, } from '@apollo/client';
 
 const DELETE_VIDEO = gql`
   mutation deleteVideo($id: String!) {

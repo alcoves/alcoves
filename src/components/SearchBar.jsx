@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, } from 'react';
 import InputBase from '@material-ui/core/InputBase';
-import { SearchContext } from '../contexts/SearchContext';
+import { SearchContext, } from '../contexts/SearchContext';
 
 const SearchBox = styled(InputBase)`
   width: 100%;
@@ -17,9 +17,12 @@ export default function search() {
   const { search, setSearch } = useContext(SearchContext);
   const [localSearch, setLocalSearch] = useState(search);
 
-  return <SearchBox
-    value={localSearch}
-    placeholder='Search'
-    onChange={(e) => { setLocalSearch(e.target.value) }}
-    onKeyPress={(e) => { if (e.key === 'Enter') { setSearch(e.target.value) } }} />
+  return (
+    <SearchBox
+      value={localSearch}
+      placeholder='Search'
+      onChange={(e) => { setLocalSearch(e.target.value); }}
+      onKeyPress={(e) => { if (e.key === 'Enter') { setSearch(e.target.value); } }}
+    />
+  );
 }

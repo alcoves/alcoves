@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, LinearProgress, Paper, Typography } from '@material-ui/core';
+import { Grid, LinearProgress, Paper, Typography, } from '@material-ui/core';
 
 export default ({ versions }) => {
   return (

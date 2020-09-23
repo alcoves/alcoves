@@ -1,16 +1,16 @@
-import SearchBar from './SearchBar';
 import styled from 'styled-components';
-import React, { useContext } from 'react';
+import React, { useContext, } from 'react';
 import Grid from '@material-ui/core/Grid';
-import favicon from '../../public/favicon.ico';
 import IconButton from '@material-ui/core/IconButton';
 import UploadIcon from '@material-ui/icons/PublishOutlined';
 import PersonOutlinedIcon from '@material-ui/icons/PersonOutlined';
 import VideoLibraryIcon from '@material-ui/icons/VideoLibraryOutlined';
 
-import { Link } from 'react-router-dom';
-import { Box } from '@material-ui/core';
-import { UserContext } from '../contexts/UserContext';
+import { Link, } from 'react-router-dom';
+import { Box, } from '@material-ui/core';
+import favicon from '../../public/favicon.ico';
+import SearchBar from './SearchBar';
+import { UserContext, } from '../contexts/UserContext';
 
 const GridCon = styled(Grid)`
   height: 50px;
@@ -26,7 +26,7 @@ const LogoCon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-`
+`;
 
 const Logo = styled.img`
   width: 40px;
@@ -47,7 +47,7 @@ export default function Navigation() {
         </LogoCon>
       </Grid>
       <Grid item xs>
-        <Grid container justify='center' >
+        <Grid container justify='center'>
           <SearchBar />
         </Grid>
       </Grid>
@@ -73,10 +73,10 @@ export default function Navigation() {
                 <PersonOutlinedIcon />
               </IconButton>
             ) : (
-                <IconButton to='/login' component={Link} color='primary'>
-                  <PersonOutlinedIcon />
-                </IconButton>
-              )}
+              <IconButton to='/login' component={Link} color='primary'>
+                <PersonOutlinedIcon />
+              </IconButton>
+            )}
           </Box>
         </Grid>
       </Grid>

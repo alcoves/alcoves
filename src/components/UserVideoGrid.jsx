@@ -1,10 +1,10 @@
-import VideoGrid from './VideoGrid';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
-import { useParams } from 'react-router-dom';
-import { gql, useLazyQuery } from '@apollo/client';
-import React, { useEffect, useContext } from 'react';
-import { UserContext } from '../contexts/UserContext';
+import { useParams, } from 'react-router-dom';
+import { gql, useLazyQuery, } from '@apollo/client';
+import React, { useEffect, useContext, } from 'react';
+import VideoGrid from './VideoGrid';
+import { UserContext, } from '../contexts/UserContext';
 
 const GET_USER_VIDEOS = gql`
   query videosByUsername($username: String!) {

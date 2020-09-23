@@ -1,16 +1,15 @@
 import './index.css';
 
-import App from './app';
 import React from 'react';
-import Theme from './theme';
 import ReactDOM from 'react-dom';
+import { SnackbarProvider, } from 'notistack';
+import { ThemeProvider, } from '@material-ui/styles';
+import { BrowserRouter as Router, } from 'react-router-dom';
+import App from './app';
+import Theme from './theme';
 import ApolloWrapper from './utils/apollo';
 import UserContextProvider from './contexts/UserContext';
 import SearchContextProvider from './contexts/SearchContext';
-
-import { SnackbarProvider } from 'notistack';
-import { ThemeProvider } from '@material-ui/styles';
-import { BrowserRouter as Router } from 'react-router-dom';
 
 const Index = () => (
   <Router>

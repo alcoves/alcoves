@@ -1,16 +1,16 @@
 import moment from 'moment';
 
 import styled from 'styled-components';
-import VideoPlayer from './VideoPlayer';
 import React from 'react';
 
-import { gql, useQuery } from '@apollo/client';
-import { Link, useParams } from 'react-router-dom';
+import { gql, useQuery, } from '@apollo/client';
+import { Link, useParams, } from 'react-router-dom';
 import {
   Container,
   Typography,
   LinearProgress,
 } from '@material-ui/core';
+import VideoPlayer from './VideoPlayer';
 
 const Wrapper = styled.div`
   margin: 0px;
@@ -19,7 +19,7 @@ const Wrapper = styled.div`
   background-color: #000000;
   height: calc(100vh - 300px);
   max-height: calc((9 /  16) * 100vw);
-`
+`;
 
 const QUERY = gql`
   query getVideo($id: String!) {
@@ -45,14 +45,15 @@ const QUERY = gql`
   }
 `;
 
-function Video({ data }) {
+function VideoContainer({ data }) {
   return (
     <div>
       <div
         style={{
           display: 'flex',
           flexDirection: 'column',
-        }}>
+        }}
+      >
         <div>
           <VideoPlayer
             versions={data.video.tidal.versions}
@@ -67,12 +68,15 @@ function Video({ data }) {
                     alignItems: 'center',
                     alignContent: 'center',
                     justifyContent: 'space-between',
-                  }}>
+                  }}
+                >
                   <Typography variant='h4'>{data.video.title}</Typography>
                 </div>
-                <Typography variant='body2'>{`${moment(
-                  parseInt(data.video.createdAt),
-                ).fromNow()}`}</Typography>
+                <Typography variant='body2'>
+                  {`${moment(
+                    parseInt(data.video.createdAt)).fromNow()}`}
+
+                </Typography>
                 <Typography variant='subtitle2'>{data.video.visibility}</Typography>
               </div>
               <div
@@ -80,14 +84,16 @@ function Video({ data }) {
                   display: 'flex',
                   marginTop: '10px',
                   height: '75px',
-                }}>
+                }}
+              >
                 <div
                   style={{
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
                     marginRight: '10px',
-                  }}>
+                  }}
+                >
                   <Link to={`/users/${data.video.user.username}`}>
                     <img
                       alt=''
@@ -108,7 +114,8 @@ function Video({ data }) {
                       display: 'flex',
                       alignItems: 'flex-end',
                       height: '50%',
-                    }}>
+                    }}
+                  >
                     {data.video.user.username}
                   </Link>
                   <div
@@ -116,7 +123,8 @@ function Video({ data }) {
                       display: 'flex',
                       alignItems: 'flex-start',
                       height: '50%',
-                    }}></div>
+                    }}
+                  />
                 </div>
               </div>
             </Container>
@@ -127,15 +135,15 @@ function Video({ data }) {
   );
 }
 
-function VideoWrapper() {
+function Video() {
   const { id } = useParams();
   const { data } = useQuery(QUERY, {
     notifyOnNetworkStatusChange: true,
     variables: { id },
   });
 
-  if (data) return <Video data={data} />;
+  if (data) return <VideoContainer data={data} />;
   return <LinearProgress />;
 }
 
-export default VideoWrapper;
+export default Video;
