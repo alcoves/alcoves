@@ -62,6 +62,7 @@ const pickUrl = (versions, override) => {
 
 export default function VideoPlayer({ versions }) {
   const vRef = useRef(null);
+  const [volume, setVolume] = useState(.25);
   const [progress, setProgress] = useState(0);
   const [settingsEl, setSettingsEl] = React.useState(null);
   const [version, setVersion] = useState();
@@ -129,13 +130,15 @@ export default function VideoPlayer({ versions }) {
 
                   <Slider style={{ marginLeft: '10px', width: '60px', color: 'white' }} onChange={(e, newValue) => {
                     if (newValue) {
+                      setVolume(newValue);
                       vRef.current.muted = false;
                       vRef.current.volume = newValue / 100;
                     } else {
+                      setVolume(0);
                       vRef.current.volume = 0;
                       vRef.current.muted = true;
                     }
-                  }} value={vRef.current.volume * 100} />
+                  }} value={volume} />
                 </LowerControlRow>
                 <LowerControlRow>
                   <IconButton onClick={(e) => {
