@@ -83,12 +83,12 @@ export default function VideoPlayer({ versions }) {
 
   useEffect(() => {
     clearTimeout(idleTimer);
-    if (controlsVisible) {
-      idleTimer = setTimeout(() => {
+    idleTimer = setTimeout(() => {
+      if (controlsVisible && !vRef?.current?.paused) {
         setSettingsEl(null);
         setControlsVisible(false);
-      }, 3000)
-    }
+      }
+    }, 3000)
   }, [controlsVisible])
 
   if (version) {
@@ -106,6 +106,9 @@ export default function VideoPlayer({ versions }) {
           height='100%'
           id='bkenVideoPlayer'
           src={version.link}
+          onPause={() => {
+            setControlsVisible(true);
+          }}
           onLoadedMetadata={() => {
             setVolume(vRef.current.volume * 100);
 
