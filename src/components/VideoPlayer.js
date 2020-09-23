@@ -8,27 +8,40 @@ import styled from 'styled-components';
 const Wrapper = styled.div`
   margin: 0px;
   line-height: 0px;
-  // overflow: hidden;
-  background-color: #000000;
+  position: relative;
   height: calc(100vh - 300px);
+  background-color: rgba(0,0,0,.3);
   max-height: calc((9 /  16) * 100vw);
 `
 
 const ControlsWrapper = styled.div`
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  overflow: none;
+  position: absolute;
   align-items: center;
-  width: 98%;
-  margin-top: -80px;
+  flex-direction: column;
+  justify-content: flex-end;
+  // https://cssgradient.io/
+  background: rgb(255,255,255);
+  background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.3029586834733894) 90%, rgba(0,0,0,0.6026785714285714) 100%);
 `
 
 const Controls = styled.div`
-  width: 98%;
+  width: 97%;
 `
 
-const LowerControls = styled.div`
+const UpperControlsContainer = styled.div`
+  height: 100%;
+  width: 100%;
+`
+
+const LowerControlsContainer = styled.div`
   display: flex;
+  padding-bottom: 5px;
   flex-direction: row;
   justify-content: space-between;
 `
@@ -37,6 +50,15 @@ const LowerControlRow = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+`
+
+const VideoWrapper = styled.video`
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background: #000000;
 `
 
 function volumeIcon(v, muted) {
@@ -67,13 +89,13 @@ const pickUrl = (versions, override) => {
   }
 };
 
-export default function VideoPlayer({ versions }) {
-  let idleTimer;
+let idleTimer = null;
 
+export default function VideoPlayer({ versions }) {
   const vRef = useRef(null);
   const [volume, setVolume] = useState(.25);
   const [progress, setProgress] = useState(0);
-  const [settingsEl, setSettingsEl] = React.useState(null);
+  const [settingsEl, setSettingsEl] = useState(null);
   const [version, setVersion] = useState();
   const [controlsVisible, setControlsVisible] = useState(false)
 
@@ -81,31 +103,33 @@ export default function VideoPlayer({ versions }) {
     setVersion(pickUrl(versions))
   }, [])
 
-  useEffect(() => {
-    clearTimeout(idleTimer);
-    idleTimer = setTimeout(() => {
-      if (controlsVisible && !vRef?.current?.paused) {
-        setSettingsEl(null);
-        setControlsVisible(false);
-      }
-    }, 3000)
-  }, [controlsVisible])
-
   if (version) {
     return (
       <Wrapper
         style={{ cursor: controlsVisible ? 'auto' : 'none' }}
-        onMouseMove={() => setControlsVisible(true)}
+        onMouseMove={() => {
+          clearTimeout(idleTimer);
+          if (!controlsVisible) setControlsVisible(true);
+
+          idleTimer = setTimeout(() => {
+            if (!vRef?.current?.paused) {
+              setSettingsEl(null);
+              setControlsVisible(false);
+            }
+          }, 2000)
+        }}
         onMouseEnter={() => setControlsVisible(true)}
-        onMouseLeave={() => setControlsVisible(false)}
+        onMouseLeave={() => {
+          if (!vRef?.current?.paused) {
+            setControlsVisible(false)
+          }
+        }}
       >
-        <video
+        <VideoWrapper
           autoPlay
           ref={vRef}
-          width='100%'
-          height='100%'
-          id='bkenVideoPlayer'
           src={version.link}
+          id='bkenVideoPlayer'
           onPause={() => {
             setControlsVisible(true);
           }}
@@ -126,91 +150,96 @@ export default function VideoPlayer({ versions }) {
             vRef.current.paused ? vRef.current.play() : vRef.current.pause()
           }}
         />
-        {controlsVisible && vRef && vRef.current &&
-          <Fade in timeout={250}>
-            <ControlsWrapper>
-              <Controls>
-                <Slider onChange={(e, newValue) => {
-                  const positionUpdate = (vRef.current.currentTime / vRef.current.duration) * 100
-                  setProgress(positionUpdate)
-                  const seekPosition = vRef.current.duration * (newValue / 100)
-                  vRef.current.currentTime = seekPosition;
-                }} value={progress} />
+        <Fade in timeout={250}>
+          <ControlsWrapper style={{ visibility: controlsVisible ? 'visible' : 'hidden' }}>
+            <UpperControlsContainer
+              onClick={() => {
+                vRef.current.paused ? vRef.current.play() : vRef.current.pause()
+              }}
+            />
+            {controlsVisible && vRef && vRef.current && <Controls>
+              <Slider style={{}} onChange={(e, newValue) => {
+                const positionUpdate = (vRef.current.currentTime / vRef.current.duration) * 100
+                setProgress(positionUpdate)
+                const seekPosition = vRef.current.duration * (newValue / 100)
+                vRef.current.currentTime = seekPosition;
+              }} value={progress} />
 
-                <LowerControls>
-                  <LowerControlRow>
-                    <IconButton onClick={() => {
-                      vRef.current.paused ? vRef.current.play() : vRef.current.pause()
-                    }}>
-                      {vRef.current.paused ? <PlayArrowOutlined /> : <PauseOutlined />}
-                    </IconButton>
+              <LowerControlsContainer>
+                <LowerControlRow>
+                  <IconButton size='small' onClick={() => {
+                    vRef.current.paused ? vRef.current.play() : vRef.current.pause()
+                  }}>
+                    {vRef.current.paused ? <PlayArrowOutlined /> : <PauseOutlined />}
+                  </IconButton>
 
-                    <IconButton onClick={() => {
-                      if (vRef.current.muted) {
-                        vRef.current.volume = .25;
-                        vRef.current.muted = false;
-                      } else {
-                        vRef.current.volume = 0;
-                        vRef.current.muted = true;
-                      }
-                    }}>
-                      {volumeIcon(vRef.current.volume, vRef.current.muted)}
-                    </IconButton>
+                  <IconButton size='small' onClick={() => {
+                    if (vRef.current.muted) {
+                      setVolume(.25 * 100);
+                      vRef.current.volume = .25;
+                      vRef.current.muted = false;
+                    } else {
+                      setVolume(0);
+                      vRef.current.volume = 0;
+                      vRef.current.muted = true;
+                    }
+                  }}>
+                    {volumeIcon(vRef.current.volume, vRef.current.muted)}
+                  </IconButton>
 
-                    <Slider style={{ marginLeft: '10px', width: '60px', color: 'white' }} onChange={(e, newValue) => {
-                      if (newValue) {
-                        setVolume(newValue);
-                        vRef.current.muted = false;
-                        vRef.current.volume = newValue / 100;
-                      } else {
-                        setVolume(0);
-                        vRef.current.volume = 0;
-                        vRef.current.muted = true;
-                      }
-                    }} value={volume} />
+                  <Slider style={{ marginLeft: '10px', width: '60px', color: 'white' }} onChange={(e, newValue) => {
+                    if (newValue) {
+                      setVolume(newValue);
+                      vRef.current.muted = false;
+                      vRef.current.volume = newValue / 100;
+                    } else {
+                      setVolume(0);
+                      vRef.current.volume = 0;
+                      vRef.current.muted = true;
+                    }
+                  }} value={volume} />
 
-                    {/* <Typography variant='body2'>
+                  {/* <Typography variant='body2'>
                       {`${vRef.current.currentTime} / ${vRef.current.duration}`}
                     </Typography> */}
-                  </LowerControlRow>
-                  <LowerControlRow>
-                    <IconButton onClick={(e) => {
-                      setSettingsEl(e.currentTarget)
-                    }}>
-                      <SettingsOutlined />
-                    </IconButton>
-                    <Menu
-                      keepMounted
-                      id="version-selector"
-                      anchorEl={settingsEl}
-                      open={Boolean(settingsEl)}
-                      onClose={() => {
+                </LowerControlRow>
+                <LowerControlRow>
+                  <IconButton size='small' onClick={(e) => {
+                    setSettingsEl(e.currentTarget)
+                  }}>
+                    <SettingsOutlined />
+                  </IconButton>
+                  <Menu
+                    keepMounted
+                    id="version-selector"
+                    anchorEl={settingsEl}
+                    open={Boolean(settingsEl)}
+                    onClose={() => {
+                      setSettingsEl(null)
+                    }}
+                  >
+                    {versions.filter(({ link }) => link).map((v) => (
+                      <MenuItem key={v.preset} selected={v.link === vRef.current.src} onClick={(e) => {
+                        const currentTime = vRef.current.currentTime
+                        vRef.current.src = v.link;
+                        vRef.current.currentTime = currentTime;
+                        vRef.current.play();
                         setSettingsEl(null)
-                      }}
-                    >
-                      {versions.filter(({ link }) => link).map((v) => (
-                        <MenuItem key={v.preset} selected={v.link === vRef.current.src} onClick={(e) => {
-                          const currentTime = vRef.current.currentTime
-                          vRef.current.src = v.link;
-                          vRef.current.currentTime = currentTime;
-                          vRef.current.play();
-                          setSettingsEl(null)
-                        }}>
-                          {v.preset.split('-')[1]}
-                        </MenuItem>
-                      ))}
-                    </Menu>
-                    <IconButton onClick={(e) => {
-                      vRef.current.requestFullscreen();
-                    }}>
-                      <FullscreenOutlined />
-                    </IconButton>
-                  </LowerControlRow>
-                </LowerControls>
-              </Controls>
-            </ControlsWrapper>
-          </Fade>
-        }
+                      }}>
+                        {v.preset.split('-')[1]}
+                      </MenuItem>
+                    ))}
+                  </Menu>
+                  <IconButton size='small' onClick={(e) => {
+                    vRef.current.requestFullscreen();
+                  }}>
+                    <FullscreenOutlined />
+                  </IconButton>
+                </LowerControlRow>
+              </LowerControlsContainer>
+            </Controls>}
+          </ControlsWrapper>
+        </Fade>
       </Wrapper >
     )
   } else {
