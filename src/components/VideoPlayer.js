@@ -68,6 +68,8 @@ const pickUrl = (versions, override) => {
 };
 
 export default function VideoPlayer({ versions }) {
+  let idleTimer;
+
   const vRef = useRef(null);
   const [volume, setVolume] = useState(.25);
   const [progress, setProgress] = useState(0);
@@ -79,9 +81,20 @@ export default function VideoPlayer({ versions }) {
     setVersion(pickUrl(versions))
   }, [])
 
+  useEffect(() => {
+    clearTimeout(idleTimer);
+    if (controlsVisible) {
+      idleTimer = setTimeout(() => {
+        setControlsVisible(false)
+      }, 3000)
+    }
+  }, [controlsVisible])
+
   if (version) {
     return (
       <Wrapper
+        style={{ cursor: controlsVisible ? 'auto' : 'none' }}
+        onMouseMove={() => setControlsVisible(true)}
         onMouseEnter={() => setControlsVisible(true)}
         onMouseLeave={() => setControlsVisible(false)}
       >
