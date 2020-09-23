@@ -85,7 +85,8 @@ export default function VideoPlayer({ versions }) {
     clearTimeout(idleTimer);
     if (controlsVisible) {
       idleTimer = setTimeout(() => {
-        setControlsVisible(false)
+        setSettingsEl(null);
+        setControlsVisible(false);
       }, 3000)
     }
   }, [controlsVisible])
@@ -129,12 +130,8 @@ export default function VideoPlayer({ versions }) {
                 <Slider onChange={(e, newValue) => {
                   const positionUpdate = (vRef.current.currentTime / vRef.current.duration) * 100
                   setProgress(positionUpdate)
-
                   const seekPosition = vRef.current.duration * (newValue / 100)
                   vRef.current.currentTime = seekPosition;
-
-                  console.log({ positionUpdate, seekPosition });
-
                 }} value={progress} />
 
                 <LowerControls>
