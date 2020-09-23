@@ -91,7 +91,7 @@ async function getTidalVersionsById(id) {
   
       return {
         preset,
-        percentCompleted: cdnPresets.includes(preset) ? 100 : (completedSegments.length / totalSegments) * 100,
+        percentCompleted: cdnPresets.includes(preset) ? 100 :  (completedSegments.length / totalSegments) * 100,
         status: cdnPresets.includes(preset) ? 'completed' : 'processing',
         link: cdnPresets.includes(preset)
           ? `https://cdn.bken.io/v/${id}/${preset}.mp4`
@@ -105,12 +105,12 @@ async function getTidalVersionsById(id) {
   if (!versions.filter(({ percentCompleted }) => percentCompleted).length) {
     status = 'segmenting';
   } else if (
-    versions.filter(({ percentCompleted }) => percentCompleted === 100)
+    cdnPresets.filter((preset) => cdnPresets.includes(preset))
       .length === versions.length
   ) {
     status = 'completed';
   } else {
-    status = 'transcoding';
+    status = 'processing';
   }
   
   return { status, versions };
