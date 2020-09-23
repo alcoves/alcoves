@@ -99,6 +99,8 @@ async function getTidalVersionsById(id) {
       };
     })
   );
+
+  versions.sort((a, b) => (parseInt(a.preset.split('-')[1]) > parseInt(b.preset.split('-')[1])) ? -1 : 1);
   
   let status;
   
