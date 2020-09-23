@@ -7,7 +7,7 @@ import StepLabel from '@material-ui/core/StepLabel';
 
 export default function VideoStatus({ status }) {
   function getSteps() {
-    return ['uploaded', 'segmenting', 'transcoding', 'completed'];
+    return ['uploaded', 'segmenting', 'processing', 'completed'];
   }
 
   return (
