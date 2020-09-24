@@ -1,24 +1,27 @@
 import moment from 'moment';
-
-import styled from 'styled-components';
 import React from 'react';
-
-import { gql, useQuery, } from '@apollo/client';
+import styled from 'styled-components';
+import { gql, useLazyQuery, } from '@apollo/client';
 import { Link, useParams, } from 'react-router-dom';
 import {
   Container,
   Typography,
+  IconButton,
   LinearProgress,
 } from '@material-ui/core';
+import { ThumbUpOutlined, } from '@material-ui/icons';
 import VideoPlayer from './VideoPlayer';
 
-const Wrapper = styled.div`
-  margin: 0px;
-  line-height: 0px;
-  overflow: hidden;
-  background-color: #000000;
-  height: calc(100vh - 300px);
-  max-height: calc((9 /  16) * 100vw);
+const SubtitleContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+const VideoContainerWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
 
 const QUERY = gql`
@@ -45,104 +48,101 @@ const QUERY = gql`
   }
 `;
 
-function VideoContainer({ data }) {
-  return (
-    <div>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        <div>
-          <VideoPlayer
-            versions={data.video.tidal.versions}
-          />
-          <div>
-            <Container style={{ marginTop: '20px' }}>
-              <div>
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    alignContent: 'center',
-                    justifyContent: 'space-between',
-                  }}
-                >
-                  <Typography variant='h4'>{data.video.title}</Typography>
-                </div>
-                <Typography variant='body2'>
-                  {`${moment(
-                    parseInt(data.video.createdAt)).fromNow()}`}
-
-                </Typography>
-                <Typography variant='subtitle2'>{data.video.visibility}</Typography>
-              </div>
-              <div
-                style={{
-                  display: 'flex',
-                  marginTop: '10px',
-                  height: '75px',
-                }}
-              >
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginRight: '10px',
-                  }}
-                >
-                  <Link to={`/users/${data.video.user.username}`}>
-                    <img
-                      alt=''
-                      width={50}
-                      height={50}
-                      src={data.video.user.avatar}
-                      style={{
-                        borderRadius: '50%',
-                        cursor: 'pointer',
-                      }}
-                    />
-                  </Link>
-                </div>
-                <div style={{ height: '100%' }}>
-                  <Link
-                    to={`/users/${data.video.user.username}`}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'flex-end',
-                      height: '50%',
-                    }}
-                  >
-                    {data.video.user.username}
-                  </Link>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'flex-start',
-                      height: '50%',
-                    }}
-                  />
-                </div>
-              </div>
-            </Container>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function Video() {
   const { id } = useParams();
-  const { data } = useQuery(QUERY, {
+  const [getVideo, { data, called }] = useLazyQuery(QUERY, {
     notifyOnNetworkStatusChange: true,
     variables: { id },
   });
 
-  if (data) return <VideoContainer data={data} />;
+  if (id && !called) getVideo();
+
+  if (data) {
+    return (
+      <VideoContainerWrapper>
+        <VideoPlayer versions={data.video.tidal.versions} />
+        <Container style={{ marginTop: '20px' }}>
+          <div>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                alignContent: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Typography variant='h4'>{data.video.title}</Typography>
+            </div>
+            <div>
+              <SubtitleContainer>
+                <div>
+                  <Typography variant='body2'>
+                    {`${moment( Number(data.video.createdAt)).fromNow()}`}
+                  </Typography>
+                  <Typography variant='subtitle2'>{data.video.visibility}</Typography>
+                </div>
+                <div>
+                  <IconButton disabled>
+                    <ThumbUpOutlined />
+                  </IconButton>
+                </div>
+              </SubtitleContainer>
+            </div>
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              marginTop: '10px',
+              height: '75px',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginRight: '10px',
+              }}
+            >
+              <Link to={`/users/${data.video.user.username}`}>
+                <img
+                  alt=''
+                  width={50}
+                  height={50}
+                  src={data.video.user.avatar}
+                  style={{
+                    borderRadius: '50%',
+                    cursor: 'pointer',
+                  }}
+                />
+              </Link>
+            </div>
+            <div style={{ height: '100%' }}>
+              <Link
+                to={`/users/${data.video.user.username}`}
+                style={{
+                  display: 'flex',
+                  alignItems: 'flex-end',
+                  height: '50%',
+                }}
+              >
+                {data.video.user.username}
+              </Link>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  height: '50%',
+                }}
+              />
+            </div>
+          </div>
+        </Container>
+      </VideoContainerWrapper>
+    );
+  }
+
   return <LinearProgress />;
 }
 

@@ -91,7 +91,8 @@ const pickUrl = (versions, override) => {
 
 let idleTimer = null;
 
-export default function VideoPlayer({ versions }) {
+function VideoPlayer({ versions }) {
+
   const vRef = useRef(null);
   const [volume, setVolume] = useState(.25);
   const [progress, setProgress] = useState(0);
@@ -126,7 +127,6 @@ export default function VideoPlayer({ versions }) {
         }}
       >
         <VideoWrapper
-          autoPlay
           ref={vRef}
           src={version.link}
           id='bkenVideoPlayer'
@@ -251,3 +251,5 @@ export default function VideoPlayer({ versions }) {
     return <LinearProgress />
   }
 }
+
+export default VideoPlayer
