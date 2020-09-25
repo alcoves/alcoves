@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import jwt from 'jsonwebtoken';
 import { setContext } from '@apollo/client/link/context';
 import { ApolloClient, createHttpLink, InMemoryCache, ApolloProvider } from '@apollo/client';
 
@@ -22,7 +23,16 @@ export default function ApolloWrapper({ children }) {
       },
     };
 
-    if (token) link.headers.Authorization = `Bearer ${token}`;
+    if (token) {
+      const decoded = jwt.decode(token);
+      if (Date.now() >= decoded.exp * 1000) {
+        console.error('user token expired, logging out');
+        localStorage.removeItem('token');
+        window.location.replace('/login');
+      } else {
+        link.headers.Authorization = `Bearer ${token}`;
+      }
+    } 
     return link;
   });
 
