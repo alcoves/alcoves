@@ -16,18 +16,17 @@ module.exports = async function context({ req }) {
     throw new AuthenticationError('authorization failed');
   }
 
-  try {
-    const authHeader = req.headers.authorization || '';
-    if (authHeader) {
-      const token = authHeader.split(' ')[1];
-      if (token) {
-        const payload = jwt.verify(token, process.env.JWT_KEY);
-        user = payload || null;
-      }
+  const authHeader = req.headers.authorization || '';
+  
+  if (authHeader) {
+    const token = authHeader.split(' ')[1];
+    if (token) {
+      const decoded = jwt.decode(token);
+      if (Date.now() >= decoded.exp * 1000) throw new AuthenticationError('expired token');
+
+      const payload = jwt.verify(token, process.env.JWT_KEY);
+      user = payload || null;
     }
-  } catch (error) {
-    // eslint-disable-next-line
-    console.error('Error decoding token', error);
   }
 
   return { user, authenticate, authorize };
