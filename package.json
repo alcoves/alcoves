@@ -8,7 +8,7 @@
   "repository": "git@github.com:bken-io/web.git",
   "description": "frontend for bken.io",
   "scripts": {
-    "lint": "eslint ./src",
+    "lint": "eslint --ext .jsx --ext .js ./src",
     "dev": "export REACT_APP_GIT_SHA=$(git rev-parse --short HEAD) && parcel public/index.html --no-autoinstall",
     "build": "export REACT_APP_GIT_SHA=$(git rev-parse --short HEAD) && parcel build public/index.html --no-source-maps --no-autoinstall && cp public/favicon.ico dist/favicon.ico"
   },
@@ -37,6 +37,7 @@
     "@babel/preset-env": "^7.11.5",
     "@babel/preset-react": "^7.10.4",
     "@cloudflare/wrangler": "^1.11.0",
+    "babel-eslint": "^10.1.0",
     "eslint": "^7.9.0",
     "eslint-config-airbnb": "^18.2.0",
     "eslint-config-prettier": "^6.11.0",

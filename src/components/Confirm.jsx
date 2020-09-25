@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, } from 'react';
 import styled from 'styled-components';
 import queryString from 'query-string';
-import { useMutation } from '@apollo/client';
-import { Typography, Button, TextField } from '@material-ui/core';
-import { useSnackbar } from 'notistack';
+import { useMutation, } from '@apollo/client';
+import { Button, TextField, } from '@material-ui/core';
+import { useSnackbar, } from 'notistack';
+import { useHistory, } from 'react-router-dom';
 import resendCodeMut from '../gql/resendCode';
 import confirmAccountMut from '../gql/confirmAccount';
-import { useHistory } from 'react-router-dom';
 
 const Container = styled.div`
   width: 100%;
@@ -96,7 +96,8 @@ export default function confirm() {
           fullWidth
           color='secondary'
           onClick={resendCode}
-          disabled={resendLoading || confirmLoading}>
+          disabled={resendLoading || confirmLoading}
+        >
           Resend
         </Button>
         <Button
@@ -104,7 +105,8 @@ export default function confirm() {
           color='primary'
           variant='outlined'
           onClick={confirmAccount}
-          disabled={resendLoading || confirmLoading}>
+          disabled={resendLoading || confirmLoading}
+        >
           Confirm
         </Button>
       </Row>

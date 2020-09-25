@@ -1,5 +1,4 @@
 import LinearProgress from '@material-ui/core/LinearProgress';
-
 import { gql, useQuery, } from '@apollo/client';
 import React, { useEffect, } from 'react';
 import { Typography, } from '@material-ui/core';

@@ -1,40 +1,24 @@
 {
-  "extends": [
-    "airbnb",
-    "prettier"
-  ],
+  "extends": ["airbnb", "prettier"],
   "env": {
     "browser": true
   },
-  "plugins": [
-    "import",
-    "react"
-  ],
+  "plugins": ["import", "react"],
   "parserOptions": {
-    "ecmaVersion": 7,
+    "ecmaVersion": 6,
     "sourceType": "module",
     "ecmaFeatures": {
       "jsx": true
     }
   },
+  "parser": "babel-eslint",
   "rules": {
-    "linebreak-style": [
-      "error",
-      "unix"
-    ],
+    "max-len": [2, 100, 2, { "ignoreUrls": true }],
+    "linebreak-style": ["error", "unix"],
     "react/prop-types": 0,
-    "indent": [
-      "error",
-      2
-    ],
-    "semi": [
-      "error",
-      "always"
-    ],
-    "quotes": [
-      "error",
-      "single"
-    ],
+    "indent": ["error", 2],
+    "semi": ["error", "always"],
+    "quotes": ["error", "single"],
     "comma-dangle": [
       "error",
       {

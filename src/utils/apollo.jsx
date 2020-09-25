@@ -1,14 +1,11 @@
 import React from 'react';
 import jwt from 'jsonwebtoken';
-import { setContext } from '@apollo/client/link/context';
-import { ApolloClient, createHttpLink, InMemoryCache, ApolloProvider } from '@apollo/client';
+import { setContext, } from '@apollo/client/link/context';
+import { ApolloClient, createHttpLink, InMemoryCache, ApolloProvider, } from '@apollo/client';
 
 function serverUrl() {
-  if (window.location.hostname === 'bken.io') {
-    return 'https://helm.bken.io/api/graphql';
-  } else {
-    return 'http://localhost:4000/api/graphql';
-  }
+  if (window.location.hostname === 'bken.io') return 'https://helm.bken.io/api/graphql';
+  return 'http://localhost:4000/api/graphql'; 
 }
 
 export default function ApolloWrapper({ children }) {

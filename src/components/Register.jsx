@@ -1,9 +1,9 @@
-import register from '../gql/register';
 import styled from 'styled-components';
-import React, { useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
-import { Typography, Button, TextField, Container } from '@material-ui/core';
+import React, { useState, } from 'react';
+import { Link, useHistory, } from 'react-router-dom';
+import { useMutation, } from '@apollo/client';
+import { Typography, Button, TextField, Container, } from '@material-ui/core';
+import register from '../gql/register';
 
 const Spacer = styled.div`
   margin: 10px 0px 10px 0px;
@@ -105,7 +105,12 @@ export default function Register() {
         Register
       </Button>
       <Spacer />
-      {error && <Typography variant='body'>{JSON.stringify(error)} </Typography>}
+      {error && (
+        <Typography variant='body'>
+          {JSON.stringify(error)}
+          {' '}
+        </Typography>
+      )}
     </Container>
   );
 }

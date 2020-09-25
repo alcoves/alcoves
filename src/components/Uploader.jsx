@@ -52,7 +52,7 @@ function UploadProgress({ id, url, file }) {
 function SimpleUploader() {
   const [file, setFile] = useState(null);
   const fileInputRef = React.createRef();
-  const [createUpload, { called, loading, data, error }] = useMutation(createUploadQuery);
+  const [createUpload, { called, loading, data }] = useMutation(createUploadQuery);
 
   useEffect(() => {
     if (file) createUpload({ variables: { input: { fileType: file.type } } });

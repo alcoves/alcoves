@@ -15,6 +15,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActionArea from '@material-ui/core/CardActionArea';
 
 import { Link, } from 'react-router-dom';
+import videoDuration from '../utils/videoDuration';
 import { UserContext, } from '../contexts/UserContext';
 
 const Duration = styled.div`
@@ -30,14 +31,6 @@ const Duration = styled.div`
   padding: 0px 3px 0px 3px;
   background: rgba(0, 0, 0, 0.7);
 `;
-
-function videoDuration(d) {
-  if (d > 3600) {
-    return moment.utc(d * 1000).format('H:mm:ss');
-  } 
-  return moment.utc(d * 1000).format('m:ss');
-  
-}
 
 function VideoCard({ video }) {
   const { user } = useContext(UserContext);

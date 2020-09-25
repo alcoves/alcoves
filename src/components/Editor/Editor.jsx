@@ -1,15 +1,15 @@
 import React from 'react';
+import Button from '@material-ui/core/Button';
+import Container from '@material-ui/core/Container';
+import { Link, useParams, } from 'react-router-dom';
+import { gql, useLazyQuery, } from '@apollo/client';
+import { Grid, LinearProgress, } from '@material-ui/core';
 import Title from './Title';
 import VideoStatus from './VideoStatus';
 import PublishStatus from './PublishStatus';
 import VersionStatus from './VersionStatus';
-import Button from '@material-ui/core/Button';
 import DeleteVideoButton from './DeleteVideoButton';
-import Container from '@material-ui/core/Container';
 
-import { Link, useParams } from 'react-router-dom';
-import { gql, useLazyQuery } from '@apollo/client';
-import { Grid, LinearProgress } from '@material-ui/core';
 
 const GET_VIDEO = gql`
   query video($id: String!) {
@@ -101,7 +101,8 @@ function Editor() {
           spacing={1}
           direction='row'
           justify='space-between'
-          style={{ marginTop: '5px' }}>
+          style={{ marginTop: '5px' }}
+        >
           <Grid item>
             <DeleteVideoButton id={data.video.id} />
           </Grid>

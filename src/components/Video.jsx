@@ -10,7 +10,7 @@ import {
   LinearProgress,
 } from '@material-ui/core';
 import { ThumbUpOutlined, } from '@material-ui/icons';
-import VideoPlayer from './VideoPlayer';
+import VideoPlayer from './VideoPlayer/Index';
 
 const SubtitleContainer = styled.div`
   width: 100%;

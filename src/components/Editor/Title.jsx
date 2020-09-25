@@ -2,8 +2,8 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
-import React, { useState } from 'react';
-import { gql, useMutation, useQuery } from '@apollo/client';
+import React, { useState, } from 'react';
+import { gql, useMutation, useQuery, } from '@apollo/client';
 
 const GET_VIDEO = gql`
   query video($id: String!) {
@@ -28,7 +28,7 @@ export default ({ id }) => {
     variables: { id },
   });
 
-  const [saveVideo, { loading }] = useMutation(UPDATE_VIDEO_TITLE)
+  const [saveVideo, { loading }] = useMutation(UPDATE_VIDEO_TITLE);
 
   return (
     <Grid container alignItems='flex-end' spacing={1} style={{ margin: '10px 0px 10px 0px' }}>
@@ -36,9 +36,14 @@ export default ({ id }) => {
         <TextField fullWidth name='title' defaultValue={data?.video?.title} onChange={e => setTitle(e.target.value)} />
       </Grid>
       <Grid item xs={2}>
-        <Button color='primary' fullWidth disabled={loading} onClick={() => {
-          saveVideo({ variables: { input: { id, title } } })
-        }}>
+        <Button
+          color='primary'
+          fullWidth
+          disabled={loading}
+          onClick={() => {
+            saveVideo({ variables: { input: { id, title } } });
+          }}
+        >
           Save
         </Button>
       </Grid>
