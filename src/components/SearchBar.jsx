@@ -13,7 +13,7 @@ const SearchBox = styled(InputBase)`
   padding: 0px 10px 0px 10px;
 `;
 
-export default function search() {
+export default function Search() {
   const { search, setSearch } = useContext(SearchContext);
   const [localSearch, setLocalSearch] = useState(search);
 

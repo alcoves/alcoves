@@ -17,14 +17,14 @@ export default function searchResults() {
             <div key={v.id} style={{ display: 'flex', flexDirection: 'row' }}>
               <div style={{ marginRight: '10px' }}>
                 <Link to={`/v/${v.id}`}>
-                  <img style={{ width: 350, borderRadius: '3px' }} src={v.thumbnails[0]} />
+                  <img style={{ width: 350, borderRadius: '3px' }} src={v.thumbnails[0]} alt='thumb' />
                 </Link>
               </div>
               <div>
                 <Link to={`/v/${v.id}`}>
                   <Typography variant="h4">{v.title}</Typography>
                 </Link>
-                <Typography variant="subtitle2">{moment(parseInt(v.createdAt)).fromNow()}</Typography>
+                <Typography variant="subtitle2">{moment(Number(v.createdAt)).fromNow()}</Typography>
                 <Link to={`/v/${v.user.username}`}>
                   <Typography variant="subtitle2">{v.user.username}</Typography>
                 </Link>

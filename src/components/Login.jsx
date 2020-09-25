@@ -1,10 +1,10 @@
-import loginQuery from '../gql/login';
 import styled from 'styled-components';
-import { useMutation } from '@apollo/client';
-import React, { useState, useContext } from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import { UserContext } from '../contexts/UserContext';
-import { LinearProgress, Typography, Button, TextField, Container } from '@material-ui/core';
+import { useMutation, } from '@apollo/client';
+import React, { useState, useContext, } from 'react';
+import { Link, useHistory, } from 'react-router-dom';
+import { LinearProgress, Typography, Button, TextField, Container, } from '@material-ui/core';
+import { UserContext, } from '../contexts/UserContext';
+import loginQuery from '../gql/login';
 
 const Spacer = styled.div`
   margin: 10px 0px 10px 0px;
@@ -73,7 +73,11 @@ export default function Login() {
         Login
       </Button>
       <Spacer />
-      {error && <Typography variant='body1'>{JSON.stringify(error)} </Typography>}
+      {error && (
+        <Typography variant='body1'>
+          {JSON.stringify(error)}
+        </Typography>
+      )}
     </Container>
   );
 }

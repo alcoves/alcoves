@@ -5,7 +5,6 @@ import IconButton from '@material-ui/core/IconButton';
 import UploadIcon from '@material-ui/icons/PublishOutlined';
 import PersonOutlinedIcon from '@material-ui/icons/PersonOutlined';
 import VideoLibraryIcon from '@material-ui/icons/VideoLibraryOutlined';
-
 import { Link, } from 'react-router-dom';
 import { Box, } from '@material-ui/core';
 import favicon from '../../public/favicon.ico';
