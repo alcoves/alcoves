@@ -36,7 +36,7 @@ function VideoCard({ video }) {
   const { user } = useContext(UserContext);
   const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const handleClick = event => {
+  const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -114,13 +114,11 @@ export default function VideoGrid({ videos = [] }) {
       justify='flex-start'
       alignItems='flex-start'
     >
-      {videos.map(video => {
-        return (
-          <Grid xs={12} sm={12} md={6} lg={4} xl={3} item key={video.id}>
-            <VideoCard video={video} />
-          </Grid>
-        );
-      })}
+      {videos.map((video) => (
+        <Grid xs={12} sm={12} md={6} lg={4} xl={3} item key={video.id}>
+          <VideoCard video={video} />
+        </Grid>
+      ))}
     </Grid>
   );
 }

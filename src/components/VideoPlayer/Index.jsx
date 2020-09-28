@@ -1,7 +1,18 @@
 import qs from 'query-string';
 import React, { useEffect, useRef, useState, } from 'react';
-import { Fade, Menu, MenuItem, IconButton, Slider, LinearProgress, } from '@material-ui/core';
-import { PauseOutlined, PlayArrowOutlined, VolumeUpOutlined, VolumeDownOutlined, VolumeOffOutlined, SettingsOutlined, FullscreenOutlined, PictureInPictureAltOutlined, } from '@material-ui/icons';
+import {
+  Fade, Menu, MenuItem, IconButton, Slider, LinearProgress,
+} from '@material-ui/core';
+import {
+  PauseOutlined,
+  PlayArrowOutlined,
+  VolumeUpOutlined,
+  VolumeDownOutlined,
+  VolumeOffOutlined,
+  SettingsOutlined,
+  FullscreenOutlined,
+  PictureInPictureAltOutlined,
+} from '@material-ui/icons';
 
 import styled from 'styled-components';
 import Duration from './Duration';
@@ -64,7 +75,7 @@ const VideoWrapper = styled.video`
 
 function volumeIcon(v, muted) {
   if (muted) return <VolumeOffOutlined />;
-  return v > .50 ? <VolumeUpOutlined /> : <VolumeDownOutlined />;
+  return v > 0.50 ? <VolumeUpOutlined /> : <VolumeDownOutlined />;
 }
 
 const pickUrl = (versions, override) => {
@@ -94,7 +105,7 @@ let idleTimer = null;
 
 function VideoPlayer({ versions }) {
   const vRef = useRef(null);
-  const [volume, setVolume] = useState(.25);
+  const [volume, setVolume] = useState(0.25);
   const [progress, setProgress] = useState(0);
   const [settingsEl, setSettingsEl] = useState(null);
   const [version, setVersion] = useState();
@@ -140,23 +151,19 @@ function VideoPlayer({ versions }) {
           }}
           onLoadedMetadata={() => {
             setVolume(vRef.current.volume * 100);
-
             const { t } = qs.parse(window.location.search);
-            if (t) {
-              vRef.current.currentTime = t;
-              window.location.search = '';
-            }
+            if (t) vRef.current.currentTime = Number(t);
           }}
           onTimeUpdate={(e) => {
             const positionUpdate = (e.target.currentTime / e.target.duration) * 100;
             setProgress(positionUpdate);
           }}
-          onClick={() => vRef.current.paused ? vRef.current.play() : vRef.current.pause()}
+          onClick={() => (vRef.current.paused ? vRef.current.play() : vRef.current.pause())}
         />
         <Fade in timeout={250}>
           <ControlsWrapper style={{ visibility: controlsVisible ? 'visible' : 'hidden' }}>
             <UpperControlsContainer
-              onClick={() => vRef.current.paused ? vRef.current.play() : vRef.current.pause()}
+              onClick={() => (vRef.current.paused ? vRef.current.play() : vRef.current.pause())}
             />
             {controlsVisible && vRef && vRef.current && (
               <Controls>
@@ -175,7 +182,7 @@ function VideoPlayer({ versions }) {
                   <LowerControlRow>
                     <IconButton
                       size='small'
-                      onClick={() => vRef.current.paused ? vRef.current.play() : vRef.current.pause()}
+                      onClick={() => (vRef.current.paused ? vRef.current.play() : vRef.current.pause())}
                     >
                       {vRef.current.paused ? <PlayArrowOutlined /> : <PauseOutlined />}
                     </IconButton>
@@ -184,8 +191,8 @@ function VideoPlayer({ versions }) {
                       size='small'
                       onClick={() => {
                         if (vRef.current.muted) {
-                          setVolume(.25 * 100);
-                          vRef.current.volume = .25;
+                          setVolume(0.25 * 100);
+                          vRef.current.volume = 0.25;
                           vRef.current.muted = false;
                         } else {
                           setVolume(0);
@@ -227,7 +234,7 @@ function VideoPlayer({ versions }) {
                     </IconButton>
                     <Menu
                       keepMounted
-                      id="version-selector"
+                      id='version-selector'
                       anchorEl={settingsEl}
                       open={Boolean(settingsEl)}
                       onClose={() => {
@@ -239,7 +246,7 @@ function VideoPlayer({ versions }) {
                           key={v.preset}
                           selected={v.link === vRef.current.src}
                           onClick={() => {
-                            const {currentTime} = vRef.current;
+                            const { currentTime } = vRef.current;
                             vRef.current.src = v.link;
                             vRef.current.currentTime = currentTime;
                             vRef.current.play();
@@ -274,9 +281,8 @@ function VideoPlayer({ versions }) {
         </Fade>
       </Wrapper>
     );
-  } 
+  }
   return <LinearProgress />;
-  
 }
 
 export default VideoPlayer;

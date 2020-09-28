@@ -33,7 +33,7 @@ export default ({ id }) => {
   return (
     <Grid container alignItems='flex-end' spacing={1} style={{ margin: '10px 0px 10px 0px' }}>
       <Grid item xs={10}>
-        <TextField fullWidth name='title' defaultValue={data?.video?.title} onChange={e => setTitle(e.target.value)} />
+        <TextField fullWidth name='title' defaultValue={data?.video?.title} onChange={(e) => setTitle(e.target.value)} />
       </Grid>
       <Grid item xs={2}>
         <Button

@@ -1,5 +1,5 @@
 {
-  "extends": ["airbnb", "prettier"],
+  "extends": ["airbnb", "prettier", "plugin:react/recommended"],
   "env": {
     "browser": true
   },
@@ -13,7 +13,14 @@
   },
   "parser": "babel-eslint",
   "rules": {
-    "max-len": [2, 100, 2, { "ignoreUrls": true }],
+    "max-len": [
+      2,
+      100,
+      2,
+      {
+        "ignoreUrls": true
+      }
+    ],
     "linebreak-style": ["error", "unix"],
     "react/prop-types": 0,
     "indent": ["error", 2],
@@ -29,6 +36,7 @@
         "functions": "never"
       }
     ],
-    "no-unused-vars": "error"
+    "no-unused-vars": "error",
+    "jsx-quotes": ["error", "prefer-single"]
   }
 }

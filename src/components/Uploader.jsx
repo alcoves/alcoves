@@ -4,7 +4,9 @@ import VideoIcon from '@material-ui/icons/MovieOutlined';
 import { useHistory, } from 'react-router-dom';
 import { useMutation, } from '@apollo/client';
 import React, { useState, useEffect, } from 'react';
-import { Button, LinearProgress, Container, CircularProgress, } from '@material-ui/core';
+import {
+  Button, LinearProgress, Container, CircularProgress,
+} from '@material-ui/core';
 
 import createUploadQuery from '../gql/createUpload';
 import completeUploadQuery from '../gql/completeUpload';
@@ -23,7 +25,7 @@ function UploadProgress({ id, url, file }) {
     axios
       .put(url, file, {
         headers: { 'Content-Type': file.type },
-        onUploadProgress: e => {
+        onUploadProgress: (e) => {
           const currentProgress = (e.loaded / file.size) * 100;
           console.log(currentProgress);
           setProgress(currentProgress);
@@ -33,11 +35,13 @@ function UploadProgress({ id, url, file }) {
         // Load video to get duration
         const video = document.createElement('video');
         video.setAttribute('src', window.URL.createObjectURL(file));
-        video.onloadeddata = event => {
+        video.onloadeddata = (event) => {
           const meta = event.srcElement; // TODO :: This is deprecated
           completeUpload({
             variables: {
-              input: { id, title: file.name, duration: meta.duration, fileType: file.type },
+              input: {
+                id, title: file.name, duration: meta.duration, fileType: file.type,
+              },
             },
           });
         };
@@ -77,7 +81,7 @@ function SimpleUploader() {
         name='video'
         ref={fileInputRef}
         accept='video/mp4'
-        onChange={e => {
+        onChange={(e) => {
           setFile(e.target.files[0]);
         }}
       />

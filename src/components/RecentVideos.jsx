@@ -30,13 +30,15 @@ function GetRecentVideos() {
   }, []);
 
   if (error) console.log(error);
-  if (data) return (
-    <div>
-      <Typography variant='h5' style={{ paddingLeft: '20px', paddingTop: '20px' }}> Latest </Typography>
-      <VideoGrid videos={data.getRecentVideos} />
-    </div>
+  if (data) {
+    return (
+      <div>
+        <Typography variant='h5' style={{ paddingLeft: '20px', paddingTop: '20px' }}> Latest </Typography>
+        <VideoGrid videos={data.getRecentVideos} />
+      </div>
 
-  );
+    );
+  }
   return <LinearProgress> Loading </LinearProgress>;
 }
 

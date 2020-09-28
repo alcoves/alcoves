@@ -34,7 +34,7 @@ export default ({ visibility: vis, id }) => {
     <ToggleButtonGroup
       exclusive
       value={visibility}
-      aria-label="visibility"
+      aria-label='visibility'
       onChange={(e, newVis) => {
         if (newVis) {
           setVisibility(newVis);
@@ -42,10 +42,10 @@ export default ({ visibility: vis, id }) => {
         }
       }}
     >
-      <ToggleButton value="unlisted" aria-label="unlisted">
+      <ToggleButton value='unlisted' aria-label='unlisted'>
         <VisibilityUnlisted />
       </ToggleButton>
-      <ToggleButton value="public" aria-label="public">
+      <ToggleButton value='public' aria-label='public'>
         <VisibilityPublic />
       </ToggleButton>
     </ToggleButtonGroup>

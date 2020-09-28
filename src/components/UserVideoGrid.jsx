@@ -35,7 +35,9 @@ function UserVideoGrid() {
   const { user } = useContext(UserContext);
   const { username } = useParams();
 
-  const [getVideos, { loading, called, data, error, refetch }] = useLazyQuery(GET_USER_VIDEOS, {
+  const [getVideos, {
+    loading, called, data, error, refetch,
+  }] = useLazyQuery(GET_USER_VIDEOS, {
     variables: { username },
   });
 
