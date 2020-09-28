@@ -121,6 +121,9 @@ function VideoPlayer({ versions }) {
             }
           }, 2000);
         }}
+        onTouchStart={() => {
+          console.log('e');
+        }}
         onMouseEnter={() => setControlsVisible(true)}
         onMouseLeave={() => {
           if (!vRef?.current?.paused) {
