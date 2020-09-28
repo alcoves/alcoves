@@ -105,13 +105,11 @@ let idleTimer = null;
 
 function VideoPlayer({ versions }) {
   const vRef = useRef(null);
-  const [volume, setVolume] = useState(0.25);
+  const [volume, setVolume] = useState(1);
   const [progress, setProgress] = useState(0);
   const [settingsEl, setSettingsEl] = useState(null);
   const [version, setVersion] = useState();
   const [controlsVisible, setControlsVisible] = useState(false);
-
-  console.log('update');
 
   useEffect(() => {
     setVersion(pickUrl(versions));
@@ -132,10 +130,15 @@ function VideoPlayer({ versions }) {
             }
           }, 2000);
         }}
+        onLoadedData={() => {
+          if (vRef.current && vRef.current.muted) vRef.current.muted = false;
+        }}
         onTouchStart={() => {
           console.log('e');
         }}
-        onMouseEnter={() => setControlsVisible(true)}
+        onMouseEnter={() => {
+          setControlsVisible(true);
+        }}
         onMouseLeave={() => {
           if (!vRef?.current?.paused) {
             setControlsVisible(false);
@@ -143,8 +146,11 @@ function VideoPlayer({ versions }) {
         }}
       >
         <VideoWrapper
+          muted
+          autoPlay
           ref={vRef}
           src={version.link}
+          disableRemotePlayback
           id='bkenVideoPlayer'
           onPause={() => {
             setControlsVisible(true);
