@@ -2,7 +2,9 @@ import styled from 'styled-components';
 import React, { useState, } from 'react';
 import { Link, useHistory, } from 'react-router-dom';
 import { useMutation, } from '@apollo/client';
-import { Typography, Button, TextField, Container, } from '@material-ui/core';
+import {
+  Typography, Button, TextField, Container,
+} from '@material-ui/core';
 import register from '../gql/register';
 
 const Spacer = styled.div`
@@ -108,7 +110,6 @@ export default function Register() {
       {error && (
         <Typography variant='body'>
           {JSON.stringify(error)}
-          {' '}
         </Typography>
       )}
     </Container>

@@ -78,7 +78,7 @@ function Video() {
               <SubtitleContainer>
                 <div>
                   <Typography variant='body2'>
-                    {`${moment( Number(data.video.createdAt)).fromNow()}`}
+                    {`${moment(Number(data.video.createdAt)).fromNow()}`}
                   </Typography>
                   <Typography variant='subtitle2'>{data.video.visibility}</Typography>
                 </div>

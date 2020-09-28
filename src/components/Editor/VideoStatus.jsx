@@ -13,7 +13,7 @@ export default function VideoStatus({ status }) {
   return (
     <Paper style={{ marginBottom: '8px' }}>
       <Stepper activeStep={getSteps().indexOf(status)}>
-        {getSteps().map(label => {
+        {getSteps().map((label) => {
           label = `${label.charAt(0).toUpperCase()}${label.substring(1)}`;
           return (
             <Step key={label}>

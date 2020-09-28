@@ -22,11 +22,11 @@ export default function searchResults() {
               </div>
               <div>
                 <Link to={`/v/${v.id}`}>
-                  <Typography variant="h4">{v.title}</Typography>
+                  <Typography variant='h4'>{v.title}</Typography>
                 </Link>
-                <Typography variant="subtitle2">{moment(Number(v.createdAt)).fromNow()}</Typography>
+                <Typography variant='subtitle2'>{moment(Number(v.createdAt)).fromNow()}</Typography>
                 <Link to={`/v/${v.user.username}`}>
-                  <Typography variant="subtitle2">{v.user.username}</Typography>
+                  <Typography variant='subtitle2'>{v.user.username}</Typography>
                 </Link>
               </div>
             </div>
@@ -36,17 +36,16 @@ export default function searchResults() {
     );
   }
 
-  if (error) return (
-    <code> 
-      {' '}
-      {JSON.stringify(error)}
-      {' '}
-    </code>
-  );
+  if (error) {
+    return (
+      <code>
+        {JSON.stringify(error)}
+      </code>
+    );
+  }
 
   if (loading) {
     return <LinearProgress />;
-  } 
+  }
   return <div> No Results </div>;
-  
 }

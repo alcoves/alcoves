@@ -10,7 +10,6 @@ import PublishStatus from './PublishStatus';
 import VersionStatus from './VersionStatus';
 import DeleteVideoButton from './DeleteVideoButton';
 
-
 const GET_VIDEO = gql`
   query video($id: String!) {
     video(id: $id) {
@@ -33,9 +32,7 @@ const GET_VIDEO = gql`
 
 function VideoPlayer({ versions }) {
   if (versions) {
-    const playableLinks = versions.filter(v => {
-      return Boolean(v && v.link);
-    });
+    const playableLinks = versions.filter((v) => Boolean(v && v.link));
 
     if (playableLinks[0] && playableLinks[0].link) {
       return (
@@ -55,7 +52,9 @@ function VideoPlayer({ versions }) {
 function Editor() {
   const { id } = useParams();
 
-  const [getVideo, { called, loading, data, error, startPolling }] = useLazyQuery(GET_VIDEO, {
+  const [getVideo, {
+    called, loading, data, error, startPolling,
+  }] = useLazyQuery(GET_VIDEO, {
     variables: { id },
   });
 

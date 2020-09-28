@@ -61,8 +61,7 @@ export default function confirm() {
   }, [resendError]);
 
   useEffect(() => {
-    if (confirmError)
-      enqueueSnackbar('Error confirming your account', { variant: 'error', persist: false });
+    if (confirmError) enqueueSnackbar('Error confirming your account', { variant: 'error', persist: false });
   }, [confirmError]);
 
   function handleChange(e) {

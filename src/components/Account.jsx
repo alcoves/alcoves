@@ -1,6 +1,8 @@
 import React, { useContext, } from 'react';
 import { useHistory, } from 'react-router-dom';
-import { Button, LinearProgress, Typography, Container, } from '@material-ui/core';
+import {
+  Button, LinearProgress, Typography, Container,
+} from '@material-ui/core';
 import { UserContext, } from '../contexts/UserContext';
 
 export default function Account() {

@@ -31,5 +31,12 @@ export default function SearchContextProvider({ children }) {
     }
   }, [search]);
 
-  return <SearchContext.Provider value={{ search, setSearch, data, error, loading }}>{children}</SearchContext.Provider>;
+  return (
+    <SearchContext.Provider value={{
+      search, setSearch, data, error, loading,
+    }}
+    >
+      {children}
+    </SearchContext.Provider>
+  );
 }
