@@ -41,7 +41,3 @@ a:hover {
 video {
   outline: none;
 }
-
-video::-internal-media-controls-overlay-cast-button {
-  display: none;
-}
