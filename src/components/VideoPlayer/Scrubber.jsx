@@ -5,12 +5,13 @@ function Duration({ vRef = {} }) {
   const [progress, setProgress] = useState(vRef.current.currentTime / vRef.current.duration * 100);
 
   useEffect(() => {
+    const video = vRef.current;
     function timeUpdate() { 
-      const positionUpdate = (vRef.current.currentTime / vRef.current.duration) * 100;
+      const positionUpdate = (video.currentTime / video.duration) * 100;
       setProgress(positionUpdate);
     }
-    vRef.current.addEventListener('timeupdate', timeUpdate);
-    return () => vRef.current.removeEventListener('timeupdate', timeUpdate);
+    video.addEventListener('timeupdate', timeUpdate);
+    return () => video.removeEventListener('timeupdate', timeUpdate);
   }, [vRef]);
 
   function handleChange(e, newValue) {
