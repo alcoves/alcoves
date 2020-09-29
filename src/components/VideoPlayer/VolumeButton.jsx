@@ -6,11 +6,10 @@ function VolumeButton({ vRef }) {
   const [volume, setVolume] = useState(vRef.current.volume);
 
   useEffect(() => {
-    function handleVolume() { setVolume(vRef.current.volume); }
-    vRef.current.addEventListener('volumechange', handleVolume);
-    return () => {
-      vRef.current.removeEventListener('volumechange', handleVolume);
-    };
+    const video = vRef.current;
+    function handleVolume() { setVolume(video.volume); }
+    video.addEventListener('volumechange', handleVolume);
+    return () => video.removeEventListener('volumechange', handleVolume);
   }, [vRef]);
 
   function handleClick() {

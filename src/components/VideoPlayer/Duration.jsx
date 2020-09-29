@@ -2,7 +2,7 @@ import { Typography, } from '@material-ui/core';
 import React, { useEffect, useState, } from 'react';
 import videoDuration from '../../utils/videoDuration';
 
-function Duration({ vRef = {} }) {
+function Duration({ vRef }) {
   const [time, setTime] = useState('0:00 / 0:00');
 
   function formatDuration() {
@@ -10,9 +10,10 @@ function Duration({ vRef = {} }) {
   }
 
   useEffect(() => {
+    const video = vRef.current;
     function timeUpdate() { setTime(formatDuration());}
-    vRef.current.addEventListener('timeupdate', timeUpdate);
-    return () => vRef.current.removeEventListener('timeupdate', timeUpdate);
+    video.addEventListener('timeupdate', timeUpdate);
+    return () => video.removeEventListener('timeupdate', timeUpdate);
   }, [vRef]);
 
   return (

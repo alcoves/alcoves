@@ -6,16 +6,16 @@ function PlayButton({ vRef }) {
   const [paused, setPaused] = useState(vRef.current.paused);
 
   useEffect(() => {
+    const video = vRef.current;
     function handlePlay() {
-      setPaused(vRef.current.paused);
+      setPaused(video.paused);
     }
 
-    vRef.current.addEventListener('play', handlePlay);
-    vRef.current.addEventListener('pause', handlePlay);
-
+    video.addEventListener('play', handlePlay);
+    video.addEventListener('pause', handlePlay);
     return () => {
-      vRef.current.removeEventListener('play', handlePlay);
-      vRef.current.removeEventListener('pause', handlePlay);
+      video.removeEventListener('play', handlePlay);
+      video.removeEventListener('pause', handlePlay);
     };
   }, [vRef]);
 
