@@ -26,6 +26,8 @@
     "indent": ["error", 2],
     "semi": ["error", "always"],
     "quotes": ["error", "single"],
+    "no-param-reassign": "warn",
+    "no-unused-expressions": ["error", { "allowTernary": true }],
     "comma-dangle": [
       "error",
       {
@@ -37,6 +39,7 @@
       }
     ],
     "no-unused-vars": "error",
-    "jsx-quotes": ["error", "prefer-single"]
+    "jsx-quotes": ["error", "prefer-single"],
+    "react/jsx-indent": [2, 2, { "indentLogicalExpressions": true, "checkAttributes": false }]
   }
 }
