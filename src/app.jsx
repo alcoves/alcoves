@@ -31,17 +31,14 @@ function AppRouter() {
         <Switch>
           <Route exact path='/'><Home /></Route>
           <Route exact path='/search'><SearchResults /></Route>
-
-          <Route exact path='/login' children={<Login />} />
-          <Route exact path='/register' children={<Register />} />
-
-          <Route exact path='/v/:id' children={<Video />} />
-          <Route exact path='/confirm' children={<Confirm />} />
-          <Route exact path='/account' children={<Account />} />
-          <Route exact path='/upload' children={<Uploader />} />
-          <Route exact path='/editor/:id' children={<Editor />} />
-          <Route exact path='/u/:username' children={<UserVideoGrid />} />
-
+          <Route exact path='/login'><Login /></Route>
+          <Route exact path='/register'><Register /></Route>
+          <Route exact path='/v/:id'><Video /></Route>
+          <Route exact path='/confirm'><Confirm /></Route>
+          <Route exact path='/account'><Account /></Route>
+          <Route exact path='/upload'><Uploader /></Route>
+          <Route exact path='/editor/:id'><Editor /></Route>
+          <Route exact path='/u/:username'><UserVideoGrid /></Route>
           <Route component={NoMatch} />
         </Switch>
       </Content>
