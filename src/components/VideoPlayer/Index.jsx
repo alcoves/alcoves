@@ -1,21 +1,18 @@
-import qs from 'query-string';
-import React, { useEffect, useRef, useState, } from 'react';
-import {
-  Fade, Menu, MenuItem, IconButton, Slider, LinearProgress,
-} from '@material-ui/core';
-import {
-  PauseOutlined,
-  PlayArrowOutlined,
-  VolumeUpOutlined,
-  VolumeDownOutlined,
-  VolumeOffOutlined,
-  SettingsOutlined,
-  FullscreenOutlined,
-  PictureInPictureAltOutlined,
-} from '@material-ui/icons';
+import React, { useRef, useState, } from 'react';
 
+import qs from 'query-string';
 import styled from 'styled-components';
+import { Fade, } from '@material-ui/core';
+import pickUrl from '../../utils/pickUrl';
+
+import Scrubber from './Scrubber';
 import Duration from './Duration';
+import PlayButton from './PlayButton';
+import VolumeSlider from './VolumeSlider';
+import VolumeButton from './VolumeButton';
+import QualitySelector from './QualitySelector';
+import FullScreenButton from './FullScreenButton.jsx';
+import PictureInPictureButton from './PictureInPictureButton';
 
 const Wrapper = styled.div`
   margin: 0px;
@@ -42,28 +39,6 @@ const ControlsWrapper = styled.div`
   background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.30) 90%, rgba(0,0,0,0.60) 100%);
 `;
 
-const Controls = styled.div`
-  width: 97%;
-`;
-
-const UpperControlsContainer = styled.div`
-  height: 100%;
-  width: 100%;
-`;
-
-const LowerControlsContainer = styled.div`
-  display: flex;
-  padding-bottom: 5px;
-  flex-direction: row;
-  justify-content: space-between;
-`;
-
-const LowerControlRow = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`;
-
 const VideoWrapper = styled.video`
   top: 0;
   left: 0;
@@ -73,222 +48,99 @@ const VideoWrapper = styled.video`
   background: #000000;
 `;
 
-function volumeIcon(v, muted) {
-  if (muted) return <VolumeOffOutlined />;
-  return v > 0.50 ? <VolumeUpOutlined /> : <VolumeDownOutlined />;
-}
+const UpperControls = styled.div`
+  height: 100%;
+  width: 100%;
+`;
 
-const pickUrl = (versions, override) => {
-  if (versions) {
-    const loadOrder = [
-      'libvpx_vp9-2160p',
-      'libx264-2160p',
-      'libvpx_vp9-1440p',
-      'libx264-1440p',
-      'libvpx_vp9-1080p',
-      'libx264-1080p',
-      'libvpx_vp9-720p',
-      'libx264-720p',
-      'libvpx_vp9-480p',
-      'libx264-480p',
-    ];
-    for (const desiredPreset of loadOrder) {
-      for (const v of versions) {
-        if (override && override === v.preset && v.link) return v;
-        if (desiredPreset === v.preset && v.link) return v;
-      }
-    }
-  }
-};
+const LowerControls = styled.div`
+  display: flex;
+  overflow: none;
+  padding-bottom: 5px;
+  flex-direction: row;
+  width: calc(100% - 45px);
+  justify-content: space-between;
+`;
 
-let idleTimer = null;
+const LowerControlRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
+let idleTimer;
 
 function VideoPlayer({ versions }) {
   const vRef = useRef(null);
-  const [volume, setVolume] = useState(1);
-  const [progress, setProgress] = useState(0);
-  const [settingsEl, setSettingsEl] = useState(null);
-  const [version, setVersion] = useState();
+  const version = pickUrl(versions);
+  const [loaded, setLoaded] = useState(false);
   const [controlsVisible, setControlsVisible] = useState(false);
 
-  useEffect(() => {
-    setVersion(pickUrl(versions));
-  }, []);
+  function togglePlay() {
+    if (vRef && vRef.current) {
+      const r = vRef.current;
+      r.paused ? r.play() : r.pause();
+    }
+  }
 
-  if (version) {
-    return (
-      <Wrapper
-        style={{ cursor: controlsVisible ? 'auto' : 'none' }}
-        onMouseMove={() => {
-          clearTimeout(idleTimer);
-          if (!controlsVisible) setControlsVisible(true);
+  function onLoadedMetadata() {
+    if (!loaded) {
+      const { t } = qs.parse(window.location.search);
+      if (t) vRef.current.currentTime = Number(t);
+      vRef.current.play();
+      setLoaded(true);
+    }
+  }
 
-          idleTimer = setTimeout(() => {
-            if (!vRef?.current?.paused) {
-              setSettingsEl(null);
-              setControlsVisible(false);
-            }
-          }, 2000);
-        }}
-        onLoadedData={() => {
-          if (vRef.current && vRef.current.muted) vRef.current.muted = false;
-        }}
-        onTouchStart={() => {
-          console.log('e');
-        }}
-        onMouseEnter={() => {
-          setControlsVisible(true);
-        }}
-        onMouseLeave={() => {
+  return (
+    <Wrapper
+      onMouseEnter={() => setControlsVisible(true)}
+      onMouseLeave={() => setControlsVisible(false)}
+      style={{ cursor: controlsVisible ? 'auto' : 'none' }}
+      onMouseMove={() => {
+        clearTimeout(idleTimer);
+        if (!controlsVisible) setControlsVisible(true);
+
+        idleTimer = setTimeout(() => {
           if (!vRef?.current?.paused) {
             setControlsVisible(false);
           }
-        }}
-      >
-        <VideoWrapper
-          muted
-          autoPlay
-          ref={vRef}
-          src={version.link}
-          disableRemotePlayback
-          id='bkenVideoPlayer'
-          onPause={() => {
-            setControlsVisible(true);
-          }}
-          onLoadedMetadata={() => {
-            setVolume(vRef.current.volume * 100);
-            const { t } = qs.parse(window.location.search);
-            if (t) vRef.current.currentTime = Number(t);
-          }}
-          onTimeUpdate={(e) => {
-            const positionUpdate = (e.target.currentTime / e.target.duration) * 100;
-            setProgress(positionUpdate);
-          }}
-          onClick={() => (vRef.current.paused ? vRef.current.play() : vRef.current.pause())}
-        />
-        <Fade in timeout={250}>
-          <ControlsWrapper style={{ visibility: controlsVisible ? 'visible' : 'hidden' }}>
-            <UpperControlsContainer
-              onClick={() => (vRef.current.paused ? vRef.current.play() : vRef.current.pause())}
-            />
-            {controlsVisible && vRef && vRef.current && (
-              <Controls>
-                <Slider
-                  style={{}}
-                  onChange={(e, newValue) => {
-                    const positionUpdate = (vRef.current.currentTime / vRef.current.duration) * 100;
-                    setProgress(positionUpdate);
-                    const seekPosition = vRef.current.duration * (newValue / 100);
-                    vRef.current.currentTime = seekPosition;
-                  }}
-                  value={progress}
-                />
-
-                <LowerControlsContainer>
-                  <LowerControlRow>
-                    <IconButton
-                      size='small'
-                      onClick={() => (vRef.current.paused ? vRef.current.play() : vRef.current.pause())}
-                    >
-                      {vRef.current.paused ? <PlayArrowOutlined /> : <PauseOutlined />}
-                    </IconButton>
-
-                    <IconButton
-                      size='small'
-                      onClick={() => {
-                        if (vRef.current.muted) {
-                          setVolume(0.25 * 100);
-                          vRef.current.volume = 0.25;
-                          vRef.current.muted = false;
-                        } else {
-                          setVolume(0);
-                          vRef.current.volume = 0;
-                          vRef.current.muted = true;
-                        }
-                      }}
-                    >
-                      {volumeIcon(vRef.current.volume, vRef.current.muted)}
-                    </IconButton>
-                    <Slider
-                      style={{ marginLeft: '10px', width: '60px', color: 'white' }}
-                      onChange={(e, newValue) => {
-                        if (newValue) {
-                          setVolume(newValue);
-                          vRef.current.muted = false;
-                          vRef.current.volume = newValue / 100;
-                        } else {
-                          setVolume(0);
-                          vRef.current.volume = 0;
-                          vRef.current.muted = true;
-                        }
-                      }}
-                      value={volume}
-                    />
-                    <Duration
-                      duration={vRef?.current?.duration}
-                      currentTime={vRef?.current?.currentTime}
-                    />
-                  </LowerControlRow>
-                  <LowerControlRow>
-                    <IconButton
-                      size='small'
-                      onClick={(e) => {
-                        setSettingsEl(e.currentTarget);
-                      }}
-                    >
-                      <SettingsOutlined />
-                    </IconButton>
-                    <Menu
-                      keepMounted
-                      id='version-selector'
-                      anchorEl={settingsEl}
-                      open={Boolean(settingsEl)}
-                      onClose={() => {
-                        setSettingsEl(null);
-                      }}
-                    >
-                      {versions.filter(({ link }) => link).map((v) => (
-                        <MenuItem
-                          key={v.preset}
-                          selected={v.link === vRef.current.src}
-                          onClick={() => {
-                            const { currentTime } = vRef.current;
-                            vRef.current.src = v.link;
-                            vRef.current.currentTime = currentTime;
-                            vRef.current.play();
-                            setSettingsEl(null);
-                          }}
-                        >
-                          {v.preset.split('-')[1]}
-                        </MenuItem>
-                      ))}
-                    </Menu>
-                    <IconButton
-                      size='small'
-                      onClick={() => {
-                        vRef.current.requestPictureInPicture();
-                      }}
-                    >
-                      <PictureInPictureAltOutlined />
-                    </IconButton>
-                    <IconButton
-                      size='small'
-                      onClick={() => {
-                        vRef.current.requestFullscreen();
-                      }}
-                    >
-                      <FullscreenOutlined />
-                    </IconButton>
-                  </LowerControlRow>
-                </LowerControlsContainer>
-              </Controls>
-            )}
+        }, 2000);
+      }}
+    >
+      <VideoWrapper
+        ref={vRef}
+        src={version.link}
+        id='bkenVideoPlayer'
+        disableRemotePlayback
+        onLoadedMetadata={onLoadedMetadata}
+      />
+ 
+      {vRef && vRef.current && (
+        <Fade in={controlsVisible}>
+          <ControlsWrapper controlsVisible={controlsVisible}>
+            <UpperControls onClick={togglePlay} />
+            <LowerControls>
+              <Scrubber vRef={vRef} />
+            </LowerControls>
+            <LowerControls>
+              <LowerControlRow>
+                <PlayButton vRef={vRef} />
+                <VolumeButton vRef={vRef} />
+                <VolumeSlider vRef={vRef} />
+                <Duration vRef={vRef} />
+              </LowerControlRow>
+              <LowerControlRow>
+                <QualitySelector vRef={vRef} versions={versions} />
+                <PictureInPictureButton vRef={vRef} />
+                <FullScreenButton vRef={vRef} />
+              </LowerControlRow>
+            </LowerControls>
           </ControlsWrapper>
         </Fade>
-      </Wrapper>
-    );
-  }
-  return <LinearProgress />;
+      )}
+    </Wrapper>
+  );
 }
 
 export default VideoPlayer;
