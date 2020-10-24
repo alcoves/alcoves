@@ -74,6 +74,64 @@ describe('end-to-end', () => {
   });
 
   describe('videos', () => {
+    test('getVideo', async () => {
+      const testVideo = await new Video({
+        duration: 60,
+        user: user.id,
+        title: 'test',
+      }).save();
+    
+      const videoQuery = `
+        query video {
+          video(id: "${testVideo.id}") {
+            id
+            title
+            views
+            duration
+            thumbnails
+            visibility
+            tidal {
+              status
+              versions {
+                link
+                status
+                preset
+                percentCompleted
+              }
+            }
+            user {
+              id
+            }
+          }
+        }
+      `;
+    
+      const res = await request(app)
+        .post(API_PATH)
+        .set('Authorization', `Bearer ${token}`)
+        .send({ query: videoQuery });
+        
+      expect(res.body.errors).toBe(undefined);
+      expect(res.body.data.video).toMatchObject({
+        id: testVideo.id,
+        title: 'test',
+        views: 0,
+        duration: 60,
+        thumbnails: [
+          'https://cdn.bken.io/files/default-thumbnail-sm.jpg',
+        ],
+        visibility: 'unlisted',
+        tidal: {
+          status: 'segmenting',
+        },
+        user: {
+          id: user.id,
+        },
+      });
+
+      await Video.deleteOne({id: testVideo.id});   
+    });
+
     test('that user can update a video title', async () => {
       const newTitle = 'new title';
       const testVideo = await new Video({
