@@ -1,12 +1,13 @@
 const mime = require('mime');
 const { nanoid } = require('nanoid');
+const { GraphQLUpload } = require('graphql-upload');
 const ds3 = require('../../utils/ds3');
 const Video = require('../videos/model');
 const dispatchJob = require('../../utils/dispatchJob');
-
 const { DIGITAL_OCEAN_TIDAL_BUCKET } = require('../../utils/config');
 
 const resolvers = {
+  Upload: GraphQLUpload,
   Mutation: {
     async createUpload(_, { input }, { authenticate }) {
       authenticate();

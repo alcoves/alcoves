@@ -1,5 +1,5 @@
 const Video = require('./model');
-const { getUserById } = require('../users/resolvers');
+const User = require('../users/model');
 const { getVideosByUsername, getTidalVersionsById, deleteVideoById, getTidalThumbnailsById } = require('./loaders');
 
 const resolvers =  {
@@ -7,8 +7,10 @@ const resolvers =  {
     tidal({ id }) {
       return getTidalVersionsById(id);
     },
-    user({ user }) {
-      return getUserById(user);
+    async user({ user }) {
+      const userAccount = await User.findById(user);
+      userAccount.id = userAccount._id;
+      return userAccount;
     },
     thumbnails({ id }) {
       return getTidalThumbnailsById(id);

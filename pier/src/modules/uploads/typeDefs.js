@@ -1,6 +1,7 @@
 const { gql } = require('apollo-server-express');
 
 module.exports = gql`
+  scalar Upload
   extend type Mutation {
     createUpload(input: CreateUploadInput!): CreateUploadResponse!
     completeUpload(input: CompleteUploadInput!): CompleteUploadResponse!
