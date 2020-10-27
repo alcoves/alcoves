@@ -1,9 +1,8 @@
 import React from 'react';
 import jwt from 'jsonwebtoken';
 import { setContext, } from '@apollo/client/link/context';
-import {
-  ApolloClient, createHttpLink, InMemoryCache, ApolloProvider,
-} from '@apollo/client';
+import { createUploadLink, } from 'apollo-upload-client';
+import { ApolloClient, InMemoryCache, ApolloProvider, } from '@apollo/client';
 
 function serverUrl() {
   if (window.location.hostname === 'bken.io') return 'https://helm.bken.io/api/graphql';
@@ -11,7 +10,10 @@ function serverUrl() {
 }
 
 export default function ApolloWrapper({ children }) {
-  const httpLink = createHttpLink({ uri: serverUrl() });
+  const httpLink = createUploadLink({
+    uri: serverUrl(),
+    headers: { 'keep-alive': 'true' }, 
+  });
 
   const authLink = setContext((_, { headers, ...rest }) => {
     const token = localStorage.getItem('token');
