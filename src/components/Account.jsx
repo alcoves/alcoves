@@ -1,35 +1,26 @@
-import styled from 'styled-components';
-import React, { useContext } from 'react';
-import { useHistory } from 'react-router-dom';
-import { Button, LinearProgress, Typography, Container } from '@material-ui/core';
-import { UserContext } from '../contexts/UserContext';
-
-const AvatarContainer = styled.div`
-  display: flex;
-  padding-top: 20px;
-  align-items: center;
-  justify-content: center;
-`;
-
-const Avatar = styled.img`
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-`;
+import React, { useContext, useEffect, } from 'react';
+import { useHistory, } from 'react-router-dom';
+import { Button, LinearProgress, Typography, Container, } from '@material-ui/core';
+import { useLazyQuery, } from '@apollo/client';
+import AccountAvatar from './AccountAvatar';
+import { UserContext, } from '../contexts/UserContext';
+import getUser from '../gql/getUser';
 
 export default function Account() {
   const history = useHistory();
   const { user, logout } = useContext(UserContext);
+  const [getMe, { data, error }] = useLazyQuery(getUser);
 
-  if (user) {
+  useEffect(() => {
+    if (user && user.id) {
+      getMe({ variables: { id: user.id } });
+    }
+  }, [user]);
+
+  if (user && data) {
     return (
       <Container maxWidth='xs'>
-        <AvatarContainer>
-          <Avatar
-            src='https://s3.us-east-2.wasabisys.com/cdn.bken.io/files/default-thumbnail-sm.jpg'
-            alt='avatar'
-          />
-        </AvatarContainer>
+        <AccountAvatar avatar={data.me.avatar} />
         <br />
         <Typography align='center' variant='subtitle1'>{`${user.username}`}</Typography>
         <Typography align='center' variant='subtitle2'>{`${user.email}`}</Typography>
@@ -40,13 +31,15 @@ export default function Account() {
           onClick={() => {
             logout();
             history.push('/');
-          }}>
+          }}
+        >
           Log Out
         </Button>
       </Container>
     );
   }
 
-  // if (!user) return history.push('/login');
+  if (error) console.error(error);
+  if (!user) return <Typography variant='h3'> Please log in </Typography>;
   return <LinearProgress />;
 }

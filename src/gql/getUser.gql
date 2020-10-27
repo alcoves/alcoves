@@ -1,0 +1,8 @@
+query me($id: String!) {
+  me(id: $id) {
+    id
+    email
+    avatar
+    username
+  }
+}
