@@ -4,6 +4,8 @@ const fs = require('fs');
 const User = require('../model');
 const ws3 = require('../../../utils/ws3');
 
+const { WASABI_BUCKET } = require('../../../utils/config');
+
 async function uploadAvatar(_, args, { user, authenticate }) {
   authenticate();
   const { createReadStream, filename } = await args.file;
@@ -23,10 +25,20 @@ async function uploadAvatar(_, args, { user, authenticate }) {
         reductionEffort: 6,
       }).toBuffer();
 
+      const { Contents } = await ws3.listObjectsV2({
+        Bucket: WASABI_BUCKET,
+        Prefix: `avatars/${user.id}`,
+      }).promise();
+
+      console.log(`removing ${Contents.length} old avatars`);
+      await Promise.all(Contents.map(({ Key }) => {
+        return ws3.deleteObject({ Key, Bucket: WASABI_BUCKET }).promise();
+      }));
+
       await ws3.upload({
         Body: avatar,
         Key: uploadKey,
-        Bucket: 'cdn.bken.io',
+        Bucket: WASABI_BUCKET,
         ContentType: 'image/webp',
       }).promise();
 
