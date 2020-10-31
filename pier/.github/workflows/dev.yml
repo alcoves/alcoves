@@ -1,4 +1,4 @@
-name: Deploy
+name: Dev
 
 env:
   JWT_KEY: ${{ secrets.JWT_KEY }}
