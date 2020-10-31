@@ -30,14 +30,15 @@
     "query-string": "^6.13.6",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-dropzone": "^11.2.3",
     "react-router-dom": "^5.2.0",
-    "styled-components": "^5.2.0"
+    "styled-components": "^5.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.3",
     "@babel/preset-env": "^7.12.1",
     "@babel/preset-react": "^7.12.1",
-    "@cloudflare/wrangler": "^1.12.0",
+    "@cloudflare/wrangler": "^1.12.1",
     "babel-eslint": "^10.1.0",
     "eslint": "^7.12.1",
     "eslint-config-airbnb": "^18.2.0",
