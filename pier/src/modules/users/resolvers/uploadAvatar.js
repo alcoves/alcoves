@@ -36,7 +36,6 @@ async function uploadAvatar(_, args, { user, authenticate }) {
         Prefix: `avatars/${user.id}`,
       }).promise();
 
-      console.log(`removing ${Contents.length} old avatars`);
       await Promise.all(Contents.map(({ Key }) => {
         return ws3.deleteObject({ Key, Bucket: WASABI_BUCKET }).promise();
       }));
