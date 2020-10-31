@@ -9,7 +9,7 @@ import getUser from '../gql/getUser';
 export default function Account() {
   const history = useHistory();
   const { user, logout } = useContext(UserContext);
-  const [getMe, { data, error }] = useLazyQuery(getUser);
+  const [getMe, { data, error, loading, called }] = useLazyQuery(getUser);
 
   useEffect(() => {
     if (user && user.id) {
@@ -40,6 +40,6 @@ export default function Account() {
   }
 
   if (error) console.error(error);
-  if (!user) return <Typography variant='h3'> Please log in </Typography>;
+  if (!user && called) return <Typography variant='h3'> Please log in </Typography>;
   return <LinearProgress />;
 }
