@@ -44,7 +44,7 @@ jobs:
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
-          token: ${{ secrets.DO_ACCESS_KEY_ID }}
+          token: ${{ secrets.DO_API_KEY }}
 
       - name: Build container image
         run: docker build -t registry.digitalocean.com/bken/api:latest .
