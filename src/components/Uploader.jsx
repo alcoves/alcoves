@@ -1,11 +1,11 @@
 import axios from 'axios';
-import VideoIcon from '@material-ui/icons/MovieOutlined';
+import styled from 'styled-components';
 
+import {useDropzone,} from 'react-dropzone';
 import { useHistory, } from 'react-router-dom';
 import { useMutation, } from '@apollo/client';
-import React, { useState, useEffect, } from 'react';
-import {
-  Button, LinearProgress, Container, CircularProgress,
+import React, { useState, useEffect, useCallback, } from 'react';
+import { LinearProgress, Container, CircularProgress, Typography,
 } from '@material-ui/core';
 
 import createUploadQuery from '../gql/createUpload';
@@ -53,10 +53,30 @@ function UploadProgress({ id, url, file }) {
   return <LinearProgress variant='determinate' value={progress} />;
 }
 
+const Dropzone = styled.div`
+  width: 100%
+  height: 200px;
+  border-radius: 4px;
+  border: dashed 2px grey;
+`;
+
 function SimpleUploader() {
   const [file, setFile] = useState(null);
-  const fileInputRef = React.createRef();
   const [createUpload, { called, loading, data }] = useMutation(createUploadQuery);
+
+  const onDrop = useCallback(acceptedFiles => {
+    setFile(acceptedFiles[0]);
+  }, []);
+
+  const {
+    getRootProps,
+    getInputProps,
+    isDragActive,
+  } = useDropzone({ 
+    onDrop, 
+    accept: 'video/mp4', 
+    disabled: Boolean(loading || called),
+  });
 
   useEffect(() => {
     if (file) createUpload({ variables: { input: { fileType: file.type } } });
@@ -64,27 +84,12 @@ function SimpleUploader() {
 
   return (
     <Container maxWidth='xs' style={{ paddingTop: '20px' }}>
-      <Button
-        fullWidth
-        size='large'
-        color='primary'
-        variant='contained'
-        startIcon={<VideoIcon />}
-        disabled={called || loading}
-        onClick={() => fileInputRef.current.click()}
-      >
-        Select Video
-      </Button>
-      <input
-        hidden
-        type='file'
-        name='video'
-        ref={fileInputRef}
-        accept='video/mp4'
-        onChange={(e) => {
-          setFile(e.target.files[0]);
-        }}
-      />
+      <Dropzone {...getRootProps()}>
+        <input {...getInputProps()} />
+        { isDragActive ?
+          <Typography variant='body1'> Drop here </Typography> :
+          <Typography variant='body1'> Select a Video </Typography>}
+      </Dropzone>
       {data && file && (
         <UploadProgress id={data.createUpload.id} url={data.createUpload.url} file={file} />
       )}
