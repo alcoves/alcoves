@@ -1,5 +1,10 @@
 name: Master
 
+on:
+  push:
+    branches:
+      - master
+
 env:
   JWT_KEY: ${{ secrets.JWT_KEY }}
   DO_API_KEY: ${{ secrets.DO_API_KEY }}
@@ -12,10 +17,6 @@ env:
   WASABI_SECRET_ACCESS_KEY: ${{ secrets.WASABI_SECRET_ACCESS_KEY }}
   NOMAD_TOKEN: ${{ secrets.NOMAD_TOKEN }}
   NOMAD_ADDRESS: ${{ secrets.NOMAD_ADDRESS }}
-on:
-  push:
-    branches:
-      - master
 
 jobs:
   deploy:
