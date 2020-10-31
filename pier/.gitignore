@@ -9,3 +9,4 @@ coverage
 dist
 .serverless
 *.0x
+tmp
