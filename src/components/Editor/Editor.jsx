@@ -69,10 +69,11 @@ function Editor() {
     startPolling(5000);
     return (
       <Container maxWidth='md' style={{ paddingTop: '15px' }}>
-        <Grid container spacing={2}>
+        <Grid container spacing={1}>
           <Grid item xs={12} sm={4}>
             {data.video?.thumbnails && (
               <img
+                alt='thumbnail'
                 style={{
                   borderRadius: '5px',
                   margin: '10px 0px 10px 0px',
