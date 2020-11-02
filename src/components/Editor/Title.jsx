@@ -1,8 +1,7 @@
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
+import React from 'react';
 import TextField from '@material-ui/core/TextField';
 
-import React, { useState, } from 'react';
+import { CircularProgress, } from '@material-ui/core';
 import { gql, useMutation, useQuery, } from '@apollo/client';
 
 const GET_VIDEO = gql`
@@ -21,32 +20,35 @@ const UPDATE_VIDEO_TITLE = gql`
   }
 `;
 
+let autosaveTimeout;
+
 export default ({ id }) => {
-  const [title, setTitle] = useState(null);
-
-  const { data } = useQuery(GET_VIDEO, {
-    variables: { id },
-  });
-
+  const { data } = useQuery(GET_VIDEO, { variables: { id } });
   const [saveVideo, { loading }] = useMutation(UPDATE_VIDEO_TITLE);
 
   return (
-    <Grid container alignItems='flex-end' spacing={1} style={{ margin: '10px 0px 10px 0px' }}>
-      <Grid item xs={10}>
-        <TextField fullWidth name='title' defaultValue={data?.video?.title} onChange={(e) => setTitle(e.target.value)} />
-      </Grid>
-      <Grid item xs={2}>
-        <Button
-          color='primary'
-          fullWidth
-          disabled={loading}
-          onClick={() => {
-            saveVideo({ variables: { input: { id, title } } });
-          }}
-        >
-          Save
-        </Button>
-      </Grid>
-    </Grid>
+    <div style={{ margin: '10px 0px 10px 0px' }}>
+      <TextField
+        fullWidth
+        name='title'
+        size='small'
+        disabled={loading}
+        variant='outlined'
+        defaultValue={data?.video?.title}
+        onChange={(e) => {
+          clearTimeout(autosaveTimeout);
+          autosaveTimeout = setTimeout(() => {
+            saveVideo({ variables: { input: { id, title: e.target.value } } });
+          }, 2000);
+        }}
+        InputProps={{
+          endAdornment: (
+            <div>
+              {loading ? <CircularProgress style={{ height: '20px', width: '20px' }} /> : <div />}
+            </div>
+          ),
+        }}
+      />
+    </div>
   );
 };
