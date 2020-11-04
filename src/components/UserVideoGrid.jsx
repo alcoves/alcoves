@@ -22,7 +22,6 @@ const GET_USER_VIDEOS = gql`
       }
       tidal {
         versions {
-          link
           status
           preset
         }

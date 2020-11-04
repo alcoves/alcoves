@@ -20,7 +20,6 @@ const GET_VIDEO = gql`
       tidal {
         status
         versions {
-          link
           status
           preset
           percentCompleted
@@ -91,7 +90,7 @@ function Editor() {
         </Grid>
         {data.video.tidal && (
           <div>
-            <VideoPlayer versions={data.video?.tidal?.versions} />
+            {/* <VideoPlayer versions={data.video?.tidal?.versions} /> */}
             <VideoStatus status={data.video?.tidal?.status} />
             <VersionStatus versions={data.video?.tidal?.versions} />
           </div>

@@ -11,6 +11,7 @@ import {
 } from '@material-ui/core';
 import { ThumbUpOutlined, } from '@material-ui/icons';
 import VideoPlayer from './VideoPlayer/Index';
+import HLSVideoPlayer from './HLSVideoPlayer';
 
 const SubtitleContainer = styled.div`
   width: 100%;
@@ -38,8 +39,8 @@ const QUERY = gql`
         username
       }
       tidal {
+        link
         versions {
-          link
           status
           preset
         }
@@ -60,7 +61,8 @@ function Video() {
   if (data) {
     return (
       <VideoContainerWrapper>
-        <VideoPlayer versions={data.video.tidal.versions} />
+        <HLSVideoPlayer link={data.video.tidal.link} />
+        {/* <VideoPlayer versions={data.video.tidal.versions} /> */}
         <Container style={{ marginTop: '20px' }}>
           <div>
             <div
