@@ -20,12 +20,6 @@ const GET_USER_VIDEOS = gql`
         avatar
         username
       }
-      tidal {
-        versions {
-          status
-          preset
-        }
-      }
     }
   }
 `;
@@ -43,14 +37,10 @@ function UserVideoGrid() {
   if (username && !loading && !called) getVideos();
 
   useEffect(() => {
-    console.log('use effect!');
-    if (!loading && called) {
-      console.log('refetching...');
-      refetch();
-    }
+    if (!loading && called) refetch();
   });
 
-  if (error) console.log(error);
+  if (error) console.error(error);
   if (data && username && user) return <VideoGrid videos={data.videosByUsername} />;
   return <LinearProgress> Loading user videos... </LinearProgress>;
 }
