@@ -1,9 +1,8 @@
-import React, { useRef, useState, } from 'react';
+import React, { useRef, useState, useEffect, } from 'react';
 
 import qs from 'query-string';
 import styled from 'styled-components';
 import { Fade, } from '@material-ui/core';
-import pickUrl from '../../utils/pickUrl';
 
 import Scrubber from './Scrubber';
 import Duration from './Duration';
@@ -70,11 +69,21 @@ const LowerControlRow = styled.div`
 
 let idleTimer;
 
-function VideoPlayer({ versions }) {
+function VideoPlayer({ link }) {
   const vRef = useRef(null);
-  const version = pickUrl(versions);
   const [loaded, setLoaded] = useState(false);
   const [controlsVisible, setControlsVisible] = useState(false);
+
+  useEffect(() => {
+    const video = document.getElementById('bkenVideoPlayer');
+    const hls = new Hls();
+    hls.loadSource(link);
+    hls.attachMedia(video);
+    hls.on(Hls.Events.MANIFEST_PARSED, function() {
+      video.play();
+    });
+  }, []);
+
 
   function togglePlay() {
     if (vRef && vRef.current) {
@@ -110,7 +119,7 @@ function VideoPlayer({ versions }) {
     >
       <VideoWrapper
         ref={vRef}
-        src={version.link}
+        src={link}
         id='bkenVideoPlayer'
         disableRemotePlayback
         onLoadedMetadata={onLoadedMetadata}
@@ -131,7 +140,7 @@ function VideoPlayer({ versions }) {
                 <Duration vRef={vRef} />
               </LowerControlRow>
               <LowerControlRow>
-                <QualitySelector vRef={vRef} versions={versions} />
+                {/* <QualitySelector vRef={vRef} versions={versions} /> */}
                 <PictureInPictureButton vRef={vRef} />
                 <FullScreenButton vRef={vRef} />
               </LowerControlRow>
