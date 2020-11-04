@@ -29,12 +29,12 @@ module.exports.typeDefs = gql`
   }
 
   type TidalVideo {
+    link: String!
     status: String!
     versions: [Version!]!
   }
 
   type Version {
-    link: String!
     status: String!
     preset: String!
     percentCompleted: Float!

@@ -47,7 +47,7 @@ async function deleteVideoById(id) {
 
 async function getTidalVersionsById(id) {
   // Should fetch more items, 1000 limit right now
-  const [tidalPresets, totalSegments, cdnPresets] = await Promise.all([
+  const [tidalPresets, totalSegments, publishedVersions] = await Promise.all([
     ds3
       .listObjectsV2({
         Bucket: 'tidal',
@@ -69,19 +69,24 @@ async function getTidalVersionsById(id) {
       .then(({ Contents }) => {
         return Contents.length;
       }),
-    ws3
-      .listObjectsV2({
-        Bucket: 'cdn.bken.io',
-        Prefix: `v/${id}`,
-      })
-      .promise()
-      .then(({ Contents }) => {
-        return Contents.map(({ Key }) => Key.split('/')[2].split('.')[0]);
-      }),
+    ws3.getObject({
+      Bucket: 'cdn.bken.io',
+      Key: `v/${id}/master.m3u8`,
+    }).promise().then(({ Body }) => {
+      return Body.toString().split('\n').reduce((acc, line) => {
+        const [preset, ext] = line.split('.');
+        if (ext === 'm3u8') acc.push(preset);
+        return acc;
+      }, []);
+    }).catch((error) => {
+      console.error(error);
+    }),
   ]);
+
+
   
   const versions = await Promise.all(
-    _.union(tidalPresets, cdnPresets).map(async (preset) => {
+    _.union(tidalPresets, publishedVersions).map(async (preset) => {
       const completedSegments = await ds3
         .listObjectsV2({ Bucket: 'tidal', Prefix: `${id}/versions/${preset}/segments/` })
         .promise()
@@ -91,11 +96,8 @@ async function getTidalVersionsById(id) {
   
       return {
         preset,
-        percentCompleted: cdnPresets.includes(preset) ? 100 :  (completedSegments.length / totalSegments) * 100,
-        status: cdnPresets.includes(preset) ? 'completed' : 'processing',
-        link: cdnPresets.includes(preset)
-          ? `https://cdn.bken.io/v/${id}/${preset}.mp4`
-          : '',
+        percentCompleted: publishedVersions.includes(preset) ? 100 :  (completedSegments.length / totalSegments) * 100,
+        status: publishedVersions.includes(preset) ? 'completed' : 'processing',
       };
     })
   );
@@ -107,7 +109,7 @@ async function getTidalVersionsById(id) {
   if (!versions.filter(({ percentCompleted }) => percentCompleted).length) {
     status = 'segmenting';
   } else if (
-    cdnPresets.filter((preset) => cdnPresets.includes(preset))
+    publishedVersions.filter((preset) => publishedVersions.includes(preset))
       .length === versions.length
   ) {
     status = 'completed';
@@ -115,7 +117,7 @@ async function getTidalVersionsById(id) {
     status = 'processing';
   }
   
-  return { status, versions };
+  return { status, link: `https://cdn.bken.io/v/${id}/master.m3u8`, versions };
 }
 
 module.exports = {
