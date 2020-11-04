@@ -83,7 +83,7 @@ async function getTidalVersionsById(id) {
       return [];
     }),
   ]);
-  
+
   const versions = await Promise.all(
     _.union(tidalPresets, publishedVersions).map(async (preset) => {
       const completedSegments = await ds3
@@ -101,7 +101,7 @@ async function getTidalVersionsById(id) {
     })
   );
 
-  versions.sort((a, b) => (parseInt(a.preset.split('-')[1]) > parseInt(b.preset.split('-')[1])) ? -1 : 1);
+  versions.sort((a, b) => (parseInt(a.preset) > parseInt(b.preset)) ? -1 : 1);
   
   let status;
   
