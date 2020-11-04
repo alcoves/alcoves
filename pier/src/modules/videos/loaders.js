@@ -83,8 +83,6 @@ async function getTidalVersionsById(id) {
       return [];
     }),
   ]);
-
-
   
   const versions = await Promise.all(
     _.union(tidalPresets, publishedVersions).map(async (preset) => {
