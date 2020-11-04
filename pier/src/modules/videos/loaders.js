@@ -80,6 +80,7 @@ async function getTidalVersionsById(id) {
       }, []);
     }).catch((error) => {
       console.error(error);
+      return [];
     }),
   ]);
 
