@@ -8,6 +8,7 @@ const userSchema = new Schema(
     code: { type: String },
     password: { type: String, required: true },
     nickname: { type: String, required: false },
+    roles: { type: Array, required: true, default: [] },
     plan: { type: String, required: true, default: 'free' },
     username: { type: String, required: true, lowercase: true },
     emailVerified: { type: Boolean, required: true, default: false },

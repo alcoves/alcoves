@@ -10,6 +10,7 @@ module.exports.typeDefs = gql`
 
   extend type Mutation {
     deleteVideo(id: String!): Boolean!
+    reprocessVideo(id: String!): Video!
     createVideo(input: CreateVideoInput!): Video!
     updateVideoTitle(input: UpdateVideoTitleInput!): Video!
     updateVideoVisibility(id: String!, visibility: VisibilityOption!): Video!

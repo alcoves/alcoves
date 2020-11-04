@@ -10,7 +10,7 @@ async function login(_, { input: { username, password } }) {
   if (!user.emailVerified) throw new Error('account is not verified');
 
   const token = jwt.sign(
-    { id: user.id, email: user.email, username: user.username },
+    { id: user.id, email: user.email, username: user.username, roles: user.roles },
     process.env.JWT_KEY,
     {
       expiresIn: '7d',

@@ -2,6 +2,10 @@ const Video = require('./model');
 const User = require('../users/model');
 const { getVideosByUsername, getTidalVersionsById, deleteVideoById, getTidalThumbnailsById } = require('./loaders');
 
+const ds3 = require('../../utils/ds3');
+const dispatchJob = require('../../utils/dispatchJob');
+const { DIGITAL_OCEAN_TIDAL_BUCKET } = require('../../utils/config');
+
 const resolvers =  {
   Video: {
     tidal({ id }) {
@@ -43,6 +47,32 @@ const resolvers =  {
     async updateVideoVisibility(__, { id, visibility }, { user, authenticate }) {
       authenticate();
       return  Video.findOneAndUpdate({ _id: id, user: user.id }, { visibility }, { new: true });
+    },
+    async reprocessVideo(_, { id }, { authenticate, authorize }) {
+      authenticate();
+      authorize('role', 'admin');
+      
+      const video = await Video.findById(id);
+
+      const { Contents } = await ds3.listObjectsV2({
+        Delimiter: '/',
+        Prefix: `${id}/`,
+        Bucket: DIGITAL_OCEAN_TIDAL_BUCKET,
+      }).promise();
+
+      const [sourceVideo] = Contents.map(({ Key }) => Key).filter(k => k.includes('source.'));
+
+      await dispatchJob('uploading', {
+        s3_in: `s3://${DIGITAL_OCEAN_TIDAL_BUCKET}/${sourceVideo}`,
+      });
+    
+      await dispatchJob('thumbnail', {
+        s3_out: `s3://cdn.bken.io/i/${id}/t/thumb.webp`,
+        s3_in: `s3://${DIGITAL_OCEAN_TIDAL_BUCKET}/${sourceVideo}`,
+        cmd: '-vf scale=854:480:force_original_aspect_ratio=increase,crop=854:480 -vframes 1 -q:v 50',
+      });
+
+      return video;
     },
   },
 };

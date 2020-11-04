@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { AuthenticationError } = require('apollo-server-express');
+const { AuthenticationError, ApolloError } = require('apollo-server-express');
 
 module.exports = async function context({ req }) {
   let user = null;
@@ -11,9 +11,22 @@ module.exports = async function context({ req }) {
     throw new AuthenticationError('authentication failed');
   }
 
-  function authorize(ownerId) {
-    if (user && ownerId.toString() === user.id) return true;
-    throw new AuthenticationError('authorization failed');
+  function authorize(entity, id) {
+    if (!user) throw new AuthenticationError('no user to authorize');
+
+    if (entity === 'user') {
+      if (user.id === id.toString()) return true;
+      throw new AuthenticationError('user authorization failed');
+    } else if (entity === 'role') {
+      if (user.roles) {
+        if (user.roles.includes('admin')) return true;
+        throw new AuthenticationError('role authorization failed');
+      }
+
+      throw new AuthenticationError('role authorization failed');
+    } else {
+      throw new ApolloError(`unsupported authorization entity: ${entity}`);
+    }
   }
 
   const authHeader = req.headers.authorization || '';

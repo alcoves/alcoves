@@ -78,8 +78,8 @@ async function getTidalVersionsById(id) {
         if (line.includes('.m3u8')) acc.push(line.split('/')[1]);
         return acc;
       }, []);
-    }).catch((error) => {
-      console.error(error);
+    }).catch(() => {
+      console.error('could not fetch m3u8 master playlist');
       return [];
     }),
   ]);
