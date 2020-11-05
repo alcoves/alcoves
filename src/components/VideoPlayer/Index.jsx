@@ -79,9 +79,6 @@ function VideoPlayer({ link }) {
     const hls = new Hls();
     hls.loadSource(link);
     hls.attachMedia(video);
-    hls.on(Hls.Events.MANIFEST_PARSED, function() {
-      video.play();
-    });
   }, []);
 
 
@@ -119,7 +116,6 @@ function VideoPlayer({ link }) {
     >
       <VideoWrapper
         ref={vRef}
-        src={link}
         id='bkenVideoPlayer'
         disableRemotePlayback
         onLoadedMetadata={onLoadedMetadata}
