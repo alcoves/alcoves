@@ -21,7 +21,7 @@
     "@types/react": "^16.9.55",
     "apollo-upload-client": "^14.1.2",
     "axios": "^0.21.0",
-    "dayjs": "^1.9.4",
+    "dayjs": "^1.9.5",
     "graphql": "^15.4.0",
     "jsonwebtoken": "^8.5.1",
     "mime": "^2.4.6",
@@ -37,7 +37,7 @@
   "devDependencies": {
     "@babel/core": "^7.12.3",
     "@babel/preset-env": "^7.12.1",
-    "@babel/preset-react": "^7.12.1",
+    "@babel/preset-react": "^7.12.5",
     "@cloudflare/wrangler": "^1.12.2",
     "babel-eslint": "^10.1.0",
     "eslint": "^7.12.1",
