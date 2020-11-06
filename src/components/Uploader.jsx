@@ -1,11 +1,11 @@
 import axios from 'axios';
 import styled from 'styled-components';
 
-import { useDropzone } from 'react-dropzone';
-import { useHistory } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
-import React, { useState, useEffect, useCallback } from 'react';
-import { Button, LinearProgress, Container, Typography } from '@material-ui/core';
+import { useDropzone, } from 'react-dropzone';
+import { useHistory, } from 'react-router-dom';
+import { useMutation, } from '@apollo/client';
+import React, { useState, useEffect, useCallback, } from 'react';
+import { Button, LinearProgress, Container, Typography, } from '@material-ui/core';
 
 import createUploadQuery from '../gql/createUpload';
 import completeUploadQuery from '../gql/completeUpload';
@@ -15,10 +15,10 @@ function UploadProgress({ file }) {
   const [progress, setProgress] = useState(0);
 
   const [createUpload, { called: createUploadCalled, data: createUploadData }] = useMutation(
-    createUploadQuery,
+    createUploadQuery
   );
   const [completeUpload, { data: completeUploadData, error: completeUploadError }] = useMutation(
-    completeUploadQuery,
+    completeUploadQuery
   );
 
   useEffect(() => {
@@ -69,7 +69,8 @@ function UploadProgress({ file }) {
           <Button
             onClick={() => {
               history.push(`/editor/${createUploadData.createUpload.id}`);
-            }}>
+            }}
+          >
             Edit
           </Button>
         )}
@@ -99,7 +100,7 @@ function SimpleUploader() {
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: 'video/mp4',
+    accept: 'video/mp4,video/quicktime',
     disabled: Boolean(files.length),
   });
 
