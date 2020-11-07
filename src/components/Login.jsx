@@ -69,6 +69,11 @@ export default function Login() {
         variant='outlined'
         placeholder='password'
         onChange={handleChange}
+        onKeyPress={(e) => {
+          if (e.key === 'Enter') {
+            handleSubmit();
+          }
+        }}
       />
       <Spacer />
       <Button fullWidth onClick={handleSubmit} variant='contained' color='primary'>
