@@ -9,9 +9,9 @@ import Footer from './components/Footer';
 import Account from './components/Account';
 import Confirm from './components/Confirm';
 import Register from './components/Register';
-import Uploader from './components/Uploader';
 import Editor from './components/Editor/Editor';
 import Navigation from './components/Navigation';
+import Uploader from './components/Uploader/Index';
 import SearchResults from './components/SearchResults';
 import UserVideoGrid from './components/UserVideoGrid';
 
