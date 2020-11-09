@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect, } from 'react';
 
 import qs from 'query-string';
 import styled from 'styled-components';
-import { Fade, } from '@material-ui/core';
+import { CircularProgress, Fade, } from '@material-ui/core';
 
 import Scrubber from './Scrubber';
 import Duration from './Duration';
@@ -10,7 +10,7 @@ import PlayButton from './PlayButton';
 import VolumeSlider from './VolumeSlider';
 import VolumeButton from './VolumeButton';
 import QualitySelector from './QualitySelector';
-import FullScreenButton from './FullScreenButton.jsx';
+import FullScreenButton from './FullScreenButton';
 import PictureInPictureButton from './PictureInPictureButton';
 
 const Wrapper = styled.div`
@@ -67,11 +67,20 @@ const LowerControlRow = styled.div`
   align-items: center;
 `;
 
+const BufferingWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 let idleTimer;
 
 function VideoPlayer({ link }) {
   const vRef = useRef(null);
   const [loaded, setLoaded] = useState(false);
+  const [buffering, setBuffering] = useState(true);
   const [controlsVisible, setControlsVisible] = useState(false);
 
   useEffect(() => {
@@ -98,28 +107,40 @@ function VideoPlayer({ link }) {
     }
   }
 
+  function controlHover() {
+    clearTimeout(idleTimer);
+    if (!controlsVisible) setControlsVisible(true);
+
+    idleTimer = setTimeout(() => {
+      if (!vRef?.current?.paused) {
+        setControlsVisible(false);
+      }
+    }, 2000);
+  }
+
   return (
     <Wrapper
       onMouseEnter={() => setControlsVisible(true)}
       onMouseLeave={() => setControlsVisible(false)}
       style={{ cursor: controlsVisible ? 'auto' : 'none' }}
-      onMouseMove={() => {
-        clearTimeout(idleTimer);
-        if (!controlsVisible) setControlsVisible(true);
-
-        idleTimer = setTimeout(() => {
-          if (!vRef?.current?.paused) {
-            setControlsVisible(false);
-          }
-        }, 2000);
-      }}
+      onTouchStart={controlHover}
+      onMouseMove={controlHover}
     >
       <VideoWrapper
         ref={vRef}
         id='bkenVideoPlayer'
         disableRemotePlayback
         onLoadedMetadata={onLoadedMetadata}
+        onStalled={() => { setBuffering(true); }}
+        onWaiting={() => { setBuffering(true); }}
+        onPlaying={() => { setBuffering(false); }}
       />
+
+      {buffering && (
+        <BufferingWrapper>
+          <CircularProgress size={60} thickeness={6} />
+        </BufferingWrapper>
+      )}
  
       {vRef && vRef.current && (
         <Fade in={controlsVisible}>
