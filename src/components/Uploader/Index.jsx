@@ -30,7 +30,8 @@ function Uploader() {
 
   return (
     <Container maxWidth='xs' style={{ paddingTop: '20px' }}>
-      <Dropzone {...getRootProps()}>
+      <Typography> Uploading is temporarily disabled. </Typography>
+      {/* <Dropzone {...getRootProps()}>
         <input {...getInputProps()} />
         {isDragActive ? (
           <Typography variant='subtitle1'> Drop here! </Typography>
@@ -40,7 +41,7 @@ function Uploader() {
       </Dropzone>
       {files.map(file => {
         return <UploadProgress key={file.name} file={file} />;
-      })}
+      })} */}
     </Container>
   );
 }
