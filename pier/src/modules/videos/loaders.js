@@ -74,8 +74,7 @@ async function getTidalVersionsById(id) {
       Key: `v/${id}/master.m3u8`,
     }).promise().then(({ Body }) => {
       return Body.toString().split('\n').reduce((acc, line) => {
-        // ./720p/720p-playlist.m3u8
-        if (line.includes('.m3u8')) acc.push(line.split('/')[1]);
+        if (line.includes('stream.m3u8')) acc.push(line.split('/')[0]);  // 720p/steam.m3u8
         return acc;
       }, []);
     }).catch(() => {
