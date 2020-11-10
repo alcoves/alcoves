@@ -11,6 +11,7 @@ import {
 } from '@material-ui/core';
 import { ThumbUpOutlined, } from '@material-ui/icons';
 import VideoPlayer from './VideoPlayer/Index';
+import HLSVideoPlayer from './HLSVideoPlayer';
 
 const SubtitleContainer = styled.div`
   width: 100%;
@@ -60,6 +61,7 @@ function Video() {
   if (data) {
     return (
       <VideoContainerWrapper>
+        {/* <HLSVideoPlayer link={data.video.tidal.link} /> */}
         <VideoPlayer link={data.video.tidal.link} />
         <Container style={{ marginTop: '20px' }}>
           <div>
