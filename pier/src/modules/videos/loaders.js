@@ -71,14 +71,19 @@ async function getTidalVersionsById(id) {
       }),
     ws3.getObject({
       Bucket: 'cdn.bken.io',
-      Key: `v/${id}/master.m3u8`,
+      Key: `v/${id}/hls/master.m3u8`,
     }).promise().then(({ Body }) => {
       return Body.toString().split('\n').reduce((acc, line) => {
-        if (line.includes('stream.m3u8')) acc.push(line.split('/')[0]);  // 720p/steam.m3u8
+        // console.log('line', line);
+        line.split(',').map(p => {
+          if (p.includes('RESOLUTION=')) {
+            const [, h] = p.split('=')[1].split('x');
+            acc.push(`${h.trim()}p`);
+          }
+        });
         return acc;
       }, []);
     }).catch(() => {
-      console.error('could not fetch m3u8 master playlist');
       return [];
     }),
   ]);
@@ -115,7 +120,7 @@ async function getTidalVersionsById(id) {
     status = 'processing';
   }
   
-  return { status, link: `https://cdn.bken.io/v/${id}/master.m3u8`, versions };
+  return { status, link: `https://cdn.bken.io/v/${id}/hls/master.m3u8`, versions };
 }
 
 module.exports = {

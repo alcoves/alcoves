@@ -48,31 +48,41 @@ const resolvers =  {
       authenticate();
       return  Video.findOneAndUpdate({ _id: id, user: user.id }, { visibility }, { new: true });
     },
-    async reprocessVideo(_, { id }, { authenticate, authorize }) {
+    async reprocessVideos(_, { ids }, { authenticate, authorize }) {
       authenticate();
       authorize('role', 'admin');
+      const videos = [];
+
+      for (const id of ids) {
+        console.log('reprocessing', id);
+        const video = await Video.findById(id);
+
+        const { Contents } = await ds3.listObjectsV2({
+          Delimiter: '/',
+          Prefix: `${id}/`,
+          Bucket: DIGITAL_OCEAN_TIDAL_BUCKET,
+        }).promise();
+  
+        const [sourceVideo] = Contents.map(({ Key }) => Key).filter(k => k.includes('source.'));
+  
+        // await dispatchJob('uploading', {
+        //   s3_in: `s3://${DIGITAL_OCEAN_TIDAL_BUCKET}/${sourceVideo}`,
+        // });
       
-      const video = await Video.findById(id);
+        await dispatchJob('converting', {
+          s3_in: `s3://${DIGITAL_OCEAN_TIDAL_BUCKET}/${sourceVideo}`,
+        });
+      
+        await dispatchJob('thumbnail', {
+          s3_out: `s3://cdn.bken.io/i/${id}/t/thumb.webp`,
+          s3_in: `s3://${DIGITAL_OCEAN_TIDAL_BUCKET}/${sourceVideo}`,
+          cmd: '-vf scale=854:480:force_original_aspect_ratio=increase,crop=854:480 -vframes 1 -q:v 50',
+        });
+  
+        videos.push(video);
+      }
 
-      const { Contents } = await ds3.listObjectsV2({
-        Delimiter: '/',
-        Prefix: `${id}/`,
-        Bucket: DIGITAL_OCEAN_TIDAL_BUCKET,
-      }).promise();
-
-      const [sourceVideo] = Contents.map(({ Key }) => Key).filter(k => k.includes('source.'));
-
-      await dispatchJob('uploading', {
-        s3_in: `s3://${DIGITAL_OCEAN_TIDAL_BUCKET}/${sourceVideo}`,
-      });
-    
-      await dispatchJob('thumbnail', {
-        s3_out: `s3://cdn.bken.io/i/${id}/t/thumb.webp`,
-        s3_in: `s3://${DIGITAL_OCEAN_TIDAL_BUCKET}/${sourceVideo}`,
-        cmd: '-vf scale=854:480:force_original_aspect_ratio=increase,crop=854:480 -vframes 1 -q:v 50',
-      });
-
-      return video;
+      return videos
     },
   },
 };

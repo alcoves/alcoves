@@ -1,6 +1,5 @@
 {
   "extends": [
-    "airbnb",
     "prettier"
   ],
   "env": {

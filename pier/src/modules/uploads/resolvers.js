@@ -31,7 +31,11 @@ const resolvers = {
         user: user.id,
       }).save();
     
-      await dispatchJob('uploading', {
+      // await dispatchJob('uploading', {
+      //   s3_in: `s3://${DIGITAL_OCEAN_TIDAL_BUCKET}/${id}/source.${mime.getExtension(fileType)}`,
+      // });
+
+      await dispatchJob('converting', {
         s3_in: `s3://${DIGITAL_OCEAN_TIDAL_BUCKET}/${id}/source.${mime.getExtension(fileType)}`,
       });
     
