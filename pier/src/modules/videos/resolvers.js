@@ -65,18 +65,14 @@ const resolvers =  {
   
         const [sourceVideo] = Contents.map(({ Key }) => Key).filter(k => k.includes('source.'));
   
-        // await dispatchJob('uploading', {
-        //   s3_in: `s3://${DIGITAL_OCEAN_TIDAL_BUCKET}/${sourceVideo}`,
-        // });
-      
-        await dispatchJob('converting', {
-          s3_in: `s3://${DIGITAL_OCEAN_TIDAL_BUCKET}/${sourceVideo}`,
-        });
-      
         await dispatchJob('thumbnail', {
           s3_out: `s3://cdn.bken.io/i/${id}/t/thumb.webp`,
           s3_in: `s3://${DIGITAL_OCEAN_TIDAL_BUCKET}/${sourceVideo}`,
           cmd: '-vf scale=854:480:force_original_aspect_ratio=increase,crop=854:480 -vframes 1 -q:v 50',
+        });
+        
+        await dispatchJob('ingest', {
+          s3_in: `s3://${DIGITAL_OCEAN_TIDAL_BUCKET}/${sourceVideo}`,
         });
   
         videos.push(video);

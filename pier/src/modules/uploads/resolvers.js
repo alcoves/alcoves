@@ -31,17 +31,13 @@ const resolvers = {
         user: user.id,
       }).save();
     
-      // await dispatchJob('uploading', {
-      //   s3_in: `s3://${DIGITAL_OCEAN_TIDAL_BUCKET}/${id}/source.${mime.getExtension(fileType)}`,
-      // });
-
-      await dispatchJob('converting', {
-        s3_in: `s3://${DIGITAL_OCEAN_TIDAL_BUCKET}/${id}/source.${mime.getExtension(fileType)}`,
-      });
-    
       await dispatchJob('thumbnail', {
         s3_out: `s3://cdn.bken.io/i/${id}/t/thumb.webp`,
         cmd: '-vf scale=854:480:force_original_aspect_ratio=increase,crop=854:480 -vframes 1 -q:v 50',
+        s3_in: `s3://${DIGITAL_OCEAN_TIDAL_BUCKET}/${id}/source.${mime.getExtension(fileType)}`,
+      });
+
+      await dispatchJob('ingest', {
         s3_in: `s3://${DIGITAL_OCEAN_TIDAL_BUCKET}/${id}/source.${mime.getExtension(fileType)}`,
       });
     

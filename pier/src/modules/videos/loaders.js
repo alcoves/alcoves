@@ -73,14 +73,8 @@ async function getTidalVersionsById(id) {
       Bucket: 'cdn.bken.io',
       Key: `v/${id}/hls/master.m3u8`,
     }).promise().then(({ Body }) => {
-      return Body.toString().split('\n').reduce((acc, line) => {
-        // console.log('line', line);
-        line.split(',').map(p => {
-          if (p.includes('RESOLUTION=')) {
-            const [, h] = p.split('=')[1].split('x');
-            acc.push(`${h.trim()}p`);
-          }
-        });
+      return Body.toString().split('\n').reduce((acc, l) => {
+        if (l.includes('NAME=')) acc.push(l.split('NAME=')[1].split(',')[0]);
         return acc;
       }, []);
     }).catch(() => {
