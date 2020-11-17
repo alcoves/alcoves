@@ -15,6 +15,7 @@ const server = new ApolloServer({
   tracing: true,
   playground: true,
   introspection: true,
+  formatError: console.error,
   modules: [users, videos, uploads],
 });
 

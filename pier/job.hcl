@@ -33,6 +33,10 @@ job "api" {
 
           MG_API_KEY = "{{key "secrets/MG_API_KEY"}}"
 
+          APOLLO_GRAPH_VARIANT=current
+          APOLLO_SCHEMA_REPORTING=true
+          APOLLO_KEY= "{{key "secrets/APOLLO_KEY"}}"
+
           NOMAD_TOKEN = "{{key "secrets/NOMAD_TOKEN"}}"
           NOMAD_ADDRESS = "{{key "secrets/NOMAD_ADDRESS"}}"
 
