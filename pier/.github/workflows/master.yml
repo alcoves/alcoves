@@ -17,6 +17,7 @@ env:
   WASABI_SECRET_ACCESS_KEY: ${{ secrets.WASABI_SECRET_ACCESS_KEY }}
   NOMAD_TOKEN: ${{ secrets.NOMAD_TOKEN }}
   NOMAD_ADDRESS: ${{ secrets.NOMAD_ADDRESS }}
+  MG_API_KEY: ${{ secrets.MG_API_KEY }}
 
 jobs:
   # test:
@@ -54,3 +55,6 @@ jobs:
 
       - name: Push image to DigitalOcean Container Registry
         run: docker push registry.digitalocean.com/bken/api
+
+      - name: Rolling update Nomad
+        run: echo "logging into bastion, cloning repo, deploying"

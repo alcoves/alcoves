@@ -8,8 +8,7 @@ The api is written in graphql and node. It is deployed on digitalocean, proxied 
 
 ### Endpoints
 
-https://api.bken.io/graphql
-
+https://helm.bken.io/api/graphql
 
 ### Can I use it?
 
