@@ -12,8 +12,11 @@ job "api" {
   group "services" {
     update {
       max_parallel     = 1
+      canary           = 1
       healthy_deadline = "2m"
+      auto_revert      = true
       min_healthy_time = "30s"
+      auto_promote     = false
     }
 
     task "api" {
