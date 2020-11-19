@@ -93,7 +93,6 @@ describe('end-to-end', () => {
             tidal {
               status
               versions {
-                link
                 status
                 preset
                 percentCompleted
