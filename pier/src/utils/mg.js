@@ -1,7 +1,7 @@
 
 const mailgun = require('mailgun-js');
 
-const mg = mailgun({ apiKey: 'key-1fc82bafe5880ed8d0607f79c82a636b', domain: 'mg.bken.io' });
+const mg = mailgun({ apiKey: process.env.MG_API_KEY, domain: 'mg.bken.io' });
 
 function send(msg) {
   return new Promise((resolve, reject) => {
