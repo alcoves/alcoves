@@ -1,5 +1,6 @@
 const Video = require('./model');
 const User = require('../users/model');
+const { viewVideo } = require('../views/loaders');
 const { getVideosByUsername, getTidalVersionsById, deleteVideoById, getTidalThumbnailsById } = require('./loaders');
 
 const ds3 = require('../../utils/ds3');
@@ -21,8 +22,10 @@ const resolvers =  {
     },
   },
   Query: {
-    video(__, { id }) {
-      return Video.findById(id);
+    async video(__, { id }, ctx) {
+      const video = await Video.findById(id);
+      await viewVideo(video, ctx);
+      return video;
     },
     async videos(_, { title }) {
       return Video.find({ visibility: 'public', '$text': {'$search': title} }).sort({ createdAt: -1 });
@@ -78,7 +81,7 @@ const resolvers =  {
         videos.push(video);
       }
 
-      return videos
+      return videos;
     },
   },
 };

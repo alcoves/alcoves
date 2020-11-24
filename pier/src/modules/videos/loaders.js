@@ -91,8 +91,8 @@ async function getTidalVersionsById(id) {
           Contents.filter(({ Key }) => !Key.endsWith('/'))
         );
 
-      const percentCompletedCalc = (completedSegments.length / totalSegments) * 100
-      const percentCompleted = isNaN(percentCompletedCalc) ? 0 : percentCompletedCalc
+      const percentCompletedCalc = (completedSegments.length / totalSegments) * 100;
+      const percentCompleted = isNaN(percentCompletedCalc) ? 0 : percentCompletedCalc;
   
       return {
         preset,

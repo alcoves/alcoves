@@ -16,7 +16,11 @@ const server = new ApolloServer({
   playground: true,
   introspection: true,
   formatError: console.error,
-  modules: [users, videos, uploads],
+  modules: [
+    users,
+    videos,
+    uploads,
+  ],
 });
 
 server.applyMiddleware({

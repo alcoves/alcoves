@@ -42,5 +42,5 @@ module.exports = async function context({ req }) {
     }
   }
 
-  return { user, authenticate, authorize };
+  return { req, user, authenticate, authorize };
 };
