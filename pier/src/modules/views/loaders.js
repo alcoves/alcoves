@@ -4,10 +4,14 @@ const Video = require('../videos/model');
 
 async function viewVideo(__, { id }, { req, user }) {
   const video = await Video.findById(id);
-
-  const requestIp = req.ip;
+  
+  const requestIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress || null;
   const requestUserAgent = req.headers['user-agent'];
   console.log({ requestIp, requestUserAgent });
+
+  if (!requestIp) {
+    return console.error('unable to parse ip address');
+  }
 
   const view = { ip: requestIp, video: video.id };
   const videoDurationInMs = video.duration * 1000;
