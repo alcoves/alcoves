@@ -11,6 +11,7 @@ import {
 } from '@material-ui/core';
 import { ThumbUpOutlined, } from '@material-ui/icons';
 import VideoPlayer from './VideoPlayer/Index';
+import abbreviateNumber from '../utils/abbreviateNumber';
 
 const SubtitleContainer = styled.div`
   width: 100%;
@@ -91,7 +92,7 @@ function Video() {
               <SubtitleContainer>
                 <div>
                   <Typography variant='body2'>
-                    {`${data.video.views} views · ${moment(Number(data.video.createdAt)).fromNow()}`}
+                    {`${abbreviateNumber(data.video.views)} views · ${moment(Number(data.video.createdAt)).fromNow()}`}
                   </Typography>
                   <Typography variant='subtitle2'>{data.video.visibility}</Typography>
                 </div>
