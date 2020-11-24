@@ -7,12 +7,10 @@ async function viewVideo(__, { id }, { req, user }) {
   
   const requestIp = req.headers['cf-connecting-ip'];
   const requestUserAgent = req.headers['user-agent'];
-  console.log({ requestIp, requestUserAgent });
 
   if (!requestIp) {
     console.error('unable to parse cf-connecting-ip header');
-    console.log(req.headers);
-    return;
+    return true;
   }
 
   const view = { ip: requestIp, video: video.id };
