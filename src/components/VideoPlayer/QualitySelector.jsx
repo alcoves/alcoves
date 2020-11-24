@@ -2,8 +2,9 @@ import React, { useState, } from 'react';
 import { SettingsOutlined, } from '@material-ui/icons';
 import { Menu, MenuItem, IconButton, } from '@material-ui/core';
 
-function QualitySelector({ vRef, versions }) {
+function QualitySelector({ hls }) {
   const [settingsEl, setSettingsEl] = useState(null);
+  if (!hls?.levels?.length) return <div />;
 
   return (
     <div>
@@ -12,30 +13,37 @@ function QualitySelector({ vRef, versions }) {
       </IconButton>
       <Menu
         keepMounted
-        id='version-selector'
         anchorEl={settingsEl}
         open={Boolean(settingsEl)}
         onClose={() => setSettingsEl(null)}
       >
-        {versions.filter(({ link }) => link).map((v) => (
-          <MenuItem
-            key={v.preset}
-            selected={v.link === vRef.current.src}
-            onClick={() => {
-              const { currentTime } = vRef.current;
-              vRef.current.src = v.link;
-              vRef.current.currentTime = currentTime;
-              vRef.current.play();
-              setSettingsEl(null);
-            }}
-          >
-            {v.preset.split('-')[1]}
-          </MenuItem>
-        ))}
+        {hls.levels.map((l, i) => {
+          return (
+            <MenuItem
+              key={l.name}
+              onClick={() => {
+                console.log('setting load level', i);
+                hls.loadLevel = i;
+                hls.startLoad();
+                setSettingsEl(null);
+              }}
+              selected={hls.currentLevel === i}
+            >
+              {`${l.name}`}
+            </MenuItem>
+          );
+        })}
+        {/* <MenuItem
+          onClick={() => {
+            hls.currentLevel = -1;
+            setSettingsEl(null);
+          }}
+        >
+          Auto
+        </MenuItem> */}
       </Menu>
     </div>
   );
- 
 }
 
 export default QualitySelector;

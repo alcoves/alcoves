@@ -13,6 +13,8 @@ import QualitySelector from './QualitySelector';
 import FullScreenButton from './FullScreenButton';
 import PictureInPictureButton from './PictureInPictureButton';
 
+const hls = new Hls({ startLevel: 3 });
+
 const Wrapper = styled.div`
   margin: 0px;
   line-height: 0px;
@@ -85,11 +87,9 @@ function VideoPlayer({ link }) {
 
   useEffect(() => {
     const video = document.getElementById('bkenVideoPlayer');
-    const hls = new Hls();
     hls.loadSource(link);
     hls.attachMedia(video);
   }, []);
-
 
   function togglePlay() {
     if (vRef && vRef.current) {
@@ -142,7 +142,7 @@ function VideoPlayer({ link }) {
         </BufferingWrapper>
       )}
  
-      {vRef && vRef.current && (
+      {hls && vRef && vRef.current && (
         <Fade in={controlsVisible}>
           <ControlsWrapper controlsVisible={controlsVisible}>
             <UpperControls onClick={togglePlay} />
@@ -157,7 +157,7 @@ function VideoPlayer({ link }) {
                 <Duration vRef={vRef} />
               </LowerControlRow>
               <LowerControlRow>
-                {/* <QualitySelector vRef={vRef} versions={versions} /> */}
+                <QualitySelector hls={hls} />
                 <PictureInPictureButton vRef={vRef} />
                 <FullScreenButton vRef={vRef} />
               </LowerControlRow>
