@@ -15,6 +15,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActionArea from '@material-ui/core/CardActionArea';
 
 import { Link, } from 'react-router-dom';
+import abbreviateNumber from '../utils/abbreviateNumber';
 import videoDuration from '../utils/videoDuration';
 import { UserContext, } from '../contexts/UserContext';
 
@@ -94,7 +95,7 @@ function VideoCard({ video }) {
           </div>
         )}
         title={<Link to={`/u/${video.user.username}`}>{video.user.username}</Link>}
-        subheader={`${video.views} views · ${moment(parseInt(video.createdAt)).fromNow()}`}
+        subheader={`${abbreviateNumber(video.views)} views · ${moment(parseInt(video.createdAt)).fromNow()}`}
       />
     </Card>
   );
