@@ -10,6 +10,7 @@ const videos = require('./modules/videos/index');
 const uploads = require('./modules/uploads/index');
 
 const app = express();
+app.set('trust proxy', true);
 
 const server = new ApolloServer({
   context,
