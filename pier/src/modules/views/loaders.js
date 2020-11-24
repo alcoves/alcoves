@@ -5,7 +5,7 @@ const Video = require('../videos/model');
 async function viewVideo(__, { id }, { req, user }) {
   const video = await Video.findById(id);
 
-  const requestIp = req.headers.origin;
+  const requestIp = req.ip;
   const requestUserAgent = req.headers['user-agent'];
   console.log({ requestIp, requestUserAgent });
 
