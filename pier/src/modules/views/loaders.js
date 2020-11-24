@@ -2,7 +2,9 @@
 const View = require('./model');
 const Video = require('../videos/model');
 
-async function viewVideo(video, { req, user }) {
+async function viewVideo(__, { id }, { req, user }) {
+  const video = await Video.findById(id);
+
   const requestIp = req.headers.origin;
   const requestUserAgent = req.headers['user-agent'];
   console.log({ requestIp, requestUserAgent });
@@ -32,6 +34,8 @@ async function viewVideo(video, { req, user }) {
     await new View(view).save();
     await Video.findOneAndUpdate({ _id: video.id }, { $inc: { 'views': 1 }  });
   }
+
+  return true;
 }
 
 module.exports = { viewVideo };

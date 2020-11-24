@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const { ApolloServer } = require('apollo-server-express');
 const context = require('./utils/context');
 const users = require('./modules/users/index');
+const views = require('./modules/views/index');
 const videos = require('./modules/videos/index');
 const uploads = require('./modules/uploads/index');
 
@@ -18,6 +19,7 @@ const server = new ApolloServer({
   formatError: console.error,
   modules: [
     users,
+    views,
     videos,
     uploads,
   ],

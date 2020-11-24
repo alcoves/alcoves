@@ -1,7 +1,7 @@
-// const { viewVideo } = require('./loaders');
+const { viewVideo } = require('./loaders');
 
-// module.exports = {
-//   Mutation: {
-//     viewVideo,
-//   },
-// };
+module.exports = {
+  Mutation: {
+    viewVideo,
+  },
+};

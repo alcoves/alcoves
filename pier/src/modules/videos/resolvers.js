@@ -22,10 +22,8 @@ const resolvers =  {
     },
   },
   Query: {
-    async video(__, { id }, ctx) {
-      const video = await Video.findById(id);
-      await viewVideo(video, ctx);
-      return video;
+    async video(__, { id }) {
+      return Video.findById(id);
     },
     async videos(_, { title }) {
       return Video.find({ visibility: 'public', '$text': {'$search': title} }).sort({ createdAt: -1 });
