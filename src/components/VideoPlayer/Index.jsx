@@ -13,8 +13,6 @@ import QualitySelector from './QualitySelector';
 import FullScreenButton from './FullScreenButton';
 import PictureInPictureButton from './PictureInPictureButton';
 
-const hls = new Hls({ startLevel: 3 });
-
 const Wrapper = styled.div`
   margin: 0px;
   line-height: 0px;
@@ -77,6 +75,7 @@ const BufferingWrapper = styled.div`
   justify-content: center;
 `;
 
+let hls;
 let idleTimer;
 
 function VideoPlayer({ link }) {
@@ -87,6 +86,7 @@ function VideoPlayer({ link }) {
 
   useEffect(() => {
     const video = document.getElementById('bkenVideoPlayer');
+    hls = new Hls({ startLevel: 3 });
     hls.loadSource(link);
     hls.attachMedia(video);
   }, []);
@@ -120,11 +120,11 @@ function VideoPlayer({ link }) {
 
   return (
     <Wrapper
+      onMouseMove={controlHover}
+      onTouchStart={controlHover}
       onMouseEnter={() => setControlsVisible(true)}
       onMouseLeave={() => setControlsVisible(false)}
       style={{ cursor: controlsVisible ? 'auto' : 'none' }}
-      onTouchStart={controlHover}
-      onMouseMove={controlHover}
     >
       <VideoWrapper
         ref={vRef}
