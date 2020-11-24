@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React from 'react';
+import React, { useEffect, } from 'react';
 import styled from 'styled-components';
 import { gql, useLazyQuery, useMutation, } from '@apollo/client';
 import { Link, useParams, } from 'react-router-dom';
@@ -12,6 +12,23 @@ import {
 import { ThumbUpOutlined, } from '@material-ui/icons';
 import VideoPlayer from './VideoPlayer/Index';
 import abbreviateNumber from '../utils/abbreviateNumber';
+
+function GoogleAds() {
+  useEffect(() => {
+    (window.adsbygoogle = window.adsbygoogle || []).push({});
+  }, []);
+
+  return (
+    <ins
+      data-ad-format='auto'
+      className='adsbygoogle'
+      data-ad-slot='7992005664'
+      style={{ display: 'block' }}
+      data-full-width-responsive='true'
+      data-ad-client='ca-pub-1017771648826122'
+    />
+  );
+}
 
 const SubtitleContainer = styled.div`
   width: 100%;
@@ -153,6 +170,7 @@ function Video() {
             </div>
           </div>
         </Container>
+        <GoogleAds />
       </VideoContainerWrapper>
     );
   }
