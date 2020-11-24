@@ -5,13 +5,14 @@ const Video = require('../videos/model');
 async function viewVideo(__, { id }, { req, user }) {
   const video = await Video.findById(id);
   
-  console.log(req.headers);
-  const requestIp = req.headers['x-real-ip'] || req.connection.remoteAddress || null;
+  const requestIp = req.headers['cf-connecting-ip'];
   const requestUserAgent = req.headers['user-agent'];
   console.log({ requestIp, requestUserAgent });
 
   if (!requestIp) {
-    return console.error('unable to parse ip address');
+    console.error('unable to parse cf-connecting-ip header');
+    console.log(req.headers);
+    return;
   }
 
   const view = { ip: requestIp, video: video.id };
