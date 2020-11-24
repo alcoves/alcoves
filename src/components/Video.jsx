@@ -1,7 +1,7 @@
 import moment from 'moment';
 import React from 'react';
 import styled from 'styled-components';
-import { gql, useLazyQuery, } from '@apollo/client';
+import { gql, useLazyQuery, useMutation, } from '@apollo/client';
 import { Link, useParams, } from 'react-router-dom';
 import {
   Container,
@@ -11,7 +11,6 @@ import {
 } from '@material-ui/core';
 import { ThumbUpOutlined, } from '@material-ui/icons';
 import VideoPlayer from './VideoPlayer/Index';
-import HLSVideoPlayer from './HLSVideoPlayer';
 
 const SubtitleContainer = styled.div`
   width: 100%;
@@ -49,6 +48,12 @@ const QUERY = gql`
   }
 `;
 
+const VIEW_VIDEO = gql`
+  mutation viewVideo($id: String!) {
+    viewVideo(id: $id)
+  }
+`;
+
 function Video() {
   const { id } = useParams();
   const [getVideo, { data, called }] = useLazyQuery(QUERY, {
@@ -56,12 +61,18 @@ function Video() {
     variables: { id },
   });
 
+  const [viewVideo, { called: viewVideoCalled }] = useMutation(
+    VIEW_VIDEO,
+    { variables: { id },
+    });
+
   if (id && !called) getVideo();
 
   if (data) {
+    if (!viewVideoCalled) viewVideo();
+
     return (
       <VideoContainerWrapper>
-        {/* <HLSVideoPlayer link={data.video.tidal.link} /> */}
         <VideoPlayer link={data.video.tidal.link} />
         <Container style={{ marginTop: '20px' }}>
           <div>
@@ -80,7 +91,7 @@ function Video() {
               <SubtitleContainer>
                 <div>
                   <Typography variant='body2'>
-                    {`${moment(Number(data.video.createdAt)).fromNow()}`}
+                    {`${data.video.views} views · ${moment(Number(data.video.createdAt)).fromNow()}`}
                   </Typography>
                   <Typography variant='subtitle2'>{data.video.visibility}</Typography>
                 </div>
