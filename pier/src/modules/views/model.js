@@ -4,6 +4,7 @@ const { Schema } = mongoose;
 
 const viewSchema = new Schema(
   {
+    userAgent: { type: String, required: false },
     _id: { auto: true, type: Schema.Types.ObjectId },
     ip: { type: String, required: true, index: true },
     user: {

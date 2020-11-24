@@ -13,7 +13,11 @@ async function viewVideo(__, { id }, { req, user }) {
     return true;
   }
 
-  const view = { ip: requestIp, video: video.id };
+  const view = {
+    ip: requestIp,
+    video: video.id,
+    userAgent: requestUserAgent,
+  };
   const videoDurationInMs = video.duration * 1000;
   const viewTimeout = new Date(Date.now() - videoDurationInMs);
 

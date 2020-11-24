@@ -57,4 +57,10 @@ jobs:
         run: docker push registry.digitalocean.com/bken/api
 
       - name: Rolling update Nomad
-        run: echo "logging into bastion, cloning repo, deploying"
+        with:
+          NOMAD_TOKEN: ${{ secrets.NOMAD_TOKEN }}
+          NOMAD_ADDRESS: ${{ secrets.NOMAD_ADDRESS }}
+        run:
+          - export JOB=$(cat ./job.hcl)
+          - echo "{\"JobHCL\":\"$JOB\"}" >> out.json
+          - curl --request POST --data @job.hcl http://$NOMAD_ADDRESS:4646/v1/jobs
