@@ -48,7 +48,7 @@ jobs:
           token: ${{ secrets.DO_API_KEY }}
 
       - name: Build container image
-        run: docker build -t registry.digitalocean.com/bken/api:latest .
+        run: docker build -t registry.digitalocean.com/bken/api:$GITHUB_SHA -t registry.digitalocean.com/bken/api:latest .
 
       - name: Login to DigitalOcean Docker Registry
         run: doctl registry login --expiry-seconds 600
@@ -63,5 +63,6 @@ jobs:
         run: |
           wget -q https://releases.hashicorp.com/nomad/0.12.9/nomad_0.12.9_linux_amd64.zip
           sudo apt install unzip -y && unzip nomad_0.12.9_linux_amd64.zip
-          export JOB=$(./nomad job run -output job.hcl)
-          curl --request POST --data $JOB http://${NOMAD_ADDRESS}:4646/v1/jobs -H "Authorization: ${NOMAD_TOKEN}"
+          sed -i "s+:latest+:${GITHUB_SHA}+g" job.hcl
+          ./nomad job run -output job.hcl >> job.json
+          curl --request POST --data @job.json http://${NOMAD_ADDRESS}:4646/v1/jobs -H "X-Nomad-Token: ${NOMAD_TOKEN}"
