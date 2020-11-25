@@ -2,11 +2,17 @@ const { gql } = require('apollo-server-express');
 const me = require('./resolvers/me');
 const login = require('./resolvers/login');
 const register = require('./resolvers/register');
+const totalViews = require('./resolvers/totalViews');
 const resendCode = require('./resolvers/resendCode');
+const totalVideos = require('./resolvers/totalVideos');
 const uploadAvatar = require('./resolvers/uploadAvatar');
 const confirmAccount = require('./resolvers/confirmAccount');
 
 const resolvers = {
+  User: {
+    totalViews,
+    totalVideos,
+  },
   Query: {
     me,
   },
@@ -37,6 +43,8 @@ const typeDefs = gql`
     id: String!
     email: String!
     avatar: String!
+    totalViews: Int!
+    totalVideos: Int!
     username: String!
   }
   type LoginResponse {
