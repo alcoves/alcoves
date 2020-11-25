@@ -60,8 +60,8 @@ jobs:
         with:
           NOMAD_TOKEN: ${{ secrets.NOMAD_TOKEN }}
           NOMAD_ADDRESS: ${{ secrets.NOMAD_ADDRESS }}
-        run: 
-          - wget https://releases.hashicorp.com/nomad/0.12.9/nomad_0.12.9_linux_amd64.zip
-          - sudo apt install unzip -y && unzip nomad_0.12.9_linux_amd64.zip
-          - export JOB=$(nomad job run -output job.hcl)
-          - curl --request POST --data $JOB http://$NOMAD_ADDRESS:4646/v1/jobs -H "Authorization: ${NOMAD_TOKEN}"
+        run: |
+          wget https://releases.hashicorp.com/nomad/0.12.9/nomad_0.12.9_linux_amd64.zip
+          sudo apt install unzip -y && unzip nomad_0.12.9_linux_amd64.zip
+          export JOB=$(nomad job run -output job.hcl)
+          curl --request POST --data $JOB http://$NOMAD_ADDRESS:4646/v1/jobs -H "Authorization: ${NOMAD_TOKEN}"
