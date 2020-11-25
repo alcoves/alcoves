@@ -1,6 +1,5 @@
 const Video = require('./model');
 const User = require('../users/model');
-const { viewVideo } = require('../views/loaders');
 const { getVideosByUsername, getTidalVersionsById, deleteVideoById, getTidalThumbnailsById } = require('./loaders');
 
 const ds3 = require('../../utils/ds3');
@@ -31,8 +30,8 @@ const resolvers =  {
     getRecentVideos() {
       return Video.find({ visibility: 'public' }).sort({ createdAt: -1 });
     },
-    videosByUsername(__, { username }) {
-      return getVideosByUsername(username);
+    videosByUsername(__, { username }, ctx) {
+      return getVideosByUsername(username, ctx);
     },
   },
   Mutation: {

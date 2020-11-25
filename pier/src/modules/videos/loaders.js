@@ -4,9 +4,22 @@ const User = require('../users/model');
 const ds3 = require('../../utils/ds3');
 const ws3 = require('../../utils/ws3');
 
-async function getVideosByUsername(username) {
-  const user = await User.findOne({ username });
-  return Video.find({ user: user.id, visibility: 'public' }).sort({ createdAt: -1 });
+async function getVideosByUsername(username, { user, authenticate, authorize }) {
+  const dbUser = await User.findOne({ username });
+  const query = {
+    user: dbUser.id,
+    visibility: 'public',
+  };
+
+  // This allows the getVideosByUsername query to return unlisted videos for logged in user
+  // TODO :: This logic should be moved into a dedicated query called myVideos or something
+  if (user && user.id === dbUser.id) {
+    authenticate();
+    authorize('user', dbUser.id);
+    delete query.visibility;
+  }
+
+  return Video.find(query).sort({ createdAt: -1 });
 }
 
 async function getTidalThumbnailsById(id) {
