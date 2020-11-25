@@ -1,11 +1,18 @@
 {
-  "extends": ["airbnb", "prettier", "plugin:react/recommended"],
+  "extends": [
+    "airbnb",
+    "prettier",
+    "plugin:react/recommended"
+  ],
   "env": {
     "browser": true
   },
-  "plugins": ["import", "react"],
+  "plugins": [
+    "import",
+    "react"
+  ],
   "parserOptions": {
-    "ecmaVersion": 6,
+    "ecmaVersion": 8,
     "sourceType": "module",
     "ecmaFeatures": {
       "jsx": true
@@ -21,13 +28,30 @@
         "ignoreUrls": true
       }
     ],
-    "linebreak-style": ["error", "unix"],
+    "linebreak-style": [
+      "error",
+      "unix"
+    ],
     "react/prop-types": 0,
-    "indent": ["error", 2],
-    "semi": ["error", "always"],
-    "quotes": ["error", "single"],
+    "indent": [
+      "error",
+      2
+    ],
+    "semi": [
+      "error",
+      "always"
+    ],
+    "quotes": [
+      "error",
+      "single"
+    ],
     "no-param-reassign": "warn",
-    "no-unused-expressions": ["error", { "allowTernary": true }],
+    "no-unused-expressions": [
+      "error",
+      {
+        "allowTernary": true
+      }
+    ],
     "comma-dangle": [
       "error",
       {
@@ -39,7 +63,17 @@
       }
     ],
     "no-unused-vars": "error",
-    "jsx-quotes": ["error", "prefer-single"],
-    "react/jsx-indent": [2, 2, { "indentLogicalExpressions": true, "checkAttributes": false }]
+    "jsx-quotes": [
+      "error",
+      "prefer-single"
+    ],
+    "react/jsx-indent": [
+      2,
+      2,
+      {
+        "indentLogicalExpressions": true,
+        "checkAttributes": false
+      }
+    ]
   }
 }

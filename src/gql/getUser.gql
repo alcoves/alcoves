@@ -4,5 +4,7 @@ query me($id: String!) {
     email
     avatar
     username
+    totalViews
+    totalVideos
   }
 }
