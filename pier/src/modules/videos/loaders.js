@@ -6,7 +6,7 @@ const ws3 = require('../../utils/ws3');
 
 async function getVideosByUsername(username) {
   const user = await User.findOne({ username });
-  return Video.find({ user: user.id }).sort({ createdAt: -1 });
+  return Video.find({ user: user.id, visibility: 'public' }).sort({ createdAt: -1 });
 }
 
 async function getTidalThumbnailsById(id) {
