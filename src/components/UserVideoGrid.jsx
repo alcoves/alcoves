@@ -25,7 +25,6 @@ const GET_USER_VIDEOS = gql`
 `;
 
 function UserVideoGrid() {
-  const { user } = useContext(UserContext);
   const { username } = useParams();
 
   const [getVideos, {
@@ -41,7 +40,7 @@ function UserVideoGrid() {
   });
 
   if (error) console.error(error);
-  if (data && username && user) return <VideoGrid videos={data.videosByUsername} />;
+  if (data && username) return <VideoGrid videos={data.videosByUsername} />;
   return <LinearProgress> Loading user videos... </LinearProgress>;
 }
 
