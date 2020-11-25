@@ -5,11 +5,12 @@ import { useLazyQuery, } from '@apollo/client';
 import AccountAvatar from './AccountAvatar';
 import { UserContext, } from '../contexts/UserContext';
 import getUser from '../gql/getUser';
+import AccountStats from './AccountStats';
 
 export default function Account() {
   const history = useHistory();
   const { user, logout } = useContext(UserContext);
-  const [getMe, { data, error, loading, called }] = useLazyQuery(getUser);
+  const [getMe, { data, error, called }] = useLazyQuery(getUser);
 
   useEffect(() => {
     if (user && user.id) {
@@ -24,6 +25,11 @@ export default function Account() {
         <br />
         <Typography align='center' variant='subtitle1'>{`${user.username}`}</Typography>
         <Typography align='center' variant='subtitle2'>{`${user.email}`}</Typography>
+        <br />
+        <AccountStats
+          totalViews={data.me.totalViews}
+          totalVideos={data.me.totalVideos}
+        />
         <br />
         <Button
           fullWidth
