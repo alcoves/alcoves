@@ -57,7 +57,7 @@ jobs:
         run: docker push registry.digitalocean.com/bken/api
 
       - name: Deploy to Prod
-        with:
+        env:
           NOMAD_TOKEN: ${{ secrets.NOMAD_TOKEN }}
           NOMAD_ADDRESS: ${{ secrets.NOMAD_ADDRESS }}
         run: |
