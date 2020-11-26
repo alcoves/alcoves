@@ -33,6 +33,10 @@ const resolvers =  {
     videosByUsername(__, { username }, ctx) {
       return getVideosByUsername(username, ctx);
     },
+    myVideos(_, __, { user, authenticate }) {
+      authenticate();
+      return Video.find({ user: user.id }).sort({ createdAt: -1 });
+    },
   },
   Mutation: {
     async deleteVideo(__, { id }, { user, authenticate }) {
