@@ -61,7 +61,7 @@ export default function Navigation() {
           </Box>
           <Box>
             {user && user.id && (
-              <IconButton component={Link} to={`/u/${user.username}`} color='primary'>
+              <IconButton component={Link} to='/editor' color='primary'>
                 <VideoLibraryIcon />
               </IconButton>
             )}
