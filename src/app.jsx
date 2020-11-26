@@ -9,11 +9,12 @@ import Footer from './components/Footer';
 import Account from './components/Account';
 import Confirm from './components/Confirm';
 import Register from './components/Register';
-import Editor from './components/Editor/Editor';
+import EditorHome from './components/EditorHome';
 import Navigation from './components/Navigation';
 import Uploader from './components/Uploader/Index';
+import UserProfile from './components/UserProfile';
+import EditVideo from './components/EditVideo/Index';
 import SearchResults from './components/SearchResults';
-import UserVideoGrid from './components/UserVideoGrid';
 
 function NoMatch() {
   return <Typography variant='h2'>404</Typography>;
@@ -37,8 +38,9 @@ function AppRouter() {
           <Route exact path='/confirm'><Confirm /></Route>
           <Route exact path='/account'><Account /></Route>
           <Route exact path='/upload'><Uploader /></Route>
-          <Route exact path='/editor/:id'><Editor /></Route>
-          <Route exact path='/u/:username'><UserVideoGrid /></Route>
+          <Route exact path='/editor'><EditorHome /></Route>
+          <Route exact path='/editor/:id'><EditVideo /></Route>
+          <Route exact path='/u/:username'><UserProfile /></Route>
           <Route component={NoMatch} />
         </Switch>
       </Content>
