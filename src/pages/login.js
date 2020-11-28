@@ -1,12 +1,19 @@
 import styled from 'styled-components';
-import { useMutation, } from '@apollo/client';
+import { gql, useMutation, } from '@apollo/client';
 import React, { useState, useContext, } from 'react';
 import { Link, useHistory, } from 'react-router-dom';
 import {
   LinearProgress, Typography, Button, TextField, Container,
 } from '@material-ui/core';
 import { UserContext, } from '../contexts/UserContext';
-import loginQuery from '../gql/login';
+
+const loginQuery = gql`
+  mutation login($input: LoginInput!) {
+    login(input: $input) {
+      token
+    }
+}
+`;
 
 const Spacer = styled.div`
   margin: 10px 0px 10px 0px;

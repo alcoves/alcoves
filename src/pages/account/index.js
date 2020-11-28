@@ -1,11 +1,23 @@
 import React, { useContext, useEffect, } from 'react';
 import { useHistory, } from 'react-router-dom';
 import { Button, LinearProgress, Typography, Container, } from '@material-ui/core';
-import { useLazyQuery, } from '@apollo/client';
-import AccountAvatar from './AccountAvatar';
-import { UserContext, } from '../contexts/UserContext';
-import getUser from '../gql/getUser';
-import AccountStats from './AccountStats';
+import { gql, useLazyQuery, } from '@apollo/client';
+import Avatar from './avatar';
+import { UserContext, } from '../../contexts/UserContext';
+import Stats from './stats';
+
+const getUser = gql`
+  query me($id: String!) {
+    me(id: $id) {
+      id
+      email
+      avatar
+      username
+      totalViews
+      totalVideos
+    }
+  }
+`;
 
 export default function Account() {
   const history = useHistory();
@@ -21,12 +33,12 @@ export default function Account() {
   if (user && data) {
     return (
       <Container maxWidth='xs'>
-        <AccountAvatar avatar={data.me.avatar} />
+        <Avatar avatar={data.me.avatar} />
         <br />
         <Typography align='center' variant='subtitle1'>{`${user.username}`}</Typography>
         <Typography align='center' variant='subtitle2'>{`${user.email}`}</Typography>
         <br />
-        <AccountStats
+        <Stats
           totalViews={data.me.totalViews}
           totalVideos={data.me.totalVideos}
         />

@@ -1,7 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useMutation, } from '@apollo/client';
-import uploadAvatar from '../gql/uploadAvatar';
+import { gql, useMutation, } from '@apollo/client';
+
+const uploadAvatar = gql`
+  mutation uploadAvatar($file: Upload!) {
+    uploadAvatar(file: $file) {
+      url
+    }
+  }
+`;
 
 const AvatarContainer = styled.div`
   display: flex;
