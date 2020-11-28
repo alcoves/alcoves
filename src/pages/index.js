@@ -2,7 +2,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import { gql, useQuery, } from '@apollo/client';
 import React, { useEffect, } from 'react';
 import { Typography, } from '@material-ui/core';
-import VideoGrid from './VideoGrid';
+import VideoGrid from '../components/VideoGrid';
 
 const GET_RECENT_VIDEOS = gql`
   query getRecentVideos {
@@ -22,7 +22,8 @@ const GET_RECENT_VIDEOS = gql`
   }
 `;
 
-function GetRecentVideos() {
+function Home() {
+  const padding = { paddingLeft: '20px', paddingTop: '20px' };
   const { data, error, refetch } = useQuery(GET_RECENT_VIDEOS);
 
   useEffect(() => {
@@ -33,7 +34,7 @@ function GetRecentVideos() {
   if (data) {
     return (
       <div>
-        <Typography variant='h5' style={{ paddingLeft: '20px', paddingTop: '20px' }}> Latest </Typography>
+        <Typography variant='h5' style={padding}> Latest </Typography>
         <VideoGrid videos={data.getRecentVideos} />
       </div>
 
@@ -42,4 +43,4 @@ function GetRecentVideos() {
   return <LinearProgress> Loading </LinearProgress>;
 }
 
-export default GetRecentVideos;
+export default Home;

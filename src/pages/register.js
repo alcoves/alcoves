@@ -1,11 +1,16 @@
 import styled from 'styled-components';
 import React, { useState, } from 'react';
 import { Link, useHistory, } from 'react-router-dom';
-import { useMutation, } from '@apollo/client';
+import { gql, useMutation, } from '@apollo/client';
 import {
   Typography, Button, TextField, Container,
 } from '@material-ui/core';
-import register from '../gql/register';
+
+const register = gql`
+  mutation register($input: RegisterInput!) {
+    register(input: $input)
+  }
+`;
 
 const Spacer = styled.div`
   margin: 10px 0px 10px 0px;

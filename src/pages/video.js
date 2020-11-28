@@ -10,7 +10,7 @@ import {
   LinearProgress,
 } from '@material-ui/core';
 import { ThumbUpOutlined, } from '@material-ui/icons';
-import VideoPlayer from './VideoPlayer/Index';
+import VideoPlayer from '../components/VideoPlayer/Index';
 import abbreviateNumber from '../utils/abbreviateNumber';
 
 function GoogleAds() {

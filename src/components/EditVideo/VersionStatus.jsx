@@ -13,7 +13,7 @@ function VersionStatus({ versions }) {
         <Grid xs={12} sm={6} md={3} item key={preset}>
           <Paper style={{ padding: '10px', display: 'flex' }}>
             <VersionStatusBox>
-              <CircularProgress variant='static' value={percentCompleted} />
+              <CircularProgress variant='determinate' value={percentCompleted} />
             </VersionStatusBox>
             <VersionStatusBox>
               <Typography variant='subtitle1'>{preset}</Typography>

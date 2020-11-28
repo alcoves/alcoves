@@ -2,17 +2,17 @@ import React from 'react';
 
 import { Typography, } from '@material-ui/core';
 import { Switch, Route, } from 'react-router-dom';
-import Home from './components/Home';
-import Video from './components/Video';
-import Login from './components/Login';
+import Login from './pages/login';
+import Home from './pages/index';
+import Video from './pages/video';
 import Footer from './components/Footer';
-import Account from './components/Account';
+import Account from './pages/account/index';
 import Confirm from './components/Confirm';
-import Register from './components/Register';
+import UserProfile from './pages/user/index';
+import Register from './pages/register';
 import EditorHome from './components/EditorHome';
 import Navigation from './components/Navigation';
 import Uploader from './components/Uploader/Index';
-import UserProfile from './components/UserProfile';
 import EditVideo from './components/EditVideo/Index';
 import SearchResults from './components/SearchResults';
 
