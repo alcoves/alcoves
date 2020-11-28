@@ -1,6 +1,6 @@
 ## API
 
-![Production](https://github.com/bken-io/api/workflows/Deploy/badge.svg?branch=master)
+![Production](https://github.com/bken-io/api/workflows/Master/badge.svg)
 
 ![Development](https://github.com/bken-io/api/workflows/Deploy/badge.svg?branch=dev)
 
