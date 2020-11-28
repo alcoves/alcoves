@@ -1,12 +1,23 @@
 import React, { useEffect, useState, } from 'react';
 import styled from 'styled-components';
 import queryString from 'query-string';
-import { useMutation, } from '@apollo/client';
+import { gql, useMutation, } from '@apollo/client';
 import { Button, TextField, } from '@material-ui/core';
 import { useSnackbar, } from 'notistack';
 import { useHistory, } from 'react-router-dom';
-import resendCodeMut from '../gql/resendCode';
-import confirmAccountMut from '../gql/confirmAccount';
+
+const resendCodeMut = gql`
+  mutation resendCode($input: ResendCodeInput!) {
+    resendCode(input: $input)
+  }
+`;
+
+
+const confirmAccountMut = gql`
+  mutation confirmAccount($input: ConfirmAccountInput!) {
+    confirmAccount(input: $input)
+  }
+`;
 
 const Container = styled.div`
   width: 100%;

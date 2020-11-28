@@ -7,10 +7,10 @@ import Home from './pages/index';
 import Video from './pages/video';
 import Footer from './components/Footer';
 import Account from './pages/account/index';
-import Confirm from './components/Confirm';
+import Confirm from './pages/confirm';
 import UserProfile from './pages/user/index';
 import Register from './pages/register';
-import EditorHome from './components/EditorHome';
+import Editor from './pages/editor/index';
 import Navigation from './components/Navigation';
 import Uploader from './components/Uploader/Index';
 import EditVideo from './components/EditVideo/Index';
@@ -38,7 +38,7 @@ function AppRouter() {
           <Route exact path='/confirm'><Confirm /></Route>
           <Route exact path='/account'><Account /></Route>
           <Route exact path='/upload'><Uploader /></Route>
-          <Route exact path='/editor'><EditorHome /></Route>
+          <Route exact path='/editor'><Editor /></Route>
           <Route exact path='/editor/:id'><EditVideo /></Route>
           <Route exact path='/u/:username'><UserProfile /></Route>
           <Route component={NoMatch} />
