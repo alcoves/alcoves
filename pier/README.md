@@ -2,8 +2,6 @@
 
 ![Production](https://github.com/bken-io/api/workflows/Master/badge.svg)
 
-![Development](https://github.com/bken-io/api/workflows/Deploy/badge.svg?branch=dev)
-
 The api is written in graphql and node. It is deployed on digitalocean, proxied through cloudflare, and availible via https endpoints.
 
 ### Endpoints
