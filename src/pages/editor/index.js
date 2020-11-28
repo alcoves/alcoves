@@ -3,8 +3,8 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import { gql, useLazyQuery, } from '@apollo/client';
 import React, { useEffect, useContext, } from 'react';
 import { Typography, } from '@material-ui/core';
-import VideoGrid from '../../components/VideoGrid';
-import { UserContext, } from '../../contexts/UserContext';
+import VideoGrid from '../../components/videoGrid';
+import { UserContext, } from '../../contexts/userContext';
 
 const MY_VIDEOS = gql`
   query myVideos {

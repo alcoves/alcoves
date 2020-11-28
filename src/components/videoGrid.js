@@ -17,7 +17,7 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import { Link, } from 'react-router-dom';
 import abbreviateNumber from '../utils/abbreviateNumber';
 import videoDuration from '../utils/videoDuration';
-import { UserContext, } from '../contexts/UserContext';
+import { UserContext, } from '../contexts/userContext';
 
 const Duration = styled.div`
   right: 0;

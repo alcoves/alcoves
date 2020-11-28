@@ -2,7 +2,7 @@ import moment from 'moment';
 import React, { useContext, } from 'react';
 import { Container, LinearProgress, Typography, } from '@material-ui/core';
 import { Link, } from 'react-router-dom';
-import { SearchContext, } from '../contexts/SearchContext';
+import { SearchContext, } from '../contexts/searchContext';
 
 export default function searchResults() {
   const { error, data, loading } = useContext(SearchContext);

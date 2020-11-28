@@ -4,11 +4,11 @@ import Container from '@material-ui/core/Container';
 import { Link, useParams, } from 'react-router-dom';
 import { gql, useLazyQuery, } from '@apollo/client';
 import { Grid, LinearProgress, } from '@material-ui/core';
-import Title from './Title';
-import VideoStatus from './VideoStatus';
-import PublishStatus from './PublishStatus';
-import VersionStatus from './VersionStatus';
-import DeleteVideoButton from './DeleteVideoButton';
+import Title from './title';
+import VideoStatus from './videoStatus';
+import PublishStatus from './publishStatus';
+import VersionStatus from './versionStatus';
+import DeleteVideoButton from './deleteVideoButton';
 
 const GET_VIDEO = gql`
   query video($id: String!) {

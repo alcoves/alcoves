@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import React, { useContext, useState, } from 'react';
 import InputBase from '@material-ui/core/InputBase';
-import { SearchContext, } from '../contexts/SearchContext';
+import { SearchContext, } from '../contexts/searchContext';
 
 const SearchBox = styled(InputBase)`
   width: 100%;

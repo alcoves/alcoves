@@ -2,7 +2,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import { gql, useQuery, } from '@apollo/client';
 import React, { useEffect, } from 'react';
 import { Typography, } from '@material-ui/core';
-import VideoGrid from '../components/VideoGrid';
+import VideoGrid from '../components/videoGrid';
 
 const GET_RECENT_VIDEOS = gql`
   query getRecentVideos {

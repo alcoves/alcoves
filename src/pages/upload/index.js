@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useDropzone, } from 'react-dropzone';
 import React, { useState, useCallback, } from 'react';
 import { Container, Typography, } from '@material-ui/core';
-import UploadProgress from './UploadProgress';
+import UploadProgress from './uploadProgress';
 
 const Dropzone = styled.div`
   display: flex;

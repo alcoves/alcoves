@@ -5,7 +5,7 @@ import { Link, useHistory, } from 'react-router-dom';
 import {
   LinearProgress, Typography, Button, TextField, Container,
 } from '@material-ui/core';
-import { UserContext, } from '../contexts/UserContext';
+import { UserContext, } from '../contexts/userContext';
 
 const loginQuery = gql`
   mutation login($input: LoginInput!) {

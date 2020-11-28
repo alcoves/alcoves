@@ -3,7 +3,7 @@ import { useHistory, } from 'react-router-dom';
 import { Button, LinearProgress, Typography, Container, } from '@material-ui/core';
 import { gql, useLazyQuery, } from '@apollo/client';
 import Avatar from './avatar';
-import { UserContext, } from '../../contexts/UserContext';
+import { UserContext, } from '../../contexts/userContext';
 import Stats from './stats';
 
 const getUser = gql`
