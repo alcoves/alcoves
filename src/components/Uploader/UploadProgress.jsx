@@ -2,12 +2,26 @@
 import axios from 'axios';
 
 import { useHistory, } from 'react-router-dom';
-import { useMutation, } from '@apollo/client';
+import { gql, useMutation, } from '@apollo/client';
 import React, { useState, useEffect, } from 'react';
 import { Button, LinearProgress, Typography, } from '@material-ui/core';
 
-import createUploadQuery from '../../gql/createUpload';
-import completeUploadQuery from '../../gql/completeUpload';
+const completeUploadQuery = gql`
+  mutation completeUpload($input: CompleteUploadInput!) {
+    completeUpload(input: $input) {
+      id
+    }
+  }
+`;
+
+const createUploadQuery = gql`
+  mutation createUpload($input: CreateUploadInput!) {
+    createUpload(input: $input) {
+      id
+      url
+    }
+  }
+`;
 
 export default function UploadProgress({ file }) {
   const history = useHistory();
