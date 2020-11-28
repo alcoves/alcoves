@@ -4,14 +4,14 @@ import qs from 'query-string';
 import styled from 'styled-components';
 import { CircularProgress, Fade, } from '@material-ui/core';
 
-import Scrubber from './Scrubber';
-import Duration from './Duration';
-import PlayButton from './PlayButton';
-import VolumeSlider from './VolumeSlider';
-import VolumeButton from './VolumeButton';
-import QualitySelector from './QualitySelector';
-import FullScreenButton from './FullScreenButton';
-import PictureInPictureButton from './PictureInPictureButton';
+import Scrubber from './scrubber';
+import Duration from './duration';
+import PlayButton from './playButton';
+import VolumeSlider from './volumeSlider';
+import VolumeButton from './volumeButton';
+import QualitySelector from './qualitySelector';
+import FullScreenButton from './fullScreenButton';
+import PictureInPictureButton from './pictureInPictureButton';
 
 const Wrapper = styled.div`
   margin: 0px;

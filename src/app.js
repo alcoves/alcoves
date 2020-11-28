@@ -5,16 +5,16 @@ import { Switch, Route, } from 'react-router-dom';
 import Login from './pages/login';
 import Home from './pages/index';
 import Video from './pages/video';
-import Footer from './components/Footer';
+import Footer from './components/footer';
 import Account from './pages/account/index';
 import Confirm from './pages/confirm';
 import UserProfile from './pages/user/index';
 import Register from './pages/register';
 import Editor from './pages/editor/index';
-import Navigation from './components/Navigation';
-import Uploader from './components/Uploader/Index';
-import EditVideo from './components/EditVideo/Index';
-import SearchResults from './components/SearchResults';
+import Navigation from './components/navigation';
+import Upload from './pages/upload/index';
+import EditVideo from './pages/editor/id/index';
+import Search from './pages/search';
 
 function NoMatch() {
   return <Typography variant='h2'>404</Typography>;
@@ -31,13 +31,13 @@ function AppRouter() {
       <Content>
         <Switch>
           <Route exact path='/'><Home /></Route>
-          <Route exact path='/search'><SearchResults /></Route>
+          <Route exact path='/search'><Search /></Route>
           <Route exact path='/login'><Login /></Route>
           <Route exact path='/register'><Register /></Route>
           <Route exact path='/v/:id'><Video /></Route>
           <Route exact path='/confirm'><Confirm /></Route>
           <Route exact path='/account'><Account /></Route>
-          <Route exact path='/upload'><Uploader /></Route>
+          <Route exact path='/upload'><Upload /></Route>
           <Route exact path='/editor'><Editor /></Route>
           <Route exact path='/editor/:id'><EditVideo /></Route>
           <Route exact path='/u/:username'><UserProfile /></Route>

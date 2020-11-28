@@ -5,7 +5,7 @@ import { gql, useLazyQuery, } from '@apollo/client';
 import React, { useEffect, } from 'react';
 import { Typography, } from '@material-ui/core';
 import styled from 'styled-components';
-import VideoGrid from '../../components/VideoGrid';
+import VideoGrid from '../../components/videoGrid';
 
 const GET_USER_VIDEOS = gql`
   query videosByUsername($username: String!) {

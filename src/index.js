@@ -8,8 +8,8 @@ import { BrowserRouter as Router, } from 'react-router-dom';
 import App from './app';
 import Theme from './theme';
 import ApolloWrapper from './utils/apollo';
-import UserContextProvider from './contexts/UserContext';
-import SearchContextProvider from './contexts/SearchContext';
+import UserContextProvider from './contexts/userContext';
+import SearchContextProvider from './contexts/searchContext';
 
 const Index = () => (
   <Router>

@@ -8,8 +8,8 @@ import VideoLibraryIcon from '@material-ui/icons/VideoLibraryOutlined';
 import { Link, } from 'react-router-dom';
 import { Box, } from '@material-ui/core';
 import favicon from '../../public/favicon.ico';
-import SearchBar from './SearchBar';
-import { UserContext, } from '../contexts/UserContext';
+import SearchBar from './searchBar';
+import { UserContext, } from '../contexts/userContext';
 
 const GridCon = styled(Grid)`
   height: 50px;
