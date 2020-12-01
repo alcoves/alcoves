@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "apollo-server-express": "^2.19.0",
-    "aws-sdk": "^2.799.0",
+    "aws-sdk": "^2.801.0",
     "axios": "^0.21.0",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
@@ -29,8 +29,8 @@
     "lodash": "^4.17.20",
     "mailgun-js": "^0.22.0",
     "mime": "^2.4.6",
-    "mongoose": "^5.10.17",
-    "nanoid": "^3.1.18",
+    "mongoose": "^5.11.1",
+    "nanoid": "^3.1.20",
     "sharp": "^0.26.3"
   },
   "devDependencies": {
