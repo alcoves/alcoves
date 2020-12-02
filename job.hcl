@@ -27,8 +27,8 @@ job "web" {
         image      = "registry.digitalocean.com/bken/web:latest"
 
         auth {
-          username = "${DO_API_KEY}"
-          password = "${DO_API_KEY}"
+          username = "{{key "secrets/DO_API_KEY"}}"
+          password = "{{key "secrets/DO_API_KEY"}}"
         }
 
         port_map {
