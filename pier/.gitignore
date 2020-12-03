@@ -10,3 +10,4 @@ dist
 .serverless
 *.0x
 tmp
+main
