@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect, } from 'react';
 
 import qs from 'query-string';
 import styled from 'styled-components';
-import { CircularProgress, Fade, } from '../old/node_modules/@material-ui/core';
+import { CircularProgress, Fade, } from '@material-ui/core';
 
 import Scrubber from './scrubber';
 import Duration from './duration';
@@ -127,6 +127,7 @@ function VideoPlayer({ url }) {
       style={{ cursor: controlsVisible ? 'auto' : 'none' }}
     >
       <VideoWrapper
+        muted
         ref={vRef}
         id='bkenVideoPlayer'
         disableRemotePlayback

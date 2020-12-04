@@ -1,6 +1,6 @@
 import React, { useState, } from 'react';
-import { SettingsOutlined, } from '../old/node_modules/@material-ui/icons';
-import { Menu, MenuItem, IconButton, } from '../old/node_modules/@material-ui/core';
+import { Menu, MenuItem, IconButton, } from '@material-ui/core';
+import { SettingsOutlined, } from '@material-ui/icons';
 
 function QualitySelector({ hls }) {
   const [settingsEl, setSettingsEl] = useState(null);

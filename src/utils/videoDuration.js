@@ -1,4 +1,4 @@
-import moment from '../components/old/node_modules/moment';
+import moment from 'moment';
 
 function videoDuration(d) {
   if (d) return d > 3600 ? moment.utc(d * 1000).format('H:mm:ss') : moment.utc(d * 1000).format('m:ss');

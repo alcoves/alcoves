@@ -24,8 +24,8 @@ function Uploader() {
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: 'video/mp4,video/quicktime',
     disabled: Boolean(files.length),
+    accept: 'video/mp4,video/quicktime',
   });
 
   return (
