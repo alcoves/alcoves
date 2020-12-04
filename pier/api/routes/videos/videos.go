@@ -24,6 +24,7 @@ func GetVideo(c *fiber.Ctx) error {
 		return c.SendStatus(404)
 	}
 
+	video.URL = fmt.Sprintf("https://cdn.bken.io/v/%s/hls/master.m3u8", video.ID)
 	return c.JSON(video)
 }
 

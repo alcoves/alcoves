@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/bken-io/api/api/models"
 	"github.com/bken-io/api/api/s3"
 	"github.com/gofiber/fiber/v2"
 	"github.com/minio/minio-go/v7"
@@ -13,12 +14,6 @@ import (
 
 // this endpoint exists because versions are a heavy query to make
 // the link the the master.m3u8 exists on the video record
-
-type Version struct {
-	Name             string `json:"name"`
-	Status           string `json:"status"`
-	PercentCompleted uint8  `json:"percentCompleted"`
-}
 
 func removeDuplicatesFromSlice(s []string) []string {
 	m := make(map[string]bool)
@@ -115,18 +110,18 @@ func GetVersions(c *fiber.Ctx) error {
 	allVersions := append(versionsFromCDN, versionsFromTidal...)
 	uniqueVersions := removeDuplicatesFromSlice(allVersions)
 
-	versions := []Version{}
+	versions := []models.VideoVersion{}
 
 	for i := 0; i < len(uniqueVersions); i++ {
 		element := uniqueVersions[i]
 		if contains(versionsFromCDN, element) {
-			versions = append(versions, Version{
+			versions = append(versions, models.VideoVersion{
 				PercentCompleted: 100,
 				Name:             element,
 				Status:           "completed",
 			})
 		} else if contains(versionsFromTidal, element) {
-			versions = append(versions, Version{
+			versions = append(versions, models.VideoVersion{
 				PercentCompleted: 50,
 				Name:             element,
 				Status:           "processing",

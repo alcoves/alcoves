@@ -10,6 +10,7 @@ import (
 	"github.com/bken-io/api/api/routes/root"
 	"github.com/bken-io/api/api/routes/versions"
 	"github.com/bken-io/api/api/routes/videos"
+	"github.com/bken-io/api/api/routes/videos/views"
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
@@ -38,6 +39,7 @@ func initDatabase() {
 
 	fmt.Println("Connected to database successfully")
 	db.DBConn.AutoMigrate(&models.Video{})
+	db.DBConn.AutoMigrate(&models.VideoView{})
 	fmt.Println("Database Migrated")
 }
 
@@ -48,6 +50,8 @@ func setupRoutes(app *fiber.App) {
 	app.Post("/videos", videos.CreateVideo)
 	app.Get("/videos/:id", videos.GetVideo)
 	app.Delete("/videos/:id", videos.DeleteVideo)
+
+	app.Post("/videos/:id/views", views.CreateView)
 
 	app.Get("/videos/:id/versions", versions.GetVersions)
 }

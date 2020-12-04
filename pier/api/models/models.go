@@ -6,11 +6,10 @@ import (
 	"gorm.io/gorm"
 )
 
-// This file contains types that should only exist in the database
-
 // Video is the video struct 🤷‍♂️
 type Video struct {
 	ID         string         `gorm:"primaryKey;default:uuid_generate_v4()" json:"id"`
+	URL        string         `json:"url"`
 	Title      string         `json:"title"`
 	Duration   float32        `json:"duration"`
 	CreatedAt  time.Time      `json:"createdAt"`
@@ -21,18 +20,25 @@ type Video struct {
 	Visibility string         `gorm:"default:unlisted" json:"visibility"`
 }
 
-type TidalVideo struct {
-	link     string
-	status   string
-	versions Version
+// VideoView 🎥
+type VideoView struct {
+	ID        uint           `gorm:"primaryKey" json:"id"`
+	IP        string         `json:"ip"`
+	Video     string         `json:"video"`
+	User      string         `json:"user"`
+	CreatedAt time.Time      `json:"createdAt"`
+	UpdatedAt time.Time      `json:"updatedAt"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"deletedAt"`
 }
 
-type Version struct {
-	name string
+// VideoVersion is the representation of a single preset ▶
+type VideoVersion struct {
+	Name             string `json:"name"`
+	Status           string `json:"status"`
+	PercentCompleted uint8  `json:"percentCompleted"`
 }
 
+// User is a user 👴
 type User struct {
-}
-
-type View struct {
+	ID string `gorm:"primaryKey;default:uuid_generate_v4()" json:"id"`
 }
