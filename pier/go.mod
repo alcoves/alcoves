@@ -15,5 +15,4 @@ require (
 	golang.org/x/sys v0.0.0-20201202213521-69691e467435 // indirect
 	gorm.io/driver/postgres v1.0.5
 	gorm.io/gorm v1.20.7
-	honnef.co/go/tools v0.0.1-2019.2.3
 )
