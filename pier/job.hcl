@@ -40,6 +40,8 @@ job "api2" {
           APOLLO_SCHEMA_REPORTING=true
           APOLLO_KEY= "{{key "secrets/APOLLO_KEY"}}"
 
+          PG_CONNECTION_STRING = "{{key "secrets/PG_CONNECTION_STRING"}}"
+
           NOMAD_TOKEN = "{{key "secrets/NOMAD_TOKEN"}}"
           NOMAD_ADDRESS = "{{key "secrets/NOMAD_ADDRESS"}}"
 
