@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import styled from 'styled-components';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
@@ -6,7 +7,7 @@ import PersonOutlinedIcon from '@material-ui/icons/PersonOutlined';
 import VideoLibraryIcon from '@material-ui/icons/VideoLibraryOutlined';
 import Link from 'next/link';
 
-import { Box, } from '@material-ui/core';
+import { Box, Typography, } from '@material-ui/core';
 // import favicon from '../public/favicon.ico';
 // import SearchBar from './SearchBar';
 // import { UserContext, } from '../contexts/userContext';
@@ -20,17 +21,17 @@ const GridCon = styled(Grid)`
 `;
 
 const LogoCon = styled.div`
-  width: 50px;
+  width: 100px;
   height: 50px;
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
 `;
 
-const Logo = styled.img`
+const Logo = styled.div`
   width: 40px;
   height: 40px;
-  cursor: pointer;
 `;
 
 export default function Navigation() {
@@ -38,51 +39,64 @@ export default function Navigation() {
   const user = null;
 
   return (
-    <div>
-      Navigation
-    </div>
-    // <GridCon container>
-    //   <Grid item xs={2}>
-    //     <LogoCon>
-    //       <Link href='/'>
-    //         {/* <Logo src={favicon} /> */}
-    //       </Link>
-    //     </LogoCon>
-    //   </Grid>
-    //   <Grid item xs>
-    //     <Grid container justify='center'>
-    //       {/* <SearchBar /> */}
-    //     </Grid>
-    //   </Grid>
-    //   <Grid item xs={2} style={{ minWidth: '150px' }}>
-    //     <Grid container justify='flex-end'>
-    //       <Box>
-    //         {user && (
-    //           <IconButton component={Link} href='/upload' color='primary'>
-    //             <UploadIcon />
-    //           </IconButton>
-    //         )}
-    //       </Box>
-    //       <Box>
-    //         {user && user.id && (
-    //           <IconButton component={Link} href='/editor' color='primary'>
-    //             <VideoLibraryIcon />
-    //           </IconButton>
-    //         )}
-    //       </Box>
-    //       <Box>
-    //         {user ? (
-    //           <IconButton href='/account' component={Link} color='primary'>
-    //             <PersonOutlinedIcon />
-    //           </IconButton>
-    //         ) : (
-    //           <IconButton href='/login' component={Link} color='primary'>
-    //             <PersonOutlinedIcon />
-    //           </IconButton>
-    //         )}
-    //       </Box>
-    //     </Grid>
-    //   </Grid>
-    // </GridCon>
+    <GridCon container>
+      <Grid item xs={2}>
+        <LogoCon>
+          <Logo>
+            <Image
+              alt='logo'
+              width={40}
+              height={40}
+              src='/logo.png'
+            />
+          </Logo>
+          <Link href='/'>
+            <Typography variant='subtitle2'>Home</Typography>
+          </Link>
+        </LogoCon>
+      </Grid>
+      <Grid item xs>
+        <Grid container justify='center'>
+          {/* <SearchBar /> */}
+        </Grid>
+      </Grid>
+      <Grid item xs={2} style={{ minWidth: '150px' }}>
+        <Grid container justify='flex-end'>
+          <Box>
+            {user && (
+              <Link href='/upload' passHref>
+                <IconButton color='primary'>
+                  <UploadIcon />
+                </IconButton>
+              </Link>
+            )}
+          </Box>
+          <Box>
+            {user && user.id && (
+              <Link href='/editor' passHref>
+                <IconButton color='primary'>
+                  <VideoLibraryIcon />
+                </IconButton>
+              </Link>
+            )}
+          </Box>
+          <Box>
+            {user ? (
+              <Link href='/account' passHref>
+                <IconButton color='primary'>
+                  <PersonOutlinedIcon />
+                </IconButton>
+              </Link>
+            ) : (
+              <Link href='/login' passHref>
+                <IconButton color='primary'>
+                  <PersonOutlinedIcon />
+                </IconButton>
+              </Link>
+            )}
+          </Box>
+        </Grid>
+      </Grid>
+    </GridCon>
   );
 }

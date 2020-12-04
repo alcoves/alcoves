@@ -8,7 +8,7 @@ export default async function api(url, config = {}) {
     const res = await axios(requestUrl, config);
     return res;
   } catch (error) {
-    console.error(error);
+    console.error('there was an api error');
     throw error;
   }
 }

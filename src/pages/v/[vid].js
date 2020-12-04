@@ -1,19 +1,18 @@
 import Head from 'next/head';
+import Link from 'next/link';
 
-import React, { useEffect, } from 'react';
 import styled from 'styled-components';
-import moment from '../../components/old/node_modules/moment';
+import moment from 'moment';
 import {
   Container,
   Typography,
   IconButton,
-  LinearProgress,
-} from '../../components/old/node_modules/@material-ui/core';
-import { ThumbUpOutlined, } from '../../components/old/node_modules/@material-ui/icons';
+} from '@material-ui/core';
+import { ThumbUpOutlined, } from '@material-ui/icons';
 import Layout from '../../components/Layout';
 import api from '../../utils/api';
 import VideoPlayer from '../../components/VideoPlayer/index';
-// import abbreviateNumber from '../../utils/abbreviateNumber';
+import abbreviateNumber from '../../utils/abbreviateNumber';
 
 const SubtitleContainer = styled.div`
   width: 100%;
@@ -48,10 +47,12 @@ export default function Video({ error, video }) {
   if (error) {
     return (
       <div>
-        whoops, there was an error
+        there was an error
       </div>
     );
   }
+
+  const videoUrl = 'https://cdn.bken.io/v/sUqq0SBBFfu3dISHrssz_/hls/master.m3u8' || video.url;
 
   return (
     <div>
@@ -61,9 +62,8 @@ export default function Video({ error, video }) {
       <Layout />
 
       <VideoContainerWrapper>
-        here
-        <VideoPlayer url={video.url} />
-        {/* <Container style={{ marginTop: '20px' }}>
+        <VideoPlayer url={videoUrl} />
+        <Container style={{ marginTop: '20px' }}>
           <div>
             <div
               style={{
@@ -74,15 +74,15 @@ export default function Video({ error, video }) {
                 justifyContent: 'space-between',
               }}
             >
-              <Typography variant='h4'>{data.video.title}</Typography>
+              <Typography variant='h4'>{video.title}</Typography>
             </div>
             <div>
               <SubtitleContainer>
                 <div>
                   <Typography variant='body2'>
-                    {`${abbreviateNumber(data.video.views)} views · ${moment(Number(data.video.createdAt)).fromNow()}`}
+                    {`${abbreviateNumber(video.views)} views · ${moment(Number(video.createdAt)).fromNow()}`}
                   </Typography>
-                  <Typography variant='subtitle2'>{data.video.visibility}</Typography>
+                  <Typography variant='subtitle2'>{video.visibility}</Typography>
                 </div>
                 <div>
                   <IconButton disabled>
@@ -107,12 +107,12 @@ export default function Video({ error, video }) {
                 marginRight: '10px',
               }}
             >
-              <Link to={`/users/${data.video.user.username}`}>
+              <Link href={`/users/${video.user.username}`} passHref>
                 <img
                   alt=''
                   width={50}
                   height={50}
-                  src={data.video.user.avatar}
+                  src={video.user.avatar}
                   style={{
                     borderRadius: '50%',
                     cursor: 'pointer',
@@ -122,14 +122,14 @@ export default function Video({ error, video }) {
             </div>
             <div style={{ height: '100%' }}>
               <Link
-                to={`/users/${data.video.user.username}`}
+                href={`/users/${video.user.username}`}
                 style={{
                   display: 'flex',
                   alignItems: 'flex-end',
                   height: '50%',
                 }}
               >
-                {data.video.user.username}
+                <a>{video.user.username}</a>
               </Link>
               <div
                 style={{
@@ -140,7 +140,7 @@ export default function Video({ error, video }) {
               />
             </div>
           </div>
-        </Container> */}
+        </Container>
         {/* <GoogleAds /> */}
       </VideoContainerWrapper>
     </div>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, } from 'react';
-import { Slider, } from '../old/node_modules/@material-ui/core';
+import { Slider, } from '@material-ui/core';
 
 function VolumeButton({ vRef }) {
   const [volume, setVolume] = useState(vRef.current.volume * 100);

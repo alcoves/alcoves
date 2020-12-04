@@ -1,14 +1,17 @@
 import '../styles/index.css';
 import Head from 'next/head';
+import { SnackbarProvider, } from 'notistack';
 
 function App({ Component, pageProps }) {
   return (
-    <div>
+    <>
       <Head>
         <title>bken.io</title>
       </Head>
-      <Component {...pageProps} />
-    </div>
+      <SnackbarProvider maxSnack={3}>
+        <Component {...pageProps} />
+      </SnackbarProvider>
+    </>
   );  
 }
 
