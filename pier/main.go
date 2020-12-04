@@ -7,6 +7,8 @@ import (
 
 	"github.com/bken-io/api/api/db"
 	"github.com/bken-io/api/api/models"
+	"github.com/bken-io/api/api/routes/login"
+	"github.com/bken-io/api/api/routes/register"
 	"github.com/bken-io/api/api/routes/root"
 	"github.com/bken-io/api/api/routes/versions"
 	"github.com/bken-io/api/api/routes/videos"
@@ -38,6 +40,7 @@ func initDatabase() {
 	}
 
 	fmt.Println("Connected to database successfully")
+	db.DBConn.AutoMigrate(&models.User{})
 	db.DBConn.AutoMigrate(&models.Video{})
 	db.DBConn.AutoMigrate(&models.VideoView{})
 	fmt.Println("Database Migrated")
@@ -45,15 +48,14 @@ func initDatabase() {
 
 func setupRoutes(app *fiber.App) {
 	app.Get("/", root.GetRoot)
-
 	app.Get("/videos", videos.GetVideos)
 	app.Post("/videos", videos.CreateVideo)
 	app.Get("/videos/:id", videos.GetVideo)
 	app.Delete("/videos/:id", videos.DeleteVideo)
-
 	app.Post("/videos/:id/views", views.CreateView)
-
 	app.Get("/videos/:id/versions", versions.GetVersions)
+	app.Post("/register", register.Register)
+	app.Post("/login", login.Login)
 }
 
 func main() {
