@@ -2,31 +2,18 @@ package videos
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/bken-io/api/api/db"
+	"github.com/bken-io/api/api/models"
 	"github.com/gofiber/fiber/v2"
 	"github.com/teris-io/shortid"
-	"gorm.io/gorm"
 )
-
-type Video struct {
-	ID         string         `gorm:"primaryKey;default:uuid_generate_v4()" json:"id"`
-	Title      string         `json:"title"`
-	Duration   float32        `json:"duration"`
-	CreatedAt  time.Time      `json:"createdAt"`
-	UpdatedAt  time.Time      `json:"updatedAt"`
-	DeletedAt  gorm.DeletedAt `gorm:"index" json:"deletedAt"`
-	User       string         `gorm:"index" json:"user"`
-	Views      int            `gorm:"default:0" json:"views"`
-	Visibility string         `gorm:"default:unlisted" json:"visibility"`
-}
 
 // GetVideo returns a video
 func GetVideo(c *fiber.Ctx) error {
 	id := c.Params("id")
 	db := db.DBConn
-	var video Video
+	var video models.Video
 	result := db.Where("id = ?", id).Find(&video)
 
 	if result.Error != nil {
@@ -43,7 +30,7 @@ func GetVideo(c *fiber.Ctx) error {
 // GetVideos returns all videos
 func GetVideos(c *fiber.Ctx) error {
 	db := db.DBConn
-	var videos []Video
+	var videos []models.Video
 	db.Find(&videos)
 	return c.JSON(videos)
 }
@@ -51,7 +38,7 @@ func GetVideos(c *fiber.Ctx) error {
 // CreateVideo creates a new video
 func CreateVideo(c *fiber.Ctx) error {
 	db := db.DBConn
-	video := new(Video)
+	video := new(models.Video)
 
 	if err := c.BodyParser(video); err != nil {
 		return c.Status(400).SendString("video input failed unmarshalling")
@@ -72,7 +59,7 @@ func DeleteVideo(c *fiber.Ctx) error {
 	id := c.Params("id")
 	db := db.DBConn
 
-	var video Video
+	var video models.Video
 	db.Where("id = ?", id).Find(&video)
 
 	fmt.Println(video)

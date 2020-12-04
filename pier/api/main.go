@@ -6,8 +6,10 @@ import (
 	"os"
 
 	"github.com/bken-io/api/api/db"
-	"github.com/bken-io/api/api/root"
-	"github.com/bken-io/api/api/videos"
+	"github.com/bken-io/api/api/models"
+	"github.com/bken-io/api/api/routes/root"
+	"github.com/bken-io/api/api/routes/versions"
+	"github.com/bken-io/api/api/routes/videos"
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
@@ -35,16 +37,19 @@ func initDatabase() {
 	}
 
 	fmt.Println("Connected to database successfully")
-	db.DBConn.AutoMigrate(&videos.Video{})
+	db.DBConn.AutoMigrate(&models.Video{})
 	fmt.Println("Database Migrated")
 }
 
 func setupRoutes(app *fiber.App) {
 	app.Get("/", root.GetRoot)
+
 	app.Get("/videos", videos.GetVideos)
 	app.Post("/videos", videos.CreateVideo)
 	app.Get("/videos/:id", videos.GetVideo)
 	app.Delete("/videos/:id", videos.DeleteVideo)
+
+	app.Get("/videos/:id/versions", versions.GetVersions)
 }
 
 func main() {

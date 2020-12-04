@@ -1,4 +1,4 @@
-job "api" {
+job "api2" {
   priority    = 100
   datacenters = ["dc1"]
   type        = "service"
@@ -19,7 +19,7 @@ job "api" {
       min_healthy_time = "30s"
     }
 
-    task "api" {
+    task "api2" {
       driver = "docker"
 
       template {
@@ -67,7 +67,7 @@ job "api" {
 
       service {
         port = "http"
-        tags = ["urlprefix-/api"]
+        tags = ["urlprefix-/api2"]
 
         connect {
           sidecar_service {}
@@ -79,7 +79,7 @@ job "api" {
           port     = "http"
           timeout  = "5s"
           interval = "10s"
-          path     = "/graphql"
+          path     = "/"
         }
       }
 
