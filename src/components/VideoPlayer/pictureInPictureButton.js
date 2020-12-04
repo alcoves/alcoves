@@ -1,6 +1,6 @@
 import React from 'react';
-import { IconButton, } from '@material-ui/core';
-import { PictureInPictureOutlined, } from '@material-ui/icons';
+import { IconButton, } from '../old/node_modules/@material-ui/core';
+import { PictureInPictureOutlined, } from '../old/node_modules/@material-ui/icons';
 
 function PictureInPictureButton({ vRef }) {
   function handleClick() {

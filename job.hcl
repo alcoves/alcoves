@@ -22,13 +22,22 @@ job "web" {
     task "web" {
       driver = "docker"
 
+      template {
+        data = <<EOH
+          DO_API_KEY = "{{key "secrets/DO_API_KEY"}}"
+        EOH
+        
+        env         = true
+        destination = ".env"
+      }
+
       config {
         force_pull = true
         image      = "registry.digitalocean.com/bken/web:latest"
 
         auth {
-          username = "{{key "secrets/DO_API_KEY"}}"
-          password = "{{key "secrets/DO_API_KEY"}}"
+          username = "${DO_API_KEY}"
+          password = "${DO_API_KEY}"
         }
 
         port_map {
@@ -38,7 +47,7 @@ job "web" {
 
       service {
         port = "http"
-        tags = ["urlprefix-/*"]
+        tags = ["urlprefix-/"]
 
         connect {
           sidecar_service {}

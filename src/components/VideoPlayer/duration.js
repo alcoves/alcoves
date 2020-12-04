@@ -1,5 +1,5 @@
-import { Typography, } from '@material-ui/core';
 import React, { useEffect, useState, } from 'react';
+import { Typography, } from '../old/node_modules/@material-ui/core';
 import videoDuration from '../../utils/videoDuration';
 
 function Duration({ vRef }) {

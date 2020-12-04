@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core';
 import { ThumbUpOutlined, } from '@material-ui/icons';
 import VideoPlayer from '../components/VideoPlayer/index';
-import abbreviateNumber from '../utils/abbreviateNumber';
+import abbreviateNumber from '../../utils/abbreviateNumber';
 
 function GoogleAds() {
   useEffect(() => {
