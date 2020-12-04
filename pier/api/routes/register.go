@@ -1,4 +1,4 @@
-package register
+package routes
 
 import (
 	"github.com/bken-io/api/api/db"

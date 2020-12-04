@@ -1,4 +1,4 @@
-package login
+package routes
 
 import (
 	"os"
@@ -21,36 +21,23 @@ func passwordVerified(hashedPwd string, password string) bool {
 	return true
 }
 
-func getHashedPassword(password string) string {
-	rawPassword := []byte(password)
-	hashedPassword, err := bcrypt.GenerateFromPassword(rawPassword, bcrypt.DefaultCost)
-	if err != nil {
-		panic(err)
-	}
-	err = bcrypt.CompareHashAndPassword(hashedPassword, rawPassword)
-	return string(hashedPassword)
-}
-
 // Login checks password and mints a token
 func Login(c *fiber.Ctx) error {
 	db := db.DBConn
 	loginInput := new(models.LoginInput)
 	if err := c.BodyParser(loginInput); err != nil {
-		return c.Status(400).SendString("failed unmarshalling")
+		return c.SendStatus(fiber.StatusUnauthorized)
 	}
 
 	var user models.User
 	db.Where("email = ?", loginInput.Email).First(&user)
 	if user.Email == "" {
-		return c.Status(401).SendString("failed")
+		return c.SendStatus(fiber.StatusUnauthorized)
 	}
 
 	if !passwordVerified(user.Password, loginInput.Password) {
-		return c.Status(401).SendString("failed")
+		return c.SendStatus(fiber.StatusUnauthorized)
 	}
-
-	currentTime := time.Now()
-	oneWeekInNS := time.Duration(604800000000000)
 
 	claims := models.UserTokenClaims{
 		ID:       user.ID,
@@ -58,15 +45,15 @@ func Login(c *fiber.Ctx) error {
 		Username: user.Username,
 		StandardClaims: jwt.StandardClaims{
 			Issuer:    "bken.io",
-			ExpiresAt: currentTime.Add(oneWeekInNS).Unix(),
+			ExpiresAt: time.Now().Add(time.Hour * 168).Unix(),
 		},
 	}
+
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	signedToken, err := token.SignedString([]byte(os.Getenv("JWT_KEY")))
 	if err != nil {
-		return c.Status(401).SendString("failed")
+		return c.SendStatus(fiber.StatusUnauthorized)
 	}
-
 	response := models.LoginResponse{
 		Token: signedToken,
 	}
