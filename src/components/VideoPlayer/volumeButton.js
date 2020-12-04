@@ -1,6 +1,6 @@
-import { IconButton, } from '@material-ui/core';
 import React, { useEffect, useState, } from 'react';
-import { VolumeOffOutlined, VolumeUpOutlined, VolumeDownOutlined, } from '@material-ui/icons';
+import { IconButton, } from '../old/node_modules/@material-ui/core';
+import { VolumeOffOutlined, VolumeUpOutlined, VolumeDownOutlined, } from '../old/node_modules/@material-ui/icons';
 
 function VolumeButton({ vRef }) {
   const [volume, setVolume] = useState(vRef.current.volume);

@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect, } from 'react';
 
 import qs from 'query-string';
 import styled from 'styled-components';
-import { CircularProgress, Fade, } from '@material-ui/core';
+import { CircularProgress, Fade, } from '../old/node_modules/@material-ui/core';
 
 import Scrubber from './scrubber';
 import Duration from './duration';
@@ -78,7 +78,7 @@ const BufferingWrapper = styled.div`
 let hls;
 let idleTimer;
 
-function VideoPlayer({ link }) {
+function VideoPlayer({ url }) {
   const vRef = useRef(null);
   const [loaded, setLoaded] = useState(false);
   const [buffering, setBuffering] = useState(true);
@@ -87,7 +87,7 @@ function VideoPlayer({ link }) {
   useEffect(() => {
     const video = document.getElementById('bkenVideoPlayer');
     hls = new Hls({ startLevel: 3 });
-    hls.loadSource(link);
+    hls.loadSource(url);
     hls.attachMedia(video);
   }, []);
 

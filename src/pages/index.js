@@ -1,46 +1,18 @@
-import LinearProgress from '@material-ui/core/LinearProgress';
-import { gql, useQuery, } from '@apollo/client';
-import React, { useEffect, } from 'react';
-import { Typography, } from '@material-ui/core';
-import VideoGrid from '../components/videoGrid';
+import React from 'react';
+import { SnackbarProvider, } from 'notistack';
+import { ThemeProvider, } from '@material-ui/styles';
+import Layout from '../components/Layout';
+import theme from './theme';
+// import ApolloWrapper from './utils/apollo';
+// import UserContextProvider from '../contexts/userContext';
+// import SearchContextProvider from '../contexts/searchContext';
 
-const GET_RECENT_VIDEOS = gql`
-  query getRecentVideos {
-    getRecentVideos {
-      id
-      title
-      views
-      duration
-      createdAt
-      thumbnails
-      user {
-        id
-        avatar
-        username
-      }
-    }
-  }
-`;
+const Index = () => (
+  <ThemeProvider theme={theme}>
+    <SnackbarProvider maxSnack={3}>
+      <Layout />
+    </SnackbarProvider>
+  </ThemeProvider>
+);
 
-function Home() {
-  const padding = { paddingLeft: '20px', paddingTop: '20px' };
-  const { data, error, refetch } = useQuery(GET_RECENT_VIDEOS);
-
-  useEffect(() => {
-    refetch();
-  }, []);
-
-  if (error) console.log(error);
-  if (data) {
-    return (
-      <div>
-        <Typography variant='h5' style={padding}> Latest </Typography>
-        <VideoGrid videos={data.getRecentVideos} />
-      </div>
-
-    );
-  }
-  return <LinearProgress> Loading </LinearProgress>;
-}
-
-export default Home;
+export default Index;

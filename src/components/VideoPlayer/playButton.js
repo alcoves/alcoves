@@ -1,6 +1,6 @@
-import { IconButton, } from '@material-ui/core';
 import React, { useEffect, useState, } from 'react';
-import { PlayArrowOutlined, PauseOutlined, } from '@material-ui/icons';
+import { IconButton, } from '../old/node_modules/@material-ui/core';
+import { PlayArrowOutlined, PauseOutlined, } from '../old/node_modules/@material-ui/icons';
 
 function PlayButton({ vRef }) {
   const [paused, setPaused] = useState(vRef.current.paused);
