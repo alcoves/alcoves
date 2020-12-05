@@ -36,7 +36,7 @@ func initDatabase() {
 }
 
 func setupRoutes(app *fiber.App) {
-	api := app.Group("/", logger.New())
+	api := app.Group("/api2", logger.New())
 
 	api.Get("/", routes.Hello)
 	api.Post("/login", routes.Login)
