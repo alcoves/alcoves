@@ -1,23 +1,24 @@
 import { useContext, useState, } from 'react';
-import Link from 'next/link';
 import Router from 'next/router';
+import Link from 'next/link';
 import { Heading, Pane, TextInputField, Button, } from 'evergreen-ui';
 import api from '../utils/api';
 import { Context, } from '../utils/store';
 
-export default function Login() {
+export default function Register() {
   const { login } = useContext(Context);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [cPassword, setCPassword] = useState('');
 
-  async function handleLogin() {
-    setLoading(true);
-    const { data } = await api('/login', {
+  async function handleRegister() {
+    const { data } = await api('/register', {
       method: 'POST',
       data: { email, password },
     });
-    setLoading(false);
+
+    // Do some error handling and show errors
+
     login(data.token);
     Router.push('/');
   }
@@ -48,7 +49,7 @@ export default function Login() {
             marginTop={20}
             marginBottom={10}
           >
-            Dive in to Bken
+            Create Your Account
           </Heading>
         </Pane>
         <Pane
@@ -80,18 +81,29 @@ export default function Login() {
             placeholder='Password'
             onChange={e => setPassword(e.target.value)}
           />
+          <TextInputField
+            required
+            width='100%'
+            type='password'
+            name='confirmPassword'
+            inputHeight={40}
+            label='Confirm Password'
+            value={cPassword}
+            placeholder='Password'
+            onChange={e => setCPassword(e.target.value)}
+          />
           <Button
             height={40}
             width='100%'
             intent='success'
-            isLoading={loading}
             appearance='primary'
             justifyContent='center'
-            onClick={handleLogin}
+            onClick={handleRegister}
           >
-            Login
+            Register
           </Button>
-          <Link href='/register'>
+
+          <Link href='/login'>
             <Heading
               size={200}
               width='100%'
@@ -101,7 +113,7 @@ export default function Login() {
               alignItems='center'
               justifyContent='center'
             >
-              <a> Register</a>
+              <a> Log in</a>
             </Heading>
           </Link>
           <Pane />
