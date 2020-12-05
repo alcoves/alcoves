@@ -1,10 +1,15 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:4000';
+function baseUrl() {
+  if (process.env.NODE_ENV === 'production') {
+    return 'https://helm.bken.io/api2';
+  }
+  return 'http://localhost:4000/api2';
+}
 
 export default async function api(url, config = {}) {
   try {
-    const requestUrl = `${BASE_URL}${url}`;
+    const requestUrl = `${baseUrl()}${url}`;
     const res = await axios(requestUrl, config);
     return res;
   } catch (error) {

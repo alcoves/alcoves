@@ -16,9 +16,7 @@ export default function Register() {
       method: 'POST',
       data: { email, password },
     });
-
-    // Do some error handling and show errors
-
+    // TODO :: Do some error handling and show errors
     login(data.token);
     Router.push('/');
   }
@@ -99,6 +97,7 @@ export default function Register() {
             appearance='primary'
             justifyContent='center'
             onClick={handleRegister}
+            disabled={!(email && (password ? password === cPassword : false))}
           >
             Register
           </Button>
