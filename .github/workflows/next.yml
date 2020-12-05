@@ -36,7 +36,6 @@ jobs:
           NOMAD_TOKEN: ${{ secrets.NOMAD_TOKEN }}
           NOMAD_ADDRESS: ${{ secrets.NOMAD_ADDRESS }}
         run: |
-          sudo apt install -y git
           wget -q https://releases.hashicorp.com/nomad/0.12.9/nomad_0.12.9_linux_amd64.zip
           sudo apt install unzip -y && unzip nomad_0.12.9_linux_amd64.zip
           sed -i "s+:latest+:${GITHUB_SHA}+g" job.hcl
