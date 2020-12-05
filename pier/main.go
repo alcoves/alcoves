@@ -10,22 +10,13 @@ import (
 	"github.com/bken-io/api/api/models"
 	"github.com/bken-io/api/api/routes"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
-
-func loadEnv() {
-	// load .env file from given path
-	// we keep it empty it will load .env from current directory
-	err := godotenv.Load(".env")
-
-	if err != nil {
-		log.Panic("Error loading .env file")
-	}
-}
 
 func initDatabase() {
 	var err error
@@ -61,10 +52,11 @@ func setupRoutes(app *fiber.App) {
 }
 
 func main() {
-	loadEnv()
+	godotenv.Load(".env")
 	initDatabase()
 
 	app := fiber.New()
+	app.Use(cors.New())
 	app.Use(recover.New())
 
 	setupRoutes(app)

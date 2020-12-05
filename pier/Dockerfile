@@ -1,17 +1,13 @@
-############################
-# STEP 1 build executable binary
-############################
-FROM golang:alpine3.11 AS builder
-RUN apk update && apk add --no-cache git
-WORKDIR $GOPATH/github.com/bken-io/api/
+FROM golang:1.15.0-alpine as BUILDER
+
+WORKDIR /go/src/github.com/bkenio/api/
 COPY . .
 RUN go mod download
 RUN go mod verify 
-RUN GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o /go/bin/main
+RUN CGO_ENABLED=0  GOARCH=amd64 GOOS=linux go build -ldflags="-w -s" -a -installsuffix cgo -o main .
 
-############################
-# STEP 2 build a small image
-############################
-FROM scratch
-COPY --from=builder /go/bin/main /go/bin/main
-ENTRYPOINT ["/go/bin/main"]
+FROM alpine:latest
+RUN apk --no-cache add ca-certificates
+WORKDIR /root/
+COPY --from=builder /go/src/github.com/bkenio/api/main .
+CMD ["./main"]
