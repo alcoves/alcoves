@@ -1,6 +1,7 @@
 FROM mhart/alpine-node:14
 
 ENV PORT 3000
+ENV NODE_ENV="production"
 
 RUN apk add git
 
