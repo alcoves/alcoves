@@ -1,6 +1,6 @@
 import '../styles/index.css';
 import Head from 'next/head';
-import { SnackbarProvider, } from 'notistack';
+import { Provider, } from '../utils/store';
 
 function App({ Component, pageProps }) {
   return (
@@ -8,9 +8,9 @@ function App({ Component, pageProps }) {
       <Head>
         <title>bken.io</title>
       </Head>
-      <SnackbarProvider maxSnack={3}>
+      <Provider>
         <Component {...pageProps} />
-      </SnackbarProvider>
+      </Provider>
     </>
   );  
 }
