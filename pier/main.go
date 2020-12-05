@@ -49,6 +49,7 @@ func setupRoutes(app *fiber.App) {
 
 	api.Post("/videos", auth.Protected(), routes.CreateVideo)
 	api.Delete("/videos/:id", auth.Protected(), routes.DeleteVideo)
+
 }
 
 func main() {
