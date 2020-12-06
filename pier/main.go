@@ -36,7 +36,7 @@ func initDatabase() {
 }
 
 func setupRoutes(app *fiber.App) {
-	api := app.Group("/api2", logger.New())
+	api := app.Group("/api", logger.New())
 
 	api.Get("/", routes.Hello)
 	api.Post("/login", routes.Login)
@@ -47,7 +47,7 @@ func setupRoutes(app *fiber.App) {
 	api.Post("/videos/:id/views", routes.CreateView)
 	api.Get("/videos/:id/versions", routes.GetVersions)
 
-	api.Post("/videos", auth.Protected(), routes.CreateVideo)
+	// api.Post("/videos", auth.Protected(), routes.CreateVideo)
 	api.Delete("/videos/:id", auth.Protected(), routes.DeleteVideo)
 
 	api.Get("/users/:id", routes.GetUser)
