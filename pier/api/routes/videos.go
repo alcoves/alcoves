@@ -14,7 +14,7 @@ func GetVideo(c *fiber.Ctx) error {
 	id := c.Params("id")
 	db := db.DBConn
 	var video models.Video
-	result := db.Where("id = ?", id).Find(&video)
+	result := db.Where("id = ? and visibility = 'public'", id).Find(&video)
 
 	if result.Error != nil {
 		return c.SendStatus(500)
@@ -32,7 +32,7 @@ func GetVideo(c *fiber.Ctx) error {
 func GetVideos(c *fiber.Ctx) error {
 	db := db.DBConn
 	var videos []models.Video
-	db.Find(&videos)
+	db.Find(&videos).Where("visibility = 'public'")
 	return c.JSON(videos)
 }
 
