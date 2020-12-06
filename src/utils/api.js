@@ -3,9 +3,9 @@ import { useState, } from 'react';
 
 function baseUrl() {
   if (process.env.NODE_ENV === 'production') {
-    return 'https://helm.bken.io/api2';
+    return 'https://bken.io/api';
   }
-  return 'http://localhost:4000/api2';
+  return 'http://localhost:4000/api';
 }
 
 function ssrApi(url, config) {
@@ -24,10 +24,27 @@ function lazyApi(url = '/', method = 'GET') {
     try {
       setCalled(true);
       setLoading(true);
+
+      if (overrides?.url) {
+        url = overrides.url;
+        delete overrides.url;
+      }
+
       const requestUrl = `${baseUrl()}${url}`;
-      const res = await axios({
+      const token = localStorage.getItem('token');
+
+      const axiosRequestConfig = {
         method,
         url: requestUrl,
+      };
+
+      if (token) {
+        axiosRequestConfig.headers = {};
+        axiosRequestConfig.headers.Authorization = `Bearer ${token}`;
+      }
+
+      const res = await axios({
+        ...axiosRequestConfig,
         ...overrides,
       });
       if (res.data) setData(res.data);

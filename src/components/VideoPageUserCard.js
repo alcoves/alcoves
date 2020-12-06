@@ -4,11 +4,8 @@ import { useEffect, } from 'react';
 import { lazyApi, } from '../utils/api';
 
 function VideoPageUserCard({ id }) {
-  const [getUser, { data, error, loading, called }] = lazyApi(`/users/${id}`);
-
-  useEffect(() => {
-    getUser();
-  }, []);
+  const [getUser, { data }] = lazyApi(`/users/${id}`);
+  useEffect(() => { getUser(); }, []);
 
   if (data) {
     return (
@@ -27,12 +24,12 @@ function VideoPageUserCard({ id }) {
             marginRight: '10px',
           }}
         >
-          <Link href={`/users/${data.user.username}`} passHref>
+          <Link href={`/u/${data.username}`} passHref>
             <img
               alt=''
               width={50}
               height={50}
-              src={data.user.avatar}
+              src={data.avatar}
               style={{
                 borderRadius: '50%',
                 cursor: 'pointer',
@@ -42,14 +39,14 @@ function VideoPageUserCard({ id }) {
         </div>
         <div style={{ height: '100%' }}>
           <Link
-            href={`/users/${data.user.username}`}
+            href={`/u/${data.username}`}
             style={{
               display: 'flex',
               alignItems: 'flex-end',
               height: '50%',
             }}
           >
-            <a>{data.user.username}</a>
+            <a>{data.username}</a>
           </Link>
           <div
             style={{

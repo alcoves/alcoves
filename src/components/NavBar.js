@@ -66,12 +66,16 @@ export default function Navigation() {
                   <Menu>
                     <Menu.Group>
                       <Menu.Item disabled> Profile (coming soon) </Menu.Item>
-                      <Menu.Item disabled> Editor (coming soon) </Menu.Item>
-                      <Menu.Item> 
-                        <Link href='/account'>
+                      <Link href='/studio'>
+                        <Menu.Item>                 
+                          Studio
+                        </Menu.Item>
+                      </Link>
+                      <Link href='/account'>
+                        <Menu.Item> 
                           Account
-                        </Link>
-                      </Menu.Item>
+                        </Menu.Item>
+                      </Link>
                     </Menu.Group>
                     <Menu.Divider />
                     <Menu.Group>

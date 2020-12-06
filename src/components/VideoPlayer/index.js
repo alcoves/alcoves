@@ -127,7 +127,6 @@ function VideoPlayer({ url }) {
       style={{ cursor: controlsVisible ? 'auto' : 'none' }}
     >
       <VideoWrapper
-        muted
         ref={vRef}
         id='bkenVideoPlayer'
         disableRemotePlayback
