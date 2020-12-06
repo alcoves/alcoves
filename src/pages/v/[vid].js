@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import { useRouter, } from 'next/router';
 import styled from 'styled-components';
 import moment from 'moment';
 import {
@@ -42,43 +43,34 @@ const VideoContainerWrapper = styled.div`
 // }
 
 export default function Video() {
-  const [getVideo, { data, error, loading, called }] = lazyApi('/videos/Fey6-8AGR');
-
-  if (error) {
-    return (
-      <div>
-        there was an error
-      </div>
-    );
-  }
+  const router = useRouter();
+  const { vid } = router.query;
+  const [getVideo, { data, error, loading }] = lazyApi();
 
   useEffect(() => {
-    if (!called) {
-      getVideo();
-    }
-  }, [called]);
+    if (vid) {
+      getVideo({ url: `/videos/${vid}` });
+    } 
+  }, [vid]);
 
-  // TODO :: Remove
-  const videoUrl = 'https://cdn.bken.io/v/sUqq0SBBFfu3dISHrssz_/hls/master.m3u8' || data.url;
+  if (error) {
+    return ( <div> There was an error </div> );
+  }
 
   if (loading) {
-    return (
-      <div>
-        loading
-      </div>
-    );
+    return ( <div> Loading... </div> );
   }
 
   if (data) {
     return (
-      <div>
+      <>
         <Head>
           <title>{data.title}</title>
         </Head>
         <Layout>
          
           <VideoContainerWrapper>
-            <VideoPlayer url={videoUrl} />
+            <VideoPlayer url={data.url} />
             <Container style={{ marginTop: '20px' }}>
               <div>
                 <div
@@ -107,14 +99,14 @@ export default function Video() {
             </Container>
           </VideoContainerWrapper>
         </Layout>
-      </div>
+      </>
     );
   }
 
   return (
-    <div>
+    <>
       how did we get here?
-    </div>
+    </>
   );
 }
 
