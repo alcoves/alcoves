@@ -8,6 +8,12 @@ function baseUrl() {
   return 'http://localhost:4000/api2';
 }
 
+function ssrApi(url, config) {
+  const requestUrl = `${baseUrl()}${url}`;
+  console.log(`server side request to ${requestUrl}`);
+  return axios(requestUrl, config);
+}
+
 function lazyApi(url = '/', method = 'GET') {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
@@ -38,5 +44,4 @@ function lazyApi(url = '/', method = 'GET') {
   return [call, { data, error, called, loading }];
 }
 
-export { lazyApi };
-export default lazyApi;
+export { ssrApi, lazyApi };

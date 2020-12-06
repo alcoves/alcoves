@@ -65,9 +65,13 @@ export default function Navigation() {
                 content={(
                   <Menu>
                     <Menu.Group>
-                      <Menu.Item> My Page </Menu.Item>
-                      <Menu.Item> Editor </Menu.Item>
-                      <Menu.Item> Account </Menu.Item>
+                      <Menu.Item disabled> Profile (coming soon) </Menu.Item>
+                      <Menu.Item disabled> Editor (coming soon) </Menu.Item>
+                      <Menu.Item> 
+                        <Link href='/account'>
+                          Account
+                        </Link>
+                      </Menu.Item>
                     </Menu.Group>
                     <Menu.Divider />
                     <Menu.Group>
