@@ -2,6 +2,7 @@ import { useContext, } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Pane, Avatar, Button, Menu, Popover, } from 'evergreen-ui';
+import Icon from './icon';
 import { Context, } from '../utils/store';
 
 export default function Navigation() {
@@ -12,7 +13,7 @@ export default function Navigation() {
       height={50}
       width='100vw'
       display='flex'
-      background='#212c34'
+      background='#fff'
       justifyContent='space-between'
     >
       <Pane
@@ -41,25 +42,46 @@ export default function Navigation() {
         justifyContent='flex-end' 
       >
         {authenticated ? (
-          <Link href='/account' passHref>
-            <Popover
-              content={(
-                <Menu>
-                  <Menu.Group>
-                    <Menu.Item> My Library</Menu.Item>
-                  </Menu.Group>
-                  <Menu.Divider />
-                  <Menu.Group>
-                    <Menu.Item onSelect={() => logout()} intent='danger'>
-                      Log out
-                    </Menu.Item>
-                  </Menu.Group>
-                </Menu>
-              )}
-            >
-              <Avatar cursor='pointer' name={user.username} size={35} />
-            </Popover>
-          </Link>
+          <>
+            <Pane marginRight={10}>
+              <Link href='/upload' passHref>
+                <a>
+                  <Icon
+                    width='24'
+                    height='24'
+                    fill='none'
+                    strokeWidth='2'
+                    name='upload-cloud'
+                    stroke='currentColor'
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                  />
+                </a>
+              </Link>
+            </Pane>
+      
+            <Link href='/account' passHref>
+              <Popover
+                content={(
+                  <Menu>
+                    <Menu.Group>
+                      <Menu.Item> My Page </Menu.Item>
+                      <Menu.Item> Editor </Menu.Item>
+                      <Menu.Item> Account </Menu.Item>
+                    </Menu.Group>
+                    <Menu.Divider />
+                    <Menu.Group>
+                      <Menu.Item onSelect={() => logout()} intent='danger'>
+                        Log out
+                      </Menu.Item>
+                    </Menu.Group>
+                  </Menu>
+                )}
+              >
+                <Avatar cursor='pointer' name={user.username} size={35} />
+              </Popover>
+            </Link>
+          </>
         )
           : (
             <Link href='/login' passHref>

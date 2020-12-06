@@ -1,27 +1,24 @@
-import { useContext, useState, } from 'react';
+import { useContext, useEffect, useState, } from 'react';
 import Link from 'next/link';
 import Router from 'next/router';
 import { Heading, Pane, TextInputField, Button, } from 'evergreen-ui';
-import api from '../utils/api';
+import { lazyApi, } from '../utils/api';
 import { Context, } from '../utils/store';
 
 export default function Login() {
   const { login } = useContext(Context);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
 
-  async function handleLogin() {
-    setLoading(true);
-    const { data } = await api('/login', {
-      method: 'POST',
-      data: { email, password },
-    });
-    setLoading(false);
-    login(data.token);
-    Router.push('/');
-  }
-  
+  const [loginRemote, { data, loading, error }] = lazyApi('/login', 'post');
+
+  useEffect(() => {
+    if (data) {
+      login(data.token);
+      Router.push('/');
+    }
+  }, [data]);
+
   return (
     <Pane
       height='100vh'
@@ -80,6 +77,16 @@ export default function Login() {
             placeholder='Password'
             onChange={e => setPassword(e.target.value)}
           />
+          {error && (
+            <Pane
+              width='100%'
+              padding='10px'
+              display='flex'
+              justifyContent='center'
+            >
+              <Heading color='red' size={200}>{error.message}</Heading>
+            </Pane>
+          )}
           <Button
             height={40}
             width='100%'
@@ -87,7 +94,12 @@ export default function Login() {
             isLoading={loading}
             appearance='primary'
             justifyContent='center'
-            onClick={handleLogin}
+            onClick={() => {
+              loginRemote({ data: {
+                email,
+                password,
+              }});
+            }}
           >
             Login
           </Button>

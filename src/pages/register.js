@@ -1,8 +1,8 @@
-import { useContext, useState, } from 'react';
+import { useContext, useEffect, useState, } from 'react';
 import Router from 'next/router';
 import Link from 'next/link';
 import { Heading, Pane, TextInputField, Button, } from 'evergreen-ui';
-import api from '../utils/api';
+import { lazyApi, } from '../utils/api';
 import { Context, } from '../utils/store';
 
 export default function Register() {
@@ -11,16 +11,15 @@ export default function Register() {
   const [password, setPassword] = useState('');
   const [cPassword, setCPassword] = useState('');
 
-  async function handleRegister() {
-    const { data } = await api('/register', {
-      method: 'POST',
-      data: { email, password },
-    });
-    // TODO :: Do some error handling and show errors
-    login(data.token);
-    Router.push('/');
-  }
-  
+  const [registerRemote, { data, error, loading }] = lazyApi('/register', 'post');
+
+  useEffect(() => {
+    if (data) {
+      login(data.token);
+      Router.push('/');
+    }
+  }, [data]);
+
   return (
     <Pane
       height='100vh'
@@ -90,13 +89,28 @@ export default function Register() {
             placeholder='Password'
             onChange={e => setCPassword(e.target.value)}
           />
+          {error && (
+            <Pane
+              width='100%'
+              padding='10px'
+              display='flex'
+              justifyContent='center'
+            >
+              <Heading color='red' size={200}>{error.message}</Heading>
+            </Pane>
+          )}
           <Button
             height={40}
             width='100%'
             intent='success'
+            isLoading={loading}
             appearance='primary'
             justifyContent='center'
-            onClick={handleRegister}
+            onClick={() => {
+              registerRemote({
+                data: { email, password },
+              });
+            }}
             disabled={!(email && (password ? password === cPassword : false))}
           >
             Register
