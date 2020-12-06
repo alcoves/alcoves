@@ -7,7 +7,7 @@ function Content({ children }) {
 
 const Layout = ({ children }) => (
   <>
-    <NavBar />
+    {/* <NavBar /> */}
     <Content>
       {children}
     </Content>

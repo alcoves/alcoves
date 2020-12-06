@@ -11,7 +11,7 @@ function index() {
           justifyContent='center'
         >
           <Heading size={500}>
-            We're revamping this page, sit tight!
+            We're working on some changes, check back later!
           </Heading>
         </Pane>
       </Layout>
