@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { useState, } from 'react';
 
 function baseUrl() {
   if (process.env.NODE_ENV === 'production') {
@@ -7,13 +8,35 @@ function baseUrl() {
   return 'http://localhost:4000/api2';
 }
 
-export default async function api(url, config = {}) {
-  try {
-    const requestUrl = `${baseUrl()}${url}`;
-    const res = await axios(requestUrl, config);
-    return res;
-  } catch (error) {
-    console.error('there was an api error');
-    throw error;
+function lazyApi(url = '/', method = 'GET') {
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+  const [called, setCalled] = useState(false);
+  const [loading, setLoading] = useState(false);
+  
+  async function call(overrides) {
+    try {
+      setCalled(true);
+      setLoading(true);
+      const requestUrl = `${baseUrl()}${url}`;
+      const res = await axios({
+        method,
+        url: requestUrl,
+        ...overrides,
+      });
+      if (res.data) setData(res.data);
+    } catch (err) {
+      console.error(err);
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+
+    return 'api request sent';
   }
+
+  return [call, { data, error, called, loading }];
 }
+
+export { lazyApi };
+export default lazyApi;
