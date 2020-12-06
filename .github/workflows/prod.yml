@@ -1,26 +1,43 @@
 name: Deploy
+
 env:
-  CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+  DO_API_KEY: ${{ secrets.DO_API_KEY }}
+  NOMAD_TOKEN: ${{ secrets.NOMAD_TOKEN }}
+  NOMAD_ADDRESS: ${{ secrets.NOMAD_ADDRESS }}
+
 on:
   push:
     branches:
       - master
+
 jobs:
-  deploy:
-    name: Deploy to Prod
+  deploy-nomad:
+    name: Deploy to Nomad
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js 12.x
-        uses: actions/setup-node@v1
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
         with:
-          node-version: 12.x
+          token: ${{ secrets.DO_API_KEY }}
 
-      - name: Install dependencies
-        run: yarn
+      - name: Build container image
+        run: docker build -t registry.digitalocean.com/bken/web:$GITHUB_SHA -t registry.digitalocean.com/bken/web:latest .
 
-      - name: Build App
-        run: yarn build
+      - name: Login to DigitalOcean Docker Registry
+        run: doctl registry login --expiry-seconds 600
 
-      - name: Deploy to Cloudflare
-        run: npx wrangler publish
+      - name: Push image to DigitalOcean Container Registry
+        run: docker push registry.digitalocean.com/bken/web
+
+      - name: Deploy to Prod
+        env:
+          NOMAD_TOKEN: ${{ secrets.NOMAD_TOKEN }}
+          NOMAD_ADDRESS: ${{ secrets.NOMAD_ADDRESS }}
+        run: |
+          wget -q https://releases.hashicorp.com/nomad/0.12.9/nomad_0.12.9_linux_amd64.zip
+          sudo apt install unzip -y && unzip nomad_0.12.9_linux_amd64.zip
+          sed -i "s+:latest+:${GITHUB_SHA}+g" job.hcl
+          ./nomad job run -output job.hcl >> job.json
+          curl --request POST --data @job.json "http://${NOMAD_ADDRESS}:4646/v1/jobs" -H "X-Nomad-Token: ${NOMAD_TOKEN}"
