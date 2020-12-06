@@ -1,4 +1,4 @@
-job "api2" {
+job "api" {
   priority    = 100
   datacenters = ["dc1"]
   type        = "service"
@@ -19,7 +19,7 @@ job "api2" {
       min_healthy_time = "30s"
     }
 
-    task "api2" {
+    task "api" {
       driver = "docker"
 
       template {
@@ -69,7 +69,7 @@ job "api2" {
 
       service {
         port = "http"
-        tags = ["urlprefix-/api2"]
+        tags = ["urlprefix-/api"]
 
         connect {
           sidecar_service {}

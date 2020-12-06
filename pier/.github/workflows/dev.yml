@@ -1,37 +1,30 @@
 name: Dev
 
-on:
-  push:
-    branches:
-      - !master
+on: [push, pull_request]
 
 env:
   JWT_KEY: ${{ secrets.JWT_KEY }}
   DO_API_KEY: ${{ secrets.DO_API_KEY }}
+  MG_API_KEY: ${{ secrets.MG_API_KEY }}
+  NOMAD_TOKEN: ${{ secrets.NOMAD_TOKEN }}
   DO_ENDPOINT: nyc3.digitaloceanspaces.com
+  WASABI_ENDPOINT: us-east-2.wasabisys.com
+  NOMAD_ADDRESS: ${{ secrets.NOMAD_ADDRESS }}
+  PG_CONNECTION_STRING: ${{ secrets.MG_API_KEY }}
   DO_ACCESS_KEY_ID: ${{ secrets.DO_ACCESS_KEY_ID }}
   DO_SECRET_ACCESS_KEY: ${{ secrets.DO_SECRET_ACCESS_KEY }}
   DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
-  WASABI_ENDPOINT: us-east-2.wasabisys.com
   WASABI_ACCESS_KEY_ID: ${{ secrets.WASABI_ACCESS_KEY_ID }}
   WASABI_SECRET_ACCESS_KEY: ${{ secrets.WASABI_SECRET_ACCESS_KEY }}
-  NOMAD_TOKEN: ${{ secrets.NOMAD_TOKEN }}
-  NOMAD_ADDRESS: ${{ secrets.NOMAD_ADDRESS }}
-  MG_API_KEY: ${{ secrets.MG_API_KEY }}
 
 jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
     steps:
-      - uses: supercharge/mongodb-github-action@1.3.0
+      - name: Install Go
+        uses: actions/setup-go@v2
         with:
-          mongodb-version: 4.4
+          go-version: 1.15.x
       - uses: actions/checkout@v2
-      - name: Use Node.js 12.x
-        uses: actions/setup-node@v1
-        with:
-          node-version: 12.x
-      - run: touch ./.env
-      - run: yarn
-      - run: yarn test
+      - run: go build main.go
