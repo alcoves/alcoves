@@ -32,9 +32,6 @@ func Register(c *fiber.Ctx) error {
 		Password: getHashedPassword(userInput.Password),
 	}
 
-	err := db.Create(&user)
-	if err != nil {
-		return c.Status(500).SendString("failed to create user")
-	}
+	db.Create(&user)
 	return c.Status(200).SendString("user account created")
 }
