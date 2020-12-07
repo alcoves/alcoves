@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useState, } from 'react';
+import { useEffect, useState, } from 'react';
 
 function baseUrl() {
   if (process.env.NODE_ENV === 'production') {
@@ -8,13 +8,49 @@ function baseUrl() {
   return 'http://localhost:4000/api';
 }
 
-function ssrApi(url, config) {
-  const requestUrl = `${baseUrl()}${url}`;
-  console.log(`server side request to ${requestUrl}`);
-  return axios(requestUrl, config);
+function useApi(url = '/', overrides) {
+  let token;
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+  const [called, setCalled] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setCalled(true);
+    setLoading(true);
+
+    const requestUrl = `${baseUrl()}${url}`;
+    const axiosRequestConfig = {
+      url: requestUrl,
+      method: 'GET',
+    };
+  
+    if (process.browser) {
+      token = localStorage.getItem('token');
+    }
+  
+    if (token) {
+      axiosRequestConfig.headers = {};
+      axiosRequestConfig.headers.Authorization = `Bearer ${token}`;
+    }
+  
+    axios({
+      ...axiosRequestConfig,
+      ...overrides,
+    }).then((res) => {
+      if (res.data) setData(res.data);
+    }).catch((err) => {
+      console.error(err);
+      setError(err);
+    }).then(() => {
+      setLoading(false);
+    });
+  }, []);
+
+  return { data, error, called, loading };
 }
 
-function lazyApi(url = '/', method = 'GET') {
+function useLazyApi(url = '/', method = 'GET') {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [called, setCalled] = useState(false);
@@ -31,12 +67,15 @@ function lazyApi(url = '/', method = 'GET') {
       }
 
       const requestUrl = `${baseUrl()}${url}`;
-      const token = localStorage.getItem('token');
-
       const axiosRequestConfig = {
         method,
         url: requestUrl,
       };
+
+      let token;
+      if (process.browser) {
+        token = localStorage.getItem('token');
+      }
 
       if (token) {
         axiosRequestConfig.headers = {};
@@ -61,4 +100,4 @@ function lazyApi(url = '/', method = 'GET') {
   return [call, { data, error, called, loading }];
 }
 
-export { ssrApi, lazyApi };
+export { useApi, useLazyApi };

@@ -11,15 +11,15 @@ export default function Navigation() {
   return (
     <Pane
       height={50}
-      width='100vw'
+      width='100%'
       display='flex'
       background='#fff'
       justifyContent='space-between'
     >
       <Pane
-        display='flex'
-        paddingLeft={10}
         width={70}
+        display='flex'
+        marginLeft={10}
         alignItems='center'
         justifyContent='flex-start' 
       >
@@ -37,7 +37,7 @@ export default function Navigation() {
       <Pane
         width={70}
         display='flex'
-        paddingRight={10}
+        marginRight={10}
         alignItems='center'
         justifyContent='flex-end' 
       >

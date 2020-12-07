@@ -17,11 +17,10 @@ export default class MyDocument extends Document {
     const { css, hydrationScript } = this.props;
 
     return (
-      <Html>
+      <Html lang='en'>
         <Head>
           <link rel='shortcut icon' href='./favicon.ico' />
           <style dangerouslySetInnerHTML={{ __html: css }} />
-          {/* <link href='https://fonts.googleapis.com/css?family=Nunito:400,700,800&display=swap' rel='stylesheet' /> */}
           <meta name='version' content='%REACT_APP_GIT_SHA%' />
           <meta property='og:title' content='bken.io' />
           <meta property='og:url' content='https://bken.io' />
