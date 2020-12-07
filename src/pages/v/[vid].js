@@ -2,11 +2,8 @@ import Head from 'next/head';
 import { useRouter, } from 'next/router';
 import styled from 'styled-components';
 import moment from 'moment';
-import {
-  Container,
-  Typography,
-} from '@material-ui/core';
 import { useEffect, } from 'react';
+import { Heading, Text, Pane, } from 'evergreen-ui';
 import Layout from '../../components/Layout';
 import { useApiLazy, } from '../../utils/api';
 import VideoPlayer from '../../components/VideoPlayer/index';
@@ -68,10 +65,9 @@ export default function Video() {
           <title>{data.title}</title>
         </Head>
         <Layout>
-         
           <VideoContainerWrapper>
             <VideoPlayer url={data.url} />
-            <Container style={{ marginTop: '20px' }}>
+            <Pane marginTop={20} marginLeft={20} marginRight={20}>
               <div>
                 <div
                   style={{
@@ -82,21 +78,21 @@ export default function Video() {
                     justifyContent: 'space-between',
                   }}
                 >
-                  <Typography variant='h4'>{data.title}</Typography>
+                  <Heading size={600}>{data.title}</Heading>
                 </div>
                 <div>
                   <SubtitleContainer>
                     <div>
-                      <Typography variant='body2'>
-                        {`${abbreviateNumber(data.views)} views · ${moment(Number(data.createdAt)).fromNow()}`}
-                      </Typography>
-                      <Typography variant='subtitle2'>{data.visibility}</Typography>
+                      <Text size={400}>
+                        {`${abbreviateNumber(data.views)} views · ${moment(data.createdAt).fromNow()}`}
+                      </Text>
+                      <Text size={400}>{data.visibility}</Text>
                     </div>
                   </SubtitleContainer>
                 </div>
               </div>
-              <VideoPageUserCard id={data.user} />
-            </Container>
+              <VideoPageUserCard id={data.userId} />
+            </Pane>
           </VideoContainerWrapper>
         </Layout>
       </>
