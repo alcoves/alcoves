@@ -20,6 +20,7 @@ type Video struct {
 	User       string  `gorm:"index" json:"user"`
 	Views      int     `gorm:"default:0" json:"views"`
 	Visibility string  `gorm:"default:unlisted" json:"visibility"`
+	Thumbnail  string  `gorm:"default:https://cdn.bken.io/files/default-thumbnail-sm.jpg" json:"thumbnail"`
 }
 
 // VideoView 🎥
