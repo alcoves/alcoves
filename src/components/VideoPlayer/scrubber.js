@@ -5,6 +5,7 @@ const Slider = styled.input`
   width: 100%;
   height: 10px;
   outline: none;
+  border: solid red 1px;
 `;
 
 function Duration({ vRef = {} }) {
@@ -24,6 +25,7 @@ function Duration({ vRef = {} }) {
     const positionUpdate = (vRef.current.currentTime / vRef.current.duration) * 100;
     setProgress(positionUpdate);
     const seekPosition = vRef.current.duration * (target.value / 100);
+    console.log({ seekPosition });
     vRef.current.currentTime = seekPosition;
   }
 
@@ -36,7 +38,7 @@ function Duration({ vRef = {} }) {
       name='volume'
       value={progress}
       onChange={handleChange}
-      style={{ color: 'white', height: '50px'}}
+      style={{ color: 'white' }}
     />
   );
 }

@@ -55,7 +55,6 @@ const UpperControls = styled.div`
 const LowerControls = styled.div`
   display: flex;
   overflow: none;
-  padding-bottom: 5px;
   flex-direction: row;
   width: calc(100% - 45px);
   justify-content: space-between;
