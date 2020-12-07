@@ -1,10 +1,10 @@
 
 import Link from 'next/link';
 import { useEffect, } from 'react';
-import { lazyApi, } from '../utils/api';
+import { useLazyApi, } from '../utils/api';
 
 function VideoPageUserCard({ id }) {
-  const [getUser, { data }] = lazyApi(`/users/${id}`);
+  const [getUser, { data }] = useLazyApi(`/users/${id}`);
   useEffect(() => { getUser(); }, []);
 
   if (data) {

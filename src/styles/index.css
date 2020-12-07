@@ -1,7 +1,6 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Nunito', sans-serif;
   /* overflow-y: scroll; */
 }
 
@@ -31,18 +30,18 @@ a:active {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background-image: linear-gradient(to bottom, #23272a, #2f3438);
-  /* background: #2c3135; */
+  /* background-image: linear-gradient(to bottom, #2c2c2c, #3d3d3d); */
+  background: #fff;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #3e4449;
+  background: #d8dadb;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: rgb(58, 65, 70);
+  background: rgb(212, 213, 218);
 }
 
 video {

@@ -2,7 +2,7 @@
 import axios from 'axios';
 import React, { useState, useEffect, } from 'react';
 import { Heading, Pane, } from 'evergreen-ui';
-import { lazyApi, } from '../../utils/api';
+import { useLazyApi, } from '../../utils/api';
 
 export default function UploadProgress({ file }) {
   const [progress, setProgress] = useState(0);
@@ -14,7 +14,7 @@ export default function UploadProgress({ file }) {
       error: completeUploadError,
       loading: completeUploadLoading,
     },
-  ] = lazyApi('/uploads', 'put');
+  ] = useLazyApi('/uploads', 'put');
 
   const [
     createUpload,
@@ -23,7 +23,7 @@ export default function UploadProgress({ file }) {
       error: createUploadError,
       loading: createUploadLoading,
     },
-  ] = lazyApi('/uploads', 'post');
+  ] = useLazyApi('/uploads', 'post');
 
   useEffect(() => {
     createUpload({

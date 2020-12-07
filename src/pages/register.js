@@ -2,7 +2,7 @@ import { useContext, useEffect, useState, } from 'react';
 import Router from 'next/router';
 import Link from 'next/link';
 import { Heading, Pane, TextInputField, Button, } from 'evergreen-ui';
-import { lazyApi, } from '../utils/api';
+import { useLazyApi, } from '../utils/api';
 import { Context, } from '../utils/store';
 
 export default function Register() {
@@ -11,7 +11,7 @@ export default function Register() {
   const [password, setPassword] = useState('');
   const [cPassword, setCPassword] = useState('');
 
-  const [registerRemote, { data, error, loading }] = lazyApi('/register', 'post');
+  const [registerRemote, { data, error, loading }] = useLazyApi('/register', 'post');
 
   useEffect(() => {
     if (data) {

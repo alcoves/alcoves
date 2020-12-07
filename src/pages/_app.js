@@ -1,6 +1,18 @@
 import '../styles/index.css';
 import Head from 'next/head';
+import { merge, } from 'lodash';
+import { ThemeProvider, defaultTheme, } from 'evergreen-ui';
 import { Provider, } from '../utils/store';
+
+const theme = merge(defaultTheme, {
+  // typography: {
+  //   fontFamilies: {
+  //     ui: 'Montserrat',
+  //     mono: 'Montserrat',
+  //     display: 'Montserrat',
+  //   },
+  // },
+});
 
 function App({ Component, pageProps }) {
   return (
@@ -8,9 +20,11 @@ function App({ Component, pageProps }) {
       <Head>
         <title>bken.io</title>
       </Head>
-      <Provider>
-        <Component {...pageProps} />
-      </Provider>
+      <ThemeProvider value={theme}>
+        <Provider>
+          <Component {...pageProps} />
+        </Provider>
+      </ThemeProvider>
     </>
   );  
 }
