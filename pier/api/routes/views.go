@@ -39,8 +39,8 @@ func CreateView(c *fiber.Ctx) error {
 	}
 
 	view := models.VideoView{
-		IP:    requestingIPHeader,
-		Video: id,
+		VideoID: id,
+		IP:      requestingIPHeader,
 	}
 	db.Create(&view)
 	return c.SendString("video view counted")

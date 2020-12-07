@@ -17,7 +17,7 @@ type Video struct {
 	URL        string  `json:"url"`
 	Title      string  `json:"title"`
 	Duration   float32 `json:"duration"`
-	User       string  `gorm:"index" json:"user"`
+	UserID     string  `gorm:"index" json:"userId"`
 	Views      int     `gorm:"default:0" json:"views"`
 	Visibility string  `gorm:"default:unlisted" json:"visibility"`
 	Thumbnail  string  `gorm:"default:https://cdn.bken.io/files/default-thumbnail-sm.jpg" json:"thumbnail"`
@@ -30,9 +30,9 @@ type VideoView struct {
 	UpdatedAt time.Time      `json:"updatedAt"`
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"deletedAt"`
 
-	IP    string `json:"ip"`
-	Video string `json:"video"`
-	User  string `json:"user"`
+	IP      string `json:"ip"`
+	VideoID string `json:"videoId"`
+	User    string `json:"user"`
 }
 
 // VideoVersion is the representation of a single preset ▶
