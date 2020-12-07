@@ -2,7 +2,7 @@ import { useContext, } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Pane, Avatar, Button, Menu, Popover, } from 'evergreen-ui';
-import Icon from './icon';
+import Icon from './Icon';
 import { Context, } from '../utils/store';
 
 export default function Navigation() {

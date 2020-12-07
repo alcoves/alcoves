@@ -1,9 +1,9 @@
 import { useContext, useEffect, } from 'react';
 import { Heading, Pane, Button, Spinner, } from 'evergreen-ui';
 import Link from 'next/link';
-import Layout from '../components/Layout';
-import { Context, } from '../utils/store';
-import { useApiLazy, } from '../utils/api';
+import Layout from '../../components/Layout';
+import { Context, } from '../../utils/store';
+import { useApiLazy, } from '../../utils/api';
 
 export default function studio() {
   const [getVideos, { data, loading }] = useApiLazy();
