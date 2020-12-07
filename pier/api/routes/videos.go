@@ -30,9 +30,33 @@ func GetVideo(c *fiber.Ctx) error {
 
 // GetVideos returns all videos
 func GetVideos(c *fiber.Ctx) error {
+	userID := c.Query("userId")
+
 	db := db.DBConn
 	videos := []models.Video{}
-	db.Where("visibility = 'public'").Order("updated_at desc").Find(&videos)
+
+	if userID != "" {
+		visibility := c.Query("visibility")
+
+		if visibility == "all" {
+			// check that they have permissions
+			fmt.Println("querying for all videos", userID)
+			db.
+				Where("user_id = ?", userID).
+				Order("created_at desc").
+				Find(&videos)
+		} else {
+			fmt.Println("querying for public videos", userID)
+			db.
+				Where("visibility = 'public' and user_id = ?", userID).
+				Order("created_at desc").
+				Find(&videos)
+		}
+	} else {
+		fmt.Println("returning all videos query")
+		db.Where("visibility = 'public'").Order("created_at desc").Find(&videos)
+	}
+
 	return c.JSON(videos)
 }
 
