@@ -9,7 +9,7 @@ function FullScreenButton({ vRef }) {
       stroke='#fff'
       name='maximize'
       onClick={() => {
-        vRef.current.requestPictureInPicture();
+        vRef.current.requestFullscreen();
       }}
     />
   );
