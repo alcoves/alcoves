@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core';
 import { useEffect, } from 'react';
 import Layout from '../../components/Layout';
-import { useLazyApi, } from '../../utils/api';
+import { useApiLazy, } from '../../utils/api';
 import VideoPlayer from '../../components/VideoPlayer/index';
 import abbreviateNumber from '../../utils/abbreviateNumber';
 import VideoPageUserCard from '../../components/VideoPageUserCard';
@@ -45,7 +45,7 @@ const VideoContainerWrapper = styled.div`
 export default function Video() {
   const router = useRouter();
   const { vid } = router.query;
-  const [getVideo, { data, error, loading }] = useLazyApi();
+  const [getVideo, { data, error, loading }] = useApiLazy();
 
   useEffect(() => {
     if (vid) {
