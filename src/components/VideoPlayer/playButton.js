@@ -1,9 +1,9 @@
 import React, { useEffect, useState, } from 'react';
-import { IconButton, } from '@material-ui/core';
-import { PlayArrowOutlined, PauseOutlined, } from '@material-ui/icons';
+import Icon from '../Icon';
 
 function PlayButton({ vRef }) {
   const [paused, setPaused] = useState(vRef.current.paused);
+  const iconName = paused ? 'play' : 'pause';
 
   useEffect(() => {
     const video = vRef.current;
@@ -24,9 +24,13 @@ function PlayButton({ vRef }) {
   }
 
   return (
-    <IconButton size='small' onClick={handleClick}>
-      {paused ? <PlayArrowOutlined /> : <PauseOutlined />}
-    </IconButton>
+    <Icon
+      width={20}
+      height={20}
+      stroke='#fff'
+      name={iconName}
+      onClick={handleClick}
+    />
   );
 }
 

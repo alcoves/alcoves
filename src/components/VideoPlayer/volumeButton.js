@@ -1,6 +1,5 @@
 import React, { useEffect, useState, } from 'react';
-import { IconButton, } from '@material-ui/core';
-import { VolumeOffOutlined, VolumeUpOutlined, VolumeDownOutlined, } from '@material-ui/icons';
+import Icon from '../Icon';
 
 function VolumeButton({ vRef }) {
   const [volume, setVolume] = useState(vRef.current.volume);
@@ -16,16 +15,21 @@ function VolumeButton({ vRef }) {
     vRef.current.volume? vRef.current.volume = 0 : vRef.current.volume = .5;
   }
 
-  function volumeIcon() {
-    if (!volume) return <VolumeOffOutlined />;
-    if (volume < .50) return <VolumeDownOutlined />;
-    return <VolumeUpOutlined />;
+  function volumeIconName() {
+    if (!volume) return 'volume-x';
+    if (volume < .60) return 'volume-1';
+    if (volume < .30) return 'volume';
+    return 'volume-2';
   }
 
   return (
-    <IconButton size='small' onClick={handleClick}>
-      {volumeIcon()}
-    </IconButton>
+    <Icon
+      width={20}
+      height={20}
+      stroke='#fff'
+      onClick={handleClick}
+      name={volumeIconName()}
+    />
   );
 }
 

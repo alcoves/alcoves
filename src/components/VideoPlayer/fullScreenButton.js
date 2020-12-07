@@ -1,16 +1,17 @@
 import React from 'react';
-import { IconButton, } from '@material-ui/core';
-import { FullscreenOutlined, } from '@material-ui/icons';
+import Icon from '../Icon';
 
 function FullScreenButton({ vRef }) {
-  function handleClick() {
-    vRef.current.requestFullscreen();
-  }
-
   return (
-    <IconButton size='small' onClick={handleClick}>
-      <FullscreenOutlined />
-    </IconButton>
+    <Icon
+      width={20}
+      height={20}
+      stroke='#fff'
+      name='maximize'
+      onClick={() => {
+        vRef.current.requestPictureInPicture();
+      }}
+    />
   );
 }
 
