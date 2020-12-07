@@ -31,8 +31,8 @@ func GetVideo(c *fiber.Ctx) error {
 // GetVideos returns all videos
 func GetVideos(c *fiber.Ctx) error {
 	db := db.DBConn
-	var videos []models.Video
-	db.Find(&videos).Where("visibility = 'public'")
+	videos := []models.Video{}
+	db.Where("visibility = 'public'").Order("updated_at desc").Find(&videos)
 	return c.JSON(videos)
 }
 
