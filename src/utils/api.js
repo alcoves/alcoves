@@ -50,7 +50,7 @@ function useApi(url = '/', overrides) {
   return { data, error, called, loading };
 }
 
-function useLazyApi(url = '/', method = 'GET') {
+function useApiLazy(url = '/', method = 'GET') {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [called, setCalled] = useState(false);
@@ -100,4 +100,4 @@ function useLazyApi(url = '/', method = 'GET') {
   return [call, { data, error, called, loading }];
 }
 
-export { useApi, useLazyApi };
+export { useApi, useApiLazy };

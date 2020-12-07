@@ -2,7 +2,7 @@ import { useContext, useEffect, useState, } from 'react';
 import Link from 'next/link';
 import Router from 'next/router';
 import { Heading, Pane, TextInputField, Button, } from 'evergreen-ui';
-import { useLazyApi, } from '../utils/api';
+import { useApiLazy, } from '../utils/api';
 import { Context, } from '../utils/store';
 
 export default function Login() {
@@ -10,7 +10,7 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const [loginRemote, { data, loading, error }] = useLazyApi('/login', 'post');
+  const [loginRemote, { data, loading, error }] = useApiLazy('/login', 'post');
 
   useEffect(() => {
     if (data) {
