@@ -1,16 +1,17 @@
 import React from 'react';
-import { IconButton, } from '@material-ui/core';
-import { PictureInPictureOutlined, } from '@material-ui/icons';
+import Icon from '../Icon';
 
 function PictureInPictureButton({ vRef }) {
-  function handleClick() {
-    vRef.current.requestPictureInPicture();
-  }
-
   return (
-    <IconButton size='small' onClick={handleClick}>
-      <PictureInPictureOutlined />
-    </IconButton>
+    <Icon
+      width={20}
+      height={20}
+      stroke='#fff'
+      name='monitor'
+      onClick={() => {
+        vRef.current.requestPictureInPicture();
+      }}
+    />
   );
 }
 

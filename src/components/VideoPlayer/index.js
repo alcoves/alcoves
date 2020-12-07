@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect, } from 'react';
 
 import qs from 'query-string';
 import styled from 'styled-components';
-import { CircularProgress, Fade, } from '@material-ui/core';
+import { Spinner, } from 'evergreen-ui';
 
 import Scrubber from './scrubber';
 import Duration from './duration';
@@ -138,32 +138,30 @@ function VideoPlayer({ url }) {
 
       {buffering && (
         <BufferingWrapper>
-          <CircularProgress size={60} thickeness={6} />
+          <Spinner size={64} />
         </BufferingWrapper>
       )}
  
       {hls && vRef && vRef.current && (
-        <Fade in={controlsVisible}>
-          <ControlsWrapper controlsVisible={controlsVisible}>
-            <UpperControls onClick={togglePlay} />
-            <LowerControls>
-              <Scrubber vRef={vRef} />
-            </LowerControls>
-            <LowerControls>
-              <LowerControlRow>
-                <PlayButton vRef={vRef} />
-                <VolumeButton vRef={vRef} />
-                <VolumeSlider vRef={vRef} />
-                <Duration vRef={vRef} />
-              </LowerControlRow>
-              <LowerControlRow>
-                <QualitySelector hls={hls} />
-                <PictureInPictureButton vRef={vRef} />
-                <FullScreenButton vRef={vRef} />
-              </LowerControlRow>
-            </LowerControls>
-          </ControlsWrapper>
-        </Fade>
+        <ControlsWrapper controlsVisible={controlsVisible}>
+          <UpperControls onClick={togglePlay} />
+          <LowerControls>
+            <Scrubber vRef={vRef} />
+          </LowerControls>
+          <LowerControls>
+            <LowerControlRow>
+              <PlayButton vRef={vRef} />
+              <VolumeButton vRef={vRef} />
+              <VolumeSlider vRef={vRef} />
+              <Duration vRef={vRef} />
+            </LowerControlRow>
+            <LowerControlRow>
+              <QualitySelector hls={hls} />
+              <PictureInPictureButton vRef={vRef} />
+              <FullScreenButton vRef={vRef} />
+            </LowerControlRow>
+          </LowerControls>
+        </ControlsWrapper>
       )}
     </Wrapper>
   );

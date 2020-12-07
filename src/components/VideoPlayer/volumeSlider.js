@@ -1,5 +1,4 @@
 import React, { useEffect, useState, } from 'react';
-import { Slider, } from '@material-ui/core';
 
 function VolumeButton({ vRef }) {
   const [volume, setVolume] = useState(vRef.current.volume * 100);
@@ -11,12 +10,17 @@ function VolumeButton({ vRef }) {
     return () => video.removeEventListener('volumechange', handleVolume);
   }, [vRef]);
 
-  function handleChange(e, newValue) {
-    vRef.current.volume = newValue / 100;
+  function handleChange({ target }) {
+    vRef.current.volume = target.value / 100;
   }
 
   return (
-    <Slider
+    <input
+      id='vol'
+      min='0'
+      max='100'
+      type='range'
+      name='volume'
       value={volume}
       onChange={handleChange}
       style={{ width: '60px', color: 'white', marginLeft: '10px' }}

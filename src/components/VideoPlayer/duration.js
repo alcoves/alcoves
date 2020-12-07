@@ -1,5 +1,5 @@
 import React, { useEffect, useState, } from 'react';
-import { Typography, } from '@material-ui/core';
+import { Heading, } from 'evergreen-ui';
 import videoDuration from '../../utils/videoDuration';
 
 function Duration({ vRef }) {
@@ -17,9 +17,9 @@ function Duration({ vRef }) {
   }, [vRef]);
 
   return (
-    <Typography variant='subtitle1' style={{ marginLeft: '15px' }}>
+    <Heading size={400} color='white' marginLeft={15}>
       {time}
-    </Typography>
+    </Heading>
   );
 }
 

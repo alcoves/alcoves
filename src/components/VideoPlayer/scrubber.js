@@ -1,5 +1,11 @@
 import React, { useEffect, useState, } from 'react';
-import { Slider, } from '@material-ui/core';
+import styled from 'styled-components';
+
+const Slider = styled.input`
+  width: 100%;
+  height: 10px;
+  outline: none;
+`;
 
 function Duration({ vRef = {} }) {
   const [progress, setProgress] = useState(vRef.current.currentTime / vRef.current.duration * 100);
@@ -14,17 +20,23 @@ function Duration({ vRef = {} }) {
     return () => video.removeEventListener('timeupdate', timeUpdate);
   }, [vRef]);
 
-  function handleChange(e, newValue) {
+  function handleChange({ target }) {
     const positionUpdate = (vRef.current.currentTime / vRef.current.duration) * 100;
     setProgress(positionUpdate);
-    const seekPosition = vRef.current.duration * (newValue / 100);
+    const seekPosition = vRef.current.duration * (target.value / 100);
     vRef.current.currentTime = seekPosition;
   }
 
   return (
     <Slider
+      id='vol'
+      min='0'
+      max='100'
+      type='range'
+      name='volume'
       value={progress}
       onChange={handleChange}
+      style={{ color: 'white', height: '50px'}}
     />
   );
 }

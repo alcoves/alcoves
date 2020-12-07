@@ -1,6 +1,6 @@
 import React, { useState, } from 'react';
 import { Menu, MenuItem, IconButton, } from '@material-ui/core';
-import { SettingsOutlined, } from '@material-ui/icons';
+import Icon from '../Icon';
 
 function QualitySelector({ hls }) {
   const [settingsEl, setSettingsEl] = useState(null);
@@ -9,7 +9,12 @@ function QualitySelector({ hls }) {
   return (
     <div>
       <IconButton size='small' onClick={(e) => { setSettingsEl(e.currentTarget); }}>
-        <SettingsOutlined />
+        <Icon
+          width={20}
+          height={20}
+          stroke='#fff'
+          name='settings'
+        />
       </IconButton>
       <Menu
         keepMounted

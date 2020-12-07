@@ -10,9 +10,10 @@ export default function Icon(props) {
       stroke='currentColor'
       strokeLinecap='round'
       strokeLinejoin='round'
+      style={{ padding: 5 }}
       {...props}
     >
-      <use xlinkHref={`feather.svg#${props.name}`} />
+      <use xlinkHref={`/feather.svg#${props.name}`} />
     </svg>
   );
 }
