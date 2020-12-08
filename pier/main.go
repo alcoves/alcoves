@@ -44,6 +44,7 @@ func setupRoutes(app *fiber.App) {
 
 	api.Get("/videos", routes.GetVideos)
 	api.Get("/videos/:id", routes.GetVideo)
+	api.Patch("/videos/:id", routes.PatchVideo)
 	api.Post("/videos/:id/views", routes.CreateView)
 	api.Get("/videos/:id/versions", routes.GetVersions)
 

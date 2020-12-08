@@ -14,7 +14,12 @@ func GetVideo(c *fiber.Ctx) error {
 	id := c.Params("id")
 	db := db.DBConn
 	var video models.Video
-	result := db.Where("id = ? and visibility = 'public'", id).Find(&video)
+	result := db.Where("id = ?", id).Find(&video)
+
+	if video.Visibility != "public" {
+		// TODO :: Make sure that the user requesting is the owner
+		// return c.SendStatus(403)
+	}
 
 	if result.Error != nil {
 		return c.SendStatus(500)
@@ -40,7 +45,7 @@ func GetVideos(c *fiber.Ctx) error {
 		visibility := c.Query("visibility")
 
 		if visibility == "all" {
-			// check that they have permissions
+			// TODO :: check that they have permissions
 			fmt.Println("querying for all videos", userID)
 			db.
 				Where("user_id = ?", userID).
@@ -78,6 +83,25 @@ func CreateVideo(c *fiber.Ctx) error {
 	video.ID = id
 	db.Create(&video)
 	return c.JSON(video)
+}
+
+// PatchVideo creates a new video
+func PatchVideo(c *fiber.Ctx) error {
+	id := c.Params("id")
+	db := db.DBConn
+
+	inputVideo := new(models.Video)
+	c.BodyParser(inputVideo)
+
+	video := new(models.Video)
+	db.Where("id = ?", id).Find(&video)
+
+	if inputVideo.Title != "" {
+		video.Title = inputVideo.Title
+	}
+
+	db.Save(&video)
+	return c.SendString("Video successfully updated")
 }
 
 // DeleteVideo creates a new video
