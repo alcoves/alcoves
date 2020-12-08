@@ -43,12 +43,19 @@ export default function Video() {
   const router = useRouter();
   const { vid } = router.query;
   const [getVideo, { data, error, loading }] = useApiLazy();
+  const [watchVideo, { called: watchVideoCalled }] = useApiLazy();
 
   useEffect(() => {
     if (vid) {
       getVideo({ url: `/videos/${vid}` });
     } 
   }, [vid]);
+
+  useEffect(() => {
+    if (data && vid && !watchVideoCalled) {
+      watchVideo({ method: 'post', url: `/views/${vid}` });
+    } 
+  }, [data]);
 
   if (error) {
     return ( <div> There was an error </div> );
