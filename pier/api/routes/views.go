@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/bken-io/api/api/db"
@@ -24,7 +23,6 @@ func CreateView(c *fiber.Ctx) error {
 
 	currentTime := time.Now()
 	backdate := time.Duration(-video.Duration * 1000 * 1000 * 1000)
-	fmt.Println("backdate", backdate)
 	timeOffset := currentTime.Add(backdate)
 
 	var recentView models.VideoView
