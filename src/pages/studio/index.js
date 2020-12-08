@@ -34,39 +34,37 @@ export default function studio() {
           alignItems='flex-start'
           justifyContent='center'
         >
-          {data.map((v) => {
-            return (
-              <Pane
-                key={v.id}
-                display='flex'
-                marginTop={10}
-                marginBottom={10}
-              >
-                <img
-                  alt='thumb'
-                  height='100px'
-                  src={v.thumbnail}
-                  style={{ borderRadius: '3px'}}
-                />
-                <div style={{ paddingLeft: 10 }}>
-                  <Heading
-                    size={400}
-                    width='300px'
-                    overflow='hidden'
-                    whiteSpace='nowrap'
-                    textOverflow='ellipsis'
-                  >
-                    {v.title}
-                  </Heading>
-                  <Link href={`/studio/${v.id}`} passHref>
-                    <Button>
-                      Edit
-                    </Button>
-                  </Link>
-                </div>
-              </Pane>
-            );
-          })}
+          {data.map((v) => (
+            <Pane
+              key={v.id}
+              display='flex'
+              marginTop={10}
+              marginBottom={10}
+            >
+              <img
+                alt='thumb'
+                height='100px'
+                src={v.thumbnail}
+                style={{ borderRadius: '3px'}}
+              />
+              <div style={{ paddingLeft: 10 }}>
+                <Heading
+                  size={400}
+                  width='300px'
+                  overflow='hidden'
+                  whiteSpace='nowrap'
+                  textOverflow='ellipsis'
+                >
+                  {v.title}
+                </Heading>
+                <Link href={`/studio/${v.id}`} passHref>
+                  <Button>
+                    Edit
+                  </Button>
+                </Link>
+              </div>
+            </Pane>
+          ))}
         </Pane>
       </Layout>
     );
