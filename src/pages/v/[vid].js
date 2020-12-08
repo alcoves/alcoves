@@ -53,7 +53,7 @@ export default function Video() {
 
   useEffect(() => {
     if (data && vid && !watchVideoCalled) {
-      watchVideo({ method: 'post', url: `/views/${vid}` });
+      watchVideo({ method: 'post', url: `/videos/${vid}/views` });
     } 
   }, [data]);
 
