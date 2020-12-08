@@ -100,6 +100,10 @@ func PatchVideo(c *fiber.Ctx) error {
 		video.Title = inputVideo.Title
 	}
 
+	if inputVideo.Visibility != "" {
+		video.Visibility = inputVideo.Visibility
+	}
+
 	db.Save(&video)
 	return c.SendString("Video successfully updated")
 }
