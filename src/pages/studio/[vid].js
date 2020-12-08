@@ -1,50 +1,10 @@
-import { Spinner, Pane, TextInput, Button, toaster, } from 'evergreen-ui';
+import { Spinner, Pane, } from 'evergreen-ui';
 import { useRouter, } from 'next/router';
-import { useState, useEffect, } from 'react';
+import { useEffect, } from 'react';
 import Layout from '../../components/Layout';
 import { useApiLazy, } from '../../utils/api';
-
-function TitleField({ id, title: t }) {
-  const [updateVideo, { data, loading, error }] = useApiLazy(`/videos/${id}`, 'patch');
-  const [title, setTitle ] = useState(t);
-
-  useEffect(() => {
-    if (data) {
-      toaster.success('Successfully updated video title');
-    }
-
-    if (error) {
-      toaster.danger('Failed to update video title');
-    }
-  }, [data, error]);
-
-  return (
-    <Pane
-      display='flex'
-    >
-      <TextInput
-        width='350px'
-        onChange={({ target }) => {
-          setTitle(target.value);
-        }}
-        name='title'
-        value={title}
-        placeholder='Enter a title'
-      />
-      <Button
-        marginLeft={5}
-        intent='success'
-        isLoading={loading}
-        appearance='minimal'
-        onClick={() => {
-          updateVideo({ data: { title }});
-        }}
-      >
-        Save
-      </Button>
-    </Pane>
-  );
-}
+import EditTitle from '../../components/Studio/EditTitle';
+import EditVisibility from '../../components/Studio/EditVisibility';
 
 export default function StudioEditVideo() {
   const [getVideo, { data }] = useApiLazy();
@@ -58,8 +18,34 @@ export default function StudioEditVideo() {
   if (data) {
     return (
       <Layout>
-        <Pane>
-          <TitleField id={data.id} title={data.title} />
+        <Pane
+          width='100%'
+          display='flex'
+          paddingTop={30}
+          alignItems='center'
+          justifyContent='center'
+          flexDirection='column'
+        >
+          <Pane
+            padding={5}
+            elevation={2}
+            minWidth={700}
+            background='tint2'
+            borderRadius='4px'
+          >
+            <Pane margin={10}>
+              <EditTitle id={data.id} title={data.title} />
+            </Pane>
+            <Pane margin={10} display='flex'>
+              <img
+                width='350px'
+                alt='thumbnail'
+                src={data.thumbnail}
+                style={{ borderRadius:'4px' }}
+              />
+              <EditVisibility id={data.id} visibility={data.visibility} />
+            </Pane>
+          </Pane>
         </Pane>
       </Layout>
     );
@@ -67,7 +53,9 @@ export default function StudioEditVideo() {
 
   return (
     <Layout>
-      <Spinner />
+      <Pane display='flex' justifyContent='center'>
+        <Spinner />
+      </Pane>
     </Layout>
   );
 }
