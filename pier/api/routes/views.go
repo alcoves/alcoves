@@ -28,7 +28,7 @@ func CreateView(c *fiber.Ctx) error {
 
 	var recentView models.VideoView
 	db.
-		Where("video = ?", video.ID).
+		Where("video_id = ?", video.ID).
 		Where("ip = ?", requestingIPHeader).
 		Where("created_at >= ?", timeOffset).
 		Find(&recentView)

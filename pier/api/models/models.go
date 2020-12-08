@@ -31,8 +31,8 @@ type VideoView struct {
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"deletedAt"`
 
 	IP      string `json:"ip"`
+	UserID  string `json:"userId"`
 	VideoID string `json:"videoId"`
-	User    string `json:"user"`
 }
 
 // VideoVersion is the representation of a single preset ▶
