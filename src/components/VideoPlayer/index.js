@@ -35,6 +35,10 @@ const ControlsWrapper = styled.div`
   justify-content: flex-end;
   // https://cssgradient.io/
   background: rgb(255,255,255);
+  transition: opacity .1s ease-in;
+  -moz-transition: opacity .1s ease-in;
+  -webkit-transition: opacity .1s ease-in;
+  opacity: ${props => props.controlsVisible ? 1 : 0};
   background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.30) 90%, rgba(0,0,0,0.60) 100%);
 `;
 
