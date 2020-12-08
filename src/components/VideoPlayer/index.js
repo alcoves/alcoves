@@ -147,7 +147,7 @@ function VideoPlayer({ url }) {
           <LowerControls>
             <Scrubber vRef={vRef} />
           </LowerControls>
-          <LowerControls>
+          <LowerControls style={{ marginBottom: '5px' }}>
             <LowerControlRow>
               <PlayButton vRef={vRef} />
               <VolumeButton vRef={vRef} />

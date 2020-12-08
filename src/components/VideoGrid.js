@@ -1,7 +1,6 @@
 import { Heading, Pane, } from 'evergreen-ui';
 import Link from 'next/link';
 import styled from 'styled-components';
-import abbreviateNumber from '../utils/abbreviateNumber';
 import videoDuration from '../utils/videoDuration';
 
 const Duration = styled.div`
@@ -68,9 +67,7 @@ const VideoGridWrapper = styled.div`
 export default function VideoGrid({ videos }) {
   return (
     <VideoGridWrapper>
-      {videos.map((v) => {
-        return <VideoCard key={v.id} v={v} />;
-      })}
+      {videos.map((v) => <VideoCard key={v.id} v={v} />)}
     </VideoGridWrapper>
   );
 }
