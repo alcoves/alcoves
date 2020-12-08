@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/bken-io/api/api/db"
@@ -40,6 +41,10 @@ func CreateView(c *fiber.Ctx) error {
 		VideoID: id,
 		IP:      requestingIPHeader,
 	}
+	fmt.Println("creating video view record")
 	db.Create(&view)
+	fmt.Println("increment video view count")
+	video.Views++
+	db.Save(&video)
 	return c.SendString("video view counted")
 }
