@@ -3,7 +3,7 @@ package routes
 import (
 	"context"
 	"fmt"
-	"mime"
+	"path/filepath"
 	"time"
 
 	"github.com/bken-io/api/src/s3"
@@ -13,7 +13,7 @@ import (
 
 // CreateUploadInput is used for creating signed urls
 type CreateUploadInput struct {
-	FileType string `json:"fileType"`
+	FileName string `json:"filename"`
 }
 
 // CreateUploadPayload instructs the client how to call the /videos endpoint
@@ -24,10 +24,13 @@ type CreateUploadPayload struct {
 
 // CreateUpload initiates the upload process
 func CreateUpload(c *fiber.Ctx) error {
-	u := new(CreateUploadInput)
-
-	if err := c.BodyParser(u); err != nil {
+	input := new(CreateUploadInput)
+	if err := c.BodyParser(input); err != nil {
 		return err
+	}
+	extension := filepath.Ext(input.FileName)
+	if extension == "" {
+		return c.Status(400).SendString("failed to infer file extension")
 	}
 
 	// TODO :: Check videos table for id collision
@@ -35,18 +38,8 @@ func CreateUpload(c *fiber.Ctx) error {
 	if sidErr != nil {
 		return c.SendStatus(400)
 	}
-	extensions, mErr := mime.ExtensionsByType(u.FileType)
-	if mErr != nil {
-		return c.SendStatus(400)
-	}
 
-	if len(extensions) < 1 {
-		fmt.Println("u.FileType", u.FileType)
-		fmt.Println("extensions", extensions)
-		return c.Status(400).SendString("could not infer extension type")
-	}
-
-	s3Path := fmt.Sprintf("%s/source%s", id, extensions[0])
+	s3Path := fmt.Sprintf("%s/source%s", id, extension)
 	fiveMinutes := time.Duration(300 * 1000 * 1000 * 1000)
 	uploadURLRes, err := s3.Doco().PresignedPutObject(
 		context.Background(),
