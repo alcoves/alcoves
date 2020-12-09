@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/bken-io/api/api/models"
-	"github.com/bken-io/api/api/s3"
+	"github.com/bken-io/api/src/models"
+	"github.com/bken-io/api/src/s3"
 	"github.com/gofiber/fiber/v2"
 	"github.com/minio/minio-go/v7"
 )

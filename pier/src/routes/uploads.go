@@ -6,7 +6,7 @@ import (
 	"mime"
 	"time"
 
-	"github.com/bken-io/api/api/s3"
+	"github.com/bken-io/api/src/s3"
 	"github.com/gofiber/fiber/v2"
 	"github.com/teris-io/shortid"
 )

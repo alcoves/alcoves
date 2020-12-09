@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"mime"
 
-	"github.com/bken-io/api/api/db"
-	"github.com/bken-io/api/api/models"
-	"github.com/bken-io/api/api/tidal"
+	"github.com/bken-io/api/src/db"
+	"github.com/bken-io/api/src/models"
+	"github.com/bken-io/api/src/tidal"
 	jwt "github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
 )
