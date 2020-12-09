@@ -4,6 +4,7 @@ import { useEffect, } from 'react';
 import Layout from '../../components/Layout';
 import { useApiLazy, } from '../../utils/api';
 import EditTitle from '../../components/Studio/EditTitle';
+import ListVersions from '../../components/Studio/ListVersions';
 import EditVisibility from '../../components/Studio/EditVisibility';
 
 export default function StudioEditVideo() {
@@ -44,6 +45,9 @@ export default function StudioEditVideo() {
                 style={{ borderRadius:'4px' }}
               />
               <EditVisibility id={data.id} visibility={data.visibility} />
+            </Pane>
+            <Pane>
+              <ListVersions id={data.id} />
             </Pane>
           </Pane>
         </Pane>
