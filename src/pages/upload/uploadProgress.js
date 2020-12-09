@@ -8,13 +8,13 @@ export default function UploadProgress({ file }) {
   const [progress, setProgress] = useState(0);
 
   const [
-    completeUpload,
+    createVideo,
     {
       data: completeUploadData,
       error: completeUploadError,
       loading: completeUploadLoading,
     },
-  ] = useApiLazy('/uploads', 'put');
+  ] = useApiLazy('/videos', 'post');
 
   const [
     createUpload,
@@ -32,31 +32,34 @@ export default function UploadProgress({ file }) {
   }, []);
 
   useEffect(() => {
-    axios
-      .put(createUploadData.url, file, {
-        headers: { 'Content-Type': file.type },
-        onUploadProgress: e => {
-          const currentProgress = (e.loaded / file.size) * 100;
-          console.log(currentProgress);
-          setProgress(currentProgress);
-        },
-      })
-      .then(() => {
+    if (createUploadData) {
+      console.log(createUploadData);
+      axios
+        .put(createUploadData.payload.url, file, {
+          headers: { 'Content-Type': file.type },
+          onUploadProgress: e => {
+            const currentProgress = (e.loaded / file.size) * 100;
+            console.log(currentProgress);
+            setProgress(currentProgress);
+          },
+        })
+        .then(() => {
         // Load video to get duration
-        const video = document.createElement('video');
-        video.setAttribute('src', window.URL.createObjectURL(file));
-        video.onloadeddata = event => {
-          const meta = event.srcElement; // TODO :: This is deprecated
-          completeUpload({
-            data: {
-              title: file.name,
-              fileType: file.type,
-              id: createUploadData.id,
-              duration: meta.duration,
-            },
-          });
-        };
-      });
+          const video = document.createElement('video');
+          video.setAttribute('src', window.URL.createObjectURL(file));
+          video.onloadeddata = event => {
+            const meta = event.srcElement; // TODO :: This is deprecated
+            createVideo({
+              data: {
+                title: file.name,
+                fileType: file.type,
+                duration: meta.duration,
+                id: createUploadData.payload.id,
+              },
+            });
+          };
+        });
+    }
   }, [createUploadData]);
 
   if (file?.name && progress) {
