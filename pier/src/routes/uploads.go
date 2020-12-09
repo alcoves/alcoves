@@ -40,6 +40,12 @@ func CreateUpload(c *fiber.Ctx) error {
 		return c.SendStatus(400)
 	}
 
+	if len(extensions) < 1 {
+		fmt.Println("u.FileType", u.FileType)
+		fmt.Println("extensions", extensions)
+		return c.Status(400).SendString("could not infer extension type")
+	}
+
 	s3Path := fmt.Sprintf("%s/source%s", id, extensions[0])
 	fiveMinutes := time.Duration(300 * 1000 * 1000 * 1000)
 	uploadURLRes, err := s3.Doco().PresignedPutObject(
