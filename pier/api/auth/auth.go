@@ -7,6 +7,10 @@ import (
 	jwtware "github.com/gofiber/jwt/v2"
 )
 
+type JwtUser struct {
+	ID string `json:"id"`
+}
+
 // Protected protect routes
 func Protected() fiber.Handler {
 	return jwtware.New(jwtware.Config{

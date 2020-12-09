@@ -44,12 +44,14 @@ func setupRoutes(app *fiber.App) {
 
 	api.Get("/videos", routes.GetVideos)
 	api.Get("/videos/:id", routes.GetVideo)
-	api.Patch("/videos/:id", routes.PatchVideo)
 	api.Post("/videos/:id/views", routes.CreateView)
 	api.Get("/videos/:id/versions", routes.GetVersions)
 
-	// api.Post("/videos", auth.Protected(), routes.CreateVideo)
+	api.Post("/videos", auth.Protected(), routes.CreateVideo)
+	api.Patch("/videos/:id", auth.Protected(), routes.PatchVideo)
 	api.Delete("/videos/:id", auth.Protected(), routes.DeleteVideo)
+
+	api.Post("/uploads", auth.Protected(), routes.CreateUpload)
 
 	api.Get("/users/:id", routes.GetUser)
 }

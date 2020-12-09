@@ -2,12 +2,22 @@ package routes
 
 import (
 	"fmt"
+	"mime"
 
 	"github.com/bken-io/api/api/db"
 	"github.com/bken-io/api/api/models"
+	"github.com/bken-io/api/api/tidal"
+	jwt "github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
-	"github.com/teris-io/shortid"
 )
+
+// CreateVideoInput is used for creating videos
+type CreateVideoInput struct {
+	ID       string  `json:"id"`
+	Title    string  `json:"title"`
+	FileType string  `json:"fileType"`
+	Duration float32 `json:"duration"`
+}
 
 // GetVideo returns a video
 func GetVideo(c *fiber.Ctx) error {
@@ -70,18 +80,46 @@ func GetVideos(c *fiber.Ctx) error {
 func CreateVideo(c *fiber.Ctx) error {
 	db := db.DBConn
 	video := new(models.Video)
+	input := new(CreateVideoInput)
 
-	if err := c.BodyParser(video); err != nil {
+	if err := c.BodyParser(input); err != nil {
 		return c.Status(400).SendString("video input failed unmarshalling")
 	}
 
-	id, sidErr := shortid.Generate()
-	if sidErr != nil {
-		return c.Status(500).SendString("failed to create video short id")
+	extensions, mErr := mime.ExtensionsByType(input.FileType)
+	if mErr != nil {
+		fmt.Println("mErr", mErr)
+		return c.SendStatus(400)
 	}
 
-	video.ID = id
-	db.Create(&video)
+	video.ID = input.ID
+	video.Duration = input.Duration
+
+	user := c.Locals("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	userID := claims["id"].(string)
+
+	video.UserID = userID
+	video.Title = input.Title
+	video.Thumbnail = fmt.Sprintf("https://cdn.bken.io/i/%s/t/thumb.webp", video.ID)
+	res := db.Create(&video)
+
+	if res.Error != nil {
+		return c.SendStatus(500)
+	}
+
+	tidal.DispatchThumbnailJob(
+		"thumbnail",
+		"-vf scale=854:480:force_original_aspect_ratio=increase,crop=854:480 -vframes 1 -q:v 50",
+		fmt.Sprintf("s3://tidal/%s/source%s", video.ID, extensions[0]),
+		fmt.Sprintf("s3://cdn.bken.io/i/%s/t/thumb.webp", video.ID),
+	)
+
+	tidal.DispatchIngestJob(
+		"ingest",
+		fmt.Sprintf("s3://tidal/%s/source%s", video.ID, extensions[0]),
+	)
+
 	return c.JSON(video)
 }
 
