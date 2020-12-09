@@ -15,10 +15,7 @@ function useApi(url = '/', overrides) {
   const [called, setCalled] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    setCalled(true);
-    setLoading(true);
-
+  function fetch() {
     const requestUrl = `${baseUrl()}${url}`;
     const axiosRequestConfig = {
       url: requestUrl,
@@ -45,9 +42,15 @@ function useApi(url = '/', overrides) {
     }).then(() => {
       setLoading(false);
     });
+  }
+
+  useEffect(() => {
+    setCalled(true);
+    setLoading(true);
+    fetch();
   }, []);
 
-  return { data, error, called, loading };
+  return { data, error, called, loading, refetch: fetch };
 }
 
 function useApiLazy(url = '/', method = 'GET') {
