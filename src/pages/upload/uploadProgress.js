@@ -27,7 +27,7 @@ export default function UploadProgress({ file }) {
 
   useEffect(() => {
     createUpload({
-      data: { fileType: file.type },
+      data: { filename: file.name },
     });
   }, []);
 
