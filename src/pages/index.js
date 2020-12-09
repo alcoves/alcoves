@@ -5,17 +5,24 @@ import { useApi, } from '../utils/api';
 import VideoGrid from '../components/VideoGrid';
 
 function index() {
-  const { data, loading } = useApi('/videos');
+  const { data } = useApi('/videos');
 
-  return (
-    <>
+  if (data) {
+    return (
       <Layout>
         <Pane padding={10}>
-          {loading && <Spinner />}
           {data && <VideoGrid videos={data} />}
         </Pane>
       </Layout>
-    </>
+    );
+  }
+
+  return (
+    <Layout>
+      <Pane padding={10} display='flex' justifyContent='center'>
+        <Spinner />
+      </Pane>
+    </Layout>
   );
 }
 
