@@ -57,7 +57,6 @@ function VideoCard({ v }) {
         </Link>
         <Text size={300} cursor='pointer'>
           {`${abbreviateNumber(v.views)} views · ${moment(v.createdAt).fromNow()}`}
-
         </Text>
       </Pane>
     </Pane>

@@ -8,31 +8,29 @@ export default function EditVisibility({ id, visibility: v }) {
     { label: 'Public', value: 'public' },
   ];
   
-  const [updateVideo, { data, loading, error }] = useApiLazy(`/videos/${id}`, 'patch');
+  const [updateVideo, { loading, error }] = useApiLazy(`/videos/${id}`, 'patch');
   const [visibility, setVisibility ] = useState(v);
 
   useEffect(() => {
-    if (!loading && data) {
-      toaster.success('Successfully updated video visibility');
-    }
-
     if (!loading && error) {
       toaster.danger('Failed to update video visibility');
     }
   }, [loading]);
 
+  async function handleChange(vis) {
+    await updateVideo({ data: { visibility: vis } });
+    setVisibility(vis);
+  }
+
   return (
-    <Pane display='flex' width='100%' marginLeft={10} marginRight={10}>
+    <Pane display='flex' width='100%'>
       <SegmentedControl
         width='100%'
         height={32}
         name='visibility'
-        value={visibility}
         options={options}
-        onChange={vis => {
-          setVisibility(vis);
-          updateVideo({ data: { visibility: vis } });
-        }}
+        value={visibility}
+        onChange={vis => handleChange(vis)}
       />
     </Pane>
   );

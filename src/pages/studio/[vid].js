@@ -1,4 +1,4 @@
-import { Spinner, Pane, } from 'evergreen-ui';
+import { Button, Spinner, Pane, } from 'evergreen-ui';
 import { useRouter, } from 'next/router';
 import { useEffect, } from 'react';
 import Layout from '../../components/Layout';
@@ -32,27 +32,30 @@ export default function StudioEditVideo() {
           <Pane
             padding={5}
             elevation={2}
-            minWidth={700}
+            maxWidth={700}
             background='tint2'
             borderRadius='4px'
           >
             <Pane margin={10}>
               <EditTitle id={data.id} title={data.title} />
             </Pane>
-            <Pane margin={10} display='flex'>
+            <Pane margin={10} display='flex' flexDirection='column'>
               <img
-                width='350px'
+                width='100%'
                 alt='thumbnail'
                 src={data.thumbnail}
                 style={{ borderRadius:'4px' }}
               />
-              <EditVisibility id={data.id} visibility={data.visibility} />
+              <Pane paddingTop={10} paddingBottom={10}>
+                <EditVisibility id={data.id} visibility={data.visibility} />
+              </Pane>
             </Pane>
             <Pane margin={10}>
               <ListVersions id={data.id} />
             </Pane>
-            <Pane margin={10}>
+            <Pane margin={10} display='flex' justifyContent='space-between'>
               <DeleteVideo id={data.id} />
+              <Button onClick={() => router.push(`/v/${vid}`)}> View </Button>
             </Pane>
           </Pane>
         </Pane>
