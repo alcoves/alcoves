@@ -1,21 +1,24 @@
 package routes
 
 import (
+	"context"
 	"fmt"
-	"mime"
+	"log"
+	"path/filepath"
 
 	"github.com/bken-io/api/src/db"
 	"github.com/bken-io/api/src/models"
+	"github.com/bken-io/api/src/s3"
 	"github.com/bken-io/api/src/tidal"
 	jwt "github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
+	"github.com/minio/minio-go/v7"
 )
 
 // CreateVideoInput is used for creating videos
 type CreateVideoInput struct {
 	ID       string  `json:"id"`
 	Title    string  `json:"title"`
-	FileType string  `json:"fileType"`
 	Duration float32 `json:"duration"`
 }
 
@@ -86,10 +89,10 @@ func CreateVideo(c *fiber.Ctx) error {
 		return c.Status(400).SendString("video input failed unmarshalling")
 	}
 
-	extensions, mErr := mime.ExtensionsByType(input.FileType)
-	if mErr != nil {
-		fmt.Println("mErr", mErr)
-		return c.SendStatus(400)
+	extension := filepath.Ext(input.Title)
+	filenameWithoutExtension := input.Title[0 : len(input.Title)-len(extension)]
+	if extension == "" {
+		return c.Status(400).SendString("failed to infer file extension")
 	}
 
 	video.ID = input.ID
@@ -100,7 +103,7 @@ func CreateVideo(c *fiber.Ctx) error {
 	userID := claims["id"].(string)
 
 	video.UserID = userID
-	video.Title = input.Title
+	video.Title = filenameWithoutExtension
 	video.Thumbnail = fmt.Sprintf("https://cdn.bken.io/i/%s/t/thumb.webp", video.ID)
 	res := db.Create(&video)
 
@@ -111,13 +114,13 @@ func CreateVideo(c *fiber.Ctx) error {
 	tidal.DispatchThumbnailJob(
 		"thumbnail",
 		"-vf scale=854:480:force_original_aspect_ratio=increase,crop=854:480 -vframes 1 -q:v 50",
-		fmt.Sprintf("s3://tidal/%s/source%s", video.ID, extensions[0]),
+		fmt.Sprintf("s3://tidal/%s/source%s", video.ID, extension),
 		fmt.Sprintf("s3://cdn.bken.io/i/%s/t/thumb.webp", video.ID),
 	)
 
 	tidal.DispatchIngestJob(
 		"ingest",
-		fmt.Sprintf("s3://tidal/%s/source%s", video.ID, extensions[0]),
+		fmt.Sprintf("s3://tidal/%s/source%s", video.ID, extension),
 	)
 
 	return c.JSON(video)
@@ -146,20 +149,73 @@ func PatchVideo(c *fiber.Ctx) error {
 	return c.SendString("Video successfully updated")
 }
 
-// DeleteVideo creates a new video
-func DeleteVideo(c *fiber.Ctx) error {
+// SoftDeleteVideo marks a video as deleted in the database for future cleanup
+func SoftDeleteVideo(c *fiber.Ctx) error {
 	id := c.Params("id")
 	db := db.DBConn
 
+	user := c.Locals("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	userID := claims["id"].(string)
+
 	var video models.Video
 	db.Where("id = ?", id).Find(&video)
-
-	fmt.Println(video)
-
 	if video.Title == "" {
 		return c.SendStatus(404)
 	}
+	if video.UserID != userID {
+		return c.SendStatus(403)
+	}
 
-	db.Delete(&video)
-	return c.SendString("Video successfully deleted")
+	db.Delete(&video) // Gorm soft deletes the row
+	return c.SendString("video successfully deleted")
+}
+
+// HardDeleteVideo fully deletes all videos marked for deletion
+func HardDeleteVideo(id string) {
+	tidalBucket := "tidal"
+	wasabiBucket := "cdn.bken.io"
+	thumbnailsPrefix := fmt.Sprintf("i/%s/", id)
+	videosPrefix := fmt.Sprintf("v/%s/", id)
+	tidalPrefix := fmt.Sprintf("%s/", id)
+
+	deleteObjects("wasabi", wasabiBucket, thumbnailsPrefix)
+	deleteObjects("wasabi", wasabiBucket, videosPrefix)
+	deleteObjects("doco", tidalBucket, tidalPrefix)
+
+	// db.Delete(&video)
+	fmt.Println("video assets successfully deleted")
+}
+
+func deleteObjects(client string, bucket string, prefix string) {
+	var s3Client *minio.Client
+	if client == "wasabi" {
+		s3Client = s3.Wasabi()
+	} else if client == "doco" {
+		s3Client = s3.Doco()
+	} else {
+		panic("invalid s3 client")
+	}
+
+	objectsCh := make(chan minio.ObjectInfo)
+	opts := minio.ListObjectsOptions{
+		Recursive: true,
+		Prefix:    prefix,
+	}
+
+	for object := range s3Client.ListObjects(context.Background(), bucket, opts) {
+		if object.Err != nil {
+			log.Fatalln(object.Err)
+		}
+		fmt.Println("object", object.Key)
+		objectsCh <- object
+	}
+
+	opts2 := minio.RemoveObjectsOptions{
+		GovernanceBypass: true,
+	}
+
+	for rErr := range s3.Wasabi().RemoveObjects(context.Background(), bucket, objectsCh, opts2) {
+		fmt.Println("Error detected during deletion: ", rErr)
+	}
 }
