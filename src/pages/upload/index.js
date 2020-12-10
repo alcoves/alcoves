@@ -9,7 +9,8 @@ import Layout from '../../components/Layout';
 const Dropzone = styled.div`
   display: flex;
   cursor: pointer;
-  min-width: 500px;
+  width: 100%;
+  max-width: 300px;
   min-height: 200px;
   border-radius: 4px;
   align-items: center;
@@ -43,6 +44,7 @@ export default function Uploader() {
         height='100%'
         display='flex'
         alignItems='center'
+        flexDirection='column'
         justifyContent='center'
       >
         <Dropzone {...getRootProps()}>
@@ -53,9 +55,7 @@ export default function Uploader() {
             <Heading color='muted' size={600}> Upload </Heading>
           )}
         </Dropzone>
-        {files.map(file => {
-          return <UploadProgress key={file.name} file={file} />;
-        })}
+        {files.map(file => <UploadProgress key={file.name} file={file} />)}
       </Pane>
     </Layout>
   );

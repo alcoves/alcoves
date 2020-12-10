@@ -1,13 +1,14 @@
 import { useContext, useEffect, } from 'react';
-import { Heading, Pane, Button, Spinner, } from 'evergreen-ui';
-import Link from 'next/link';
+import { useRouter, } from 'next/router';
+import { Heading, Pane, Table, Spinner, } from 'evergreen-ui';
+import moment from 'moment';
 import Layout from '../../components/Layout';
 import { Context, } from '../../utils/store';
 import { useApiLazy, } from '../../utils/api';
-import Icon from '../../components/Icon';
 
 export default function studio() {
-  const [getVideos, { data, loading }] = useApiLazy();
+  const router = useRouter();
+  const [getVideos, { data }] = useApiLazy();
   const { user, authenticated } = useContext(Context);
 
   useEffect(() => {
@@ -16,66 +17,40 @@ export default function studio() {
     }
   }, [user]);
 
-  if (loading) {
-    return (
-      <Layout>
-        <Spinner />
-      </Layout>
-    );
-  }
-
   if (data) {
     return (
       <Layout>
-        <Pane display='flex' justifyContent='center' width='100%'>
-          <Pane
-            width='800px'
-            display='flex'
-            padding={20}
-            flexDirection='column'
-            alignItems='flex-start'
-            justifyContent='center'
-          >
-            {data.map((v) => (
-              <Pane
-                key={v.id}
-                display='flex'
-                marginTop={10}
-                marginBottom={10}
-              >
-                <img
-                  alt='thumb'
-                  height='100px'
-                  src={v.thumbnail}
-                  style={{ borderRadius: '3px'}}
-                />
-                <div style={{ paddingLeft: 10 }}>
-                  <Pane display='flex' alignItems='center'>
-                    <Icon
-                      width={18}
-                      height={18}
-                      color={v.visibility === 'public' ? 'green' : 'grey'}
-                      name={v.visibility === 'public' ? 'globe' : 'link-2'}
-                    />
-                    <Heading
-                      size={400}
-                      width='300px'
-                      overflow='hidden'
-                      whiteSpace='nowrap'
-                      textOverflow='ellipsis'
-                    >
-                      {v.title}
-                    </Heading>
-                  </Pane>
-                  <Link href={`/studio/${v.id}`} passHref>
-                    <Button>
-                      Edit
-                    </Button>
-                  </Link>
-                </div>
-              </Pane>
-            ))}
-          </Pane>
+        <Pane padding={10}>
+          <Table>
+            <Table.Head>
+              <Table.TextHeaderCell>
+                Title
+              </Table.TextHeaderCell>
+              <Table.TextHeaderCell>
+                Created At
+              </Table.TextHeaderCell>
+              <Table.TextHeaderCell>
+                Visibility
+              </Table.TextHeaderCell>
+              <Table.TextHeaderCell>
+                Views
+              </Table.TextHeaderCell>
+            </Table.Head>
+            <Table.Body height='100%'>
+              {data.map(v => (
+                <Table.Row key={v.id} isSelectable onSelect={() => router.push(`/studio/${v.id}`)}>
+                  <Table.TextCell>{v.title}</Table.TextCell>
+                  <Table.TextCell>{moment(v.createdAt).fromNow()}</Table.TextCell>
+                  <Table.TextCell>
+                    {v.visibility}
+                  </Table.TextCell>
+                  <Table.TextCell isNumber>
+                    {v.views}
+                  </Table.TextCell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table>
         </Pane>
       </Layout>
     );

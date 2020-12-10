@@ -3,17 +3,11 @@ import { useState, useEffect, } from 'react';
 import { useApiLazy, } from '../../utils/api';
 
 export default function EditTitle({ id, title: t }) {
-  const [updateVideo, { data, loading, error }] = useApiLazy(`/videos/${id}`, 'patch');
+  const [updateVideo, { loading, error }] = useApiLazy(`/videos/${id}`, 'patch');
   const [title, setTitle ] = useState(t);
 
   useEffect(() => {
-    if (!loading && data) {
-      toaster.success('Successfully updated video title');
-    }
-
-    if (!loading && error) {
-      toaster.danger('Failed to update video title');
-    }
+    if (!loading && error) toaster.danger('Failed to update video title');
   }, [loading]);
 
   return (
@@ -24,12 +18,10 @@ export default function EditTitle({ id, title: t }) {
         size={500}
         height={38}
         width='100%'
-        onChange={({ target }) => {
-          setTitle(target.value);
-        }}
         name='title'
         value={title}
         placeholder='Enter a title'
+        onChange={({ target }) => setTitle(target.value)}
       />
       <Button
         height={38}
@@ -37,9 +29,7 @@ export default function EditTitle({ id, title: t }) {
         intent='success'
         isLoading={loading}
         appearance='minimal'
-        onClick={() => {
-          updateVideo({ data: { title }});
-        }}
+        onClick={() => updateVideo({ data: { title }})}
       >
         Save
       </Button>
