@@ -52,7 +52,6 @@ export default function UploadProgress({ file }) {
             createVideo({
               data: {
                 title: file.name,
-                fileType: file.type,
                 duration: meta.duration,
                 id: createUploadData.payload.id,
               },

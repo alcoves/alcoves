@@ -32,7 +32,7 @@ export default function ListVersions({ id }) {
 
   if (data) {
     return (
-      <Pane display='flex' margin={10} flexDirection='column'>
+      <Pane display='flex' flexDirection='column'>
         <Heading size={500}>
           Versions
         </Heading>
