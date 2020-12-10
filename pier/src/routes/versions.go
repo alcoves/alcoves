@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/bken-io/api/src/models"
@@ -129,5 +131,13 @@ func GetVersions(c *fiber.Ctx) error {
 		}
 	}
 
+	sort.Slice(versions, func(i, j int) bool {
+		a, aErr := strconv.Atoi(strings.TrimSuffix(versions[i].Name, "p"))
+		b, bErr := strconv.Atoi(strings.TrimSuffix(versions[j].Name, "p"))
+		if aErr != nil || bErr != nil {
+			panic("failed to parse ints")
+		}
+		return a > b
+	})
 	return c.JSON(versions)
 }
