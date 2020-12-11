@@ -1,9 +1,8 @@
-import { Heading, Pane, Text, } from 'evergreen-ui';
+import { Heading, Pane, } from 'evergreen-ui';
 import Link from 'next/link';
 import styled from 'styled-components';
-import moment from 'moment';
 import videoDuration from '../utils/videoDuration';
-import abbreviateNumber from '../utils/abbreviateNumber';
+import UserVideoCard from './UserVideoCard';
 
 const Duration = styled.div`
   right: 0;
@@ -23,7 +22,6 @@ function VideoCard({ v }) {
   return (
     <Pane
       width='100%'
-      height='250px'
       elevation={1}
       borderRadius='5px'
       background='tint2'
@@ -51,13 +49,8 @@ function VideoCard({ v }) {
           </Duration>
         </div>
       </Link>
-      <Pane padding={5}>
-        <Link href={`/v/${v.id}`} passHref>
-          <Heading size={500} cursor='pointer'>{v.title}</Heading>
-        </Link>
-        <Text size={300} cursor='pointer'>
-          {`${abbreviateNumber(v.views)} views · ${moment(v.createdAt).fromNow()}`}
-        </Text>
+      <Pane padding={5} display='flex'>
+        <UserVideoCard v={v} />
       </Pane>
     </Pane>
   );
