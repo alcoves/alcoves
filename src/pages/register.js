@@ -100,6 +100,7 @@ export default function Register() {
             </Pane>
           )}
           <Button
+            disabled
             height={40}
             width='100%'
             intent='success'
@@ -111,9 +112,9 @@ export default function Register() {
                 data: { email, password },
               });
             }}
-            disabled={!(email && (password ? password === cPassword : false))}
+            // disabled={!(email && (password ? password === cPassword : false))}
           >
-            Register
+            Registration is currently disabled
           </Button>
 
           <Link href='/login'>
