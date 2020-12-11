@@ -14,11 +14,11 @@ export default function UserVideoCard({ v }) {
           padding={2}
           display='flex'
           marginRight={5}
-          alignItems='center'
+          alignItems='flex-start'
           justifyContent='center'
         >
           <Avatar
-            size={50}
+            size={38}
             src={data.avatar}
             name={data.username}
           />
