@@ -1,11 +1,13 @@
 import { useContext, } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Pane, Avatar, Button, Menu, Popover, } from 'evergreen-ui';
+import { Pane, Avatar, Menu, Popover, } from 'evergreen-ui';
+import { useRouter, } from 'next/router';
 import Icon from './Icon';
 import { Context, } from '../utils/store';
 
 export default function Navigation() {
+  const router = useRouter();
   const { user, authenticated, logout } = useContext(Context);
 
   return (
@@ -86,15 +88,24 @@ export default function Navigation() {
                   </Menu>
                 )}
               >
-                <Avatar cursor='pointer' name={user.username} size={35} />
+                <Avatar
+                  size={35}
+                  cursor='pointer'
+                  src={user.avatar}
+                  name={user.username}
+                />
               </Popover>
             </Link>
           </>
         )
           : (
-            <Link href='/login' passHref>
-              <Button appearance='minimal' height={24}> Login </Button>
-            </Link>
+            <Icon
+              width={20}
+              height={20}
+              name='user'
+              style={{ cursor:'pointer' }}
+              onClick={() => router.push('/login')}
+            />
           )}
       </Pane>
     </Pane>
