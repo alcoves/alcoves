@@ -19,11 +19,7 @@ function Provider({ children }) {
       console.log('loaded user successfully');
       setStore({
         ...store,
-        user: {
-          id: decoded.id,
-          email: decoded.email,
-          username: decoded.username,
-        },
+        user: { ...decoded },
         authenticated: true,
       });
     }
