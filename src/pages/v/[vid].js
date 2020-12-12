@@ -3,7 +3,7 @@ import { useRouter, } from 'next/router';
 import styled from 'styled-components';
 import moment from 'moment';
 import { useEffect, } from 'react';
-import { Heading, Text, Pane, } from 'evergreen-ui';
+import { Heading, Text, Pane, Spinner, } from 'evergreen-ui';
 import Layout from '../../components/Layout';
 import { useApiLazy, } from '../../utils/api';
 import VideoPlayer from '../../components/VideoPlayer/index';
@@ -42,7 +42,7 @@ const VideoContainerWrapper = styled.div`
 export default function Video() {
   const router = useRouter();
   const { vid } = router.query;
-  const [getVideo, { data, error, loading }] = useApiLazy();
+  const [getVideo, { data, error }] = useApiLazy();
   const [watchVideo, { called: watchVideoCalled }] = useApiLazy();
 
   useEffect(() => {
@@ -56,14 +56,6 @@ export default function Video() {
       watchVideo({ method: 'post', url: `/videos/${vid}/views` });
     } 
   }, [data]);
-
-  if (error) {
-    return ( <div> There was an error </div> );
-  }
-
-  if (loading) {
-    return ( <div> Loading... </div> );
-  }
 
   if (data) {
     return (
@@ -106,10 +98,22 @@ export default function Video() {
     );
   }
 
+  if (error) {
+    return (
+      <Layout>
+        <Pane display='flex' justifyContent='center'>
+          <Heading> There was an error loading this video </Heading>
+        </Pane>
+      </Layout>
+    );
+  }
+
   return (
-    <>
-      how did we get here?
-    </>
+    <Layout>
+      <Pane display='flex' justifyContent='center'>
+        <Spinner />
+      </Pane>
+    </Layout>
   );
 }
 
