@@ -17,11 +17,14 @@ export default function UserVideoCard({ v }) {
           alignItems='flex-start'
           justifyContent='center'
         >
-          <Avatar
-            size={38}
-            src={data.avatar}
-            name={data.username}
-          />
+          <Link href={`/u/${v.userId}`} passHref>
+            <Avatar
+              size={38}
+              src={data.avatar}
+              name={data.username}
+              style={{ cursor: 'pointer' }}
+            />
+          </Link>
         </Pane>
         <Pane>
           <Link href={`/v/${v.id}`} passHref>
