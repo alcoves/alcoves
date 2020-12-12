@@ -6,6 +6,7 @@ const Context = createContext();
 function Provider({ children }) {
   const [store, setStore] = useState({
     user: null,
+    loading: true,
     authenticated: false,
     login(token) {
       if (token) localStorage.setItem('token', token);
@@ -17,7 +18,14 @@ function Provider({ children }) {
         setStore({
           ...store,
           user: { ...decoded },
+          loading: false,
           authenticated: true,
+        });
+      } else {
+        setStore({
+          ...store,
+          loading: false,
+          authenticated: false,
         });
       }
     },
@@ -27,6 +35,7 @@ function Provider({ children }) {
       setStore({
         ...store,
         user: null,
+        loading: false,
         authenticated: false,
       });
     },
