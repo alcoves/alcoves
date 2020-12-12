@@ -1,8 +1,9 @@
 import { Button, Spinner, Pane, } from 'evergreen-ui';
 import { useRouter, } from 'next/router';
-import { useEffect, } from 'react';
+import { useEffect, useContext, } from 'react';
 import Layout from '../../components/Layout';
 import { useApiLazy, } from '../../utils/api';
+import { Context, } from '../../utils/store';
 
 import EditTitle from '../../components/Studio/EditTitle';
 import DeleteVideo from '../../components/Studio/DeleteVideo';
@@ -10,12 +11,19 @@ import ListVersions from '../../components/Studio/ListVersions';
 import EditVisibility from '../../components/Studio/EditVisibility';
 
 export default function StudioEditVideo() {
+  const { authenticated, loading } = useContext(Context);
   const [getVideo, { data }] = useApiLazy();
   const router = useRouter();
   const { vid } = router.query;
 
   useEffect(() => {
-    if (vid) getVideo({ url: `/videos/${vid}` });
+    if (!loading && !authenticated) {
+      return router.push(`/login?redirect=${router.asPath}`);
+    }
+    
+    if (vid) {
+      getVideo({ url: `/videos/${vid}` });
+    }
   }, [vid]);
 
   if (data) {
