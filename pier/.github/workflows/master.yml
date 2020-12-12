@@ -1,4 +1,4 @@
-name: Fiber
+name: Deploy
 
 on:
   push:
