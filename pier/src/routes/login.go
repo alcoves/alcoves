@@ -42,6 +42,7 @@ func Login(c *fiber.Ctx) error {
 	claims := models.UserTokenClaims{
 		ID:       user.ID,
 		Email:    user.Email,
+		Avatar:   user.Avatar,
 		Username: user.Username,
 		StandardClaims: jwt.StandardClaims{
 			Issuer:    "bken.io",
