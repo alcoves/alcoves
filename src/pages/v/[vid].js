@@ -58,6 +58,12 @@ export default function Video() {
   }, [data]);
 
   if (data) {
+    const subHeader = `${
+      abbreviateNumber(data.views)} views ·
+      ${moment(data.createdAt).fromNow()} · 
+      ${data.visibility}
+    `;
+
     return (
       <>
         <Head>
@@ -83,9 +89,8 @@ export default function Video() {
                   <SubtitleContainer>
                     <div>
                       <Text size={400}>
-                        {`${abbreviateNumber(data.views)} views · ${moment(data.createdAt).fromNow()}`}
+                        {subHeader}
                       </Text>
-                      <Text size={400}>{data.visibility}</Text>
                     </div>
                   </SubtitleContainer>
                 </div>
