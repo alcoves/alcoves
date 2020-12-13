@@ -64,6 +64,7 @@ type LoginResponse struct {
 type UserTokenClaims struct {
 	ID       string `json:"id"`
 	Email    string `json:"email"`
+	Avatar   string `json:"avatar"`
 	Username string `json:"username"`
 	jwt.StandardClaims
 }
