@@ -14,9 +14,6 @@ import (
 	"github.com/minio/minio-go/v7"
 )
 
-// this endpoint exists because versions are a heavy query to make
-// the link the the master.m3u8 exists on the video record
-
 func removeDuplicatesFromSlice(s []string) []string {
 	m := make(map[string]bool)
 	for _, item := range s {
@@ -102,6 +99,34 @@ func getTidalVersions(id string) []string {
 	return versions
 }
 
+func getNumberOfS3Objects(client *minio.Client, bucket string, prefix string) float32 {
+	var numObjects float32
+
+	opts := minio.ListObjectsOptions{
+		Recursive: false,
+		Prefix:    prefix,
+	}
+	for object := range s3.Doco().ListObjects(context.Background(), bucket, opts) {
+		if object.Err != nil {
+			fmt.Println(object.Err)
+		}
+
+		// This is kinda janky, can minio add an exclusion?
+		if !strings.Contains(object.Key, "marker.json") {
+			numObjects++
+		}
+	}
+	return numObjects
+}
+
+func calculatePercentCompleted(id string, version string) uint8 {
+	totalSegments := getNumberOfS3Objects(s3.Doco(), "tidal", fmt.Sprintf("%s/segments/", id))
+	transcodedSegments := getNumberOfS3Objects(s3.Doco(), "tidal", fmt.Sprintf("%s/versions/%s/", id, version))
+	percentCompleted := uint8((transcodedSegments / totalSegments) * 100)
+	// fmt.Println(id, version, transcodedSegments, totalSegments, percentCompleted)
+	return percentCompleted
+}
+
 // GetVersions returns tidal information from s3
 func GetVersions(c *fiber.Ctx) error {
 	id := c.Params("id")
@@ -115,17 +140,17 @@ func GetVersions(c *fiber.Ctx) error {
 	versions := []models.VideoVersion{}
 
 	for i := 0; i < len(uniqueVersions); i++ {
-		element := uniqueVersions[i]
-		if contains(versionsFromCDN, element) {
+		version := uniqueVersions[i]
+		if contains(versionsFromCDN, version) {
 			versions = append(versions, models.VideoVersion{
 				PercentCompleted: 100,
-				Name:             element,
+				Name:             version,
 				Status:           "completed",
 			})
-		} else if contains(versionsFromTidal, element) {
+		} else if contains(versionsFromTidal, version) {
 			versions = append(versions, models.VideoVersion{
-				PercentCompleted: 50,
-				Name:             element,
+				PercentCompleted: calculatePercentCompleted(id, version),
+				Name:             version,
 				Status:           "processing",
 			})
 		}
