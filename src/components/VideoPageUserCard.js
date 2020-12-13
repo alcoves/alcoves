@@ -1,6 +1,7 @@
 
 import Link from 'next/link';
 import { useEffect, } from 'react';
+import { Pane, Text, }  from 'evergreen-ui';
 import { useApiLazy, } from '../utils/api';
 
 function VideoPageUserCard({ id }) {
@@ -9,26 +10,13 @@ function VideoPageUserCard({ id }) {
 
   if (data) {
     return (
-      <div
-        style={{
-          display: 'flex',
-          marginTop: '10px',
-          height: '75px',
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginRight: '10px',
-          }}
-        >
+      <Pane display='flex' marginTop='10px' height='75px'>
+        <Pane display='flex' marginRight='10px'>
           <Link href={`/u/${data.username}`} passHref>
             <img
-              alt=''
               width={50}
               height={50}
+              alt='avatar'
               src={data.avatar}
               style={{
                 borderRadius: '50%',
@@ -36,8 +24,8 @@ function VideoPageUserCard({ id }) {
               }}
             />
           </Link>
-        </div>
-        <div style={{ height: '100%' }}>
+        </Pane>
+        <Pane height='100%'>
           <Link
             href={`/u/${data.username}`}
             style={{
@@ -46,21 +34,19 @@ function VideoPageUserCard({ id }) {
               height: '50%',
             }}
           >
-            <a>{data.username}</a>
+            <Text cursor='pointer'>{data.username}</Text>
           </Link>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'flex-start',
-              height: '50%',
-            }}
+          <Pane
+            height='50%'
+            display='flex'
+            alignItems='flex-start'
           />
-        </div>
-      </div>
+        </Pane>
+      </Pane>
     );
   }
 
-  return <div />; 
+  return <Pane />; 
 }
 
 export default VideoPageUserCard;
