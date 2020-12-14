@@ -3,12 +3,6 @@ job "api" {
   datacenters = ["dc1"]
   type        = "service"
 
-  constraint {
-    operator  = "regexp"
-    value     = "[/app/]"
-    attribute = "${attr.unique.hostname}"
-  }
-
   group "services" {
     update {
       max_parallel     = 1
@@ -20,6 +14,12 @@ job "api" {
     }
 
     task "api" {
+      constraint {
+        operator  = "regexp"
+        value     = "[/app/]"
+        attribute = "${attr.unique.hostname}"
+      }
+
       driver = "docker"
 
       template {
