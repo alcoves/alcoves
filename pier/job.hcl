@@ -86,11 +86,11 @@ job "api" {
       }
 
       resources {
-        memory = 200
-        cpu    = 200
+        memory = 100
+        cpu    = 50
 
         network {
-          mbits = 100
+          mbits = 50
           port "http" {}
         }
       }
