@@ -110,20 +110,15 @@ func getNumberOfS3Objects(client *minio.Client, bucket string, prefix string) fl
 		if object.Err != nil {
 			fmt.Println(object.Err)
 		}
-
-		// This is kinda janky, can minio add an exclusion?
-		if !strings.Contains(object.Key, "marker.json") {
-			numObjects++
-		}
+		numObjects++
 	}
 	return numObjects
 }
 
 func calculatePercentCompleted(id string, version string) uint8 {
 	totalSegments := getNumberOfS3Objects(s3.Doco(), "tidal", fmt.Sprintf("%s/segments/", id))
-	transcodedSegments := getNumberOfS3Objects(s3.Doco(), "tidal", fmt.Sprintf("%s/versions/%s/", id, version))
+	transcodedSegments := getNumberOfS3Objects(s3.Doco(), "tidal", fmt.Sprintf("%s/versions/%s/segments/", id, version))
 	percentCompleted := uint8((transcodedSegments / totalSegments) * 100)
-	// fmt.Println(id, version, transcodedSegments, totalSegments, percentCompleted)
 	return percentCompleted
 }
 
