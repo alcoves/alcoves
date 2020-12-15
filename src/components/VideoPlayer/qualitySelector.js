@@ -1,53 +1,60 @@
 import React, { useState, } from 'react';
-import { Menu, MenuItem, IconButton, } from '@material-ui/core';
+import { Text, Button, Menu, Popover, } from 'evergreen-ui';
 import Icon from '../Icon';
 
 function QualitySelector({ hls }) {
-  const [settingsEl, setSettingsEl] = useState(null);
+  const [open, setOpen] = useState(false);
+
+  function toggleOpen() {
+    setOpen(!open);
+  }
+
   if (!hls?.levels?.length) return <div />;
 
   return (
-    <div>
-      <IconButton size='small' onClick={(e) => { setSettingsEl(e.currentTarget); }}>
+    <Popover
+      isShown={open}
+      position='top'
+      content={(
+        <Menu>
+          <Menu.Group>
+            {hls.levels.map((l, i) => (
+              <Menu.Item
+                value={i}
+                key={l.name}
+                onSelect={() => {
+                  console.log('setting load level', i);
+                  hls.currentLevel = i;
+                  setOpen(false);
+                }}
+              >
+                <Text fontWeight={hls.currentLevel === i ? 500 : 300}>
+                  {l.name}
+                </Text>
+              </Menu.Item>
+            ))}
+            <Menu.Item onSelect={() =>{
+              hls.currentLevel = -1;
+              setOpen(false);
+            }}
+            >
+              Auto
+            </Menu.Item>
+          </Menu.Group>
+        </Menu>
+      )}
+    >
+      <div>
         <Icon
           width={20}
           height={20}
           stroke='#fff'
           name='settings'
+          cursor='pointer'
+          onClick={toggleOpen}
         />
-      </IconButton>
-      <Menu
-        keepMounted
-        anchorEl={settingsEl}
-        open={Boolean(settingsEl)}
-        onClose={() => setSettingsEl(null)}
-      >
-        {hls.levels.map((l, i) => {
-          return (
-            <MenuItem
-              key={l.name}
-              onClick={() => {
-                console.log('setting load level', i);
-                hls.loadLevel = i;
-                hls.startLoad();
-                setSettingsEl(null);
-              }}
-              selected={hls.currentLevel === i}
-            >
-              {`${l.name}`}
-            </MenuItem>
-          );
-        })}
-        {/* <MenuItem
-          onClick={() => {
-            hls.currentLevel = -1;
-            setSettingsEl(null);
-          }}
-        >
-          Auto
-        </MenuItem> */}
-      </Menu>
-    </div>
+      </div>
+    </Popover>
   );
 }
 
