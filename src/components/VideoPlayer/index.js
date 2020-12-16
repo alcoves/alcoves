@@ -17,9 +17,12 @@ const Wrapper = styled.div`
   margin: 0px;
   line-height: 0px;
   position: relative;
-  height: calc(100vh - 300px);
   background-color: rgba(0,0,0,.3);
-  max-height: calc((9 /  16) * 100vw);
+   ${p => p.rotation === 0 ? 
+    'max-height: calc((9 /  16) * 100vw); height: calc(100vh - 300px);'
+    : 
+    'max-height: calc(100vh - 50px); height: calc(100vh - 50px);'
+}
 `;
 
 const ControlsWrapper = styled.div`
@@ -83,6 +86,7 @@ let idleTimer;
 
 function VideoPlayer({ url }) {
   const vRef = useRef(null);
+  const [rotation, setRotation] = useState(0);
   const [loaded, setLoaded] = useState(false);
   const [buffering, setBuffering] = useState(true);
   const [controlsVisible, setControlsVisible] = useState(false);
@@ -92,6 +96,14 @@ function VideoPlayer({ url }) {
     hls = new Hls({ startLevel: 3 });
     hls.loadSource(url);
     hls.attachMedia(video);
+
+    const orientationchange = window.addEventListener('orientationchange', (event) => {
+      setRotation(event.target.screen.orientation.angle);
+      console.log(`the orientation of the device is now ${event.target.screen.orientation.angle}`);
+    });
+    return () => {
+      window.removeEventListener('orientationchange', orientationchange);
+    };
   }, []);
 
   function togglePlay() {
@@ -123,6 +135,7 @@ function VideoPlayer({ url }) {
 
   return (
     <Wrapper
+      rotation={rotation}
       onMouseMove={controlHover}
       onTouchStart={controlHover}
       onMouseEnter={() => setControlsVisible(true)}
