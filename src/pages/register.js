@@ -1,17 +1,17 @@
 import { useContext, useEffect, useState, } from 'react';
 import Router from 'next/router';
 import Link from 'next/link';
-import { Heading, Pane, TextInputField, Button, } from 'evergreen-ui';
+import { Text, Button, Heading, Box, TextInput, } from 'grommet';
 import { useApiLazy, } from '../utils/api';
 import { Context, } from '../utils/store';
 
 export default function Register() {
   const { login } = useContext(Context);
   const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [cPassword, setCPassword] = useState('');
-
-  const [registerRemote, { data, error, loading }] = useApiLazy('/register', 'post');
+  const [registerRemote, { data, error }] = useApiLazy('/register', 'post');
 
   useEffect(() => {
     if (data) {
@@ -21,118 +21,107 @@ export default function Register() {
   }, [data]);
 
   return (
-    <Pane
+    <Box
       height='100vh'
       width='100vw'
-      display='flex'
-      background='tint1'
-      alignItems='flex-start'
-      justifyContent='center'
+      align='start'
+      justify='center'
+      direction='row'
     >
-      <Pane
-        width={450}
+      <Box
+        width='450px'
         display='flex'
-        elevation={2}
-        marginTop={100}
+        style={{marginTop: '100px'}}
         borderRadius='5px'
-        background='white'
-        alignItems='center'
-        flexDirection='column'
-        justifyContent='flex-start'
+        align='center'
+        direction='column'
+        justify='start'
       >
-        <Pane>
+        <Box>
           <Heading
-            size={700}
-            marginTop={20}
-            marginBottom={10}
+            level='2'
+            margin='small'
           >
             Create Your Account
           </Heading>
-        </Pane>
-        <Pane
-          padding={30}
+        </Box>
+        <Box
           width='100%'
-          display='flex'
-          justifyContent='center'
-          flexDirection='column'
-          alignItems='flex-start'
+          margin='small'
+          justify='center'
+          alignItems='start'
         >
-          <TextInputField
-            required
+          <TextInput
             name='email'
             width='100%'
-            label='Email'
             value={email}
-            inputHeight={40}
             placeholder='Email'
             onChange={e => setEmail(e.target.value)}
           />
-          <TextInputField
-            required
+          <br />
+          <TextInput
+            width='100%'
+            name='username'
+            value={username}
+            placeholder='Username'
+            onChange={e => setUsername(e.target.value)}
+          />
+          <br />
+          <TextInput
             width='100%'
             type='password'
             name='password'
-            inputHeight={40}
-            label='Password'
             value={password}
             placeholder='Password'
             onChange={e => setPassword(e.target.value)}
           />
-          <TextInputField
-            required
+          <br />
+          <TextInput
             width='100%'
             type='password'
             name='confirmPassword'
-            inputHeight={40}
-            label='Confirm Password'
             value={cPassword}
-            placeholder='Password'
+            placeholder='Confirm Password'
             onChange={e => setCPassword(e.target.value)}
           />
           {error && (
-            <Pane
+            <Box
               width='100%'
               padding='10px'
               display='flex'
               justifyContent='center'
             >
               <Heading color='red' size={200}>{error.message}</Heading>
-            </Pane>
+            </Box>
           )}
           <Button
+            style={{ margin: '20px 0px 20px 0px' }}
+            primary
             disabled
-            height={40}
-            width='100%'
-            intent='success'
-            isLoading={loading}
-            appearance='primary'
-            justifyContent='center'
+            fill='horizontal'
+            label='Registration is currently disabled'
             onClick={() => {
               registerRemote({
                 data: { email, password },
               });
             }}
-            // disabled={!(email && (password ? password === cPassword : false))}
+          />
+          <Box
+            width='100%'
+            align='center'
+            justify='center'
+            direction='column'
           >
-            Registration is currently disabled
-          </Button>
-
-          <Link href='/login'>
-            <Heading
-              size={200}
-              width='100%'
-              marginTop={30}
-              display='flex'
-              cursor='pointer'
-              alignItems='center'
-              justifyContent='center'
-            >
-              <a> Log in</a>
-            </Heading>
-          </Link>
-          <Pane />
-        </Pane>
-      </Pane>
-    </Pane>
+            {error && (
+              <Text color='red'>{error.message}</Text>
+            )}
+            <Text as={Link} href='/login'>
+              Login
+            </Text>
+          </Box>
+          <Box />
+        </Box>
+      </Box>
+    </Box>
   );
 }
