@@ -113,6 +113,16 @@ function VideoPlayer({ url }) {
     }
   }
 
+  useEffect(() => {
+    function onKeydown(e) {
+      if (e.code === 'Space') togglePlay();
+    }
+    window.addEventListener('keydown', onKeydown);
+    return () => {
+      window.removeEventListener('keydown', onKeydown);
+    };
+  });
+
   function onLoadedMetadata() {
     if (!loaded) {
       const { t } = qs.parse(window.location.search);
@@ -160,7 +170,7 @@ function VideoPlayer({ url }) {
  
       {hls && vRef && vRef.current && (
         <ControlsWrapper controlsVisible={controlsVisible}>
-          <UpperControls onClick={togglePlay} />
+          <UpperControls />
           <LowerControls>
             <Scrubber vRef={vRef} />
           </LowerControls>
