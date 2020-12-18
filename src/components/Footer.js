@@ -1,25 +1,23 @@
 import React from 'react';
-import { Heading, Pane, } from 'evergreen-ui';
-
-
+import { Text, Box, } from 'grommet';
 
 export default function Footer() {
   const gitSha = process.env.REACT_APP_GIT_SHA;
   const webLink = `https://github.com/bken-io/web/commit/${gitSha}`;
   const message = `Version: ${gitSha}`;
   return (
-    <Pane
-      height={50}
+    <Box
+      height='50px'
       width='100%'
-      display='flex'
-      alignItems='center'
-      justifyContent='center'
+      align='center'
+      direction='row'
+      justify='center'
     >
-      <Heading size={100}>
+      <Text size='xsmall'>
         <a href={webLink}>
           {message}
         </a>
-      </Heading>
-    </Pane>
+      </Text>
+    </Box>
   );
 }

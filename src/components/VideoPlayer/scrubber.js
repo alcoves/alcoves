@@ -1,12 +1,5 @@
 import React, { useEffect, useState, } from 'react';
-import styled from 'styled-components';
-
-const Slider = styled.input`
-  width: 100%;
-  height: 10px;
-  outline: none;
-  border: solid red 1px;
-`;
+import { RangeInput, } from 'grommet';
 
 function Duration({ vRef = {} }) {
   const [progress, setProgress] = useState(0);
@@ -46,15 +39,9 @@ function Duration({ vRef = {} }) {
   }
 
   return (
-    <Slider
-      id='vol'
-      min='0'
-      max='100'
-      type='range'
-      name='volume'
+    <RangeInput
       value={progress}
       onChange={handleChange}
-      style={{ color: 'white' }}
     />
   );
 }

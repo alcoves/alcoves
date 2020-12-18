@@ -1,29 +1,34 @@
 const acme = {
   global: {
+    focus: {
+      outline: {
+        color: 'transparent',
+      },
+    },
     colors: {
       background: {
         dark: '#212c34',
         light: '#fff',
       },
-      ruby: {
-        dark: '#d4111e',
-        light: '#f58990',
-      },
-      'ruby!': '#EF3F4C',
-      gold: {
-        dark: '#df9007',
-        light: '#e7b86b',
-      },
-      'gold!': '#F9B644',
-      amethyst: {
-        dark: '#9B59B6',
-        light: '#C39BD3',
-      },
-      'amethyst!': '#AF7AC5',
-      'grey-1': '#ECE9E3',
-      'grey-2': '#CECCC6',
-      'grey-3': '#737069',
-      'grey-4': '#52504C', 
+      brand: '#07c2ba',
+      focus: '#07c2ba',
+
+      'accent-1': '#07c2ba',
+      'accent-2': '#07c2ba',
+      'accent-3': '#07c2ba',
+      'accent-4': '#07c2ba',
+
+      'neutral-1': '#07c2ba',
+      'neutral-2': '#07c2ba',
+      'neutral-3': '#07c2ba',
+      'neutral-4': '#07c2ba',
+
+      'status-critical': '#bf1e2e',
+      'status-error': '#bf1e2e',
+      'status-warning': '#FFAA15',
+      'status-ok': '#00C781',
+      'status-unknown': '#CCCCCC',
+      'status-disabled': '#CCCCCC',
     },
     font: {
       family: 'Open Sans',

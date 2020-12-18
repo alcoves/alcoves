@@ -1,30 +1,30 @@
 import { useContext, } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Pane, Menu, Popover, } from 'evergreen-ui';
 import { useRouter, } from 'next/router';
-import { Box, Avatar, } from 'grommet';
+import { Menu, Box, } from 'grommet';
 import Icon from './Icon';
 import { Context, } from '../utils/store';
 
 export default function Navigation() {
   const router = useRouter();
-  const { user, authenticated, logout } = useContext(Context);
+  const { authenticated, logout } = useContext(Context);
 
   return (
-    <Pane
-      height={50}
+    <Box
+      height='50px'
       width='100%'
-      display='flex'
+      margin='none'
+      direction='row'
+      justify='between'
       background='#192228'
-      justifyContent='space-between'
     >
-      <Pane
-        width={70}
-        display='flex'
-        marginLeft={10}
-        alignItems='center'
-        justifyContent='flex-start' 
+      <Box
+        height='50px'
+        width='70px'
+        direction='row'
+        align='center'
+        justify='start'
       >
         <Link href='/'>
           <a>
@@ -36,77 +36,52 @@ export default function Navigation() {
             />
           </a>
         </Link>
-      </Pane>
-      <Pane
-        width={70}
-        display='flex'
-        marginRight={10}
-        alignItems='center'
-        justifyContent='flex-end' 
+      </Box>
+      <Box
+        width='auto'
+        direction='row'
+        margin='xsmall'
+        align='center'
+        justify='end' 
       >
         {authenticated ? (
           <>
-            <Pane marginRight={10}>
-              <Link href='/upload' passHref>
-                <a>
-                  <Icon
-                    width='24'
-                    height='24'
-                    fill='none'
-                    strokeWidth='2'
-                    stroke='white'
-                    name='upload-cloud'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                  />
-                </a>
-              </Link>
-            </Pane>
-      
-            <Link href='/account' passHref>
-              <Popover
-                content={(
-                  <Menu>
-                    <Menu.Group>
-                      <Menu.Item disabled> Profile (coming soon) </Menu.Item>
-                      <Link href='/studio'>
-                        <Menu.Item>                 
-                          Studio
-                        </Menu.Item>
-                      </Link>
-                      <Link href='/account'>
-                        <Menu.Item> 
-                          Account
-                        </Menu.Item>
-                      </Link>
-                    </Menu.Group>
-                    <Menu.Divider />
-                    <Menu.Group>
-                      <Menu.Item onSelect={() => logout()} intent='danger'>
-                        Log out
-                      </Menu.Item>
-                    </Menu.Group>
-                  </Menu>
-                )}
-              >
-                <Box direction='row' gap='small'>
-                  <Avatar src={user.avatar} style={{ width: '30px', height: '30px' }} />   
-                </Box>
-              </Popover>
+            <Link href='/upload' passHref>
+              <a>
+                <Icon
+                  width='24'
+                  height='24'
+                  fill='none'
+                  strokeWidth='2'
+                  stroke='white'
+                  name='upload-cloud'
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                />
+              </a>
             </Link>
+            <Menu
+              icon={<Icon name='user' />}
+              items={[
+                { label: 'Profile (Coming soon!)', onClick: () => {} },
+                { label: 'Studio', onClick: () => router.push('/studio') },
+                { label: 'Account (Coming soon!)', onClick: () => {} },
+                { label: 'Log Out', onClick: () => logout() },
+              ]}
+            />
           </>
         )
           : (
             <Icon
-              width={30}
-              height={30}
+              width='24'
+              height='24'
               name='user'
               stroke='white'
               style={{ cursor:'pointer' }}
               onClick={() => router.push('/login')}
             />
           )}
-      </Pane>
-    </Pane>
+      </Box>
+    </Box>
   );
 }
