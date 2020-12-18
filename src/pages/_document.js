@@ -1,6 +1,11 @@
 import React from 'react';
 import Document, { Html, Head, Main, NextScript, } from 'next/document';
 
+function mediaAds() {
+  window._mNHandle = window._mNHandle || {};
+  window._mNHandle.queue = window._mNHandle.queue || [];
+  medianet_versionId = '3121199';
+}
 export default class MyDocument extends Document {
   render() {
     return (
@@ -14,6 +19,10 @@ export default class MyDocument extends Document {
           <meta property='og:url' content='https://bken.io' />
           <meta property='og:image' content='./favicon.ico' />
           <meta property='og:description' content='bken.io is a video sharing platform' />
+          <script type='text/javascript'>
+            {mediaAds()}
+          </script>
+          <script src='https://contextual.media.net/dmedianet.js?cid=8CUX14CQ8' async='async' />
         </Head>
         <body>
           <script src='https://cdn.jsdelivr.net/npm/hls.js@latest' />
