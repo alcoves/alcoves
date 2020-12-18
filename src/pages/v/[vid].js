@@ -8,6 +8,7 @@ import { useApiLazy, } from '../../utils/api';
 import VideoPlayer from '../../components/VideoPlayer/index';
 import abbreviateNumber from '../../utils/abbreviateNumber';
 import VideoPageUserCard from '../../components/VideoPageUserCard';
+import Spinner from '../../components/Spinner';
 
 // function GoogleAds() {
 //   useEffect(() => {
@@ -84,8 +85,8 @@ export default function Video() {
 
   return (
     <Layout>
-      <Box justify='center'>
-        Loading
+      <Box align='center'>
+        <Spinner />
       </Box>
     </Layout>
   );

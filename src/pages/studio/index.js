@@ -1,11 +1,12 @@
 import { useContext, useEffect, } from 'react';
 import { useRouter, } from 'next/router';
-import { Heading, Pane, Table, Spinner, } from 'evergreen-ui';
+import { Heading, Pane, Table, } from 'evergreen-ui';
 import moment from 'moment';
 import Layout from '../../components/Layout';
 import { Context, } from '../../utils/store';
 import { useApiLazy, } from '../../utils/api';
 import Icon from '../../components/Icon';
+import Spinner from '../../components/Spinner';
 
 export default function studio() {
   const router = useRouter();
