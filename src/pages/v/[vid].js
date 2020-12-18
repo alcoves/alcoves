@@ -1,26 +1,13 @@
 import Head from 'next/head';
 import { useRouter, } from 'next/router';
-import styled from 'styled-components';
 import moment from 'moment';
 import { useEffect, } from 'react';
-import { Heading, Text, Pane, Spinner, } from 'evergreen-ui';
+import { Box, Heading, Text, } from 'grommet';
 import Layout from '../../components/Layout';
 import { useApiLazy, } from '../../utils/api';
 import VideoPlayer from '../../components/VideoPlayer/index';
 import abbreviateNumber from '../../utils/abbreviateNumber';
 import VideoPageUserCard from '../../components/VideoPageUserCard';
-
-const SubtitleContainer = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`;
-
-const VideoContainerWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
 
 // function GoogleAds() {
 //   useEffect(() => {
@@ -70,34 +57,16 @@ export default function Video() {
           <title>{data.title}</title>
         </Head>
         <Layout>
-          <VideoContainerWrapper>
+          <Box>
             <VideoPlayer url={data.url} />
-            <Pane marginTop={20} marginLeft={20} marginRight={20}>
-              <div>
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    alignContent: 'center',
-                    justifyContent: 'space-between',
-                  }}
-                >
-                  <Heading size={600}>{data.title}</Heading>
-                </div>
-                <div>
-                  <SubtitleContainer>
-                    <div>
-                      <Text size={400}>
-                        {subHeader}
-                      </Text>
-                    </div>
-                  </SubtitleContainer>
-                </div>
-              </div>
+            <Box margin='small'>
+              <Heading level='3' margin='xsmall'>{data.title}</Heading>
+              <Text margin='xsmall' size='small'>
+                {subHeader}
+              </Text>
               <VideoPageUserCard id={data.userId} />
-            </Pane>
-          </VideoContainerWrapper>
+            </Box>
+          </Box>
         </Layout>
       </>
     );
@@ -106,23 +75,21 @@ export default function Video() {
   if (error) {
     return (
       <Layout>
-        <Pane display='flex' justifyContent='center'>
+        <Box justify='center'>
           <Heading> There was an error loading this video </Heading>
-        </Pane>
+        </Box>
       </Layout>
     );
   }
 
   return (
     <Layout>
-      <Pane display='flex' justifyContent='center'>
-        <Spinner />
-      </Pane>
+      <Box justify='center'>
+        Loading
+      </Box>
     </Layout>
   );
 }
-
-
 
 // export async function getServerSideProps({ params }) {
 //   try {

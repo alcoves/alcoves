@@ -1,8 +1,8 @@
-import { Heading, Pane, } from 'evergreen-ui';
 import Link from 'next/link';
 import styled from 'styled-components';
-import videoDuration from '../utils/videoDuration';
+import { Box, Text, } from 'grommet';
 import UserVideoCard from './UserVideoCard';
+import videoDuration from '../utils/videoDuration';
 
 const Duration = styled.div`
   right: 0;
@@ -20,12 +20,7 @@ const Duration = styled.div`
 
 function VideoCard({ v }) {
   return (
-    <Pane
-      width='100%'
-      elevation={1}
-      borderRadius='5px'
-      background='tint2'
-    >
+    <Box>
       <Link href={`/v/${v.id}`}>
         <div
           style={{
@@ -38,21 +33,20 @@ function VideoCard({ v }) {
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
-            borderRadius: '5px 5px 0px 0px',
             backgroundImage: `url("${v.thumbnail}")`,
           }}
         >
           <Duration>
-            <Heading color='white' size={200}>
+            <Text size='xsmall'>
               {videoDuration(v.duration)}
-            </Heading>
+            </Text>
           </Duration>
         </div>
       </Link>
-      <Pane padding={5} display='flex'>
+      <Box pad='small'>
         <UserVideoCard v={v} />
-      </Pane>
-    </Pane>
+      </Box>
+    </Box>
   );
 }
 

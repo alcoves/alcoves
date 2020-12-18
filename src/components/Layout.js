@@ -1,3 +1,4 @@
+import { Main, } from 'grommet';
 import NavBar from './NavBar';
 import Footer from './Footer';
 
@@ -6,13 +7,13 @@ function Content({ children }) {
 }
 
 const Layout = ({ children }) => (
-  <>
+  <Main>
     <NavBar />
     <Content>
       {children}
     </Content>
     <Footer />
-  </>
+  </Main>
 );
 
 export default Layout;

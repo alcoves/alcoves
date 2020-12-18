@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import moment from 'moment';
-import { Text, Pane, Avatar, Heading, Spinner, } from 'evergreen-ui';
+import { Avatar, Box, Text, } from 'grommet';
+import { Spinner, } from 'evergreen-ui';
 import { useApi, } from '../utils/api';
 import abbreviateNumber from '../utils/abbreviateNumber';
 
@@ -9,43 +10,34 @@ export default function UserVideoCard({ v }) {
 
   if (data) {
     return (
-      <Pane display='flex' minHeight='60px'>
-        <Pane
-          padding={2}
-          display='flex'
-          marginRight={5}
-          alignItems='flex-start'
-          justifyContent='center'
-        >
-          <Link href={`/u/${v.userId}`} passHref>
-            <Avatar
-              size={38}
-              src={data.avatar}
-              name={data.username}
-              style={{ cursor: 'pointer' }}
-            />
+      <Box
+        maring='small'
+        align='flex-start'
+        justify='flex-start'
+        direction='row'
+      >
+        <Link href={`/u/${v.userId}`} passHref>
+          <Avatar
+            size='medium'
+            src={data.avatar}
+          />
+        </Link>
+        <Box style={{ paddingLeft: '10px' }}>
+          <Text as={Link} href={`/v/${v.id}`} size='medium' cursor='pointer'>{v.title}</Text>
+          <Link href={`/u/${data.username}`} passHref>
+            <Text size='xsmall' style={{ cursor: 'pointer' }}>{data.username}</Text>
           </Link>
-        </Pane>
-        <Pane>
-          <Link href={`/v/${v.id}`} passHref>
-            <Heading size={500} cursor='pointer'>{v.title}</Heading>
-          </Link>
-          <Pane>
-            <Link href={`/u/${data.username}`} passHref>
-              <Text size={300} cursor='pointer'>{data.username}</Text>
-            </Link>
-          </Pane>
-          <Text size={300} cursor='pointer'>
+          <Text size='xsmall'>
             {`${abbreviateNumber(v.views)} views · ${moment(v.createdAt).fromNow()}`}
           </Text>
-        </Pane>
-      </Pane>
+        </Box>
+      </Box>
     );
   }
 
   return (
-    <Pane minHeight='60px'>
+    <Box minHeight='60px'>
       <Spinner />
-    </Pane>
+    </Box>
   ); 
 }

@@ -16,7 +16,7 @@ export default function Navigation() {
       height={50}
       width='100%'
       display='flex'
-      background='#fff'
+      background='#192228'
       justifyContent='space-between'
     >
       <Pane
@@ -54,8 +54,8 @@ export default function Navigation() {
                     height='24'
                     fill='none'
                     strokeWidth='2'
+                    stroke='white'
                     name='upload-cloud'
-                    stroke='currentColor'
                     strokeLinecap='round'
                     strokeLinejoin='round'
                   />
@@ -101,6 +101,7 @@ export default function Navigation() {
               width={30}
               height={30}
               name='user'
+              stroke='white'
               style={{ cursor:'pointer' }}
               onClick={() => router.push('/login')}
             />

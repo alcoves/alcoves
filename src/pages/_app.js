@@ -1,18 +1,8 @@
 import '../styles/index.css';
 import Head from 'next/head';
-import { merge, } from 'lodash';
-import { ThemeProvider, defaultTheme, } from 'evergreen-ui';
+import { Grommet, } from 'grommet';
 import { Provider, } from '../utils/store';
-
-const theme = merge(defaultTheme, {
-  // typography: {
-  //   fontFamilies: {
-  //     ui: 'Montserrat',
-  //     mono: 'Montserrat',
-  //     display: 'Montserrat',
-  //   },
-  // },
-});
+import theme from '../styles/theme';
 
 function App({ Component, pageProps }) {
   return (
@@ -20,11 +10,11 @@ function App({ Component, pageProps }) {
       <Head>
         <title>bken.io</title>
       </Head>
-      <ThemeProvider value={theme}>
+      <Grommet full theme={theme} themeMode='dark'>
         <Provider>
           <Component {...pageProps} />
         </Provider>
-      </ThemeProvider>
+      </Grommet>
     </>
   );  
 }

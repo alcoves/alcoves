@@ -90,7 +90,7 @@ export default function studio() {
     return (
       <Layout>
         <Pane display='flex' justifyContent='center'>
-          <Heading size={300}>
+          <Heading size='xsmall'>
             You must be authenticated
           </Heading>
         </Pane>
