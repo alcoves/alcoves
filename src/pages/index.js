@@ -3,6 +3,7 @@ import React from 'react';
 import Layout from '../components/Layout';
 import { useApi, } from '../utils/api';
 import VideoGrid from '../components/VideoGrid';
+import Spinner from '../components/Spinner';
 
 function index() {
   const { data } = useApi('/videos');
@@ -20,8 +21,8 @@ function index() {
 
   return (
     <Layout>
-      <Box pad='small' justify='center'>
-        Loading
+      <Box pad='small' justify='center' align='center'>
+        <Spinner />
       </Box>
     </Layout>
   );

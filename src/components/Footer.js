@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, Box, } from 'grommet';
+import { Box, Heading, } from 'grommet';
 
 export default function Footer() {
   const gitSha = process.env.REACT_APP_GIT_SHA;
@@ -13,11 +13,11 @@ export default function Footer() {
       direction='row'
       justify='center'
     >
-      <Text size='xsmall'>
+      <Heading level='6'>
         <a href={webLink}>
           {message}
         </a>
-      </Text>
+      </Heading>
     </Box>
   );
 }
