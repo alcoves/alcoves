@@ -29,6 +29,7 @@ function VideoCard({ v }) {
             minHeight: '180px',
             maxHeight: '180px',
             position: 'relative',
+            borderRadius: '4px',
             backgroundColor: 'grey',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
