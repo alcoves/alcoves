@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect, } from 'react';
 
 import qs from 'query-string';
 import styled from 'styled-components';
-import { Spinner, } from 'evergreen-ui';
+import Spinner from '../Spinner';
 
 import Scrubber from './scrubber';
 import Duration from './duration';
@@ -154,7 +154,7 @@ function VideoPlayer({ url }) {
 
       {buffering && (
         <BufferingWrapper>
-          <Spinner size={64} />
+          <Spinner />
         </BufferingWrapper>
       )}
  

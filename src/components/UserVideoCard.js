@@ -1,9 +1,9 @@
 import Link from 'next/link';
 import moment from 'moment';
 import { Avatar, Box, Text, } from 'grommet';
-import { Spinner, } from 'evergreen-ui';
 import { useApi, } from '../utils/api';
 import abbreviateNumber from '../utils/abbreviateNumber';
+import Spinner from './Spinner';
 
 export default function UserVideoCard({ v }) {
   const { data } = useApi(`/users/${v.userId}`);

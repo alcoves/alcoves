@@ -1,9 +1,10 @@
-import { Button, Spinner, Pane, } from 'evergreen-ui';
+import { Button, Pane, } from 'evergreen-ui';
 import { useRouter, } from 'next/router';
 import { useEffect, useContext, } from 'react';
 import Layout from '../../components/Layout';
 import { useApiLazy, } from '../../utils/api';
 import { Context, } from '../../utils/store';
+import Spinner from '../../components/Spinner';
 
 import EditTitle from '../../components/Studio/EditTitle';
 import DeleteVideo from '../../components/Studio/DeleteVideo';

@@ -1,8 +1,9 @@
-import { Text, Heading, Pane, Spinner, } from 'evergreen-ui';
+import { Text, Heading, Pane, } from 'evergreen-ui';
 import { useEffect, } from 'react';
 import styled from 'styled-components';
 import { useApi,} from '../../utils/api';
 import Icon from '../Icon';
+import Spinner from '../Spinner';
 
 let timer;
 
