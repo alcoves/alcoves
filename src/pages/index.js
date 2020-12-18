@@ -6,9 +6,11 @@ import VideoGrid from '../components/VideoGrid';
 import Spinner from '../components/Spinner';
 
 function showAd() {
-  window._mNHandle.queue.push(()=> {
-    window._mNDetails.loadTag('836884472', '728x90', '836884472');
-  });
+  if (window !== undefined) {
+    window._mNHandle.queue.push(()=> {
+      window._mNDetails.loadTag('836884472', '728x90', '836884472');
+    });
+  }
 }
 
 function index() {
