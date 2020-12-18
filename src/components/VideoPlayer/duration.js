@@ -1,5 +1,5 @@
+import { Text, } from 'grommet';
 import React, { useEffect, useState, } from 'react';
-import { Heading, } from 'evergreen-ui';
 import videoDuration from '../../utils/videoDuration';
 
 function Duration({ vRef }) {
@@ -17,9 +17,9 @@ function Duration({ vRef }) {
   }, [vRef]);
 
   return (
-    <Heading size={400} color='white' marginLeft={15}>
+    <Text size='small' color='white' style={{ marginLeft: '15px' }}>
       {time}
-    </Heading>
+    </Text>
   );
 }
 

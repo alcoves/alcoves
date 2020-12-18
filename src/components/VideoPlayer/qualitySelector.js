@@ -1,5 +1,5 @@
 import React, { useState, } from 'react';
-import { Text, Button, Menu, Popover, } from 'evergreen-ui';
+import { Text, Menu, Popover, } from 'evergreen-ui';
 import Icon from '../Icon';
 
 function QualitySelector({ hls }) {
