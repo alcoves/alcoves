@@ -83,17 +83,17 @@ a:active {
 /* Track */
 ::-webkit-scrollbar-track {
   /* background-image: linear-gradient(to bottom, #2c2c2c, #3d3d3d); */
-  background: #fff;
+  background: #192228;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #d8dadb;
+  background: #384a58;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: rgb(212, 213, 218);
+  background: #3f5564;
 }
 
 video {
