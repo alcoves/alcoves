@@ -1,6 +1,6 @@
 import { useContext, useEffect, } from 'react';
 import { useRouter, } from 'next/router';
-import { Heading, Pane, Table, } from 'evergreen-ui';
+import { Heading, Box, Table, Text, TableHeader, TableRow, TableCell, TableBody, } from 'grommet';
 import moment from 'moment';
 import Layout from '../../components/Layout';
 import { Context, } from '../../utils/store';
@@ -22,67 +22,76 @@ export default function studio() {
   if (data) {
     return (
       <Layout>
-        <Pane padding={10}>
+        <Box>
           <Table>
-            <Table.Head>
-              <Table.TextHeaderCell flexBasis={120} flexShrink={0} flexGrow={0} />
-              <Table.TextHeaderCell flexBasis={75} flexShrink={0} flexGrow={0}>
-                Visibility
-              </Table.TextHeaderCell>
-              <Table.TextHeaderCell flexBasis={560} flexShrink={0} flexGrow={0}>
-                Title
-              </Table.TextHeaderCell>
-              <Table.TextHeaderCell>
-                Created At
-              </Table.TextHeaderCell>
-              <Table.TextHeaderCell>
-                Views
-              </Table.TextHeaderCell>
-            </Table.Head>
-            <Table.Body height='100%'>
+            <TableHeader>
+              <TableRow>
+                <TableCell scope='col' border='bottom'>
+                  Thumbnail
+                </TableCell>
+                <TableCell scope='col' border='bottom'>
+                  Visibility
+                </TableCell>
+                <TableCell scope='col' border='bottom'>
+                  Title
+                </TableCell>
+                <TableCell scope='col' border='bottom'>
+                  Created
+                </TableCell>
+                <TableCell scope='col' border='bottom'>
+                  Views
+                </TableCell>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {data.map(v => (
-                <Table.Row
-                  key={v.id}
-                  isSelectable
-                  height='50px'
-                  onSelect={() => router.push(`/studio/${v.id}`)}
-                >
-                  <Table.TextCell
-                    flexBasis={120}
-                    flexShrink={0}
-                    flexGrow={0}
-                  >
-                    <img height='50px' src={v.thumbnail} alt='thumb' />
-                  </Table.TextCell>
-                  <Table.TextCell flexBasis={75} flexShrink={0} flexGrow={0}>
-                    {v.visibility === 'public' ? (
-                      <Icon
-                        width='20px'
-                        height='20px'
-                        name='globe'
-                        color='green'
-                      />
-                    ) : (
-                      <Icon
-                        width='20px'
-                        height='20px'
-                        name='link-2'
-                        color='grey'
-                      />
-                    )}
-                  </Table.TextCell>
-                  <Table.TextCell flexBasis={560} flexShrink={0} flexGrow={0}>
-                    {v.title}
-                  </Table.TextCell>
-                  <Table.TextCell>{moment(v.createdAt).fromNow()}</Table.TextCell>
-                  <Table.TextCell isNumber>
-                    {v.views}
-                  </Table.TextCell>
-                </Table.Row>
+                <>
+                  <TableRow>
+                    <TableCell scope='row'>
+                      <div
+                        style={{cursor: 'pointer'}}
+                        onClick={() => {
+                          router.push(`/studio/${v.id}`);
+                        }}
+                      >
+                        <img height='70px' src={v.thumbnail} alt='thumb' />
+                      </div>
+                    
+                    </TableCell>
+                    <TableCell>
+                      {v.visibility === 'public' ? (
+                        <Icon
+                          width='20px'
+                          height='20px'
+                          name='globe'
+                          color='green'
+                        />
+                      ) : (
+                        <Icon
+                          width='20px'
+                          height='20px'
+                          name='link-2'
+                          color='grey'
+                        />
+                      )}
+                    </TableCell>
+                    <TableCell>{v.title}</TableCell>
+                    <TableCell width='80px'>
+                      <Text size='xsmall'>
+                        {moment(v.createdAt).fromNow()}
+                      </Text>
+                    </TableCell>
+                    <TableCell>
+                      <Text size='xsmall'>
+                        {v.views}
+                      </Text>
+                    </TableCell>
+                  </TableRow>
+                </>
               ))}
-            </Table.Body>
+            </TableBody>
           </Table>
-        </Pane>
+        </Box>
       </Layout>
     );
   }
@@ -90,20 +99,20 @@ export default function studio() {
   if (!authenticated) {
     return (
       <Layout>
-        <Pane display='flex' justifyContent='center'>
+        <Box margin='small' align='center'>
           <Heading size='xsmall'>
             You must be authenticated
           </Heading>
-        </Pane>
+        </Box>
       </Layout>
     );
   }
 
   return (
     <Layout>
-      <Pane display='flex' justifyContent='center'>
+      <Box margin='small' align='center'>
         <Spinner />
-      </Pane>
+      </Box>
     </Layout>
   );
 }
