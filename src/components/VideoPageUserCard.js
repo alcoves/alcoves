@@ -18,7 +18,11 @@ function VideoPageUserCard({ id }) {
           onClick={() => router.push(`/u/${data.username}`)}
         />
         <Box margin='small'>
-          <Text size='small' onClick={() => router.push(`/u/${data.username}`)}>
+          <Text
+            size='small'
+            style={{ cursor: 'pointer' }}
+            onClick={() => router.push(`/u/${data.username}`)}
+          >
             {data.username}
           </Text>
         </Box>

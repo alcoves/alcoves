@@ -33,6 +33,24 @@ const acme = {
     font: {
       family: 'Open Sans',
     },
+    elevation: {
+      'light': {
+        'none': 'none',
+        'xsmall': '0px 2px 2px rgba(255, 255, 255, 0.40)',
+        'small': '0px 4px 4px rgba(255, 255, 255, 0.40)',
+        'medium': '0px 6px 8px rgba(255, 255, 255, 0.40)',
+        'large': '0px 8px 16px rgba(255, 255, 255, 0.40)',
+        'xlarge': '0px 12px 24px rgba(255, 255, 255, 0.40)',
+      },
+      dark: {
+        'none': 'none',
+        'xsmall': '0px 1px 2px rgba(0, 0, 0, 0.20)',
+        'small': '0px 2px 4px rgba(0, 0, 0, 0.20)',
+        'medium': '0px 4px 8px rgba(0, 0, 0, 0.20)',
+        'large': '0px 8px 16px rgba(0, 0, 0, 0.20)',
+        'xlarge': '0px 12px 24px rgba(0, 0, 0, 0.20)',
+      },
+    },
   },
   button: {
     primary: {
@@ -41,6 +59,9 @@ const acme = {
         textTransform: 'uppercase',
       },
     },
+  },
+  menu: {
+    background: '#192228',
   },
 };
 

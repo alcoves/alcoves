@@ -2,7 +2,7 @@ import { Heading, Box, } from 'grommet';
 import React from 'react';
 import Layout from '../components/Layout';
 import { useApi, } from '../utils/api';
-import VideoGrid from '../components/VideoGrid';
+import VideoGrid from '../components/VideoGrid/Index';
 import Spinner from '../components/Spinner';
 
 function index() {

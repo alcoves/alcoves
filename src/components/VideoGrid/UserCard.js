@@ -1,9 +1,9 @@
 import moment from 'moment';
 import { Avatar, Box, Text, } from 'grommet';
 import { useRouter, } from 'next/router';
-import { useApi, } from '../utils/api';
-import abbreviateNumber from '../utils/abbreviateNumber';
-import Spinner from './Spinner';
+import { useApi, } from '../../utils/api';
+import abbreviateNumber from '../../utils/abbreviateNumber';
+import Spinner from '../Spinner';
 
 export default function UserVideoCard({ v }) {
   const router = useRouter();
@@ -12,9 +12,9 @@ export default function UserVideoCard({ v }) {
   if (data) {
     return (
       <Box
-        maring='small'
-        align='flex-start'
-        justify='flex-start'
+        margin='small'
+        align='start'
+        justify='start'
         direction='row'
       >
         <Avatar
@@ -26,6 +26,7 @@ export default function UserVideoCard({ v }) {
           <Text
             size='medium'
             cursor='pointer'
+            style={{ cursor: 'pointer' }}
             onClick={() => router.push(`/v/${v.id}`)}
           >
             {v.title}

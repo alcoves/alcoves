@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import { Box, Text, } from 'grommet';
 import { useRouter, } from 'next/router';
-import UserVideoCard from './UserVideoCard';
-import videoDuration from '../utils/videoDuration';
+import UserCard from './UserCard';
+import videoDuration from '../../utils/videoDuration';
 
 const Duration = styled.div`
   right: 0;
@@ -47,7 +47,7 @@ function VideoCard({ v }) {
         </div>
       </div>
       <Box pad='small'>
-        <UserVideoCard v={v} />
+        <UserCard v={v} />
       </Box>
     </Box>
   );
