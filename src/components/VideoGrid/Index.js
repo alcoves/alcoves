@@ -18,33 +18,33 @@ const Duration = styled.div`
   background: rgba(0, 0, 0, 0.7);
 `;
 
+const VideoThumbnailBox = styled.div`
+  width: 100%;
+  cursor: pointer;
+  min-height: 180px;
+  max-height: 180px;
+  position: relative;
+  border-radius: 4px;
+  background-color: grey;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-image: url("${p => p.v.thumbnail}");
+`;
+
 function VideoCard({ v }) {
   const router = useRouter();
 
   return (
     <Box>
       <div onClick={() => router.push(`/v/${v.id}`)}>
-        <div
-          style={{
-            width: '100%',
-            cursor: 'pointer',
-            minHeight: '180px',
-            maxHeight: '180px',
-            position: 'relative',
-            borderRadius: '4px',
-            backgroundColor: 'grey',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-            backgroundImage: `url("${v.thumbnail}")`,
-          }}
-        >
+        <VideoThumbnailBox v={v}>
           <Duration>
             <Text size='xsmall'>
               {videoDuration(v.duration)}
             </Text>
           </Duration>
-        </div>
+        </VideoThumbnailBox>
       </div>
       <Box pad='small'>
         <UserCard v={v} />
