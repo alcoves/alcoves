@@ -79,8 +79,8 @@ export default function Login() {
                   email,
                   password,
                 }});
-              } catch (err) {
-                Bugsnag.notify(new Error('failed to log user in'));
+              } catch (e) {
+                Bugsnag.notify(e);
               }
             }}
           />
