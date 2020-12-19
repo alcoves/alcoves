@@ -1,7 +1,7 @@
 
 import axios from 'axios';
 import React, { useState, useEffect, } from 'react';
-import { Heading, Pane, } from 'evergreen-ui';
+import { Text, Box, } from 'grommet';
 import { useApiLazy, } from '../../utils/api';
 
 export default function UploadProgress({ file }) {
@@ -63,10 +63,10 @@ export default function UploadProgress({ file }) {
 
   if (file?.name && progress) {
     return (
-      <Pane>
-        <Heading>{file.name}</Heading>
-        <Heading>{progress}</Heading>
-      </Pane>
+      <Box>
+        <Text>{file.name}</Text>
+        <Text>{progress}</Text>
+      </Box>
     );
   }
 

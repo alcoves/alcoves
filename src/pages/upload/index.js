@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useDropzone, } from 'react-dropzone';
 import React, { useState, useCallback, useContext, } from 'react';
-import { Heading, Pane, } from 'evergreen-ui';
+import { Heading, Box, } from 'grommet';
 import UploadProgress from './uploadProgress';
 import { Context, } from '../../utils/store';
 import Layout from '../../components/Layout';
@@ -38,25 +38,23 @@ export default function Uploader() {
 
   return (
     <Layout>
-      <Pane
-        padding={10}
+      <Box
         width='100%'
         height='100%'
         display='flex'
-        alignItems='center'
-        flexDirection='column'
-        justifyContent='center'
+        align='center'
+        justify='center'
       >
         <Dropzone {...getRootProps()}>
           <input {...getInputProps()} />
           {isDragActive ? (
-            <Heading color='muted' size={600}> Drop here! </Heading>
+            <Heading level='4'> Drop here! </Heading>
           ) : (
-            <Heading color='muted' size={600}> Upload </Heading>
+            <Heading level='4'> Upload </Heading>
           )}
         </Dropzone>
         {files.map(file => <UploadProgress key={file.name} file={file} />)}
-      </Pane>
+      </Box>
     </Layout>
   );
 }
