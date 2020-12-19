@@ -1,37 +1,40 @@
 import React from 'react';
-import Document, { Html, Head, Main, NextScript, } from 'next/document';
+import Document from 'next/document';
 import { ServerStyleSheet, } from 'styled-components';
 
 export default class MyDocument extends Document {
-  static getInitialProps({ renderPage }) {
+  static async getInitialProps(ctx) {
     const sheet = new ServerStyleSheet();
-    const page = renderPage(App => props => sheet.collectStyles(<App {...props} />));
-    const styleTags = sheet.getStyleElement();
-    return {
-      ...page, styleTags,
-    };
-  }
+    const originalRenderPage = ctx.renderPage;
 
-  render() {
-    return (
-      <Html lang='en'>
-        <Head>
-          {this.props.styleTags}
-          <link rel='shortcut icon' href='./favicon.ico' />
-          <link rel='preconnect' href='https://fonts.gstatic.com' />
-          <link href='https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap' rel='stylesheet' />
-          <meta name='version' content='%REACT_APP_GIT_SHA%' />
-          <meta property='og:title' content='bken.io' />
-          <meta property='og:url' content='https://bken.io' />
-          <meta property='og:image' content='./favicon.ico' />
-          <meta property='og:description' content='bken.io is a video sharing platform' />
-        </Head>
-        <body>
-          <script src='https://cdn.jsdelivr.net/npm/hls.js@latest' />
-          <Main />
-          <NextScript />
-        </body>
-      </Html>
-    );
+    try {
+      ctx.renderPage = () =>
+        originalRenderPage({
+          enhanceApp: (App) => (props) =>
+            sheet.collectStyles(<App {...props} />),
+        });
+
+      const initialProps = await Document.getInitialProps(ctx);
+      return {
+        ...initialProps,
+        styles: (
+          <>
+            <link rel='shortcut icon' href='./favicon.ico' />
+            <link rel='preconnect' href='https://fonts.gstatic.com' />
+            <link href='https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap' rel='stylesheet' />
+            <meta name='version' content='%REACT_APP_GIT_SHA%' />
+            <meta property='og:title' content='bken.io' />
+            <meta property='og:url' content='https://bken.io' />
+            <meta property='og:image' content='./favicon.ico' />
+            <meta property='og:description' content='bken.io is a video sharing platform' />
+            <script src='https://cdn.jsdelivr.net/npm/hls.js@latest' />
+            {initialProps.styles}
+            {sheet.getStyleElement()}
+          </>
+        ),
+      };
+    } finally {
+      sheet.seal();
+    }
   }
 }
