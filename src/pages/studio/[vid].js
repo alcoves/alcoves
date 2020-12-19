@@ -1,4 +1,4 @@
-import { Button, Pane, } from 'evergreen-ui';
+import { Box, Button, } from 'grommet';
 import { useRouter, } from 'next/router';
 import { useEffect, useContext, } from 'react';
 import Layout from '../../components/Layout';
@@ -30,53 +30,48 @@ export default function StudioEditVideo() {
   if (data) {
     return (
       <Layout>
-        <Pane
+        <Box
           width='100%'
-          display='flex'
-          paddingTop={30}
-          alignItems='center'
-          justifyContent='center'
-          flexDirection='column'
+          align='center'
+          justify='center'
+          style={{ paddingTop: '30px' }}
         >
-          <Pane
-            padding={5}
-            elevation={2}
-            maxWidth={700}
-            background='tint2'
-            borderRadius='4px'
+          <Box
+            pad='small'
+            width='700px'
           >
-            <Pane margin={10}>
+            <Box margin='xsmall'>
               <EditTitle id={data.id} title={data.title} />
-            </Pane>
-            <Pane margin={10} display='flex' flexDirection='column'>
+            </Box>
+            <Box margin='xsmall'>
               <img
                 width='100%'
                 alt='thumbnail'
                 src={data.thumbnail}
                 style={{ borderRadius:'4px' }}
               />
-              <Pane paddingTop={10} paddingBottom={10}>
+              <Box paddingTop={10} paddingBottom={10}>
                 <EditVisibility id={data.id} visibility={data.visibility} />
-              </Pane>
-            </Pane>
-            <Pane margin={10}>
+              </Box>
+            </Box>
+            <Box margin='xsmall'>
               <ListVersions id={data.id} />
-            </Pane>
-            <Pane margin={10} display='flex' justifyContent='space-between'>
+            </Box>
+            <Box margin='xsmall' direction='row' justify='between'>
               <DeleteVideo id={data.id} />
-              <Button onClick={() => router.push(`/v/${vid}`)}> View </Button>
-            </Pane>
-          </Pane>
-        </Pane>
+              <Button primary onClick={() => router.push(`/v/${vid}`)} label='View' />
+            </Box>
+          </Box>
+        </Box>
       </Layout>
     );
   }
 
   return (
     <Layout>
-      <Pane display='flex' justifyContent='center'>
+      <Box justify='center'>
         <Spinner />
-      </Pane>
+      </Box>
     </Layout>
   );
 }

@@ -1,6 +1,6 @@
-import { Text, Pane, Dialog, Button, } from 'evergreen-ui';
 import { useRouter, } from 'next/router';
 import { useState, } from 'react';
+import { Heading, Box, Text, Layer, Button, } from 'grommet';
 import { useApiLazy, } from '../../utils/api';
 
 export default function DeleteVideo({ id }) {
@@ -10,28 +10,47 @@ export default function DeleteVideo({ id }) {
   if (data) router.push('/studio');
 
   return (
-    <Pane>
-      <Dialog
-        isShown={open}
-        intent='danger'
-        isConfirmLoading={loading}
-        onConfirm={() => deleteVideo()}
-        confirmLabel='Permenantly Delete'
-        title='Permenantly Delete This Video'
-        onCloseComplete={() => setOpen(false)}
-      >
-        <Text>
-          Are you absolutely sure you want to delete this video?
-          This action cannot be undone.
-        </Text>
-      </Dialog>
+    <Box>
       <Button
-        intent='danger'
-        appearance='primary'
+        primary
+        label='Delete'
+        color='status-critical'
         onClick={() => setOpen(true)}
-      >
-        Delete
-      </Button>
-    </Pane>
+      />
+      {open && (
+        <Layer
+          onEsc={() => setOpen(false)}
+          onClickOutside={() => setOpen(false)}
+        >
+          <Box pad='medium'>
+            <Heading level='3'>
+              Permenantly Delete This Video
+            </Heading>
+            <Text>
+              Are you absolutely sure you want to delete this video?
+              This action cannot be undone.
+            </Text>
+            <Box direction='row' justify='end'>
+              <Button
+                label='Close'
+                margin='xsmall'
+                onClick={() => setOpen(false)}
+              />
+              <Button
+                primary
+                margin='xsmall'
+                disabled={loading}
+                color='status-critical'
+                label='Permenantly Delete'
+                onClick={() => {
+                  deleteVideo();
+                  setOpen(false);
+                }}
+              />
+            </Box>
+          </Box>
+        </Layer>
+      )}
+    </Box>
   );
 }
