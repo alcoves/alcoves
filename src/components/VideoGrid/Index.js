@@ -37,7 +37,7 @@ function VideoCard({ v }) {
 
   return (
     <Box>
-      <div onClick={() => router.push(`/v/${v.id}`)}>
+      <Box onClick={() => router.push(`/v/${v.id}`)}>
         <VideoThumbnailBox v={v}>
           <Duration>
             <Text size='xsmall'>
@@ -45,7 +45,7 @@ function VideoCard({ v }) {
             </Text>
           </Duration>
         </VideoThumbnailBox>
-      </div>
+      </Box>
       <Box pad='small'>
         <UserCard v={v} />
       </Box>
