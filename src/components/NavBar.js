@@ -1,6 +1,5 @@
 import { useContext, } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter, } from 'next/router';
 import { Menu, Box, } from 'grommet';
 import Icon from './Icon';
@@ -26,16 +25,13 @@ export default function Navigation() {
         align='center'
         justify='start'
       >
-        <Link href='/'>
-          <a>
-            <Image
-              alt='logo'
-              width={40}
-              height={40}
-              src='/logo.png'
-            />
-          </a>
-        </Link>
+        <Image
+          alt='logo'
+          width={40}
+          height={40}
+          src='/logo.png'
+          onClick={() => router.push('/')}
+        />
       </Box>
       <Box
         width='auto'
@@ -46,20 +42,17 @@ export default function Navigation() {
       >
         {authenticated ? (
           <>
-            <Link href='/upload' passHref>
-              <a>
-                <Icon
-                  width='24'
-                  height='24'
-                  fill='none'
-                  strokeWidth='2'
-                  stroke='white'
-                  name='upload-cloud'
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                />
-              </a>
-            </Link>
+            <Icon
+              width='24'
+              height='24'
+              fill='none'
+              strokeWidth='2'
+              stroke='white'
+              name='upload-cloud'
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              onClick={() => router.push('/upload')}
+            />
             <Menu
               icon={<Icon name='user' />}
               items={[

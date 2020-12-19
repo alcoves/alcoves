@@ -1,6 +1,6 @@
-import Link from 'next/link';
 import styled from 'styled-components';
 import { Box, Text, } from 'grommet';
+import { useRouter, } from 'next/router';
 import UserVideoCard from './UserVideoCard';
 import videoDuration from '../utils/videoDuration';
 
@@ -19,9 +19,11 @@ const Duration = styled.div`
 `;
 
 function VideoCard({ v }) {
+  const router = useRouter();
+
   return (
     <Box>
-      <Link href={`/v/${v.id}`}>
+      <div onClick={() => router.push(`/v/${v.id}`)}>
         <div
           style={{
             width: '100%',
@@ -43,7 +45,7 @@ function VideoCard({ v }) {
             </Text>
           </Duration>
         </div>
-      </Link>
+      </div>
       <Box pad='small'>
         <UserVideoCard v={v} />
       </Box>
