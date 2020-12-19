@@ -22,6 +22,8 @@
     "grommet": "^2.16.2",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.20",
+    "logrocket": "^1.0.14",
+    "logrocket-react": "^4.0.1",
     "mime": "^2.4.7",
     "moment": "^2.29.1",
     "next": "^10.0.3",
