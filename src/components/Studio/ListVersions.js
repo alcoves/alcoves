@@ -1,4 +1,4 @@
-import { Text, Heading, Pane, } from 'evergreen-ui';
+import { Text, Heading, Box, } from 'grommet';
 import { useEffect, } from 'react';
 import styled from 'styled-components';
 import { useApi,} from '../../utils/api';
@@ -24,7 +24,7 @@ const ColoredIcon = styled.div`
 function Version({ version }) {
   const { name, status, percentCompleted } = version;
   return (
-    <Pane minWidth={200} display='flex'>
+    <Box direction='row' margin='xsmall'>
       {status === 'completed' ? (
         <Icon color='green' name='check-circle' />
       ) : (
@@ -32,13 +32,13 @@ function Version({ version }) {
           <Icon name='settings' />
         </ColoredIcon>
       )}
-      <Pane display='flex' flexDirection='column'>
-        <Heading size={400}>
+      <Box>
+        <Text level='4'>
           {name}
-        </Heading>
+        </Text>
         <Text>{`${percentCompleted}%`}</Text>
-      </Pane>
-    </Pane>
+      </Box>
+    </Box>
   );
 }
 
@@ -58,20 +58,20 @@ export default function ListVersions({ id }) {
 
   if (data) {
     return (
-      <Pane display='flex' flexDirection='column'>
-        <Heading size={500}>
+      <Box>
+        <Heading margin='xsmall' level='3'>
           Versions
         </Heading>
-        <Pane display='flex' flexDirection='column'>
+        <Box>
           {data.map(v => <Version key={v.name} version={v} />)}
-        </Pane>
-      </Pane>
+        </Box>
+      </Box>
     );
   }
 
   return (
-    <Pane display='flex' justifyContent='center'>
+    <Box justify='center'>
       {error ? <div>{JSON.stringify(error)}</div> : <Spinner />}
-    </Pane>
+    </Box>
   );
 }

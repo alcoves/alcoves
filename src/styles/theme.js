@@ -34,6 +34,14 @@ const acme = {
       family: 'Open Sans',
     },
   },
+  button: {
+    primary: {
+      font: {
+        weight: '800',
+        textTransform: 'uppercase',
+      },
+    },
+  },
 };
 
 export default acme;
