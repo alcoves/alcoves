@@ -14,7 +14,6 @@ export default class MyDocument extends Document {
           <meta property='og:url' content='https://bken.io' />
           <meta property='og:image' content='./favicon.ico' />
           <meta property='og:description' content='bken.io is a video sharing platform' />
-          <script src='https://contextual.media.net/dmedianet.js?cid=8CUX14CQ8' async='async' />
         </Head>
         <body>
           <script src='https://cdn.jsdelivr.net/npm/hls.js@latest' />

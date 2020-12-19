@@ -18,6 +18,8 @@ export default function Login() {
       Router.push('/');
     }
   }, [data]);
+  
+  // Bugsnag.notify(new Error('bad!')
 
   return (
     <Box

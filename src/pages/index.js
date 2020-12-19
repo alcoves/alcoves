@@ -5,14 +5,6 @@ import { useApi, } from '../utils/api';
 import VideoGrid from '../components/VideoGrid';
 import Spinner from '../components/Spinner';
 
-function showAd() {
-  if (window !== undefined) {
-    window._mNHandle.queue.push(()=> {
-      window._mNDetails.loadTag('836884472', '728x90', '836884472');
-    });
-  }
-}
-
 function index() {
   const { data } = useApi('/videos');
 
@@ -23,9 +15,6 @@ function index() {
           <Heading margin='xsmall' level='2'> Latest Videos </Heading>
           {data && <VideoGrid videos={data} />}
         </Box>
-        <div id='836884472'>
-          {showAd()}
-        </div>
       </Layout>
     );
   }
