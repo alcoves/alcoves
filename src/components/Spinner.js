@@ -1,7 +1,7 @@
 import { Meter, } from 'grommet';
 import styled from 'styled-components';
 
-const MeterAnimation = styled.div`
+const MeterAnimation = styled.span`
   width: 50px;
   height: 50px;
   display: flex;
