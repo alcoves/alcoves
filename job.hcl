@@ -25,12 +25,10 @@ job "web" {
       template {
         data = <<EOH
           DO_API_KEY = "{{key "secrets/DO_API_KEY"}}"
-
-          BUGSNAG_API_KEY={{key "secrets/BUGSNAG_API_KEY"}}
         EOH
         
         env         = true
-        destination = ".env.local"
+        destination = ".env"
       }
 
       config {
