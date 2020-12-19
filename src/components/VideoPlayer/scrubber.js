@@ -28,11 +28,7 @@ function Duration({ vRef = {} }) {
 
   function handleChange({ target }) {
     let seekPosition = vRef.current.duration * (target.value / 100);
-
-    if (Number.isNaN(seekPosition)) {
-      seekPosition = 0;
-    }
-
+    if (Number.isNaN(seekPosition)) seekPosition = 0;
     vRef.current.currentTime = seekPosition;
     setProgress(seekPosition / vRef.current.duration * 100);
   }
