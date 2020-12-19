@@ -25,13 +25,15 @@ export default function Navigation() {
         align='center'
         justify='start'
       >
-        <Image
-          alt='logo'
-          width={40}
-          height={40}
-          src='/logo.png'
-          onClick={() => router.push('/')}
-        />
+        <div style={{ cursor: 'pointer', marginLeft: '10px' }}>
+          <Image
+            alt='logo'
+            width={40}
+            height={40}
+            src='/logo.png'
+            onClick={() => router.push('/')}
+          />
+        </div>
       </Box>
       <Box
         width='auto'
@@ -51,6 +53,7 @@ export default function Navigation() {
               name='upload-cloud'
               strokeLinecap='round'
               strokeLinejoin='round'
+              style={{ cursor: 'pointer' }}
               onClick={() => router.push('/upload')}
             />
             <Menu

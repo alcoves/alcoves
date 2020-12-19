@@ -8,12 +8,12 @@ const MeterAnimation = styled.div`
   align-items: center;
   justify-content: center;
 
-  animation-name: spin;
+  animation-name: spinner_animation;
   animation-duration: 1000ms;
   animation-iteration-count: infinite;
   animation-timing-function: linear;
 
-  @keyframes spin { 
+  @keyframes spinner_animation { 
     0% {
       transform: rotate(0deg) scale(1,1); 
     }

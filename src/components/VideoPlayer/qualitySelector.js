@@ -6,8 +6,8 @@ function QualitySelector({ hls }) {
   function QualityIcon() {
     return (
       <Icon
-        width={20}
-        height={20}
+        width='20px'
+        height='20px'
         stroke='#fff'
         name='settings'
         cursor='pointer'
