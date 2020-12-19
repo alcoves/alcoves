@@ -70,7 +70,7 @@ export default function ListVersions({ id }) {
   }
 
   return (
-    <Box justify='center'>
+    <Box align='center' pad='medium'>
       {error ? <div>{JSON.stringify(error)}</div> : <Spinner />}
     </Box>
   );
