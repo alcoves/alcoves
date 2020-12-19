@@ -4,6 +4,7 @@ import Router from 'next/router';
 import { Text, Button, Heading, Box, TextInput, } from 'grommet';
 import { useApiLazy, } from '../utils/api';
 import { Context, } from '../utils/store';
+import Bugsnag from '../utils/bugsnag';
 
 export default function Login() {
   const { login } = useContext(Context);
@@ -18,8 +19,6 @@ export default function Login() {
       Router.push('/');
     }
   }, [data]);
-  
-  // Bugsnag.notify(new Error('bad!')
 
   return (
     <Box
@@ -75,10 +74,14 @@ export default function Login() {
             fill='horizontal'
             disabled={loading}
             onClick={() => {
-              loginRemote({ data: {
-                email,
-                password,
-              }});
+              try {
+                loginRemote({ data: {
+                  email,
+                  password,
+                }});
+              } catch (err) {
+                Bugsnag.notify(new Error('failed to log user in'));
+              }
             }}
           />
           <Box
