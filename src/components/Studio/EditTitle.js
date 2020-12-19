@@ -22,7 +22,7 @@ export default function EditTitle({ id, title: t }) {
       <Button
         primary
         label='Save'
-        size='xsmall'
+        size='small'
         margin='xsmall'
         disabled={loading}
         onClick={() => updateVideo({ data: { title }})}

@@ -69,7 +69,7 @@ export default function StudioEditVideo() {
 
   return (
     <Layout>
-      <Box justify='center'>
+      <Box align='center' pad='small'>
         <Spinner />
       </Box>
     </Layout>

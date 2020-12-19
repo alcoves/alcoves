@@ -30,15 +30,16 @@ export default function DeleteVideo({ id }) {
               Are you absolutely sure you want to delete this video?
               This action cannot be undone.
             </Text>
+            <br />
             <Box direction='row' justify='end'>
               <Button
                 label='Close'
-                margin='xsmall'
+                margin='small'
                 onClick={() => setOpen(false)}
               />
               <Button
                 primary
-                margin='xsmall'
+                margin='small'
                 disabled={loading}
                 color='status-critical'
                 label='Permenantly Delete'
