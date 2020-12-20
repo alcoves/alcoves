@@ -29,6 +29,7 @@ function VolumeButton({ vRef }) {
       stroke='#fff'
       onClick={handleClick}
       name={volumeIconName()}
+      style={{ cursor: 'pointer', padding:'5px' }}
     />
   );
 }

@@ -30,6 +30,7 @@ function PlayButton({ vRef }) {
       stroke='#fff'
       name={iconName}
       onClick={handleClick}
+      style={{ cursor: 'pointer', padding:'5px' }}
     />
   );
 }

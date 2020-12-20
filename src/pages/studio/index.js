@@ -26,7 +26,7 @@ const Duration = styled.div`
 
 const Visibility = styled.div`
   left: 0;
-  top: 0;
+  bottom: 0;
   z-index: 0;
   height: 35px;
   position: absolute;
@@ -37,6 +37,23 @@ const VideoGridWrapper = styled.div`
   display: grid;
   grid-gap: 1rem;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+`;
+
+const VideoThumbnailBox = styled.div`
+  width: 100%;
+  cursor: pointer;
+  min-height: 180px;
+  max-height: 180px;
+  position: relative;
+  border-radius: 4px;
+  background-color: grey;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-image: url("${p => p.v.thumbnail}");
+  -webkit-box-shadow: inset 0px -105px 66px -39px rgba(0,0,0,0.83);
+  -moz-box-shadow: inset 0px -105px 66px -39px rgba(0,0,0,0.83);
+  box-shadow: inset 0px -105px 66px -39px rgba(0,0,0,0.83);
 `;
 
 export default function studio() {
@@ -68,23 +85,7 @@ export default function studio() {
               align='start'
               direciton='column'
             >
-              <div
-                style={{
-                  width: '100%',
-                  cursor: 'pointer',
-                  minHeight: '180px',
-                  maxHeight: '180px',
-                  position: 'relative',
-                  borderRadius: '4px',
-                  backgroundColor: 'grey',
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  backgroundRepeat: 'no-repeat',
-                  boxShadow: 'inset 0 0 100px black',
-                  backgroundImage: `url("${v.thumbnail}")`,
-                }}
-                onClick={() => router.push(`/studio/${v.id}`)}
-              >
+              <VideoThumbnailBox v={v} onClick={() => router.push(`/studio/${v.id}`)}>
                 <Duration>
                   <Text size='xsmall'>
                     {videoDuration(v.duration)}
@@ -95,19 +96,19 @@ export default function studio() {
                     <Icon
                       width='20px'
                       height='20px'
-                      name='globe'
-                      color='green'
+                      name='eye'
+                      color='#00796B'
                     />
                   ) : (
                     <Icon
                       width='20px'
                       height='20px'
-                      name='link-2'
-                      color='#eee'
+                      name='eye-off'
+                      color='#78909C'
                     />
                   )}
                 </Visibility>
-              </div>
+              </VideoThumbnailBox>
               <Box direction='row' align='center' height='40px'>
                 <Heading margin='none' level='5' truncate>
                   {v.title}

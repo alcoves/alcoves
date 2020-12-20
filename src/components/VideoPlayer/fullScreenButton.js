@@ -8,6 +8,7 @@ function FullScreenButton({ vRef }) {
       height={20}
       stroke='#fff'
       name='maximize'
+      style={{ cursor: 'pointer', padding:'5px' }}
       onClick={() => {
         vRef.current.requestFullscreen();
       }}
