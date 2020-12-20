@@ -19,7 +19,7 @@ const Dropzone = styled.div`
 `;
 
 export default function Uploader() {
-  const { authenticated } = useContext(Context);
+  const { authenticated, loading } = useContext(Context);
   const [files, setFiles] = useState([]);
 
   const onDrop = useCallback(acceptedFiles => {
@@ -32,7 +32,7 @@ export default function Uploader() {
     accept: 'video/mp4,video/quicktime',
   });
 
-  if (!authenticated) {
+  if (!authenticated && !loading) {
     return <div> Please log in to upload </div>;
   }
 

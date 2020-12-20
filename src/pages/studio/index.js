@@ -42,7 +42,7 @@ const VideoGridWrapper = styled.div`
 export default function studio() {
   const router = useRouter();
   const [getVideos, { data }] = useApiLazy();
-  const { user, authenticated } = useContext(Context);
+  const { user, authenticated, loading } = useContext(Context);
 
   useEffect(() => {
     if (user && user.id) {
@@ -125,7 +125,7 @@ export default function studio() {
     );
   }
 
-  if (!authenticated) {
+  if (!loading && !authenticated) {
     return (
       <Layout>
         <Box margin='small' align='center'>
