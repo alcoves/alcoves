@@ -8,6 +8,7 @@ function PictureInPictureButton({ vRef }) {
       height={20}
       stroke='#fff'
       name='monitor'
+      style={{ cursor: 'pointer', padding:'5px' }}
       onClick={() => {
         vRef.current.requestPictureInPicture();
       }}
