@@ -7,7 +7,7 @@ import { Context, } from '../../utils/store';
 import Layout from '../../components/Layout';
 
 const Dropzone = styled.div`
-  display: flex;
+  display: ${p => p.files.length ? 'none' : 'flex'};
   cursor: pointer;
   width: 100%;
   max-width: 300px;
@@ -16,6 +16,7 @@ const Dropzone = styled.div`
   align-items: center;
   justify-content: center;
   border: dashed 3px #E4E7EB;
+  margin: 30px 10px 10px 10px;
 `;
 
 export default function Uploader() {
@@ -45,7 +46,7 @@ export default function Uploader() {
         align='center'
         justify='center'
       >
-        <Dropzone {...getRootProps()}>
+        <Dropzone {...getRootProps()} files={files}>
           <input {...getInputProps()} />
           {isDragActive ? (
             <Heading level='4'> Drop here! </Heading>

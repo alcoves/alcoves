@@ -1,10 +1,12 @@
 
 import axios from 'axios';
 import React, { useState, useEffect, } from 'react';
-import { Text, Box, } from 'grommet';
+import { Text, Box, Meter, Button, } from 'grommet';
+import { useRouter, } from 'next/router';
 import { useApiLazy, } from '../../utils/api';
 
 export default function UploadProgress({ file }) {
+  const router = useRouter();
   const [progress, setProgress] = useState(0);
 
   const [
@@ -63,9 +65,24 @@ export default function UploadProgress({ file }) {
 
   if (file?.name && progress) {
     return (
-      <Box>
-        <Text>{file.name}</Text>
-        <Text>{progress}</Text>
+      <Box width='300px' margin='small'>
+        <Text truncate>
+          {file.name}
+        </Text>
+        <br />
+        <Box direction='row' align='center'>
+          <Meter
+            aria-label='meter'
+            values={[{ value: progress }]}
+          />
+          <Button
+            size='small'
+            label='Edit'
+            style={{ marginLeft: '10px' }}
+            disabled={!completeUploadData}
+            onClick={() => router.push(`/studio/${createUploadData.payload.id}`)}
+          />
+        </Box>
       </Box>
     );
   }
