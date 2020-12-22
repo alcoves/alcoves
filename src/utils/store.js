@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import LogRocket from 'logrocket';
 import React, { createContext, useState, useEffect, } from 'react';
 
 const Context = createContext();
@@ -14,7 +15,14 @@ function Provider({ children }) {
   
       if (decoded) {
         // TODO :: Check for token expiry
-        console.log('loaded user successfully');
+        if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production') {
+          LogRocket.identify(decoded.id, {
+            email: decoded.email,
+            name: decoded.username,
+            username: decoded.username,
+          });
+        }
+
         setStore({
           ...store,
           user: { ...decoded },
