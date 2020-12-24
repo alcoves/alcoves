@@ -1,13 +1,13 @@
 import { useContext, } from 'react';
 import Image from 'next/image';
 import { useRouter, } from 'next/router';
-import { Menu, Box, } from 'grommet';
+import { Menu, Box, Avatar, } from 'grommet';
 import Icon from './Icon';
 import { Context, } from '../utils/store';
 
 export default function Navigation() {
   const router = useRouter();
-  const { authenticated, logout } = useContext(Context);
+  const { user, authenticated } = useContext(Context);
 
   return (
     <Box
@@ -42,7 +42,7 @@ export default function Navigation() {
         align='center'
         justify='end' 
       >
-        {authenticated ? (
+        {authenticated && user ? (
           <>
             <Icon
               width='24'
@@ -57,12 +57,11 @@ export default function Navigation() {
               onClick={() => router.push('/upload')}
             />
             <Menu
-              icon={<Icon name='user' />}
+              icon={<Avatar src={user.avatar} size='small' />}
               items={[
                 { label: 'Profile (Coming soon!)', onClick: () => {} },
                 { label: 'Studio', onClick: () => router.push('/studio') },
-                { label: 'Account (Coming soon!)', onClick: () => {} },
-                { label: 'Log Out', onClick: () => logout() },
+                { label: 'Account', onClick: () => router.push('/account') },
               ]}
             />
           </>
