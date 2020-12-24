@@ -16,7 +16,7 @@
   "dependencies": {
     "@bugsnag/js": "^7.5.4",
     "@bugsnag/plugin-react": "^7.5.4",
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "dayjs": "^1.9.7",
     "grommet": "^2.16.2",
     "jsonwebtoken": "^8.5.1",
@@ -25,7 +25,7 @@
     "logrocket-react": "^4.0.1",
     "mime": "^2.4.7",
     "moment": "^2.29.1",
-    "next": "^10.0.3",
+    "next": "^10.0.4",
     "query-string": "^6.13.7",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
