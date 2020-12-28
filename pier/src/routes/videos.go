@@ -58,8 +58,7 @@ func GetVideos(c *fiber.Ctx) error {
 		visibility := c.Query("visibility")
 
 		if visibility == "all" {
-			// TODO :: check that they have permissions
-			fmt.Println("querying for all videos", userID)
+			fmt.Println("user is querying for all videos", userID)
 			db.
 				Where("user_id = ?", userID).
 				Order("created_at desc").
