@@ -83,5 +83,5 @@ type User struct {
 	Username      string `gorm:"unique" json:"username"`
 	Plan          string `gorm:"default:alpha" json:"plan"`
 	EmailVerified bool   `gorm:"default:true" json:"emailVerified"`
-	Avatar        string `gorm:"default:https://s3.us-east-2.wasabisys.com/cdn.bken.io/files/favicon.png" json:"avatar"`
+	Avatar        string `gorm:"default:https://cdn.bken.io/files/favicon.png" json:"avatar"`
 }
