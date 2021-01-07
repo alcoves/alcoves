@@ -59,7 +59,7 @@ export default function Navigation() {
             <Menu
               icon={<Avatar src={user.avatar} size='small' />}
               items={[
-                { label: 'Profile', onClick: () => router.push(`/u/${user.username}`) },
+                { label: 'Profile', onClick: () => router.push(`/u/${user.id}`) },
                 { label: 'Studio', onClick: () => router.push('/studio') },
                 { label: 'Account', onClick: () => router.push('/account') },
               ]}
