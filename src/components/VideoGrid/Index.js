@@ -3,6 +3,7 @@ import { Box, Text, } from 'grommet';
 import { useRouter, } from 'next/router';
 import UserCard from './UserCard';
 import videoDuration from '../../utils/videoDuration';
+import VideoMeta from './VideoMeta';
 
 const Duration = styled.div`
   right: 0;
@@ -32,7 +33,7 @@ const VideoThumbnailBox = styled.div`
   background-image: url("${p => p.v.thumbnail}");
 `;
 
-function VideoCard({ v }) {
+function VideoCard({ v, noUser }) {
   const router = useRouter();
 
   return (
@@ -46,9 +47,7 @@ function VideoCard({ v }) {
           </Duration>
         </VideoThumbnailBox>
       </Box>
-      <Box pad='small'>
-        <UserCard v={v} />
-      </Box>
+      {noUser ? <VideoMeta v={v} /> : <UserCard v={v} />}
     </Box>
   );
 }
@@ -59,10 +58,10 @@ const VideoGridWrapper = styled.div`
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 `;
 
-export default function VideoGrid({ videos }) {
+export default function VideoGrid({ videos, noUser }) {
   return (
     <VideoGridWrapper>
-      {videos.map((v) => <VideoCard key={v.id} v={v} />)}
+      {videos.map((v) => <VideoCard key={v.id} v={v} noUser={noUser} />)}
     </VideoGridWrapper>
   );
 }
