@@ -1,48 +1,15 @@
-import moment from 'moment';
-import { Avatar, Box, Text, } from 'grommet';
-import { useRouter, } from 'next/router';
+
+import { Box, } from 'grommet';
 import { useApi, } from '../../utils/api';
-import abbreviateNumber from '../../utils/abbreviateNumber';
 import Spinner from '../Spinner';
+import VideoMeta from './VideoMeta';
 
 export default function UserVideoCard({ v }) {
-  const router = useRouter();
   const { data } = useApi(`/users/${v.userId}`);
 
   if (data) {
     return (
-      <Box
-        margin='small'
-        align='start'
-        justify='start'
-        direction='row'
-      >
-        <Avatar
-          size='medium'
-          src={data.avatar}
-          onClick={() => router.push(`/u/${v.userId}`)}
-        />
-        <Box style={{ paddingLeft: '10px' }}>
-          <Text
-            size='medium'
-            cursor='pointer'
-            style={{ cursor: 'pointer' }}
-            onClick={() => router.push(`/v/${v.id}`)}
-          >
-            {v.title}
-          </Text>
-          <Text
-            size='xsmall'
-            style={{ cursor: 'pointer' }}
-            onClick={() => router.push(`/u/${data.username}`)}
-          >
-            {data.username}
-          </Text>
-          <Text size='xsmall'>
-            {`${abbreviateNumber(v.views)} views · ${moment(v.createdAt).fromNow()}`}
-          </Text>
-        </Box>
-      </Box>
+      <VideoMeta v={v} u={data} />
     );
   }
 
