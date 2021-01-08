@@ -42,6 +42,9 @@ export default function StudioEditVideo() {
           >
             <Box margin='xsmall'>
               <EditTitle id={data.id} title={data.title} />
+              <Box style={{ margin: '15px 0px 0px 0px' }}>
+                <EditVisibility id={data.id} visibility={data.visibility} />
+              </Box>
             </Box>
             <Box margin='xsmall'>
               <img
@@ -50,9 +53,6 @@ export default function StudioEditVideo() {
                 src={data.thumbnail}
                 style={{ borderRadius:'4px' }}
               />
-              <Box paddingTop={10} paddingBottom={10}>
-                <EditVisibility id={data.id} visibility={data.visibility} />
-              </Box>
             </Box>
             <Box margin='xsmall'>
               <ListVersions id={data.id} />

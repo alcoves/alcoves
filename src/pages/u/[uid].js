@@ -48,7 +48,6 @@ function UserProfile({ uid }) {
                       <Text size='small'>{`Public Videos: ${videos.length}`}</Text>
                       <Text size='small'>{`Total Views: ${countViews(videos)}`}</Text>
                     </Box>
-                   
                   </Box>
                 </Box>
               )}
@@ -66,10 +65,6 @@ function UserProfile({ uid }) {
 export default function UserProfileIndex() {
   const router = useRouter();
   const { uid } = router.query;
-
-  if (uid) {
-    return <UserProfile uid={uid} />;
-  }
-
-  return <div />;
+  if (!uid) return <div />;
+  return <UserProfile uid={uid} />;
 }

@@ -7,6 +7,12 @@ import Spinner from '../Spinner';
 
 let timer;
 
+const VersionWrapper = styled.div`
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
+`;
+
 const ColoredIcon = styled.div`
   display: flex;
   align-items: center;
@@ -62,9 +68,9 @@ export default function ListVersions({ id }) {
         <Heading margin='xsmall' level='3'>
           Versions
         </Heading>
-        <Box>
+        <VersionWrapper>
           {data.map(v => <Version key={v.name} version={v} />)}
-        </Box>
+        </VersionWrapper>
       </Box>
     );
   }

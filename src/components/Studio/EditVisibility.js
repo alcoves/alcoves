@@ -1,17 +1,11 @@
 
 import { Box,Select,  } from 'grommet';
-import { useState, useEffect, } from 'react';
+import { useState, } from 'react';
 import { useApiLazy, } from '../../utils/api';
 
 export default function EditVisibility({ id, visibility: v }) {
-  const [updateVideo, { loading, error }] = useApiLazy(`/videos/${id}`, 'patch');
+  const [updateVideo, { loading }] = useApiLazy(`/videos/${id}`, 'patch');
   const [visibility, setVisibility ] = useState(v);
-
-  // useEffect(() => {
-  //   if (!loading && error) {
-  //     toaster.danger('Failed to update video visibility');
-  //   }
-  // }, [loading]);
 
   async function handleChange(vis) {
     await updateVideo({ data: { visibility: vis } });
