@@ -16,6 +16,7 @@
   "dependencies": {
     "@bugsnag/js": "^7.5.4",
     "@bugsnag/plugin-react": "^7.5.4",
+    "autoprefixer": "^10.2.1",
     "axios": "^0.21.1",
     "dayjs": "^1.10.1",
     "grommet": "^2.16.2",
@@ -26,11 +27,13 @@
     "mime": "^2.4.7",
     "moment": "^2.29.1",
     "next": "^10.0.4",
+    "postcss": "^8.2.3",
     "query-string": "^6.13.8",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-dropzone": "^11.2.4",
-    "styled-components": "^5.2.1"
+    "styled-components": "^5.2.1",
+    "tailwindcss": "^2.0.2"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",

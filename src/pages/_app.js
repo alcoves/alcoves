@@ -1,4 +1,5 @@
 import '../styles/index.css';
+import 'tailwindcss/tailwind.css';
 import Head from 'next/head';
 import { Grommet, } from 'grommet';
 import React from 'react';
