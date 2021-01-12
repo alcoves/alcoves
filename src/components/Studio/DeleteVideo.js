@@ -13,7 +13,7 @@ export default function DeleteVideo({ id }) {
       <button
         type='button'
         onClick={() => setOpen(true)}
-        className='rounded-md uppercase text-sm font-medium h-8 py-1 px-2 tracking-wide bg-red-500'
+        className='text-gray-200 rounded-md uppercase text-sm font-medium h-8 py-1 px-2 tracking-wide bg-red-500'
       >
         Delete
       </button>
@@ -50,7 +50,7 @@ export default function DeleteVideo({ id }) {
                 <button
                   type='button'
                   onClick={() => setOpen(false)} 
-                  className='mt-3 w-full inline-flex justify-center rounded-md border px-4 py-2 text-base font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm'
+                  className='mt-3 w-full inline-flex text-gray-200 justify-center rounded-md border px-4 py-2 text-base font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm'
                 >
                   Cancel
                 </button>
@@ -62,7 +62,7 @@ export default function DeleteVideo({ id }) {
                   type='button'
                   className='w-full inline-flex justify-center rounded-md border border-transparent px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm'
                 >
-                  Deactivate
+                  Delete
                 </button>
               </div>
             </div>
