@@ -17,14 +17,14 @@ export default function Login() {
   }, [data]);
 
   return (
-    <div className='min-h-screen flex items-center justify-center bg-gray-800 py-12 px-4 sm:px-6 lg:px-8'>
+    <div className='mt-32 flex items-center justify-center bg-gray-800 pb-12 px-4 sm:px-6 lg:px-8'>
       <div className='max-w-md w-full space-y-8'>
         <div>
-          <img className='mx-auto h-12 w-auto' src='/favicon.ico' alt='Workflow' />
+          <img className='mx-auto h-20 w-auto' src='/favicon.ico' alt='logo' />
           <h2 className='mt-2 text-center text-5xl font-extrabold text-gray-200'>
             Dive in to bken
           </h2>
-          <p className='mt-2 text-center text-sm text-gray-600'>
+          <p className='mt-2 text-center text-sm text-gray-400'>
             <a href='/register' className='font-medium  '>
               Or create your account
             </a>
