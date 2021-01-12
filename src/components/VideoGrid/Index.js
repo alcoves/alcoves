@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { Box, Text, } from 'grommet';
 import { useRouter, } from 'next/router';
 import UserCard from './UserCard';
 import videoDuration from '../../utils/videoDuration';
@@ -37,18 +36,18 @@ function VideoCard({ v, noUser }) {
   const router = useRouter();
 
   return (
-    <Box>
-      <Box onClick={() => router.push(`/v/${v.id}`)}>
+    <div>
+      <div onClick={() => router.push(`/v/${v.id}`)}>
         <VideoThumbnailBox v={v}>
           <Duration>
-            <Text size='xsmall'>
+            <p size='xsmall'>
               {videoDuration(v.duration)}
-            </Text>
+            </p>
           </Duration>
         </VideoThumbnailBox>
-      </Box>
+      </div>
       {noUser ? <VideoMeta v={v} /> : <UserCard v={v} />}
-    </Box>
+    </div>
   );
 }
 

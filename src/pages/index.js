@@ -1,4 +1,3 @@
-import { Heading, Box, } from 'grommet';
 import React from 'react';
 import Layout from '../components/Layout';
 import { useApi, } from '../utils/api';
@@ -11,19 +10,19 @@ function index() {
   if (data) {
     return (
       <Layout>
-        <Box pad='small'>
-          <Heading margin='xsmall' level='2'> Latest Videos </Heading>
+        <div className='p-2'>
+          <h2 className='text-3xl mb-2 text-gray-100 font-bold'> Latest Videos </h2>
           {data && <VideoGrid videos={data} />}
-        </Box>
+        </div>
       </Layout>
     );
   }
 
   return (
     <Layout>
-      <Box pad='small' justify='center' align='center'>
+      <div className='flex flex-row justify-center p-2'>
         <Spinner />
-      </Box>
+      </div>
     </Layout>
   );
 }

@@ -62,7 +62,7 @@ function Version({ version }) {
         {Status(status)}
         <p className='text-sm text-gray-300 font-bold'>{`${percentCompleted}%`}</p>
       </div>
-      <div className='uppercase flex justify-center w-full flex-col'>
+      <div className='uppercase flex justify-center w-full flex-col text-gray-200'>
         <p className='font-bold'> 
           {name}
         </p>

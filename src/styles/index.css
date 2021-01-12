@@ -1,9 +1,7 @@
 body {
   margin: 0;
   padding: 0;
-  background: #212c34;
-  font-family: 'Open Sans';
-  /* overflow-y: scroll; */
+  background: #1F2937;
 }
 
 input[type=range] {
@@ -37,7 +35,7 @@ input[type=range]::-webkit-slider-runnable-track {
   width: 100%;
   height: 4px;
   cursor: pointer;
-  background: #c5c5c563;
+  background: #c5c5c52d;
   border-radius: 2px;
 }
 

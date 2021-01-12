@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import { useDropzone, } from 'react-dropzone';
 import React, { useState, useCallback, useContext, } from 'react';
-import { Heading, Box, } from 'grommet';
 import UploadProgress from './uploadProgress';
 import { Context, } from '../../utils/store';
 import Layout from '../../components/Layout';
@@ -39,7 +38,7 @@ export default function Uploader() {
 
   return (
     <Layout>
-      <Box
+      <div
         width='100%'
         height='100%'
         display='flex'
@@ -49,13 +48,13 @@ export default function Uploader() {
         <Dropzone {...getRootProps()} files={files}>
           <input {...getInputProps()} />
           {isDragActive ? (
-            <Heading level='4'> Drop here! </Heading>
+            <h1 level='4'> Drop here! </h1>
           ) : (
-            <Heading level='4'> Upload </Heading>
+            <h1 level='4'> Upload </h1>
           )}
         </Dropzone>
         {files.map(file => <UploadProgress key={file.name} file={file} />)}
-      </Box>
+      </div>
     </Layout>
   );
 }

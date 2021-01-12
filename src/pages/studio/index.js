@@ -1,6 +1,5 @@
 import { useContext, useEffect, } from 'react';
 import { useRouter, } from 'next/router';
-import { Heading, Box, Text, } from 'grommet';
 import moment from 'moment';
 import styled from 'styled-components';
 import Layout from '../../components/Layout';
@@ -84,13 +83,13 @@ export default function studio() {
             >
               <VideoThumbnailBox v={v} onClick={() => router.push(`/studio/${v.id}`)}>
                 <Duration>
-                  <Text size='xsmall'>
+                  <p size='xsmall'>
                     {videoDuration(v.duration)}
-                  </Text>
+                  </p>
                 </Duration>
                 <Visibility>
                   {v.visibility === 'public' ? (
-                    <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24px 24px' stroke='green'>
+                    <svg xmlns='http://www.w3.org/2000/svg' className='h-6 w-6' fill='none' viewBox='0 0 24 24' stroke='green'>
                       <path
                         strokeLinecap='round' 
                         strokeLinejoin='round'
@@ -105,7 +104,7 @@ export default function studio() {
                       />
                     </svg>
                   ) : (
-                    <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24px 24px' stroke='currentColor'>
+                    <svg xmlns='http://www.w3.org/2000/svg' className='h-6 w-6' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
                       <path
                         strokeLinecap='round'
                         strokeLinejoin='round'
@@ -116,13 +115,13 @@ export default function studio() {
                   )}
                 </Visibility>
               </VideoThumbnailBox>
-              <div className='overflow-ellipsis truncate flex flex-row content-center'>
+              <div className='overflow-ellipsis truncate flex flex-row content-center text-gray-200'>
                 <h5>
                   {v.title}
                 </h5>
               </div>
               <div direction='flex flex-row'>
-                <p className='text-xs'>
+                <p className='text-xs text-gray-400'>
                   {metadata(v)}
                 </p>
               </div>
@@ -136,20 +135,20 @@ export default function studio() {
   if (!loading && !authenticated) {
     return (
       <Layout>
-        <Box margin='small' align='center'>
-          <Heading size='xsmall'>
+        <div margin='small' align='center'>
+          <h1 size='xsmall'>
             You must be authenticated
-          </Heading>
-        </Box>
+          </h1>
+        </div>
       </Layout>
     );
   }
 
   return (
     <Layout>
-      <Box margin='small' align='center'>
+      <div margin='small' align='center'>
         <Spinner />
-      </Box>
+      </div>
     </Layout>
   );
 }

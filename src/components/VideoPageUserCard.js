@@ -1,5 +1,4 @@
 import { useEffect, } from 'react';
-import { Avatar, Box, Text, } from 'grommet';
 import { useRouter, } from 'next/router';
 import { useApiLazy, } from '../utils/api';
 
@@ -10,27 +9,26 @@ function VideoPageUserCard({ id }) {
 
   if (data) {
     return (
-      <Box direction='row' height='75px'>
-        <Avatar
+      <div className='flex flex-row h-12 mt-3'>
+        <img
+          className='cursor-pointer w-12 h-12 rounded-full mr-3'
           alt='avatar'
           src={data.avatar}
-          style={{ cursor: 'pointer' }}
           onClick={() => router.push(`/u/${data.username}`)}
         />
-        <Box margin='small'>
-          <Text
-            size='small'
-            style={{ cursor: 'pointer' }}
+        <div margin='small'>
+          <p
+            className='cursor-pointer text-lg font-semibold text-gray-200'
             onClick={() => router.push(`/u/${data.username}`)}
           >
             {data.username}
-          </Text>
-        </Box>
-      </Box>
+          </p>
+        </div>
+      </div>
     );
   }
 
-  return <Box />; 
+  return <div />; 
 }
 
 export default VideoPageUserCard;

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const MeterAnimation = styled.svg`
-  border-top-color: #3498db;
+  border-top-color: #CBD5E1;
   animation-name: spinner_animation;
   animation-duration: 1000ms;
   animation-iteration-count: infinite;
@@ -23,7 +23,7 @@ const MeterAnimation = styled.svg`
 export default function Spinner(props = {}) {
   return (
     <MeterAnimation
-      className={`ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 ${{...props}}`}
+      className={`ease-linear rounded-full border-4 border-t-4 border-gray-800 h-12 w-12 ${{...props}}`}
     />
   );
 }

@@ -2,7 +2,6 @@ import Head from 'next/head';
 import { useRouter, } from 'next/router';
 import moment from 'moment';
 import { useEffect, } from 'react';
-import { Box, Heading, Text, } from 'grommet';
 import Layout from '../../components/Layout';
 import { useApiLazy, } from '../../utils/api';
 import VideoPlayer from '../../components/VideoPlayer/index';
@@ -58,16 +57,16 @@ export default function Video() {
           <title>{data.title}</title>
         </Head>
         <Layout>
-          <Box>
+          <div>
             <VideoPlayer url={data.url} />
-            <Box margin='small'>
-              <Heading level='3' margin='xsmall'>{data.title}</Heading>
-              <Text margin='xsmall' size='small'>
+            <div className='m-3 flex flex-col'>
+              <h1 className='text-3xl font-semibold text-gray-200'>{data.title}</h1>
+              <p className='text-sm font-semibold text-gray-400'>
                 {subHeader}
-              </Text>
+              </p>
               <VideoPageUserCard id={data.userId} />
-            </Box>
-          </Box>
+            </div>
+          </div>
         </Layout>
       </>
     );
@@ -76,18 +75,18 @@ export default function Video() {
   if (error) {
     return (
       <Layout>
-        <Box justify='center'>
-          <Heading> There was an error loading this video </Heading>
-        </Box>
+        <div justify='center'>
+          <h1> There was an error loading this video </h1>
+        </div>
       </Layout>
     );
   }
 
   return (
     <Layout>
-      <Box align='center'>
+      <div align='center'>
         <Spinner />
-      </Box>
+      </div>
     </Layout>
   );
 }

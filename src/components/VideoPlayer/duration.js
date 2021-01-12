@@ -1,4 +1,3 @@
-import { Text, } from 'grommet';
 import React, { useEffect, useState, } from 'react';
 import videoDuration from '../../utils/videoDuration';
 
@@ -17,9 +16,9 @@ function Duration({ vRef }) {
   }, [vRef]);
 
   return (
-    <Text size='small' color='white' style={{ marginLeft: '15px' }}>
+    <p className='text-gray-200 text-sm font-bold ml-4'>
       {time}
-    </Text>
+    </p>
   );
 }
 

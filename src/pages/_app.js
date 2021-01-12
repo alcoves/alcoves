@@ -1,12 +1,10 @@
 import '../styles/index.css';
 import 'tailwindcss/tailwind.css';
 import Head from 'next/head';
-import { Grommet, } from 'grommet';
 import React from 'react';
 import LogRocket  from 'logrocket';
 import setupLogRocketReact  from 'logrocket-react';
 import Bugsnag from '../utils/bugsnag';
-import theme from '../styles/theme';
 import { Provider, } from '../utils/store';
 
 function App({ Component, pageProps }) {
@@ -30,11 +28,9 @@ function App({ Component, pageProps }) {
           <meta property='og:description' content='bken.io is a video sharing platform' />
           <script src='https://cdn.jsdelivr.net/npm/hls.js@latest' />
         </Head>
-        <Grommet full theme={theme} themeMode='dark'>
-          <Provider>
-            <Component {...pageProps} />
-          </Provider>
-        </Grommet>
+        <Provider>
+          <Component {...pageProps} />
+        </Provider>
       </ErrorBoundary>
     );  
   }
@@ -44,11 +40,9 @@ function App({ Component, pageProps }) {
       <Head>
         <title>bken.io</title>
       </Head>
-      <Grommet full theme={theme} themeMode='dark'>
-        <Provider>
-          <Component {...pageProps} />
-        </Provider>
-      </Grommet>
+      <Provider>
+        <Component {...pageProps} />
+      </Provider>
     </>
   );
 }

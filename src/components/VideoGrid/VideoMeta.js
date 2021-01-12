@@ -1,5 +1,4 @@
 import moment from 'moment';
-import { Avatar, Box, Text, } from 'grommet';
 import { useRouter, } from 'next/router';
 import abbreviateNumber from '../../utils/abbreviateNumber';
 
@@ -7,41 +6,31 @@ export default function VideoMeta({ v, u }) {
   const router = useRouter();
 
   return (
-    <Box
-      align='start'
-      justify='start'
-      direction='row'
-      style={{ margin: '10px 0px 10px 0px' }}
-    >
+    <div className='flex flex-row justify-start my-2'>
       {u && (
-        <Avatar
-          size='medium'
+        <img
+          alt='avatar'
           src={u.avatar}
+          className='w-12 h-12 rounded-full'
           onClick={() => router.push(`/u/${v.userId}`)}
         />
       )}
-      <Box style={{ paddingLeft: !u ? '0px' : '10px' }}>
-        <Text
-          size='medium'
-          cursor='pointer'
-          style={{ cursor: 'pointer' }}
-          onClick={() => router.push(`/v/${v.id}`)}
-        >
+      <div style={{ paddingLeft: !u ? '0px' : '10px' }}>
+        <p className='truncate text-lg text-gray-200 font-bold cursor-pointer' onClick={() => router.push(`/v/${v.id}`)}>
           {v.title}
-        </Text>
+        </p>
         {u && (
-          <Text
-            size='xsmall'
-            style={{ cursor: 'pointer' }}
+          <p
+            className='text-sm font-semibold text-gray-200 cursor-pointer'
             onClick={() => router.push(`/u/${u.username}`)}
           >
             {u.username}
-          </Text>
+          </p>
         )}
-        <Text size='xsmall'>
+        <p className='text-xs lowercase text-gray-400 font-bold'>
           {`${abbreviateNumber(v.views)} views · ${moment(v.createdAt).fromNow()}`}
-        </Text>
-      </Box>
-    </Box>
+        </p>
+      </div>
+    </div>
   );
 }

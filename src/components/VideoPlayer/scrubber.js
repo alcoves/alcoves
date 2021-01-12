@@ -1,5 +1,4 @@
 import React, { useEffect, useState, } from 'react';
-import { RangeInput, } from 'grommet';
 
 function Duration({ vRef = {} }) {
   const [progress, setProgress] = useState(0);
@@ -34,7 +33,9 @@ function Duration({ vRef = {} }) {
   }
 
   return (
-    <RangeInput
+    <input
+      type='range'
+      className='outline-none'
       value={progress}
       onChange={handleChange}
     />

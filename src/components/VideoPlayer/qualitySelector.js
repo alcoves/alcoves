@@ -1,20 +1,6 @@
 import React from 'react';
-import { Menu, } from 'grommet';
-import Icon from '../Icon';
 
 function QualitySelector({ hls }) {
-  function QualityIcon() {
-    return (
-      <Icon
-        width='20px'
-        height='20px'
-        stroke='#fff'
-        name='settings'
-        cursor='pointer'
-      />
-    );
-  }
-
   function handleLevel(i) {
     console.log('setting load level', i);
     hls.currentLevel = i;
@@ -23,11 +9,18 @@ function QualitySelector({ hls }) {
   if (!hls?.levels?.length) return <div />;
 
   return (
-    <Menu
-      icon={QualityIcon()}
-      dropAlign={{ bottom: 'top', right: 'right' }}
-      items={hls.levels.map((l, i) => ({ label: l.name, onClick: () => handleLevel(i) }))}
-    />
+    <select
+      id='visibility'
+      name='visibility'
+      onChange={(e) => handleLevel(e.target.value)}
+      className='bg-transparent text-gray-200 text-sm w-full font-semibold rounded-md'
+    >
+      {hls.levels.map((l, i) => (
+        <option key={l.name} className='bg-gray-800' value={i}>
+          {l.name}
+        </option>
+      ))}
+    </select>
   );
 }
 

@@ -1,4 +1,3 @@
-import { Box, Avatar, Heading, Text, } from 'grommet';
 import Head from 'next/head';
 import { useRouter, } from 'next/router';
 import styled from 'styled-components';
@@ -32,31 +31,32 @@ function UserProfile({ uid }) {
         <title>bken.io</title>
       </Head>
       <Layout>
-        <Box direction='column'>
+        <div className='flex flex-col'>
           <HeaderImage src='https://images.unsplash.com/photo-1609771270965-aeda41eee819?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80' />
-          <Box direction='column' pad='small' gap='small'>
-            <Box direction='row' gap='small' margin='small'>
+          <div className='flex flex-col mx-4'>
+            <div className='flex flex-row'>
               {user && videos && (
-                <Box direction='row' gap='small'>
-                  <Avatar
-                    size='xlarge'
+                <div className='flex flex-row my-4'>
+                  <img
+                    alt='avatar'
                     src={user.avatar}
+                    className='h-20 w-20 rounded-full'
                   />
-                  <Box direction='column' justify='between'>
-                    <Heading level='3' margin='none'>{user.username}</Heading>
-                    <Box>
-                      <Text size='small'>{`Public Videos: ${videos.length}`}</Text>
-                      <Text size='small'>{`Total Views: ${countViews(videos)}`}</Text>
-                    </Box>
-                  </Box>
-                </Box>
+                  <div className='flex flex-col justify-between ml-3'>
+                    <h1 className='text-2xl text-gray-200 font-bold'>{user.username}</h1>
+                    <div>
+                      <p className='text-xs text-gray-400 font-semibold'>{`Public Videos: ${videos.length}`}</p>
+                      <p className='text-xs text-gray-400 font-semibold'>{`Total Views: ${countViews(videos)}`}</p>
+                    </div>
+                  </div>
+                </div>
               )}
-            </Box>
-            <Box>
+            </div>
+            <div>
               {videos && <VideoGrid videos={videos} noUser />}
-            </Box>
-          </Box>
-        </Box>
+            </div>
+          </div>
+        </div>
       </Layout>
     </>
   );
