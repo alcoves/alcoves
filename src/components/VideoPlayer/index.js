@@ -146,7 +146,7 @@ function VideoPlayer({ url }) {
           <div className='flex flex-row w-full px-2 h-6 justify-between'>
             <Scrubber vRef={vRef} />
           </div>
-          <div className='flex flex-row w-full px-2 h-6 mb-1 justify-between content-end'>
+          <div className='flex flex-row w-full px-2 h-6 mb-2 justify-between content-end'>
             <div className='flex flex-row items-center'>
               <PlayButton vRef={vRef} />
               <VolumeButton vRef={vRef} />
