@@ -11,7 +11,7 @@ export default function VideoMeta({ v, u }) {
         <img
           alt='avatar'
           src={u.avatar}
-          className='w-12 h-12 rounded-full'
+          className='w-12 h-12 rounded-full cursor-pointer'
           onClick={() => router.push(`/u/${v.userId}`)}
         />
       )}
@@ -22,7 +22,7 @@ export default function VideoMeta({ v, u }) {
         {u && (
           <p
             className='text-sm font-semibold text-gray-200 cursor-pointer'
-            onClick={() => router.push(`/u/${u.username}`)}
+            onClick={() => router.push(`/u/${u.id}`)}
           >
             {u.username}
           </p>

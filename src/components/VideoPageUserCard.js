@@ -14,12 +14,12 @@ function VideoPageUserCard({ id }) {
           className='cursor-pointer w-12 h-12 rounded-full mr-3'
           alt='avatar'
           src={data.avatar}
-          onClick={() => router.push(`/u/${data.username}`)}
+          onClick={() => router.push(`/u/${data.id}`)}
         />
         <div margin='small'>
           <p
             className='cursor-pointer text-lg font-semibold text-gray-200'
-            onClick={() => router.push(`/u/${data.username}`)}
+            onClick={() => router.push(`/u/${data.id}`)}
           >
             {data.username}
           </p>
