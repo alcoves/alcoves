@@ -16,7 +16,7 @@ function Duration({ vRef }) {
   }, [vRef]);
 
   return (
-    <p className='text-gray-200 text-sm font-bold ml-4'>
+    <p className='select-none text-gray-200 text-sm font-bold ml-4 '>
       {time}
     </p>
   );

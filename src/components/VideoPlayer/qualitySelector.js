@@ -13,7 +13,7 @@ function QualitySelector({ hls }) {
       id='visibility'
       name='visibility'
       onChange={(e) => handleLevel(e.target.value)}
-      className='bg-transparent text-gray-200 text-sm w-full font-semibold rounded-md'
+      className='cursor-pointer bg-transparent text-gray-200 text-sm w-full font-semibold rounded-md'
     >
       {hls.levels.map((l, i) => (
         <option key={l.name} className='bg-gray-800' value={i}>
