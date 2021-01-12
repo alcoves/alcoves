@@ -1,4 +1,4 @@
-import { Box, Button, } from 'grommet';
+import { div, Button, } from 'grommet';
 import { useRouter, } from 'next/router';
 import { useEffect, useContext, } from 'react';
 import Layout from '../../components/Layout';
@@ -30,48 +30,42 @@ export default function StudioEditVideo() {
   if (data) {
     return (
       <Layout>
-        <Box
-          width='100%'
-          align='center'
-          justify='center'
-          style={{ paddingTop: '30px' }}
-        >
-          <Box
-            pad='small'
-            width='700px'
-          >
-            <Box margin='xsmall'>
-              <EditTitle id={data.id} title={data.title} />
-              <Box style={{ margin: '15px 0px 0px 0px' }}>
-                <EditVisibility id={data.id} visibility={data.visibility} />
-              </Box>
-            </Box>
-            <Box margin='xsmall'>
+        <div className='w-full justify-center flex p-4'>
+          <div className='max-w-screen-md'>
+            <div>
               <img
                 width='100%'
                 alt='thumbnail'
                 src={data.thumbnail}
                 style={{ borderRadius:'4px' }}
               />
-            </Box>
-            <Box margin='xsmall'>
+            </div>
+            <div>
+              <EditTitle id={data.id} title={data.title} />
+              <EditVisibility id={data.id} visibility={data.visibility} />
               <ListVersions id={data.id} />
-            </Box>
-            <Box margin='xsmall' direction='row' justify='between'>
+            </div>
+            <div className='flex flex-row justify-between'>
               <DeleteVideo id={data.id} />
-              <Button primary onClick={() => router.push(`/v/${vid}`)} label='View' />
-            </Box>
-          </Box>
-        </Box>
+              <button
+                type='button'
+                onClick={() => router.push(`/v/${vid}`)}
+                className='border rounded-md uppercase text-sm font-medium h-8 py-1 px-2 tracking-wide'
+              >
+                View
+              </button>
+            </div>
+          </div>
+        </div>
       </Layout>
     );
   }
 
   return (
     <Layout>
-      <Box align='center' pad='small'>
+      <div className='flex w-full justify-center'>
         <Spinner />
-      </Box>
+      </div>
     </Layout>
   );
 }

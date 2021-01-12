@@ -1,25 +1,26 @@
-
-import { Box,Select,  } from 'grommet';
 import { useState, } from 'react';
 import { useApiLazy, } from '../../utils/api';
 
 export default function EditVisibility({ id, visibility: v }) {
-  const [updateVideo, { loading }] = useApiLazy(`/videos/${id}`, 'patch');
+  const [updateVideo] = useApiLazy(`/videos/${id}`, 'patch');
   const [visibility, setVisibility ] = useState(v);
 
   async function handleChange(vis) {
-    await updateVideo({ data: { visibility: vis } });
+    await updateVideo({ data: { visibility: vis.toLowerCase() } });
     setVisibility(vis);
   }
 
   return (
-    <Box>
-      <Select
-        value={visibility}
-        disabled={loading}
-        options={['unlisted', 'public']}
-        onChange={({ option }) => handleChange(option)}
-      />
-    </Box>
+    <div className='flex flex-row my-2'>
+      <select
+        id='visibility'
+        name='visibility'
+        onChange={(e) => handleChange(e.target.value)}
+        className='bg-gray-700 text-gray-200 w-full rounded-md p-2'
+      >
+        <option selected={visibility === 'public'}>Public</option>
+        <option selected={visibility === 'unlisted'}>Unlisted</option>
+      </select>
+    </div>
   );
 }
