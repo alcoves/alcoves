@@ -1,5 +1,5 @@
 import { useRouter, } from 'next/router';
-import { useEffect, useContext, } from 'react';
+import { useEffect, useRef, useContext, } from 'react';
 import Layout from '../../components/Layout';
 import { useApiLazy, } from '../../utils/api';
 import { Context, } from '../../utils/store';
@@ -10,7 +10,10 @@ import DeleteVideo from '../../components/Studio/DeleteVideo';
 import ListVersions from '../../components/Studio/ListVersions';
 import EditVisibility from '../../components/Studio/EditVisibility';
 
+let hls;
+
 export default function StudioEditVideo() {
+  const vRef = useRef(null);
   const { authenticated, loading } = useContext(Context);
   const [getVideo, { data }] = useApiLazy();
   const router = useRouter();
@@ -26,11 +29,28 @@ export default function StudioEditVideo() {
     }
   }, [vid]);
 
+  useEffect(() => {
+    if (data) {
+      const video = document.getElementById('bkenStudioVideoPlayer');
+      hls = new Hls({ startLevel: 3 });
+      hls.loadSource(data.url);
+      hls.attachMedia(video);
+    }
+  });
+
   if (data) {
     return (
       <Layout>
         <div className='w-full justify-center flex p-4'>
           <div className='max-w-screen-md'>
+            <div className='my-2'>
+              <video
+                className='rounded-md'
+                controls 
+                ref={vRef}
+                id='bkenStudioVideoPlayer'
+              />
+            </div>
             <div>
               <img
                 width='100%'
