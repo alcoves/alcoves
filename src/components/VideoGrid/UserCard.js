@@ -1,5 +1,4 @@
 
-import { Box, } from 'grommet';
 import { useApi, } from '../../utils/api';
 import Spinner from '../Spinner';
 import VideoMeta from './VideoMeta';
@@ -14,8 +13,8 @@ export default function UserVideoCard({ v }) {
   }
 
   return (
-    <Box minHeight='60px'>
+    <div className='flex flex-row w-full'>
       <Spinner />
-    </Box>
+    </div>
   ); 
 }

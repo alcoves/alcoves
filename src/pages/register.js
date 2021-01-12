@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState, } from 'react';
 import Router from 'next/router';
 import Link from 'next/link';
-import { Text, Button, Heading, Box, TextInput, } from 'grommet';
 import { useApiLazy, } from '../utils/api';
 import { Context, } from '../utils/store';
 
@@ -21,14 +20,14 @@ export default function Register() {
   }, [data]);
 
   return (
-    <Box
+    <div
       height='100vh'
       width='100vw'
       align='start'
       justify='center'
       direction='row'
     >
-      <Box
+      <div
         width='450px'
         display='flex'
         style={{marginTop: '100px'}}
@@ -37,15 +36,15 @@ export default function Register() {
         direction='column'
         justify='start'
       >
-        <Box>
-          <Heading
+        <div>
+          <h1
             level='2'
             margin='small'
           >
             Create Your Account
-          </Heading>
-        </Box>
-        <Box
+          </h1>
+        </div>
+        <div
           width='100%'
           margin='small'
           justify='center'
@@ -85,14 +84,14 @@ export default function Register() {
             onChange={e => setCPassword(e.target.value)}
           />
           {error && (
-            <Box
+            <div
               width='100%'
               padding='10px'
               display='flex'
               justifyContent='center'
             >
-              <Heading color='red' size={200}>{error.message}</Heading>
-            </Box>
+              <h1 color='red' size={200}>{error.message}</h1>
+            </div>
           )}
           <Button
             style={{ margin: '20px 0px 20px 0px' }}
@@ -106,22 +105,22 @@ export default function Register() {
               });
             }}
           />
-          <Box
+          <div
             width='100%'
             align='center'
             justify='center'
             direction='column'
           >
             {error && (
-              <Text color='red'>{error.message}</Text>
+              <p color='red'>{error.message}</p>
             )}
-            <Text as={Link} href='/login'>
+            <p as={Link} href='/login'>
               Login
-            </Text>
-          </Box>
-          <Box />
-        </Box>
-      </Box>
-    </Box>
+            </p>
+          </div>
+          <div />
+        </div>
+      </div>
+    </div>
   );
 }

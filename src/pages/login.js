@@ -17,11 +17,11 @@ export default function Login() {
   }, [data]);
 
   return (
-    <div className='min-h-screen flex items-center justify-center bg-black-100 py-12 px-4 sm:px-6 lg:px-8'>
+    <div className='min-h-screen flex items-center justify-center bg-gray-800 py-12 px-4 sm:px-6 lg:px-8'>
       <div className='max-w-md w-full space-y-8'>
         <div>
           <img className='mx-auto h-12 w-auto' src='/favicon.ico' alt='Workflow' />
-          <h2 className='mt-6 text-center text-3xl font-extrabold text-gray-900'>
+          <h2 className='mt-2 text-center text-5xl font-extrabold text-gray-200'>
             Dive in to bken
           </h2>
           <p className='mt-2 text-center text-sm text-gray-600'>
@@ -32,16 +32,15 @@ export default function Login() {
         </div>
         <form className='mt-8 space-y-6'>
           <input type='hidden' name='remember' value='true' />
-          <div className='rounded-md shadow-sm -space-y-px'>
+          <div>
             <div>
-              <label htmlFor='email-address' className='sr-only'>Email address</label>
               <input
                 id='email-address'
                 name='email'
                 type='email'
                 autoComplete='email'
                 required
-                className='appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-500 rounded-t-md focus:outline-none focus:z-10 sm:text-sm'
+                className='appearance-none my-2 rounded-none relative block w-full px-3 py-2 bg-gray-900 text-gray-500 rounded-t-md focus:outline-none'
                 placeholder='Email address'
                 value={email}
                 onChange={(e) => {
@@ -50,14 +49,13 @@ export default function Login() {
               />
             </div>
             <div>
-              <label htmlFor='password' className='sr-only'>Password</label>
               <input
                 id='password'
                 name='password'
                 type='password'
                 autoComplete='current-password'
                 required
-                className='appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-500 rounded-b-md focus:outline-none focus:z-10 sm:text-sm'
+                className='appearance-none my-2 rounded-none relative block w-full px-3 py-2 bg-gray-900 text-gray-500 rounded-b-md focus:outline-none'
                 placeholder='Password'
                 value={password}
                 onChange={(e) => {
@@ -96,7 +94,7 @@ export default function Login() {
                   console.error(err);
                 }
               }}
-              className='group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2'
+              className='group relative w-full flex justify-center py-2 px-4 text-sm font-semibold  rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 bg-teal-500 uppercase'
             >
               <span className='absolute left-0 inset-y-0 flex items-center pl-3'>
                 <svg className='h-5 w-5' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor' aria-hidden='true'>

@@ -1,5 +1,4 @@
 import { useContext, } from 'react';
-import { Avatar, Box, Button, Heading, Text, } from 'grommet';
 import { useRouter, } from 'next/router';
 import Layout from '../components/Layout';
 import { Context, } from '../utils/store';
@@ -27,26 +26,27 @@ export default function Account() {
 
   return (
     <Layout>
-      <Box align='center'>
-        <Box width='500px' align='center' margin='medium'>
-          <Avatar size='xlarge' src={user.avatar} />
-          <Heading level='4'>
+      <div className='flex flex-col mt-4'>
+        <div width='500px' align='center' margin='medium'>
+          <img className='h-32 w-32 rounded-full' src={user.avatar} alt='avatar' />
+          <h4 className='mt-2 text-3xl font-bold text-gray-200'>
             {user.username}
-          </Heading>
-          <Text>
+          </h4>
+          <p className='mb-2 text-sm lowercase font-bold text-gray-500'>
             {user.email}
-          </Text>
-          <Button
-            primary
-            margin='small'
-            label='Log out'
+          </p>
+          <button
+            type='button'
+            className='rounded-md uppercase text-sm text-gray-50 font-medium h-8 py-1 px-4 tracking-wide bg-teal-600'
             onClick={() => {
               logout();
               router.push('/');
             }}
-          />
-        </Box>
-      </Box>
+          >
+            Log out
+          </button>
+        </div>
+      </div>
     </Layout>
   );
 }

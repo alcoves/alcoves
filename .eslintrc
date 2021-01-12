@@ -21,7 +21,7 @@
   "parser": "babel-eslint",
   "rules": {
     "max-len": [
-      2,
+      1,
       100,
       2,
       {

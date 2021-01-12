@@ -1,4 +1,3 @@
-import { RangeInput, } from 'grommet';
 import React, { useEffect, useState, } from 'react';
 
 function VolumeButton({ vRef }) {
@@ -16,7 +15,9 @@ function VolumeButton({ vRef }) {
   }
 
   return (
-    <RangeInput
+    <input
+      type='range'
+      className='outline-none'
       value={volume}
       onChange={handleChange}
       style={{ width: '60px', color: 'white', marginLeft: '10px' }}

@@ -21,7 +21,7 @@ const Wrapper = styled.div`
    ${p => p.rotation === 0 ? 
     'max-height: calc((9 /  16) * 100vw); height: calc(100vh - 300px);'
     : 
-    'max-height: calc(100vh - 50px); height: calc(100vh - 50px);'
+    'max-height: calc(100vh - 48px); height: calc(100vh - 48px);'
 }
 `;
 
@@ -36,41 +36,12 @@ const ControlsWrapper = styled.div`
   align-items: center;
   flex-direction: column;
   justify-content: flex-end;
-  // https://cssgradient.io/
   background: rgb(255,255,255);
   transition: opacity .1s ease-in;
   -moz-transition: opacity .1s ease-in;
   -webkit-transition: opacity .1s ease-in;
   opacity: ${props => props.controlsVisible ? 1 : 0};
   background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.30) 90%, rgba(0,0,0,0.60) 100%);
-`;
-
-const VideoWrapper = styled.video`
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  background: #000000;
-`;
-
-const UpperControls = styled.div`
-  height: 100%;
-  width: 100%;
-`;
-
-const LowerControls = styled.div`
-  display: flex;
-  overflow: none;
-  flex-direction: row;
-  width: calc(100% - 45px);
-  justify-content: space-between;
-`;
-
-const LowerControlRow = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
 `;
 
 const BufferingWrapper = styled.div`
@@ -152,7 +123,7 @@ function VideoPlayer({ url }) {
       onMouseLeave={() => setControlsVisible(false)}
       style={{ cursor: controlsVisible ? 'auto' : 'none' }}
     >
-      <VideoWrapper
+      <video
         ref={vRef}
         id='bkenVideoPlayer'
         disableRemotePlayback
@@ -160,6 +131,7 @@ function VideoPlayer({ url }) {
         onStalled={() => { setBuffering(true); }}
         onWaiting={() => { setBuffering(true); }}
         onPlaying={() => { setBuffering(false); }}
+        className='-top-0 -left-0 w-full h-full absolute bg-black'
       />
 
       {buffering && (
@@ -170,23 +142,25 @@ function VideoPlayer({ url }) {
  
       {hls && vRef && vRef.current && (
         <ControlsWrapper controlsVisible={controlsVisible}>
-          <UpperControls />
-          <LowerControls>
+          <div className='h-full w-full' />
+          <div className='flex flex-row w-full px-2 h-6 justify-between'>
             <Scrubber vRef={vRef} />
-          </LowerControls>
-          <LowerControls style={{ marginBottom: '5px' }}>
-            <LowerControlRow>
+          </div>
+          <div className='flex flex-row w-full px-2 h-6 mb-1 justify-between content-end'>
+            <div className='flex flex-row items-center'>
               <PlayButton vRef={vRef} />
               <VolumeButton vRef={vRef} />
               <VolumeSlider vRef={vRef} />
               <Duration vRef={vRef} />
-            </LowerControlRow>
-            <LowerControlRow>
+            </div>
+            <div className='flex flex-row items-center'>
               <QualitySelector hls={hls} />
-              <PictureInPictureButton vRef={vRef} />
-              <FullScreenButton vRef={vRef} />
-            </LowerControlRow>
-          </LowerControls>
+              <div className='flex flex-row items-center'>
+                <PictureInPictureButton vRef={vRef} />
+                <FullScreenButton vRef={vRef} />
+              </div>
+            </div>
+          </div>
         </ControlsWrapper>
       )}
     </Wrapper>
