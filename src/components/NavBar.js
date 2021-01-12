@@ -1,11 +1,17 @@
-import { useContext, } from 'react';
+import { useContext, useState, } from 'react';
 import Image from 'next/image';
 import { useRouter, } from 'next/router';
 import { Context, } from '../utils/store';
 
 export default function Navigation() {
   const router = useRouter();
+  const [open, setOpen] = useState(false);
   const { user, authenticated } = useContext(Context);
+
+  function handleClick(route) {
+    setOpen(false);
+    router.push(route);
+  }
 
   return (
     <div className='flex flex-row h-12 justify-between bg-gray-900'>
@@ -39,17 +45,36 @@ export default function Navigation() {
                 d='M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12'
               />
             </svg>
-            {/* <img className='h-8 w-8' src={user.avatar} alt='avatar' /> */}
-            <select
-              id='home-menu'
-              name='home-menu'
-              onClick={(e) => router.push(e.target.value)}
-              className='mx-2 text-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 rounded-md bg-gray-800 text-white h-6'
-            >
-              <option value={`/u/${user.id}`}> Profile </option>
-              <option value='/studio'> Studio </option>
-              <option value='/account'> Account </option>
-            </select>
+            <img
+              alt='avatar'
+              src={user.avatar}
+              onClick={() => setOpen(!open)}
+              className='h-8 w-8 mx-2 rounded-full cursor-pointer'
+            />
+            {open && (
+              <div className='z-50 absolute right-0 top-0 mt-14 mr-4 w-56 rounded-md shadow-lg bg-gray-900'>
+                <div className='py-1' role='menu' aria-orientation='vertical' aria-labelledby='options-menu'>
+                  <div
+                    onClick={() => handleClick(`/u/${user.id}`)} 
+                    className='cursor-pointer block px-4 py-2 text-sm text-gray-200 hover:bg-gray-800'
+                  >
+                    Profile
+                  </div>
+                  <div
+                    onClick={() => handleClick('/studio')} 
+                    className='cursor-pointer block px-4 py-2 text-sm text-gray-200 hover:bg-gray-800'
+                  >
+                    Studio
+                  </div>
+                  <div
+                    onClick={() => handleClick('/account')} 
+                    className='cursor-pointer block px-4 py-2 text-sm text-gray-200 hover:bg-gray-800'
+                  >
+                    Account
+                  </div>
+                </div>
+              </div>
+            )}
           </>
         )
           : (
