@@ -2,11 +2,8 @@ body {
   margin: 0;
   padding: 0;
   background: #212c34;
+  font-family: 'Open Sans';
   /* overflow-y: scroll; */
-}
-
-input {
-  outline: none;
 }
 
 input[type=range] {
