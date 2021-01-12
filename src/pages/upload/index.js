@@ -38,13 +38,7 @@ export default function Uploader() {
 
   return (
     <Layout>
-      <div
-        width='100%'
-        height='100%'
-        display='flex'
-        align='center'
-        justify='center'
-      >
+      <div className='w-full h-full flex justify-center items-center'>
         <Dropzone {...getRootProps()} files={files}>
           <input {...getInputProps()} />
           {isDragActive ? (

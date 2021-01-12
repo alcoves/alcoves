@@ -64,23 +64,25 @@ export default function UploadProgress({ file }) {
 
   if (file?.name && progress) {
     return (
-      <div width='300px' margin='small'>
-        <p truncate>
+      <div className='p-2 w-96'>
+        <p className='text-lg text-gray-200' truncate>
           {file.name}
         </p>
-        <br />
-        <div direction='row' align='center'>
-          <Meter
-            aria-label='meter'
-            values={[{ value: progress }]}
-          />
-          <Button
-            size='small'
-            label='Edit'
-            style={{ marginLeft: '10px' }}
-            disabled={!completeUploadData}
-            onClick={() => router.push(`/studio/${createUploadData.payload.id}`)}
-          />
+        <div className='flex flex-row items-center'>
+          <div className='w-full'>
+            <div className='overflow-hidden h-4 text-xs flex rounded-sm bg-teal-500'>
+              <div style={{ width: `${progress}%` }} className='shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-teal-400' />
+            </div>
+          </div>
+          {progress >= 100 && (
+            <button
+              className='ml-2 px-2 py-1 text-gray-200 border rounded-md font-semibold'
+              disabled={!completeUploadData}
+              onClick={() => router.push(`/studio/${createUploadData.payload.id}`)}
+            >
+              Edit
+            </button>
+          )}
         </div>
       </div>
     );

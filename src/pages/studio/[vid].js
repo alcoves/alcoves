@@ -49,7 +49,7 @@ export default function StudioEditVideo() {
               <button
                 type='button'
                 onClick={() => router.push(`/v/${vid}`)}
-                className='border rounded-md uppercase text-sm font-medium h-8 py-1 px-2 tracking-wide'
+                className='text-gray-200 border rounded-md uppercase text-sm font-medium h-8 py-1 px-2 tracking-wide'
               >
                 View
               </button>
