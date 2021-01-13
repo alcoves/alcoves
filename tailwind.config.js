@@ -19,10 +19,10 @@ module.exports = {
       teal: colors.teal,
       blueGray: colors.blueGray,
     },
-  },
-  fontFamily: {
-    sans: ['Open Sans', 'sans-serif'],
-    serif: ['Merriweather', 'serif'],
+    fontFamily: {
+      serif: ['Merriweather', 'serif'],
+      sans: ['Nunito Sans', 'sans-serif'],
+    },
   },
   variants: {
     extend: {},
