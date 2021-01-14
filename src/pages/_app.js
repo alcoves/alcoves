@@ -1,6 +1,5 @@
 import '../styles/index.css';
 import 'tailwindcss/tailwind.css';
-import Head from 'next/head';
 import React from 'react';
 import LogRocket  from 'logrocket';
 import setupLogRocketReact  from 'logrocket-react';
@@ -25,14 +24,11 @@ function App({ Component, pageProps }) {
   }
 
   return (
-    <>
-      <Head>
-        <title>bken.io</title>
-      </Head>
+    <div>
       <Provider>
         <Component {...pageProps} />
       </Provider>
-    </>
+    </div>
   );
 }
 
