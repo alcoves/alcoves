@@ -8,33 +8,36 @@ function baseUrl() {
   return 'http://localhost:4000/api';
 }
 
-function useApi(url = '/', overrides) {
+function fetch(url, overrides) {
   let token;
+  const requestUrl = `${baseUrl()}${url}`;
+  const axiosRequestConfig = {
+    url: requestUrl,
+    method: 'GET',
+  };
+
+  if (process.browser) {
+    token = localStorage.getItem('token');
+  }
+
+  if (token) {
+    axiosRequestConfig.headers = {};
+    axiosRequestConfig.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return axios({ ...axiosRequestConfig, ...overrides });
+}
+
+function useApi(url = '/', overrides) {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [called, setCalled] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  function fetch() {
-    const requestUrl = `${baseUrl()}${url}`;
-    const axiosRequestConfig = {
-      url: requestUrl,
-      method: 'GET',
-    };
-  
-    if (process.browser) {
-      token = localStorage.getItem('token');
-    }
-  
-    if (token) {
-      axiosRequestConfig.headers = {};
-      axiosRequestConfig.headers.Authorization = `Bearer ${token}`;
-    }
-  
-    axios({
-      ...axiosRequestConfig,
-      ...overrides,
-    }).then((res) => {
+  useEffect(() => {
+    setCalled(true);
+    setLoading(true);
+    fetch(url, overrides).then((res) => {
       if (res.data) setData(res.data);
     }).catch((err) => {
       console.error(err);
@@ -42,15 +45,9 @@ function useApi(url = '/', overrides) {
     }).then(() => {
       setLoading(false);
     });
-  }
-
-  useEffect(() => {
-    setCalled(true);
-    setLoading(true);
-    fetch();
   }, []);
 
-  return { data, error, called, loading, refetch: fetch };
+  return { data, error, called, loading };
 }
 
 function useApiLazy(url = '/', method = 'GET') {
@@ -103,4 +100,4 @@ function useApiLazy(url = '/', method = 'GET') {
   return [call, { data, error, called, loading }];
 }
 
-export { useApi, useApiLazy };
+export { fetch, useApi, useApiLazy };
