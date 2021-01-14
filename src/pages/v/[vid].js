@@ -3,82 +3,51 @@ import { useRouter, } from 'next/router';
 import moment from 'moment';
 import { useEffect, } from 'react';
 import Layout from '../../components/Layout';
-import { useApiLazy, } from '../../utils/api';
+import { useApiLazy, fetch, } from '../../utils/api';
 import VideoPlayer from '../../components/VideoPlayer/index';
 import abbreviateNumber from '../../utils/abbreviateNumber';
 import VideoPageUserCard from '../../components/VideoPageUserCard';
 import Spinner from '../../components/Spinner';
 
-// function GoogleAds() {
-//   useEffect(() => {
-//     (window.adsbygoogle = window.adsbygoogle || []).push({});
-//   }, []);
-
-//   return (
-//     <ins
-//       data-ad-format='auto'
-//       className='adsbygoogle'
-//       data-ad-slot='7992005664'
-//       style={{ display: 'block' }}
-//       data-full-width-responsive='true'
-//       data-ad-client='ca-pub-1017771648826122'
-//     />
-//   );
-// }
-
-export default function Video() {
+export default function Video({ video }) {
   const router = useRouter();
   const { vid } = router.query;
-  const [getVideo, { data, error }] = useApiLazy();
   const [watchVideo, { called: watchVideoCalled }] = useApiLazy();
 
   useEffect(() => {
-    if (vid) {
-      getVideo({ url: `/videos/${vid}` });
-    } 
-  }, [vid]);
-
-  useEffect(() => {
-    if (data && vid && !watchVideoCalled) {
+    if (video && vid && !watchVideoCalled) {
       watchVideo({ method: 'post', url: `/videos/${vid}/views` });
     } 
-  }, [data]);
+  }, [video]);
 
-  if (data) {
+  if (video) {
     const subHeader = `${
-      abbreviateNumber(data.views)} views ·
-      ${moment(data.createdAt).fromNow()} · 
-      ${data.visibility}
+      abbreviateNumber(video.views)} views ·
+      ${moment(video.createdAt).fromNow()} · 
+      ${video.visibility}
     `;
 
     return (
       <>
         <Head>
-          <title>{data.title}</title>
+          <title>{video.title}</title>
+          <meta property='og:title' content={video.title} />
+          <meta property='og:image' content={video.thumbnail} />
+          <meta property='og:description' content={video.title} />
         </Head>
         <Layout>
           <div>
-            <VideoPlayer url={data.url} />
+            <VideoPlayer url={video.url} />
             <div className='m-3 flex flex-col'>
-              <h1 className='text-3xl font-semibold text-gray-200'>{data.title}</h1>
+              <h1 className='text-3xl font-semibold text-gray-200'>{video.title}</h1>
               <p className='text-sm font-semibold text-gray-400'>
                 {subHeader}
               </p>
-              <VideoPageUserCard id={data.userId} />
+              <VideoPageUserCard id={video.userId} />
             </div>
           </div>
         </Layout>
       </>
-    );
-  }
-
-  if (error) {
-    return (
-      <Layout>
-        <div justify='center'>
-          <h1> There was an error loading this video </h1>
-        </div>
-      </Layout>
     );
   }
 
@@ -91,11 +60,11 @@ export default function Video() {
   );
 }
 
-// export async function getServerSideProps({ params }) {
-//   try {
-//     const { data } = await ssrApi(`/videos/${params.vid}`);
-//     return { props: { video: data } };
-//   } catch (error) {
-//     return { props: { error: error.message } };
-//   }
-// }
+export async function getServerSideProps({ params }) {
+  try {
+    const { data } = await fetch(`/videos/${params.vid}`);
+    return { props: { video: data } };
+  } catch (error) {
+    return { props: { error: error.message } };
+  }
+}
