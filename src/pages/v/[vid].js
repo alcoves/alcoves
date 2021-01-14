@@ -28,7 +28,7 @@ export default function Video({ video }) {
     `;
 
     return (
-      <>
+      <div>
         <Head>
           <title>{video.title}</title>
           <meta property='og:title' content={video.title} />
@@ -47,7 +47,7 @@ export default function Video({ video }) {
             </div>
           </div>
         </Layout>
-      </>
+      </div>
     );
   }
 
