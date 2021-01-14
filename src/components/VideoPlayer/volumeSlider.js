@@ -11,14 +11,16 @@ function VolumeButton({ vRef }) {
   }, [vRef]);
 
   function handleChange({ target }) {
-    vRef.current.volume = target.value / 100;
+    const newVolume =  target.value / 100;
+    vRef.current.volume = newVolume;
+    // localStorage.setItem('bken_video_volume', newVolume);
   }
 
   return (
     <input
       type='range'
       className='outline-none'
-      value={volume}
+      value={vRef.current.muted ? 0 : volume}
       onChange={handleChange}
       style={{ width: '60px', color: 'white', marginLeft: '10px' }}
     />
