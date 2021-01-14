@@ -15,7 +15,7 @@ function VolumeButton({ vRef }) {
   }
 
   function volumeIcon() {
-    if (!volume) {
+    if (!volume || vRef.current.muted) {
       return (
         <>
           <path 

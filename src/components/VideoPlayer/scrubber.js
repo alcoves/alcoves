@@ -34,6 +34,8 @@ function Duration({ vRef = {} }) {
 
   return (
     <input
+      min='0'
+      max='100'
       type='range'
       className='outline-none'
       value={progress}

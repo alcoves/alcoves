@@ -98,8 +98,18 @@ function VideoPlayer({ url }) {
     if (!loaded) {
       const { t } = qs.parse(window.location.search);
       if (t) vRef.current.currentTime = Number(t);
-      vRef.current.play();
-      setLoaded(true);
+      const startPlayPromise = vRef.current.play();
+
+      if (startPlayPromise !== undefined) {
+        startPlayPromise.then(() => {
+          console.info('video started playing without error');
+          vRef.current.volume = 1; // TODO :: Set last know volume
+          vRef.current.muted = false;
+          setLoaded(true);
+        }).catch(error => {
+          console.error(error.name);
+        });
+      }      
     }
   }
 
@@ -124,11 +134,13 @@ function VideoPlayer({ url }) {
       style={{ cursor: controlsVisible ? 'auto' : 'none' }}
     >
       <video
+        muted
+        autoPlay
         ref={vRef}
         id='bkenVideoPlayer'
         disableRemotePlayback
         onLoadedMetadata={onLoadedMetadata}
-        onStalled={() => { setBuffering(true); }}
+        // onStalled={() => { setBuffering(true); }}
         onWaiting={() => { setBuffering(true); }}
         onPlaying={() => { setBuffering(false); }}
         className='-top-0 -left-0 w-full h-full absolute bg-black'
