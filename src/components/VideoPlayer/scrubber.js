@@ -37,6 +37,7 @@ function Duration({ vRef = {} }) {
       max={vRef.current.duration || 0}
       onChange={({ target }) => {
         setProgress(target.value);
+        vRef.current.currentTime = target.value;
       }}
     />
   );
