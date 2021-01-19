@@ -1,45 +1,37 @@
 import React, { useEffect, useState, } from 'react';
 
 function Duration({ vRef = {} }) {
-  const [progress, setProgress] = useState(0);
+  const [progress, setProgress ] = useState(0);
 
   useEffect(() => {
-    if (vRef.current.currentTime && vRef.current.duration) {
-      const updateProgress = vRef.current.currentTime / vRef.current.duration * 100;
-
-      if (Number.isNaN(updateProgress)) {
+    if (vRef.current.currentTime) {
+      if (Number.isNaN(vRef.current.currentTime)) {
         setProgress(0);
       } else {
-        setProgress(updateProgress);
+        setProgress(vRef.current.currentTime);
       }
     }
   }, []);
 
   useEffect(() => {
-    const video = vRef.current;
-    function timeUpdate() { 
-      const positionUpdate = (video.currentTime / video.duration) * 100;
-      setProgress(positionUpdate);
+    function timeUpdate() {
+      setProgress(vRef.current.currentTime);
     }
-    video.addEventListener('timeupdate', timeUpdate);
-    return () => video.removeEventListener('timeupdate', timeUpdate);
-  }, [vRef]);
 
-  function handleChange({ target }) {
-    let seekPosition = vRef.current.duration * (target.value / 100);
-    if (Number.isNaN(seekPosition)) seekPosition = 0;
-    vRef.current.currentTime = seekPosition;
-    setProgress(seekPosition / vRef.current.duration * 100);
-  }
+    vRef.current.addEventListener('timeupdate', timeUpdate);
+    return () => vRef.current.removeEventListener('timeupdate', timeUpdate);
+  }, [vRef]);
 
   return (
     <input
-      min='0'
-      max='100'
+      min={0}
       type='range'
-      className='outline-none'
       value={progress}
-      onChange={handleChange}
+      className='outline-none'
+      max={vRef.current.duration || 0}
+      onChange={({ target }) => {
+        setProgress(target.value);
+      }}
     />
   );
 }
