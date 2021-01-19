@@ -2,7 +2,7 @@ import { useState, } from 'react';
 import { useApiLazy, } from '../../utils/api';
 
 export default function EditVisibility({ id, visibility: v }) {
-  const [updateVideo] = useApiLazy(`/videos/${id}`, 'patch');
+  const [updateVideo] = useApiLazy({ url: `/videos/${id}`, method: 'patch' });
   const [visibility, setVisibility ] = useState(v);
 
   async function handleChange(vis) {

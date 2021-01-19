@@ -1,13 +1,9 @@
-import { useState, useEffect, } from 'react';
+import { useState, } from 'react';
 import { useApiLazy, } from '../../utils/api';
 
 export default function EditTitle({ id, title: t }) {
-  const [updateVideo, { loading, error }] = useApiLazy(`/videos/${id}`, 'patch');
+  const [updateVideo, { loading }] = useApiLazy({ url: `/videos/${id}`, methid: 'patch' });
   const [title, setTitle ] = useState(t);
-
-  // useEffect(() => {
-  //   if (!loading && error) toaster.danger('Failed to update video title');
-  // }, [loading]);
 
   return (
     <div className='flex flex-row my-2'>
@@ -21,7 +17,7 @@ export default function EditTitle({ id, title: t }) {
         type='button'
         disabled={loading}
         className='w-max px-5 py-1 border rounded-md text-gray-300'
-        onClick={() => updateVideo({ data: { title }})}
+        onClick={() => updateVideo({ data: { title } })}
       >
         Save
       </button>

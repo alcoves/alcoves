@@ -4,7 +4,7 @@ import { useApiLazy, } from '../utils/api';
 
 function VideoPageUserCard({ id }) {
   const router = useRouter();
-  const [getUser, { data }] = useApiLazy(`/users/${id}`);
+  const [getUser, { data }] = useApiLazy({ url: `/users/${id}` });
   useEffect(() => { getUser(); }, []);
 
   if (data) {

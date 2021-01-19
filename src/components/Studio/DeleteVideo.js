@@ -5,7 +5,7 @@ import { useApiLazy, } from '../../utils/api';
 export default function DeleteVideo({ id }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const [deleteVideo, { loading, data }] = useApiLazy(`/videos/${id}`, 'delete');
+  const [deleteVideo, { data }] = useApiLazy({ url: `/videos/${id}`, method: 'delete' });
   if (data) router.push('/studio');
 
   return (

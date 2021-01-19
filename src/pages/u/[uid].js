@@ -22,8 +22,8 @@ const HeaderImage = styled.div`
 `;
 
 function UserProfile({ uid }) {
-  const { data: user } = useApi(`/users/${uid}`);
-  const { data: videos } = useApi(`/videos?userId=${uid}`);
+  const { data: user } = useApi({ url: `/users/${uid}` });
+  const { data: videos } = useApi({ url: `/videos?userId=${uid}` });
 
   return (
     <>

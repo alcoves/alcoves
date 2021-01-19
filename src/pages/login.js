@@ -7,7 +7,7 @@ export default function Login() {
   const { login } = useContext(Context);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loginRemote, { data, loading, error }] = useApiLazy('/login', 'post');
+  const [loginRemote, { data }] = useApiLazy({ url: '/login', method: 'post' });
 
   useEffect(() => {
     if (data) {
@@ -89,7 +89,7 @@ export default function Login() {
                   loginRemote({ data: {
                     email,
                     password,
-                  }});
+                  } });
                 } catch (err) {
                   console.error(err);
                 }
