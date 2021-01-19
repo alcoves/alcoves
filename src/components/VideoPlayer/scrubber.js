@@ -15,11 +15,17 @@ function Duration({ vRef = {} }) {
 
   useEffect(() => {
     function timeUpdate() {
-      setProgress(vRef.current.currentTime);
+      if (vRef?.current?.currentTime) {
+        setProgress(vRef.current.currentTime);
+      }
     }
 
     vRef.current.addEventListener('timeupdate', timeUpdate);
-    return () => vRef.current.removeEventListener('timeupdate', timeUpdate);
+    return () => {
+      if (vRef?.current) {
+        vRef.current.removeEventListener('timeupdate', timeUpdate);
+      }
+    };
   }, [vRef]);
 
   return (
