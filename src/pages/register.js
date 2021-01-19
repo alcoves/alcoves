@@ -9,7 +9,7 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [registerRemote, { data, error }] = useApiLazy('/register', 'post');
+  const [registerRemote, { data }] = useApiLazy({ url: '/register', method: 'post' });
 
   useEffect(() => {
     if (data) {

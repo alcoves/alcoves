@@ -28,6 +28,10 @@
         "ignoreUrls": true
       }
     ],
+    "object-curly-spacing": [
+      "error",
+      "always"
+    ],
     "linebreak-style": [
       "error",
       "unix"

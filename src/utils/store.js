@@ -56,7 +56,7 @@ function Provider({ children }) {
   };
 
   useEffect(() => { if (!store.user) login(); }, []);
-  return <Context.Provider value={{...store, login, logout}}>{children}</Context.Provider>;
+  return <Context.Provider value={{ ...store, login, logout }}>{children}</Context.Provider>;
 }
 
 export { Context, Provider };

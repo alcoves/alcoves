@@ -64,7 +64,7 @@ function VideoPlayer({ url }) {
 
   useEffect(() => {
     const video = document.getElementById('bkenVideoPlayer');
-    hls = new Hls({ startLevel: 3 });
+    hls = new window.Hls({ startLevel: 3 });
     hls.loadSource(url);
     hls.attachMedia(video);
 

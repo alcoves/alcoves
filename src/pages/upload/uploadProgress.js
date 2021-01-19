@@ -12,19 +12,15 @@ export default function UploadProgress({ file }) {
     createVideo,
     {
       data: completeUploadData,
-      error: completeUploadError,
-      loading: completeUploadLoading,
     },
-  ] = useApiLazy('/videos', 'post');
+  ] = useApiLazy({ url: '/videos', method: 'post' });
 
   const [
     createUpload,
     {
       data: createUploadData,
-      error: createUploadError,
-      loading: createUploadLoading,
     },
-  ] = useApiLazy('/uploads', 'post');
+  ] = useApiLazy({ url: '/uploads', method: 'post' });
 
   useEffect(() => {
     createUpload({

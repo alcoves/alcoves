@@ -1,6 +1,6 @@
 import { useEffect, } from 'react';
 import styled from 'styled-components';
-import { useApi,} from '../../utils/api';
+import { useApi, } from '../../utils/api';
 import Spinner from '../Spinner';
 
 let timer;
@@ -72,7 +72,7 @@ function Version({ version }) {
 }
 
 export default function ListVersions({ id }) {
-  const { data, error, refetch }  = useApi(`/videos/${id}/versions`);
+  const { data, error, refetch }  = useApi({ url: `/videos/${id}/versions` });
 
   useEffect(() => {
     clearInterval(timer);

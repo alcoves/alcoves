@@ -23,7 +23,7 @@ const MeterAnimation = styled.svg`
 export default function Spinner(props = {}) {
   return (
     <MeterAnimation
-      className={`ease-linear rounded-full border-4 border-t-4 border-gray-800 h-12 w-12 ${{...props}}`}
+      className={`ease-linear rounded-full border-4 border-t-4 border-gray-800 h-12 w-12 ${{ ...props }}`}
     />
   );
 }

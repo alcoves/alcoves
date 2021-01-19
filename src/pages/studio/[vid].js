@@ -32,7 +32,7 @@ export default function StudioEditVideo() {
   useEffect(() => {
     if (data) {
       const video = document.getElementById('bkenStudioVideoPlayer');
-      hls = new Hls({ startLevel: 3 });
+      hls = new window.Hls({ startLevel: 3 });
       hls.loadSource(data.url);
       hls.attachMedia(video);
     }

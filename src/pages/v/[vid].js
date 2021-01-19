@@ -62,7 +62,7 @@ export default function Video({ video }) {
 
 export async function getServerSideProps({ params }) {
   try {
-    const { data } = await fetch(`/videos/${params.vid}`);
+    const { data } = await fetch({ url: `/videos/${params.vid}` });
     return { props: { video: data } };
   } catch (error) {
     return { props: { error: error.message } };

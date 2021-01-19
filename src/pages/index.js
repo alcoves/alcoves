@@ -5,7 +5,7 @@ import VideoGrid from '../components/VideoGrid/Index';
 import Spinner from '../components/Spinner';
 
 function index() {
-  const { data } = useApi('/videos');
+  const { data } = useApi({ url: '/videos' });
 
   if (data) {
     return (
