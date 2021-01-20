@@ -28,6 +28,7 @@ export default function Uploader() {
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
+    multiple: false,
     disabled: Boolean(files.length),
     accept: 'video/mp4,video/quicktime',
   });
@@ -42,12 +43,14 @@ export default function Uploader() {
         <Dropzone {...getRootProps()} files={files}>
           <input {...getInputProps()} />
           {isDragActive ? (
-            <h1 level='4'> Drop here! </h1>
+            <h1 className='text-xl font-extrabold uppercase text-gray-300'> Drop here! </h1>
           ) : (
-            <h1 level='4'> Upload </h1>
+            <h1 className='text-xl font-extrabold uppercase text-gray-300'> Upload </h1>
           )}
         </Dropzone>
-        {files.map(file => <UploadProgress key={file.name} file={file} />)}
+        <div className='flex flex-col items-center'>
+          {files.map(file => <UploadProgress key={file.name} file={file} />)}
+        </div>
       </div>
     </Layout>
   );
