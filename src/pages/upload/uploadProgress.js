@@ -61,7 +61,7 @@ export default function UploadProgress({ file }) {
   if (file?.name && progress) {
     return (
       <div className='p-2 w-96'>
-        <p className='text-lg text-gray-200' truncate>
+        <p className='text-lg text-gray-200 truncate'>
           {file.name}
         </p>
         <div className='flex flex-row items-center'>
