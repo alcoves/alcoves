@@ -134,7 +134,6 @@ func CreateVideo(c *fiber.Ctx) error {
 // PatchVideo creates a new video
 func PatchVideo(c *fiber.Ctx) error {
 	id := c.Params("id")
-	db := db.DBConn
 
 	user := c.Locals("user").(*jwt.Token)
 	claims := user.Claims.(jwt.MapClaims)
@@ -144,11 +143,12 @@ func PatchVideo(c *fiber.Ctx) error {
 		c.SendStatus(403)
 	}
 
+	db := db.DBConn
 	inputVideo := new(models.Video)
 	c.BodyParser(inputVideo)
 
 	video := new(models.Video)
-	db.Where("id = ?", id).Find(&video)
+	db.Where("id = ? and user_id = ?", id, userID).Find(&video)
 
 	if inputVideo.Title != "" {
 		video.Title = inputVideo.Title
