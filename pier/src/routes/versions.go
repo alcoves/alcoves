@@ -8,8 +8,10 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/bken-io/api/src/db"
 	"github.com/bken-io/api/src/models"
 	"github.com/bken-io/api/src/s3"
+	jwt "github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
 	"github.com/minio/minio-go/v7"
 )
@@ -125,6 +127,22 @@ func calculatePercentCompleted(id string, version string) uint8 {
 // GetVersions returns tidal information from s3
 func GetVersions(c *fiber.Ctx) error {
 	id := c.Params("id")
+
+	user := c.Locals("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	userID := claims["id"].(string)
+
+	db := db.DBConn
+	var video models.Video
+	result := db.Where("id = ?", id).Find(&video)
+
+	if result.Error != nil {
+		return c.SendStatus(500)
+	}
+
+	if video.UserID != userID {
+		return c.SendStatus(403)
+	}
 
 	versionsFromCDN := getMasterPlaylistPresets(id)
 	versionsFromTidal := getTidalVersions(id)

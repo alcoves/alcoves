@@ -29,11 +29,6 @@ func GetVideo(c *fiber.Ctx) error {
 	var video models.Video
 	result := db.Where("id = ?", id).Find(&video)
 
-	if video.Visibility != "public" {
-		// TODO :: Make sure that the user requesting is the owner
-		// return c.SendStatus(403)
-	}
-
 	if result.Error != nil {
 		return c.SendStatus(500)
 	}
@@ -41,6 +36,16 @@ func GetVideo(c *fiber.Ctx) error {
 	if video.ID == "" {
 		return c.SendStatus(404)
 	}
+
+	// This logic can be used once private videos are a thing
+	// user := c.Locals("user").(*jwt.Token)
+	// claims := user.Claims.(jwt.MapClaims)
+	// userID := claims["id"].(string)
+	// if video.Visibility != "public" {
+	// 	if video.UserID != userID {
+	// 		return c.SendStatus(403)
+	// 	}
+	// }
 
 	video.URL = fmt.Sprintf("https://cdn.bken.io/v/%s/hls/master.m3u8", video.ID)
 	// video.URL = fmt.Sprintf("https://s3.us-east-2.wasabisys.com/cdn.bken.io/v/%s/hls/master.m3u8", video.ID)
