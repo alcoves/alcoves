@@ -9,6 +9,7 @@ import (
 
 type JwtUser struct {
 	ID string `json:"id"`
+	// Roles [string] `json:"roles"`
 }
 
 // Protected protect routes

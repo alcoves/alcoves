@@ -38,6 +38,8 @@ func initDatabase() {
 func setupRoutes(app *fiber.App) {
 	api := app.Group("/api", logger.New())
 
+	api.Get("/me", auth.Protected(), routes.GetMe)
+
 	api.Get("/", routes.Hello)
 	api.Post("/login", routes.Login)
 	api.Post("/register", routes.Register)
@@ -54,6 +56,8 @@ func setupRoutes(app *fiber.App) {
 	api.Post("/uploads", auth.Protected(), routes.CreateUpload)
 
 	api.Get("/users/:id", routes.GetUser)
+
+	api.Delete("/admin/videos", auth.Protected(), routes.HardDeleteVideos)
 }
 
 func main() {

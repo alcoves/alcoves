@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"path/filepath"
+	"time"
 
 	"github.com/bken-io/api/src/db"
 	"github.com/bken-io/api/src/models"
@@ -135,6 +136,14 @@ func PatchVideo(c *fiber.Ctx) error {
 	id := c.Params("id")
 	db := db.DBConn
 
+	user := c.Locals("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	userID := claims["id"].(string)
+
+	if userID == "" {
+		c.SendStatus(403)
+	}
+
 	inputVideo := new(models.Video)
 	c.BodyParser(inputVideo)
 
@@ -175,8 +184,7 @@ func SoftDeleteVideo(c *fiber.Ctx) error {
 	return c.SendString("video successfully deleted")
 }
 
-// HardDeleteVideo fully deletes all videos marked for deletion
-func HardDeleteVideo(id string) {
+func hardDeleteVideo(id string) {
 	tidalBucket := "tidal"
 	wasabiBucket := "cdn.bken.io"
 	thumbnailsPrefix := fmt.Sprintf("i/%s/", id)
@@ -189,6 +197,35 @@ func HardDeleteVideo(id string) {
 
 	// db.Delete(&video)
 	fmt.Println("video assets successfully deleted")
+}
+
+// HardDeleteVideos fully deletes all videos marked for deletion
+func HardDeleteVideos(c *fiber.Ctx) error {
+	db := db.DBConn
+
+	user := c.Locals("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	userID := claims["id"].(string)
+
+	if userID != "7ec2aafd-1998-40ab-a812-d08baced3b9a" {
+		return c.SendStatus(403)
+	}
+
+	videos := []models.Video{}
+	twoWeeksAgo := time.Now().AddDate(0, 0, -14).Format(time.RFC3339)
+
+	db.Unscoped().
+		Where("deleted_at IS NOT NULL and created_at < ?", twoWeeksAgo).
+		Order("created_at desc").
+		Find(&videos)
+
+	for i := 0; i < len(videos); i++ {
+		fmt.Println("Deleting video", videos[i].DeletedAt)
+		hardDeleteVideo(videos[i].ID)
+		db.Unscoped().Delete(&videos[i])
+	}
+
+	return c.JSON(videos)
 }
 
 func deleteObjects(client string, bucket string, prefix string) {
@@ -207,19 +244,23 @@ func deleteObjects(client string, bucket string, prefix string) {
 		Prefix:    prefix,
 	}
 
-	for object := range s3Client.ListObjects(context.Background(), bucket, opts) {
-		if object.Err != nil {
-			log.Fatalln(object.Err)
+	go func() {
+		defer close(objectsCh)
+		// List all objects from a bucket-name with a matching prefix.
+		for object := range s3Client.ListObjects(context.Background(), bucket, opts) {
+			if object.Err != nil {
+				log.Fatalln(object.Err)
+			}
+			fmt.Println("object", object.Key)
+			objectsCh <- object
 		}
-		fmt.Println("object", object.Key)
-		objectsCh <- object
-	}
+	}()
 
 	opts2 := minio.RemoveObjectsOptions{
-		GovernanceBypass: true,
+		GovernanceBypass: false,
 	}
 
-	for rErr := range s3.Wasabi().RemoveObjects(context.Background(), bucket, objectsCh, opts2) {
+	for rErr := range s3Client.RemoveObjects(context.Background(), bucket, objectsCh, opts2) {
 		fmt.Println("Error detected during deletion: ", rErr)
 	}
 }

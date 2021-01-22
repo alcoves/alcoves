@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/bken-io/api/src/s3"
+	jwt "github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
 	"github.com/teris-io/shortid"
 )
@@ -24,6 +25,14 @@ type CreateUploadPayload struct {
 
 // CreateUpload initiates the upload process
 func CreateUpload(c *fiber.Ctx) error {
+	user := c.Locals("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	userID := claims["id"].(string)
+
+	if userID == "" {
+		return c.SendStatus(403)
+	}
+
 	input := new(CreateUploadInput)
 	if err := c.BodyParser(input); err != nil {
 		return err
