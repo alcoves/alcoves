@@ -14,7 +14,7 @@ let hls;
 
 export default function StudioEditVideo() {
   const vRef = useRef(null);
-  const { authenticated, loading } = useContext(Context);
+  const { user, authenticated, loading } = useContext(Context);
   const [getVideo, { data }] = useApiLazy();
   const router = useRouter();
   const { vid } = router.query;
@@ -38,7 +38,19 @@ export default function StudioEditVideo() {
     }
   });
 
-  if (data) {
+  if (data && authenticated) {
+    if (data?.userId !== user?.id) {
+      return (
+        <Layout>
+          <div className='w-full justify-center flex p-4'>
+            <div className='text-gray-200 uppercase text-3xl font-extrabold h-8 py-1 px-2 tracking-wide'>
+              Not Allowed
+            </div>
+          </div>
+        </Layout>
+      );
+    }
+
     return (
       <Layout>
         <div className='w-full justify-center flex p-4'>
