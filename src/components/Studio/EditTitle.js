@@ -2,7 +2,7 @@ import { useState, } from 'react';
 import { useApiLazy, } from '../../utils/api';
 
 export default function EditTitle({ id, title: t }) {
-  const [updateVideo, { loading }] = useApiLazy({ url: `/videos/${id}`, methid: 'patch' });
+  const [updateVideo, { loading }] = useApiLazy({ url: `/videos/${id}`, method: 'patch' });
   const [title, setTitle ] = useState(t);
 
   return (
