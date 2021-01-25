@@ -14,11 +14,11 @@
     "lint": "eslint --ext .jsx --ext .js ./src"
   },
   "dependencies": {
-    "@bugsnag/js": "^7.5.6",
-    "@bugsnag/plugin-react": "^7.5.6",
-    "autoprefixer": "^10.2.1",
+    "@bugsnag/js": "^7.6.0",
+    "@bugsnag/plugin-react": "^7.6.0",
+    "autoprefixer": "^10.2.3",
     "axios": "^0.21.1",
-    "dayjs": "^1.10.3",
+    "dayjs": "^1.10.4",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.20",
     "logrocket": "^1.0.14",
@@ -38,7 +38,7 @@
     "babel-eslint": "^10.1.0",
     "eslint": "^7.18.0",
     "eslint-config-airbnb": "^18.2.1",
-    "eslint-config-prettier": "^7.1.0",
+    "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-react": "^7.22.0"
