@@ -48,11 +48,11 @@ func CreateUpload(c *fiber.Ctx) error {
 		return c.SendStatus(400)
 	}
 
-	s3Path := fmt.Sprintf("%s/source%s", id, extension)
+	s3Path := fmt.Sprintf("v/%s/source%s", id, extension)
 	fiveMinutes := time.Duration(300 * 1000 * 1000 * 1000)
-	uploadURLRes, err := s3.Doco().PresignedPutObject(
+	uploadURLRes, err := s3.Wasabi().PresignedPutObject(
 		context.Background(),
-		"tidal",
+		"cdn.bken.io",
 		s3Path,
 		fiveMinutes,
 	)

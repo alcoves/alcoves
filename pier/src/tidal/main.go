@@ -10,7 +10,6 @@ import (
 
 type DispatchThumbnailJobBody struct {
 	Meta struct {
-		Cmd   string `json:"cmd"`
 		S3In  string `json:"s3_in"`
 		S3Out string `json:"s3_out"`
 	} `json:"Meta"`
@@ -25,7 +24,6 @@ type DispatchIngestJobBody struct {
 // DispatchThumbnailJob asks tidal to create a thumbnail
 func DispatchThumbnailJob(
 	jobName string,
-	cmd string,
 	s3In string,
 	s3Out string) *resty.Response {
 
@@ -34,7 +32,6 @@ func DispatchThumbnailJob(
 	requestURL := fmt.Sprintf("%s/v1/job/%s/dispatch", nomadAddress, jobName)
 
 	meta := DispatchThumbnailJobBody{}
-	meta.Meta.Cmd = cmd
 	meta.Meta.S3In = s3In
 	meta.Meta.S3Out = s3Out
 	requestMeta, _ := json.Marshal(meta)

@@ -116,18 +116,11 @@ func CreateVideo(c *fiber.Ctx) error {
 		return c.SendStatus(500)
 	}
 
-	tidal.DispatchThumbnailJob(
-		"thumbnail",
-		"-vf scale=854:480:force_original_aspect_ratio=increase,crop=854:480 -vframes 1 -q:v 50",
-		fmt.Sprintf("s3://tidal/%s/source%s", video.ID, extension),
-		fmt.Sprintf("s3://cdn.bken.io/i/%s/t/thumb.webp", video.ID),
-	)
+	S3SourceIn := fmt.Sprintf("s3://cdn.bken.io/v/%s/source%s", video.ID, extension)
+	S3ThumbnailOut := fmt.Sprintf("s3://cdn.bken.io/i/%s/t/thumb.webp", video.ID)
 
-	tidal.DispatchIngestJob(
-		"ingest",
-		fmt.Sprintf("s3://tidal/%s/source%s", video.ID, extension),
-	)
-
+	tidal.DispatchThumbnailJob("thumbnail", S3SourceIn, S3ThumbnailOut)
+	tidal.DispatchIngestJob("ingest", S3SourceIn)
 	return c.JSON(video)
 }
 
