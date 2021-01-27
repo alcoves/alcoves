@@ -17,7 +17,8 @@ type DispatchThumbnailJobBody struct {
 
 type DispatchIngestJobBody struct {
 	Meta struct {
-		S3In string `json:"s3_in"`
+		S3In    string `json:"s3_in"`
+		VideoID string `json:"video_id"`
 	} `json:"Meta"`
 }
 
@@ -50,13 +51,14 @@ func DispatchThumbnailJob(
 }
 
 // DispatchIngestJob asks tidal to transcode a video
-func DispatchIngestJob(jobName string, s3In string) *resty.Response {
+func DispatchIngestJob(jobName string, s3In string, videoID string) *resty.Response {
 	client := resty.New()
 	nomadAddress := os.Getenv("NOMAD_ADDRESS")
 	requestURL := fmt.Sprintf("%s/v1/job/%s/dispatch", nomadAddress, jobName)
 
 	meta := DispatchIngestJobBody{}
 	meta.Meta.S3In = s3In
+	meta.Meta.VideoID = videoID
 	requestMeta, _ := json.Marshal(meta)
 
 	resp, err := client.R().
