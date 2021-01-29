@@ -33,33 +33,25 @@ export default function Uploader() {
     accept: 'video/mp4,video/quicktime',
   });
 
+  if (!authenticated && !loading) {
+    return <div> Please log in to upload </div>;
+  }
+
   return (
     <Layout>
-      <div className='w-full text-xl justify-center flex items-center pt-4 text-gray-50'>
-        Uploading is temporarily disabled, just gotta fix a few more things...
+      <div className='w-full h-full flex justify-center items-center'>
+        <Dropzone {...getRootProps()} files={files}>
+          <input {...getInputProps()} />
+          {isDragActive ? (
+            <h1 className='text-xl font-extrabold uppercase text-gray-300'> Drop here! </h1>
+          ) : (
+            <h1 className='text-xl font-extrabold uppercase text-gray-300'> Upload </h1>
+          )}
+        </Dropzone>
+        <div className='flex flex-col items-center'>
+          {files.map(file => <UploadProgress key={file.name} file={file} />)}
+        </div>
       </div>
     </Layout>
   );
-
-  // if (!authenticated && !loading) {
-  //   return <div> Please log in to upload </div>;
-  // }
-
-  // return (
-  //   <Layout>
-  //     <div className='w-full h-full flex justify-center items-center'>
-  //       <Dropzone {...getRootProps()} files={files}>
-  //         <input {...getInputProps()} />
-  //         {isDragActive ? (
-  //           <h1 className='text-xl font-extrabold uppercase text-gray-300'> Drop here! </h1>
-  //         ) : (
-  //           <h1 className='text-xl font-extrabold uppercase text-gray-300'> Upload </h1>
-  //         )}
-  //       </Dropzone>
-  //       <div className='flex flex-col items-center'>
-  //         {files.map(file => <UploadProgress key={file.name} file={file} />)}
-  //       </div>
-  //     </div>
-  //   </Layout>
-  // );
 }
