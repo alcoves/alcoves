@@ -51,13 +51,11 @@ func setupRoutes(app *fiber.App) {
 
 	api.Post("/videos", auth.Protected(), routes.CreateVideo)
 	api.Patch("/videos/:id", auth.Protected(), routes.PatchVideo)
-	api.Delete("/videos/:id", auth.Protected(), routes.SoftDeleteVideo)
+	api.Delete("/videos/:id", auth.Protected(), routes.HardDeleteVideo)
 
 	api.Post("/uploads", auth.Protected(), routes.CreateUpload)
 
 	api.Get("/users/:id", routes.GetUser)
-
-	api.Delete("/admin/videos", auth.Protected(), routes.HardDeleteVideos)
 }
 
 func main() {

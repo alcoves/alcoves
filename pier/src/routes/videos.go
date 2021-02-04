@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"path/filepath"
-	"time"
 
 	"github.com/bken-io/api/src/db"
 	"github.com/bken-io/api/src/models"
@@ -155,8 +154,9 @@ func PatchVideo(c *fiber.Ctx) error {
 	return c.SendString("Video successfully updated")
 }
 
-// SoftDeleteVideo marks a video as deleted in the database for future cleanup
-func SoftDeleteVideo(c *fiber.Ctx) error {
+// HardDeleteVideo fully delete the video and all cdn resources
+// Tidal resources will be retained
+func HardDeleteVideo(c *fiber.Ctx) error {
 	id := c.Params("id")
 	db := db.DBConn
 
@@ -173,52 +173,15 @@ func SoftDeleteVideo(c *fiber.Ctx) error {
 		return c.SendStatus(403)
 	}
 
-	db.Delete(&video) // Gorm soft deletes the row
-	return c.SendString("video successfully deleted")
-}
-
-func hardDeleteVideo(id string) {
-	tidalBucket := "tidal"
 	wasabiBucket := "cdn.bken.io"
 	thumbnailsPrefix := fmt.Sprintf("i/%s/", id)
 	videosPrefix := fmt.Sprintf("v/%s/", id)
-	tidalPrefix := fmt.Sprintf("%s/", id)
 
 	deleteObjects("wasabi", wasabiBucket, thumbnailsPrefix)
 	deleteObjects("wasabi", wasabiBucket, videosPrefix)
-	deleteObjects("doco", tidalBucket, tidalPrefix)
 
-	// db.Delete(&video)
-	fmt.Println("video assets successfully deleted")
-}
-
-// HardDeleteVideos fully deletes all videos marked for deletion
-func HardDeleteVideos(c *fiber.Ctx) error {
-	db := db.DBConn
-
-	user := c.Locals("user").(*jwt.Token)
-	claims := user.Claims.(jwt.MapClaims)
-	userID := claims["id"].(string)
-
-	if userID != "7ec2aafd-1998-40ab-a812-d08baced3b9a" {
-		return c.SendStatus(403)
-	}
-
-	videos := []models.Video{}
-	twoWeeksAgo := time.Now().AddDate(0, 0, -14).Format(time.RFC3339)
-
-	db.Unscoped().
-		Where("deleted_at IS NOT NULL and created_at < ?", twoWeeksAgo).
-		Order("created_at desc").
-		Find(&videos)
-
-	for i := 0; i < len(videos); i++ {
-		fmt.Println("Deleting video", videos[i].DeletedAt)
-		hardDeleteVideo(videos[i].ID)
-		db.Unscoped().Delete(&videos[i])
-	}
-
-	return c.JSON(videos)
+	db.Unscoped().Delete(&video)
+	return c.SendString("video successfully deleted")
 }
 
 func deleteObjects(client string, bucket string, prefix string) {
