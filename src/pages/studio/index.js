@@ -1,63 +1,61 @@
 import { useContext, useEffect, } from 'react';
 import { useRouter, } from 'next/router';
 import moment from 'moment';
-import styled from 'styled-components';
 import Layout from '../../components/Layout';
 import { Context, } from '../../utils/store';
 import { useApiLazy, } from '../../utils/api';
 import Spinner from '../../components/Spinner';
 import videoDuration from '../../utils/videoDuration';
 
-const Duration = styled.div`
-  right: 0;
-  bottom: 0;
-  z-index: 0;
-  color: white;
-  font-size: 12px;
-  font-weight: 600;
-  position: absolute;
-  border-radius: 3px;
-  margin: 0px 3px 3px 0px;
-  padding: 0px 3px 0px 3px;
-  background: rgba(0, 0, 0, 0.7);
-`;
-
-const Visibility = styled.div`
-  left: 0;
-  bottom: 0;
-  z-index: 0;
-  height: 24px;
-  position: absolute;
-  margin: 0px 0px 5px 5px;
-`;
-
-const VideoGridWrapper = styled.div`
-  display: grid;
-  grid-gap: 1rem;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-`;
-
-const VideoThumbnailBox = styled.div`
-  width: 100%;
-  cursor: pointer;
-  min-height: 180px;
-  max-height: 180px;
-  position: relative;
-  border-radius: 4px;
-  background-color: grey;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-image: url("${p => p.v.thumbnail}");
-  -webkit-box-shadow: inset 0px -105px 66px -39px rgba(0,0,0,0.83);
-  -moz-box-shadow: inset 0px -105px 66px -39px rgba(0,0,0,0.83);
-  box-shadow: inset 0px -105px 66px -39px rgba(0,0,0,0.83);
-`;
-
 export default function studio() {
   const router = useRouter();
   const [getVideos, { data }] = useApiLazy();
   const { user, authenticated, loading } = useContext(Context);
+
+  const styles = {
+    Duration: {
+      right: '0',
+      bottom: '0',
+      zIndex: '0',
+      color: 'white',
+      fontSize: '12px',
+      fontWeight: '600',
+      position: 'absolute',
+      borderRadius: '3px',
+      margin: '0px 3px 3px 0px',
+      padding: '0px 3px 0px 3px',
+      background: 'rgba(0, 0, 0, 0.7)',
+    },
+    Visibility: {
+      left: '0',
+      bottom: '0',
+      zIndex: '0',
+      height: '24px',
+      position: 'absolute',
+      margin: '0px 0px 5px 5px',
+    },
+    VideoGridWrapper: {
+      display: 'grid',
+      gridGap: '1rem',
+      gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+    },
+    VideoThumbnailBox: {
+      width: '100%',
+      cursor: 'pointer',
+      minHeight: '180px',
+      maxHeight: '180px',
+      position: 'relative',
+      borderRadius: '4px',
+      backgroundColor: 'grey',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      backgroundImage: `url("${v.thumbnail}")`,
+      '-webkit-box-shadow': 'inset 0px -105px 66px -39px rgba(0,0,0,0.83)',
+      '-moz-box-shadow': 'inset 0px -105px 66px -39px rgba(0,0,0,0.83)',
+      boxShadow: 'inset 0px -105px 66px -39px rgba(0,0,0,0.83)',
+    },
+  };
 
   useEffect(() => {
     if (user && user.id) {
@@ -75,19 +73,19 @@ export default function studio() {
   if (data) {
     return (
       <Layout>
-        <VideoGridWrapper>
+        <div styles={styles.VideoGridWrapper}>
           {data.map(v => (
             <div
               key={v.id}
               className='flex flex-col content-start p-2'
             >
-              <VideoThumbnailBox v={v} onClick={() => router.push(`/studio/${v.id}`)}>
-                <Duration>
+              <div style={styles.VideoThumbnailBox} onClick={() => router.push(`/studio/${v.id}`)}>
+                <div style={styles.Duration}>
                   <p size='xsmall'>
                     {videoDuration(v.duration)}
                   </p>
-                </Duration>
-                <Visibility>
+                </div>
+                <div style={styles.visibility}>
                   {v.visibility === 'public' ? (
                     <svg xmlns='http://www.w3.org/2000/svg' className='h-6 w-6' fill='none' viewBox='0 0 24 24' stroke='green'>
                       <path
@@ -113,8 +111,8 @@ export default function studio() {
                       />
                     </svg>
                   )}
-                </Visibility>
-              </VideoThumbnailBox>
+                </div>
+              </div>
               <div className='overflow-ellipsis truncate flex flex-row content-center text-gray-200'>
                 <h5>
                   {v.title}
@@ -127,7 +125,7 @@ export default function studio() {
               </div>
             </div>
           ))}
-        </VideoGridWrapper>
+        </div>
       </Layout>
     );
   }

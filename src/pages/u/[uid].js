@@ -1,6 +1,5 @@
 import Head from 'next/head';
 import { useRouter, } from 'next/router';
-import styled from 'styled-components';
 import Layout from '../../components/Layout';
 import VideoGrid from '../../components/VideoGrid/Index';
 import { useApi, } from '../../utils/api';
@@ -12,18 +11,10 @@ function countViews(videos) {
   }, 0);
 }
 
-const HeaderImage = styled.div`
-  width: 100%;
-  height: 300px;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-image: url("${p => p.src}");
-`;
-
 function UserProfile({ uid }) {
   const { data: user } = useApi({ url: `/users/${uid}` });
   const { data: videos } = useApi({ url: `/videos?userId=${uid}` });
+  const headerImageURL = 'https://images.unsplash.com/photo-1609771270965-aeda41eee819?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80';
 
   return (
     <>
@@ -32,7 +23,15 @@ function UserProfile({ uid }) {
       </Head>
       <Layout>
         <div className='flex flex-col'>
-          <HeaderImage src='https://images.unsplash.com/photo-1609771270965-aeda41eee819?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80' />
+          <div style={{
+            width: '100%',
+            height: '300px',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            backgroundImage: `url("${headerImageURL}")`,
+          }}
+          />
           <div className='flex flex-col mx-4'>
             <div className='flex flex-row'>
               {user && videos && (

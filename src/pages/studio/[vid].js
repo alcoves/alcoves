@@ -55,9 +55,9 @@ export default function StudioEditVideo() {
       <Layout>
         <div className='w-full justify-center flex p-4'>
           <div className='max-w-screen-md'>
-            <div className='my-2'>
+            <div className='my-2 flex justify-center'>
               <video
-                className='rounded-md'
+                className='rounded-md max-h-96'
                 controls 
                 ref={vRef}
                 id='bkenStudioVideoPlayer'

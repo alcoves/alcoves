@@ -116,3 +116,15 @@ a:active {
 video {
   outline: none;
 }
+
+@keyframes spinner_animation {
+  0% {
+    transform: rotate(0deg) scale(1,1); 
+  }
+  50% {
+    transform: rotate(360deg) scale(1.1, 1.1); 
+  }
+  100% {
+    transform: rotate(720deg) scale(1, 1); 
+  }
+}
