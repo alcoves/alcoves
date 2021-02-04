@@ -145,14 +145,8 @@ func GetVersions(c *fiber.Ctx) error {
 	versionsFromCDN := getMasterPlaylistPresets(id)
 	versionsFromTidal := getTidalVersions(id)
 
-	fmt.Println("versionsFromCDN", versionsFromCDN)
-	fmt.Println("versionsFromTidal", versionsFromTidal)
-
 	allVersions := append(versionsFromCDN, versionsFromTidal...)
 	uniqueVersions := removeDuplicatesFromSlice(allVersions)
-
-	fmt.Println("allVersions", allVersions)
-	fmt.Println("uniqueVersions", uniqueVersions)
 
 	versions := []models.VideoVersion{}
 
