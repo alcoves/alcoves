@@ -1,7 +1,6 @@
 import React, { useRef, useState, useEffect, } from 'react';
 
 import qs from 'query-string';
-import styled from 'styled-components';
 import Spinner from '../Spinner';
 
 import Scrubber from './scrubber';
@@ -13,45 +12,6 @@ import QualitySelector from './qualitySelector';
 import FullScreenButton from './fullScreenButton';
 import PictureInPictureButton from './pictureInPictureButton';
 
-const Wrapper = styled.div`
-  margin: 0px;
-  line-height: 0px;
-  position: relative;
-  background-color: rgba(0,0,0,.3);
-   ${p => p.rotation === 0 ? 
-    'max-height: calc((9 /  16) * 100vw); height: calc(100vh - 300px);'
-    : 
-    'max-height: calc(100vh - 48px); height: calc(100vh - 48px);'
-}
-`;
-
-const ControlsWrapper = styled.div`
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  overflow: none;
-  position: absolute;
-  align-items: center;
-  flex-direction: column;
-  justify-content: flex-end;
-  background: rgb(255,255,255);
-  transition: opacity .1s ease-in;
-  -moz-transition: opacity .1s ease-in;
-  -webkit-transition: opacity .1s ease-in;
-  opacity: ${props => props.controlsVisible ? 1 : 0};
-  background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.30) 90%, rgba(0,0,0,0.60) 100%);
-`;
-
-const BufferingWrapper = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
 let hls;
 let idleTimer;
 
@@ -61,6 +21,43 @@ function VideoPlayer({ url }) {
   const [loaded, setLoaded] = useState(false);
   const [buffering, setBuffering] = useState(true);
   const [controlsVisible, setControlsVisible] = useState(false);
+
+  const styles = {
+    Wrapper: {
+      margin: '0px',
+      lineHeight: '0px',
+      position: 'relative',
+      backgroundColor: 'rgba(0,0,0,.3)',
+      cursor: `${controlsVisible ? 'auto' : 'none'}`,
+      height: `${rotation === 0 ? 'calc(100vh - 300px)' : 'calc(100vh - 48px)'}`,
+      maxHeight: `${rotation === 0 ? 'calc((9 /  16) * 100vw)' : 'calc(100vh - 48px)'}`,
+    },
+    ControlsWrapper: {
+      top: '0',
+      left: '0',
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      overflow: 'none',
+      position: 'absolute',
+      alignItems: 'center',
+      flexDirection: 'column',
+      justifyContent: 'flex-end',
+      background: 'rgb(255,255,255)',
+      transition: 'opacity .1s ease-in',
+      '-moz-transition': 'opacity .1s ease-in',
+      '-webkit-transition': 'opacity .1s ease-in',
+      opacity: `${controlsVisible ? 1 : 0}`,
+      background: 'linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.30) 90%, rgba(0,0,0,0.60) 100%)',
+    },
+    BufferingWrapper: {
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+  };
 
   useEffect(() => {
     const video = document.getElementById('bkenVideoPlayer');
@@ -125,13 +122,12 @@ function VideoPlayer({ url }) {
   }
 
   return (
-    <Wrapper
-      rotation={rotation}
+    <div
+      style={styles.Wrapper}
       onMouseMove={controlHover}
       onTouchStart={controlHover}
       onMouseEnter={() => setControlsVisible(true)}
       onMouseLeave={() => setControlsVisible(false)}
-      style={{ cursor: controlsVisible ? 'auto' : 'none' }}
     >
       <video
         muted
@@ -147,13 +143,13 @@ function VideoPlayer({ url }) {
       />
 
       {buffering && (
-        <BufferingWrapper>
+        <div style={styles.BufferingWrapper}>
           <Spinner />
-        </BufferingWrapper>
+        </div>
       )}
  
       {hls && vRef && vRef.current && (
-        <ControlsWrapper controlsVisible={controlsVisible}>
+        <div style={styles.ControlsWrapper}>
           <div className='h-full w-full' />
           <div className='flex flex-row w-full px-2 h-6 justify-between'>
             <Scrubber vRef={vRef} />
@@ -173,9 +169,9 @@ function VideoPlayer({ url }) {
               </div>
             </div>
           </div>
-        </ControlsWrapper>
+        </div>
       )}
-    </Wrapper>
+    </div>
   );
 }
 

@@ -1,15 +1,8 @@
 import { useEffect, } from 'react';
-import styled from 'styled-components';
 import { useApi, } from '../../utils/api';
 import Spinner from '../Spinner';
 
 let timer;
-
-const VersionWrapper = styled.div`
-  display: grid;
-  grid-gap: 1rem;
-  grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
-`;
 
 function Status(status) {
   return (
@@ -64,7 +57,8 @@ function Version({ version }) {
       </div>
       <div className='uppercase flex justify-center w-full flex-col text-gray-200'>
         <p className='font-bold'> 
-          {name}p
+          {name}
+          p
         </p>
       </div>
     </div>
@@ -88,9 +82,14 @@ export default function ListVersions({ id }) {
   if (data) {
     return (
       <div className='my-2'>
-        <VersionWrapper>
+        <div style={{
+          display: 'grid',
+          gridGap: '1rem',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(96px, 1fr))',
+        }}
+        >
           {data.map(v => <Version key={v.name} version={v} />)}
-        </VersionWrapper>
+        </div>
       </div>
     );
   }

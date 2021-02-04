@@ -1,66 +1,68 @@
-import styled from 'styled-components';
 import { useRouter, } from 'next/router';
 import UserCard from './UserCard';
-import videoDuration from '../../utils/videoDuration';
 import VideoMeta from './VideoMeta';
-
-const Duration = styled.div`
-  right: 0;
-  bottom: 0;
-  z-index: 0;
-  color: white;
-  font-size: 12px;
-  font-weight: 600;
-  position: absolute;
-  border-radius: 3px;
-  margin: 0px 3px 3px 0px;
-  padding: 0px 3px 0px 3px;
-  background: rgba(0, 0, 0, 0.7);
-`;
-
-const VideoThumbnailBox = styled.div`
-  width: 100%;
-  cursor: pointer;
-  min-height: 180px;
-  max-height: 180px;
-  position: relative;
-  border-radius: 4px;
-  background-color: grey;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-image: url("${p => p.v.thumbnail}");
-`;
+import videoDuration from '../../utils/videoDuration';
 
 function VideoCard({ v, noUser }) {
   const router = useRouter();
 
+  const styles = {
+    Duration: {
+      right: '0',
+      bottom: '0',
+      zIndex: '0',
+      color: 'white',
+      fontSize: '12px',
+      fontWeight: '600',
+      position: 'absolute',
+      borderRadius: '3px',
+      margin: '0px 3px 3px 0px',
+      padding: '0px 3px 0px 3px',
+      background: 'rgba(0, 0, 0, 0.7)',
+    },
+    VideoThumbnailBox: {
+      width: '100%',
+      cursor: 'pointer',
+      minHeight: '180px',
+      maxHeight: '180px',
+      position: 'relative',
+      borderRadius: '4px',
+      backgroundColor: 'grey',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      backgroundImage:`url("${v.thumbnail}")`,
+    },
+  };
+
   return (
     <div>
       <div onClick={() => router.push(`/v/${v.id}`)}>
-        <VideoThumbnailBox v={v}>
-          <Duration>
+        <div style={styles.VideoThumbnailBox}>
+          <div style={styles.Duration}>
             <p size='xsmall'>
               {videoDuration(v.duration)}
             </p>
-          </Duration>
-        </VideoThumbnailBox>
+          </div>
+        </div>
       </div>
       {noUser ? <VideoMeta v={v} /> : <UserCard v={v} />}
     </div>
   );
 }
 
-const VideoGridWrapper = styled.div`
-  display: grid;
-  grid-gap: 1rem;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-`;
-
 export default function VideoGrid({ videos, noUser }) {
+  const styles = {
+    VideoGridWrapper: {
+      display: 'grid',
+      gridGap: '1rem',
+      gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+    },
+  };
+  
   return (
-    <VideoGridWrapper>
+    <div style={styles.VideoGridWrapper}>
       {videos.map((v) => <VideoCard key={v.id} v={v} noUser={noUser} />)}
-    </VideoGridWrapper>
+    </div>
   );
 }
