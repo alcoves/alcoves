@@ -39,22 +39,6 @@ export default function studio() {
       gridGap: '1rem',
       gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
     },
-    VideoThumbnailBox: {
-      width: '100%',
-      cursor: 'pointer',
-      minHeight: '180px',
-      maxHeight: '180px',
-      position: 'relative',
-      borderRadius: '4px',
-      backgroundColor: 'grey',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-      backgroundImage: `url("${data ? data.thumbnail : ""}")`,
-      '-webkit-box-shadow': 'inset 0px -105px 66px -39px rgba(0,0,0,0.83)',
-      '-moz-box-shadow': 'inset 0px -105px 66px -39px rgba(0,0,0,0.83)',
-      boxShadow: 'inset 0px -105px 66px -39px rgba(0,0,0,0.83)',
-    },
   };
 
   useEffect(() => {
@@ -73,13 +57,28 @@ export default function studio() {
   if (data) {
     return (
       <Layout>
-        <div styles={styles.VideoGridWrapper}>
+        <div style={styles.VideoGridWrapper}>
           {data.map(v => (
             <div
               key={v.id}
               className='flex flex-col content-start p-2'
             >
-              <div style={styles.VideoThumbnailBox} onClick={() => router.push(`/studio/${v.id}`)}>
+              <div style={{
+                width: '100%',
+                cursor: 'pointer',
+                minHeight: '180px',
+                maxHeight: '180px',
+                position: 'relative',
+                borderRadius: '4px',
+                backgroundColor: 'grey',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                backgroundImage: `url("${v.thumbnail}")`,
+                '-webkit-box-shadow': 'inset 0px -105px 66px -39px rgba(0,0,0,0.83)',
+                '-moz-box-shadow': 'inset 0px -105px 66px -39px rgba(0,0,0,0.83)',
+                boxShadow: 'inset 0px -105px 66px -39px rgba(0,0,0,0.83)',
+              }} onClick={() => router.push(`/studio/${v.id}`)}>
                 <div style={styles.Duration}>
                   <p size='xsmall'>
                     {videoDuration(v.duration)}
