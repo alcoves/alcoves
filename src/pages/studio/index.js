@@ -50,7 +50,7 @@ export default function studio() {
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
-      backgroundImage: `url("${v.thumbnail}")`,
+      backgroundImage: `url("${data ? data.thumbnail : ""}")`,
       '-webkit-box-shadow': 'inset 0px -105px 66px -39px rgba(0,0,0,0.83)',
       '-moz-box-shadow': 'inset 0px -105px 66px -39px rgba(0,0,0,0.83)',
       boxShadow: 'inset 0px -105px 66px -39px rgba(0,0,0,0.83)',
