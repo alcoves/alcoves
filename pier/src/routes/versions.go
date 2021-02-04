@@ -66,6 +66,7 @@ func getMasterPlaylistPresets(id string) []string {
 		if strings.Contains(e, "NAME=") {
 			presetPart := strings.Split(e, "NAME=")[1]
 			preset := strings.Split(presetPart, ",")[0]
+			preset = strings.TrimSuffix(preset, "p")
 			if preset != "" {
 				presets = append(presets, preset)
 			}
@@ -92,10 +93,7 @@ func getTidalVersions(id string) []string {
 
 		presetSplit := strings.Split(object.Key, "/")
 		presetName := presetSplit[len(presetSplit)-2]
-
-		if strings.Contains(presetName, "p") {
-			versions = append(versions, presetName)
-		}
+		versions = append(versions, presetName)
 	}
 
 	return versions
@@ -147,8 +145,14 @@ func GetVersions(c *fiber.Ctx) error {
 	versionsFromCDN := getMasterPlaylistPresets(id)
 	versionsFromTidal := getTidalVersions(id)
 
+	fmt.Println("versionsFromCDN", versionsFromCDN)
+	fmt.Println("versionsFromTidal", versionsFromTidal)
+
 	allVersions := append(versionsFromCDN, versionsFromTidal...)
 	uniqueVersions := removeDuplicatesFromSlice(allVersions)
+
+	fmt.Println("allVersions", allVersions)
+	fmt.Println("uniqueVersions", uniqueVersions)
 
 	versions := []models.VideoVersion{}
 
