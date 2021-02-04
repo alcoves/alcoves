@@ -64,7 +64,7 @@ function Version({ version }) {
       </div>
       <div className='uppercase flex justify-center w-full flex-col text-gray-200'>
         <p className='font-bold'> 
-          {name}
+          {name}p
         </p>
       </div>
     </div>
