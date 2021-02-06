@@ -63,10 +63,8 @@ func getMasterPlaylistPresets(id string) []string {
 
 	for i := 0; i < len(temp); i++ {
 		e := temp[i]
-		if strings.Contains(e, "NAME=") {
-			presetPart := strings.Split(e, "NAME=")[1]
-			preset := strings.Split(presetPart, ",")[0]
-			preset = strings.TrimSuffix(preset, "p")
+		if strings.Contains(e, "/media-1/stream.m3u8") {
+			preset := strings.Split(e, "/media-1/stream.m3u8")[0]
 			if preset != "" {
 				presets = append(presets, preset)
 			}
