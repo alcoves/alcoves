@@ -15,8 +15,8 @@ job "api" {
 
     task "api" {
       constraint {
+        value     = "app-"
         operator  = "regexp"
-        value     = "[/app/]"
         attribute = "${attr.unique.hostname}"
       }
 
