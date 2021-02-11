@@ -26,11 +26,11 @@
     "mime": "^2.5.0",
     "moment": "^2.29.1",
     "next": "^10.0.6",
-    "postcss": "^8.2.5",
-    "query-string": "^6.13.8",
+    "postcss": "^8.2.6",
+    "query-string": "^6.14.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "react-dropzone": "^11.3.0",
+    "react-dropzone": "^11.3.1",
     "tailwindcss": "^2.0.3"
   },
   "devDependencies": {
