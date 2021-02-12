@@ -54,14 +54,11 @@ export default function StudioEditVideo() {
     return (
       <Layout>
         <div className='w-full justify-center flex p-4'>
-          <div className='max-w-screen-md'>
-            <div className='my-2 flex justify-center'>
-              <video
-                className='rounded-md max-h-96'
-                controls 
-                ref={vRef}
-                id='bkenStudioVideoPlayer'
-              />
+          <div className='max-w-screen-sm'>
+            <div>
+              <EditTitle id={data.id} title={data.title} />
+              <EditVisibility id={data.id} visibility={data.visibility} />
+              <ListVersions id={data.id} />
             </div>
             <div>
               <img
@@ -71,12 +68,15 @@ export default function StudioEditVideo() {
                 style={{ borderRadius:'4px' }}
               />
             </div>
-            <div>
-              <EditTitle id={data.id} title={data.title} />
-              <EditVisibility id={data.id} visibility={data.visibility} />
-              <ListVersions id={data.id} />
+            <div className='my-2 flex justify-center'>
+              <video
+                className='rounded-md max-h-96 min-h-96'
+                controls 
+                ref={vRef}
+                id='bkenStudioVideoPlayer'
+              />
             </div>
-            <div className='flex flex-row justify-between'>
+            <div className='flex flex-row justify-between py-2'>
               <DeleteVideo id={data.id} />
               <button
                 type='button'
