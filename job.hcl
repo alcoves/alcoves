@@ -68,7 +68,6 @@ job "web" {
         cpu    = 50
 
         network {
-          mbits = 50
           port "http" {}
         }
       }
