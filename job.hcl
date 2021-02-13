@@ -13,6 +13,10 @@ job "web" {
       min_healthy_time = "30s"
     }
 
+    network {
+      port "http" {}
+    }
+
     task "web" {
       constraint {
         operator  = "regexp"
@@ -66,10 +70,6 @@ job "web" {
       resources {
         memory = 100
         cpu    = 50
-
-        network {
-          port "http" {}
-        }
       }
     }
   }
