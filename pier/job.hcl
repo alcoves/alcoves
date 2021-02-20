@@ -13,6 +13,10 @@ job "api" {
       min_healthy_time = "30s"
     }
 
+    network {
+      port "bken_api_port" { to = 4000 }
+    }
+
     task "api" {
       constraint {
         value     = "app-"
@@ -35,18 +39,12 @@ job "api" {
           DO_ENDPOINT = "{{key "secrets/DO_ENDPOINT"}}"
 
           MG_API_KEY = "{{key "secrets/MG_API_KEY"}}"
-
-          APOLLO_GRAPH_VARIANT=current
-          APOLLO_SCHEMA_REPORTING=true
-          APOLLO_KEY= "{{key "secrets/APOLLO_KEY"}}"
-
           PG_CONNECTION_STRING = "{{key "secrets/PG_CONNECTION_STRING"}}"
 
           NOMAD_TOKEN = "{{key "secrets/NOMAD_TOKEN"}}"
           NOMAD_ADDRESS = "{{key "secrets/NOMAD_ADDRESS"}}"
 
           JWT_KEY = "{{key "secrets/JWT_KEY"}}"
-          DB_CONNECTION_STRING = "{{key "secrets/DB_CONNECTION_STRING"}}"
         EOH
         
         env         = true
@@ -55,20 +53,18 @@ job "api" {
 
       config {
         force_pull = true
+        ports      = ["bken_api_port"]
         image      = "registry.digitalocean.com/bken/api:latest"
 
         auth {
           username = "${DO_API_KEY}"
           password = "${DO_API_KEY}"
         }
-
-        port_map {
-          http = 4000
-        }
       }
 
       service {
-        port = "http"
+        name = "bken-api"
+        port = "bken_api_port"
         tags = ["urlprefix-/api"]
 
         connect {
@@ -76,23 +72,17 @@ job "api" {
         }
 
         check {
-          name     = "alive"
-          type     = "tcp"
-          port     = "http"
-          timeout  = "5s"
-          interval = "10s"
           path     = "/"
+          timeout  = "2s"
+          interval = "10s"
+          type     = "tcp"
+          name     = "bken_api_port alive"
         }
       }
 
       resources {
         memory = 100
-        cpu    = 50
-
-        network {
-          mbits = 50
-          port "http" {}
-        }
+        cpu    = 100
       }
     }
   }
