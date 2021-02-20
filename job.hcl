@@ -14,16 +14,10 @@ job "web" {
     }
 
     network {
-      port "http" {}
+      port "bken_web_port" { to = 3000 }
     }
 
     task "web" {
-      constraint {
-        operator  = "regexp"
-        value     = "[/app/]"
-        attribute = "${attr.unique.hostname}"
-      }
-
       driver = "docker"
 
       template {
@@ -35,22 +29,26 @@ job "web" {
         destination = ".env"
       }
 
+      constraint {
+        operator  = "regexp"
+        value     = "[/app/]"
+        attribute = "${attr.unique.hostname}"
+      }
+
       config {
         force_pull = true
+        ports      = ["bken_web_port"]
         image      = "registry.digitalocean.com/bken/web:latest"
 
         auth {
           username = "${DO_API_KEY}"
           password = "${DO_API_KEY}"
         }
-
-        port_map {
-          http = 3000
-        }
       }
 
       service {
-        port = "http"
+        name = "bken-web"
+        port = "bken_web_port"
         tags = ["urlprefix-/"]
 
         connect {
@@ -58,18 +56,17 @@ job "web" {
         }
 
         check {
-          name     = "alive"
-          type     = "tcp"
-          port     = "http"
-          timeout  = "5s"
-          interval = "10s"
           path     = "/"
+          timeout  = "2s"
+          interval = "10s"
+          type     = "http"
+          name     = "bken_web_port alive"
         }
       }
 
       resources {
         memory = 100
-        cpu    = 50
+        cpu    = 100
       }
     }
   }
