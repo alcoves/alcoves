@@ -23,6 +23,7 @@ job "web" {
       template {
         data = <<EOH
           DO_API_KEY = "{{key "secrets/DO_API_KEY"}}"
+          BKEN_API_URI = "{{key "secrets/BKEN_API_URI"}}"
         EOH
         
         env         = true
