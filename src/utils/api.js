@@ -2,9 +2,11 @@ import axios from 'axios';
 import { useEffect, useState, } from 'react';
 
 function baseUrl() {
-  return process.env.BKEN_API_URI ?
-    process.env.BKEN_API_URI :
-    'http://localhost:4000/api';
+  if (process.env.NODE_ENV === 'production') return 'https://bken.io/api';
+  return 'http://localhost:4000/api';
+  // return process.env.BKEN_API_URI ?
+  //   process.env.BKEN_API_URI :
+  //   'http://localhost:4000/api';
 }
 
 function fetch(config = { method: 'GET' }) {
