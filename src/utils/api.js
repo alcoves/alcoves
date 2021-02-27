@@ -4,17 +4,17 @@ import { useEffect, useState, } from 'react';
 function baseUrl() {
   if (process.env.NODE_ENV === 'production') return 'https://bken.io/api';
   return 'http://localhost:4000/api';
-  // return process.env.BKEN_API_URI ?
-  //   process.env.BKEN_API_URI :
-  //   'http://localhost:4000/api';
 }
 
 function fetch(config = { method: 'GET' }) {
   let token;
   if (!config.url) throw new Error('api request url not specified');
   config.url = `${baseUrl()}${config.url}`;
+  
+  if (process.browser) {
+    token = localStorage.getItem('token')
+  }
 
-  if (process.browser) token = localStorage.getItem('token');
   if (token) {
     config.headers = {
       Authorization: `Bearer ${token}`,
