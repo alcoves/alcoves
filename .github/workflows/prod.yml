@@ -31,13 +31,13 @@ jobs:
       - name: Push image to DigitalOcean Container Registry
         run: docker push registry.digitalocean.com/bken/web
 
-      # - name: Deploy to Prod
-      #   env:
-      #     NOMAD_TOKEN: ${{ secrets.NOMAD_TOKEN }}
-      #     NOMAD_ADDRESS: ${{ secrets.NOMAD_ADDRESS }}
-      #   run: |
-      #     wget -q https://releases.hashicorp.com/nomad/1.0.3/nomad_1.0.3_linux_amd64.zip
-      #     sudo apt install unzip -y && unzip nomad_1.0.3_linux_amd64.zip
-      #     sed -i "s+:latest+:${GITHUB_SHA}+g" job.hcl
-      #     ./nomad job run -output job.hcl >> job.json
-      #     curl --request POST --data @job.json "http://${NOMAD_ADDRESS}:4646/v1/jobs" -H "X-Nomad-Token: ${NOMAD_TOKEN}"
+      - name: Deploy to Prod
+        env:
+          NOMAD_TOKEN: ${{ secrets.NOMAD_TOKEN }}
+          NOMAD_ADDRESS: ${{ secrets.NOMAD_ADDRESS }}
+        run: |
+          wget -q https://releases.hashicorp.com/nomad/1.0.4/nomad_1.0.4_linux_amd64.zip
+          sudo apt install unzip -y && unzip nomad_1.0.4_linux_amd64.zip
+          sed -i "s+:latest+:${GITHUB_SHA}+g" job.hcl
+          ./nomad job run -output job.hcl >> job.json
+          curl --request POST --data @job.json "http://${NOMAD_ADDRESS}:4646/v1/jobs" -H "X-Nomad-Token: ${NOMAD_TOKEN}"
