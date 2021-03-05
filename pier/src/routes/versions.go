@@ -156,9 +156,9 @@ func GetVersions(c *fiber.Ctx) error {
 				Name:             version,
 				Status:           "completed",
 			})
-		} else if contains(versionsFromTidal, version) {
+		} else {
 			versions = append(versions, models.VideoVersion{
-				PercentCompleted: calculatePercentCompleted(id, version),
+				PercentCompleted: 0,
 				Name:             version,
 				Status:           "processing",
 			})
