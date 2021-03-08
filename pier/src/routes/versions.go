@@ -63,8 +63,11 @@ func getMasterPlaylistPresets(id string) []string {
 
 	for i := 0; i < len(temp); i++ {
 		e := temp[i]
-		if strings.Contains(e, "/media-1/stream.m3u8") {
-			preset := strings.Split(e, "/media-1/stream.m3u8")[0]
+		if strings.Contains(e, "#EXT-X-STREAM-INF:") {
+			preset := strings.Split(e, "RESOLUTION=")[1]   // 1920x1080,URI...
+			preset = strings.Split(preset, ",")[0]         // 1920x1080
+			preset = strings.Split(preset, "x")[1]         // 1080
+			preset = strings.Replace(preset, "\r", "", -1) // wtf is this. why does this string contain \r
 			if preset != "" {
 				presets = append(presets, preset)
 			}
@@ -143,9 +146,10 @@ func GetVersions(c *fiber.Ctx) error {
 	}
 
 	sort.Slice(versions, func(i, j int) bool {
-		a, aErr := strconv.Atoi(strings.TrimSuffix(versions[i].Name, "p"))
-		b, bErr := strconv.Atoi(strings.TrimSuffix(versions[j].Name, "p"))
+		a, aErr := strconv.Atoi(versions[i].Name)
+		b, bErr := strconv.Atoi(versions[j].Name)
 		if aErr != nil || bErr != nil {
+			fmt.Println(aErr, bErr)
 			panic("failed to parse ints")
 		}
 		return a > b
