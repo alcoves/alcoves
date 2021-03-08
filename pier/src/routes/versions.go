@@ -74,29 +74,6 @@ func getMasterPlaylistPresets(id string) []string {
 	return presets
 }
 
-// fetches versions from tidal
-// usually null when there is no ongoing processing
-func getTidalVersions(id string) []string {
-	versions := []string{}
-
-	opts := minio.ListObjectsOptions{
-		Recursive: false,
-		Prefix:    fmt.Sprintf("%s/versions/", id),
-	}
-
-	for object := range s3.Doco().ListObjects(context.Background(), "tidal", opts) {
-		if object.Err != nil {
-			fmt.Println(object.Err)
-		}
-
-		presetSplit := strings.Split(object.Key, "/")
-		presetName := presetSplit[len(presetSplit)-2]
-		versions = append(versions, presetName)
-	}
-
-	return versions
-}
-
 func getNumberOfS3Objects(client *minio.Client, bucket string, prefix string) float32 {
 	var numObjects float32
 
@@ -141,15 +118,15 @@ func GetVersions(c *fiber.Ctx) error {
 	}
 
 	versionsFromCDN := getMasterPlaylistPresets(id)
-	versionsFromTidal := getTidalVersions(id)
+	// versionsFromTidal := getTidalVersions(id)
 
-	allVersions := append(versionsFromCDN, versionsFromTidal...)
-	uniqueVersions := removeDuplicatesFromSlice(allVersions)
+	// allVersions := append(versionsFromCDN, versionsFromTidal...)
+	// uniqueVersions := removeDuplicatesFromSlice(allVersions)
 
 	versions := []models.VideoVersion{}
 
-	for i := 0; i < len(uniqueVersions); i++ {
-		version := uniqueVersions[i]
+	for i := 0; i < len(versionsFromCDN); i++ {
+		version := versionsFromCDN[i]
 		if contains(versionsFromCDN, version) {
 			versions = append(versions, models.VideoVersion{
 				PercentCompleted: 100,

@@ -115,9 +115,12 @@ func CreateVideo(c *fiber.Ctx) error {
 		return c.SendStatus(500)
 	}
 
-	// S3ThumbnailOut := fmt.Sprintf("s3://cdn.bken.io/i/%s/t/thumb.webp", video.ID)
-	RcloneSourceFile := fmt.Sprintf("wasabi:cdn.bken.io/v/%s/source%s", video.ID, extension)
-	tidal.CreateVideo(RcloneSourceFile)
+	rcloneSourceFile := fmt.Sprintf("wasabi:cdn.bken.io/v/%s/%s%s", video.ID, video.ID, extension)
+	rcloneDestinationDir := fmt.Sprintf("wasabi:cdn.bken.io/v/%s/hls", video.ID)
+	tidal.CreateVideo(rcloneSourceFile, rcloneDestinationDir)
+
+	thumbnailDestinationPath := fmt.Sprintf("wasabi:cdn.bken.io/i/%s/t/thumb.webp", video.ID)
+	tidal.CreateThumbnail(rcloneSourceFile, thumbnailDestinationPath)
 	return c.JSON(video)
 }
 
