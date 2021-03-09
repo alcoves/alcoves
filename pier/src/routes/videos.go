@@ -108,7 +108,7 @@ func CreateVideo(c *fiber.Ctx) error {
 
 	video.UserID = userID
 	video.Title = filenameWithoutExtension
-	video.Thumbnail = fmt.Sprintf("https://cdn.bken.io/i/%s/t/thumb.webp", video.ID)
+	video.Thumbnail = fmt.Sprintf("https://cdn.bken.io/v/%s/thumb.webp", video.ID)
 	res := db.Create(&video)
 
 	if res.Error != nil {
