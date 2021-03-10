@@ -174,12 +174,8 @@ func HardDeleteVideo(c *fiber.Ctx) error {
 		return c.SendStatus(403)
 	}
 
-	wasabiBucket := "cdn.bken.io"
-	thumbnailsPrefix := fmt.Sprintf("i/%s/", id)
-	videosPrefix := fmt.Sprintf("v/%s/", id)
-
-	deleteObjects("wasabi", wasabiBucket, thumbnailsPrefix)
-	deleteObjects("wasabi", wasabiBucket, videosPrefix)
+	// Delete all objects from s3
+	deleteObjects("wasabi", "cdn.bken.io", fmt.Sprintf("v/%s/", id))
 
 	db.Unscoped().Delete(&video)
 	return c.SendString("video successfully deleted")
