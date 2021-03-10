@@ -56,6 +56,8 @@ func setupRoutes(app *fiber.App) {
 	api.Post("/uploads", auth.Protected(), routes.CreateUpload)
 
 	api.Get("/users/:id", routes.GetUser)
+
+	api.Post("/admin/videos/reprocess", auth.Protected(), routes.ReprocessVideos)
 }
 
 func main() {
