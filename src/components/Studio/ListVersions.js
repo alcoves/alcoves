@@ -79,16 +79,29 @@ export default function ListVersions({ id }) {
     };
   }, []);
 
+  function DisplayVersion(data) {
+    if (data.length) {
+      return data.map(v => {
+        <Version key={v.name} version={v} />
+      })
+    } else {
+      return (<div className='flex justify-center w-full flex-row items-center'>
+        {Status(status)}
+        <p className='text-sm text-gray-300 font-bold'>Processing</p>
+      </div>)
+    }
+  }
+
   if (data) {
     return (
-      <div className='my-2'>
+      <div className='my-2 w-full'>
         <div style={{
           display: 'grid',
           gridGap: '1rem',
           gridTemplateColumns: 'repeat(auto-fill, minmax(96px, 1fr))',
         }}
         >
-          {data.map(v => <Version key={v.name} version={v} />)}
+          {DisplayVersion(data)}
         </div>
       </div>
     );
