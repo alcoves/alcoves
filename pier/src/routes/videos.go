@@ -116,7 +116,7 @@ func CreateVideo(c *fiber.Ctx) error {
 	}
 
 	rcloneSourceFile := fmt.Sprintf("wasabi:cdn.bken.io/v/%s/%s%s", video.ID, video.ID, extension)
-	rcloneDestinationDir := fmt.Sprintf("wasabi:cdn.bken.io/v/%s/hls", video.ID)
+	rcloneDestinationDir := fmt.Sprintf("wasabi:cdn.bken.io/v/%s", video.ID)
 	tidal.CreateVideo(rcloneSourceFile, rcloneDestinationDir)
 
 	thumbnailDestinationPath := fmt.Sprintf("wasabi:cdn.bken.io/v/%s/thumb.webp", video.ID)
