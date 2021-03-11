@@ -1,4 +1,6 @@
-export default (file, chunkSize = 10000000 * 5) => {
+const DEFAULT_CHUNK_SIZE = 10000000 * 5 // 50mb
+
+export default (file, chunkSize = DEFAULT_CHUNK_SIZE) => {
   let end;
   let blob;
   let start;
