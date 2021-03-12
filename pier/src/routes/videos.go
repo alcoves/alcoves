@@ -29,17 +29,13 @@ type CreateVideoInput struct {
 type TidalMetaRendition struct {
 	Type             string  `json:"type"`
 	Name             string  `json:"name"`
-	Link             string  `json:"link"`
 	PercentCompleted float64 `json:"percent_completed"`
 }
 
 // TidalMeta is a struct that contains relevant metadata about a video encode
 type TidalMeta struct {
 	ID                  string               `json:"id"`
-	Source              string               `json:"source"`
 	Status              string               `json:"status"`
-	Duration            float64              `json:"duration"`
-	Thumbnail           string               `json:"thumbnail"`
 	Renditions          []TidalMetaRendition `json:"renditions"`
 	HLSMasterLink       string               `json:"hls_master_link"`
 	SourceSegmentsCount int                  `json:"source_segments_count"`
@@ -52,6 +48,7 @@ type GetVideoResponse struct {
 	Views      int       `json:"views"`
 	Duration   float32   `json:"duration"`
 	UserID     string    `json:"userId"`
+	Thumbnail  string    `json:"thumbnail"`
 	Visibility string    `json:"visibility"`
 }
 
@@ -87,6 +84,7 @@ func constructVideoResponse(v models.Video, meta TidalMeta) GetVideoResponse {
 		Views:      v.Views,
 		UserID:     v.UserID,
 		Duration:   v.Duration,
+		Thumbnail:  v.Thumbnail,
 		Visibility: v.Visibility,
 	}
 	return res
