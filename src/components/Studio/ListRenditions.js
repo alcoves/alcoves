@@ -47,13 +47,13 @@ function Status(percent_compelted) {
 }
 
 function Rendition({ rendition }) {
-  const { name, percent_completed } = rendition;
+  const { name, percentCompleted } = rendition;
 
   return (
     <div className='flex flex-col w-24'>
       <div className='flex flex-row items-end'>
-        {Status(percent_completed)}
-        <p className='text-sm text-gray-300 font-bold'>{`${percent_completed.toFixed(0)}%`}</p>
+        {Status(percentCompleted)}
+        <p className='text-sm text-gray-300 font-bold'>{`${percentCompleted.toFixed(0)}%`}</p>
       </div>
       <div className='uppercase flex justify-center w-full flex-col text-gray-200'>
         <p className='font-bold'> 
@@ -72,14 +72,14 @@ export default function ListRenditions({ id }) {
     clearInterval(timer);
     timer = setInterval(() => {
         refetch();
-    }, 2000);
+    }, 4000);
 
     return function cleanup() {
       clearInterval(timer);
     };
   }, []);
 
-  if (data?.tidal?.renditions) {
+  if (data && data.renditions) {
     return (
       <div className='my-2 w-full'>
         <div style={{
@@ -88,7 +88,7 @@ export default function ListRenditions({ id }) {
           gridTemplateColumns: 'repeat(auto-fill, minmax(96px, 1fr))',
         }}
         >
-          {data.tidal.renditions.map(r => <Rendition key={r.name} rendition={r} />)}
+          {data.renditions.map(r => <Rendition key={r.name} rendition={r} />)}
         </div>
       </div>
     );
