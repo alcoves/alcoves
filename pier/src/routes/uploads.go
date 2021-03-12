@@ -48,6 +48,10 @@ func CreateUpload(c *fiber.Ctx) error {
 		return c.SendStatus(400)
 	}
 
+	// For length of requested urls
+	// Create signed urls
+	// Start multipart upload
+
 	s3Path := fmt.Sprintf("v/%s/%s%s", id, id, extension)
 	fiveMinutes := time.Duration(300 * 1000 * 1000 * 1000)
 	uploadURLRes, err := s3.Wasabi().PresignedPutObject(

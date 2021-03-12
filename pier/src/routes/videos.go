@@ -1,10 +1,13 @@
 package routes
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"path/filepath"
+	"strings"
 
 	"github.com/bken-io/api/src/db"
 	"github.com/bken-io/api/src/models"
@@ -20,6 +23,72 @@ type CreateVideoInput struct {
 	ID       string  `json:"id"`
 	Title    string  `json:"title"`
 	Duration float32 `json:"duration"`
+}
+
+// TidalMetaRendition represents an individual video preset
+type TidalMetaRendition struct {
+	Type             string  `json:"type"`
+	Name             string  `json:"name"`
+	Link             string  `json:"link"`
+	PercentCompleted float64 `json:"percent_completed"`
+}
+
+// TidalMeta is a struct that contains relevant metadata about a video encode
+type TidalMeta struct {
+	ID                  string               `json:"id"`
+	Source              string               `json:"source"`
+	Status              string               `json:"status"`
+	Duration            float64              `json:"duration"`
+	Thumbnail           string               `json:"thumbnail"`
+	Renditions          []TidalMetaRendition `json:"renditions"`
+	HLSMasterLink       string               `json:"hls_master_link"`
+	SourceSegmentsCount int                  `json:"source_segments_count"`
+}
+
+type GetVideoResponse struct {
+	Tidal      TidalMeta `json:"tidal"`
+	ID         string    `json:"id"`
+	Title      string    `json:"title"`
+	Views      int       `json:"views"`
+	Duration   float32   `json:"duration"`
+	UserID     string    `json:"userId"`
+	Visibility string    `json:"visibility"`
+}
+
+func getVideoMeta(path string) TidalMeta {
+	fmt.Println(path)
+	object, err := s3.Wasabi().GetObject(
+		context.Background(),
+		"cdn.bken.io",
+		path,
+		minio.GetObjectOptions{})
+	if err != nil {
+		fmt.Println(err)
+		log.Fatal("failed to get meta.json from cdn")
+	}
+
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(object)
+	myFileContentAsString := buf.String()
+	decoder := json.NewDecoder(strings.NewReader(myFileContentAsString))
+	var tm TidalMeta
+	err = decoder.Decode(&tm)
+	if err != nil {
+		fmt.Println("twas an error")
+	}
+	return tm
+}
+
+func constructVideoResponse(v models.Video, meta TidalMeta) GetVideoResponse {
+	res := GetVideoResponse{
+		Tidal:      meta,
+		ID:         v.ID,
+		Title:      v.Title,
+		Views:      v.Views,
+		Duration:   v.Duration,
+		Visibility: v.Visibility,
+	}
+	return res
 }
 
 // GetVideo returns a video
@@ -47,9 +116,9 @@ func GetVideo(c *fiber.Ctx) error {
 	// 	}
 	// }
 
-	video.URL = fmt.Sprintf("https://cdn.bken.io/v/%s/hls/master.m3u8", video.ID)
-	// video.URL = fmt.Sprintf("https://s3.us-east-2.wasabisys.com/cdn.bken.io/v/%s/hls/master.m3u8", video.ID)
-	return c.JSON(video)
+	tidalMeta := getVideoMeta(fmt.Sprintf("v/%s/meta.json", video.ID))
+	res := constructVideoResponse(video, tidalMeta)
+	return c.JSON(res)
 }
 
 // GetVideos returns all videos
@@ -108,7 +177,6 @@ func CreateVideo(c *fiber.Ctx) error {
 
 	video.UserID = userID
 	video.Title = filenameWithoutExtension
-	video.Thumbnail = fmt.Sprintf("https://cdn.bken.io/v/%s/thumb.webp", video.ID)
 	res := db.Create(&video)
 
 	if res.Error != nil {
@@ -118,9 +186,6 @@ func CreateVideo(c *fiber.Ctx) error {
 	rcloneSourceFile := fmt.Sprintf("wasabi:cdn.bken.io/v/%s/%s%s", video.ID, video.ID, extension)
 	rcloneDestinationDir := fmt.Sprintf("wasabi:cdn.bken.io/v/%s", video.ID)
 	tidal.CreateVideo(rcloneSourceFile, rcloneDestinationDir)
-
-	thumbnailDestinationPath := fmt.Sprintf("wasabi:cdn.bken.io/v/%s/thumb.webp", video.ID)
-	tidal.CreateThumbnail(rcloneSourceFile, thumbnailDestinationPath)
 	return c.JSON(video)
 }
 
