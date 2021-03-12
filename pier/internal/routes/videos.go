@@ -8,6 +8,7 @@ import (
 	"log"
 	"path/filepath"
 	"strings"
+	"sync"
 
 	"github.com/bken-io/api/internal/db"
 	"github.com/bken-io/api/internal/models"
@@ -16,6 +17,7 @@ import (
 	jwt "github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
 	"github.com/minio/minio-go/v7"
+	"gorm.io/gorm"
 )
 
 // CreateVideoInput is used for creating videos
@@ -25,7 +27,8 @@ type CreateVideoInput struct {
 	Duration float32 `json:"duration"`
 }
 
-func hydrateVideoMeta(path string, video *models.Video) {
+func hydrateVideoMeta(db *gorm.DB, wg *sync.WaitGroup, path string, video *models.Video) {
+	defer wg.Done()
 	object, err := s3.Wasabi().GetObject(
 		context.Background(),
 		"cdn.bken.io",
@@ -52,6 +55,8 @@ func hydrateVideoMeta(path string, video *models.Video) {
 	video.HLSMasterLink = videoMeta.HLSMasterLink
 	video.PercentCompleted = videoMeta.PercentCompleted
 	video.SourceSegmentsCount = videoMeta.SourceSegmentsCount
+
+	db.Save(&video)
 }
 
 // GetVideo returns a video
@@ -67,8 +72,10 @@ func GetVideo(c *fiber.Ctx) error {
 	if video.VideoID == "" {
 		return c.SendStatus(404)
 	}
-	hydrateVideoMeta(fmt.Sprintf("v/%s/meta.json", video.VideoID), &video)
-	db.Save(&video)
+	var wg sync.WaitGroup
+	wg.Add(1)
+	hydrateVideoMeta(db, &wg, fmt.Sprintf("v/%s/meta.json", video.VideoID), &video)
+	wg.Wait()
 	return c.JSON(video)
 }
 
@@ -100,6 +107,13 @@ func GetVideos(c *fiber.Ctx) error {
 		db.Where("visibility = 'public'").Order("created_at desc").Find(&videos)
 	}
 
+	// This would rehydrate each video
+	// var wg sync.WaitGroup
+	// for i := 0; i < len(videos); i++ {
+	// 	wg.Add(1)
+	// 	v := videos[i]
+	// 	go hydrateVideoMeta(db, &wg, fmt.Sprintf("v/%s/meta.json", v.VideoID), &v)
+	// }
 	return c.JSON(videos)
 }
 
