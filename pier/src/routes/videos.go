@@ -85,6 +85,7 @@ func constructVideoResponse(v models.Video, meta TidalMeta) GetVideoResponse {
 		ID:         v.ID,
 		Title:      v.Title,
 		Views:      v.Views,
+		UserID:     v.UserID,
 		Duration:   v.Duration,
 		Visibility: v.Visibility,
 	}
