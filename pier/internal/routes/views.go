@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/bken-io/api/src/db"
-	"github.com/bken-io/api/src/models"
+	"github.com/bken-io/api/internal/db"
+	"github.com/bken-io/api/internal/models"
 	"github.com/gofiber/fiber/v2"
 )
 

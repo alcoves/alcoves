@@ -3,9 +3,9 @@ package routes
 import (
 	"fmt"
 
-	"github.com/bken-io/api/src/db"
-	"github.com/bken-io/api/src/models"
-	"github.com/bken-io/api/src/tidal"
+	"github.com/bken-io/api/internal/db"
+	"github.com/bken-io/api/internal/models"
+	"github.com/bken-io/api/internal/tidal"
 	jwt "github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
 )

@@ -4,8 +4,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/bken-io/api/src/db"
-	"github.com/bken-io/api/src/models"
+	"github.com/bken-io/api/internal/db"
+	"github.com/bken-io/api/internal/models"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gofiber/fiber/v2"
 	"golang.org/x/crypto/bcrypt"
