@@ -4,10 +4,10 @@ import Spinner from '../Spinner';
 
 let timer;
 
-function Status(percent_compelted) {
+function Status(percentCompleted) {
   return (
     <>
-      {percent_compelted === 100 ? (
+      {percentCompleted === 100 ? (
         <svg
           xmlns='http://www.w3.org/2000/svg' 
           fill='none'
@@ -46,25 +46,6 @@ function Status(percent_compelted) {
   );
 }
 
-function Rendition({ rendition }) {
-  const { name, percentCompleted } = rendition;
-
-  return (
-    <div className='flex flex-col w-24'>
-      <div className='flex flex-row items-end'>
-        {Status(percentCompleted)}
-        <p className='text-sm text-gray-300 font-bold'>{`${percentCompleted.toFixed(0)}%`}</p>
-      </div>
-      <div className='uppercase flex justify-center w-full flex-col text-gray-200'>
-        <p className='font-bold'> 
-          {name}
-          p
-        </p>
-      </div>
-    </div>
-  );
-}
-
 export default function ListRenditions({ id }) {
   const { data, error, refetch }  = useApi({ url: `/videos/${id}` });
 
@@ -72,14 +53,14 @@ export default function ListRenditions({ id }) {
     clearInterval(timer);
     timer = setInterval(() => {
         refetch();
-    }, 4000);
+    }, 3000);
 
     return function cleanup() {
       clearInterval(timer);
     };
   }, []);
 
-  if (data && data.renditions) {
+  if (data) {
     return (
       <div className='my-2 w-full'>
         <div style={{
@@ -88,7 +69,17 @@ export default function ListRenditions({ id }) {
           gridTemplateColumns: 'repeat(auto-fill, minmax(96px, 1fr))',
         }}
         >
-          {data.renditions.map(r => <Rendition key={r.name} rendition={r} />)}
+          <div className='flex flex-col w-24'>
+            <div className='flex flex-row items-end'>
+              {Status(data.percentCompleted)}
+              <p className='text-sm text-gray-300 font-bold'>{`${data.percentCompleted.toFixed(0)}%`}</p>
+            </div>
+            <div className='capitalize flex justify-center w-full flex-col text-gray-200'>
+              <p className='font-bold'> 
+                {data.status}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     );
