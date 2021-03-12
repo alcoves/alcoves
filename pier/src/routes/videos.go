@@ -178,6 +178,7 @@ func CreateVideo(c *fiber.Ctx) error {
 
 	video.UserID = userID
 	video.Title = filenameWithoutExtension
+	video.Thumbnail = fmt.Sprintf("https://cdn.bken.io/v/%s/thumb.webp", video.ID)
 	res := db.Create(&video)
 
 	if res.Error != nil {
@@ -187,6 +188,9 @@ func CreateVideo(c *fiber.Ctx) error {
 	rcloneSourceFile := fmt.Sprintf("wasabi:cdn.bken.io/v/%s/%s%s", video.ID, video.ID, extension)
 	rcloneDestinationDir := fmt.Sprintf("wasabi:cdn.bken.io/v/%s", video.ID)
 	tidal.CreateVideo(rcloneSourceFile, rcloneDestinationDir)
+
+	thumbnailDestinationPath := fmt.Sprintf("wasabi:cdn.bken.io/v/%s/thumb.webp", video.ID)
+	tidal.CreateThumbnail(rcloneSourceFile, thumbnailDestinationPath)
 	return c.JSON(video)
 }
 
