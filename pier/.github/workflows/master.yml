@@ -34,7 +34,7 @@ jobs:
       - name: Build container image
         run: docker build 
           -t registry.digitalocean.com/bken/api:latest
-          -t registry.digitalocean.com/bken/api:$GITHUB_SHA .
+          -t registry.digitalocean.com/bken/api:$GITHUB_SHA -f build/Dockerfile .
 
       - name: Login to DigitalOcean Docker Registry
         run: doctl registry login --expiry-seconds 600
