@@ -1,13 +1,7 @@
-import { useEffect, } from 'react';
-import { useApi, } from '../../utils/api';
-import Spinner from '../Spinner';
-
-let timer;
-
-function Status(status) {
+function Status(percent_completed) {
   return (
     <>
-      {status === 'completed' ? (
+      {percent_completed === 100 ? (
         <svg
           xmlns='http://www.w3.org/2000/svg' 
           fill='none'
@@ -46,14 +40,14 @@ function Status(status) {
   );
 }
 
-function Version({ version }) {
-  const { name, status, percentCompleted } = version;
+function Rendition({ rendition }) {
+  const { name, percent_completed } = rendition;
 
   return (
     <div className='flex flex-col w-24'>
       <div className='flex flex-row items-end'>
-        {Status(status)}
-        <p className='text-sm text-gray-300 font-bold'>{`${percentCompleted}%`}</p>
+        {Status(percent_completed)}
+        <p className='text-sm text-gray-300 font-bold'>{`${percent_completed}%`}</p>
       </div>
       <div className='uppercase flex justify-center w-full flex-col text-gray-200'>
         <p className='font-bold'> 
@@ -65,51 +59,19 @@ function Version({ version }) {
   );
 }
 
-export default function ListVersions({ id }) {
-  const { data, error, refetch }  = useApi({ url: `/videos/${id}/versions` });
-
-  useEffect(() => {
-    clearInterval(timer);
-    timer = setInterval(() => {
-      refetch();
-    }, 3000);
-
-    return function cleanup() {
-      clearInterval(timer);
-    };
-  }, []);
-
-  function DisplayVersion(data) {
-    if (data.length) {
-      return data.map(v => {
-        <Version key={v.name} version={v} />
-      })
-    } else {
-      return (<div className='flex justify-center w-full flex-row items-center'>
-        {Status(status)}
-        <p className='text-sm text-gray-300 font-bold'>Processing</p>
-      </div>)
-    }
-  }
-
-  if (data) {
-    return (
-      <div className='my-2 w-full'>
-        <div style={{
-          display: 'grid',
-          gridGap: '1rem',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(96px, 1fr))',
-        }}
-        >
-          {DisplayVersion(data)}
-        </div>
-      </div>
-    );
-  }
-
+export default function ListRenditions({ renditions = [] }) {
   return (
-    <div className='flex m-3 justify-center'>
-      {error ? <div>{JSON.stringify(error)}</div> : <Spinner />}
+    <div className='my-2 w-full'>
+      <div style={{
+        display: 'grid',
+        gridGap: '1rem',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(96px, 1fr))',
+      }}
+      >
+        {renditions.map((r) => {
+          return  <Rendition key={r.name} rendition={r} />
+        })}
+      </div>
     </div>
   );
 }
