@@ -15,7 +15,7 @@ func processVideo(v *models.Video, wg *sync.WaitGroup) {
 	defer wg.Done()
 	fmt.Println("reprocessing", v.VideoID)
 	rcloneSourceFile := fmt.Sprintf("wasabi:cdn.bken.io/v/%s/%s%s", v.VideoID, v.VideoID, ".mp4")
-	rcloneDestinationDir := fmt.Sprintf("wasabi:cdn.bken.io/v/%s/hls", v.VideoID)
+	rcloneDestinationDir := fmt.Sprintf("wasabi:cdn.bken.io/v/%s", v.VideoID)
 	tidal.CreateVideo(rcloneSourceFile, rcloneDestinationDir)
 }
 
