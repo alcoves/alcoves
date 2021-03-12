@@ -58,7 +58,7 @@ export default function StudioEditVideo() {
             <div>
               <EditTitle id={data.id} title={data.title} />
               <EditVisibility id={data.id} visibility={data.visibility} />
-              <ListRenditions renditions={data.tidal.renditions} />
+              <ListRenditions id={data.id} />
             </div>
             <div>
               <img
@@ -69,12 +69,13 @@ export default function StudioEditVideo() {
               />
             </div>
             <div className='my-2 flex justify-center'>
-              <video
+              {data?.tidal?.status === 'completed' && <video
                 className='rounded-md max-h-96 min-h-96'
                 controls 
                 ref={vRef}
                 id='bkenStudioVideoPlayer'
               />
+              }
             </div>
             <div className='flex flex-row justify-between py-2'>
               <DeleteVideo id={data.id} />
