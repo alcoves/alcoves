@@ -16,7 +16,6 @@ import (
 	jwt "github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
 	"github.com/minio/minio-go/v7"
-	"gorm.io/gorm/clause"
 )
 
 // CreateVideoInput is used for creating videos
@@ -70,7 +69,6 @@ func GetVideo(c *fiber.Ctx) error {
 	}
 	hydrateVideoMeta(fmt.Sprintf("v/%s/meta.json", video.VideoID), &video)
 	db.Save(&video)
-	result = db.Preload(clause.Associations).Where("video_id", id).Find(&video)
 	return c.JSON(video)
 }
 
