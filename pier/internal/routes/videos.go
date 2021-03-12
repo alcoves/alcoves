@@ -16,6 +16,7 @@ import (
 	jwt "github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
 	"github.com/minio/minio-go/v7"
+	"gorm.io/gorm/clause"
 )
 
 // CreateVideoInput is used for creating videos
@@ -25,35 +26,8 @@ type CreateVideoInput struct {
 	Duration float32 `json:"duration"`
 }
 
-// TidalMetaRendition represents an individual video preset
-type TidalMetaRendition struct {
-	Type             string  `json:"type"`
-	Name             string  `json:"name"`
-	PercentCompleted float64 `json:"percent_completed"`
-}
-
-// TidalMeta is a struct that contains relevant metadata about a video encode
-type TidalMeta struct {
-	ID                  string               `json:"id"`
-	Status              string               `json:"status"`
-	Renditions          []TidalMetaRendition `json:"renditions"`
-	HLSMasterLink       string               `json:"hls_master_link"`
-	SourceSegmentsCount int                  `json:"source_segments_count"`
-}
-
-type GetVideoResponse struct {
-	Tidal      TidalMeta `json:"tidal"`
-	ID         string    `json:"id"`
-	Title      string    `json:"title"`
-	Views      int       `json:"views"`
-	Duration   float32   `json:"duration"`
-	UserID     string    `json:"userId"`
-	Thumbnail  string    `json:"thumbnail"`
-	Visibility string    `json:"visibility"`
-}
-
-func getVideoMeta(path string) TidalMeta {
-	fmt.Println(path)
+func hydrateVideoMeta(path string, video *models.Video) {
+	db := db.DBConn
 	object, err := s3.Wasabi().GetObject(
 		context.Background(),
 		"cdn.bken.io",
@@ -68,26 +42,29 @@ func getVideoMeta(path string) TidalMeta {
 	buf.ReadFrom(object)
 	myFileContentAsString := buf.String()
 	decoder := json.NewDecoder(strings.NewReader(myFileContentAsString))
-	var tm TidalMeta
-	err = decoder.Decode(&tm)
+	var videoMeta models.TidalMeta
+	err = decoder.Decode(&videoMeta)
 	if err != nil {
-		fmt.Println("twas an error")
+		fmt.Println("Error getting video metadata", err)
 	}
-	return tm
-}
 
-func constructVideoResponse(v models.Video, meta TidalMeta) GetVideoResponse {
-	res := GetVideoResponse{
-		Tidal:      meta,
-		ID:         v.ID,
-		Title:      v.Title,
-		Views:      v.Views,
-		UserID:     v.UserID,
-		Duration:   v.Duration,
-		Thumbnail:  v.Thumbnail,
-		Visibility: v.Visibility,
+	for i := 0; i < len(videoMeta.Renditions); i++ {
+		rendition := models.VideoRendition{
+			VideoID:          video.ID,
+			Type:             videoMeta.Renditions[i].Type,
+			Name:             videoMeta.Renditions[i].Name,
+			PercentCompleted: videoMeta.Renditions[i].PercentCompleted,
+		}
+		if db.Model(&rendition).Where("video_id = ? and name = ?", video.ID, rendition.Name).Updates(&rendition).RowsAffected == 0 {
+			db.Create(&rendition)
+		}
 	}
-	return res
+
+	video.Status = videoMeta.Status
+	video.Duration = videoMeta.Duration
+	video.Thumbnail = videoMeta.Thumbnail
+	video.HLSMasterLink = videoMeta.HLSMasterLink
+	video.SourceSegmentsCount = videoMeta.SourceSegmentsCount
 }
 
 // GetVideo returns a video
@@ -95,29 +72,18 @@ func GetVideo(c *fiber.Ctx) error {
 	id := c.Params("id")
 	db := db.DBConn
 	var video models.Video
-	result := db.Where("id = ?", id).Find(&video)
+	result := db.Where("video_id", id).Find(&video)
 
 	if result.Error != nil {
 		return c.SendStatus(500)
 	}
-
-	if video.ID == "" {
+	if video.VideoID == "" {
 		return c.SendStatus(404)
 	}
-
-	// This logic can be used once private videos are a thing
-	// user := c.Locals("user").(*jwt.Token)
-	// claims := user.Claims.(jwt.MapClaims)
-	// userID := claims["id"].(string)
-	// if video.Visibility != "public" {
-	// 	if video.UserID != userID {
-	// 		return c.SendStatus(403)
-	// 	}
-	// }
-
-	tidalMeta := getVideoMeta(fmt.Sprintf("v/%s/meta.json", video.ID))
-	res := constructVideoResponse(video, tidalMeta)
-	return c.JSON(res)
+	hydrateVideoMeta(fmt.Sprintf("v/%s/meta.json", video.VideoID), &video)
+	db.Save(&video)
+	result = db.Preload(clause.Associations).Where("video_id", id).Find(&video)
+	return c.JSON(video)
 }
 
 // GetVideos returns all videos
@@ -167,7 +133,7 @@ func CreateVideo(c *fiber.Ctx) error {
 		return c.Status(400).SendString("failed to infer file extension")
 	}
 
-	video.ID = input.ID
+	video.VideoID = input.ID
 	video.Duration = input.Duration
 
 	user := c.Locals("user").(*jwt.Token)
@@ -176,19 +142,16 @@ func CreateVideo(c *fiber.Ctx) error {
 
 	video.UserID = userID
 	video.Title = filenameWithoutExtension
-	video.Thumbnail = fmt.Sprintf("https://cdn.bken.io/v/%s/thumb.webp", video.ID)
+	video.Thumbnail = fmt.Sprintf("https://cdn.bken.io/v/%s/thumb.webp", video.VideoID)
 	res := db.Create(&video)
 
 	if res.Error != nil {
 		return c.SendStatus(500)
 	}
 
-	rcloneSourceFile := fmt.Sprintf("wasabi:cdn.bken.io/v/%s/%s%s", video.ID, video.ID, extension)
-	rcloneDestinationDir := fmt.Sprintf("wasabi:cdn.bken.io/v/%s", video.ID)
+	rcloneSourceFile := fmt.Sprintf("wasabi:cdn.bken.io/v/%s/%s%s", video.VideoID, video.VideoID, extension)
+	rcloneDestinationDir := fmt.Sprintf("wasabi:cdn.bken.io/v/%s", video.VideoID)
 	tidal.CreateVideo(rcloneSourceFile, rcloneDestinationDir)
-
-	thumbnailDestinationPath := fmt.Sprintf("wasabi:cdn.bken.io/v/%s/thumb.webp", video.ID)
-	tidal.CreateThumbnail(rcloneSourceFile, thumbnailDestinationPath)
 	return c.JSON(video)
 }
 
@@ -209,7 +172,7 @@ func PatchVideo(c *fiber.Ctx) error {
 	c.BodyParser(inputVideo)
 
 	video := new(models.Video)
-	db.Where("id = ? and user_id = ?", id, userID).Find(&video)
+	db.Where("video_id and user_id = ?", id, userID).Find(&video)
 
 	if inputVideo.Title != "" {
 		video.Title = inputVideo.Title
@@ -234,7 +197,7 @@ func HardDeleteVideo(c *fiber.Ctx) error {
 	userID := claims["id"].(string)
 
 	var video models.Video
-	db.Where("id = ?", id).Find(&video)
+	db.Where("video_id", id).Find(&video)
 	if video.Title == "" {
 		return c.SendStatus(404)
 	}

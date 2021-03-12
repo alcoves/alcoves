@@ -20,7 +20,7 @@ func CreateView(c *fiber.Ctx) error {
 
 	db := db.DBConn
 	var video models.Video
-	db.Where("id = ?", id).Find(&video)
+	db.Where("video_id", id).Find(&video)
 
 	currentTime := time.Now()
 	backdate := time.Duration(-video.Duration * 1000 * 1000 * 1000)
@@ -28,7 +28,7 @@ func CreateView(c *fiber.Ctx) error {
 
 	var recentView models.VideoView
 	db.
-		Where("video_id = ?", video.ID).
+		Where("video_id = ?", video.VideoID).
 		Where("ip = ?", requestingIPHeader).
 		Where("created_at >= ?", timeOffset).
 		Find(&recentView)

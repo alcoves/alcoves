@@ -32,6 +32,7 @@ func initDatabase() {
 	db.DBConn.AutoMigrate(&models.User{})
 	db.DBConn.AutoMigrate(&models.Video{})
 	db.DBConn.AutoMigrate(&models.VideoView{})
+	db.DBConn.AutoMigrate(&models.VideoRendition{})
 	fmt.Println("Database Migrated")
 }
 

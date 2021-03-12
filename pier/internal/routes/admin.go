@@ -28,12 +28,12 @@ func ReprocessVideos(c *fiber.Ctx) error {
 
 	for i := 0; i < len(videos); i++ {
 		video := videos[i]
-		fmt.Println("video", video.ID)
-		rcloneSourceFile := fmt.Sprintf("wasabi:cdn.bken.io/v/%s/%s%s", video.ID, video.ID, ".mp4")
-		rcloneDestinationDir := fmt.Sprintf("wasabi:cdn.bken.io/v/%s/hls", video.ID)
+		fmt.Println("video", video.VideoID)
+		rcloneSourceFile := fmt.Sprintf("wasabi:cdn.bken.io/v/%s/%s%s", video.VideoID, video.VideoID, ".mp4")
+		rcloneDestinationDir := fmt.Sprintf("wasabi:cdn.bken.io/v/%s/hls", video.VideoID)
 		tidal.CreateVideo(rcloneSourceFile, rcloneDestinationDir)
 
-		thumbnailDestinationPath := fmt.Sprintf("wasabi:cdn.bken.io/v/%s/thumb.webp", video.ID)
+		thumbnailDestinationPath := fmt.Sprintf("wasabi:cdn.bken.io/v/%s/thumb.webp", video.VideoID)
 		tidal.CreateThumbnail(rcloneSourceFile, thumbnailDestinationPath)
 	}
 
