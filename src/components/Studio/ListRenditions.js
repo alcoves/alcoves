@@ -1,7 +1,13 @@
-function Status(percent_completed) {
+import { useEffect, } from 'react';
+import { useApi, } from '../../utils/api';
+import Spinner from '../Spinner';
+
+let timer;
+
+function Status(percent_compelted) {
   return (
     <>
-      {percent_completed === 100 ? (
+      {percent_compelted === 100 ? (
         <svg
           xmlns='http://www.w3.org/2000/svg' 
           fill='none'
@@ -47,7 +53,7 @@ function Rendition({ rendition }) {
     <div className='flex flex-col w-24'>
       <div className='flex flex-row items-end'>
         {Status(percent_completed)}
-        <p className='text-sm text-gray-300 font-bold'>{`${percent_completed}%`}</p>
+        <p className='text-sm text-gray-300 font-bold'>{`${percent_completed.toFixed(0)}%`}</p>
       </div>
       <div className='uppercase flex justify-center w-full flex-col text-gray-200'>
         <p className='font-bold'> 
@@ -59,19 +65,38 @@ function Rendition({ rendition }) {
   );
 }
 
-export default function ListRenditions({ renditions = [] }) {
-  return (
-    <div className='my-2 w-full'>
-      <div style={{
-        display: 'grid',
-        gridGap: '1rem',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(96px, 1fr))',
-      }}
-      >
-        {renditions.map((r) => {
-          return  <Rendition key={r.name} rendition={r} />
-        })}
+export default function ListRenditions({ id }) {
+  const { data, error, refetch }  = useApi({ url: `/videos/${id}` });
+
+  useEffect(() => {
+    clearInterval(timer);
+    timer = setInterval(() => {
+        refetch();
+    }, 2000);
+
+    return function cleanup() {
+      clearInterval(timer);
+    };
+  }, []);
+
+  if (data?.tidal?.renditions) {
+    return (
+      <div className='my-2 w-full'>
+        <div style={{
+          display: 'grid',
+          gridGap: '1rem',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(96px, 1fr))',
+        }}
+        >
+          {data.tidal.renditions.map(r => <Rendition key={r.name} rendition={r} />)}
+        </div>
       </div>
+    );
+  }
+
+  return (
+    <div className='flex m-3 justify-center'>
+      {error ? <div>{JSON.stringify(error)}</div> : <Spinner />}
     </div>
   );
 }
