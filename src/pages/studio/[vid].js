@@ -33,7 +33,7 @@ export default function StudioEditVideo() {
     if (data) {
       const video = document.getElementById('bkenStudioVideoPlayer');
       hls = new window.Hls({ startLevel: 3 });
-      hls.loadSource(data.tidal.hls_master_link);
+      hls.loadSource(data.hlsMasterLink);
       hls.attachMedia(video);
     }
   });
@@ -69,7 +69,7 @@ export default function StudioEditVideo() {
               />
             </div>
             <div className='my-2 flex justify-center'>
-              {data?.tidal?.status === 'completed' && <video
+              {data.status === 'completed' && <video
                 className='rounded-md max-h-96 min-h-96'
                 controls 
                 ref={vRef}
