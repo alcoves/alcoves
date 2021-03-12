@@ -27,7 +27,6 @@ type CreateVideoInput struct {
 }
 
 func hydrateVideoMeta(path string, video *models.Video) {
-	db := db.DBConn
 	object, err := s3.Wasabi().GetObject(
 		context.Background(),
 		"cdn.bken.io",
@@ -48,22 +47,11 @@ func hydrateVideoMeta(path string, video *models.Video) {
 		fmt.Println("Error getting video metadata", err)
 	}
 
-	for i := 0; i < len(videoMeta.Renditions); i++ {
-		rendition := models.VideoRendition{
-			VideoID:          video.ID,
-			Type:             videoMeta.Renditions[i].Type,
-			Name:             videoMeta.Renditions[i].Name,
-			PercentCompleted: videoMeta.Renditions[i].PercentCompleted,
-		}
-		if db.Model(&rendition).Where("video_id = ? and name = ?", video.ID, rendition.Name).Updates(&rendition).RowsAffected == 0 {
-			db.Create(&rendition)
-		}
-	}
-
 	video.Status = videoMeta.Status
 	video.Duration = videoMeta.Duration
 	video.Thumbnail = videoMeta.Thumbnail
 	video.HLSMasterLink = videoMeta.HLSMasterLink
+	video.PercentCompleted = videoMeta.PercentCompleted
 	video.SourceSegmentsCount = videoMeta.SourceSegmentsCount
 }
 
