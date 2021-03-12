@@ -7,7 +7,7 @@ import Spinner from '../../components/Spinner';
 
 import EditTitle from '../../components/Studio/EditTitle';
 import DeleteVideo from '../../components/Studio/DeleteVideo';
-import ListVersions from '../../components/Studio/ListVersions';
+import ListRenditions from '../../components/Studio/ListRenditions';
 import EditVisibility from '../../components/Studio/EditVisibility';
 
 let hls;
@@ -33,7 +33,7 @@ export default function StudioEditVideo() {
     if (data) {
       const video = document.getElementById('bkenStudioVideoPlayer');
       hls = new window.Hls({ startLevel: 3 });
-      hls.loadSource(data.url);
+      hls.loadSource(data.tidal.hls_master_link);
       hls.attachMedia(video);
     }
   });
@@ -58,7 +58,7 @@ export default function StudioEditVideo() {
             <div>
               <EditTitle id={data.id} title={data.title} />
               <EditVisibility id={data.id} visibility={data.visibility} />
-              <ListVersions id={data.id} />
+              <ListRenditions renditions={data.tidal.renditions} />
             </div>
             <div>
               <img
