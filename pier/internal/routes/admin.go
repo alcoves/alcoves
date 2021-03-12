@@ -2,6 +2,7 @@ package routes
 
 import (
 	"fmt"
+	"sync"
 
 	"github.com/bken-io/api/internal/db"
 	"github.com/bken-io/api/internal/models"
@@ -9,6 +10,14 @@ import (
 	jwt "github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
 )
+
+func processVideo(v *models.Video, wg *sync.WaitGroup) {
+	defer wg.Done()
+	fmt.Println("reprocessing", v.VideoID)
+	rcloneSourceFile := fmt.Sprintf("wasabi:cdn.bken.io/v/%s/%s%s", v.VideoID, v.VideoID, ".mp4")
+	rcloneDestinationDir := fmt.Sprintf("wasabi:cdn.bken.io/v/%s/hls", v.VideoID)
+	tidal.CreateVideo(rcloneSourceFile, rcloneDestinationDir)
+}
 
 func ReprocessVideos(c *fiber.Ctx) error {
 	user := c.Locals("user").(*jwt.Token)
@@ -26,16 +35,11 @@ func ReprocessVideos(c *fiber.Ctx) error {
 		Order("created_at desc").
 		Find(&videos)
 
+	var wg sync.WaitGroup
 	for i := 0; i < len(videos); i++ {
-		video := videos[i]
-		fmt.Println("video", video.VideoID)
-		rcloneSourceFile := fmt.Sprintf("wasabi:cdn.bken.io/v/%s/%s%s", video.VideoID, video.VideoID, ".mp4")
-		rcloneDestinationDir := fmt.Sprintf("wasabi:cdn.bken.io/v/%s/hls", video.VideoID)
-		tidal.CreateVideo(rcloneSourceFile, rcloneDestinationDir)
-
-		thumbnailDestinationPath := fmt.Sprintf("wasabi:cdn.bken.io/v/%s/thumb.webp", video.VideoID)
-		tidal.CreateThumbnail(rcloneSourceFile, thumbnailDestinationPath)
+		wg.Add(1)
+		go processVideo(&videos[i], &wg)
 	}
-
+	wg.Wait()
 	return c.SendStatus(202)
 }
