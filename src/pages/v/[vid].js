@@ -37,7 +37,7 @@ export default function Video({ video }) {
         </Head>
         <Layout>
           <div>
-            <VideoPlayer url={video.url} />
+            <VideoPlayer url={video.hlsMasterLink} />
             <div className='m-3 flex flex-col'>
               <h1 className='text-3xl font-semibold text-gray-200'>{video.title}</h1>
               <p className='text-sm font-semibold text-gray-400'>
