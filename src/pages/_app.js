@@ -1,31 +1,12 @@
 import '../styles/index.css';
 import 'tailwindcss/tailwind.css';
 import React from 'react';
-import LogRocket  from 'logrocket';
-import setupLogRocketReact  from 'logrocket-react';
-import Bugsnag from '../utils/bugsnag';
-import { Provider, } from '../utils/store';
+import { Provider } from 'next-auth/client'
 
 function App({ Component, pageProps }) {
-  if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production') {
-    LogRocket.init('7qbcw4/bkenio');
-    setupLogRocketReact(LogRocket);
-  }
-
-  if (process.env.NODE_ENV === 'production') {
-    const ErrorBoundary = Bugsnag.getPlugin('react');
-    return (
-      <ErrorBoundary>
-        <Provider>
-          <Component {...pageProps} />
-        </Provider>
-      </ErrorBoundary>
-    );  
-  }
-
   return (
     <div>
-      <Provider>
+      <Provider session={pageProps.session}>
         <Component {...pageProps} />
       </Provider>
     </div>

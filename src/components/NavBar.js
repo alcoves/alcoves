@@ -1,12 +1,12 @@
-import { useContext, useState, } from 'react';
+import { useState, } from 'react';
 import Image from 'next/image';
 import { useRouter, } from 'next/router';
-import { Context, } from '../utils/store';
+import { useSession } from 'next-auth/client'
 
 export default function Navigation() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const { loading, user, authenticated } = useContext(Context);
+  const [session, loading] = useSession();
 
   function handleClick(route) {
     setOpen(false);
@@ -19,7 +19,7 @@ export default function Navigation() {
         <>
         </>
       );
-    } if (authenticated && user) {
+    } if (!loading && session.user) {
       return(
         <>
           <svg
@@ -39,7 +39,7 @@ export default function Navigation() {
           </svg>
           <img
             alt='avatar'
-            src={user.avatar}
+            src={session.user.image}
             onClick={() => setOpen(!open)}
             className='h-8 w-8 mx-2 rounded-full cursor-pointer'
           />
@@ -47,7 +47,7 @@ export default function Navigation() {
             <div className='z-50 absolute right-0 top-0 mt-14 mr-4 w-56 rounded-md shadow-lg bg-gray-900'>
               <div className='py-1' role='menu' aria-orientation='vertical' aria-labelledby='options-menu'>
                 <div
-                  onClick={() => handleClick(`/u/${user.id}`)} 
+                  onClick={() => handleClick(`/u/${session.user.name}`)} 
                   className='cursor-pointer block px-4 py-2 text-sm text-gray-200 hover:bg-gray-800'
                 >
                   Profile
@@ -103,7 +103,7 @@ export default function Navigation() {
         </div>
       </div>
       <div className='flex flex-row items-center justify-end'>
-        {renderRightNav({ authenticated, user })}
+        {renderRightNav()}
       </div>
     </div>
   );
