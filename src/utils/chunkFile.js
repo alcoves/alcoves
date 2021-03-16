@@ -1,4 +1,4 @@
-const DEFAULT_CHUNK_SIZE = 10000000 * 5 // 50mb
+const DEFAULT_CHUNK_SIZE = 10000000 * 2 // 20mb
 
 export default (file, chunkSize = DEFAULT_CHUNK_SIZE) => {
   let end;

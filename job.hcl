@@ -27,6 +27,9 @@ job "web" {
           DO_API_KEY="{{key "secrets/DO_API_KEY"}}"
           GOOGLE_SECRET="{{key "secrets/GOOGLE_SECRET"}}"
           PG_CONNECTION_STRING="{{key "secrets/GOOGLE_SECRET"}}"
+          WASABI_ENDPOINT="{{key "secrets/WASABI_ENDPOINT"}}"
+          WASABI_ACCESS_KEY_ID="{{key "secrets/WASABI_ACCESS_KEY_ID"}}"
+          WASABI_SECRET_ACCESS_KEY="{{key "secrets/WASABI_SECRET_ACCESS_KEY"}}"
         EOH
         
         env         = true
