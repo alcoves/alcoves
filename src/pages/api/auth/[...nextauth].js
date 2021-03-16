@@ -2,6 +2,10 @@ import NextAuth from 'next-auth'
 import Providers from 'next-auth/providers'
 
 export default NextAuth({
+  pages: {
+    newUser: null, // TODO :: Send new users to welcome page!
+    signIn: '/login',
+  },
   database: process.env.PG_CONNECTION_STRING,
   providers: [
     Providers.Google({

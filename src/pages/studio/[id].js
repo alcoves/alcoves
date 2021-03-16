@@ -1,32 +1,23 @@
 import { useRouter, } from 'next/router';
 import { useEffect, useRef, } from 'react';
 import Layout from '../../components/Layout';
-import { useApiLazy, } from '../../utils/api';
 import Spinner from '../../components/Spinner';
 
 import EditTitle from '../../components/Studio/EditTitle';
 import DeleteVideo from '../../components/Studio/DeleteVideo';
 import ListRenditions from '../../components/Studio/ListRenditions';
 import EditVisibility from '../../components/Studio/EditVisibility';
+import { useSession } from 'next-auth/client';
 
 let hls;
 
 export default function StudioEditVideo() {
   const vRef = useRef(null);
-  // const { user, authenticated, loading } = useContext(Context);
-  const [getVideo, { data }] = useApiLazy();
   const router = useRouter();
-  const { vid } = router.query;
+  const [session, loading] = useSession();
 
-  useEffect(() => {
-    if (!loading && !authenticated) {
-      return router.push(`/login?redirect=${router.asPath}`);
-    }
-    
-    if (vid) {
-      getVideo({ url: `/videos/${vid}` });
-    }
-  }, [vid]);
+  const { id } = router.query
+  const { data } = useSWR(id ? `/api/videos/studio/${id}`: false, fetcher)
 
   useEffect(() => {
     if (data) {
@@ -37,27 +28,27 @@ export default function StudioEditVideo() {
     }
   });
 
-  if (data && authenticated) {
-    if (data?.userId !== user?.id) {
-      return (
-        <Layout>
-          <div className='w-full justify-center flex p-4'>
-            <div className='text-gray-200 uppercase text-3xl font-extrabold h-8 py-1 px-2 tracking-wide'>
-              Not Allowed
-            </div>
+  if (!loading && !session) {
+    return (
+      <Layout>
+        <div className='w-full justify-center flex p-4'>
+          <div className='text-gray-200 uppercase text-3xl font-extrabold h-8 py-1 px-2 tracking-wide'>
+            Not Allowed
           </div>
-        </Layout>
-      );
-    }
+        </div>
+      </Layout>
+    );
+  }
 
+  if (data && (session.id === data.user_id)) {
     return (
       <Layout>
         <div className='w-full justify-center flex p-4'>
           <div className='max-w-screen-sm'>
             <div>
-              <EditTitle id={data.id} title={data.title} />
-              <EditVisibility id={data.id} visibility={data.visibility} />
-              <ListRenditions id={data.id} />
+              <EditTitle id={data.video_id} title={data.title} />
+              <EditVisibility id={data.video_id} visibility={data.visibility} />
+              <ListRenditions id={data.video_id} />
             </div>
             <div>
               <img
@@ -77,10 +68,10 @@ export default function StudioEditVideo() {
               }
             </div>
             <div className='flex flex-row justify-between py-2'>
-              <DeleteVideo id={data.id} />
+              <DeleteVideo id={data.video_id} />
               <button
                 type='button'
-                onClick={() => router.push(`/v/${vid}`)}
+                onClick={() => router.push(`/v/${id}`)}
                 className='text-gray-200 border rounded-md uppercase text-sm font-medium h-8 py-1 px-2 tracking-wide'
               >
                 View

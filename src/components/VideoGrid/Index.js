@@ -37,7 +37,7 @@ function VideoCard({ v, noUser }) {
 
   return (
     <div>
-      <div onClick={() => router.push(`/v/${v.id}`)}>
+      <div onClick={() => router.push(`/v/${v.video_id}`)}>
         <div style={styles.VideoThumbnailBox}>
           <div style={styles.Duration}>
             <p size='xsmall'>
@@ -62,7 +62,7 @@ export default function VideoGrid({ videos, noUser }) {
   
   return (
     <div style={styles.VideoGridWrapper}>
-      {videos.map((v) => <VideoCard key={v.id} v={v} noUser={noUser} />)}
+      {videos.map((v) => <VideoCard key={v.video_id} v={v} noUser={noUser} />)}
     </div>
   );
 }
