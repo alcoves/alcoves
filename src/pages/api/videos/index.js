@@ -1,6 +1,9 @@
 import db from '../../../utils/db';
 import { s3 } from '../../../utils/s3';
 
+const { PrismaClient } = require('@prisma/client')
+const prisma = new PrismaClient()
+
 export default async function handler(req, res) {
   try {
     if (req.method === 'GET') {
@@ -18,13 +21,22 @@ export default async function handler(req, res) {
         MultipartUpload: { Parts: parts },
       }).promise();
       res.status(200).end()
-      // const video = await prisma.video.create()
-      // res.send(video)
+
+      const newVideo = await prisma.videos.create({
+        data: {
+          video_id: 
+        }
+      })
+
+      res.json(video)
     }
 
     res.status(400).end()
+    await prisma.$disconnect()
   } catch (error) {
     console.error(error);
     return res.status(500).end()
+  } finally {
+    await prisma.$disconnect()
   }
 }
