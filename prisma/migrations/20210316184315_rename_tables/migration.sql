@@ -13,7 +13,7 @@ DROP TABLE "VideoView";
 
 -- CreateTable
 CREATE TABLE "video_views" (
-    "id" BIGSERIAL NOT NULL,
+    "id" SERIAL NOT NULL,
     "ip" TEXT,
     "video_id" TEXT,
     "user_id" TEXT,
@@ -26,7 +26,7 @@ CREATE TABLE "video_views" (
 
 -- CreateTable
 CREATE TABLE "videos" (
-    "id" BIGSERIAL NOT NULL,
+    "id" SERIAL NOT NULL,
     "user_id" BIGINT,
     "video_id" TEXT,
     "status" TEXT DEFAULT E'queued',

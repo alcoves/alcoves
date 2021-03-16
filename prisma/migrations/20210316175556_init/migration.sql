@@ -55,7 +55,7 @@ CREATE TABLE "verification_requests" (
 
 -- CreateTable
 CREATE TABLE "VideoView" (
-    "id" BIGSERIAL NOT NULL,
+    "id" SERIAL NOT NULL,
     "ip" TEXT,
     "video_id" TEXT,
     "user_id" TEXT,
@@ -68,7 +68,7 @@ CREATE TABLE "VideoView" (
 
 -- CreateTable
 CREATE TABLE "Video" (
-    "id" BIGSERIAL NOT NULL,
+    "id" SERIAL NOT NULL,
     "user_id" BIGINT,
     "video_id" TEXT,
     "status" TEXT DEFAULT E'queued',

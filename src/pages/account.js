@@ -22,7 +22,7 @@ export default function Account() {
               {session.user.email}
             </p>
             <p className='mb-2 text-sm lowercase font-bold text-gray-500'>
-              {session.id}
+              User ID: {session.id}
             </p>
             <button
               type='button'

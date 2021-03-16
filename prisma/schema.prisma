@@ -20,7 +20,6 @@ model Account {
   createdAt          DateTime  @default(now()) @map(name: "created_at")
   updatedAt          DateTime  @default(now()) @map(name: "updated_at")
 
-
   @@index([providerAccountId], name: "providerAccountId")
   @@index([providerId], name: "providerId")
   @@index([userId], name: "userId")
@@ -63,33 +62,37 @@ model VerificationRequest {
 }
 
 model VideoView {
-  id         BigInt    @id @default(autoincrement())
-  ip         String?
-  video_id   String?
-  user_id    String?
-  created_at DateTime? @default(now()) @db.Timestamptz(6)
-  updated_at DateTime? @default(now()) @db.Timestamptz(6)
-  deleted_at DateTime? @db.Timestamptz(6)
+  id        Int      @id @default(autoincrement())
+  ip        String?
+  videoId   String?  @map(name: "video_id")
+  userId    String?  @map(name: "user_id")
+  createdAt DateTime @default(now()) @map(name: "created_at") @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @map(name: "updated_at") @db.Timestamptz(6)
 
+  @@index([ip], name: "ip")
+  @@index([userId], name: "viewsUserId")
+  @@index([videoId], name: "viewsVideoId")
   @@map(name: "video_views")
 }
 
 model Video {
-  id                    BigInt    @id @default(autoincrement())
-  user_id               BigInt?
-  video_id              String?   @unique @default(cuid())
-  status                String?   @default("queued")
-  title                 String?   @default("new-upload")
-  duration              Decimal?  @db.Decimal
-  views                 BigInt?   @default(0)
-  visibility            String?   @default("unlisted")
-  thumbnail             String?
-  hls_master_link       String?
-  source_segments_count BigInt?   @default(0)
-  percent_completed     Decimal?  @default(0.000000) @db.Decimal
-  created_at            DateTime? @default(now()) @db.Timestamptz(6)
-  updated_at            DateTime? @default(now()) @db.Timestamptz(6)
-  deleted_at            DateTime? @db.Timestamptz(6)
+  id                  Int       @id @default(autoincrement())
+  userId              Int       @map(name: "user_id")
+  videoId             String    @unique @default(cuid()) @map(name: "video_id")
+  status              String    @default("queued")
+  title               String    @default("new-upload")
+  duration            Decimal   @default(0.0) @db.Decimal
+  views               Int       @default(0)
+  visibility          String    @default("unlisted")
+  thumbnail           String?
+  hlsMasterLink       String?   @map(name: "hls_master_link")
+  sourceSegmentsCount Int?      @default(0) @map(name: "source_segments_count")
+  percentCompleted    Decimal?  @default(0.000000) @map(name: "percent_completed") @db.Decimal
+  createdAt           DateTime  @default(now()) @map(name: "created_at") @db.Timestamptz(6)
+  updatedAt           DateTime  @default(now()) @map(name: "updated_at") @db.Timestamptz(6)
+  deletedAt           DateTime? @map(name: "deleted_at") @db.Timestamptz(6)
 
+  @@index([visibility], name: "visibility")
+  @@index([videoId], name: "videosVideoId")
   @@map(name: "videos")
 }
