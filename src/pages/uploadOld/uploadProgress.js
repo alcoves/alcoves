@@ -1,13 +1,20 @@
 
 import axios from 'axios';
+import useSWR from 'swr';
 import React, { useState, useEffect, } from 'react';
 import { useRouter, } from 'next/router';
-import { useApiLazy, } from '../../utils/api';
+
+const fetcher = (url) => fetch(url).then((res) => res.json())
 
 export default function UploadProgress({ file }) {
   const router = useRouter();
   const [speed, setSpeed] = useState(0)
   const [progress, setProgress] = useState(0);
+
+  // GET /uploads - returns an upload url
+  // POST /videos - completes a video upload and invokes tidal
+
+  const { data } = useSWR('/api/uploads', fetcher)
 
   const [
     createVideo,
@@ -51,13 +58,12 @@ export default function UploadProgress({ file }) {
           video.setAttribute('src', window.URL.createObjectURL(file));
           video.onloadeddata = event => {
             const meta = event.srcElement; // TODO :: This is deprecated
-            createVideo({
-              data: {
-                title: file.name,
-                duration: meta.duration,
-                id: createUploadData.payload.id,
-              },
-            });
+            const body = {
+              title: file.name,
+              duration: meta.duration,
+              id: createUploadData.payload.id,
+            }
+            fetch('/api/uploads', { method: 'POST', body })
           };
         });
     }

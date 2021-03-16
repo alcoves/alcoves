@@ -1,57 +1,77 @@
-import { useDropzone, } from 'react-dropzone';
-import React, { useState, useCallback, } from 'react';
-import UploadProgress from './uploadProgress';
+import axios from 'axios';
+import { useState } from 'react';
 import Layout from '../../components/Layout';
+import chunkFile from '../../utils/chunkFile';
 
-export default function Uploader() {
-  // const { authenticated, loading } = useContext(Context);
-  const [files, setFiles] = useState([]);
+export default function Upload() {
+  const [files, setFiles] = useState()
+  const [loading, setLoading] = useState();
+  let [bytesUploaded, setBytesUploaded] = useState(0);
 
-  const onDrop = useCallback(acceptedFiles => {
-    setFiles(acceptedFiles);
-  }, []);
+  async function uploadChunks(chunks, urls) {
+    const results = await Promise.all(chunks.map((chunk, i) => {
+      let lastBytesUploaded = 0;
+      console.log(`uploading part ${i} to ${urls[i]}`);
+      return axios.put(urls[i], chunk, {
+        onUploadProgress: e => {
+          setBytesUploaded((bytesUploaded += e.loaded - lastBytesUploaded));
+          lastBytesUploaded = e.loaded;
+        },
+      })
+    }))
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    multiple: false,
-    disabled: Boolean(files.length),
-    accept: 'video/mp4,video/quicktime',
-  });
+    return results.reduce((acc, { headers }, i) => {
+      acc.push({ ETag: headers.etag, PartNumber: i+1 });
+      return acc;
+    }, [])
+  }
 
-  if (!authenticated && !loading) {
-    return <div> Please log in to upload </div>;
+  // uploads handles chunking up a file, getting signed urls, and uploading all parts
+  async function startUpload(file) {
+    console.log('Chunking video');
+    const chunks = chunkFile(file);
+    console.log("Chunks", chunks.length);
+
+    console.log('Fetching upload urls', file);
+    const uploadBody =  JSON.stringify({
+      type: file.type,
+      chunks: chunks.length,
+    })
+    console.log(uploadBody);
+    const uploadResponse = fetch('/api/uploads', {
+      method: 'POST',
+      body:uploadBody
+    })
+
+    const { uploadId, key, video_id, urls } = await (await uploadResponse).json()
+
+    console.log('Uploading files parts');
+    const parts = await uploadChunks(chunks, urls)
+
+    console.log('Completing video upload');
+    console.log({uploadId, key, video_id, urls, parts});
+    const videoUploadRes = await fetch('/api/videos', {
+      method: 'POST',
+      body: JSON.stringify({ key, video_id, uploadId, parts, })
+    })
+
+    console.log(videoUploadRes);
   }
 
   return (
     <Layout>
-      <div className='w-full h-full flex justify-center items-center'>
-        <div
-          style={{
-            display: `${files.length ? 'none' : 'flex'}`,
-            cursor: 'pointer',
-            width: '100%',
-            maxWidth: '300px',
-            minHeight: '200px',
-            borderRadius: '4px',
-            alignItems: 'center',
-            justifyContent: 'center',
-            border: 'dashed 3px #E4E7EB',
-            margin: '30px 10px 10px 10px',
-          }}
-          {...getRootProps()}
-          files={files}
-        >
-          <input {...getInputProps()} />
-          {isDragActive ? (
-            <h1 className='text-xl font-extrabold uppercase text-gray-300'> Drop here! </h1>
-          ) : (
-            <h1 className='text-xl font-extrabold uppercase text-gray-300'> Upload </h1>
-          )}
-        </div>
-        <div className='flex flex-col items-center'>
-          {files.map(file => <UploadProgress key={file.name} file={file} />)}
-        </div>
+      <div className="w-full h-full flex justify-center items-center">
+        <label htmlFor="bken-video">Select Video</label>
+        <input accept="video/mp4" onChange={({ target }) => {
+          setFiles(target.files)
+          startUpload(target.files[0])
+        }} id="bken-video" name="bken-video" type="file"></input>
+      </div>
+      <div>
+      <p>
+        {files?.length ? ((bytesUploaded / files[0].size) * 100).toFixed(0) : ''}
+      </p>
       </div>
     </Layout>
-  );
+  )
 }
