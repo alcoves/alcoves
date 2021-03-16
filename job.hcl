@@ -22,11 +22,15 @@ job "web" {
 
       template {
         data = <<EOH
-          DO_API_KEY = "{{key "secrets/DO_API_KEY"}}"
+          NEXTAUTH_URL="https://bken.io"
+          GOOGLE_ID="{{key "secrets/GOOGLE_ID"}}"
+          DO_API_KEY="{{key "secrets/DO_API_KEY"}}"
+          GOOGLE_SECRET="{{key "secrets/GOOGLE_SECRET"}}"
+          PG_CONNECTION_STRING="{{key "secrets/GOOGLE_SECRET"}}"
         EOH
         
         env         = true
-        destination = ".env"
+        destination = ".env.local"
       }
 
       constraint {
