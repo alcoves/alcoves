@@ -1,11 +1,10 @@
 import { useDropzone, } from 'react-dropzone';
-import React, { useState, useCallback, useContext, } from 'react';
+import React, { useState, useCallback, } from 'react';
 import UploadProgress from './uploadProgress';
-import { Context, } from '../../utils/store';
 import Layout from '../../components/Layout';
 
 export default function Uploader() {
-  const { authenticated, loading } = useContext(Context);
+  // const { authenticated, loading } = useContext(Context);
   const [files, setFiles] = useState([]);
 
   const onDrop = useCallback(acceptedFiles => {

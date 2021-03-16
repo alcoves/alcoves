@@ -1,8 +1,7 @@
-import { useContext, useEffect, } from 'react';
+import { useEffect, } from 'react';
 import { useRouter, } from 'next/router';
 import moment from 'moment';
 import Layout from '../../components/Layout';
-import { Context, } from '../../utils/store';
 import { useApiLazy, } from '../../utils/api';
 import Spinner from '../../components/Spinner';
 import videoDuration from '../../utils/videoDuration';
@@ -10,7 +9,7 @@ import videoDuration from '../../utils/videoDuration';
 export default function studio() {
   const router = useRouter();
   const [getVideos, { data }] = useApiLazy();
-  const { user, authenticated, loading } = useContext(Context);
+  // const { user, authenticated, loading } = useContext(Context);
 
   const styles = {
     Duration: {
