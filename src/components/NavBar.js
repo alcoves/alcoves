@@ -15,10 +15,7 @@ export default function Navigation() {
 
   function renderRightNav() {
     if (loading) {
-      return (
-        <>
-        </>
-      );
+      return null
     } if (!loading && session && session.user) {
       return(
         <>

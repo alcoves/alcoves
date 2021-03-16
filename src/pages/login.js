@@ -1,8 +1,6 @@
 import { providers as getProviders, signIn, } from 'next-auth/client';
 
 export default function Login({ providers }) {
-  console.log(providers);
-
   return (
     <div className='mt-32 flex items-center justify-center bg-gray-800 pb-12 px-4 sm:px-6 lg:px-8'>
       <div className='max-w-md w-full space-y-8'>

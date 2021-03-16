@@ -50,12 +50,26 @@ export default function Upload() {
 
     console.log('Completing video upload');
     console.log({ uploadId, key, video_id, urls, parts });
-    const videoUploadRes = await fetch('/api/videos', {
-      method: 'POST',
-      body: JSON.stringify({ key, video_id, uploadId, parts }),
-    });
 
-    console.log(videoUploadRes);
+    const video = document.createElement('video');
+    video.setAttribute('src', window.URL.createObjectURL(file));
+    video.onloadeddata = event => {
+      const meta = event.srcElement; // TODO :: This is deprecated
+      const body = {
+        key,
+        parts,
+        video_id,
+        uploadId,
+        title: file.name,
+        duration: meta.duration,
+      };
+      fetch('/api/videos', {
+        method: 'POST',
+        body: JSON.stringify(body),
+      }).then((res) => {
+        console.log(res);
+      })
+    };
   }
 
   return (
