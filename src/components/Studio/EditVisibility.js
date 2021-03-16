@@ -19,8 +19,8 @@ export default function EditVisibility({ id, visibility: v }) {
         onChange={(e) => handleChange(e.target.value)}
         className='bg-gray-700 text-gray-200 w-full rounded-md p-2'
       >
-        <option value={'public'}>Public</option>
-        <option value={'unlisted'}>Unlisted</option>
+        <option value='public'>Public</option>
+        <option value='unlisted'>Unlisted</option>
       </select>
     </div>
   );

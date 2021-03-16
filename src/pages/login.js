@@ -1,4 +1,4 @@
-import { providers as getProviders, signIn } from 'next-auth/client'
+import { providers as getProviders, signIn, } from 'next-auth/client';
 
 export default function Login({ providers }) {
   console.log(providers);
@@ -14,19 +14,19 @@ export default function Login({ providers }) {
         </div>
 
         {Object.values(providers).map(provider => (
-        <div key={provider.name}>
-          <button
-          className='group relative w-full flex justify-center py-2 px-4 text-sm font-semibold  rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 bg-teal-500 uppercase'
-          onClick={() => signIn(provider.id)}>
-            Log in with {provider.name}
-          </button>
-        </div>
-      ))}
+          <div key={provider.name}>
+            <button
+              className='group relative w-full flex justify-center py-2 px-4 text-sm font-semibold  rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 bg-teal-500 uppercase'
+              onClick={() => signIn(provider.id)}>
+              Log in with {provider.name}
+            </button>
+          </div>
+        ))}
       </div>
     </div>
   );
 }
 
 export async function getServerSideProps(ctx) {
-  return { props: { providers: await getProviders(ctx) } }
+  return { props: { providers: await getProviders(ctx) } };
 }

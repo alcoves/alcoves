@@ -1,5 +1,5 @@
-import NextAuth from 'next-auth'
-import Providers from 'next-auth/providers'
+import NextAuth from 'next-auth';
+import Providers from 'next-auth/providers';
 
 export default NextAuth({
   pages: {
@@ -30,17 +30,17 @@ export default NextAuth({
     },
     async redirect(url, _) {
       if (url === '/api/auth/signin') {
-        return Promise.resolve('/account')
+        return Promise.resolve('/account');
       }
       // Send account information to bken api
-      return Promise.resolve('/api/auth/signin')
+      return Promise.resolve('/api/auth/signin');
     },
     async jwt(token, user, account, profile, isNewUser) {
       // Add access_token to the token right after signin      
       if (account?.accessToken) {
-        token.accessToken = account.accessToken
+        token.accessToken = account.accessToken;
       }
-      return Promise.resolve(token)
-    }
+      return Promise.resolve(token);
+    },
   },
-})
+});

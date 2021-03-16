@@ -1,13 +1,13 @@
 import Head from 'next/head';
 import moment from 'moment';
+import useSWR from 'swr';
 import Layout from '../../components/Layout';
 import VideoPlayer from '../../components/VideoPlayer/index';
 import abbreviateNumber from '../../utils/abbreviateNumber';
 import VideoPageUserCard from '../../components/VideoPageUserCard';
 import Spinner from '../../components/Spinner';
 
-import useSWR from 'swr'
-const fetcher = (url) => fetch(url).then((res) => res.json())
+const fetcher = (url) => fetch(url).then((res) => res.json());
 
 export default function Video(props) {
   // const router = useRouter();
@@ -18,7 +18,7 @@ export default function Video(props) {
   //   } 
   // }, [video]);
 
-  const { data } = useSWR(props.url, fetcher, { initialData: props.video })
+  const { data } = useSWR(props.url, fetcher, { initialData: props.video });
   console.log('data', data);
 
   if (data) {
@@ -62,7 +62,7 @@ export default function Video(props) {
 }
 
 export async function getServerSideProps({ params }) {
-  const url = `http://localhost:3000/api/videos/${params.id}`
-  const video = await fetcher(url)
+  const url = `http://localhost:3000/api/videos/${params.id}`;
+  const video = await fetcher(url);
   return { props: { video, url, id: params.id } };
 }

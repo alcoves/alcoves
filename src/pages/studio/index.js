@@ -1,12 +1,12 @@
 import { useRouter, } from 'next/router';
 import moment from 'moment';
+import { useSession, } from 'next-auth/client';
+import useSWR from 'swr';
 import Layout from '../../components/Layout';
 import Spinner from '../../components/Spinner';
 import videoDuration from '../../utils/videoDuration';
-import { useSession } from 'next-auth/client';
-import useSWR from 'swr';
 
-const fetcher = (url) => fetch(url).then((res) => res.json())
+const fetcher = (url) => fetch(url).then((res) => res.json());
 
 const styles = {
   Duration: {
@@ -39,8 +39,8 @@ const styles = {
 
 export default function studio() {
   const router = useRouter();
-  const [ session, loading ] = useSession()
-  const { data } = useSWR('/api/videos/studio', fetcher)
+  const [ session, loading ] = useSession();
+  const { data } = useSWR('/api/videos/studio', fetcher);
 
   function metadata(v) {
     const created_at = moment(v.created_at).fromNow();
@@ -148,7 +148,7 @@ export default function studio() {
 
   return (
     <Layout>
-      {`You don't have any videos`}
+      You don't have any videos
     </Layout>
-  )
+  );
 }

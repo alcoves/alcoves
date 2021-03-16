@@ -1,7 +1,7 @@
 import '../styles/index.css';
 import 'tailwindcss/tailwind.css';
 import React from 'react';
-import { Provider } from 'next-auth/client'
+import { Provider, } from 'next-auth/client';
 
 function App({ Component, pageProps }) {
   return (

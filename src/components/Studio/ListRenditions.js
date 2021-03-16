@@ -2,7 +2,7 @@ import useSWR from 'swr';
 import { useEffect, } from 'react';
 import Spinner from '../Spinner';
 
-const fetcher = (url) => fetch(url).then((res) => res.json())
+const fetcher = (url) => fetch(url).then((res) => res.json());
 
 let timer;
 
@@ -49,12 +49,12 @@ function Status(percentCompleted) {
 }
 
 export default function ListRenditions({ id }) {
-  const { data, error } = useSWR(`/videos/${id}`, fetcher)
+  const { data, error } = useSWR(`/videos/${id}`, fetcher);
 
   useEffect(() => {
     clearInterval(timer);
     timer = setInterval(() => {
-        refetch();
+      refetch();
     }, 3000);
 
     return function cleanup() {

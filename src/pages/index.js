@@ -1,13 +1,13 @@
 import React from 'react';
+import useSWR from 'swr';
 import Layout from '../components/Layout';
 import VideoGrid from '../components/VideoGrid/Index';
 import Spinner from '../components/Spinner';
-import useSWR from 'swr';
 
-const fetcher = (url) => fetch(url).then((res) => res.json())
+const fetcher = (url) => fetch(url).then((res) => res.json());
 
 function index() {
-  const { data } = useSWR(`/api/videos`, fetcher)
+  const { data } = useSWR('/api/videos', fetcher);
 
   if (data) {
     return (
