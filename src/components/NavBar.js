@@ -1,7 +1,7 @@
 import { useState, } from 'react';
 import Image from 'next/image';
 import { useRouter, } from 'next/router';
-import { useSession } from 'next-auth/client'
+import { useSession, } from 'next-auth/client';
 
 export default function Navigation() {
   const router = useRouter();

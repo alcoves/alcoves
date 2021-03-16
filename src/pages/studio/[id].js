@@ -1,5 +1,6 @@
 import { useRouter, } from 'next/router';
 import { useEffect, useRef, } from 'react';
+import { useSession, } from 'next-auth/client';
 import Layout from '../../components/Layout';
 import Spinner from '../../components/Spinner';
 
@@ -7,7 +8,6 @@ import EditTitle from '../../components/Studio/EditTitle';
 import DeleteVideo from '../../components/Studio/DeleteVideo';
 import ListRenditions from '../../components/Studio/ListRenditions';
 import EditVisibility from '../../components/Studio/EditVisibility';
-import { useSession } from 'next-auth/client';
 
 let hls;
 
@@ -16,8 +16,8 @@ export default function StudioEditVideo() {
   const router = useRouter();
   const [session, loading] = useSession();
 
-  const { id } = router.query
-  const { data } = useSWR(id ? `/api/videos/studio/${id}`: false, fetcher)
+  const { id } = router.query;
+  const { data } = useSWR(id ? `/api/videos/studio/${id}`: false, fetcher);
 
   useEffect(() => {
     if (data) {

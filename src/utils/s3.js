@@ -13,7 +13,7 @@ AWS.config.update({
 
 const s3 = new AWS.S3({
   signatureVersion: 'v4',
-  endpoint: process.env.WASABI_ENDPOINT
+  endpoint: process.env.WASABI_ENDPOINT,
 });
 
 module.exports = { s3 };

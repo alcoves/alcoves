@@ -4,17 +4,17 @@ import useSWR from 'swr';
 import React, { useState, useEffect, } from 'react';
 import { useRouter, } from 'next/router';
 
-const fetcher = (url) => fetch(url).then((res) => res.json())
+const fetcher = (url) => fetch(url).then((res) => res.json());
 
 export default function UploadProgress({ file }) {
   const router = useRouter();
-  const [speed, setSpeed] = useState(0)
+  const [speed, setSpeed] = useState(0);
   const [progress, setProgress] = useState(0);
 
   // GET /uploads - returns an upload url
   // POST /videos - completes a video upload and invokes tidal
 
-  const { data } = useSWR('/api/uploads', fetcher)
+  const { data } = useSWR('/api/uploads', fetcher);
 
   const [
     createVideo,
@@ -39,16 +39,16 @@ export default function UploadProgress({ file }) {
   useEffect(() => {
     if (createUploadData) {
       console.log(createUploadData);
-      const uploadStartTime = Date.now()
+      const uploadStartTime = Date.now();
 
       axios
         .put(createUploadData.payload.url, file, {
           headers: { 'Content-Type': file.type },
           onUploadProgress: e => {
             const currentProgress = (e.loaded / e.total) * 100;
-            const timeTaken = (Date.now() - uploadStartTime) / 1000
-            const uploadSpeedMb = (e.loaded / timeTaken) / 1000000 // bytes to mb
-            setSpeed(uploadSpeedMb.toFixed(1))
+            const timeTaken = (Date.now() - uploadStartTime) / 1000;
+            const uploadSpeedMb = (e.loaded / timeTaken) / 1000000; // bytes to mb
+            setSpeed(uploadSpeedMb.toFixed(1));
             setProgress(currentProgress);
           },
         })
@@ -62,8 +62,8 @@ export default function UploadProgress({ file }) {
               title: file.name,
               duration: meta.duration,
               id: createUploadData.payload.id,
-            }
-            fetch('/api/uploads', { method: 'POST', body })
+            };
+            fetch('/api/uploads', { method: 'POST', body });
           };
         });
     }
@@ -83,20 +83,20 @@ export default function UploadProgress({ file }) {
           </div>
           <div className='flex flex-row justify-between pt-2 pb-2'>
             <div className='h-6 text-sm w-6 text-gray-200'>
-                {speed ? `${speed}mb/s` : ""}
+              {speed ? `${speed}mb/s` : ''}
             </div>
             <div className='h-6 text-sm w-6 text-gray-200'>
-                {`${progress.toFixed(2)}%`}
+              {`${progress.toFixed(2)}%`}
             </div>
             {progress >= 100 && (
-            <button
-              disabled={!completeUploadData}
-              className='ml-2 px-2 py-1 text-gray-200 border rounded-md font-semibold'
-              onClick={() => router.push(`/studio/${createUploadData.payload.id}`)}
-            >
-              Edit
-            </button>
-          )}
+              <button
+                disabled={!completeUploadData}
+                className='ml-2 px-2 py-1 text-gray-200 border rounded-md font-semibold'
+                onClick={() => router.push(`/studio/${createUploadData.payload.id}`)}
+              >
+                Edit
+              </button>
+            )}
           </div>
         </div>
       </div>

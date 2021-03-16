@@ -2,7 +2,7 @@ import useSWR from 'swr';
 import { useEffect, } from 'react';
 import { useRouter, } from 'next/router';
 
-const fetcher = (url) => fetch(url).then((res) => res.json())
+const fetcher = (url) => fetch(url).then((res) => res.json());
 
 function VideoPageUserCard({ id }) {
   const router = useRouter();

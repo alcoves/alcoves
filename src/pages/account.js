@@ -1,12 +1,12 @@
+import { useSession, signOut, } from 'next-auth/client';
 import Layout from '../components/Layout';
 import Spinner from '../components/Spinner';
-import { useSession, signOut } from 'next-auth/client'
 
 export default function Account() {
   const [session, loading] = useSession();
 
   if (loading) {
-    return <Layout><Spinner /></Layout>
+    return <Layout><Spinner /></Layout>;
   }
 
   if (session) {
@@ -33,5 +33,5 @@ export default function Account() {
     );
   }
 
-  return null
+  return null;
 }
