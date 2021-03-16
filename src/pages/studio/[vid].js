@@ -1,8 +1,7 @@
 import { useRouter, } from 'next/router';
-import { useEffect, useRef, useContext, } from 'react';
+import { useEffect, useRef, } from 'react';
 import Layout from '../../components/Layout';
 import { useApiLazy, } from '../../utils/api';
-import { Context, } from '../../utils/store';
 import Spinner from '../../components/Spinner';
 
 import EditTitle from '../../components/Studio/EditTitle';
@@ -14,7 +13,7 @@ let hls;
 
 export default function StudioEditVideo() {
   const vRef = useRef(null);
-  const { user, authenticated, loading } = useContext(Context);
+  // const { user, authenticated, loading } = useContext(Context);
   const [getVideo, { data }] = useApiLazy();
   const router = useRouter();
   const { vid } = router.query;
@@ -33,7 +32,7 @@ export default function StudioEditVideo() {
     if (data) {
       const video = document.getElementById('bkenStudioVideoPlayer');
       hls = new window.Hls({ startLevel: 3 });
-      hls.loadSource(data.hlsMasterLink);
+      hls.loadSource(data.hls_master_link);
       hls.attachMedia(video);
     }
   });
