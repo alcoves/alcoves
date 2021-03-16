@@ -24,7 +24,7 @@ export default function Video(props) {
   if (data) {
     const subHeader = `${
       abbreviateNumber(data.views)} views ·
-      ${moment(data.createdAt).fromNow()} · 
+      ${moment(data.created_at).fromNow()} · 
       ${data.visibility}
     `;
 
@@ -44,7 +44,7 @@ export default function Video(props) {
               <p className='text-sm font-semibold text-gray-400'>
                 {subHeader}
               </p>
-              <VideoPageUserCard id={data.userId} />
+              <VideoPageUserCard id={data.user_id} />
             </div>
           </div>
         </Layout>
