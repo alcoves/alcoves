@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model accounts {
+  id                   Int       @id @default(autoincrement())
+  compound_id          String    @unique @db.VarChar(255)
+  user_id              Int
+  provider_type        String    @db.VarChar(255)
+  provider_id          String    @db.VarChar(255)
+  provider_account_id  String    @db.VarChar(255)
+  refresh_token        String?
+  access_token         String?
+  access_token_expires DateTime? @db.Timestamptz(6)
+  created_at           DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at           DateTime  @default(now()) @db.Timestamptz(6)
+
+  @@index([provider_account_id], name: "provider_account_id")
+  @@index([provider_id], name: "provider_id")
+  @@index([user_id], name: "user_id")
+}
+
+model sessions {
+  id            Int      @id @default(autoincrement())
+  user_id       Int
+  expires       DateTime @db.Timestamptz(6)
+  session_token String   @unique @db.VarChar(255)
+  access_token  String   @unique @db.VarChar(255)
+  created_at    DateTime @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model users {
+  id             Int       @id @default(autoincrement())
+  name           String?   @db.VarChar(255)
+  email          String?   @unique @db.VarChar(255)
+  email_verified DateTime? @db.Timestamptz(6)
+  image          String?
+  created_at     DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime  @default(now()) @db.Timestamptz(6)
+}
+
+model verification_requests {
+  id         Int      @id @default(autoincrement())
+  identifier String   @db.VarChar(255)
+  token      String   @unique @db.VarChar(255)
+  expires    DateTime @db.Timestamptz(6)
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model video_views {
+  id         BigInt    @id @default(autoincrement())
+  ip         String?
+  created_at DateTime? @db.Timestamptz(6)
+  updated_at DateTime? @db.Timestamptz(6)
+  deleted_at DateTime? @db.Timestamptz(6)
+  video_id   String?
+  user_id    String?
+
+  @@index([deleted_at], name: "idx_video_views_deleted_at")
+}
+
+model videos {
+  title                 String?
+  duration              Decimal?  @db.Decimal
+  created_at            DateTime? @db.Timestamptz(6)
+  updated_at            DateTime? @db.Timestamptz(6)
+  deleted_at            DateTime? @db.Timestamptz(6)
+  user_id               String?
+  views                 BigInt?   @default(0)
+  visibility            String?   @default("unlisted")
+  thumbnail             String?
+  status                String?   @default("queued")
+  hls_master_link       String?
+  source_segments_count BigInt?   @default(0)
+  video_id              String?   @default(dbgenerated("uuid_generate_v4()"))
+  id                    BigInt    @id @default(autoincrement())
+  percent_completed     Decimal?  @default(0.000000) @db.Decimal
+
+  @@index([deleted_at], name: "idx_videos_deleted_at")
+  @@index([user_id], name: "idx_videos_user")
+  @@index([user_id], name: "idx_videos_user_id")
+}
