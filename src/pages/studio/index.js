@@ -1,65 +1,83 @@
-import { useEffect, } from 'react';
 import { useRouter, } from 'next/router';
 import moment from 'moment';
 import Layout from '../../components/Layout';
-import { useApiLazy, } from '../../utils/api';
 import Spinner from '../../components/Spinner';
 import videoDuration from '../../utils/videoDuration';
+import { useSession } from 'next-auth/client';
+import useSWR from 'swr';
+
+const fetcher = (url) => fetch(url).then((res) => res.json())
+
+const styles = {
+  Duration: {
+    right: '0',
+    bottom: '0',
+    zIndex: '0',
+    color: 'white',
+    fontSize: '12px',
+    fontWeight: '600',
+    position: 'absolute',
+    borderRadius: '3px',
+    margin: '0px 3px 3px 0px',
+    padding: '0px 3px 0px 3px',
+    background: 'rgba(0, 0, 0, 0.7)',
+  },
+  Visibility: {
+    left: '0',
+    bottom: '0',
+    zIndex: '0',
+    height: '24px',
+    position: 'absolute',
+    margin: '0px 0px 5px 5px',
+  },
+  VideoGridWrapper: {
+    display: 'grid',
+    gridGap: '1rem',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+  },
+};
 
 export default function studio() {
   const router = useRouter();
-  const [getVideos, { data }] = useApiLazy();
-  // const { user, authenticated, loading } = useContext(Context);
-
-  const styles = {
-    Duration: {
-      right: '0',
-      bottom: '0',
-      zIndex: '0',
-      color: 'white',
-      fontSize: '12px',
-      fontWeight: '600',
-      position: 'absolute',
-      borderRadius: '3px',
-      margin: '0px 3px 3px 0px',
-      padding: '0px 3px 0px 3px',
-      background: 'rgba(0, 0, 0, 0.7)',
-    },
-    Visibility: {
-      left: '0',
-      bottom: '0',
-      zIndex: '0',
-      height: '24px',
-      position: 'absolute',
-      margin: '0px 0px 5px 5px',
-    },
-    VideoGridWrapper: {
-      display: 'grid',
-      gridGap: '1rem',
-      gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-    },
-  };
-
-  useEffect(() => {
-    if (user && user.id) {
-      getVideos({ url: `/videos?userId=${user.id}&visibility=all` });
-    }
-  }, [user]);
+  const [ session, loading ] = useSession()
+  const { data } = useSWR('/api/videos/studio', fetcher)
 
   function metadata(v) {
-    const createdAt = moment(v.createdAt).fromNow();
+    const created_at = moment(v.created_at).fromNow();
     return (
-      `Created ${createdAt} · ${v.views} Views`
+      `Created ${created_at} · ${v.views} Views`
     );
   }
 
-  if (data) {
+  if (loading) {
+    return (
+      <Layout>
+        <div margin='small' align='center'>
+          <Spinner />
+        </div>
+      </Layout>
+    );
+  }
+  
+  if (!loading && !session) {
+    return (
+      <Layout>
+        <div margin='small' align='center'>
+          <h1 size='xsmall'>
+            You must be authenticated
+          </h1>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (data && data.length) {
     return (
       <Layout>
         <div style={styles.VideoGridWrapper}>
           {data.map(v => (
             <div
-              key={v.id}
+              key={v.video_id}
               className='flex flex-col content-start p-2'
             >
               <div style={{
@@ -77,7 +95,7 @@ export default function studio() {
                 '-webkit-box-shadow': 'inset 0px -105px 66px -39px rgba(0,0,0,0.83)',
                 '-moz-box-shadow': 'inset 0px -105px 66px -39px rgba(0,0,0,0.83)',
                 boxShadow: 'inset 0px -105px 66px -39px rgba(0,0,0,0.83)',
-              }} onClick={() => router.push(`/studio/${v.id}`)}>
+              }} onClick={() => router.push(`/studio/${v.video_id}`)}>
                 <div style={styles.Duration}>
                   <p size='xsmall'>
                     {videoDuration(v.duration)}
@@ -128,23 +146,9 @@ export default function studio() {
     );
   }
 
-  if (!loading && !authenticated) {
-    return (
-      <Layout>
-        <div margin='small' align='center'>
-          <h1 size='xsmall'>
-            You must be authenticated
-          </h1>
-        </div>
-      </Layout>
-    );
-  }
-
   return (
     <Layout>
-      <div margin='small' align='center'>
-        <Spinner />
-      </div>
+      {`You don't have any videos`}
     </Layout>
-  );
+  )
 }

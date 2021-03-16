@@ -38,7 +38,7 @@ export default function Navigation() {
             />
           </svg>
           <img
-            alt='avatar'
+            alt='image'
             src={session.user.image}
             onClick={() => setOpen(!open)}
             className='h-8 w-8 mx-2 rounded-full cursor-pointer'
