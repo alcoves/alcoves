@@ -68,7 +68,7 @@ export default function Upload() {
         body: JSON.stringify(body),
       }).then((res) => {
         console.log(res);
-      })
+      });
     };
   }
 

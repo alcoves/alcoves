@@ -1,18 +1,19 @@
 import axios from 'axios';
-import { s3 } from '../utils/s3';
 import { getSession, } from 'next-auth/client';
+import { s3, } from '../utils/s3';
 
-const { PrismaClient } = require('@prisma/client')
-const prisma = new PrismaClient()
+const { PrismaClient } = require('@prisma/client');
+
+const prisma = new PrismaClient();
 
 export default async function createVideo(req, res) {
   const session = await getSession({ req });
   console.log(session);
-  if (!session) return res.status(401).end()
-  const { duration, title, video_id, key, parts, uploadId } = JSON.parse(req.body)
+  if (!session) return res.status(401).end();
+  const { duration, title, video_id, key, parts, uploadId } = JSON.parse(req.body);
 
-  const user = await prisma.users.findUnique({ where: { email: session.user.email }})
-  if (!user) res.status(401).end()
+  const user = await prisma.users.findUnique({ where: { email: session.user.email } });
+  if (!user) res.status(401).end();
   
   await s3.completeMultipartUpload({
     Key: key,
@@ -29,19 +30,19 @@ export default async function createVideo(req, res) {
       user_id: user.id,
       created_at: new Date(),
       updated_at: new Date(),
-    }
-  })
+    },
+  });
 
   // Invoke tidal
   await axios.post('https://bk-det1.bken.dev/tidal/videos', {
     rcloneSource: `wasabi:cdn.bken.io/${key}`,
-    rcloneDest: `wasabi:cdn.bken.io/tmp/${video_id}`
+    rcloneDest: `wasabi:cdn.bken.io/tmp/${video_id}`,
   }, {
     headers: {
-      'Content-Type': "application/json"
-    }
-  })
+      'Content-Type': 'application/json',
+    },
+  });
 
-  res.status(200).end()
-  await prisma.$disconnect()
+  res.status(200).end();
+  await prisma.$disconnect();
 }
