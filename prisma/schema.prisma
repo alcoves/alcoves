@@ -20,6 +20,7 @@ model Account {
   createdAt          DateTime  @default(now()) @map(name: "created_at")
   updatedAt          DateTime  @default(now()) @map(name: "updated_at")
 
+
   @@index([providerAccountId], name: "providerAccountId")
   @@index([providerId], name: "providerId")
   @@index([userId], name: "userId")
@@ -69,6 +70,8 @@ model VideoView {
   created_at DateTime? @default(now()) @db.Timestamptz(6)
   updated_at DateTime? @default(now()) @db.Timestamptz(6)
   deleted_at DateTime? @db.Timestamptz(6)
+
+  @@map(name: "video_views")
 }
 
 model Video {
@@ -87,4 +90,6 @@ model Video {
   created_at            DateTime? @default(now()) @db.Timestamptz(6)
   updated_at            DateTime? @default(now()) @db.Timestamptz(6)
   deleted_at            DateTime? @db.Timestamptz(6)
+
+  @@map(name: "videos")
 }
