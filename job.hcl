@@ -33,7 +33,7 @@ job "web" {
         EOH
         
         env         = true
-        destination = ".env.local"
+        destination = ".env"
       }
 
       constraint {
