@@ -3,16 +3,16 @@ import db from '../../../utils/db';
 export default async function handler(req, res) {
   try {
     if (req.method === 'GET') {
-      const user = await db.user.findFirst({ where: { id: parseInt(req.query.id) } })
+      const user = await db.user.findFirst({ where: { id: parseInt(req.query.id) } });
       if (user) {
         console.log(user);
         return res.send({
           id: user.id,
           name: user.name,
-          image: user.image
-        })
+          image: user.image,
+        });
       }
-      return res.status(404).end()
+      return res.status(404).end();
     }
     res.status(400).end();
   } catch (error) {

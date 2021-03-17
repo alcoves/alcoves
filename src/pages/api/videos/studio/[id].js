@@ -10,8 +10,8 @@ export default async function handler(req, res) {
       if (req.method === 'GET') {
         const videos = await db.user.findFirst({ 
           where: { videoId: req.query.id, userId: session.id },
-        })
-        res.send(videos)
+        });
+        res.send(videos);
       }
 
       if (req.method === 'PATCH') {
