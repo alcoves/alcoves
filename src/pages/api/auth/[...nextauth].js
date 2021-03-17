@@ -1,16 +1,14 @@
 import NextAuth from 'next-auth';
 import Providers from 'next-auth/providers';
 import Adapters from 'next-auth/adapters';
-import { PrismaClient, } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import db from '../../../utils/db';
 
 export default NextAuth({
   pages: {
     newUser: null, // TODO :: Send new users to welcome page!
     signIn: '/login',
   },
-  adapter: Adapters.Prisma.Adapter({ prisma }),
+  adapter: Adapters.Prisma.Adapter({ prisma: db }),
   providers: [
     Providers.Google({
       clientId: process.env.GOOGLE_ID,

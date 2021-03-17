@@ -43,13 +43,13 @@ export default function Upload() {
       body:uploadBody,
     });
 
-    const { uploadId, key, video_id, urls } = await (await uploadResponse).json();
+    const { uploadId, key, videoId, urls } = await (await uploadResponse).json();
 
     console.log('Uploading files parts');
     const parts = await uploadChunks(chunks, urls);
 
     console.log('Completing video upload');
-    console.log({ uploadId, key, video_id, urls, parts });
+    console.log({ uploadId, key, videoId, urls, parts });
 
     const video = document.createElement('video');
     video.setAttribute('src', window.URL.createObjectURL(file));
@@ -58,7 +58,7 @@ export default function Upload() {
       const body = {
         key,
         parts,
-        video_id,
+        videoId,
         uploadId,
         title: file.name,
         duration: meta.duration,

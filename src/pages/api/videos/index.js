@@ -1,14 +1,10 @@
-import { PrismaClient, } from '@prisma/client';
 import createVideo from '../../../api/createVideo';
+import db from '../../../utils/db';
 
 export default async function handler(req, res) {
-
   try {
     if (req.method === 'GET') {
-      const prisma = new PrismaClient();
-      const videos = await prisma.video.findMany({ where: { visibility: 'public' } });
-      console.log('videos', videos);
-      if (!videos.length) return res.status(404).end();
+      const videos = await db.video.findMany({ where: { visibility: 'public' } });
       return res.json(videos);
     }
 
@@ -19,7 +15,5 @@ export default async function handler(req, res) {
   } catch (error) {
     console.error(error);
     return res.status(500).end();
-  } finally {
-    await prisma.$disconnect();
   }
 }

@@ -77,7 +77,7 @@ export default function studio() {
         <div style={styles.VideoGridWrapper}>
           {data.map(v => (
             <div
-              key={v.video_id}
+              key={v.videoId}
               className='flex flex-col content-start p-2'
             >
               <div style={{
@@ -95,7 +95,7 @@ export default function studio() {
                 '-webkit-box-shadow': 'inset 0px -105px 66px -39px rgba(0,0,0,0.83)',
                 '-moz-box-shadow': 'inset 0px -105px 66px -39px rgba(0,0,0,0.83)',
                 boxShadow: 'inset 0px -105px 66px -39px rgba(0,0,0,0.83)',
-              }} onClick={() => router.push(`/studio/${v.video_id}`)}>
+              }} onClick={() => router.push(`/studio/${v.videoId}`)}>
                 <div style={styles.Duration}>
                   <p size='xsmall'>
                     {videoDuration(v.duration)}

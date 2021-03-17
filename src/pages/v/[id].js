@@ -38,13 +38,13 @@ export default function Video(props) {
         </Head>
         <Layout>
           <div>
-            <VideoPlayer url={data.hls_master_link} />
+            <VideoPlayer url={data.hlsMasterLink} />
             <div className='m-3 flex flex-col'>
               <h1 className='text-3xl font-semibold text-gray-200'>{data.title}</h1>
               <p className='text-sm font-semibold text-gray-400'>
                 {subHeader}
               </p>
-              <VideoPageUserCard id={data.user_id} />
+              <VideoPageUserCard id={data.userId} />
             </div>
           </div>
         </Layout>
