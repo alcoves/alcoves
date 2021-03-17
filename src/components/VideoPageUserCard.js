@@ -1,13 +1,11 @@
 import useSWR from 'swr';
-import { useEffect, } from 'react';
 import { useRouter, } from 'next/router';
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
 function VideoPageUserCard({ id }) {
   const router = useRouter();
-  const [getUser, { data }] = useSWR(id ? `/api/users/${id}` : false, fetcher);
-  useEffect(() => { getUser(); }, []);
+  const { data } = useSWR(id ? `/api/users/${id}` : false, fetcher);
 
   if (data) {
     return (
@@ -15,12 +13,12 @@ function VideoPageUserCard({ id }) {
         <img
           alt='image'
           src={data.image}
-          onClick={() => router.push(`/u/${data.user_id}`)}
+          onClick={() => router.push(`/u/${data.userId}`)}
           className='cursor-pointer w-12 h-12 rounded-full mr-3'
         />
         <div margin='small'>
           <p
-            onClick={() => router.push(`/u/${data.user_id}`)}
+            onClick={() => router.push(`/u/${data.userId}`)}
             className='cursor-pointer text-lg font-semibold text-gray-200'
           >
             {data.name}

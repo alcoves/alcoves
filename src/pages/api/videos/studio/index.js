@@ -8,8 +8,8 @@ export default async function handler(req, res) {
     const session = await getSession({ req });
     if (session) {
       if (req.method === 'GET') {
-        const { rows } = await db.query('select * from videos where user_id = $1', [session.id]);
-        res.send(rows);
+        const videos = await db.video.findMany({ where: { userId: session.id } })
+        res.send(videos);
       }
     } else {
       res.status(401).end();

@@ -12,11 +12,11 @@ export default function VideoMeta({ v, u }) {
           alt='image'
           src={u.image}
           className='w-12 h-12 rounded-full cursor-pointer'
-          onClick={() => router.push(`/u/${v.user_id}`)}
+          onClick={() => router.push(`/u/${v.userId}`)}
         />
       )}
       <div style={{ paddingLeft: !u ? '0px' : '10px' }}>
-        <p className='truncate text-lg text-gray-200 font-bold cursor-pointer' onClick={() => router.push(`/v/${v.video_id}`)}>
+        <p className='truncate text-lg text-gray-200 font-bold cursor-pointer' onClick={() => router.push(`/v/${v.videoId}`)}>
           {v.title}
         </p>
         {u && (

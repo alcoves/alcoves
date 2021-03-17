@@ -8,8 +8,10 @@ export default async function handler(req, res) {
     const session = await getSession({ req });
     if (session) {
       if (req.method === 'GET') {
-        const { rows } = await db.query('select * from videos where video_id = $1 and user_id = $2', [req.query.id, session.id]);
-        res.send(rows[0]);
+        const videos = await db.user.findFirst({ 
+          where: { videoId: req.query.id, userId: session.id },
+        })
+        res.send(videos)
       }
 
       if (req.method === 'PATCH') {

@@ -23,7 +23,7 @@ export default function StudioEditVideo() {
     if (data) {
       const video = document.getElementById('bkenStudioVideoPlayer');
       hls = new window.Hls({ startLevel: 3 });
-      hls.loadSource(data.hls_master_link);
+      hls.loadSource(data.hlsMasterLink);
       hls.attachMedia(video);
     }
   });
@@ -40,15 +40,15 @@ export default function StudioEditVideo() {
     );
   }
 
-  if (data && (session.id === data.user_id)) {
+  if (data && (session.id === data.userId)) {
     return (
       <Layout>
         <div className='w-full justify-center flex p-4'>
           <div className='max-w-screen-sm'>
             <div>
-              <EditTitle id={data.video_id} title={data.title} />
-              <EditVisibility id={data.video_id} visibility={data.visibility} />
-              <ListRenditions id={data.video_id} />
+              <EditTitle id={data.videoId} title={data.title} />
+              <EditVisibility id={data.videoId} visibility={data.visibility} />
+              <ListRenditions id={data.videoId} />
             </div>
             <div>
               <img
@@ -68,7 +68,7 @@ export default function StudioEditVideo() {
               }
             </div>
             <div className='flex flex-row justify-between py-2'>
-              <DeleteVideo id={data.video_id} />
+              <DeleteVideo id={data.videoId} />
               <button
                 type='button'
                 onClick={() => router.push(`/v/${id}`)}
