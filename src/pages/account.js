@@ -6,7 +6,13 @@ export default function Account() {
   const [session, loading] = useSession();
 
   if (loading) {
-    return <Layout><Spinner /></Layout>;
+    return (
+      <Layout>
+        <div className='flex w-full justify-center pt-4'>
+          <Spinner />
+        </div>
+      </Layout>
+    );
   }
 
   if (session) {
@@ -36,5 +42,15 @@ export default function Account() {
     );
   }
 
-  return null;
+  return (
+    <Layout>
+      <div className='flex flex-col pt-4'>
+        <div width='500px' align='center' margin='medium'>
+          <div className='text-gray-200 uppercase text-3xl font-extrabold h-8 py-1 px-2 tracking-wide'>
+            Please sign in
+          </div>
+        </div>
+      </div>
+    </Layout>
+  );
 }
