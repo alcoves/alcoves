@@ -12,7 +12,7 @@ export default function Account() {
   if (session) {
     return (
       <Layout>
-        <div className='flex flex-col mt-4'>
+        <div className='flex flex-col pt-4'>
           <div width='500px' align='center' margin='medium'>
             <img className='h-32 w-32 rounded-full' src={session.user.image} alt='image' />
             <h4 className='mt-2 text-3xl font-bold text-gray-200'>
