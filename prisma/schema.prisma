@@ -87,12 +87,13 @@ model Video {
   thumbnail           String?
   hlsMasterLink       String?   @map(name: "hls_master_link")
   sourceSegmentsCount Int?      @default(0) @map(name: "source_segments_count")
-  percentCompleted    Decimal?  @default(0.000000) @map(name: "percent_completed") @db.Decimal
+  percentCompleted    Decimal?  @default(0.0) @map(name: "percent_completed") @db.Decimal
   createdAt           DateTime  @default(now()) @map(name: "created_at") @db.Timestamptz(6)
   updatedAt           DateTime  @default(now()) @map(name: "updated_at") @db.Timestamptz(6)
   deletedAt           DateTime? @map(name: "deleted_at") @db.Timestamptz(6)
 
   @@index([visibility], name: "visibility")
   @@index([videoId], name: "videosVideoId")
+  @@index([userId], name: "videosUserId")
   @@map(name: "videos")
 }

@@ -1,13 +1,19 @@
+import axios from 'axios';
 import { useRouter, } from 'next/router';
 import { useState, } from 'react';
-// import { useApiLazy, } from '../../utils/api';
 
 export default function DeleteVideo({ id }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
 
-  // const [deleteVideo, { data }] = useApiLazy({ url: `/videos/${id}`, method: 'delete' });
-  // if (data) router.push('/studio');
+  async function deleteVideo() {
+    try {
+      await axios.delete(`/api/videos/studio/${id}`)
+      router.push('/studio');
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   return (
     <div className='flex row-auto'>
@@ -57,7 +63,7 @@ export default function DeleteVideo({ id }) {
                 </button>
                 <button
                   onClick={() => {
-                    // deleteVideo();
+                    deleteVideo();
                     setOpen(false);
                   }}
                   type='button'

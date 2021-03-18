@@ -22,7 +22,7 @@ export default function StudioEditVideo() {
   const { data } = useSWR(id ? `/api/videos/studio/${id}`: false, fetcher);
 
   useEffect(() => {
-    if (data) {
+    if (data?.hlsMasterLink) {
       const video = document.getElementById('bkenStudioVideoPlayer');
       hls = new window.Hls({ startLevel: 3 });
       hls.loadSource(data.hlsMasterLink);

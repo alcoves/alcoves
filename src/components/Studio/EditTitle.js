@@ -1,9 +1,24 @@
-import { useState, } from 'react';
-// import { useApiLazy, } from '../../utils/api';
+import axios from 'axios';
+import { useEffect, useState, } from 'react';
 
 export default function EditTitle({ id, title: t }) {
-  // const [updateVideo, { loading }] = useApiLazy({ url: `/videos/${id}`, method: 'patch' });
+  const [loading, setLoading] = useState(false);
   const [title, setTitle ] = useState(t);
+
+  useEffect(() => {
+    if (t !== title) updateTitle(id, title)
+  }, [title])
+
+  async function updateTitle() {
+    try {
+      setLoading(true)
+      await axios.patch(`/api/videos/studio/${id}`, { title })
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <div className='flex flex-row my-2'>
@@ -16,8 +31,8 @@ export default function EditTitle({ id, title: t }) {
       <button
         type='button'
         disabled={loading}
-        className='w-max px-5 py-1 border rounded-md text-gray-300'
-        // onClick={() => updateVideo({ data: { title } })}
+        onClick={() => updateTitle()}
+        className={`w-max px-5 py-1 border rounded-md ${loading ? 'text-gray-400' : 'text-gray-300'}`}
       >
         Save
       </button>
