@@ -11,6 +11,7 @@ import ListRenditions from '../../components/Studio/ListRenditions';
 import EditVisibility from '../../components/Studio/EditVisibility';
 
 let hls;
+const fetcher = (url) => fetch(url).then((res) => res.json());
 
 export default function StudioEditVideo() {
   const vRef = useRef(null);

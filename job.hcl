@@ -22,11 +22,11 @@ job "web" {
 
       template {
         data = <<EOH
-          NEXTAUTH_URL="https://bken.io"
           GOOGLE_ID="{{key "secrets/GOOGLE_ID"}}"
-          DO_API_KEY="{{key "secrets/DO_API_KEY"}}"
           GOOGLE_SECRET="{{key "secrets/GOOGLE_SECRET"}}"
-          PG_CONNECTION_STRING="{{key "secrets/GOOGLE_SECRET"}}"
+          DO_API_KEY="{{key "secrets/DO_API_KEY"}}"
+          NEXTAUTH_URL="{{key "secrets/NEXTAUTH_URL"}}"
+          PG_CONNECTION_STRING="{{key "secrets/PG_CONNECTION_STRING"}}"
           WASABI_ENDPOINT="{{key "secrets/WASABI_ENDPOINT"}}"
           WASABI_ACCESS_KEY_ID="{{key "secrets/WASABI_ACCESS_KEY_ID"}}"
           WASABI_SECRET_ACCESS_KEY="{{key "secrets/WASABI_SECRET_ACCESS_KEY"}}"
@@ -72,8 +72,8 @@ job "web" {
       }
 
       resources {
-        memory = 300
-        cpu    = 100
+        memory = 500
+        cpu    = 500
       }
     }
   }
