@@ -1,8 +1,8 @@
 import { useState, } from 'react';
-import { useApiLazy, } from '../../utils/api';
+// import { useApiLazy, } from '../../utils/api';
 
 export default function EditTitle({ id, title: t }) {
-  const [updateVideo, { loading }] = useApiLazy({ url: `/videos/${id}`, method: 'patch' });
+  // const [updateVideo, { loading }] = useApiLazy({ url: `/videos/${id}`, method: 'patch' });
   const [title, setTitle ] = useState(t);
 
   return (
@@ -17,7 +17,7 @@ export default function EditTitle({ id, title: t }) {
         type='button'
         disabled={loading}
         className='w-max px-5 py-1 border rounded-md text-gray-300'
-        onClick={() => updateVideo({ data: { title } })}
+        // onClick={() => updateVideo({ data: { title } })}
       >
         Save
       </button>
