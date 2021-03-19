@@ -12,7 +12,7 @@ export default function EditTitle({ id, title: t }) {
   async function updateTitle() {
     try {
       setLoading(true)
-      await axios.patch(`/api/videos/studio/${id}`, { title })
+      await axios.patch(`/api/videos/${id}`, { title })
     } catch (error) {
       console.error(error)
     } finally {

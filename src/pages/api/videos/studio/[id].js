@@ -15,19 +15,6 @@ export default async function handler(req, res) {
         res.send(videos);
       }
 
-      if (req.method === 'PATCH') {
-        const videoCheck = await db.video.findUnique({ where: { videoId: req.query.id } })
-        // Ensure that the user requesting the delete has access
-        if (videoCheck.userId !== session.id) {
-          return res.status(403).end()
-        }
-        const video = await db.video.update({
-          data: { ...JSON.parse(body) },
-          where: { videoId: req.query.id }
-        })
-        res.send(video);
-      }
-
       if (req.method === 'DELETE') {
         const video = await db.video.findUnique({ where: { videoId: req.query.id } })
 
