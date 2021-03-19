@@ -47,7 +47,7 @@ async function createVideo(req, res) {
   await axios.post(getTidalURL(), {
     rcloneSource: `wasabi:cdn.bken.io/${key}`,
     rcloneDest: `wasabi:cdn.bken.io/v/${videoId}`,
-    webhookURL: getWebhookURL()
+    webhookURL: getWebhookURL(videoId)
   }, {
     headers: {
       'Content-Type': 'application/json',
