@@ -59,7 +59,7 @@ export default function ListRenditions({ id }) {
         >
           <div className='flex flex-col w-24'>
             <div className='flex flex-row items-end'>
-              {Status(data.percentCompleted)}
+              {Status(parseInt(data.percentCompleted))}
               <p className='text-sm text-gray-300 font-bold'>{`${parseInt(data.percentCompleted).toFixed(0)}%`}</p>
             </div>
             <div className='capitalize flex justify-center w-full flex-col text-gray-200'>
