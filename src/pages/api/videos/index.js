@@ -3,6 +3,20 @@ import db from '../../../utils/db';
 import { s3, } from '../../../utils/s3';
 import { getSession, } from 'next-auth/client';
 
+function getTidalURL() {
+  if (process.env.NODE_ENV === 'production') {
+    return 'https://bk-det1.bken.dev/tidal/videos'
+  }
+  return 'http://localhost:4000/videos'
+}
+
+function getWebhookURL(id) {
+  if (process.env.NODE_ENV === 'production') {
+    return `https://bken.io/api/videos/${id}`
+  }
+  return `http://localhost:3000/api/videos/${id}`
+}
+
 async function createVideo(req, res) {
   const session = await getSession({ req });
   if (!session) return res.status(401).end();
@@ -30,15 +44,15 @@ async function createVideo(req, res) {
   });
 
   // Invoke tidal
-  await axios.post('https://bk-det1.bken.dev/tidal/videos', {
+  await axios.post(getTidalURL(), {
     rcloneSource: `wasabi:cdn.bken.io/${key}`,
     rcloneDest: `wasabi:cdn.bken.io/v/${videoId}`,
+    webhookURL: getWebhookURL()
   }, {
     headers: {
       'Content-Type': 'application/json',
     },
   });
-
   res.status(200).end();
 }
 

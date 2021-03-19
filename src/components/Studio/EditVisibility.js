@@ -7,7 +7,7 @@ export default function EditVisibility({ id, visibility: v }) {
   async function handleChange(v) {
     try {
       setVisibility(v);
-      await axios.patch(`/api/videos/studio/${id}`, { visibility: v.toLowerCase() })
+      await axios.patch(`/api/videos/${id}`, { visibility: v.toLowerCase() })
     } catch (error) {
       console.error(error)
     }
