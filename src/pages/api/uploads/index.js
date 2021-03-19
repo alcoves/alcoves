@@ -15,7 +15,7 @@ export default async function handler(req, res) {
         const { UploadId, Key } = await s3.createMultipartUpload({
           Bucket: 'cdn.bken.io',
           ContentType: type,
-          Key: `tmp/${videoId}/${videoId}.${mime.extension(type)}`,
+          Key: `v/${videoId}/${videoId}.${mime.extension(type)}`,
         }).promise();
 
         const urls = [];

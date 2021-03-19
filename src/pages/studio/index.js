@@ -43,9 +43,9 @@ export default function studio() {
   const { data } = useSWR('/api/videos/studio', fetcher);
 
   function metadata(v) {
-    const created_at = moment(v.created_at).fromNow();
+    const createdAt = moment(v.createdAt).fromNow();
     return (
-      `Created ${created_at} · ${v.views} Views`
+      `Created ${createdAt} · ${v.views} Views`
     );
   }
 

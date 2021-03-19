@@ -22,7 +22,7 @@ export default async function handler(req, res) {
           return res.status(403).end()
         }
         const video = await db.video.update({
-          data: { ...req.body },
+          data: { ...JSON.parse(body) },
           where: { videoId: req.query.id }
         })
         res.send(video);

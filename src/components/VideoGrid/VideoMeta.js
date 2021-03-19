@@ -28,7 +28,7 @@ export default function VideoMeta({ v, u }) {
           </p>
         )}
         <p className='text-xs lowercase text-gray-400 font-bold'>
-          {`${abbreviateNumber(v.views)} views · ${moment(v.created_at).fromNow()}`}
+          {`${abbreviateNumber(v.views)} views · ${moment(v.createdAt).fromNow()}`}
         </p>
       </div>
     </div>
