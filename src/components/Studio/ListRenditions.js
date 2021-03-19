@@ -1,15 +1,12 @@
 import useSWR from 'swr';
-import { useEffect, } from 'react';
 import Spinner from '../Spinner';
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
-let timer;
-
 function Status(percentCompleted) {
   return (
     <>
-      {percentCompleted === '100' ? (
+      {percentCompleted === 100 ? (
         <svg
           xmlns='http://www.w3.org/2000/svg' 
           fill='none'
@@ -49,18 +46,7 @@ function Status(percentCompleted) {
 }
 
 export default function ListRenditions({ id }) {
-  const { data, error } = useSWR(`/api/videos/${id}`, fetcher);
-
-  useEffect(() => {
-    clearInterval(timer);
-    timer = setInterval(() => {
-      // refetch();
-    }, 3000);
-
-    return function cleanup() {
-      clearInterval(timer);
-    };
-  }, []);
+  const { data, error } = useSWR(`/api/videos/${id}`, fetcher, { refreshInterval: 1000 });
 
   if (data?.percentCompleted) {
     return (

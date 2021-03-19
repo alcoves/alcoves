@@ -4,8 +4,8 @@ export default async function handler(req, res) {
   try {
     if (req.method === 'GET') {
       const user = await db.user.findFirst({ where: { id: parseInt(req.query.id) } });
-      if (user) {
-        console.log(user);
+      if (user) {;
+        // TODO :: Replace this with explicit select statement
         return res.send({
           id: user.id,
           name: user.name,

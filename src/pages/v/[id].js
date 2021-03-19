@@ -24,7 +24,7 @@ export default function Video(props) {
   if (data) {
     const subHeader = `${
       abbreviateNumber(data.views)} views ·
-      ${moment(data.created_at).fromNow()} · 
+      ${moment(data.createdAt).fromNow()} · 
       ${data.visibility}
     `;
 
