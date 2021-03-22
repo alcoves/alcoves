@@ -19,21 +19,6 @@ export default function Navigation() {
     } if (!loading && session && session.user) {
       return(
         <>
-          <svg
-            onClick={() => router.push('/upload')} 
-            xmlns='http://www.w3.org/2000/svg'
-            fill='none'
-            className='cursor-pointer h-6 w-6'
-            stroke='white'
-            viewBox='0 0 24 24'
-          >
-            <path
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              strokeWidth={2}
-              d='M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12'
-            />
-          </svg>
           <img
             alt='image'
             src={session.user.image}
@@ -66,22 +51,22 @@ export default function Navigation() {
           )}
         </>
       );
-    } else {
-      return (
-        <svg
-          fill="white"
-          viewBox='0 0 24 24'
-          className='pr-2 cursor-pointer h-10 w-10'
-          xmlns="http://www.w3.org/2000/svg"
-          onClick={() => router.push("/login")}
-        >
+    } 
+    return (
+      <svg
+        fill='white'
+        viewBox='0 0 24 24'
+        className='pr-2 cursor-pointer h-10 w-10'
+        xmlns='http://www.w3.org/2000/svg'
+        onClick={() => router.push('/login')}
+      >
         <path
-          fillRule="evenodd"
-          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
-          clipRule="evenodd" />
-        </svg>
-      )
-    }
+          fillRule='evenodd'
+          d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z'
+          clipRule='evenodd' />
+      </svg>
+    );
+    
   }
 
   return (

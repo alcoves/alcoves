@@ -1,11 +1,9 @@
 import axios from 'axios';
 import { useState, } from 'react';
-import Layout from '../../components/Layout';
-import chunkFile from '../../utils/chunkFile';
+import chunkFile from '../utils/chunkFile';
 
 export default function Upload() {
-  const [files, setFiles] = useState();
-  const [loading, setLoading] = useState();
+  const [files, setFiles] = useState([]);
   let [bytesUploaded, setBytesUploaded] = useState(0);
 
   async function uploadChunks(chunks, urls) {
@@ -68,24 +66,39 @@ export default function Upload() {
         body: JSON.stringify(body),
       }).then((res) => {
         console.log(res);
+        window.location.reload();
       });
     };
   }
 
+  function renderProgressBar() {
+    let progress = 0;
+    if (files.length) {
+      progress = ((bytesUploaded / files[0].size) * 100).toFixed(0);
+    }
+    return (
+      <div className='relative pt-1'>
+        <div className='overflow-hidden h-2 mb-4 text-xs flex rounded bg-teal-200'>
+          <div style={{ width: `${progress}%` }} className='shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-teal-500' />
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <Layout>
-      <div className='w-full h-full flex justify-center items-center'>
-        <label htmlFor='bken-video'>Select Video</label>
-        <input accept='video/mp4' onChange={({ target }) => {
-          setFiles(target.files);
-          startUpload(target.files[0]);
-        }} id='bken-video' name='bken-video' type='file' />
+    <div className='flex flex-row justify-center align-center py-4'>
+      <div className='w-48'>
+        <label>
+          <span className='rounded-md uppercase text-gray-200 border cursor-pointer text-sm font-bold tracking-wide p-2'>Upload</span>
+          <input accept='video/mp4' onChange={({ target }) => {
+            setFiles(target.files);
+            startUpload(target.files[0]);
+          }} id='bken-video' className='hidden' name='bken-video' type='file' />
+        </label>
+        <div className='my-2'>
+          {files.length ? renderProgressBar(): null}
+        </div>
       </div>
-      <div>
-        <p>
-          {files?.length ? ((bytesUploaded / files[0].size) * 100).toFixed(0) : ''}
-        </p>
-      </div>
-    </Layout>
+    </div>
   );
 }

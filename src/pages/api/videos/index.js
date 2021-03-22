@@ -1,8 +1,8 @@
 import axios from 'axios';
+import { getSession, } from 'next-auth/client';
 import db from '../../../utils/db';
 import { s3, } from '../../../utils/s3';
-import { getSession, } from 'next-auth/client';
-import { getTidalURL, getWebhookURL } from '../../../utils/tidal'
+import { getTidalURL, getWebhookURL, } from '../../../utils/tidal';
 
 async function createVideo(req, res) {
   const session = await getSession({ req });
@@ -36,7 +36,7 @@ async function createVideo(req, res) {
   await axios.post(getTidalURL(), {
     rcloneSource: `wasabi:cdn.bken.io/${key}`,
     rcloneDest: `wasabi:cdn.bken.io/v/${videoId}`,
-    webhookURL: getWebhookURL(videoId)
+    webhookURL: getWebhookURL(videoId),
   }, {
     headers: {
       'Content-Type': 'application/json',
@@ -50,7 +50,7 @@ export default async function handler(req, res) {
     if (req.method === 'GET') {
       const videos = await db.video.findMany({
         where: { visibility: 'public' },
-        orderBy: { createdAt: "desc" }
+        orderBy: { createdAt: 'desc' },
       });
       return res.json(videos);
     }

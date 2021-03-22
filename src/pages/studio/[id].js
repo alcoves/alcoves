@@ -42,7 +42,7 @@ export default function StudioEditVideo() {
               <img
                 alt='thumbnail'
                 src={data.thumbnail}
-                className="h-auto w-48"
+                className='h-auto w-48'
                 style={{ borderRadius:'4px' }}
               />
               <div className='flex-1 flex-col px-4'>
