@@ -30,6 +30,8 @@ job "web" {
           WASABI_ENDPOINT="{{key "secrets/WASABI_ENDPOINT"}}"
           WASABI_ACCESS_KEY_ID="{{key "secrets/WASABI_ACCESS_KEY_ID"}}"
           WASABI_SECRET_ACCESS_KEY="{{key "secrets/WASABI_SECRET_ACCESS_KEY"}}"
+          DISCORD_CLIENT_ID="{{key "secrets/DISCORD_CLIENT_ID"}}"
+          DISCORD_CLIENT_SECRET="{{key "secrets/DISCORD_CLIENT_SECRET"}}"
         EOH
         
         env         = true
