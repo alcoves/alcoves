@@ -15,6 +15,10 @@ export default NextAuth({
       clientSecret: process.env.GOOGLE_SECRET,
       authorizationUrl: 'https://accounts.google.com/o/oauth2/v2/auth?prompt=consent&access_type=offline&response_type=code',
     }),
+    Providers.Discord({
+      clientId: process.env.DISCORD_CLIENT_ID,
+      clientSecret: process.env.DISCORD_CLIENT_SECRET,
+    }),
   ],
   callbacks: {
     session(session, token) { 
