@@ -1,14 +1,31 @@
 import { getSession, } from 'next-auth/client';
 import db from '../../../../../utils/db';
 
-// Returns all videos for an authenticated user
+// Returns videos for a given user
+// Ensures that users cannot query for unlisted videos
 export default async function handler(req, res) {
   try {
     const session = await getSession({ req });
-    if (!session) return res.status(401).end();
-    if (req.query.id != session.id) return res.status(403).end();
-
     if (req.method === 'GET') {
+      const visibility = req.query.visibility;
+
+      // Anon user and or non-author user
+      if (!session || req.query.id != session.id) {
+        const videos = await db.video.findMany({
+          where: { userId: parseInt(req.query.id), visibility: 'public' },
+          orderBy: { createdAt: "desc" }
+        });
+        return res.send(videos);
+      }
+
+      if (visibility) {
+        const videos = await db.video.findMany({
+          where: { userId: parseInt(req.query.id), visibility },
+          orderBy: { createdAt: "desc" }
+        });
+        return res.send(videos);
+      }
+
       const videos = await db.video.findMany({
         where: { userId: parseInt(req.query.id) },
         orderBy: { createdAt: "desc" }

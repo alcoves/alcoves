@@ -1,6 +1,29 @@
+import axios from 'axios';
 import db from '../../../utils/db';
 import { s3 } from '../../../utils/s3';
 import { getSession, } from 'next-auth/client';
+import { getTidalURL, getWebhookURL } from '../../../utils/tidal'
+
+async function reprocessVideo(req, res) {
+  const session = await getSession({ req });
+  if (!session) return res.status(401).end();
+  const video = await db.video.findFirst({ where: { videoId: req.query.id } });
+  if (!video) return res.status(404).end();
+  if (video.userId !== session.id) return res.status(403).end();
+  // if (video.status !== 'completed') return res.status(400).end();
+
+  // Invoke tidal
+  await axios.post(getTidalURL(), {
+    rcloneSource: `wasabi:cdn.bken.io/v/${video.videoId}/${video.videoId}.mp4`, // FIXME :: We should store the source file path
+    rcloneDest: `wasabi:cdn.bken.io/v/${video.videoId}`,
+    webhookURL: getWebhookURL(video.videoId)
+  }, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  res.status(200).end();
+}
 
 async function getVideo(req, res) {
   const video = await db.video.findFirst({ where: { videoId: req.query.id } });
@@ -61,6 +84,8 @@ export default async function handler(req, res) {
       await patchVideo(req, res)
     } else if (req.method === 'DELETE') {
       await deleteVideo(req, res)
+    } else if (req.method === "POST") {
+      await reprocessVideo(req, res)
     }
     res.status(400).end();
   } catch (error) {
