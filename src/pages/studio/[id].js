@@ -19,7 +19,7 @@ export default function StudioEditVideo() {
   const [session, loading] = useSession();
 
   const { id } = router.query;
-  const { data } = useSWR(id ? `/api/videos/studio/${id}`: false, fetcher);
+  const { data } = useSWR(id ? `/api/videos/${id}`: false, fetcher, { refreshInterval: 1000 });
 
   useEffect(() => {
     if (data?.hlsMasterLink) {
@@ -28,7 +28,7 @@ export default function StudioEditVideo() {
       hls.loadSource(data.hlsMasterLink);
       hls.attachMedia(video);
     }
-  });
+  }, []);
 
   if (!loading && !session) {
     return (

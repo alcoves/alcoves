@@ -2,20 +2,7 @@ import axios from 'axios';
 import db from '../../../utils/db';
 import { s3, } from '../../../utils/s3';
 import { getSession, } from 'next-auth/client';
-
-function getTidalURL() {
-  if (process.env.NODE_ENV === 'production') {
-    return 'https://bk-det1.bken.dev/tidal/videos'
-  }
-  return 'http://localhost:4000/videos'
-}
-
-function getWebhookURL(id) {
-  if (process.env.NODE_ENV === 'production') {
-    return `https://bken.io/api/videos/${id}`
-  }
-  return `http://localhost:3000/api/videos/${id}`
-}
+import { getTidalURL, getWebhookURL } from '../../../utils/tidal'
 
 async function createVideo(req, res) {
   const session = await getSession({ req });
@@ -40,6 +27,8 @@ async function createVideo(req, res) {
       userId: user.id,
       createdAt: new Date(),
       updatedAt: new Date(),
+      thumbnail: `https://cdn.bken.io/v/${videoId}/thumb.webp`,
+      hlsMasterLink : `https://cdn.bken.io/v/${videoId}/hls/master.m3u8`,
     },
   });
 

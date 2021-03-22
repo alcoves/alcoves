@@ -40,7 +40,7 @@ const styles = {
 export default function studio() {
   const router = useRouter();
   const [ session, loading ] = useSession();
-  const { data } = useSWR('/api/videos/studio', fetcher);
+  const { data } = useSWR(session ? `/api/users/${session.id}/videos` : null, fetcher);
 
   function metadata(v) {
     const createdAt = moment(v.createdAt).fromNow();
@@ -146,9 +146,5 @@ export default function studio() {
     );
   }
 
-  return (
-    <Layout>
-      You don't have any videos
-    </Layout>
-  );
+  return <Layout/>
 }
