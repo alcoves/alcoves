@@ -8,7 +8,7 @@ export default function DeleteVideo({ id }) {
 
   async function deleteVideo() {
     try {
-      await axios.delete(`/api/videos/studio/${id}`)
+      await axios.delete(`/api/videos/${id}`)
       router.push('/studio');
     } catch (error) {
       console.error(error)
