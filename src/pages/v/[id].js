@@ -1,13 +1,16 @@
 import Head from 'next/head';
 import moment from 'moment';
 import useSWR from 'swr';
-import { CircularProgress, } from '@chakra-ui/react';
+import { CircularProgress, Flex, Box, Text, Heading  } from '@chakra-ui/react';
 import Layout from '../../components/Layout';
 import VideoPlayer from '../../components/VideoPlayer/index';
 import abbreviateNumber from '../../utils/abbreviateNumber';
 import VideoPageUserCard from '../../components/VideoPageUserCard';
+import { useEffect, useRef } from 'react';
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
+
+let hls;
 
 export default function Video(props) {
   // const router = useRouter();
@@ -18,8 +21,18 @@ export default function Video(props) {
   //   } 
   // }, [video]);
 
+  const vRef = useRef(null)
   const { data } = useSWR(props.url, fetcher, { initialData: props.video });
-  console.log('data', data);
+
+  useEffect(() => {
+    if (data.hlsMasterLink) {
+      const video = document.getElementById('bkenVideoPlayer');
+      hls = new window.Hls();
+      hls.loadSource(data.hlsMasterLink);
+      hls.attachMedia(video);
+    }
+  }, [data])
+
 
   if (data) {
     const subHeader = `${
@@ -29,7 +42,7 @@ export default function Video(props) {
     `;
 
     return (
-      <div>
+      <Box>
         <Head>
           <title>{data.title}</title>
           <meta property='og:title' content={data.title} />
@@ -37,26 +50,27 @@ export default function Video(props) {
           <meta property='og:description' content={data.title} />
         </Head>
         <Layout>
-          <div>
-            <VideoPlayer url={data.hlsMasterLink} />
-            <div className='m-3 flex flex-col'>
-              <h1 className='text-3xl font-semibold text-gray-200'>{data.title}</h1>
-              <p className='text-sm font-semibold text-gray-400'>
-                {subHeader}
-              </p>
+          <Box>
+            {/* <VideoPlayer url={data.hlsMasterLink} /> */}
+            <Box bg='black' minH='calc((9 / 16) * 100vw)' minW='100vw'>
+              <video autoPlay id="bkenVideoPlayer" controls ref={vRef}/>
+            </Box>
+            <Box p='4'>
+              <Heading as='h3' size='lg'>{data.title}</Heading>
+              <Text fontSize='sm'>{subHeader}</Text>
               <VideoPageUserCard id={data.userId} />
-            </div>
-          </div>
+           </Box>
+           </Box>
         </Layout>
-      </div>
+      </Box>
     );
   }
 
   return (
     <Layout>
-      <div align='center'>
+      <Flex justify='center'>
         <CircularProgress isIndeterminate />
-      </div>
+      </Flex>
     </Layout>
   );
 }

@@ -58,6 +58,8 @@ async function deleteVideo(req, res) {
   res.status(200).end();
 }
 
+// This endpoint is where user's edit their videos
+// Tidal also uses this endpoint to webhook data in
 async function patchVideo(req, res) {
   // const videoCheck = await db.video.findUnique({ where: { videoId: req.query.id } })
   // Ensure that the user requesting the delete has access
@@ -66,11 +68,17 @@ async function patchVideo(req, res) {
   // }
 
   // Tidal webhook events send this data
-  // TODO :: is there a cleaner way to sanitize inputs?
-  delete req.body.id;
-  delete req.body.renditions;
+  const reqKeys = Object.keys(req.body)
+  const permittedKeys = ["status", "percentCompleted", "title", "visibility"]
+  const update = permittedKeys.reduce((acc, cv) => {
+    if (reqKeys.includes(cv)) {
+      acc[cv] = req.body[cv]
+    }
+    return acc
+  }, {})
+
   await db.video.update({
-    data: { ...req.body },
+    data: update,
     where: { videoId: req.query.id },
   });
   res.status(200).end();

@@ -1,30 +1,34 @@
 import axios from 'axios';
 import { useState, } from 'react';
+import {IconButton } from '@chakra-ui/react';
+import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 
 export default function EditVisibility({ id, visibility: v }) {
   const [visibility, setVisibility ] = useState(v);
+  const [loading, setLoading] = useState(false)
 
-  async function handleChange(v) {
+  async function handleChange(vis) {
     try {
-      setVisibility(v);
-      await axios.patch(`/api/videos/${id}`, { visibility: v.toLowerCase() });
+      setLoading(true)
+      const toggledVis = visibility === 'public' ? "unlisted" : 'public'
+      setVisibility(toggledVis);
+      await axios.patch(`/api/videos/${id}`, { visibility: toggledVis.toLowerCase() });
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false)
     }
   }
 
   return (
-    <div className='flex flex-row my-2'>
-      <select
-        id='visibility'
-        name='visibility'
-        defaultValue={visibility}
-        onChange={(e) => handleChange(e.target.value)}
-        className='bg-gray-700 text-gray-200 w-full rounded-md p-2'
-      >
-        <option value='public'>Public</option>
-        <option value='unlisted'>Unlisted</option>
-      </select>
-    </div>
-  );
+    <IconButton
+      size='xs'
+      variant="outline"
+      isLoading={loading}
+      onClick={handleChange}
+      aria-label="Toggle visibility"
+      colorScheme={visibility === 'public' ? "teal" : "gray"}
+      icon={visibility === 'public' ? <ViewIcon/> : <ViewOffIcon/>}
+    />
+);
 }
