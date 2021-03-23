@@ -1,8 +1,8 @@
 import React, { useRef, useState, useEffect, } from 'react';
 
 import qs from 'query-string';
-import Spinner from '../Spinner';
 
+import { CircularProgress, } from '@chakra-ui/react';
 import Scrubber from './scrubber';
 import Duration from './duration';
 import PlayButton from './playButton';
@@ -144,7 +144,7 @@ function VideoPlayer({ url }) {
 
       {buffering && (
         <div style={styles.BufferingWrapper}>
-          <Spinner />
+          <CircularProgress isIndeterminate />
         </div>
       )}
  

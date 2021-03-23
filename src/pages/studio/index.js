@@ -1,7 +1,7 @@
 import { useSession, } from 'next-auth/client';
 import useSWR from 'swr';
+import { CircularProgress, } from '@chakra-ui/react';
 import Layout from '../../components/Layout';
-import Spinner from '../../components/Spinner';
 import Uploader from '../../components/Uploader';
 import StudioVideoGrid from '../../components/Studio/StudioVideoGrid';
 
@@ -15,7 +15,7 @@ export default function studio() {
     return (
       <Layout>
         <div margin='small' align='center'>
-          <Spinner />
+          <CircularProgress isIndeterminate />
         </div>
       </Layout>
     );

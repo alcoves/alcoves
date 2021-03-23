@@ -1,15 +1,18 @@
 import '../styles/index.css';
-import 'tailwindcss/tailwind.css';
 import React from 'react';
-import { Provider, } from 'next-auth/client';
+import { ChakraProvider, extendTheme } from "@chakra-ui/react"
+import { Provider } from 'next-auth/client';
+import theme from '../styles/theme';
+
+const _theme = extendTheme({ theme });
 
 function App({ Component, pageProps }) {
   return (
-    <div>
+    <ChakraProvider theme={_theme}>
       <Provider session={pageProps.session}>
         <Component {...pageProps} />
       </Provider>
-    </div>
+    </ChakraProvider>
   );
 }
 

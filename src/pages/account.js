@@ -1,6 +1,6 @@
 import { useSession, signOut, } from 'next-auth/client';
+import { CircularProgress, } from '@chakra-ui/react';
 import Layout from '../components/Layout';
-import Spinner from '../components/Spinner';
 
 export default function Account() {
   const [session, loading] = useSession();
@@ -9,7 +9,7 @@ export default function Account() {
     return (
       <Layout>
         <div className='flex w-full justify-center pt-4'>
-          <Spinner />
+          <CircularProgress isIndeterminate />
         </div>
       </Layout>
     );

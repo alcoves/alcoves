@@ -1,11 +1,11 @@
 import Head from 'next/head';
 import moment from 'moment';
 import useSWR from 'swr';
+import { CircularProgress, } from '@chakra-ui/react';
 import Layout from '../../components/Layout';
 import VideoPlayer from '../../components/VideoPlayer/index';
 import abbreviateNumber from '../../utils/abbreviateNumber';
 import VideoPageUserCard from '../../components/VideoPageUserCard';
-import Spinner from '../../components/Spinner';
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -55,7 +55,7 @@ export default function Video(props) {
   return (
     <Layout>
       <div align='center'>
-        <Spinner />
+        <CircularProgress isIndeterminate />
       </div>
     </Layout>
   );
