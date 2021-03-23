@@ -8,6 +8,11 @@ const theme = {
     initialColorMode: 'dark',
     useSystemColorMode: true,
   },
+  fonts: {
+    body: "'Nunito Sans', sans-serif",
+    heading: "'Nunito Sans', sans-serif",
+    mono: "'Nunito Sans', monospace",
+  },
 };
 
 export default theme;

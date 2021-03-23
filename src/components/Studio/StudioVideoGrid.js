@@ -1,9 +1,10 @@
 import StudioVideo from './StudioVideo';
+import { SimpleGrid  } from "@chakra-ui/react"
 
 export default function StudioVideoGrid({ videos }) {
-  return (
-    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4'>
-      {videos.map(v => <StudioVideo v={v}/>)}
-    </div>
+  return ( 
+    <SimpleGrid columns={[2, null, 3]} spacing="10px">
+      {videos.map(v => <StudioVideo key={v.videoId} v={v}/>)}
+    </SimpleGrid >
   );  
 }

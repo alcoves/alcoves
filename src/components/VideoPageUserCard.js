@@ -1,5 +1,6 @@
 import useSWR from 'swr';
 import { useRouter, } from 'next/router';
+import { Flex, Avatar, Heading } from '@chakra-ui/react';
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -9,22 +10,22 @@ function VideoPageUserCard({ id }) {
 
   if (data) {
     return (
-      <div className='flex flex-row h-12 mt-3'>
-        <img
-          alt='image'
+      <Flex pt='4'>
+        <Avatar
+          size='md'
           src={data.image}
-          onClick={() => router.push(`/u/${data.userId}`)}
-          className='cursor-pointer w-12 h-12 rounded-full mr-3'
+          cursor='pointer'
+          onClick={() => router.push(`/u/${id}`)}
         />
-        <div margin='small'>
-          <p
-            onClick={() => router.push(`/u/${data.userId}`)}
-            className='cursor-pointer text-lg font-semibold text-gray-200'
-          >
-            {data.name}
-          </p>
-        </div>
-      </div>
+        <Heading
+          pl='4'
+          size='sm'
+          cursor='pointer'
+          onClick={() => router.push(`/u/${id}`)}
+        >
+          {data.name}
+        </Heading>
+      </Flex>
     );
   }
 

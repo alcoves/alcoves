@@ -1,3 +1,5 @@
+import { Box, Flex } from '@chakra-ui/layout';
+import { Progress } from "@chakra-ui/react"
 import axios from 'axios';
 import { useState, } from 'react';
 import chunkFile from '../utils/chunkFile';
@@ -65,9 +67,13 @@ export default function Upload() {
         method: 'POST',
         body: JSON.stringify(body),
       }).then((res) => {
-        console.log(res);
-        window.location.reload();
-      });
+        setBytesUploaded(0)
+        setFiles([])
+      }).catch((error) => {
+        console.log(error);
+        setBytesUploaded(0)
+        setFiles([])
+      })
     };
   }
 
@@ -77,28 +83,23 @@ export default function Upload() {
       progress = ((bytesUploaded / files[0].size) * 100).toFixed(0);
     }
     return (
-      <div className='relative pt-1'>
-        <div className='overflow-hidden h-2 mb-4 text-xs flex rounded bg-teal-200'>
-          <div style={{ width: `${progress}%` }} className='shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-teal-500' />
-        </div>
-      </div>
+      <Progress hasStripe value={progress} />
     );
   }
 
   return (
-    <div className='flex flex-row justify-center align-center py-4'>
-      <div className='w-48'>
+    <Flex>
+      <Box className='w-48'>
         <label>
-          <span className='rounded-md uppercase text-gray-200 border cursor-pointer text-sm font-bold tracking-wide p-2'>Upload</span>
-          <input accept='video/mp4' onChange={({ target }) => {
+          <input disabled={Boolean(files.length)} accept='video/mp4' onChange={({ target }) => {
             setFiles(target.files);
             startUpload(target.files[0]);
-          }} id='bken-video' className='hidden' name='bken-video' type='file' />
+          }} id='bken-video' name='bken-video' type='file' />
         </label>
-        <div className='my-2'>
+        <Box my='2'>
           {files.length ? renderProgressBar(): null}
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Flex>
   );
 }

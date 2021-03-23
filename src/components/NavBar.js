@@ -9,7 +9,7 @@ export default function Navigation() {
   const [session, loading] = useSession();
 
   return (
-    <Flex h='55px' bg='teal.500'>
+    <Flex h='48px' bg='gray.700'>
       <Box p='1'>
         <Img 
           alt='Bken.io'
@@ -26,6 +26,8 @@ export default function Navigation() {
           <Menu>
             <MenuButton>
               <Avatar
+                h='40px'
+                w='40px'
                 name={session.user.name}
                 src={session.user.image}
                 onClick={() => setOpen(!open)}
@@ -39,6 +41,7 @@ export default function Navigation() {
           </Menu>
           :
           <Avatar
+            size='sm'
             onClick={() => router.push('/login')}
           />
         }
