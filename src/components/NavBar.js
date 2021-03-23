@@ -1,90 +1,48 @@
 import { useState, } from 'react';
-import Image from 'next/image';
 import { useRouter, } from 'next/router';
 import { useSession, } from 'next-auth/client';
+import { Flex, Spacer, Box, Avatar, Img, Menu, MenuButton, MenuList, MenuItem, } from '@chakra-ui/react';
 
 export default function Navigation() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [session, loading] = useSession();
 
-  function handleClick(route) {
-    setOpen(false);
-    router.push(route);
-  }
-
-  function renderRightNav() {
-    if (loading) {
-      return null;
-    } if (!loading && session && session.user) {
-      return(
-        <>
-          <img
-            alt='image'
-            src={session.user.image}
-            onClick={() => setOpen(!open)}
-            className='h-8 w-8 mx-2 rounded-full cursor-pointer'
-          />
-          {open && (
-            <div className='z-50 absolute right-0 top-0 mt-14 mr-4 w-56 rounded-md shadow-lg bg-gray-900'>
-              <div className='py-1' role='menu' aria-orientation='vertical' aria-labelledby='options-menu'>
-                <div
-                  onClick={() => handleClick(`/u/${session.id}`)} 
-                  className='cursor-pointer block px-4 py-2 text-sm text-gray-200 hover:bg-gray-800'
-                >
-                  Profile
-                </div>
-                <div
-                  onClick={() => handleClick('/studio')} 
-                  className='cursor-pointer block px-4 py-2 text-sm text-gray-200 hover:bg-gray-800'
-                >
-                  Studio
-                </div>
-                <div
-                  onClick={() => handleClick('/account')} 
-                  className='cursor-pointer block px-4 py-2 text-sm text-gray-200 hover:bg-gray-800'
-                >
-                  Account
-                </div>
-              </div>
-            </div>
-          )}
-        </>
-      );
-    } 
-    return (
-      <svg
-        fill='white'
-        viewBox='0 0 24 24'
-        className='pr-2 cursor-pointer h-10 w-10'
-        xmlns='http://www.w3.org/2000/svg'
-        onClick={() => router.push('/login')}
-      >
-        <path
-          fillRule='evenodd'
-          d='M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z'
-          clipRule='evenodd' />
-      </svg>
-    );
-    
-  }
-
   return (
-    <div className='flex flex-row h-12 justify-between bg-gray-900'>
-      <div className='h-12 w-12 flex flex-row justify-center items-center'>
-        <div style={{ cursor: 'pointer', marginLeft: '10px' }}>
-          <Image
-            alt='logo'
-            width={40}
-            height={40}
-            src='/logo.png'
-            onClick={() => router.push('/')}
+    <Flex h='55px' bg='teal.500'>
+      <Box p='1'>
+        <Img 
+          alt='Bken.io'
+          boxSize='40px'
+          cursor='pointer'
+          src='/logo.png'
+          objectFit='cover'
+          onClick={() => router.push('/')}
+        />
+      </Box>
+      <Spacer />
+      <Box p='1'>
+        {session && session.user ?
+          <Menu>
+            <MenuButton>
+              <Avatar
+                name={session.user.name}
+                src={session.user.image}
+                onClick={() => setOpen(!open)}
+              />
+            </MenuButton>
+            <MenuList>
+              <MenuItem onClick={() => router.push(`/u/${session.id}`)}>Profile</MenuItem>
+              <MenuItem onClick={() => router.push('/studio')}>Studio</MenuItem>
+              <MenuItem onClick={() => router.push('/account')}>Account</MenuItem>
+            </MenuList>
+          </Menu>
+          :
+          <Avatar
+            onClick={() => router.push('/login')}
           />
-        </div>
-      </div>
-      <div className='flex flex-row items-center justify-end'>
-        {renderRightNav()}
-      </div>
-    </div>
+        }
+      </Box>
+    </Flex>
   );
 }

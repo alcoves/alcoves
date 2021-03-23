@@ -73,7 +73,7 @@ input[type=range]::-moz-range-track {
   border-radius: 2px;
 }
 
-a {
+/* a {
   color: inherit;
   transition: 0.1s;
   text-decoration: none;
@@ -90,7 +90,7 @@ a:visited {
 
 a:active {
   color: inherit;
-}
+} */
 
 /* width */
 ::-webkit-scrollbar {
@@ -115,16 +115,4 @@ a:active {
 
 video {
   outline: none;
-}
-
-@keyframes spinner_animation {
-  0% {
-    transform: rotate(0deg) scale(1,1); 
-  }
-  50% {
-    transform: rotate(360deg) scale(1.1, 1.1); 
-  }
-  100% {
-    transform: rotate(720deg) scale(1, 1); 
-  }
 }
