@@ -8,8 +8,10 @@ import { Box, Flex, Progress , Text, Spacer, Modal,
   ModalContent,
   ModalCloseButton,
   useDisclosure,
-  Heading, } from "@chakra-ui/react"
+  Heading,
+  IconButton, } from "@chakra-ui/react"
 import { useEffect, useRef } from 'react';
+import { ChevronRightIcon } from '@chakra-ui/icons';
 
 function Metadata({ v }) {
   const createdAt = moment(v.createdAt).fromNow();
@@ -40,12 +42,9 @@ export default function StudioVideo({ v }) {
   return (
     <Box borderWidth="1px" borderRadius="md" overflow="hidden">
       <Box
-        onClick={onOpen}
-        boxShadow="inner"
         w='100%' h='300px'
         bgSize='cover' bgColor='black'
         bgImage={`url("${v.thumbnail}")`}
-        cursor='pointer' position='relative'
         bgPosition='center' bgRepeat='no-repeat'
       >
         <Flex w='100%' h='100%' direction='column' p='2'>
@@ -59,7 +58,15 @@ export default function StudioVideo({ v }) {
             <Flex direction='column' align='center'>
               <Heading size='sm' textTransform='uppercase' py='2'>{v.status}</Heading>
               <Progress w='50%' minW='200px' colorScheme="teal" hasStripe borderRadius='lg' height="15px" value={v.percentCompleted} />
-            </Flex> ) : null}
+            </Flex> ) :
+            <IconButton
+              size='lg'
+              variant="outline"
+              onClick={onOpen}
+              aria-label="watch"
+              icon={<ChevronRightIcon w='100%' h='100%'/>}
+            />
+            }
           </Flex>
           <Spacer/>
           <Flex>
@@ -68,7 +75,7 @@ export default function StudioVideo({ v }) {
               <Text fontSize='xs' fontWeight='bold'>{videoDuration(v.duration)}</Text>
             </Flex>
           </Flex>
-        </Flex>        
+        </Flex> 
       </Box>
       <Box p='2' bg="transparent" w="100%" color="white">
         <EditTitle id={v.videoId} title={v.title} />
