@@ -3,6 +3,8 @@ import Head from 'next/head';
 import { useRouter, } from 'next/router';
 import Layout from '../../components/Layout';
 import VideoGrid from '../../components/VideoGrid/Index';
+import geo from 'geopattern';
+import { Box, Avatar, Flex, Image, Heading} from '@chakra-ui/react'
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -16,7 +18,6 @@ function countViews(videos) {
 function UserProfile({ id }) {
   const { data: user } = useSWR(`/api/users/${id}`, fetcher);
   const { data: videos } = useSWR(`/api/users/${id}/videos?visibility=public`, fetcher);
-  const headerImageURL = 'https://images.unsplash.com/photo-1609771270965-aeda41eee819?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80';
 
   return (
     <>
@@ -24,40 +25,27 @@ function UserProfile({ id }) {
         <title>bken.io</title>
       </Head>
       <Layout>
-        <div className='flex flex-col'>
-          <div style={{
-            width: '100%',
-            height: '300px',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-            backgroundImage: `url("${headerImageURL}")`,
-          }}
+        <Flex w='full' direction='column'>
+          <Image
+            w='full'
+            h='300px'
+            objectFit='cover'
+            src={geo.generate(user?.id).toDataUri()}
           />
-          <div className='flex flex-col mx-4'>
-            <div className='flex flex-row'>
-              {user && videos && (
-                <div className='flex flex-row my-4'>
-                  <img
-                    alt='image'
-                    src={user.image}
-                    className='h-20 w-20 rounded-full'
-                  />
-                  <div className='flex flex-col justify-between ml-3'>
-                    <h1 className='text-2xl text-gray-200 font-bold'>{user.name}</h1>
-                    <div>
-                      <p className='text-xs text-gray-400 font-semibold'>{`Public Videos: ${videos.length}`}</p>
-                      <p className='text-xs text-gray-400 font-semibold'>{`Total Views: ${countViews(videos)}`}</p>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-            <div>
-              {videos && <VideoGrid videos={videos} noUser />}
-            </div>
-          </div>
-        </div>
+          <Flex p='2' justify='center' align='center'>
+            <Flex direction='column' align='center'>
+              <Avatar
+                mt='2'
+                src={user?.image}
+                w='75px' h='75px'
+              />
+              <Heading size='lg'>{user?.name}</Heading>
+            </Flex>
+          </Flex>
+          <Box p='2'>
+          {videos && <VideoGrid videos={videos} />}
+          </Box>
+        </Flex>
       </Layout>
     </>
   );
