@@ -33,7 +33,6 @@ export default function Video(props) {
     }
   }, [data])
 
-
   if (data) {
     const subHeader = `${
       abbreviateNumber(data.views)} views ·
