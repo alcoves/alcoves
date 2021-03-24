@@ -63,7 +63,7 @@ export default function StudioVideo({ v }) {
             {v.status !== 'completed' ? (
             <Flex direction='column' align='center'>
               <Heading size='sm' textTransform='uppercase' py='2'>{v.status}</Heading>
-              <Progress w='50%' minW='200px' colorScheme="teal" hasStripe borderRadius='lg' height="15px" value={v.percentCompleted} />
+              <Progress isAnimated={true} w='50%' minW='200px' colorScheme="teal" hasStripe borderRadius='lg' height="15px" value={v.percentCompleted} />
             </Flex> ) :
             <IconButton
               size='lg'
