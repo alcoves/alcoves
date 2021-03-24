@@ -9,16 +9,21 @@ import { Box, Flex, Progress , Text, Spacer, Modal,
   ModalCloseButton,
   useDisclosure,
   Heading,
-  IconButton, } from "@chakra-ui/react"
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  Button, } from "@chakra-ui/react"
 import { useEffect, useRef } from 'react';
-import { ChevronRightIcon } from '@chakra-ui/icons';
+import { ChevronRightIcon, ChevronDownIcon } from '@chakra-ui/icons';
+import { useRouter } from 'next/router';
 
 function Metadata({ v }) {
   const createdAt = moment(v.createdAt).fromNow();
   return (
-    <Box py='1'>
-      <Text fontSize="xs">{createdAt}</Text>
-      <Text fontSize="xs">{`${v.views} views`}</Text>
+    <Box p='1'>
+      <Text fontSize="xs">{createdAt} - {`${v.views} views`}</Text>
     </Box>
   );
 }
@@ -37,12 +42,13 @@ function VideoPlayer({ link }) {
 }
 
 export default function StudioVideo({ v }) {
+  const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
     <Box borderWidth="1px" borderRadius="md" overflow="hidden">
       <Box
-        w='100%' h='300px'
+        w='100%' h='200px'
         bgSize='cover' bgColor='black'
         bgImage={`url("${v.thumbnail}")`}
         bgPosition='center' bgRepeat='no-repeat'
@@ -79,13 +85,29 @@ export default function StudioVideo({ v }) {
       </Box>
       <Box p='2' bg="transparent" w="100%" color="white">
         <EditTitle id={v.videoId} title={v.title} />
-        <Flex align='center'>
+        <Flex>
           <Metadata v={v}/>
+        </Flex>
+        <Flex pt='1' justify='start'>
+          <Button
+            size='xs'
+            variant='outline'
+            onClick={() => { router.push(`/v/${v.videoId}`) }}
+          > Watch
+          </Button>
           <Spacer/>
-          <DeleteVideo id={v.videoId}/>
+          <Menu>
+            <MenuButton variant='outline' size='xs' as={Button} rightIcon={<ChevronDownIcon />}>
+              More
+            </MenuButton>
+            <MenuList>
+              <MenuItem>
+                <DeleteVideo id={v.videoId}/>
+              </MenuItem>
+            </MenuList>
+          </Menu>
         </Flex>
       </Box>
-
       <Modal size='4xl' isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
