@@ -1,12 +1,19 @@
-import { Box, Flex } from '@chakra-ui/layout';
-import { Progress } from "@chakra-ui/react"
+import { Box, Flex, Text, } from '@chakra-ui/layout';
+import { Progress, Button } from "@chakra-ui/react"
 import axios from 'axios';
-import { useState, } from 'react';
+import { useState, useCallback } from 'react';
+import {useDropzone} from 'react-dropzone'
 import chunkFile from '../utils/chunkFile';
 
 export default function Upload() {
   const [files, setFiles] = useState([]);
   let [bytesUploaded, setBytesUploaded] = useState(0);
+
+  const onDrop = useCallback(acceptedFiles => {
+    setFiles(acceptedFiles)
+    startUpload(acceptedFiles[0]);
+  }, [])
+  const {getRootProps, getInputProps, isDragActive} = useDropzone({ onDrop })
 
   async function uploadChunks(chunks, urls) {
     const results = await Promise.all(chunks.map((chunk, i) => {
@@ -89,14 +96,12 @@ export default function Upload() {
 
   return (
     <Flex>
-      <Box className='w-48'>
-        <label>
-          <input disabled={Boolean(files.length)} accept='video/mp4' onChange={({ target }) => {
-            setFiles(target.files);
-            startUpload(target.files[0]);
-          }} id='bken-video' name='bken-video' type='file' />
-        </label>
-        <Box my='2'>
+      <Box>
+        <Box {...getRootProps()}>
+        <input {...getInputProps()} accept='video/mp4' multiple={false} disabled={Boolean(files.length)} />
+        <Button> Upload </Button>
+        </Box>
+        <Box my='1' w='300px'>
           {files.length ? renderProgressBar(): null}
         </Box>
       </Box>
