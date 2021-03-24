@@ -31,6 +31,7 @@ export default function EditTitle({ id, title: t }) {
       w='100%'
       size='sm'
       value={title}
+      borderRadius='md'
       isDisabled={loading}
       placeholder='Enter a title'
       onChange={({ target }) => setTitle(target.value)}
