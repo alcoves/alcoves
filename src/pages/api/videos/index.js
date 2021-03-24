@@ -27,8 +27,6 @@ async function createVideo(req, res) {
       userId: user.id,
       createdAt: new Date(),
       updatedAt: new Date(),
-      thumbnail: `https://cdn.bken.io/v/${videoId}/thumb.webp`,
-      hlsMasterLink : `https://cdn.bken.io/v/${videoId}/hls/master.m3u8`,
     },
   });
 
