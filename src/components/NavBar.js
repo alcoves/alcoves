@@ -24,10 +24,9 @@ export default function Navigation() {
       <Box p='1'>
         {session && session.user ?
           <Menu>
-            <MenuButton>
+            <MenuButton h='100%'>
               <Avatar
-                h='40px'
-                w='40px'
+                h='30px' w='30px'
                 name={session.user.name}
                 src={session.user.image}
                 onClick={() => setOpen(!open)}
@@ -40,10 +39,13 @@ export default function Navigation() {
             </MenuList>
           </Menu>
           :
-          <Avatar
-            size='sm'
-            onClick={() => router.push('/login')}
-          />
+          <Flex w='full' h='full' align='center'>
+            <Avatar
+              h='30px' w='30px'
+              cursor='pointer'
+              onClick={() => router.push('/login')}
+            />
+          </Flex>
         }
       </Box>
     </Flex>
