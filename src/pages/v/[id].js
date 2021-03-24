@@ -56,7 +56,7 @@ export default function Video(props) {
               controls
               ref={vRef}
               id="bkenVideoPlayer"
-              style={{ background: 'black', minHeight: "calc((9 / 16) * 100vw)", minWidth:'' }}
+              style={{ background: 'black', minHeight: "calc((9 / 16) * 100vw)", minWidth:'100%' }}
             />
             <Box p='4'>
               <Heading as='h3' size='lg'>{data.title}</Heading>
