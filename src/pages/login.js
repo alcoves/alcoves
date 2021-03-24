@@ -1,11 +1,12 @@
-import { Image, Button, Flex, Heading, Box } from '@chakra-ui/react';
+import { Button, Flex, Heading, Box } from '@chakra-ui/react';
+import Image from 'next/image';
 import { providers as getProviders, signIn, } from 'next-auth/client';
 
 export default function Login({ providers }) {
   return (
     <Flex justify='center'>
       <Flex align='center' pt='20%' direction='column'>
-        <Image w='200px' src='/favicon.ico' alt='logo' />
+        <Image height="auto" width='200px' src='/favicon.ico' alt='logo' />
         <Heading>Dive into bken</Heading>
         {Object.values(providers).map(provider => (
            <Box key={provider.name} w='full'>
