@@ -52,9 +52,13 @@ export default function Video(props) {
         <Layout>
           <Box>
             {/* <VideoPlayer url={data.hlsMasterLink} /> */}
-            <Box bg='black' minH='calc((9 / 16) * 100vw)' minW='100vw'>
-              <video autoPlay id="bkenVideoPlayer" controls ref={vRef}/>
-            </Box>
+            <video
+              autoPlay
+              controls
+              ref={vRef}
+              id="bkenVideoPlayer"
+              style={{ background: 'black', minHeight: "calc((9 / 16) * 100vw)", minWidth:'' }}
+            />
             <Box p='4'>
               <Heading as='h3' size='lg'>{data.title}</Heading>
               <Text fontSize='sm'>{subHeader}</Text>
