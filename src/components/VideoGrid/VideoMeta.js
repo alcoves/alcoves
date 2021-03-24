@@ -1,4 +1,4 @@
-import { Box, Grid, GridItem, Text, Avatar, Heading } from '@chakra-ui/react';
+import { Box, Grid, GridItem, Text, Avatar, Heading, } from '@chakra-ui/react';
 import useSWR from 'swr';
 import moment from 'moment';
 import { useRouter, } from 'next/router';
@@ -11,12 +11,12 @@ export default function VideoMeta({ v }) {
   const router = useRouter();
 
   const createdAt = moment(v.createdAt).fromNow();
-  const metadata = `${abbreviateNumber(v.views)} views - ${createdAt}`
+  const metadata = `${abbreviateNumber(v.views)} views - ${createdAt}`;
 
   return (
     <Grid
-      templateRows="repeat(2, 40px)"
-      templateColumns="repeat(5, 1fr)"
+      templateRows='repeat(2, 40px)'
+      templateColumns='repeat(5, 1fr)'
       gap={1}
     >
       <GridItem rowSpan={2} colSpan={1}>

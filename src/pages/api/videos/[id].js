@@ -67,19 +67,19 @@ async function patchVideo(req, res) {
   //   return res.status(403).end()
   // }
 
-  const reqKeys = Object.keys(req.body)
-  const permittedKeys = ["status", "percentCompleted", "title", "visibility", "thumbnail" , "hlsMasterLink"]
+  const reqKeys = Object.keys(req.body);
+  const permittedKeys = ['status', 'percentCompleted', 'title', 'visibility', 'thumbnail' , 'hlsMasterLink'];
   const update = permittedKeys.reduce((acc, cv) => {
     if (reqKeys.includes(cv)) {
       // Override the paths coming from tidal
       if (cv === 'thumbnail' || cv === 'hlsMasterLink') {
-        acc[cv] = `https://${req.body[cv].split(":")[1]}` // wasabi:cdn.bken.io/path
+        acc[cv] = `https://${req.body[cv].split(':')[1]}`; // wasabi:cdn.bken.io/path
       } else {
-        acc[cv] = req.body[cv]
+        acc[cv] = req.body[cv];
       }
     }
-    return acc
-  }, {})
+    return acc;
+  }, {});
 
   await db.video.update({
     data: update,

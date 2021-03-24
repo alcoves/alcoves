@@ -1,18 +1,18 @@
 
 
 import moment from 'moment';
+import { Box, Flex , Text, Spacer, } from '@chakra-ui/react';
+import { useRouter, } from 'next/router';
 import videoDuration from '../../utils/videoDuration';
-import { Box, Flex , Text, Spacer, } from "@chakra-ui/react"
-import { useRouter } from 'next/router';
 import VideoMeta from './VideoMeta';
 
 export default function VideoCard({ v }) {
   const router = useRouter();
 
   return (
-    <Box borderWidth="1px" borderRadius="md" overflow="hidden">
+    <Box borderWidth='1px' borderRadius='md' overflow='hidden'>
       <Box
-        boxShadow="inner"
+        boxShadow='inner'
         w='100%' h='200px'
         bgSize='cover' bgColor='black'
         bgImage={`url("${v.thumbnail}")`}
@@ -37,7 +37,7 @@ export default function VideoCard({ v }) {
           </Flex>
         </Flex>        
       </Box>
-      <Box p='2' bg="transparent" w="100%" color="white">
+      <Box p='2' bg='transparent' w='100%' color='white'>
         <VideoMeta v={v}/>
       </Box>
     </Box>

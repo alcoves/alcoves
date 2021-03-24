@@ -1,4 +1,4 @@
-import { useDisclosure } from '@chakra-ui/hooks';
+import { useDisclosure, } from '@chakra-ui/hooks';
 import axios from 'axios';
 import {
   Button,
@@ -10,22 +10,22 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-} from "@chakra-ui/react"
-import { useState } from 'react';
+} from '@chakra-ui/react';
+import { useState, } from 'react';
 
 export default function DeleteVideo({ id }) {
   const [loading, setLoading] = useState(false);
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   async function deleteVideo() {
     try {
-      setLoading(true)
+      setLoading(true);
       await axios.delete(`/api/videos/${id}`);
-      onClose()
+      onClose();
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
@@ -44,13 +44,13 @@ export default function DeleteVideo({ id }) {
             This action cannot be undone.
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="red" mr={3} onClick={deleteVideo} isLoading={loading}>
+            <Button colorScheme='red' mr={3} onClick={deleteVideo} isLoading={loading}>
               Delete Forever
             </Button>
-            <Button variant="ghost" onClick={onClose}>Close</Button>
+            <Button variant='ghost' onClick={onClose}>Close</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
     </>
-  )
+  );
 }

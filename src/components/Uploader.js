@@ -1,8 +1,8 @@
-import { Box, Flex, Text, } from '@chakra-ui/layout';
-import { Progress, Button } from "@chakra-ui/react"
+import { Box, Flex, Heading, } from '@chakra-ui/layout';
+import { Progress, Button, } from '@chakra-ui/react';
 import axios from 'axios';
-import { useState, useCallback } from 'react';
-import {useDropzone} from 'react-dropzone'
+import { useState, useCallback, } from 'react';
+import { useDropzone, } from 'react-dropzone';
 import chunkFile from '../utils/chunkFile';
 
 export default function Upload() {
@@ -10,10 +10,10 @@ export default function Upload() {
   let [bytesUploaded, setBytesUploaded] = useState(0);
 
   const onDrop = useCallback(acceptedFiles => {
-    setFiles(acceptedFiles)
+    setFiles(acceptedFiles);
     startUpload(acceptedFiles[0]);
-  }, [])
-  const {getRootProps, getInputProps, isDragActive} = useDropzone({ onDrop })
+  }, []);
+  const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   async function uploadChunks(chunks, urls) {
     const results = await Promise.all(chunks.map((chunk, i) => {
@@ -74,35 +74,31 @@ export default function Upload() {
         method: 'POST',
         body: JSON.stringify(body),
       }).then((res) => {
-        setBytesUploaded(0)
-        setFiles([])
+        setBytesUploaded(0);
+        setFiles([]);
       }).catch((error) => {
         console.log(error);
-        setBytesUploaded(0)
-        setFiles([])
-      })
+        setBytesUploaded(0);
+        setFiles([]);
+      });
     };
   }
 
-  function renderProgressBar() {
-    let progress = 0;
-    if (files.length) {
-      progress = ((bytesUploaded / files[0].size) * 100).toFixed(0);
-    }
-    return (
-      <Progress hasStripe value={progress} />
-    );
+  let progress = 0;
+  if (files.length) {
+    progress = ((bytesUploaded / files[0].size) * 100).toFixed(0);
   }
 
   return (
     <Flex>
-      <Box>
-        <Box {...getRootProps()}>
-        <input {...getInputProps()} accept='video/mp4' multiple={false} disabled={Boolean(files.length)} />
-        <Button> Upload </Button>
+      <Box w='full'>
+        <Box {...getRootProps()} w='min'>
+          <input {...getInputProps()} accept='video/mp4' multiple={false} disabled={Boolean(files.length)} />
+          {!progress && <Button> Upload </Button>}
         </Box>
-        <Box my='1'>
-          {files.length ? renderProgressBar(): null}
+        <Box my='1' w='full'>
+          {files.length ? <Heading size='sm' p='1' align='center'>{progress}% Uploaded</Heading> : null}
+          {files.length ? <Progress hasStripe isAnimated value={progress} /> : null}
         </Box>
       </Box>
     </Flex>

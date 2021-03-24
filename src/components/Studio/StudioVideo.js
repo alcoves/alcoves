@@ -1,8 +1,4 @@
 import moment from 'moment';
-import EditTitle from './EditTitle';
-import videoDuration from '../../utils/videoDuration';
-import DeleteVideo from './DeleteVideo';
-import EditVisibility from './EditVisibility';
 import { Box, Flex, Progress , Text, Spacer, Modal,
   ModalOverlay,
   ModalContent,
@@ -14,16 +10,20 @@ import { Box, Flex, Progress , Text, Spacer, Modal,
   MenuButton,
   MenuList,
   MenuItem,
-  Button, } from "@chakra-ui/react"
-import { useEffect, useRef } from 'react';
-import { ChevronRightIcon, ChevronDownIcon } from '@chakra-ui/icons';
-import { useRouter } from 'next/router';
+  Button, } from '@chakra-ui/react';
+import { useEffect, useRef, } from 'react';
+import { ChevronRightIcon, ChevronDownIcon, } from '@chakra-ui/icons';
+import { useRouter, } from 'next/router';
+import EditTitle from './EditTitle';
+import videoDuration from '../../utils/videoDuration';
+import DeleteVideo from './DeleteVideo';
+import EditVisibility from './EditVisibility';
 
 function Metadata({ v }) {
   const createdAt = moment(v.createdAt).fromNow();
   return (
     <Box p='1'>
-      <Text fontSize="xs">{createdAt} - {`${v.views} views`}</Text>
+      <Text fontSize='xs'>{createdAt} - {`${v.views} views`}</Text>
     </Box>
   );
 }
@@ -36,17 +36,17 @@ function VideoPlayer({ link }) {
     const hls = new window.Hls();
     hls.loadSource(link);
     hls.attachMedia(video);
-  }, [])
+  }, []);
 
-  return <video autoPlay id="bkenStudioPlayer" controls ref={vRef} />
+  return <video autoPlay id='bkenStudioPlayer' controls ref={vRef} />;
 }
 
 export default function StudioVideo({ v }) {
   const router = useRouter();
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
-    <Box borderWidth="1px" borderRadius="md" overflow="hidden">
+    <Box borderWidth='1px' borderRadius='md' overflow='hidden'>
       <Box
         w='100%' h='200px'
         bgSize='cover' bgColor='black'
@@ -61,17 +61,17 @@ export default function StudioVideo({ v }) {
           <Spacer/>
           <Flex align='center' direction='column'>
             {v.status !== 'completed' ? (
-            <Flex direction='column' align='center'>
-              <Heading size='sm' textTransform='uppercase' py='2'>{v.status}</Heading>
-              <Progress isAnimated={true} w='50%' minW='200px' colorScheme="teal" hasStripe borderRadius='lg' height="15px" value={v.percentCompleted} />
-            </Flex> ) :
-            <IconButton
-              size='lg'
-              variant="outline"
-              onClick={onOpen}
-              aria-label="watch"
-              icon={<ChevronRightIcon w='100%' h='100%'/>}
-            />
+              <Flex direction='column' align='center'>
+                <Heading size='sm' textTransform='uppercase' py='2'>{v.status}</Heading>
+                <Progress isAnimated w='50%' minW='200px' colorScheme='teal' hasStripe borderRadius='lg' height='15px' value={v.percentCompleted} />
+              </Flex> ) :
+              <IconButton
+                size='lg'
+                variant='outline'
+                onClick={onOpen}
+                aria-label='watch'
+                icon={<ChevronRightIcon w='100%' h='100%'/>}
+              />
             }
           </Flex>
           <Spacer/>
@@ -83,7 +83,7 @@ export default function StudioVideo({ v }) {
           </Flex>
         </Flex> 
       </Box>
-      <Box p='2' bg="transparent" w="100%" color="white">
+      <Box p='2' bg='transparent' w='100%' color='white'>
         <EditTitle id={v.videoId} title={v.title} />
         <Flex>
           <Metadata v={v}/>
@@ -92,7 +92,8 @@ export default function StudioVideo({ v }) {
           <Button
             size='xs'
             variant='outline'
-            onClick={() => { router.push(`/v/${v.videoId}`) }}
+            disabled={v.status !== 'completed'}
+            onClick={() => { router.push(`/v/${v.videoId}`); }}
           > Watch
           </Button>
           <Spacer/>

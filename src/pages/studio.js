@@ -1,21 +1,21 @@
 import { useSession, } from 'next-auth/client';
 import useSWR from 'swr';
-import { CircularProgress, Box } from '@chakra-ui/react';
+import { CircularProgress, Box, } from '@chakra-ui/react';
+import { useEffect, useState, } from 'react';
 import Layout from '../components/Layout';
 import Uploader from '../components/Uploader';
 import StudioVideoGrid from '../components/Studio/StudioVideoGrid';
-import { useEffect, useState } from 'react';
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
 export default function studio() {
   const [ session, loading ] = useSession();
-  const [videos, setVideos] = useState([])
+  const [videos, setVideos] = useState([]);
   const { data } = useSWR(session ? `/api/users/${session.id}/videos` : null, fetcher, { refreshInterval: 1000 });
 
   useEffect(() => {
-    setVideos(data)
-  }, [data])
+    setVideos(data);
+  }, [data]);
 
   if (loading) {
     return (
