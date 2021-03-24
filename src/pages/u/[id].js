@@ -1,10 +1,10 @@
 import useSWR from 'swr';
 import Head from 'next/head';
 import { useRouter, } from 'next/router';
+import geo from 'geopattern';
+import { Box, Avatar, Flex, Image, Heading, } from '@chakra-ui/react';
 import Layout from '../../components/Layout';
 import VideoGrid from '../../components/VideoGrid/Index';
-import geo from 'geopattern';
-import { Box, Avatar, Flex, Image, Heading} from '@chakra-ui/react'
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -43,7 +43,7 @@ function UserProfile({ id }) {
             </Flex>
           </Flex>
           <Box p='2'>
-          {videos && <VideoGrid videos={videos} />}
+            {videos && <VideoGrid videos={videos} />}
           </Box>
         </Flex>
       </Layout>

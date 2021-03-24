@@ -1,12 +1,12 @@
 import Head from 'next/head';
 import moment from 'moment';
 import useSWR from 'swr';
-import { CircularProgress, Flex, Box, Text, Heading  } from '@chakra-ui/react';
+import { CircularProgress, Flex, Box, Text, Heading,  } from '@chakra-ui/react';
+import { useEffect, useRef, } from 'react';
 import Layout from '../../components/Layout';
 import VideoPlayer from '../../components/VideoPlayer/index';
 import abbreviateNumber from '../../utils/abbreviateNumber';
 import VideoPageUserCard from '../../components/VideoPageUserCard';
-import { useEffect, useRef } from 'react';
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -21,7 +21,7 @@ export default function Video(props) {
   //   } 
   // }, [video]);
 
-  const vRef = useRef(null)
+  const vRef = useRef(null);
   const { data } = useSWR(props.url, fetcher, { initialData: props.video });
 
   useEffect(() => {
@@ -31,7 +31,7 @@ export default function Video(props) {
       hls.loadSource(data.hlsMasterLink);
       hls.attachMedia(video);
     }
-  }, [data])
+  }, [data]);
 
   if (data) {
     const subHeader = `${
@@ -55,15 +55,15 @@ export default function Video(props) {
               autoPlay
               controls
               ref={vRef}
-              id="bkenVideoPlayer"
-              style={{ background: 'black', maxHeight: "calc((9 / 16) * 100vh)", minWidth:'100%' }}
+              id='bkenVideoPlayer'
+              style={{ background: 'black', maxHeight: 'calc((9 / 16) * 100vh)', minWidth:'100%' }}
             />
             <Box p='4'>
               <Heading as='h3' size='lg'>{data.title}</Heading>
               <Text fontSize='sm'>{subHeader}</Text>
               <VideoPageUserCard id={data.userId} />
-           </Box>
-           </Box>
+            </Box>
+          </Box>
         </Layout>
       </Box>
     );

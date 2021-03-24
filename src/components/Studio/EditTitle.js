@@ -1,12 +1,12 @@
 import axios from 'axios';
 import { useEffect, useState, } from 'react';
-import { Input } from "@chakra-ui/react"
+import { Input, } from '@chakra-ui/react';
 
 let timer;
 
 export default function EditTitle({ id, title: t }) {
   const [title, setTitle ] = useState(t);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (t !== title) updateTitle(id, title);
@@ -16,13 +16,13 @@ export default function EditTitle({ id, title: t }) {
     clearTimeout(timer);
     timer = setTimeout(() => {
       console.log('setting title');
-      setLoading(true)
+      setLoading(true);
       axios.patch(`/api/videos/${id}`, { title }).then(() => {
-        setLoading(false)
+        setLoading(false);
       }).catch((error) => {
-        console.error(error)
-        setLoading(false)
-      })
+        console.error(error);
+        setLoading(false);
+      });
     }, 1000);
   }
 

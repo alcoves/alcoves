@@ -1,4 +1,4 @@
-import { Flex, Link } from '@chakra-ui/layout';
+import { Flex, Link, } from '@chakra-ui/layout';
 import React from 'react';
 
 export default function Footer() {

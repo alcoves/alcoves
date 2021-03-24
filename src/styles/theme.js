@@ -9,9 +9,9 @@ const theme = {
     useSystemColorMode: true,
   },
   fonts: {
-    body: "'Nunito Sans', sans-serif",
-    heading: "'Nunito Sans', sans-serif",
-    mono: "'Nunito Sans', monospace",
+    body: '\'Nunito Sans\', sans-serif',
+    heading: '\'Nunito Sans\', sans-serif',
+    mono: '\'Nunito Sans\', monospace',
   },
 };
 

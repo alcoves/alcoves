@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 import { useRouter, } from 'next/router';
-import { Flex, Avatar, Heading } from '@chakra-ui/react';
+import { Flex, Avatar, Heading, } from '@chakra-ui/react';
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
