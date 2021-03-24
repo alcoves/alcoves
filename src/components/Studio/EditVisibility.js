@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useState, } from 'react';
-import {IconButton } from '@chakra-ui/react';
+import { IconButton } from '@chakra-ui/react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 
 export default function EditVisibility({ id, visibility: v }) {
@@ -22,7 +22,7 @@ export default function EditVisibility({ id, visibility: v }) {
 
   return (
     <IconButton
-      size='xs'
+      size='md'
       variant="outline"
       isLoading={loading}
       onClick={handleChange}
