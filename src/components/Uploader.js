@@ -101,7 +101,7 @@ export default function Upload() {
         <input {...getInputProps()} accept='video/mp4' multiple={false} disabled={Boolean(files.length)} />
         <Button> Upload </Button>
         </Box>
-        <Box my='1' w='300px'>
+        <Box my='1'>
           {files.length ? renderProgressBar(): null}
         </Box>
       </Box>
