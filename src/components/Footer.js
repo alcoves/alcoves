@@ -6,7 +6,7 @@ export default function Footer() {
   const webLink = `https://github.com/bken-io/web/commit/${gitSha}`;
   const message = `Version: ${gitSha}`;
   return (
-    <Flex h='50px' w='100%' justify='center' align='center'>
+    <Flex h='48px' w='100%' justify='center' align='center'>
       <Link fontSize='xs' fontWeight='bold' href={webLink}>{message}</Link>
     </Flex>
   );

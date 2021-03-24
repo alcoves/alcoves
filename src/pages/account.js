@@ -30,12 +30,6 @@ export default function Account() {
             <p className='mb-2 text-sm lowercase font-bold text-gray-500'>
               User ID: {session.id}
             </p>
-            <button
-              type='button'
-              className='rounded-md uppercase text-sm text-gray-50 font-medium h-8 py-1 px-4 tracking-wide bg-teal-600'
-              onClick={() => signOut()}>
-              Log out
-            </button>
           </div>
         </div>
       </Layout>

@@ -1,6 +1,6 @@
 import React from 'react';
 import useSWR from 'swr';
-import { CircularProgress, } from '@chakra-ui/react';
+import { Box, CircularProgress, Heading, } from '@chakra-ui/react';
 import Layout from '../components/Layout';
 import VideoGrid from '../components/VideoGrid/Index';
 
@@ -12,10 +12,10 @@ function index() {
   if (data) {
     return (
       <Layout>
-        <div className='p-2'>
-          <h2 className='text-3xl mb-2 text-gray-100 font-bold'> Latest Videos </h2>
+        <Box px='2'>
+          <Heading py='2'> Latest Videos </Heading>
           {data && <VideoGrid videos={data} />}
-        </div>
+        </Box>
       </Layout>
     );
   }
