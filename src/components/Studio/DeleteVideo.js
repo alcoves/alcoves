@@ -2,7 +2,7 @@ import { useDisclosure } from '@chakra-ui/hooks';
 import axios from 'axios';
 import {
   Button,
-  IconButton,
+  Box,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -11,7 +11,6 @@ import {
   ModalBody,
   ModalCloseButton,
 } from "@chakra-ui/react"
-import { DeleteIcon } from '@chakra-ui/icons';
 import { useState } from 'react';
 
 export default function DeleteVideo({ id }) {
@@ -32,16 +31,9 @@ export default function DeleteVideo({ id }) {
 
   return (
     <>
-      <IconButton
-        size='xs'
-        fontSize="20px"
-        onClick={onOpen}
-        variant="outline"
-        colorScheme="red"
-        isLoading={loading}
-        aria-label="Delete Video"
-        icon={<DeleteIcon w='3' h='3' />}
-      />
+      <Box onClick={onOpen}>
+        Delete Video
+      </Box>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
@@ -52,7 +44,7 @@ export default function DeleteVideo({ id }) {
             This action cannot be undone.
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="red" mr={3} onClick={deleteVideo}>
+            <Button colorScheme="red" mr={3} onClick={deleteVideo} isLoading={loading}>
               Delete Forever
             </Button>
             <Button variant="ghost" onClick={onClose}>Close</Button>
