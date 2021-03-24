@@ -27,7 +27,7 @@ export default NextAuth({
     },
     redirect(url, _) {
       if (url === '/api/auth/signin') {
-        return Promise.resolve('/account');
+        return Promise.resolve('/');
       }
       // Send account information to bken api
       return Promise.resolve('/api/auth/signin');

@@ -1,36 +1,41 @@
+import { Box, Grid, GridItem, Text, Avatar, Heading } from '@chakra-ui/react';
+import useSWR from 'swr';
 import moment from 'moment';
 import { useRouter, } from 'next/router';
 import abbreviateNumber from '../../utils/abbreviateNumber';
 
-export default function VideoMeta({ v, u }) {
+const fetcher = (url) => fetch(url).then((res) => res.json());
+
+export default function VideoMeta({ v }) {
+  const { data: user } = useSWR(v.userId ? `/api/users/${v.userId}` : false, fetcher);
   const router = useRouter();
 
+  const createdAt = moment(v.createdAt).fromNow();
+  const metadata = `${abbreviateNumber(v.views)} views - ${createdAt}`
+
   return (
-    <div className='flex flex-row justify-start my-2'>
-      {u && (
-        <img
-          alt='image'
-          src={u.image}
-          className='w-12 h-12 rounded-full cursor-pointer'
+    <Grid
+      templateRows="repeat(2, 40px)"
+      templateColumns="repeat(5, 1fr)"
+      gap={1}
+    >
+      <GridItem rowSpan={2} colSpan={1}>
+        <Avatar
+          size='md'
+          src={user?.image}
+          cursor='pointer'
           onClick={() => router.push(`/u/${v.userId}`)}
         />
-      )}
-      <div style={{ paddingLeft: !u ? '0px' : '10px' }}>
-        <p className='truncate text-lg text-gray-200 font-bold cursor-pointer' onClick={() => router.push(`/v/${v.videoId}`)}>
-          {v.title}
-        </p>
-        {u && (
-          <p
-            className='text-sm font-semibold text-gray-200 cursor-pointer'
-            onClick={() => router.push(`/u/${u.id}`)}
-          >
-            {u.name}
-          </p>
-        )}
-        <p className='text-xs lowercase text-gray-400 font-bold'>
-          {`${abbreviateNumber(v.views)} views · ${moment(v.createdAt).fromNow()}`}
-        </p>
-      </div>
-    </div>
+      </GridItem>
+      <GridItem colSpan={4}>
+        <Heading onClick={() => router.push(`/v/${v.videoId}`)}cursor='pointer' size='sm'>{v.title}</Heading>
+      </GridItem>
+      <GridItem colSpan={4} rowSpan={1}>
+        <Box>
+          <Text cursor='pointer' fontSize='xs' onClick={() => router.push(`/u/${v.userId}`)} >{user?.name}</Text>
+          <Text fontSize='xs'>{metadata}</Text>
+        </Box>
+      </GridItem>
+    </Grid>
   );
 }

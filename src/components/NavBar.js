@@ -1,6 +1,6 @@
 import { useState, } from 'react';
 import { useRouter, } from 'next/router';
-import { useSession, } from 'next-auth/client';
+import { signOut, useSession, } from 'next-auth/client';
 import { Flex, Spacer, Box, Avatar, Img, Menu, MenuButton, MenuList, MenuItem, } from '@chakra-ui/react';
 
 export default function Navigation() {
@@ -36,6 +36,7 @@ export default function Navigation() {
               <MenuItem onClick={() => router.push(`/u/${session.id}`)}>Profile</MenuItem>
               <MenuItem onClick={() => router.push('/studio')}>Studio</MenuItem>
               <MenuItem onClick={() => router.push('/account')}>Account</MenuItem>
+              <MenuItem onClick={signOut}>Log out</MenuItem>
             </MenuList>
           </Menu>
           :
