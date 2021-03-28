@@ -56,7 +56,13 @@ export default function Video(props) {
               controls
               ref={vRef}
               id='bkenVideoPlayer'
-              style={{ background: 'black', maxHeight: 'calc((9 / 16) * 100vh)', minWidth:'100%' }}
+              style={{
+                background: 'black',
+                minHeight: '280px',
+                height: 'calc(100vh - 300px)',
+                maxHeight: 'calc((9 / 16) * 100vw)',
+                minWidth:'100%',
+              }}
             />
             <Box p='4'>
               <Heading as='h3' size='lg'>{data.title}</Heading>
