@@ -5,7 +5,7 @@ import { CircularProgress, Flex, Box, Text, Heading,  } from '@chakra-ui/react';
 import { useEffect, useRef, } from 'react';
 import axios from 'axios';
 import Layout from '../../components/Layout';
-import VideoPlayer from '../../components/VideoPlayer/index';
+// import VideoPlayer from '../../components/VideoPlayer/index';
 import abbreviateNumber from '../../utils/abbreviateNumber';
 import VideoPageUserCard from '../../components/VideoPageUserCard';
 
@@ -18,7 +18,9 @@ export default function Video({ url, video: v }) {
   const { data } = useSWR(url, fetcher, { initialData: v });
 
   useEffect(() => {
-    axios.post(`/api/videos/${v.videoId}/views`);
+    axios.post(`/api/videos/${v.videoId}/views`).catch((err) =>{
+      console.error('error counting video view', err);
+    });
   }, []);
 
   useEffect(() => {
