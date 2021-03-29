@@ -3,6 +3,7 @@ import moment from 'moment';
 import useSWR from 'swr';
 import { CircularProgress, Flex, Box, Text, Heading,  } from '@chakra-ui/react';
 import { useEffect, useRef, } from 'react';
+import axios from 'axios';
 import Layout from '../../components/Layout';
 import VideoPlayer from '../../components/VideoPlayer/index';
 import abbreviateNumber from '../../utils/abbreviateNumber';
@@ -12,17 +13,13 @@ const fetcher = (url) => fetch(url).then((res) => res.json());
 
 let hls;
 
-export default function Video(props) {
-  // const router = useRouter();
-  // const [watchVideo, { called: watchVideoCalled }] = useApiLazy();
-  // useEffect(() => {
-  //   if (video && id && !watchVideoCalled) {
-  //     watchVideo({ method: 'post', url: `/videos/${id}/views` });
-  //   } 
-  // }, [video]);
-
+export default function Video({ url, video: v }) {
   const vRef = useRef(null);
-  const { data } = useSWR(props.url, fetcher, { initialData: props.video });
+  const { data } = useSWR(url, fetcher, { initialData: v });
+
+  useEffect(() => {
+    axios.post(`/api/videos/${v.videoId}/views`);
+  }, []);
 
   useEffect(() => {
     if (data.hlsMasterLink) {
