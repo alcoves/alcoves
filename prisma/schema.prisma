@@ -72,6 +72,7 @@ model VideoView {
   @@index([ip], name: "ip")
   @@index([userId], name: "viewsUserId")
   @@index([videoId], name: "viewsVideoId")
+  @@index([createdAt], name: "viewsCreatedAt")
   @@map(name: "video_views")
 }
 

@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { getSession, } from 'next-auth/client';
-import db from '../../../utils/db';
-import { s3, } from '../../../utils/s3';
-import { getTidalURL, getWebhookURL, } from '../../../utils/tidal';
+import db from '../../../../utils/db';
+import { s3, } from '../../../../utils/s3';
+import { getTidalURL, getWebhookURL, } from '../../../../utils/tidal';
 
 async function reprocessVideo(req, res) {
   const session = await getSession({ req });
