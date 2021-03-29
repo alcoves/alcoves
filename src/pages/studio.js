@@ -37,7 +37,7 @@ export default function studio() {
     <Layout>
       <Box p='4'>
         <Box pb='4'><Uploader/></Box>
-        {videos?.length && <StudioVideoGrid videos={videos}/>}
+        {videos?.length ? <StudioVideoGrid videos={videos}/> : null}
       </Box>
     </Layout>
   );
