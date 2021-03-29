@@ -5,7 +5,7 @@ import db from '../../../utils/db';
 
 export default NextAuth({
   pages: {
-    newUser: null, // TODO :: Send new users to welcome page!
+    newUser: '/studio',
     signIn: '/login',
   },
   adapter: Adapters.Prisma.Adapter({ prisma: db }),
