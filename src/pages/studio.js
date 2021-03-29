@@ -1,7 +1,6 @@
 import { useSession, } from 'next-auth/client';
 import useSWR from 'swr';
 import { CircularProgress, Box, } from '@chakra-ui/react';
-import { useEffect, useState, } from 'react';
 import Layout from '../components/Layout';
 import Uploader from '../components/Uploader';
 import StudioVideoGrid from '../components/Studio/StudioVideoGrid';
@@ -9,15 +8,10 @@ import StudioVideoGrid from '../components/Studio/StudioVideoGrid';
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
 export default function studio() {
-  const [ session, loading ] = useSession();
-  const [videos, setVideos] = useState([]);
-  const { data } = useSWR(session ? `/api/users/${session.id}/videos` : null, fetcher, { refreshInterval: 1000 });
+  const [ session, sessionLoading ] = useSession();
+  const { data: videos, loading } = useSWR(session ? `/api/users/${session.id}/videos` : null, fetcher, { refreshInterval: 1000 });
 
-  useEffect(() => {
-    setVideos(data);
-  }, [data]);
-
-  if (loading) {
+  if (sessionLoading || loading) {
     return (
       <Layout>
         <div margin='small' align='center'>
@@ -27,7 +21,7 @@ export default function studio() {
     );
   }
   
-  if (!loading && !session) {
+  if (!sessionLoading && !session) {
     return (
       <Layout>
         <div margin='small' align='center'>
@@ -43,10 +37,7 @@ export default function studio() {
     <Layout>
       <Box p='4'>
         <Box pb='4'><Uploader/></Box>
-        {videos?.length
-          ? <StudioVideoGrid videos={videos}/>
-          : <CircularProgress isIndeterminate />
-        }
+        {videos?.length && <StudioVideoGrid videos={videos}/>}
       </Box>
     </Layout>
   );
