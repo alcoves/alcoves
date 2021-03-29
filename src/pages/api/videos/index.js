@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getSession, session, } from 'next-auth/client';
+import { getSession, } from 'next-auth/client';
 import db from '../../../utils/db';
 import { s3, } from '../../../utils/s3';
 import isAdmin from '../../../utils/isAdmin';
@@ -47,10 +47,12 @@ async function createVideo(req, res) {
 export default async function handler(req, res) {
   try {
     if (req.method === 'GET') {
+      const session = await getSession({ req });
       const where = {};
       const orderBy = { createdAt: 'desc' };
 
       if (req?.query?.visibility === 'all' && isAdmin(session.id)) {
+        console.log('in admin block');
         // Don't do anything, all videos are returned
         // This is consumed by the admin dashboard
       } else {
