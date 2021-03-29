@@ -1,7 +1,8 @@
 import axios from 'axios';
-import { getSession, } from 'next-auth/client';
+import { getSession, session, } from 'next-auth/client';
 import db from '../../../utils/db';
 import { s3, } from '../../../utils/s3';
+import isAdmin from '../../../utils/isAdmin';
 import { getTidalURL, getWebhookURL, } from '../../../utils/tidal';
 
 async function createVideo(req, res) {
@@ -46,9 +47,20 @@ async function createVideo(req, res) {
 export default async function handler(req, res) {
   try {
     if (req.method === 'GET') {
+      const where = {};
+      const orderBy = { createdAt: 'desc' };
+
+      if (req?.query?.visibility === 'all' && isAdmin(session.id)) {
+        // Don't do anything, all videos are returned
+        // This is consumed by the admin dashboard
+      } else {
+        // Default to showing public videos only
+        where.visibility = 'public';
+      }
+
       const videos = await db.video.findMany({
-        where: { visibility: 'public' },
-        orderBy: { createdAt: 'desc' },
+        where,
+        orderBy,
       });
       return res.json(videos);
     }
