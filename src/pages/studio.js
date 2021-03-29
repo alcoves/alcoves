@@ -39,16 +39,15 @@ export default function studio() {
     );
   }
 
-  if (videos?.length) {
-    return (
-      <Layout>
-        <Box p='4'>
-          <Box pb='4'><Uploader/></Box>
-          <StudioVideoGrid videos={videos}/>
-        </Box>
-      </Layout>
-    );
-  }
-
-  return <Layout/>;
+  return (
+    <Layout>
+      <Box p='4'>
+        <Box pb='4'><Uploader/></Box>
+        {videos?.length
+          ? <StudioVideoGrid videos={videos}/>
+          : <CircularProgress isIndeterminate />
+        }
+      </Box>
+    </Layout>
+  );
 }
