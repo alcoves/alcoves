@@ -14,7 +14,7 @@ export default async function handler(req, res) {
       if (video.duration <= 0) return res.status(400).end();
 
       const backdatedTimestamp = new Date(Date.now() - (video.duration * 1000)).toISOString();
-      const recentView = await db.videoView.findOne({
+      const recentView = await db.videoView.findFirst({
         where: {
           videoId,
           ip: requestIP,
