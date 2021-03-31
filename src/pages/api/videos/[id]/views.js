@@ -7,6 +7,7 @@ export default async function handler(req, res) {
       const videoId = req.query.id;
       const session = await getSession({ req });
       const requestIP = req.headers['cf-connecting-ip'];
+      console.log(req.headers);
       if (!requestIP) return res.status(400).send(`invalid request ip: ${requestIP}`);
 
       const video = await db.video.findFirst({ where: { videoId } });
