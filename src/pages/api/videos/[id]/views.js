@@ -7,7 +7,6 @@ export default async function handler(req, res) {
       const videoId = req.query.id;
       const session = await getSession({ req });
       const requestIP = req.headers['cf-connecting-ip'];
-      console.log(requestIP);
       if (!requestIP) return res.status(400).send(`invalid request ip: ${requestIP}`);
 
       const video = await db.video.findFirst({ where: { videoId } });
@@ -15,7 +14,7 @@ export default async function handler(req, res) {
       if (video.duration <= 0) return res.status(400).end();
 
       const backdatedTimestamp = new Date(Date.now() - (video.duration * 1000)).toISOString();
-      const recentView = await db.videoView.findMany({
+      const recentView = await db.videoView.findOne({
         where: {
           videoId,
           ip: requestIP,
