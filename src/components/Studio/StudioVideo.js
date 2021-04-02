@@ -44,6 +44,7 @@ function VideoPlayer({ link }) {
 export default function StudioVideo({ v }) {
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const shareLink = `https://bken.io/v/${v.videoId}`;
 
   return (
     <Box borderWidth='1px' borderRadius='md' overflow='hidden'>
@@ -85,18 +86,20 @@ export default function StudioVideo({ v }) {
       </Box>
       <Box p='2' bg='transparent' w='100%' color='white'>
         <EditTitle id={v.videoId} title={v.title} />
-        <Flex>
+        <Flex direction='column'>
           <Metadata v={v}/>
+          <Text fontSize='xs' mx='5px' cursor='pointer'
+            onClick={() => {navigator.clipboard.writeText(shareLink);}}
+          >{shareLink}</Text>
         </Flex>
-        <Flex pt='1' justify='start'>
+        <Flex pt='1' justifyContent='end'>
           <Button
             size='xs'
             variant='outline'
             disabled={v.status !== 'completed'}
             onClick={() => { router.push(`/v/${v.videoId}`); }}
-          > Watch
+          > Watch page
           </Button>
-          <Spacer/>
           <Menu>
             <MenuButton variant='outline' size='xs' as={Button} rightIcon={<ChevronDownIcon />}>
               More
