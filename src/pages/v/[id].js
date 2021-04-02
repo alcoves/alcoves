@@ -8,6 +8,7 @@ import Layout from '../../components/Layout';
 // import VideoPlayer from '../../components/VideoPlayer/index';
 import abbreviateNumber from '../../utils/abbreviateNumber';
 import VideoPageUserCard from '../../components/VideoPageUserCard';
+import ShareModal from '../../components/ShareModal';
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -63,11 +64,16 @@ export default function Video({ url, video: v }) {
                 minWidth:'100%',
               }}
             />
-            <Box p='4'>
-              <Heading as='h3' size='lg'>{data.title}</Heading>
-              <Text fontSize='sm'>{subHeader}</Text>
-              <VideoPageUserCard id={data.userId} />
-            </Box>
+            <Flex w='100%' justifyContent='center'>
+              <Box p='4' w='1024px'>
+                <Heading as='h3' size='lg'>{data.title}</Heading>
+                <Flex justifyContent='space-between'>
+                  <Text fontSize='sm'>{subHeader}</Text>
+                  <ShareModal link={`https://bken.io/v/${data.videoId}`}/>
+                </Flex>
+                <VideoPageUserCard id={data.userId} />
+              </Box>
+            </Flex>
           </Box>
         </Layout>
       </Box>
