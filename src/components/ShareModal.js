@@ -52,7 +52,7 @@ export default function ShareModal({ link, vRef }) {
           <ModalFooter justifyContent='start'>
             <Switch onChange={({ target }) => {
               if (target.checked) {
-                setShareLink(`${shareLink  }?t=${currentTime.toFixed(0)}`);
+                setShareLink(`${shareLink}?t=${currentTime.toFixed(0)}`);
               } else {
                 setShareLink(link);
               }
