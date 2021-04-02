@@ -69,7 +69,7 @@ export default function Video({ url, video: v }) {
                 <Heading as='h3' size='lg'>{data.title}</Heading>
                 <Flex justifyContent='space-between'>
                   <Text fontSize='sm'>{subHeader}</Text>
-                  <ShareModal link={`https://bken.io/v/${data.videoId}`}/>
+                  <ShareModal vRef={vRef} link={`https://bken.io/v/${data.videoId}`}/>
                 </Flex>
                 <VideoPageUserCard id={data.userId} />
               </Box>
