@@ -4,6 +4,7 @@ import useSWR from 'swr';
 import { CircularProgress, Flex, Box, Text, Heading,  } from '@chakra-ui/react';
 import { useEffect, useRef, } from 'react';
 import axios from 'axios';
+import { useRouter, } from 'next/router';
 import Layout from '../../components/Layout';
 // import VideoPlayer from '../../components/VideoPlayer/index';
 import abbreviateNumber from '../../utils/abbreviateNumber';
@@ -16,6 +17,7 @@ let hls;
 
 export default function Video({ url, video: v }) {
   const vRef = useRef(null);
+  const router = useRouter();
   const { data } = useSWR(url, fetcher, { initialData: v });
 
   useEffect(() => {
@@ -30,6 +32,11 @@ export default function Video({ url, video: v }) {
       hls = new window.Hls();
       hls.loadSource(data.hlsMasterLink);
       hls.attachMedia(video);
+
+      if (router?.query?.t) {
+        console.log('seeking to', router.query.t);
+        video.currentTime = router.query.t;
+      }
     }
   }, [data]);
 
