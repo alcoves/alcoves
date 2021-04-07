@@ -1,5 +1,4 @@
-import { Box, Flex, Heading, } from '@chakra-ui/layout';
-import { Progress, Button, } from '@chakra-ui/react';
+import { Box, Flex, Heading, Progress, Button, } from '@chakra-ui/react';
 import axios from 'axios';
 import { useState, useCallback, } from 'react';
 import { useDropzone, } from 'react-dropzone';
@@ -67,13 +66,13 @@ export default function Upload() {
         parts,
         videoId,
         uploadId,
-        title: file.name,
         duration: meta.duration,
+        title: file.name.substring(0, file.name.lastIndexOf('.')) || file.name,
       };
       fetch('/api/videos', {
         method: 'POST',
         body: JSON.stringify(body),
-      }).then((res) => {
+      }).then(() => {
         setBytesUploaded(0);
         setFiles([]);
       }).catch((error) => {
