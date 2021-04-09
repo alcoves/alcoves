@@ -39,8 +39,8 @@ export default function Video({ url, video: v }) {
       }
     }
   }, [data]);
-
-  if (data) {
+  
+  if (data?.status === 'completed') {
     const subHeader = `${
       abbreviateNumber(data.views)} views ·
       ${moment(data.createdAt).fromNow()} · 
@@ -89,8 +89,10 @@ export default function Video({ url, video: v }) {
 
   return (
     <Layout>
-      <Flex justify='center'>
-        <CircularProgress isIndeterminate />
+      <Flex justify='center' flexDirection='column' align='center' pt='25px'>
+        <Heading pb='25px'>This video is not quite ready</Heading>
+        {data.percentCompleted !== '100' && <CircularProgress value={data.percentCompleted} />}
+        <div>Status: {data.status}</div>
       </Flex>
     </Layout>
   );
