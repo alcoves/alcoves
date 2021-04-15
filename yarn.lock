@@ -883,10 +883,10 @@
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.4.4.tgz#11d5db19bd178936ec89cd84519c4de439574398"
   integrity sha512-1oO6+dN5kdIA3sKPZhRGJTfGVP4SWV6KqlMOwry4J3HfyD68sl/3KmG7DeYUzvN+RbhXDnv/D8vNNB8168tAMg==
 
-"@prisma/client@^2.21.0":
-  version "2.21.0"
-  resolved "https://registry.yarnpkg.com/@prisma/client/-/client-2.21.0.tgz#97cb64d7ac76c1cce7f65f7a207320733efbac3a"
-  integrity sha512-RMtX0sdDl5MDJ49WOvGMzqgPF5yN6DQMSpzr+jpCkL7kuHASGiVcBYpvkBlNNA5a186zKCHuaMdNb8h7hDS4/A==
+"@prisma/client@^2.21.1":
+  version "2.21.1"
+  resolved "https://registry.yarnpkg.com/@prisma/client/-/client-2.21.1.tgz#790e09b7f0367a456cdb40cc5898d25494631106"
+  integrity sha512-37Sq4vBsZt21AvgMzo2kLvPs1LhqEWoelwGNK/tDNuDR+HbuxlDSX6lIiqSwd7s4/Lw5mx2Dtevpopq/RzaqzQ==
   dependencies:
     "@prisma/engines-version" "2.21.0-36.e421996c87d5f3c8f7eeadd502d4ad402c89464d"
 
@@ -950,9 +950,9 @@
   integrity sha512-oVfRvqHV/V6D1yifJbVRU3TMp8OT6o6BG+U9MkwuJ3U8/CsDHvalRpsxBqivn71ztOFZBTfJMvETbqHiaNSj7Q==
 
 "@types/node@*":
-  version "14.14.37"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.37.tgz#a3dd8da4eb84a996c36e331df98d82abd76b516e"
-  integrity sha512-XYmBiy+ohOR4Lh5jE379fV2IU+6Jn4g5qASinhitfyO71b/sCo6MKsMLF5tc7Zf2CE8hViVQyYSobJNke8OvUw==
+  version "14.14.39"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.39.tgz#9ef394d4eb52953d2890e4839393c309aa25d2d1"
+  integrity sha512-Qipn7rfTxGEDqZiezH+wxqWYR8vcXq5LRpZrETD19Gs4o8LbklbmqotSUsMU+s5G3PJwMRDfNEYoxrcBwIxOuw==
 
 "@types/parse-json@^4.0.0":
   version "4.0.0"
@@ -1209,10 +1209,10 @@ available-typed-arrays@^1.0.2:
   dependencies:
     array-filter "^1.0.0"
 
-aws-sdk@^2.886.0:
-  version "2.886.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.886.0.tgz#a3c17ead366eb05d3c1bd3f0efc7b4cdf4daab54"
-  integrity sha512-GK2TiijM/sX3PMOvPbZFPBeL7hW5S0RstwgplEABVxCMPXLkk8ws5ENOwS/c74nrTQKSxZMn/3sThNEtb3J7Ew==
+aws-sdk@^2.887.0:
+  version "2.887.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.887.0.tgz#53839921124b024d24005dbb83b372efdf2fe9b6"
+  integrity sha512-jFRVrdyvBEYmSSrriA92dXDn1VgCXnz6Rax6wRGQDhyCWH+9NzZ7ZvIag2Yy2SLpvoRU7IaiEmiBLbNe/BksgA==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
@@ -1865,9 +1865,9 @@ ecdsa-sig-formatter@1.0.11:
     safe-buffer "^5.0.1"
 
 electron-to-chromium@^1.3.634, electron-to-chromium@^1.3.712:
-  version "1.3.714"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.714.tgz#dabe0b67bd9463bcef5d25fe141daf8de7f93ea3"
-  integrity sha512-/xC2dSRZTzpPuKF/v+YZSYSkS0ZzktGrqou/ldu3MovPdEuLBzU/QUfEAc1as/M/KMbM5HZFQDs7/edNmSOpNA==
+  version "1.3.717"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.717.tgz#78d4c857070755fb58ab64bcc173db1d51cbc25f"
+  integrity sha512-OfzVPIqD1MkJ7fX+yTl2nKyOE4FReeVfMCzzxQS+Kp43hZYwHwThlGP+EGIZRXJsxCM7dqo8Y65NOX/HP12iXQ==
 
 elliptic@^6.5.3:
   version "6.5.4"
@@ -2785,9 +2785,9 @@ js-yaml@^3.13.1:
     esprima "^4.0.0"
 
 js-yaml@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-4.0.0.tgz#f426bc0ff4b4051926cd588c71113183409a121f"
-  integrity sha512-pqon0s+4ScYUvX30wxQi3PogGFAlUyH0awepWvwkj4jD4v+ova3RiYw8bmA6x2rDrEaj8i/oWKoRxpVNW+Re8Q==
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-4.1.0.tgz#c1fb65f8f5017901cdd2c951864ba18458a10602"
+  integrity sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA==
   dependencies:
     argparse "^2.0.1"
 
@@ -3124,10 +3124,10 @@ natural-compare@^1.4.0:
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
   integrity sha1-Sr6/7tdUHywnrPspvbvRXI1bpPc=
 
-next-auth@^3.14.6:
-  version "3.14.6"
-  resolved "https://registry.yarnpkg.com/next-auth/-/next-auth-3.14.6.tgz#9ef6fa2e449ee6dc200a0eb72e4a1c26537f79c3"
-  integrity sha512-Yh2xWV20TC3BL3yOMwUQHPTSNDuHgy3H3bXUg2yK1Xg011888LKMfjnpjIOGP+brvy3J09CHPEiU+OGtSyFFFg==
+next-auth@^3.14.7:
+  version "3.14.7"
+  resolved "https://registry.yarnpkg.com/next-auth/-/next-auth-3.14.7.tgz#3718fc5265851fbf52838fb3165a7a2a58b59d06"
+  integrity sha512-Z3kGvmdpr3uaSMyijRytHYpUajPAhpLJjlze99awmXD20pEV7yrtrQmrsgEnhUpASaVQYranexR3k6i+V0SZ6g==
   dependencies:
     crypto-js "^4.0.0"
     futoin-hkdf "^1.3.2"
@@ -3623,10 +3623,10 @@ pretty-format@^3.8.0:
   resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-3.8.0.tgz#bfbed56d5e9a776645f4b1ff7aa1a3ac4fa3c385"
   integrity sha1-v77VbV6ad2ZF9LH/eqGjrE+jw4U=
 
-prisma@^2.21.0:
-  version "2.21.0"
-  resolved "https://registry.yarnpkg.com/prisma/-/prisma-2.21.0.tgz#ffab3901fbd2335b77d9d939c5cf3031fe11a8f3"
-  integrity sha512-lmlfcWEyl24AO788DmZOerFl8npH0xW2aY1BmXLeTgHvovvk3/AJIYZNfaDEx9wuvjNLhZTExICMDAtJIFi3kQ==
+prisma@^2.21.1:
+  version "2.21.1"
+  resolved "https://registry.yarnpkg.com/prisma/-/prisma-2.21.1.tgz#04314f87439fedc8ab9da0c55f3ad41321f36d80"
+  integrity sha512-uUnNaJTdbTNeZyJadu5rZnRlPi7o/u3ep9wqe4fZMNd70dyFl/q0RrAss6hqd6MTXPqknGNgxaoXIFNVRg37EA==
   dependencies:
     "@prisma/engines" "2.21.0-36.e421996c87d5f3c8f7eeadd502d4ad402c89464d"
 
@@ -4328,9 +4328,9 @@ swr@^0.5.5:
     dequal "2.0.2"
 
 table@^6.0.4:
-  version "6.0.9"
-  resolved "https://registry.yarnpkg.com/table/-/table-6.0.9.tgz#790a12bf1e09b87b30e60419bafd6a1fd85536fb"
-  integrity sha512-F3cLs9a3hL1Z7N4+EkSscsel3z55XT950AvB05bwayrNg5T1/gykXtigioTAjbltvbMSJvvhFCbnf6mX+ntnJQ==
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/table/-/table-6.1.0.tgz#676a0cfb206008b59e783fcd94ef8ba7d67d966c"
+  integrity sha512-T4G5KMmqIk6X87gLKWyU5exPpTjLjY5KyrFWaIjv3SvgaIUGXV7UEzGEnZJdTA38/yUS6f9PlKezQ0bYXG3iIQ==
   dependencies:
     ajv "^8.0.1"
     is-boolean-object "^1.1.0"
