@@ -6,22 +6,14 @@ import chunkFile from '../utils/chunkFile';
 
 export default function Upload() {
   const [files, setFiles] = useState([]);
-  let [bytesUploaded, setBytesUploaded] = useState(0);
-
-  const onDrop = useCallback(acceptedFiles => {
-    setFiles(acceptedFiles);
-    startUpload(acceptedFiles[0]);
-  }, []);
-  const { getRootProps, getInputProps } = useDropzone({ onDrop });
+  const [bytesUploaded, setBytesUploaded] = useState({});
 
   async function uploadChunks(chunks, urls) {
     const results = await Promise.all(chunks.map((chunk, i) => {
-      let lastBytesUploaded = 0;
       console.log(`uploading part ${i} to ${urls[i]}`);
       return axios.put(urls[i], chunk, {
         onUploadProgress: e => {
-          setBytesUploaded((bytesUploaded += e.loaded - lastBytesUploaded));
-          lastBytesUploaded = e.loaded;
+          setBytesUploaded({ ...bytesUploaded, [i]: e.loaded });
         },
       });
     }));
@@ -37,7 +29,7 @@ export default function Upload() {
     console.log('Chunking video');
     const chunks = chunkFile(file);
     console.log('Chunks', chunks.length);
-
+  
     console.log('Fetching upload urls', file);
     const uploadBody =  JSON.stringify({
       type: file.type,
@@ -48,15 +40,15 @@ export default function Upload() {
       method: 'POST',
       body:uploadBody,
     });
-
+  
     const { uploadId, key, videoId, urls } = await (await uploadResponse).json();
-
+  
     console.log('Uploading files parts');
     const parts = await uploadChunks(chunks, urls);
-
+  
     console.log('Completing video upload');
     console.log({ uploadId, key, videoId, urls, parts });
-
+  
     const video = document.createElement('video');
     video.setAttribute('src', window.URL.createObjectURL(file));
     video.onloadeddata = event => {
@@ -73,20 +65,27 @@ export default function Upload() {
         method: 'POST',
         body: JSON.stringify(body),
       }).then(() => {
-        setBytesUploaded(0);
+        setBytesUploaded({});
         setFiles([]);
       }).catch((error) => {
         console.log(error);
-        setBytesUploaded(0);
+        setBytesUploaded({});
         setFiles([]);
       });
     };
   }
 
-  let progress = 0;
-  if (files.length) {
-    progress = ((bytesUploaded / files[0].size) * 100).toFixed(0);
-  }
+  const onDrop = useCallback(acceptedFiles => {
+    setFiles(acceptedFiles);
+    startUpload(acceptedFiles[0]);
+  }, []);
+  const { getRootProps, getInputProps } = useDropzone({ onDrop });
+
+  const totalBytesLoaded = Object.values(bytesUploaded).reduce((acc, cv) => {
+    acc += cv;
+    return acc;
+  }, 0);
+  const progress = parseInt(((totalBytesLoaded / files[0]?.size || 0) * 100).toFixed(0));
 
   return (
     <Flex>
