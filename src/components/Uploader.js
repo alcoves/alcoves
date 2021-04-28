@@ -13,7 +13,7 @@ export default function Upload() {
       console.log(`uploading part ${i} to ${urls[i]}`);
       return axios.put(urls[i], chunk, {
         onUploadProgress: e => {
-          setBytesUploaded({ ...bytesUploaded, [i]: e.loaded });
+          setBytesUploaded(prevState => ({ ...prevState, [i]: e.loaded }));
         },
       });
     }));
