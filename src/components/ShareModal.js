@@ -21,6 +21,9 @@ export default function ShareModal({ link, vRef }) {
 
   useEffect(() => {
     setCurrentTime(vRef?.current?.currentTime);
+    return function cleanup() {
+      setShareLink(link);
+    };
   }, [isOpen]);
 
   return(
