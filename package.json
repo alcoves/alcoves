@@ -18,9 +18,9 @@
     "@chakra-ui/react": "^1.6.0",
     "@emotion/react": "^11",
     "@emotion/styled": "^11.3.0",
-    "@prisma/client": "^2.21.2",
+    "@prisma/client": "^2.22.0",
     "autoprefixer": "^10.2.5",
-    "aws-sdk": "^2.897.0",
+    "aws-sdk": "^2.900.0",
     "axios": "^0.21.1",
     "dayjs": "^1.10.4",
     "framer-motion": "^4.1.11",
@@ -30,13 +30,13 @@
     "moment": "^2.29.1",
     "nanoid": "^3.1.22",
     "next": "^10.2.0",
-    "next-auth": "^3.19.5",
-    "prisma": "^2.21.2",
+    "next-auth": "^3.19.8",
+    "prisma": "^2.22.0",
     "query-string": "^7.0.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-dropzone": "^11.3.2",
-    "swr": "^0.5.5"
+    "swr": "^0.5.6"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
