@@ -6,7 +6,4 @@ module.exports = {
   env: {
     REACT_APP_GIT_SHA,
   },
-  future: {
-    webpack5: true,
-  },
 };
