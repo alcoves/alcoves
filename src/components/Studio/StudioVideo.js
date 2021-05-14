@@ -12,7 +12,7 @@ import { Box, Flex, Progress , Text, Spacer, Modal,
   MenuItem,
   Button, } from '@chakra-ui/react';
 import { useEffect, useRef, } from 'react';
-import { ChevronRightIcon, ChevronDownIcon, } from '@chakra-ui/icons';
+import { IoPlayOutline, IoPauseOutline } from 'react-icons/io5'
 import { useRouter, } from 'next/router';
 import EditTitle from './EditTitle';
 import videoDuration from '../../utils/videoDuration';
@@ -71,7 +71,7 @@ export default function StudioVideo({ v }) {
                 variant='outline'
                 onClick={onOpen}
                 aria-label='watch'
-                icon={<ChevronRightIcon w='100%' h='100%'/>}
+                icon={<IoPlayOutline w='100%' h='100%'/>}
               />
             }
           </Flex>
@@ -101,7 +101,7 @@ export default function StudioVideo({ v }) {
           > Watch page
           </Button>
           <Menu>
-            <MenuButton variant='outline' size='xs' as={Button} rightIcon={<ChevronDownIcon />}>
+            <MenuButton variant='outline' size='xs' as={Button} rightIcon={<IoPauseOutline />}>
               More
             </MenuButton>
             <MenuList>

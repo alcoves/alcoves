@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useState, } from 'react';
 import { IconButton, } from '@chakra-ui/react';
-import { ViewIcon, ViewOffIcon, } from '@chakra-ui/icons';
+import { IoEyeOff, IoEye, } from 'react-icons/io5';
 
 export default function EditVisibility({ id, visibility: v }) {
   const [visibility, setVisibility ] = useState(v);
@@ -28,7 +28,7 @@ export default function EditVisibility({ id, visibility: v }) {
       onClick={handleChange}
       aria-label='Toggle visibility'
       colorScheme={visibility === 'public' ? 'teal' : 'gray'}
-      icon={visibility === 'public' ? <ViewIcon/> : <ViewOffIcon/>}
+      icon={visibility === 'public' ? <IoEye/> : <IoEyeOff/>}
     />
   );
 }
