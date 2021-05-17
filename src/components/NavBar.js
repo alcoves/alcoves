@@ -6,8 +6,8 @@ import isAdmin from '../utils/isAdmin';
 
 export default function Navigation() {
   const router = useRouter();
-  const [open, setOpen] = useState(false);
   const [session] = useSession();
+  const [open, setOpen] = useState(false);
 
   return (
     <Flex h='48px' bg='gray.700'>
@@ -23,9 +23,9 @@ export default function Navigation() {
       </Box>
       <Spacer />
       <Box p='1'>
-        {session && session.user ?
-          <Flex justify='center' align='center' h='100%'>
-            <Button me='10px' size='sm' onClick={() => router.push('/studio')}>Studio</Button>
+        <Flex justify='center' align='center' h='100%'>
+          <Button me='10px' size='sm' onClick={() => router.push('/studio')}>Studio</Button>
+          {session && session.user ? 
             <Menu>
               <MenuButton me='10px'>
                 <Avatar
@@ -42,16 +42,17 @@ export default function Navigation() {
                 <MenuItem onClick={signOut}>Log out</MenuItem>
               </MenuList>
             </Menu>
-          </Flex>
-          :
-          <Flex w='full' h='full' align='center'>
-            <Avatar
-              h='30px' w='30px'
-              cursor='pointer'
-              onClick={() => router.push('/login')}
-            />
-          </Flex>
-        }
+            :
+            <Flex w='full' h='full' align='center'>
+              <Avatar
+                h='30px' w='30px'
+                cursor='pointer'
+                onClick={() => router.push('/login')}
+              />
+            </Flex>
+          }
+
+        </Flex>
       </Box>
     </Flex>
   );

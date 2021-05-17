@@ -10,9 +10,10 @@ import { Box, Flex, Progress , Text, Spacer, Modal,
   MenuButton,
   MenuList,
   MenuItem,
-  Button, } from '@chakra-ui/react';
+  Button,
+  HStack, } from '@chakra-ui/react';
 import { useEffect, useRef, } from 'react';
-import { IoPlayOutline, IoPauseOutline } from 'react-icons/io5'
+import { IoPlayOutline, IoPauseOutline, } from 'react-icons/io5';
 import { useRouter, } from 'next/router';
 import EditTitle from './EditTitle';
 import videoDuration from '../../utils/videoDuration';
@@ -92,24 +93,27 @@ export default function StudioVideo({ v }) {
             onClick={() => {navigator.clipboard.writeText(shareLink);}}
           >{shareLink}</Text>
         </Flex>
+
         <Flex pt='1' justifyContent='end'>
-          <Button
-            size='xs'
-            variant='outline'
-            disabled={v.status !== 'completed'}
-            onClick={() => { router.push(`/v/${v.videoId}`); }}
-          > Watch page
-          </Button>
-          <Menu>
-            <MenuButton variant='outline' size='xs' as={Button} rightIcon={<IoPauseOutline />}>
-              More
-            </MenuButton>
-            <MenuList>
-              <MenuItem>
-                <DeleteVideo id={v.videoId}/>
-              </MenuItem>
-            </MenuList>
-          </Menu>
+          <HStack>
+            <Button
+              size='xs'
+              variant='outline'
+              disabled={v.status !== 'completed'}
+              onClick={() => { router.push(`/v/${v.videoId}`); }}
+            > Watch page
+            </Button>
+            <Menu>
+              <MenuButton variant='outline' size='xs' as={Button}>
+                More
+              </MenuButton>
+              <MenuList>
+                <MenuItem>
+                  <DeleteVideo id={v.videoId}/>
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          </HStack>
         </Flex>
       </Box>
       <Modal size='4xl' isOpen={isOpen} onClose={onClose}>
