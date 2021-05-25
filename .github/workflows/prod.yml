@@ -1,45 +1,25 @@
 name: Deploy
-
 env:
   DO_API_KEY: ${{ secrets.DO_API_KEY }}
-  NOMAD_TOKEN: ${{ secrets.NOMAD_TOKEN }}
-  NOMAD_ADDRESS: ${{ secrets.NOMAD_ADDRESS }}
-
 on:
   push:
     branches:
       - master
-
 jobs:
   deploy-nomad:
-    name: Deploy to Nomad
+    name: Deploy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
           token: ${{ secrets.DO_API_KEY }}
-
       - name: Build container image
         run: docker build
-          -t registry.digitalocean.com/bken/web:latest
-          -t registry.digitalocean.com/bken/web:$GITHUB_SHA .
-
+          -t registry.digitalocean.com/bken/reef:latest
+          -t registry.digitalocean.com/bken/reef:$GITHUB_SHA .
       - name: Login to DigitalOcean Docker Registry
         run: doctl registry login --expiry-seconds 600
-
       - name: Push image to DigitalOcean Container Registry
-        run: docker push registry.digitalocean.com/bken/web --all-tags
-
-      - name: Deploy to Prod
-        env:
-          NOMAD_TOKEN: ${{ secrets.NOMAD_TOKEN }}
-          NOMAD_ADDRESS: ${{ secrets.NOMAD_ADDRESS }}
-        run: |
-          wget -q https://releases.hashicorp.com/nomad/1.0.4/nomad_1.0.4_linux_amd64.zip
-          sudo apt install unzip -y && unzip nomad_1.0.4_linux_amd64.zip
-          sed -i "s+:latest+:${GITHUB_SHA}+g" job.hcl
-          ./nomad job run -output job.hcl >> job.json
-          curl --request POST --data @job.json "http://${NOMAD_ADDRESS}:4646/v1/jobs" -H "X-Nomad-Token: ${NOMAD_TOKEN}"
+        run: docker push registry.digitalocean.com/bken/reef --all-tags
