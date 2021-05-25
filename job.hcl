@@ -1,4 +1,4 @@
-job "web" {
+job "reef" {
   priority    = 100
   datacenters = ["dc1"]
   type        = "service"
@@ -14,10 +14,10 @@ job "web" {
     }
 
     network {
-      port "bken_web_port" { to = 3000 }
+      port "bken_reef_port" { to = 3000 }
     }
 
-    task "web" {
+    task "reef" {
       driver = "docker"
 
       template {
@@ -46,8 +46,8 @@ job "web" {
 
       config {
         force_pull = true
-        ports      = ["bken_web_port"]
-        image      = "registry.digitalocean.com/bken/web:latest"
+        ports      = ["bken_reef_port"]
+        image      = "registry.digitalocean.com/bken/reef:latest"
 
         auth {
           username = "${DO_API_KEY}"
@@ -56,8 +56,8 @@ job "web" {
       }
 
       service {
-        name = "bken-web"
-        port = "bken_web_port"
+        name = "bken-reef"
+        port = "bken_reef_port"
         tags = ["urlprefix-/"]
 
         connect {
@@ -69,7 +69,7 @@ job "web" {
           timeout  = "2s"
           interval = "10s"
           type     = "http"
-          name     = "bken_web_port alive"
+          name     = "bken_reef_port alive"
         }
       }
 
