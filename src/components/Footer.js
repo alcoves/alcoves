@@ -1,4 +1,4 @@
-import { Flex, Link, } from '@chakra-ui/layout';
+import { Flex, Link, } from '@chakra-ui/react';
 import React from 'react';
 
 export default function Footer() {
@@ -7,7 +7,7 @@ export default function Footer() {
   const message = `Version: ${gitSha}`;
   return (
     <Flex h='48px' w='100%' justify='center' align='center'>
-      <Link fontSize='xs' fontWeight='bold' href={webLink}>{message}</Link>
+      {gitSha && <Link fontSize='xs' fontWeight='bold' href={webLink}>{message}</Link>}
     </Flex>
   );
 }
