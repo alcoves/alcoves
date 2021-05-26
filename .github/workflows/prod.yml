@@ -19,6 +19,7 @@ jobs:
           token: ${{ secrets.DO_API_KEY }}
       - name: Build container image
         run: docker build
+          --build-arg REACT_APP_GIT_SHA=$GITHUB_SHA
           -t registry.digitalocean.com/bken/reef:latest
           -t registry.digitalocean.com/bken/reef:$GITHUB_SHA .
       - name: Login to DigitalOcean Docker Registry
