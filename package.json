@@ -14,7 +14,7 @@
     "lint": "eslint --ext .jsx --ext .js ./src"
   },
   "dependencies": {
-    "@chakra-ui/react": "^1.6.2",
+    "@chakra-ui/react": "^1.6.3",
     "@emotion/react": "^11.4.0",
     "@emotion/styled": "^11.3.0",
     "@prisma/client": "^2.23.0",
