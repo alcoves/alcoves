@@ -19,7 +19,7 @@
     "@emotion/styled": "^11.3.0",
     "@prisma/client": "^2.23.0",
     "autoprefixer": "^10.2.5",
-    "aws-sdk": "^2.916.0",
+    "aws-sdk": "^2.917.0",
     "axios": "^0.21.1",
     "dayjs": "^1.10.4",
     "framer-motion": "4.1.17",
