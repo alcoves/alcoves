@@ -1,7 +1,7 @@
 import { useState, } from 'react';
 import { useRouter, } from 'next/router';
 import { signOut, useSession, } from 'next-auth/client';
-import { Button, Flex, Spacer, Box, Avatar, Img, Menu, MenuButton, MenuList, MenuItem, } from '@chakra-ui/react';
+import { Button, Flex, Spacer, Box, Avatar, Img, Menu, MenuButton, MenuList, MenuItem, MenuDivider, } from '@chakra-ui/react';
 import isAdmin from '../utils/isAdmin';
 
 export default function Navigation() {
@@ -25,7 +25,7 @@ export default function Navigation() {
       <Box p='1'>
         <Flex justify='center' align='center' h='100%'>
           <Button me='10px' size='sm' onClick={() => router.push('/studio')}>Studio</Button>
-          {session && session.user ? 
+          {session && session.user ?
             <Menu>
               <MenuButton me='10px'>
                 <Avatar
@@ -35,10 +35,11 @@ export default function Navigation() {
                   onClick={() => setOpen(!open)}
                 />
               </MenuButton>
-              <MenuList>
+              <MenuList minW='auto'>
                 <MenuItem onClick={() => router.push(`/u/${session.id}`)}>Profile</MenuItem>
                 <MenuItem onClick={() => router.push('/account')}>Account</MenuItem>
                 {session?.id && isAdmin(session.id) && <MenuItem onClick={() => router.push('/admin')}>Admin</MenuItem>}
+                <MenuDivider />
                 <MenuItem onClick={signOut}>Log out</MenuItem>
               </MenuList>
             </Menu>
