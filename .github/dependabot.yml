@@ -11,10 +11,10 @@ updates:
       - dependency-name: "*"
         update-types:
           ["version-update:semver-patch"]
-  - package-ecosystem: "docker"
-    directory: "/"
-    schedule:
-      interval: "daily"
-    labels:
-      - "Priority: Medium"
-      - "Type: Maintenance"
+  # - package-ecosystem: "docker"
+  #   directory: "/"
+  #   schedule:
+  #     interval: "daily"
+  #   labels:
+  #     - "Priority: Medium"
+  #     - "Type: Maintenance"
