@@ -1,14 +1,12 @@
 FROM node:16-alpine
 
 ENV PORT 3000
+ENV NODE_ENV="production"
+
+RUN apk add git
 
 WORKDIR /usr/src/app
-
-COPY new/pages /usr/src/app/pages
-COPY new/public /usr/src/app/public
-COPY new/styles /usr/src/app/styles
-COPY new/yarn.lock /usr/src/app/yarn.lock
-COPY new/package.json /usr/src/app/package.json
+COPY .  /usr/src/app/
 
 RUN yarn install --production
 RUN yarn build
