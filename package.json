@@ -29,7 +29,7 @@
     "moment": "^2.29.1",
     "nanoid": "^3.1.23",
     "next": "^10.2.3",
-    "next-auth": "^3.24.0",
+    "next-auth": "^4.0.0",
     "prisma": "^2.24.0",
     "query-string": "^7.0.0",
     "react": "^17.0.2",
