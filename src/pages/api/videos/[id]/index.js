@@ -73,8 +73,10 @@ async function patchVideo(req, res) {
     if (reqKeys.includes(cv)) {
       // This is where tidal webhooks land
       // Links from tidal are in the rclone format
-      if (cv === 'thumbnail' || cv === 'mpdLink' || 'hlsMasterLink') {
-        acc[cv] = `https://${req.body[cv].split(':')[1]}`; // wasabi:cdn.bken.io/path
+      if (cv === 'thumbnail' || cv === 'mpdLink' || cv === 'hlsMasterLink') {
+        if (req.body[cv]) {
+          acc[cv] = `https://${req.body[cv].split(':')[1]}`; // wasabi:cdn.bken.io/path
+        }
       } else {
         acc[cv] = req.body[cv];
       }
