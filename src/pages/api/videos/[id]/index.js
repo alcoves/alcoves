@@ -13,7 +13,7 @@ async function reprocessVideo(req, res) {
   // if (video.status !== 'completed') return res.status(400).end();
 
   // Invoke tidal
-  await axios.post(getTidalURL(), {
+  await axios.post(`${getTidalURL()}/transcodes`, {
     rcloneSource: `wasabi:cdn.bken.io/v/${video.videoId}/${video.videoId}.mp4`, // FIXME :: We should store the source file path
     rcloneDest: `wasabi:cdn.bken.io/v/${video.videoId}`,
     webhookURL: getWebhookURL(video.videoId),
