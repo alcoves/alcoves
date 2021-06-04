@@ -1,4 +1,5 @@
 import moment from 'moment';
+// import dashjs from 'dashjs';
 import { Box, Flex, Progress , Text, Spacer, Modal,
   ModalOverlay,
   ModalContent,
@@ -30,16 +31,14 @@ function Metadata({ v }) {
 }
 
 function VideoPlayer({ link }) {
-  const vRef = useRef(null);
-
   useEffect(() => {
-    const video = document.getElementById('bkenStudioPlayer');
-    const hls = new window.Hls();
-    hls.loadSource(link);
-    hls.attachMedia(video);
+    const player = dashjs.MediaPlayer().create();
+    player.initialize(document.querySelector('#videoPlayer'), link, true);
   }, []);
 
-  return <video autoPlay id='bkenStudioPlayer' controls ref={vRef} />;
+  return (
+    <video id='videoPlayer' autoPlay preload='none' controls/>
+  );
 }
 
 export default function StudioVideo({ v }) {
