@@ -68,11 +68,12 @@ async function patchVideo(req, res) {
   // }
 
   const reqKeys = Object.keys(req.body);
-  const permittedKeys = ['status', 'percentCompleted', 'title', 'visibility', 'thumbnail' , 'hlsMasterLink'];
+  const permittedKeys = ['status', 'percentCompleted', 'title', 'visibility', 'thumbnail' , 'mpdLink', 'hlsMasterLink'];
   const update = permittedKeys.reduce((acc, cv) => {
     if (reqKeys.includes(cv)) {
-      // Override the paths coming from tidal
-      if (cv === 'thumbnail' || cv === 'hlsMasterLink') {
+      // This is where tidal webhooks land
+      // Links from tidal are in the rclone format
+      if (cv === 'thumbnail' || cv === 'mpdLink' || 'hlsMasterLink') {
         acc[cv] = `https://${req.body[cv].split(':')[1]}`; // wasabi:cdn.bken.io/path
       } else {
         acc[cv] = req.body[cv];
