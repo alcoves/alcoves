@@ -31,17 +31,31 @@ async function createVideo(req, res) {
     },
   });
 
-  // Invoke tidal
-  await axios.post(getTidalURL(), {
-    rcloneSource: `wasabi:cdn.bken.io/${key}`,
-    rcloneDest: `wasabi:cdn.bken.io/v/${videoId}`,
-    webhookURL: getWebhookURL(videoId),
+  // Process video
+  await axios.post(`${getTidalURL()}/transcodes`, {
+    videoId,
+    webhookUrl: getWebhookURL(videoId),
+    rcloneSourceUri: `wasabi:cdn.bken.io/${key}`,
+    rcloneDestinationUri: `wasabi:cdn.bken.io/v/${videoId}`,
   }, {
     headers: {
       'Content-Type': 'application/json',
     },
   });
   res.status(200).end();
+
+  // Create thumbnail
+  // await axios.post(`${getTidalURL()}/transcodes`, {
+  //   videoId,
+  //   webhookUrl: getWebhookURL(videoId),
+  //   rcloneSourceUri: `wasabi:cdn.bken.io/${key}`,
+  //   rcloneDestinationUri: `wasabi:cdn.bken.io/v/${videoId}`,
+  // }, {
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //   },
+  // });
+  // res.status(200).end();
 }
 
 export default async function handler(req, res) {

@@ -1,9 +1,9 @@
 export function getTidalURL() {
   if (process.env.NODE_ENV === 'production') {
-    return 'https://bk-det1.bken.dev/tidal/videos';
+    return 'https://bk-det1.bken.dev/tidal';
   }
   // return 'http://localhost:4000/videos'
-  return 'https://bk-det1.bken.dev/tidal/videos';
+  return 'https://bk-det1.bken.dev/tidal';
 }
 
 export function getWebhookURL(id) {
