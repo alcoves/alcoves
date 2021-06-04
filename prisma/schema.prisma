@@ -86,6 +86,7 @@ model Video {
   views               Int       @default(0)
   visibility          String    @default("unlisted")
   thumbnail           String?
+  mpdLink             String?   @map(name: "mpd_link")
   hlsMasterLink       String?   @map(name: "hls_master_link")
   sourceSegmentsCount Int?      @default(0) @map(name: "source_segments_count")
   percentCompleted    Decimal?  @default(0.0) @map(name: "percent_completed") @db.Decimal
