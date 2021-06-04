@@ -13,7 +13,7 @@ import { Box, Flex, Progress , Text, Spacer, Modal,
   MenuItem,
   Button,
   HStack, } from '@chakra-ui/react';
-import { useEffect, useRef, } from 'react';
+import { useEffect, } from 'react';
 import { IoPlayOutline, IoPauseOutline, } from 'react-icons/io5';
 import { useRouter, } from 'next/router';
 import EditTitle from './EditTitle';
@@ -119,7 +119,7 @@ export default function StudioVideo({ v }) {
         <ModalOverlay />
         <ModalContent>
           <ModalCloseButton />
-          <VideoPlayer link={v.hlsMasterLink}/>
+          <VideoPlayer link={v.mpdLink}/>
         </ModalContent>
       </Modal>
     </Box>

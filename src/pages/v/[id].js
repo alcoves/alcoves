@@ -13,11 +13,11 @@ import ShareModal from '../../components/ShareModal';
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
-let hls;
+let player;
 
 export default function Video({ url, video: v }) {
   const vRef = useRef(null);
-  const router = useRouter();
+  // const router = useRouter();
   const { data } = useSWR(url, fetcher, { initialData: v });
 
   useEffect(() => {
@@ -27,16 +27,14 @@ export default function Video({ url, video: v }) {
   }, []);
 
   useEffect(() => {
-    if (data.hlsMasterLink) {
-      const video = document.getElementById('bkenVideoPlayer');
-      hls = new window.Hls();
-      hls.loadSource(data.hlsMasterLink);
-      hls.attachMedia(video);
+    if (data.mpdLink) {
+      player = dashjs.MediaPlayer().create();
+      player.initialize(document.getElementById('bkenVideoPlayer'), data.mpdLink, true);;
 
-      if (router?.query?.t) {
-        console.log('seeking to', router.query.t);
-        video.currentTime = router.query.t;
-      }
+      // if (router?.query?.t) {
+      //   console.log('seeking to', router.query.t);
+      //   player.seek(router.query.t);
+      // }
     }
   }, [data]);
   
