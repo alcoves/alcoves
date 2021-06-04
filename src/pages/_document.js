@@ -12,9 +12,9 @@ export default class MyDocument extends Document {
           <link rel='preconnect' href='https://fonts.gstatic.com' />
           <link href='https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800&display=swap' rel='stylesheet' />
           <meta name='version' content='%REACT_APP_GIT_SHA%' />
-          <script src='https://cdn.jsdelivr.net/npm/hls.js@latest' />
         </Head>
         <body>
+          <script src='https://cdn.dashjs.org/latest/dash.all.min.js'/>
           <ColorModeScript initialColorMode={theme.config.initialColorMode} />
           <Main />
           <NextScript />
