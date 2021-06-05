@@ -4,7 +4,7 @@ import db from '../../../../utils/db';
 import { s3, } from '../../../../utils/s3';
 import { getTidalURL, getWebhookURL, } from '../../../../utils/tidal';
 
-async function reprocessVideo(req, res) {
+async function processVideo(req, res) {
   const session = await getSession({ req });
   if (!session) return res.status(401).end();
   const video = await db.video.findFirst({ where: { videoId: req.query.id } });
@@ -13,7 +13,17 @@ async function reprocessVideo(req, res) {
   // if (video.status !== 'completed') return res.status(400).end();
 
   // Invoke tidal
-  await axios.post(`${getTidalURL()}/transcodes`, {
+  await axios.post(`${getTidalURL()}/jobs/thumbnail`, {
+    rcloneSource: `wasabi:cdn.bken.io/v/${video.videoId}/${video.videoId}.mp4`, // FIXME :: We should store the source file path
+    rcloneDest: `wasabi:cdn.bken.io/v/${video.videoId}/thumb.webp`,
+    webhookURL: getWebhookURL(video.videoId),
+  }, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  await axios.post(`${getTidalURL()}/jobs/transcode`, {
     rcloneSource: `wasabi:cdn.bken.io/v/${video.videoId}/${video.videoId}.mp4`, // FIXME :: We should store the source file path
     rcloneDest: `wasabi:cdn.bken.io/v/${video.videoId}`,
     webhookURL: getWebhookURL(video.videoId),
@@ -68,12 +78,12 @@ async function patchVideo(req, res) {
   // }
 
   const reqKeys = Object.keys(req.body);
-  const permittedKeys = ['status', 'percentCompleted', 'title', 'visibility', 'thumbnail' , 'mpdLink', 'hlsMasterLink'];
+  const permittedKeys = ['status', 'percentCompleted', 'title', 'visibility', 'thumbnail' , 'mpdLink'];
   const update = permittedKeys.reduce((acc, cv) => {
     if (reqKeys.includes(cv)) {
       // This is where tidal webhooks land
       // Links from tidal are in the rclone format
-      if (cv === 'thumbnail' || cv === 'mpdLink' || cv === 'hlsMasterLink') {
+      if (cv === 'mpdLink') {
         if (req.body[cv]) {
           acc[cv] = `https://${req.body[cv].split(':')[1]}`; // wasabi:cdn.bken.io/path
         }
@@ -100,7 +110,7 @@ export default async function handler(req, res) {
     } else if (req.method === 'DELETE') {
       await deleteVideo(req, res);
     } else if (req.method === 'POST') {
-      await reprocessVideo(req, res);
+      await processVideo(req, res);
     }
     res.status(400).end();
   } catch (error) {

@@ -32,11 +32,11 @@ async function createVideo(req, res) {
   });
 
   // Process video
-  await axios.post(`${getTidalURL()}/transcodes`, {
+  await axios.post(`${getTidalURL()}/jobs/transcode`, {
     videoId,
     webhookUrl: getWebhookURL(videoId),
     rcloneSourceUri: `wasabi:cdn.bken.io/${key}`,
-    rcloneDestinationUri: `wasabi:cdn.bken.io/v/${videoId}`,
+    rcloneDestinationUri: `wasabi:cdn.bken.io/v/${videoId}/mpd`,
   }, {
     headers: {
       'Content-Type': 'application/json',
@@ -45,17 +45,17 @@ async function createVideo(req, res) {
   res.status(200).end();
 
   // Create thumbnail
-  // await axios.post(`${getTidalURL()}/transcodes`, {
-  //   videoId,
-  //   webhookUrl: getWebhookURL(videoId),
-  //   rcloneSourceUri: `wasabi:cdn.bken.io/${key}`,
-  //   rcloneDestinationUri: `wasabi:cdn.bken.io/v/${videoId}`,
-  // }, {
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //   },
-  // });
-  // res.status(200).end();
+  await axios.post(`${getTidalURL()}/jobs/thumbnail`, {
+    videoId,
+    webhookUrl: getWebhookURL(videoId),
+    rcloneSourceUri: `wasabi:cdn.bken.io/${key}`,
+    rcloneDestinationUri: `wasabi:cdn.bken.io/v/${videoId}/thumb.webp`,
+  }, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  res.status(200).end();
 }
 
 export default async function handler(req, res) {
