@@ -1,5 +1,4 @@
 import moment from 'moment';
-// import dashjs from 'dashjs';
 import { Box, Flex, Progress , Text, Spacer, Modal,
   ModalOverlay,
   ModalContent,
