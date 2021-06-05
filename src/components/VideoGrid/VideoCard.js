@@ -1,6 +1,3 @@
-
-
-import moment from 'moment';
 import { Box, Flex , Text, Spacer, } from '@chakra-ui/react';
 import { useRouter, } from 'next/router';
 import videoDuration from '../../utils/videoDuration';
