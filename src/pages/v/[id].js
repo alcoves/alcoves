@@ -17,8 +17,16 @@ let player;
 
 export default function Video({ url, video: v }) {
   const vRef = useRef(null);
-  // const router = useRouter();
+  const router = useRouter();
   const { data } = useSWR(url, fetcher, { initialData: v });
+
+  function onLoadedMetadata() {
+    console.log('onLoadedMetadata');
+    if (router?.query?.t) {
+      console.log('seeking to', router.query.t);
+      player.seek(30);
+    }
+  }
 
   useEffect(() => {
     axios.post(`/api/videos/${v.videoId}/views`).catch((err) =>{
@@ -28,13 +36,9 @@ export default function Video({ url, video: v }) {
 
   useEffect(() => {
     if (data.mpdLink) {
+      console.log('loaded dash player'); 
       player = dashjs.MediaPlayer().create();
-      player.initialize(document.getElementById('bkenVideoPlayer'), data.mpdLink, true);;
-
-      // if (router?.query?.t) {
-      //   console.log('seeking to', router.query.t);
-      //   player.seek(router.query.t);
-      // }
+      player.initialize(document.getElementById('bkenVideoPlayer'), data.mpdLink, true);
     }
   }, [data]);
   
@@ -55,10 +59,11 @@ export default function Video({ url, video: v }) {
         </Head>
         <Layout>
           <Box>
-            {/* <VideoPlayer url={data.hlsMasterLink} /> */}
+            {/* <VideoPlayer url={data.mpdLink} /> */}
             <video
               autoPlay
               controls
+              onLoadedMetadata={onLoadedMetadata}
               ref={vRef}
               id='bkenVideoPlayer'
               style={{

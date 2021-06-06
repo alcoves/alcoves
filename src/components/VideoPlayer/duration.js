@@ -1,3 +1,4 @@
+import { Text, } from '@chakra-ui/layout';
 import React, { useEffect, useState, } from 'react';
 import videoDuration from '../../utils/videoDuration';
 
@@ -16,9 +17,9 @@ function Duration({ vRef }) {
   }, [vRef]);
 
   return (
-    <p className='select-none text-gray-200 text-sm font-bold ml-4 '>
+    <Text ml='4' select='none' color='lightgrey' fontSize='.8rem' fontWeight='800'>
       {time}
-    </p>
+    </Text>
   );
 }
 

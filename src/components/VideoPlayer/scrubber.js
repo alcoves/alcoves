@@ -1,4 +1,5 @@
 import React, { useEffect, useState, } from 'react';
+import { Slider, SliderFilledTrack, SliderThumb, SliderTrack, } from '@chakra-ui/slider';
 
 function Duration({ vRef = {} }) {
   const [progress, setProgress ] = useState(0);
@@ -29,17 +30,20 @@ function Duration({ vRef = {} }) {
   }, [vRef]);
 
   return (
-    <input
-      min={0}
-      type='range'
-      value={progress}
-      className='outline-none'
+    <Slider 
+      onChange={(val) => {
+        setProgress(val);
+        vRef.current.currentTime = val;
+      }} 
       max={vRef.current.duration || 0}
-      onChange={({ target }) => {
-        setProgress(target.value);
-        vRef.current.currentTime = target.value;
-      }}
-    />
+      w='100%' color='white' lf='10px' aria-label='volume-slider'
+      value={progress}
+    >
+      <SliderTrack>
+        <SliderFilledTrack />
+      </SliderTrack>
+      <SliderThumb />
+    </Slider>
   );
 }
 
