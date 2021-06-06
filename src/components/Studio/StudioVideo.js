@@ -36,7 +36,7 @@ function VideoPlayer({ link }) {
   }, []);
 
   return (
-    <video height='100%' id='videoPlayer' autoPlay preload='none' controls/>
+    <video id='videoPlayer' autoPlay controls preload='none'/>
   );
 }
 
@@ -116,7 +116,7 @@ export default function StudioVideo({ v }) {
       </Box>
       <Modal size='4xl' isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent backgroundColor='black' maxH='600px'>
+        <ModalContent backgroundColor='black'>
           <ModalCloseButton />
           <VideoPlayer link={v.mpdLink}/>
         </ModalContent>

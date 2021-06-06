@@ -1,6 +1,7 @@
+import { Slider, SliderFilledTrack, SliderThumb, SliderTrack, } from '@chakra-ui/slider';
 import React, { useEffect, useState, } from 'react';
 
-function VolumeButton({ vRef }) {
+function VolumeSlider({ vRef }) {
   const [volume, setVolume] = useState(vRef.current.volume * 100);
 
   useEffect(() => {
@@ -10,21 +11,22 @@ function VolumeButton({ vRef }) {
     return () => video.removeEventListener('volumechange', handleVolume);
   }, [vRef]);
 
-  function handleChange({ target }) {
-    const newVolume =  target.value / 100;
+  function handleChange(val) {
+    const newVolume =  val / 100;
     vRef.current.volume = newVolume;
-    // localStorage.setItem('bken_video_volume', newVolume);
   }
 
   return (
-    <input
-      type='range'
-      className='outline-none'
+    <Slider onChange={handleChange} 
+      w='60px' color='white' lf='10px' aria-label='volume-slider'
       value={vRef.current.muted ? 0 : volume}
-      onChange={handleChange}
-      style={{ width: '60px', color: 'white', marginLeft: '10px' }}
-    />
+    >
+      <SliderTrack>
+        <SliderFilledTrack />
+      </SliderTrack>
+      <SliderThumb />
+    </Slider>
   );
 }
 
-export default VolumeButton;
+export default VolumeSlider;

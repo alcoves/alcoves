@@ -7,7 +7,7 @@ export default function EditVisibility({ id, visibility: v }) {
   const [visibility, setVisibility ] = useState(v);
   const [loading, setLoading] = useState(false);
 
-  async function handleChange(vis) {
+  async function handleChange() {
     try {
       setLoading(true);
       const toggledVis = visibility === 'public' ? 'unlisted' : 'public';
