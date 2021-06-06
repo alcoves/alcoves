@@ -36,7 +36,7 @@ function VideoPlayer({ link }) {
   }, []);
 
   return (
-    <video id='videoPlayer' autoPlay preload='none' controls/>
+    <video height='100%' id='videoPlayer' autoPlay preload='none' controls/>
   );
 }
 
@@ -105,7 +105,7 @@ export default function StudioVideo({ v }) {
               <MenuButton variant='outline' size='xs' as={Button}>
                 More
               </MenuButton>
-              <MenuList>
+              <MenuList minW='auto'>
                 <MenuItem>
                   <DeleteVideo id={v.videoId}/>
                 </MenuItem>
@@ -116,7 +116,7 @@ export default function StudioVideo({ v }) {
       </Box>
       <Modal size='4xl' isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent backgroundColor='black' maxH='600px'>
           <ModalCloseButton />
           <VideoPlayer link={v.mpdLink}/>
         </ModalContent>
