@@ -35,7 +35,6 @@ export default function EditTitle({ id, title: t }) {
       isDisabled={loading}
       placeholder='Enter a title'
       onChange={({ target }) => setTitle(target.value)}
-      className='bg-transparent text-gray-200 w-full p-1 block rounded-md'
     />
   );
 }

@@ -1,7 +1,8 @@
 import { useState, } from 'react';
 import { useRouter, } from 'next/router';
 import { signOut, useSession, } from 'next-auth/client';
-import { Button, Flex, Spacer, Box, Avatar, Img, Menu, MenuButton, MenuList, MenuItem, MenuDivider, } from '@chakra-ui/react';
+import { Flex, Spacer, Box, Avatar, Img, Menu, MenuButton, MenuList, MenuItem, MenuDivider, IconButton, } from '@chakra-ui/react';
+import { IoFilmOutline, } from 'react-icons/io5';
 import isAdmin from '../utils/isAdmin';
 
 export default function Navigation() {
@@ -24,7 +25,9 @@ export default function Navigation() {
       <Spacer />
       <Box p='1'>
         <Flex justify='center' align='center' h='100%'>
-          <Button me='10px' size='sm' onClick={() => router.push('/studio')}>Studio</Button>
+          <IconButton me='2' size='sm' onClick={() => router.push('/studio')}>
+            <IoFilmOutline />
+          </IconButton>
           {session && session.user ?
             <Menu>
               <MenuButton me='10px'>
