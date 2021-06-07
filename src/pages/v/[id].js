@@ -38,7 +38,25 @@ export default function Video({ url, video: v }) {
     if (data.mpdLink) {
       console.log('loaded dash player'); 
       player = dashjs.MediaPlayer().create();
-      player.initialize(document.getElementById('bkenVideoPlayer'), data.mpdLink, true);
+      const video = document.getElementById('bkenVideoPlayer');
+
+      // TODO :: Optimize DashJS player settings
+      // player.updateSettings({
+      //   streaming: {
+      //     abr: {
+      //       useDefaultABRRules: true,
+      //       ABRStrategy: 'abrThroughput',
+      //       additionalAbrRules: {
+      //         insufficientBufferRule: true,
+      //         switchHistoryRule: false,
+      //         droppedFramesRule: false,
+      //         abandonRequestsRule: false,
+      //       },
+      //     },
+      //   },
+      // });
+
+      player.initialize(video, data.mpdLink, true);
     }
   }, [data]);
   

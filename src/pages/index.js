@@ -1,6 +1,6 @@
 import React from 'react';
 import useSWR from 'swr';
-import { Box, CircularProgress, Heading, } from '@chakra-ui/react';
+import { Box, CircularProgress, Flex, Heading, Progress, } from '@chakra-ui/react';
 import Layout from '../components/Layout';
 import VideoGrid from '../components/VideoGrid/Index';
 
@@ -22,9 +22,7 @@ function index() {
 
   return (
     <Layout>
-      <div className='flex flex-row justify-center p-2'>
-        <CircularProgress isIndeterminate />
-      </div>
+      <Progress size='xs' isIndeterminate />
     </Layout>
   );
 }
