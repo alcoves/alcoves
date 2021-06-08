@@ -77,22 +77,20 @@ model VideoView {
 }
 
 model Video {
-  id                  Int       @id @default(autoincrement())
-  userId              Int       @map(name: "user_id")
-  videoId             String    @unique @default(cuid()) @map(name: "video_id")
-  status              String    @default("queued")
-  title               String    @default("new-upload")
-  duration            Decimal   @default(0.0) @db.Decimal
-  views               Int       @default(0)
-  visibility          String    @default("unlisted")
-  thumbnail           String?
-  mpdLink             String?   @map(name: "mpd_link")
-  hlsMasterLink       String?   @map(name: "hls_master_link")
-  sourceSegmentsCount Int?      @default(0) @map(name: "source_segments_count")
-  percentCompleted    Decimal?  @default(0.0) @map(name: "percent_completed") @db.Decimal
-  createdAt           DateTime  @default(now()) @map(name: "created_at") @db.Timestamptz(6)
-  updatedAt           DateTime  @default(now()) @map(name: "updated_at") @db.Timestamptz(6)
-  deletedAt           DateTime? @map(name: "deleted_at") @db.Timestamptz(6)
+  id               Int       @id @default(autoincrement())
+  userId           Int       @map(name: "user_id")
+  videoId          String    @unique @default(cuid()) @map(name: "video_id")
+  status           String    @default("queued")
+  title            String    @default("new-upload")
+  duration         Decimal   @default(0.0) @db.Decimal
+  views            Int       @default(0)
+  visibility       String    @default("unlisted")
+  thumbnail        String?
+  mpdLink          String?   @map(name: "mpd_link")
+  percentCompleted Decimal?  @default(0.0) @map(name: "percent_completed") @db.Decimal
+  createdAt        DateTime  @default(now()) @map(name: "created_at") @db.Timestamptz(6)
+  updatedAt        DateTime  @default(now()) @map(name: "updated_at") @db.Timestamptz(6)
+  deletedAt        DateTime? @map(name: "deleted_at") @db.Timestamptz(6)
 
   @@index([visibility], name: "visibility")
   @@index([videoId], name: "videosVideoId")
