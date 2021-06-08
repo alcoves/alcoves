@@ -40,21 +40,15 @@ export default function Video({ url, video: v }) {
       player = dashjs.MediaPlayer().create();
       const video = document.getElementById('bkenVideoPlayer');
 
-      // TODO :: Optimize DashJS player settings
-      // player.updateSettings({
-      //   streaming: {
-      //     abr: {
-      //       useDefaultABRRules: true,
-      //       ABRStrategy: 'abrThroughput',
-      //       additionalAbrRules: {
-      //         insufficientBufferRule: true,
-      //         switchHistoryRule: false,
-      //         droppedFramesRule: false,
-      //         abandonRequestsRule: false,
-      //       },
-      //     },
-      //   },
-      // });
+      player.updateSettings({
+        streaming: {
+          fastSwitchEnabled: true,
+          lowLatencyEnabled: true,
+          abr: {
+            ABRStrategy: 'abrDynamic',
+          },
+        },
+      });
 
       player.initialize(video, data.mpdLink, true);
     }

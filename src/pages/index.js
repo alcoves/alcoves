@@ -1,6 +1,6 @@
 import React from 'react';
 import useSWR from 'swr';
-import { Box, CircularProgress, Flex, Heading, Progress, } from '@chakra-ui/react';
+import { Box, Heading, Progress, } from '@chakra-ui/react';
 import Layout from '../components/Layout';
 import VideoGrid from '../components/VideoGrid/Index';
 
