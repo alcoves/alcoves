@@ -25,7 +25,7 @@ export default function Navigation() {
       <Spacer />
       <Box p='1'>
         <Flex justify='center' align='center' h='100%'>
-          <Button leftIcon={<IoFilmOutline />} me='2' size='sm' onClick={() => router.push('/studio')}>
+          <Button minW='auto' leftIcon={<IoFilmOutline />} me='2' size='sm' onClick={() => router.push('/studio')}>
             Studio
           </Button>
           {session && session.user ?
@@ -47,7 +47,7 @@ export default function Navigation() {
               </MenuList>
             </Menu>
             :
-            <Flex w='full' h='full' align='center'>
+            <Flex w='full' h='full' align='center' me='10px'>
               <Avatar
                 h='30px' w='30px'
                 cursor='pointer'
