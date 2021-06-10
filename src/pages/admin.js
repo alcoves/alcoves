@@ -23,21 +23,18 @@ async function reprocess({ currentTarget }) {
   const { id } = currentTarget;
   console.log('Reprocessing', id);
 
-  const res = await axios.post('https://bk-det1.bken.dev/tidal/jobs/transcode', {
+  await axios.post('https://bk-det1.bken.dev/tidal/jobs/transcode', {
     videoId: id,
     webhookUrl: `https://bken.io/api/videos/${id}`,
     rcloneDestinationUri: `wasabi:cdn.bken.io/v/${id}/mpd`,
     rcloneSourceUri: `wasabi:cdn.bken.io/v/${id}/${id}.mp4`,
   });
-
-  const res2 = await axios.post('https://bk-det1.bken.dev/tidal/jobs/thumbnail', {
+  await axios.post('https://bk-det1.bken.dev/tidal/jobs/thumbnail', {
     videoId: id,
     webhookUrl: `https://bken.io/api/videos/${id}`,
     rcloneDestinationUri: `wasabi:cdn.bken.io/v/${id}/thumb.webp`,
     rcloneSourceUri: `wasabi:cdn.bken.io/v/${id}/${id}.mp4`,
   });
-
-  console.log('reprocesing res', res);
 }
 
 export default function Admin() {
