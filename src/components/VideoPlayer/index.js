@@ -28,8 +28,6 @@ function VideoPlayer({ url }) {
 
     player.updateSettings({
       streaming: {
-        fastSwitchEnabled: true,
-        lowLatencyEnabled: true,
         abr: {
           ABRStrategy: 'abrDynamic',
           autoSwitchBitrate: { video: true, audio: true },

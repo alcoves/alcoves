@@ -4,7 +4,7 @@ import { IoSettingsOutline, } from 'react-icons/io5';
 function QualitySelector({ player }) {
   const videoLevels = player.getBitrateInfoListFor && player.getBitrateInfoListFor('video') || [];
   const currentLevel = player.getQualityFor && player.getQualityFor('video');
-  // const currentSettings = player.getSettings && player.getSettings();
+  const currentSettings = player.getSettings && player.getSettings();
   console.log('Current level: ', videoLevels[currentLevel]);
 
   return (
@@ -33,9 +33,7 @@ function QualitySelector({ player }) {
             {currentLevel === l.qualityIndex ? <b>{`${l.height}p`}</b> : <p>{`${l.height}p`}</p> }
           </MenuItem>
         ))}
-        {/*
-          // Auto play doesn't seem to switch back 
-          <MenuItem
+        <MenuItem
           key='auto' value='Auto' py='4'
           onClick={() => {
             player.updateSettings({
@@ -49,7 +47,7 @@ function QualitySelector({ player }) {
           }}
         >
           {currentSettings?.streaming?.abr?.autoSwitchBitrate?.video ? <b>Auto</b> : <p>Auto</p>}
-        </MenuItem> */}
+        </MenuItem>
       </MenuList>
     </Menu>
   );
