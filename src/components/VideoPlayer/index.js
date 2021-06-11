@@ -8,7 +8,7 @@ import Duration from './duration';
 import PlayButton from './playButton';
 import VolumeSlider from './volumeSlider';
 import VolumeButton from './volumeButton';
-// import QualitySelector from './qualitySelector';
+import QualitySelector from './qualitySelector';
 import FullScreenButton from './fullScreenButton';
 import PictureInPictureButton from './pictureInPictureButton';
 
@@ -25,6 +25,17 @@ function VideoPlayer({ url }) {
   useEffect(() => {
     const video = document.getElementById('bkenVideoPlayer');
     player = dashjs.MediaPlayer().create();
+
+    player.updateSettings({
+      streaming: {
+        fastSwitchEnabled: true,
+        lowLatencyEnabled: true,
+        abr: {
+          ABRStrategy: 'abrDynamic',
+          autoSwitchBitrate: { video: true, audio: true },
+        },
+      },
+    });
     player.initialize(video, url, true);
 
     const orientationchange = window.addEventListener('orientationchange', (event) => {
@@ -107,8 +118,8 @@ function VideoPlayer({ url }) {
         onPlaying={() => { setBuffering(false); }}
         style={{ top: 0, left: 0, width: '100%', height: '100%', background: 'black' }}
       />
- 
-      {player && vRef && vRef.current && (
+
+      {player?.isReady() && vRef?.current && (
         <Flex
           top='0' left='0' w='100%' h='100%'
           overflow='none' position='absolute' alignItems='center'
@@ -117,14 +128,10 @@ function VideoPlayer({ url }) {
           opacity={`${controlsVisible ? 1 : 0}`}
           background='linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.30) 90%, rgba(0,0,0,0.60) 100%)'
         >
-          {buffering && (
-            <Flex
-            >
-              <CircularProgress isIndeterminate />
-            </Flex>
-          )}
-
-          <Box h='100%' w='100%' />
+          
+          <Flex pt='10' w='100%' h='100%' onClick={() => togglePlay()}>
+            {buffering &&<CircularProgress isIndeterminate />}
+          </Flex>
           <Flex w='100%' px='2' h='6' justifyContent='space-between'>
             <Scrubber vRef={vRef} />
           </Flex>
@@ -136,7 +143,7 @@ function VideoPlayer({ url }) {
               <Duration vRef={vRef} />
             </Flex>
             <Flex alignItems='center'>
-              {/* <QualitySelector hls={hls} /> */}
+              <QualitySelector player={player} />
               <Flex alignItems='center'>
                 <PictureInPictureButton vRef={vRef} />
                 <FullScreenButton vRef={vRef} />

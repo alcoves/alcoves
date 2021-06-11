@@ -20,7 +20,7 @@ function VolumeButton({ vRef }) {
     if (!volume || vRef.current.muted) {
       return (
         <IoVolumeMuteOutline
-          size='1.3rem'
+          size='20px'
           stroke='white'
           cursor='pointer'
           onClick={handleClick}
@@ -31,7 +31,7 @@ function VolumeButton({ vRef }) {
     if (volume < .30) {
       return (
         <IoVolumeLowOutline
-          size='1.3rem'
+          size='20px'
           stroke='white'
           cursor='pointer'
           onClick={handleClick}
@@ -42,7 +42,7 @@ function VolumeButton({ vRef }) {
     if (volume < .60) {
       return (
         <IoVolumeMediumOutline
-          size='1.3rem'
+          size='20px'
           stroke='white'
           cursor='pointer'
           onClick={handleClick}
@@ -52,7 +52,7 @@ function VolumeButton({ vRef }) {
 
     return (
       <IoVolumeHighOutline
-        size='1.3rem'
+        size='20px'
         stroke='white'
         cursor='pointer'
         onClick={handleClick}
