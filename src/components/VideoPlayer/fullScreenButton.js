@@ -7,9 +7,10 @@ const browser = detect();
 
 function FullScreenButton({ vRef }) {
   switch (browser && browser.name) {
-  case 'firefox':
-    return <div />;
-  default:
+  case 'edge':
+  case 'opera':
+  case 'safari':
+  case 'chrome':
     return (
       <Box>
         <IoExpand
@@ -20,6 +21,8 @@ function FullScreenButton({ vRef }) {
         />
       </Box>
     );
+  default:
+    return <div />;
   }
 }
 
