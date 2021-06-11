@@ -14,13 +14,14 @@ import {
 import { useEffect, useState, } from 'react';
 import videoDuration from '../utils/videoDuration';
 
-export default function ShareModal({ link, vRef }) {
+export default function ShareModal({ link }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [shareLink, setShareLink] = useState(link);
   const [currentTime, setCurrentTime] = useState(0);
 
   useEffect(() => {
-    setCurrentTime(vRef?.current?.currentTime);
+    const video = document.getElementById('bkenVideoPlayer');
+    setCurrentTime(video?.currentTime);
     return function cleanup() {
       setShareLink(link);
     };

@@ -6,7 +6,7 @@ function PictureInPictureButton({ vRef }) {
   return (
     <Box mx='2'>
       <IoOpenOutline
-        size='1.3rem'  
+        size='20px'  
         stroke='white'
         cursor='pointer'
         onClick={() => { vRef.current.requestPictureInPicture(); }}

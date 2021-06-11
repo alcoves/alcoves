@@ -2,11 +2,10 @@ import Head from 'next/head';
 import moment from 'moment';
 import useSWR from 'swr';
 import { CircularProgress, Flex, Box, Text, Heading,  } from '@chakra-ui/react';
-import { useEffect, useRef, } from 'react';
+import { useEffect, } from 'react';
 import axios from 'axios';
-import { useRouter, } from 'next/router';
 import Layout from '../../components/Layout';
-// import VideoPlayer from '../../components/VideoPlayer/index';
+import VideoPlayer from '../../components/VideoPlayer/index';
 import abbreviateNumber from '../../utils/abbreviateNumber';
 import VideoPageUserCard from '../../components/VideoPageUserCard';
 import ShareModal from '../../components/ShareModal';
@@ -16,43 +15,13 @@ const fetcher = (url) => fetch(url).then((res) => res.json());
 let player;
 
 export default function Video({ url, video: v }) {
-  const vRef = useRef(null);
-  const router = useRouter();
   const { data } = useSWR(url, fetcher, { initialData: v });
-
-  function onLoadedMetadata() {
-    console.log('onLoadedMetadata');
-    if (router?.query?.t) {
-      console.log('seeking to', router.query.t);
-      player.seek(30);
-    }
-  }
 
   useEffect(() => {
     axios.post(`/api/videos/${v.videoId}/views`).catch((err) =>{
       console.error('error counting video view', err);
     });
   }, []);
-
-  useEffect(() => {
-    if (data.mpdLink) {
-      console.log('loaded dash player'); 
-      player = dashjs.MediaPlayer().create();
-      const video = document.getElementById('bkenVideoPlayer');
-
-      player.updateSettings({
-        streaming: {
-          fastSwitchEnabled: true,
-          lowLatencyEnabled: true,
-          abr: {
-            ABRStrategy: 'abrDynamic',
-          },
-        },
-      });
-
-      player.initialize(video, data.mpdLink, true);
-    }
-  }, [data]);
   
   if (data?.status === 'completed') {
     const subHeader = `${
@@ -71,27 +40,13 @@ export default function Video({ url, video: v }) {
         </Head>
         <Layout>
           <Box>
-            {/* <VideoPlayer url={data.mpdLink} /> */}
-            <video
-              autoPlay
-              controls
-              onLoadedMetadata={onLoadedMetadata}
-              ref={vRef}
-              id='bkenVideoPlayer'
-              style={{
-                background: 'black',
-                minHeight: '280px',
-                height: 'calc(100vh - 300px)',
-                maxHeight: 'calc((9 / 16) * 100vw)',
-                minWidth:'100%',
-              }}
-            />
+            <VideoPlayer player={player} url={data.mpdLink} />
             <Flex w='100%' justifyContent='center'>
               <Box p='4' w='1024px'>
                 <Heading as='h3' size='lg'>{data.title}</Heading>
                 <Flex justifyContent='space-between'>
                   <Text fontSize='sm'>{subHeader}</Text>
-                  <ShareModal vRef={vRef} link={`https://bken.io/v/${data.videoId}`}/>
+                  <ShareModal link={`https://bken.io/v/${data.videoId}`}/>
                 </Flex>
                 <VideoPageUserCard id={data.userId} />
               </Box>

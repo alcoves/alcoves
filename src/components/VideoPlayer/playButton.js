@@ -26,12 +26,12 @@ function PlayButton({ vRef }) {
   return (
     <Box mr='2'>
       {paused ? <IoPlayOutline
-        size='1.3rem'
+        size='20px'
         stroke='white'
         cursor='pointer'
         onClick={handleClick}
       /> : <IoPauseOutline
-        size='1.3rem'
+        size='20px'
         stroke='white'
         cursor='pointer'
         onClick={handleClick}
