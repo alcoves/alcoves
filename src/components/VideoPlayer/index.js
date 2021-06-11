@@ -20,7 +20,7 @@ function VideoPlayer({ url }) {
   const [rotation, setRotation] = useState(0);
   const [loaded, setLoaded] = useState(false);
   const [buffering, setBuffering] = useState(true);
-  const [controlsVisible, setControlsVisible] = useState(false);
+  const [controlsVisible, setControlsVisible] = useState(true);
 
   useEffect(() => {
     const video = document.getElementById('bkenVideoPlayer');
@@ -62,6 +62,12 @@ function VideoPlayer({ url }) {
     };
   });
 
+  useEffect(() => {
+    if (buffering) {
+      setControlsVisible(true);
+    }
+  }, [buffering]);
+
   function onLoadedMetadata() {
     if (!loaded) {
       const { t } = qs.parse(window.location.search);
@@ -87,7 +93,7 @@ function VideoPlayer({ url }) {
 
     idleTimer = setTimeout(() => {
       if (!vRef?.current?.paused) {
-        setControlsVisible(false);
+        setControlsVisible(buffering);
       }
     }, 2000);
   }
@@ -96,8 +102,8 @@ function VideoPlayer({ url }) {
     <Box
       onMouseMove={controlHover}
       onTouchStart={controlHover}
-      onMouseEnter={() => setControlsVisible(true)}
-      onMouseLeave={() => setControlsVisible(false)}
+      onMouseEnter={() => setControlsVisible(!buffering)}
+      onMouseLeave={() => setControlsVisible(buffering)}
       m='0px' minW='100%' lineHeight='0px' minH='280px'
       pos='relative' backgroundColor='rgba(0,0,0,.3)'
       cursor={`${controlsVisible ? 'auto' : 'none'}`}
@@ -126,9 +132,10 @@ function VideoPlayer({ url }) {
           opacity={`${controlsVisible ? 1 : 0}`}
           background='linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.30) 90%, rgba(0,0,0,0.60) 100%)'
         >
-          
-          <Flex pt='10' w='100%' h='100%' onClick={() => togglePlay()}>
-            {buffering &&<CircularProgress isIndeterminate />}
+          <Flex w='100%' h='100%' justify='center' align='center' onClick={() => togglePlay()}>
+            <Box w='30px' h='30px'>
+              {buffering && <CircularProgress isIndeterminate />}
+            </Box>
           </Flex>
           <Flex w='100%' px='2' h='6' justifyContent='space-between'>
             <Scrubber vRef={vRef} />
