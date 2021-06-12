@@ -72,7 +72,7 @@ export default function Video({ url, video: v }) {
 }
 
 export async function getServerSideProps({ params }) {
-  const url = `/api/videos/${params.id}`;
+  const url = `http://localhost:3000/api/videos/${params.id}`;
   const video = await fetcher(url);
   return { props: { video, url, id: params.id } };
 }
