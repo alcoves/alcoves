@@ -36,8 +36,14 @@ export default function Video({ url, video: v }) {
           <title>{data.title}</title>
           <meta property='og:title' content={data.title} />
           <meta property='og:image' content={data.thumbnail} />
+          <meta property='og:url' content={`https://bken.io/v/${data.id}`} />
+          <meta property='og:site_name' content='bken.io'/>
           <meta property='og:image:width' content='854' />
+          <meta property='og:type' content='video.other' />
           <meta property='og:image:height' content='480' />
+          <meta property='og:video:type' content='video/mp4'/>
+          <meta property='og:video:width' content='1280'/>
+          <meta property='og:video:height' content='720'/>
           <meta property='og:image:type' content='image/webp' />
           <meta property='og:description' content={data.title} />
         </Head>
