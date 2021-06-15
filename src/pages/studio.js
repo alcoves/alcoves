@@ -9,18 +9,10 @@ const fetcher = (url) => fetch(url).then((res) => res.json());
 
 export default function studio() {
   const [ session, sessionLoading ] = useSession();
-  const { data: videos, loading } = useSWR(session ?
+  const { data: videos } = useSWR(session ?
     `/api/users/${session.id}/videos` :
     null, fetcher, { refreshInterval: 1000 }
   );
-
-  if (sessionLoading || loading) {
-    return (
-      <Layout>
-        <Progress size='xs' isIndeterminate />
-      </Layout>
-    );
-  }
   
   if (!sessionLoading && !session) {
     return (
@@ -38,7 +30,7 @@ export default function studio() {
     <Layout>
       <Box p='4'>
         <Box pb='4'><Uploader/></Box>
-        {videos?.length && <StudioVideoGrid videos={videos}/>}
+        <StudioVideoGrid videos={videos}/>
       </Box>
     </Layout>
   );
