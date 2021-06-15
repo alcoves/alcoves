@@ -28,6 +28,7 @@ function VideoPlayer({ url }) {
 
     player.updateSettings({
       streaming: {
+        fastSwitchEnabled: true,
         abr: {
           ABRStrategy: 'abrDynamic',
           autoSwitchBitrate: { video: true, audio: true },
