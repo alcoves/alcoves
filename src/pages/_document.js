@@ -10,6 +10,7 @@ export default class MyDocument extends Document {
         <Head>
           <link rel='shortcut icon' href='./favicon.ico' />
           <link rel='preconnect' href='https://fonts.gstatic.com' />
+          <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'/>
           <link href='https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800&display=swap' rel='stylesheet' />
           <meta name='version' content='%REACT_APP_GIT_SHA%' />
         </Head>
