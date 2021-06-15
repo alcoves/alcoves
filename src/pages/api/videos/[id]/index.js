@@ -82,8 +82,8 @@ async function patchVideo(req, res) {
   const update = permittedKeys.reduce((acc, cv) => {
     if (reqKeys.includes(cv)) {
       // This is where tidal webhooks land
-      // Links from tidal are in the rclone format
-      if (cv === 'mpdLink') {
+      // wasabi:cdn.bken.io/path are transformmed into https://cdn.bken.io/path
+      if (cv === 'mpdLink' || cv === 'thumbnail') {
         if (req.body[cv]) {
           acc[cv] = `https://${req.body[cv].split(':')[1]}`; // wasabi:cdn.bken.io/path
         }
