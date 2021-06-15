@@ -9,7 +9,7 @@ export default function Account() {
   return (
     <Layout>
       <Flex justify='center' pt='5' direction='row'>
-        <Flex direction='column' rounded='lg' w='400px' p='5'>
+        <Flex direction='column' rounded='lg' p='5'>
           <Flex direction='row' justify='center' w='100%' h='75px'>
             <SkeletonCircle w='60px' h='60px' isLoaded={Boolean(!loading && session?.user?.image)}>
               <Avatar
