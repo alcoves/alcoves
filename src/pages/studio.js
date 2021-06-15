@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 import { useSession, } from 'next-auth/client';
-import { Box, Progress, Container, Heading, } from '@chakra-ui/react';
+import { Box, Container, Heading, } from '@chakra-ui/react';
 import Layout from '../components/Layout';
 import Uploader from '../components/Uploader';
 import StudioVideoGrid from '../components/Studio/StudioVideoGrid';
