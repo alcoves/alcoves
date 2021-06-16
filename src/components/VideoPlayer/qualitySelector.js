@@ -5,7 +5,6 @@ function QualitySelector({ player }) {
   const videoLevels = player.getBitrateInfoListFor && player.getBitrateInfoListFor('video') || [];
   const currentLevel = player.getQualityFor && player.getQualityFor('video');
   const currentSettings = player.getSettings && player.getSettings();
-  console.log('Current level: ', videoLevels[currentLevel]);
 
   return (
     <Menu placement='top'>

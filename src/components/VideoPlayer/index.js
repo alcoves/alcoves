@@ -28,13 +28,27 @@ function VideoPlayer({ url }) {
 
     player.updateSettings({
       streaming: {
-        fastSwitchEnabled: true,
+        liveDelay: 2,
+        liveCatchup: {
+          minDrift: 0.05,
+          playbackRate: 0.3,
+          playbackBufferMin: 0.5,    
+        },
+        fastSwitchEnabled: false,
+        lowLatencyEnabled: true,
         abr: {
           ABRStrategy: 'abrDynamic',
           autoSwitchBitrate: { video: true, audio: true },
         },
       },
     });
+
+    player.on(dashjs.MediaPlayer.events.PLAYBACK_NOT_ALLOWED, () => {
+      console.log('Playback did not start due to auto play restrictions. Muting audio and reloading');
+      video.muted = true;
+      player.initialize(video, url, true);
+    });
+
     player.initialize(video, url, true);
 
     const orientationchange = window.addEventListener('orientationchange', (event) => {
@@ -112,8 +126,6 @@ function VideoPlayer({ url }) {
       maxHeight={`${rotation === 0 ? 'calc((9 /  16) * 100vw)' : 'calc(100vh - 48px)'}`}
     >
       <video
-        muted
-        autoPlay
         ref={vRef}
         id='bkenVideoPlayer'
         disableRemotePlayback
@@ -139,14 +151,14 @@ function VideoPlayer({ url }) {
             </Box>
           </Flex>
           <Flex w='100%' px='2' h='6' justifyContent='space-between'>
-            <Scrubber vRef={vRef} />
+            {Number.isFinite(vRef?.current?.duration) && <Scrubber vRef={vRef} />}
           </Flex>
           <Flex w='100%' px='2' h='6' mb='2' justifyContent='space-between' alignContent='end'>
             <Flex alignItems='center'>
               <PlayButton vRef={vRef} />
               <VolumeButton vRef={vRef} />
               <VolumeSlider vRef={vRef} />
-              <Duration vRef={vRef} />
+              <Duration player={player} vRef={vRef} />
             </Flex>
             <Flex alignItems='center'>
               <QualitySelector player={player} />
