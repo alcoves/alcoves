@@ -2,12 +2,10 @@ import { Flex, Text, } from '@chakra-ui/react';
 import Layout from '../../components/Layout';
 import VideoPlayer from '../../components/VideoPlayer/index';
 
-let player;
-
 export default function LiveVideo({ url, id }) {
   return (
     <Layout>
-      <VideoPlayer player={player} url={url} />
+      <VideoPlayer id='bkenLivePlayer' url={url} mode='live'/>
       <Flex direction='column'>
         <Text>Stream ID: {id}</Text>
         <Text>Stream URL: {url}</Text>

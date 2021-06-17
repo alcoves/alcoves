@@ -12,45 +12,46 @@ import QualitySelector from './qualitySelector';
 import FullScreenButton from './fullScreenButton';
 import PictureInPictureButton from './pictureInPictureButton';
 
-let player;
 let idleTimer;
 
-function VideoPlayer({ url }) {
+const defaultOpts = {
+  vod: {
+    streaming: {
+      fastSwitchEnabled: true,
+      abr: {
+        ABRStrategy: 'abrDynamic',
+        autoSwitchBitrate: { video: true, audio: true },
+      },
+    },
+  },
+  live: {
+    streaming: {
+      liveDelay: 2,
+      liveCatchup: {
+        minDrift: 0.05,
+        playbackRate: 0.3,
+        playbackBufferMin: 0.5,    
+      },
+      fastSwitchEnabled: true,
+      lowLatencyEnabled: true,
+      abr: {
+        ABRStrategy: 'abrDynamic',
+        autoSwitchBitrate: { video: true, audio: true },
+      },
+    },
+  },
+};
+
+function VideoPlayer({ url, id = 'bkenVideoPlayer', mode = 'vod' }) {
   const vRef = useRef(null);
+  const [player, setPlayer] = useState(null);
   const [rotation, setRotation] = useState(0);
-  const [loaded, setLoaded] = useState(false);
   const [buffering, setBuffering] = useState(true);
   const [controlsVisible, setControlsVisible] = useState(true);
 
   useEffect(() => {
-    const video = document.getElementById('bkenVideoPlayer');
-    player = dashjs.MediaPlayer().create();
-
-    player.updateSettings({
-      streaming: {
-        liveDelay: 2,
-        liveCatchup: {
-          minDrift: 0.05,
-          playbackRate: 0.3,
-          playbackBufferMin: 0.5,    
-        },
-        fastSwitchEnabled: false,
-        lowLatencyEnabled: true,
-        abr: {
-          ABRStrategy: 'abrDynamic',
-          autoSwitchBitrate: { video: true, audio: true },
-        },
-      },
-    });
-
-    player.on(dashjs.MediaPlayer.events.PLAYBACK_NOT_ALLOWED, () => {
-      console.log('Playback did not start due to auto play restrictions. Muting audio and reloading');
-      video.muted = true;
-      player.initialize(video, url, true);
-    });
-
-    player.initialize(video, url, true);
-
+    setPlayer(dashjs.MediaPlayer().create());
+    console.log('here', url);
     const orientationchange = window.addEventListener('orientationchange', (event) => {
       setRotation(event.target.screen.orientation.angle);
       console.log(`the orientation of the device is now ${event.target.screen.orientation.angle}`);
@@ -59,6 +60,21 @@ function VideoPlayer({ url }) {
       window.removeEventListener('orientationchange', orientationchange);
     };
   }, []);
+
+  useEffect(() => {
+    if (player) {
+      const video = document.getElementById(id);
+      player.updateSettings(defaultOpts[mode]);
+  
+      player.on(dashjs.MediaPlayer.events.PLAYBACK_NOT_ALLOWED, () => {
+        console.log('Playback did not start due to auto play restrictions. Muting audio and reloading');
+        video.muted = true;
+        player.initialize(video, url, true);
+      });
+  
+      player.initialize(video, url, true);
+    }
+  }, [player]);
 
   function togglePlay() {
     if (vRef && vRef.current) {
@@ -72,9 +88,7 @@ function VideoPlayer({ url }) {
       if (e.code === 'Space') togglePlay();
     }
     window.addEventListener('keydown', onKeydown);
-    return () => {
-      window.removeEventListener('keydown', onKeydown);
-    };
+    return () => window.removeEventListener('keydown', onKeydown);
   });
 
   useEffect(() => {
@@ -82,25 +96,6 @@ function VideoPlayer({ url }) {
       setControlsVisible(true);
     }
   }, [buffering]);
-
-  function onLoadedMetadata() {
-    if (!loaded) {
-      const { t } = qs.parse(window.location.search);
-      if (t) vRef.current.currentTime = Number(t);
-      const startPlayPromise = vRef.current.play();
-
-      if (startPlayPromise !== undefined) {
-        startPlayPromise.then(() => {
-          console.info('video started playing without error');
-          vRef.current.volume = 1; // TODO :: Set last know volume
-          vRef.current.muted = false;
-          setLoaded(true);
-        }).catch(error => {
-          console.error(error.name);
-        });
-      }      
-    }
-  }
 
   function controlHover() {
     clearTimeout(idleTimer);
@@ -126,10 +121,17 @@ function VideoPlayer({ url }) {
       maxHeight={`${rotation === 0 ? 'calc((9 /  16) * 100vw)' : 'calc(100vh - 48px)'}`}
     >
       <video
+        muted
+        autoPlay
+        id={id}
         ref={vRef}
-        id='bkenVideoPlayer'
         disableRemotePlayback
-        onLoadedMetadata={onLoadedMetadata}
+        onLoadedMetadata={() => {
+          if (player.isReady()) {
+            const { t } = qs.parse(window.location.search);
+            if (t) vRef.current.currentTime = Number(t);
+          }
+        }}
         onStalled={() => { setBuffering(true); }}
         onWaiting={() => { setBuffering(true); }}
         onPlaying={() => { setBuffering(false); }}
