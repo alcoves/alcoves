@@ -14,6 +14,7 @@ export default class MyDocument extends Document {
           <meta name='version' content='%REACT_APP_GIT_SHA%' />
         </Head>
         <body>
+          <script src='https://cdn.jsdelivr.net/npm/hls.js@latest'/>
           <script src='https://cdn.dashjs.org/latest/dash.all.min.js'/>
           <ColorModeScript initialColorMode={theme.config.initialColorMode} />
           <Main />

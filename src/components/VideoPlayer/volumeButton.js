@@ -16,9 +16,10 @@ function VolumeButton({ vRef }) {
     if (vRef.current.volume) {
       vRef.current.volume = 0;
       vRef.current.muted = true;
+    } else {
+      vRef.current.volume = .5;
+      vRef.current.muted = false;
     }
-    vRef.current.volume = .5;
-    vRef.current.muted = false;
   }
 
   function renderVolumeIcon() {
