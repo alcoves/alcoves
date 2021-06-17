@@ -1,9 +1,9 @@
-import { Slider, SliderFilledTrack, SliderThumb, SliderTrack, } from '@chakra-ui/slider';
+import { Slider, SliderFilledTrack, SliderThumb, SliderTrack, } from '@chakra-ui/react';
 import React, { useEffect, useState, } from 'react';
 
 function VolumeSlider({ vRef }) {
   const [volume, setVolume] = useState(vRef.current.volume * 100);
-
+ 
   useEffect(() => {
     const video = vRef.current;
     function handleVolume() { setVolume(video.volume * 100); }
@@ -13,6 +13,7 @@ function VolumeSlider({ vRef }) {
 
   function handleChange(val) {
     const newVolume =  val / 100;
+    if (newVolume > 0) vRef.current.muted = false;
     vRef.current.volume = newVolume;
   }
 
