@@ -26,10 +26,10 @@ const defaultOpts = {
   },
   live: {
     streaming: {
-      liveDelay: 2,
+      liveDelay: 3,
       liveCatchup: {
         minDrift: 0.05,
-        playbackRate: 0.3,
+        playbackRate: 0.5,
         playbackBufferMin: 0.5,    
       },
       fastSwitchEnabled: true,
