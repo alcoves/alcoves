@@ -30,13 +30,14 @@ const defaultOpts = {
       liveCatchup: {
         minDrift: 0.05,
         playbackRate: 0.5,
-        playbackBufferMin: 0.5,    
+        latencyThreshold: 30,
+        playbackBufferMin: 0.5,
       },
-      fastSwitchEnabled: true,
-      lowLatencyEnabled: true,
+      fastSwitchEnabled: false,
+      lowLatencyEnabled: false,
       abr: {
         ABRStrategy: 'abrDynamic',
-        autoSwitchBitrate: { video: true, audio: true },
+        autoSwitchBitrate: { video: false, audio: false },
       },
     },
   },
@@ -51,7 +52,6 @@ function VideoPlayer({ url, id = 'bkenVideoPlayer', mode = 'vod' }) {
 
   useEffect(() => {
     setPlayer(dashjs.MediaPlayer().create());
-    console.log('here', url);
     const orientationchange = window.addEventListener('orientationchange', (event) => {
       setRotation(event.target.screen.orientation.angle);
       console.log(`the orientation of the device is now ${event.target.screen.orientation.angle}`);
