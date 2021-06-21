@@ -26,19 +26,27 @@ const defaultOpts = {
   },
   live: {
     streaming: {
-      liveDelay: 3,
-      liveCatchup: {
-        minDrift: 0.05,
-        playbackRate: 0.5,
-        latencyThreshold: 30,
-        playbackBufferMin: 0.5,
-      },
-      fastSwitchEnabled: false,
-      lowLatencyEnabled: false,
-      abr: {
-        ABRStrategy: 'abrDynamic',
-        autoSwitchBitrate: { video: false, audio: false },
-      },
+      // delay: {
+      //   liveDelay: 5,
+      // },
+      liveDelayFragmentCount: 3,
+      // liveCatchup: {
+      //   enabled: false,
+      // },
+      // liveCatchup: {
+      //   enabled: false,
+      //   minDrift: 0.05,
+      //   playbackRate: 0.5,
+      //   latencyThreshold: 30,
+      //   playbackBufferMin: 0.5,
+      // },
+      // lowLatencyEnabled: true,
+      // jumpGaps: false,
+      // jumpLargeGaps: true,
+      // smallGapLimit: 3,
+      // abr: {
+      //   ABRStrategy: 'abrThroughput',
+      // },
     },
   },
 };
