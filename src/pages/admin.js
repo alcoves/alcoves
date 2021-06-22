@@ -26,8 +26,8 @@ async function reprocess({ currentTarget }) {
   await axios.post('https://bk-det1.bken.dev/tidal/jobs/transcode', {
     videoId: id,
     webhookUrl: `https://bken.io/api/videos/${id}`,
-    rcloneDestinationUri: `wasabi:cdn.bken.io/v/${id}/mpd`,
-    rcloneSourceUri: `wasabi:cdn.bken.io/v/${id}/${id}.mp4`,
+    rcloneDestinationUri: `wasabi:cdn.bken.io/v/${id}/pkg`,
+    rcloneSourceUri: `wasabi:cdn.bken.io/v/${id}/${id}.mp4`, // TODO :: Get this from db
   });
   await axios.post('https://bk-det1.bken.dev/tidal/jobs/thumbnail', {
     videoId: id,
