@@ -16,6 +16,7 @@ export default class MyDocument extends Document {
         <body>
           <script src='https://cdn.jsdelivr.net/npm/hls.js@latest'/>
           <script src='https://cdn.dashjs.org/latest/dash.all.min.js'/>
+          <script async src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js' />
           <ColorModeScript initialColorMode={theme.config.initialColorMode} />
           <Main />
           <NextScript />
