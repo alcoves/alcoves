@@ -36,7 +36,7 @@ async function createVideo(req, res) {
     videoId,
     webhookUrl: getWebhookURL(videoId),
     rcloneSourceUri: `wasabi:cdn.bken.io/${key}`,
-    rcloneDestinationUri: `wasabi:cdn.bken.io/v/${videoId}/mpd`,
+    rcloneDestinationUri: `wasabi:cdn.bken.io/v/${videoId}/pkg`,
   }, {
     headers: {
       'Content-Type': 'application/json',
