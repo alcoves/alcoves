@@ -8,6 +8,22 @@ export default class MyDocument extends Document {
     return(
       <Html>
         <Head>
+          <script
+            async
+            src='https://www.googletagmanager.com/gtag/js?id=G-ETPYPF2X0K'
+          />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-ETPYPF2X0K', {
+              page_path: window.location.pathname,
+            });
+          `,
+            }}
+          />
           <link rel='shortcut icon' href='./favicon.ico' />
           <link rel='preconnect' href='https://fonts.gstatic.com' />
           <link href='https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800&display=swap' rel='stylesheet' />
