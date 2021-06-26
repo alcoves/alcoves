@@ -4,6 +4,8 @@ job "reef" {
   type        = "service"
 
   group "services" {
+    count = 2
+    
     update {
       max_parallel     = 1
       canary           = 1
