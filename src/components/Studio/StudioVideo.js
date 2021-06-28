@@ -37,7 +37,10 @@ function VideoPlayer({ link }) {
   }, []);
 
   return (
-    <video id='videoPlayer' autoPlay controls preload='none'/>
+    <video
+      style={{ width: '100%', height: '100%', background: 'black' }}
+      id='videoPlayer' autoPlay controls preload='none'
+    />
   );
 }
 
@@ -118,7 +121,7 @@ export default function StudioVideo({ v }) {
         </Box>
         <Modal size='4xl' isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
-          <ModalContent backgroundColor='black'>
+          <ModalContent maxH='80vh' backgroundColor='black'>
             <ModalCloseButton />
             <VideoPlayer link={v.mpdLink}/>
           </ModalContent>
