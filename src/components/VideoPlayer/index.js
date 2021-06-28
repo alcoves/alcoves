@@ -62,11 +62,11 @@ function VideoPlayer({ url, id = 'bkenVideoPlayer', mode = 'vod' }) {
       const video = document.getElementById(id);
       player.updateSettings(defaultOpts[mode]);
   
-      player.on(dashjs.MediaPlayer.events.PLAYBACK_NOT_ALLOWED, () => {
-        console.log('Playback did not start due to auto play restrictions. Muting audio and reloading');
-        video.muted = true;
-        player.initialize(video, url, true);
-      });
+      // player.on(dashjs.MediaPlayer.events.PLAYBACK_NOT_ALLOWED, () => {
+      //   console.log('Playback did not start due to auto play restrictions. Muting audio and reloading');
+      //   video.muted = true;
+      //   player.initialize(video, url, true);
+      // });
   
       player.initialize(video, url, true);
     }
@@ -117,7 +117,6 @@ function VideoPlayer({ url, id = 'bkenVideoPlayer', mode = 'vod' }) {
       maxHeight={`${rotation === 0 ? 'calc((9 /  16) * 100vw)' : 'calc(100vh - 48px)'}`}
     >
       <video
-        muted
         autoPlay
         id={id}
         ref={vRef}
@@ -143,8 +142,8 @@ function VideoPlayer({ url, id = 'bkenVideoPlayer', mode = 'vod' }) {
           opacity={`${controlsVisible ? 1 : 0}`}
           background='linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.30) 90%, rgba(0,0,0,0.60) 100%)'
         >
-          <Flex w='100%' h='100%' justify='center' align='center' onClick={() => togglePlay()}>
-            <Box w='30px' h='30px'>
+          <Flex w='100%' h='100%' flexDirection='column' justify='center' align='center' onClick={() => togglePlay()}>
+            <Box>
               {buffering && <CircularProgress isIndeterminate />}
             </Box>
           </Flex>

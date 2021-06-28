@@ -2,7 +2,7 @@ import { Box, } from '@chakra-ui/react';
 import React, { useEffect, useState, } from 'react';
 import { IoPauseOutline, IoPlayOutline, } from 'react-icons/io5';
 
-function PlayButton({ vRef }) {
+function PlayButton({ vRef, size = '20px', disableOnClick = false }) {
   const [paused, setPaused] = useState(vRef.current.paused);
 
   useEffect(() => {
@@ -20,23 +20,20 @@ function PlayButton({ vRef }) {
   }, [vRef]);
 
   function handleClick() {
-    vRef.current.paused ? vRef.current.play() : vRef.current.pause();
+    if (!disableOnClick) {
+      vRef.current.paused ? vRef.current.play() : vRef.current.pause();
+    }
   }
 
+  const options = {
+    size,
+    stroke: 'white',
+    cursor: 'pointer',
+  };
+
   return (
-    <Box mr='2'>
-      {paused ? <IoPlayOutline
-        size='20px'
-        stroke='white'
-        cursor='pointer'
-        onClick={handleClick}
-      /> : <IoPauseOutline
-        size='20px'
-        stroke='white'
-        cursor='pointer'
-        onClick={handleClick}
-      />
-      }
+    <Box mr='2' onClick={handleClick}>
+      {paused ? <IoPlayOutline {...options} /> : <IoPauseOutline {...options}/>}
     </Box>
   );
 }
