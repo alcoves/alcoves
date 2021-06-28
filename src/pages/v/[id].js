@@ -12,8 +12,6 @@ import ShareModal from '../../components/ShareModal';
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
-let player;
-
 export default function Video({ url, video: v }) {
   const { data } = useSWR(url, fetcher, { initialData: v });
 
@@ -58,7 +56,7 @@ export default function Video({ url, video: v }) {
         </Head>
         <Layout>
           <Box>
-            <VideoPlayer player={player} url={data.mpdLink} />
+            <VideoPlayer url={data.mpdLink} />
             <Flex w='100%' justifyContent='center'>
               <Box p='4' w='1024px'>
                 <Heading as='h3' size='lg'>{data.title}</Heading>
