@@ -17,7 +17,7 @@
     "@chakra-ui/react": "^1.6.4",
     "@emotion/react": "^11.4.0",
     "@emotion/styled": "^11.3.0",
-    "@prisma/client": "^2.25.0",
+    "@prisma/client": "^2.26.0",
     "autoprefixer": "^10.2.6",
     "aws-sdk": "^2.936.0",
     "axios": "^0.21.1",
