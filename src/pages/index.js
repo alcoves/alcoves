@@ -32,7 +32,7 @@ function index({ url, videos }) {
 export async function getServerSideProps() {
   const url = 'http://localhost:3000/api/videos';
   const videos = await fetcher(url);
-  return { props: { videos, url: 'https://bken.io/api/videos' } };
+  return { props: { videos, url } };
 }
 
 export default index;
