@@ -36,3 +36,5 @@ jobs:
           sed -i "s+:latest+:${GITHUB_SHA}+g" job.hcl
           ./nomad job run -output job.hcl >> job.json
           curl --request POST --data @job.json "http://${NOMAD_ADDRESS}:4646/v1/jobs" -H "X-Nomad-Token: ${NOMAD_TOKEN}"
+      - name: Cleanup Repository
+        run: ./scripts/doco_registry_cleanup.sh
