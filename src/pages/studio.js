@@ -1,6 +1,7 @@
 import useSWR from 'swr';
 import { useSession, } from 'next-auth/client';
 import { Box, Container, Heading, } from '@chakra-ui/react';
+import { useRouter, } from 'next/router';
 import Layout from '../components/Layout';
 import Uploader from '../components/Uploader';
 import StudioVideoGrid from '../components/Studio/StudioVideoGrid';
@@ -8,22 +9,15 @@ import StudioVideoGrid from '../components/Studio/StudioVideoGrid';
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
 export default function studio() {
+  const router = useRouter();
   const [ session, sessionLoading ] = useSession();
   const { data: videos } = useSWR(session ?
     `/api/users/${session.id}/videos` :
-    null, fetcher, { refreshInterval: 1000 }
+    null, fetcher, { refreshInterval: 2000 }
   );
   
   if (!sessionLoading && !session) {
-    return (
-      <Layout>
-        <Container textAlign='center' pt='1rem'>
-          <Heading size='lg'>
-            You must be authenticated
-          </Heading>
-        </Container>
-      </Layout>
-    );
+    router.push('/login');
   }
 
   return (
