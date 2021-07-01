@@ -39,8 +39,8 @@ function Duration({ vRef = {} }) {
       w='100%' color='white' lf='10px' aria-label='volume-slider'
       value={progress}
     >
-      <SliderTrack>
-        <SliderFilledTrack />
+      <SliderTrack bg='gray.700'>
+        <SliderFilledTrack bg='gray.500' />
       </SliderTrack>
       <SliderThumb />
     </Slider>

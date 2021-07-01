@@ -7,7 +7,7 @@ function FullScreenButton({ vRef }) {
     <Box>
       <IoExpand
         size='20px'
-        stroke='white'
+        color='white'
         cursor='pointer'
         onClick={() => { vRef.current.requestFullscreen(); }}
       />

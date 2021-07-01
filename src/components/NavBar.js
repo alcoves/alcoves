@@ -1,7 +1,7 @@
 import { useState, } from 'react';
 import { useRouter, } from 'next/router';
 import { signOut, useSession, } from 'next-auth/client';
-import { Flex, Spacer, Box, Avatar, Img, Menu, MenuButton, MenuList, MenuItem, MenuDivider, IconButton, Button, } from '@chakra-ui/react';
+import { Flex, Spacer, Box, Avatar, Img, Menu, MenuButton, MenuList, MenuItem, MenuDivider, Button, useColorMode, } from '@chakra-ui/react';
 import { IoFilmOutline, } from 'react-icons/io5';
 import isAdmin from '../utils/isAdmin';
 
@@ -9,9 +9,10 @@ export default function Navigation() {
   const router = useRouter();
   const [session] = useSession();
   const [open, setOpen] = useState(false);
+  const { colorMode } = useColorMode();
 
   return (
-    <Flex h='48px' bg='gray.700'>
+    <Flex h='48px' bg={colorMode === 'dark' ? 'gray.700' : 'white'}>
       <Box p='1'>
         <Img 
           alt='Bken.io'

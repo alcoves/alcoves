@@ -1,4 +1,6 @@
-const theme = {
+import { extendTheme, } from '@chakra-ui/react';
+
+const theme = extendTheme({
   brand: {
     900: '#1a365d',
     800: '#153e75',
@@ -6,14 +8,12 @@ const theme = {
   },
   config: {
     initialColorMode: 'dark',
-    useSystemColorMode: true,
+    // useSystemColorMode: true,
   },
   fonts: {
-    body: '\'Nunito Sans\', sans-serif',
-    heading: '\'Nunito Sans\', sans-serif',
-    mono: '\'Nunito Sans\', monospace',
+    body: 'Nunito Sans',
+    mono: 'Nunito Sans',
+    heading: 'Nunito Sans',
   },
-};
-
+});
 export default theme;
-
