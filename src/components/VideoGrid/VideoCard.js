@@ -30,12 +30,12 @@ export default function VideoCard({ v }) {
             <Flex>
               <Spacer/>
               <Flex bg='rgba(10, 10, 10, .4)' borderRadius='md' px='1' justify='center' align='center'>
-                <Text fontSize='xs' fontWeight='bold'>{videoDuration(v.duration)}</Text>
+                <Text color='gray.100' fontSize='xs' fontWeight='bold'>{videoDuration(v.duration)}</Text>
               </Flex>
             </Flex>
           </Flex>        
         </Box>
-        <Box p='2' bg='transparent' w='100%' color='white'>
+        <Box p='2' bg='transparent' w='100%'>
           <VideoMeta v={v}/>
         </Box>
       </Skeleton>

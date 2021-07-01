@@ -27,7 +27,7 @@ function VolumeButton({ vRef }) {
       return (
         <IoVolumeMuteOutline
           size='20px'
-          stroke='white'
+          color='white'
           cursor='pointer'
           onClick={handleClick}
         />
@@ -38,7 +38,7 @@ function VolumeButton({ vRef }) {
       return (
         <IoVolumeLowOutline
           size='20px'
-          stroke='white'
+          color='white'
           cursor='pointer'
           onClick={handleClick}
         />
@@ -49,7 +49,7 @@ function VolumeButton({ vRef }) {
       return (
         <IoVolumeMediumOutline
           size='20px'
-          stroke='white'
+          color='white'
           cursor='pointer'
           onClick={handleClick}
         />
@@ -59,7 +59,7 @@ function VolumeButton({ vRef }) {
     return (
       <IoVolumeHighOutline
         size='20px'
-        stroke='white'
+        color='white'
         cursor='pointer'
         onClick={handleClick}
       />
@@ -67,7 +67,7 @@ function VolumeButton({ vRef }) {
   }
 
   return (
-    <Box mx='2'>
+    <Box ml='2' mr='4'>
       {renderVolumeIcon()}
     </Box>
   );

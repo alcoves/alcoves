@@ -28,7 +28,7 @@ export default function VideoMeta({ v }) {
         />
       </GridItem>
       <GridItem colSpan={4}>
-        <Heading onClick={() => router.push(`/v/${v.videoId}`)}cursor='pointer' size='sm'>{v.title}</Heading>
+        <Heading onClick={() => router.push(`/v/${v.videoId}`)} cursor='pointer' size='sm'>{v.title}</Heading>
       </GridItem>
       <GridItem colSpan={4} rowSpan={1}>
         <Box>
