@@ -37,8 +37,8 @@ export default function LiveVideo({ hlsUrl, dashUrl, id }) {
 }
 
 export async function getServerSideProps({ params }) {
-  const baseUrl = 'https://live.bken.io';
-  const hlsUrl = `${baseUrl}/hls/${params.id}.m3u8`;
-  const dashUrl = `${baseUrl}/dash/${params.id}.mpd`;
+  const baseUrl = 'https://cdn.bken.io/live';
+  const hlsUrl = `${baseUrl}/${params.id}/master.m3u8`;
+  const dashUrl = `${baseUrl}/${params.id}/manifest.mpd`;
   return { props: { hlsUrl, dashUrl, id: params.id } };
 }
