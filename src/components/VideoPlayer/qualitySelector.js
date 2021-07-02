@@ -8,7 +8,7 @@ function QualitySelector({ player }) {
 
   return (
     <Menu placement='top'>
-      <MenuButton as={IconButton} size='xs' variant='unstyled'>
+      <MenuButton as={IconButton} rounded='md' size='xs' variant='unstyled'>
         <IoSettingsOutline size='20px'/>
       </MenuButton>
       <MenuList>
