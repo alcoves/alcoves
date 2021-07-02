@@ -12,7 +12,8 @@ import { Box, Flex, Progress , Text, Spacer, Modal,
   MenuItem,
   Skeleton,
   Button,
-  HStack, } from '@chakra-ui/react';
+  HStack,
+  useColorMode, } from '@chakra-ui/react';
 import { useEffect, } from 'react';
 import { IoPlayOutline, } from 'react-icons/io5';
 import { useRouter, } from 'next/router';
@@ -46,6 +47,7 @@ function VideoPlayer({ link }) {
 
 export default function StudioVideo({ v }) {
   const router = useRouter();
+  const { colorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const shareLink = `https://bken.io/v/${v.videoId}`;
 
@@ -72,10 +74,11 @@ export default function StudioVideo({ v }) {
                 </Flex> ) :
                 <IconButton
                   size='lg'
-                  variant='outline'
+                  rounded='md'
                   onClick={onOpen}
+                  variant='solid'
                   aria-label='watch'
-                  icon={<IoPlayOutline w='100%' h='100%'/>}
+                  icon={<IoPlayOutline color='inherit' w='100%' h='100%'/>}
                 />
               }
             </Flex>
@@ -83,12 +86,12 @@ export default function StudioVideo({ v }) {
             <Flex>
               <Spacer/>
               <Flex bg='rgba(10, 10, 10, .4)' borderRadius='md' px='1' justify='center' align='center'>
-                <Text fontSize='xs' fontWeight='bold'>{videoDuration(v.duration)}</Text>
+                <Text color='gray.100' fontSize='xs' fontWeight='bold'>{videoDuration(v.duration)}</Text>
               </Flex>
             </Flex>
           </Flex> 
         </Box>
-        <Box p='2' bg='transparent' w='100%' color='white'>
+        <Box p='2' bg='transparent' w='100%'>
           <EditTitle id={v.videoId} title={v.title} />
           <Flex direction='column'>
             <Metadata v={v}/>

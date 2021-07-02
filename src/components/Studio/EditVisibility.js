@@ -22,13 +22,13 @@ export default function EditVisibility({ id, visibility: v }) {
 
   return (
     <IconButton
-      size='md'
-      variant='outline'
+      size='sm'
+      rounded='md'
       isLoading={loading}
       onClick={handleChange}
       aria-label='Toggle visibility'
       colorScheme={visibility === 'public' ? 'teal' : 'gray'}
-      icon={visibility === 'public' ? <IoEye/> : <IoEyeOff/>}
+      icon={visibility === 'public' ? <IoEye color='inherit'/> : <IoEyeOff color='inherit'/>}
     />
   );
 }
