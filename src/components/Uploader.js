@@ -4,7 +4,7 @@ import { useState, useCallback, } from 'react';
 import { useDropzone, } from 'react-dropzone';
 import chunkFile from '../utils/chunkFile';
 
-export default function Upload() {
+export default function Upload({ refetch }) {
   const [files, setFiles] = useState([]);
   const [bytesUploaded, setBytesUploaded] = useState({});
 
@@ -67,10 +67,12 @@ export default function Upload() {
       }).then(() => {
         setBytesUploaded({});
         setFiles([]);
+        if (refetch) refetch();
       }).catch((error) => {
         console.log(error);
         setBytesUploaded({});
         setFiles([]);
+        if (refetch) refetch();
       });
     };
   }
