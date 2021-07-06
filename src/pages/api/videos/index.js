@@ -65,7 +65,7 @@ export default async function handler(req, res) {
       const where = {};
       const orderBy = { createdAt: 'desc' };
 
-      if (req?.query?.visibility === 'all' && isAdmin(session.id)) {
+      if (req?.query?.visibility === 'all' && isAdmin(session?.id)) {
         console.log('in admin block');
         // Don't do anything, all videos are returned
         // This is consumed by the admin dashboard

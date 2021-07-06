@@ -19,22 +19,30 @@ import axios from 'axios';
 import Layout from '../components/Layout';
 import isAdmin from '../utils/isAdmin';
 
-async function reprocess({ currentTarget }) {
-  const { id } = currentTarget;
-  console.log('Reprocessing', id);
+async function reprocessThumbnail(id) {
+  await axios.post('https://bk-det1.bken.dev/tidal/jobs/thumbnail', {
+    videoId: id,
+    webhookUrl: `https://bken.io/api/videos/${id}`,
+    rcloneSourceUri: `wasabi:cdn.bken.io/v/${id}/${id}.mp4`,
+    rcloneDestinationUri: `wasabi:cdn.bken.io/v/${id}/thumb.webp`,
+  });
+}
 
+async function reprocessVideo(id) {
   await axios.post('https://bk-det1.bken.dev/tidal/jobs/transcode', {
     videoId: id,
     webhookUrl: `https://bken.io/api/videos/${id}`,
     rcloneDestinationUri: `wasabi:cdn.bken.io/v/${id}/pkg`,
     rcloneSourceUri: `wasabi:cdn.bken.io/v/${id}/${id}.mp4`, // TODO :: Get this from db
   });
-  await axios.post('https://bk-det1.bken.dev/tidal/jobs/thumbnail', {
-    videoId: id,
-    webhookUrl: `https://bken.io/api/videos/${id}`,
-    rcloneDestinationUri: `wasabi:cdn.bken.io/v/${id}/thumb.webp`,
-    rcloneSourceUri: `wasabi:cdn.bken.io/v/${id}/${id}.mp4`,
-  });
+}
+
+async function reprocessAllVideos(videos) {
+  await Promise.all(videos.map(({ videoId }) => reprocessVideo(videoId)));
+}
+
+async function reprocessAllThumbnails(videos) {
+  await Promise.all(videos.map(({ videoId }) => reprocessThumbnail(videoId)));
 }
 
 export default function Admin() {
@@ -54,6 +62,12 @@ export default function Admin() {
   if (videos?.length) {
     return (
       <Layout>
+        <Button onClick={() => reprocessAllVideos(videos)} my='4' ml='2' size='xs'>
+          Reprocess All Videos
+        </Button>
+        <Button onClick={() => reprocessAllThumbnails(videos)} my='4' ml='2' size='xs'>
+          Reprocess All Thumbnails
+        </Button>
         <Table variant='simple' size='sm'>
           <TableCaption> All Videos </TableCaption>
           <Thead>
@@ -79,7 +93,8 @@ export default function Admin() {
                 <Td>
                   <Flex direction='column'>
                     {v.status}
-                    <Button id={v.videoId} onClick={reprocess} w='100px' my='2' size='xs'>Reprocess</Button>
+                    <Button id={v.videoId} onClick={() => reprocessVideo(v.videoId)} my='2' size='xs'>Reprocess Video</Button>
+                    <Button id={v.videoId} onClick={() => reprocessThumbnail(v.videoId)} my='2' size='xs'>Reprocess Thumbnail</Button>
                   </Flex>
                 </Td>
                 <Td isNumeric>{v.percentCompleted}</Td>
