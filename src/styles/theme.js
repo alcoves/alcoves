@@ -6,6 +6,9 @@ const theme = extendTheme({
     800: '#153e75',
     700: '#2a69ac',
   },
+  config: {
+    initialColorMode: 'dark',
+  },
   fonts: {
     body: 'Nunito Sans',
     mono: 'Nunito Sans',

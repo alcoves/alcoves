@@ -1,11 +1,10 @@
 import '../styles/index.css';
 import React, { useEffect, } from 'react';
 import Head from 'next/head';
-import { ChakraProvider, } from '@chakra-ui/react';
 import { Provider, } from 'next-auth/client';
 import { useRouter, } from 'next/router';
-import theme from '../styles/theme';
 import * as gtag from '../utils/gtag';
+import { Chakra, } from '../styles/chakra';
 
 function App({ Component, pageProps }) {
   const router = useRouter();
@@ -24,11 +23,11 @@ function App({ Component, pageProps }) {
       <Head>
         <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'/>
       </Head>
-      <ChakraProvider theme={theme}>
-        <Provider session={pageProps.session}>
+      <Provider session={pageProps.session}>
+        <Chakra cookies={pageProps.cookies}>
           <Component {...pageProps} />
-        </Provider>
-      </ChakraProvider>
+        </Chakra>
+      </Provider>
     </>
   );
 }

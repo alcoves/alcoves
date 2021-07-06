@@ -9,7 +9,7 @@ export default function StudioVideoGrid({ videos = [] }) {
   }
   return ( 
     <SimpleGrid columns={[1, 1, 3, 3, 4]} spacing='10px'>
-      {videos.map(v => <StudioVideo key={v.videoId} v={v}/>)}
+      {videos.map((v, i) => <StudioVideo key={v?.videoId || i} v={v}/>)}
     </SimpleGrid>
   );  
 }
