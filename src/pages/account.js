@@ -1,9 +1,8 @@
 import { useSession, } from 'next-auth/client';
-import { Flex, Avatar, useColorMode, VStack, SkeletonCircle, Heading, SkeletonText, Text, Switch, } from '@chakra-ui/react';
+import { Flex, Avatar, VStack, SkeletonCircle, Heading, SkeletonText, Text, Switch, } from '@chakra-ui/react';
 import Layout from '../components/Layout';
 
 export default function Account() {
-  const { colorMode, toggleColorMode } = useColorMode();
   const [session, loading] = useSession();
 
   return (
@@ -34,10 +33,6 @@ export default function Account() {
             isLoaded={Boolean(!loading && session?.user?.name)}
           >
             <VStack w='100%'>
-              <Flex alignItems='center' justifyContent='space-between' w='100%'>
-                <Text>Dark Mode</Text>
-                <Switch size='sm' isChecked={colorMode === 'dark'} onChange={toggleColorMode} />
-              </Flex>
               <Flex alignItems='center' justifyContent='space-between' w='100%'>
                 <Text>Videos Uploaded</Text>
                 <Text>N/A</Text>
