@@ -12,15 +12,17 @@ import { Box, Flex, Progress , Text, Spacer, Modal,
   MenuItem,
   Skeleton,
   Button,
-  HStack,
-  useColorMode, } from '@chakra-ui/react';
+  HStack, } from '@chakra-ui/react';
 import { useEffect, } from 'react';
 import { IoPlayOutline, } from 'react-icons/io5';
 import { useRouter, } from 'next/router';
+import useSWR from 'swr';
 import EditTitle from './EditTitle';
 import videoDuration from '../../utils/videoDuration';
 import DeleteVideo from './DeleteVideo';
 import EditVisibility from './EditVisibility';
+
+const fetcher = (url) => fetch(url).then((res) => res.json());
 
 function Metadata({ v }) {
   const createdAt = moment(v.createdAt).fromNow();
@@ -45,32 +47,46 @@ function VideoPlayer({ link }) {
   );
 }
 
-export default function StudioVideo({ v }) {
+export default function StudioVideo({ v = {}, refetch }) {
   const router = useRouter();
-  const { colorMode } = useColorMode();
+  const { data: video } = useSWR(
+    `/api/videos/${v?.videoId}`, fetcher,
+    { initialData: v, refreshInterval: v?.status === 'completed' ? 0 : 2000 }
+  );
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const shareLink = `https://bken.io/v/${v.videoId}`;
+  const shareLink = `https://bken.io/v/${video.videoId}`;
 
   return (
     <Box borderWidth='1px' borderRadius='md' overflow='hidden'>
-      <Skeleton isLoaded={Boolean(v.videoId)}>
+      <Skeleton isLoaded={Boolean(video.videoId)}>
         <Box
           w='100%' h='200px'
           bgSize='cover' bgColor='black'
-          bgImage={`url("${v.thumbnail}")`}
+          bgImage={`url("${video.thumbnail}")`}
           bgPosition='center' bgRepeat='no-repeat'
         >
           <Flex w='100%' h='100%' direction='column' p='2'>
             <Flex>
-              <EditVisibility id={v.videoId} visibility={v.visibility}/>
+              <EditVisibility id={video.videoId} visibility={video.visibility}/>
               <Spacer/>
             </Flex>
             <Spacer/>
             <Flex align='center' direction='column'>
-              {v.status !== 'completed' ? (
+              {video.status !== 'completed' ? (
                 <Flex direction='column' align='center'>
-                  <Heading size='sm' textTransform='uppercase' py='2'>{v.status}</Heading>
-                  <Progress isAnimated w='50%' minW='200px' colorScheme='teal' hasStripe borderRadius='lg' height='15px' value={v.percentCompleted} />
+                  <Heading size='sm' textTransform='uppercase' py='2'>
+                    {video.status} - {parseFloat(video?.percentCompleted).toFixed(2)}%
+                  </Heading>
+                  <Progress
+                    w='50%'
+                    hasStripe
+                    isAnimated
+                    minW='200px'
+                    height='15px'
+                    borderRadius='lg'
+                    colorScheme='teal'
+                    value={video.percentCompleted}
+                  />
                 </Flex> ) :
                 <IconButton
                   size='lg'
@@ -86,13 +102,13 @@ export default function StudioVideo({ v }) {
             <Flex>
               <Spacer/>
               <Flex bg='rgba(10, 10, 10, .4)' borderRadius='md' px='1' justify='center' align='center'>
-                <Text color='gray.100' fontSize='xs' fontWeight='bold'>{videoDuration(v.duration)}</Text>
+                <Text color='gray.100' fontSize='xs' fontWeight='bold'>{videoDuration(video.duration)}</Text>
               </Flex>
             </Flex>
           </Flex> 
         </Box>
         <Box p='2' bg='transparent' w='100%'>
-          <EditTitle id={v.videoId} title={v.title} />
+          <EditTitle id={video.videoId} title={video.title} />
           <Flex direction='column'>
             <Metadata v={v}/>
             <Text fontSize='xs' mx='5px' cursor='pointer'
@@ -105,8 +121,8 @@ export default function StudioVideo({ v }) {
               <Button
                 size='xs'
                 variant='outline'
-                disabled={v.status !== 'completed'}
-                onClick={() => { router.push(`/v/${v.videoId}`); }}
+                disabled={video.status !== 'completed'}
+                onClick={() => { router.push(`/v/${video.videoId}`); }}
               > Watch page
               </Button>
               <Menu>
@@ -115,7 +131,7 @@ export default function StudioVideo({ v }) {
                 </MenuButton>
                 <MenuList minW='auto'>
                   <MenuItem>
-                    <DeleteVideo id={v.videoId}/>
+                    <DeleteVideo id={video.videoId} refetch={refetch}/>
                   </MenuItem>
                 </MenuList>
               </Menu>
@@ -126,7 +142,7 @@ export default function StudioVideo({ v }) {
           <ModalOverlay />
           <ModalContent maxH='80vh' backgroundColor='black'>
             <ModalCloseButton />
-            <VideoPlayer link={v.mpdLink}/>
+            <VideoPlayer link={video.mpdLink}/>
           </ModalContent>
         </Modal>
       </Skeleton>

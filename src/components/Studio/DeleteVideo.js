@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react';
 import { useState, } from 'react';
 
-export default function DeleteVideo({ id }) {
+export default function DeleteVideo({ id, refetch }) {
   const [loading, setLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -25,6 +25,7 @@ export default function DeleteVideo({ id }) {
     } catch (error) {
       console.error(error);
     } finally {
+      if (refetch) refetch();
       setLoading(false);
     }
   }

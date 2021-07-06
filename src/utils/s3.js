@@ -30,7 +30,7 @@ async function deleteFolder(params) {
   const req = await s3.listObjectsV2(params).promise();
   await s3.deleteObjects({
     Bucket: 'cdn.bken.io',
-    Delete: { Objects: req.Contents },
+    Delete: { Objects: req.Contents.map(({ Key }) => ({ Key })) },
   }).promise();
 
   if (req.NextContinuationToken) {
