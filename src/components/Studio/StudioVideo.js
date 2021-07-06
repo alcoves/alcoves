@@ -75,7 +75,7 @@ export default function StudioVideo({ v = {}, refetch }) {
               {video.status !== 'completed' ? (
                 <Flex direction='column' align='center'>
                   <Heading size='sm' textTransform='uppercase' py='2'>
-                    {video.status} - {parseFloat(video?.percentCompleted).toFixed(2)}%
+                    {video.status}
                   </Heading>
                   <Progress
                     w='50%'
@@ -87,6 +87,9 @@ export default function StudioVideo({ v = {}, refetch }) {
                     colorScheme='teal'
                     value={video.percentCompleted}
                   />
+                  <Text pt='1' fontSize='xs' fontWeight={800}>
+                    {`${parseFloat(video?.percentCompleted).toFixed(2)}%`}
+                  </Text>
                 </Flex> ) :
                 <IconButton
                   size='lg'
