@@ -1,8 +1,8 @@
-import { Box, } from '@chakra-ui/react';
+import { IconButton, } from '@chakra-ui/react';
 import React, { useEffect, useState, } from 'react';
 import { IoPauseOutline, IoPlayOutline, } from 'react-icons/io5';
 
-function PlayButton({ vRef, size = '20px', disableOnClick = false }) {
+function PlayButton({ vRef, size = '20px', chakraProps = { variant: 'ghost' } }) {
   const [paused, setPaused] = useState(vRef.current.paused);
 
   useEffect(() => {
@@ -19,10 +19,9 @@ function PlayButton({ vRef, size = '20px', disableOnClick = false }) {
     };
   }, [vRef]);
 
-  function handleClick() {
-    if (!disableOnClick) {
-      vRef.current.paused ? vRef.current.play() : vRef.current.pause();
-    }
+  function handleClick(e) {
+    e.stopPropagation();
+    vRef.current.paused ? vRef.current.play() : vRef.current.pause();
   }
 
   const options = {
@@ -32,9 +31,9 @@ function PlayButton({ vRef, size = '20px', disableOnClick = false }) {
   };
 
   return (
-    <Box mr='2' onClick={handleClick}>
+    <IconButton onClick={handleClick} {...chakraProps}>
       {paused ? <IoPlayOutline {...options} /> : <IoPauseOutline {...options}/>}
-    </Box>
+    </IconButton>
   );
 }
 

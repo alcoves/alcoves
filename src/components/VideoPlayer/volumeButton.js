@@ -1,4 +1,4 @@
-import { Box, } from '@chakra-ui/react';
+import { IconButton, } from '@chakra-ui/react';
 import React, { useEffect, useState, } from 'react';
 import { IoVolumeHighOutline, IoVolumeLowOutline, IoVolumeMediumOutline, IoVolumeMuteOutline, } from 'react-icons/io5';
 
@@ -67,9 +67,9 @@ function VolumeButton({ vRef }) {
   }
 
   return (
-    <Box ml='2' mr='4'>
+    <IconButton variant='ghost'>
       {renderVolumeIcon()}
-    </Box>
+    </IconButton>
   );
 }
 

@@ -31,7 +31,7 @@ function Duration({ vRef, player = {} }) {
   }, [vRef]);
 
   return (
-    <Flex ml='4' select='none' color='lightgrey' fontSize='.8rem' fontWeight='800'>
+    <Flex mx='2' select='none' color='lightgrey' fontSize='.8rem' fontWeight='800'>
       <Text>{time}</Text>
     </Flex>
   );

@@ -45,6 +45,7 @@ function VideoPlayer({ url, id = 'bkenVideoPlayer', mode = 'vod' }) {
   const [rotation, setRotation] = useState(0);
   const [buffering, setBuffering] = useState(true);
   const [controlsVisible, setControlsVisible] = useState(true);
+  const [manualPlayButton, setManualPlayButton] = useState(false);
 
   useEffect(() => {
     setPlayer(dashjs.MediaPlayer().create());
@@ -62,11 +63,11 @@ function VideoPlayer({ url, id = 'bkenVideoPlayer', mode = 'vod' }) {
       const video = document.getElementById(id);
       player.updateSettings(defaultOpts[mode]);
   
-      // player.on(dashjs.MediaPlayer.events.PLAYBACK_NOT_ALLOWED, () => {
-      //   console.log('Playback did not start due to auto play restrictions. Muting audio and reloading');
-      //   video.muted = true;
-      //   player.initialize(video, url, true);
-      // });
+      player.on(dashjs.MediaPlayer.events.PLAYBACK_NOT_ALLOWED, () => {
+        console.log('Playback did not start due to auto play restrictions. Muting audio and reloading');
+        setControlsVisible(true);
+        setManualPlayButton(true);
+      });
   
       player.initialize(video, url, true);
     }
@@ -104,6 +105,19 @@ function VideoPlayer({ url, id = 'bkenVideoPlayer', mode = 'vod' }) {
     }, 2000);
   }
 
+  function renderCenter() {
+    if (manualPlayButton) {
+      return <PlayButton
+        size='100px'
+        vRef={vRef}
+        chakraProps={{ variant: 'solid', rounded: 'md', h:'100%' }}
+      />;
+    } if (buffering) {
+      return <CircularProgress isIndeterminate />;
+    }
+    return <div/>;
+  }
+
   return (
     <Box
       onMouseMove={controlHover}
@@ -129,7 +143,7 @@ function VideoPlayer({ url, id = 'bkenVideoPlayer', mode = 'vod' }) {
         }}
         onStalled={() => { setBuffering(true); }}
         onWaiting={() => { setBuffering(true); }}
-        onPlaying={() => { setBuffering(false); }}
+        onPlaying={() => { setBuffering(false); setManualPlayButton(false); }}
         style={{ top: 0, left: 0, width: '100%', height: '100%', background: 'black' }}
       />
 
@@ -144,7 +158,7 @@ function VideoPlayer({ url, id = 'bkenVideoPlayer', mode = 'vod' }) {
         >
           <Flex w='100%' h='100%' flexDirection='column' justify='center' align='center' onClick={() => togglePlay()}>
             <Box>
-              {buffering && <CircularProgress isIndeterminate />}
+              {renderCenter()}
             </Box>
           </Flex>
           <Flex w='100%' px='2' h='6' justifyContent='space-between'>
