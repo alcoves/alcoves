@@ -13,6 +13,7 @@ async function createVideo(req, res) {
   const user = await db.user.findUnique({ where: { email: session.user.email } });
   if (!user) res.status(401).end();
   
+  console.info('Completing multipart s3 upload');
   await s3.completeMultipartUpload({
     Key: key,
     UploadId: uploadId,
@@ -20,6 +21,7 @@ async function createVideo(req, res) {
     MultipartUpload: { Parts: parts },
   }).promise();
 
+  console.info('Creating video database record');
   await db.video.create({
     data: {
       title,
@@ -31,7 +33,7 @@ async function createVideo(req, res) {
     },
   });
 
-  // Process video
+  console.info('Invoking tidal transcode job');
   await axios.post(`${getTidalURL()}/jobs/transcode`, {
     videoId,
     webhookUrl: getWebhookURL(videoId),
@@ -44,7 +46,7 @@ async function createVideo(req, res) {
   });
   res.status(200).end();
 
-  // Create thumbnail
+  console.info('Invoking tidal thumbnail job');
   await axios.post(`${getTidalURL()}/jobs/thumbnail`, {
     videoId,
     webhookUrl: getWebhookURL(videoId),

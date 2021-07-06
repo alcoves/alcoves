@@ -1,7 +1,6 @@
-import axios from 'axios';
 import { getSession, } from 'next-auth/client';
 import db from '../../../../utils/db';
-import { s3, } from '../../../../utils/s3';
+import { deleteFolder, } from '../../../../utils/s3';
 
 async function getVideo(req, res) {
   const video = await db.video.findFirst({ where: { videoId: req.query.id } });
@@ -13,24 +12,15 @@ async function deleteVideo(req, res) {
   const session = await getSession({ req });
   if (!session) return res.status(401).end();
 
+  // Ensure the authenticated user is the owner of the video
   const video = await db.video.findUnique({ where: { videoId: req.query.id } });
   if (video.userId !== session.id) return res.status(403).end();
 
-  // Ensure that the user requesting the delete has access
-  if (video.userId !== session.id) {
-    return res.status(403).end();
-  }
-
   // Delete assets from cdn
-  // This doesn't work on videos that have more than 1,000 objects
-  const { Contents } = await s3.listObjectsV2({
+  await deleteFolder({
     Bucket: 'cdn.bken.io',
     Prefix: `v/${req.query.id}`,
-  }).promise();
-
-  await Promise.all(Contents.map(({ Key }) => {
-    s3.deleteObject({ Bucket: 'cdn.bken.io', Key }).promise();
-  }));
+  });
 
   // Delete video from db
   await db.video.delete({ where: { videoId: req.query.id } });
