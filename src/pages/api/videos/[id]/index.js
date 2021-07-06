@@ -22,6 +22,7 @@ async function deleteVideo(req, res) {
   }
 
   // Delete assets from cdn
+  // This doesn't work on videos that have more than 1,000 objects
   const { Contents } = await s3.listObjectsV2({
     Bucket: 'cdn.bken.io',
     Prefix: `v/${req.query.id}`,
