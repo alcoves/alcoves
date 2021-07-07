@@ -7,12 +7,10 @@ function QualitySelector({ player }) {
   const abrEnabled = player.getConfiguration().abr.enabled;
 
   function renderCurrentQuality() {
+    const currentTrackText = selectedTrack?.height ? `${selectedTrack?.height}p` : '';
     if (abrEnabled) {
-      return <Text fontSize='xs'>Auto</Text>;
-    }
-    if (selectedTrack?.height) {
-      return <Text fontSize='xs'>{selectedTrack?.height}p</Text>;
-    }
+      return <Text fontSize='xs'>Auto {currentTrackText}</Text>;
+    } return <Text fontSize='xs'>{currentTrackText}</Text>;
   }
 
   return (
