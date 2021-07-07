@@ -6,21 +6,21 @@ function Duration({ vRef, player = {} }) {
   const [time, setTime] = useState('0:00 / 0:00');
 
   function formatDuration() {
-    if (Number.isFinite(vRef.current.duration)) {
-      return `${videoDuration(vRef.current.currentTime)} / ${videoDuration(vRef.current.duration)}`;
+    if (player?.isLive()) {
+      return (
+        <Flex>
+          <Text >
+            {videoDuration(vRef.current.currentTime)}
+          </Text>
+          <Text cursor='pointer' onClick={() => player.seek(player.duration())}
+            ml='2' textTransform='uppercase' color='red.500' fontSize='.8rem' fontWeight='800'>
+            Live
+          </Text>
+        </Flex>
+      );
     }
 
-    return (
-      <Flex>
-        <Text >
-          {videoDuration(vRef.current.currentTime)}
-        </Text>
-        <Text cursor='pointer' onClick={() => player.seek(player.duration())}
-          ml='2' textTransform='uppercase' color='red.500' fontSize='.8rem' fontWeight='800'>
-          Live
-        </Text>
-      </Flex>
-    );
+    return `${videoDuration(vRef.current.currentTime)} / ${videoDuration(vRef.current.duration)}`;
   }
 
   useEffect(() => {

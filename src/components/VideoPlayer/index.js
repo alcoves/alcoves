@@ -1,7 +1,6 @@
 import React, { useRef, useState, useEffect, } from 'react';
-
 import qs from 'query-string';
-
+import shaka from 'shaka-player';
 import { Box, CircularProgress, Flex, } from '@chakra-ui/react';
 import Scrubber from './scrubber';
 import Duration from './duration';
@@ -14,41 +13,18 @@ import PictureInPictureButton from './pictureInPictureButton';
 
 let idleTimer;
 
-const defaultOpts = {
-  vod: {
-    streaming: {
-      fastSwitchEnabled: true,
-      abr: {
-        ABRStrategy: 'abrDynamic',
-        autoSwitchBitrate: { video: true, audio: true },
-      },
-    },
-  },
-  live: {
-    streaming: {
-      liveDelay: 4,
-      liveCatchup: {
-        enabled: false,
-        minDrift: 0.05,
-        playbackRate: 0.5,
-        latencyThreshold: 30,
-        playbackBufferMin: 0.5,
-      },
-      lowLatencyEnabled: false,
-    },
-  },
-};
-
-function VideoPlayer({ url, id = 'bkenVideoPlayer', mode = 'vod' }) {
+function VideoPlayer({ thumbnail, url, id = 'bkenVideoPlayer' }) {
   const vRef = useRef(null);
+  const cRef = useRef(null);
+  // const [ui, setUi] = useState(null);
   const [player, setPlayer] = useState(null);
   const [rotation, setRotation] = useState(0);
-  const [buffering, setBuffering] = useState(true);
   const [controlsVisible, setControlsVisible] = useState(true);
-  const [manualPlayButton, setManualPlayButton] = useState(false);
 
   useEffect(() => {
-    setPlayer(dashjs.MediaPlayer().create());
+    const video = document.getElementById(id);
+    setPlayer(new shaka.Player(video));
+
     const orientationchange = window.addEventListener('orientationchange', (event) => {
       setRotation(event.target.screen.orientation.angle);
       console.log(`the orientation of the device is now ${event.target.screen.orientation.angle}`);
@@ -60,16 +36,14 @@ function VideoPlayer({ url, id = 'bkenVideoPlayer', mode = 'vod' }) {
 
   useEffect(() => {
     if (player) {
-      const video = document.getElementById(id);
-      player.updateSettings(defaultOpts[mode]);
-  
-      player.on(dashjs.MediaPlayer.events.PLAYBACK_NOT_ALLOWED, () => {
-        console.log('Playback did not start due to auto play restrictions. Muting audio and reloading');
-        setControlsVisible(true);
-        setManualPlayButton(true);
+      const { t = 0 } = qs.parse(window.location.search);
+      // console.log(`Seeking to ${t}`);
+
+      player.load(url, t).then(() => {
+        // console.debug('video has been loaded');
+      }).catch((err) => {
+        console.error(err);
       });
-  
-      player.initialize(video, url, true);
     }
   }, [player]);
 
@@ -83,16 +57,10 @@ function VideoPlayer({ url, id = 'bkenVideoPlayer', mode = 'vod' }) {
   useEffect(() => {
     function onKeydown(e) {
       if (e.code === 'Space') togglePlay();
-    }
+    } 
     window.addEventListener('keydown', onKeydown);
     return () => window.removeEventListener('keydown', onKeydown);
   });
-
-  useEffect(() => {
-    if (buffering) {
-      setControlsVisible(true);
-    }
-  }, [buffering]);
 
   function controlHover() {
     clearTimeout(idleTimer);
@@ -100,19 +68,19 @@ function VideoPlayer({ url, id = 'bkenVideoPlayer', mode = 'vod' }) {
 
     idleTimer = setTimeout(() => {
       if (!vRef?.current?.paused) {
-        setControlsVisible(buffering);
+        setControlsVisible(player?.isBuffering());
       }
     }, 2000);
   }
 
   function renderCenter() {
-    if (manualPlayButton) {
+    if (player?.getLoadMode() === 1) {
       return <PlayButton
         size='100px'
         vRef={vRef}
         chakraProps={{ variant: 'solid', rounded: 'md', h:'100%' }}
       />;
-    } if (buffering) {
+    } if (player?.isBuffering()) {
       return <CircularProgress isIndeterminate />;
     }
     return <div/>;
@@ -120,10 +88,11 @@ function VideoPlayer({ url, id = 'bkenVideoPlayer', mode = 'vod' }) {
 
   return (
     <Box
+      ref={cRef}
       onMouseMove={controlHover}
       onTouchStart={controlHover}
-      onMouseEnter={() => setControlsVisible(!buffering)}
-      onMouseLeave={() => setControlsVisible(buffering)}
+      onMouseEnter={() => setControlsVisible(!player?.isBuffering())}
+      onMouseLeave={() => setControlsVisible(player?.isBuffering())}
       m='0px' minW='100%' lineHeight='0px' minH='280px'
       pos='relative' backgroundColor='rgba(0,0,0,.3)'
       cursor={`${controlsVisible ? 'auto' : 'none'}`}
@@ -131,23 +100,15 @@ function VideoPlayer({ url, id = 'bkenVideoPlayer', mode = 'vod' }) {
       maxHeight={`${rotation === 0 ? 'calc((9 /  16) * 100vw)' : 'calc(100vh - 48px)'}`}
     >
       <video
-        autoPlay
         id={id}
+        autoPlay
         ref={vRef}
         disableRemotePlayback
-        onLoadedMetadata={() => {
-          if (player.isReady()) {
-            const { t } = qs.parse(window.location.search);
-            if (t) vRef.current.currentTime = Number(t);
-          }
-        }}
-        onStalled={() => { setBuffering(true); }}
-        onWaiting={() => { setBuffering(true); }}
-        onPlaying={() => { setBuffering(false); setManualPlayButton(false); }}
+        poster={thumbnail}
         style={{ top: 0, left: 0, width: '100%', height: '100%', background: 'black' }}
       />
 
-      {player?.isReady() && vRef?.current && (
+      {player && vRef?.current && (
         <Flex
           top='0' left='0' w='100%' h='100%'
           overflow='none' position='absolute' alignItems='center'

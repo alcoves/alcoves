@@ -1,17 +1,17 @@
 import React from 'react';
-import { Box, } from '@chakra-ui/react';
+import { IconButton, } from '@chakra-ui/react';
 import { IoExpand, } from 'react-icons/io5';
 
 function FullScreenButton({ vRef }) {
   return (
-    <Box>
+    <IconButton variant='ghost'>
       <IoExpand
         size='20px'
         color='white'
         cursor='pointer'
         onClick={() => { vRef.current.requestFullscreen(); }}
       />
-    </Box>
+    </IconButton>
   );
 }
 
