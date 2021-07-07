@@ -1,51 +1,57 @@
-import { Menu, MenuItem, IconButton, MenuButton, MenuList, } from '@chakra-ui/react';
+import { Menu, MenuItem, Button, MenuButton, MenuList, Text, } from '@chakra-ui/react';
 import { IoSettingsOutline, } from 'react-icons/io5';
 
 function QualitySelector({ player }) {
-  const videoLevels = player.getBitrateInfoListFor && player.getBitrateInfoListFor('video') || [];
-  const currentLevel = player.getQualityFor && player.getQualityFor('video');
-  const currentSettings = player.getSettings && player.getSettings();
+  const tracks = player?.getVariantTracks();
+  const selectedTrack = tracks.find((track) => track.active);
+  const abrEnabled = player.getConfiguration().abr.enabled;
+
+  function renderCurrentQuality() {
+    if (abrEnabled) {
+      return <Text fontSize='xs'>Auto</Text>;
+    }
+    if (selectedTrack?.height) {
+      return <Text fontSize='xs'>{selectedTrack?.height}p</Text>;
+    }
+  }
 
   return (
     <Menu placement='top'>
-      <MenuButton as={IconButton} rounded='md' size='xs' variant='unstyled'>
-        <IoSettingsOutline size='20px'/>
+      <MenuButton
+        as={Button}
+        variant='ghost'
+        rounded='none'
+        rightIcon={<IoSettingsOutline size='20px'/>}
+      >
+        {renderCurrentQuality()}
       </MenuButton>
       <MenuList>
-        {videoLevels.map((l) => (
-          <MenuItem
-            py='4'
-            key={l.qualityIndex} value={l.qualityIndex}
-            onClick={() => {
-              console.log('setting quality to', l.height);
-              player.setQualityFor('video', l.qualityIndex);
-              player.updateSettings({
-                streaming: {
-                  abr: {
-                    autoSwitchBitrate: { video: false, audio: false },
-                  },
-                },
-              });
-              console.log('Settings:', player.getSettings());
-            }}
-          >
-            {currentLevel === l.qualityIndex ? <b>{`${l.height}p`}</b> : <p>{`${l.height}p`}</p> }
-          </MenuItem>
-        ))}
+        {tracks.map((track) => {
+          const menuText = `${track.height}p${track.frameRate}fps`;
+
+          return (
+            <MenuItem
+              py='4'
+              key={track.id} value={track.id}
+              onClick={() => {
+                console.log('setting track', track.height);
+                const config = { abr: { enabled: false } };
+                player.configure(config);
+                player.selectVariantTrack(track, true);
+              }}
+            >
+              {track.active ? <b>{menuText}</b> : <p>{menuText}</p>}
+            </MenuItem>
+          );
+        })}
         <MenuItem
           key='auto' value='Auto' py='4'
           onClick={() => {
-            player.updateSettings({
-              streaming: {
-                abr: {
-                  autoSwitchBitrate: { video: true, audio: true },
-                },
-              },
-            });
-            console.log('AutoPlay Enabled, Settings: ', player.getSettings());
+            const config = { abr: { enabled: true } };
+            player.configure(config);
           }}
         >
-          {currentSettings?.streaming?.abr?.autoSwitchBitrate?.video ? <b>Auto</b> : <p>Auto</p>}
+          {abrEnabled ? <b>Auto</b> : <p>Auto</p>}
         </MenuItem>
       </MenuList>
     </Menu>

@@ -17,6 +17,7 @@ import { useEffect, } from 'react';
 import { IoPlayOutline, } from 'react-icons/io5';
 import { useRouter, } from 'next/router';
 import useSWR from 'swr';
+import shaka from 'shaka-player';
 import EditTitle from './EditTitle';
 import videoDuration from '../../utils/videoDuration';
 import DeleteVideo from './DeleteVideo';
@@ -35,14 +36,20 @@ function Metadata({ v }) {
 
 function VideoPlayer({ link }) {
   useEffect(() => {
-    const player = dashjs.MediaPlayer().create();
-    player.initialize(document.querySelector('#videoPlayer'), link, true);
+    const video = document.getElementById('studioVideoPlayer');
+    const player = new shaka.Player(video);
+
+    player.load(link).then(() => {
+      console.log('The video has now been loaded!');
+    }).catch((err) => {
+      console.error(err);
+    });
   }, []);
 
   return (
     <video
       style={{ width: '100%', height: '100%', background: 'black' }}
-      id='videoPlayer' autoPlay controls preload='none'
+      id='studioVideoPlayer' controls autoPlay width='100%' height='100%'
     />
   );
 }
