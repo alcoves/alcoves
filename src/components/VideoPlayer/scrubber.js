@@ -21,14 +21,14 @@ function Duration({ vRef = {} }) {
   useEffect(() => {
     function timeUpdate() {
       if (vRef?.current?.currentTime) {
-        setProgress(vRef.current.currentTime);
+        setProgress(vRef?.current?.currentTime);
       }
     }
 
-    vRef.current.addEventListener('timeupdate', timeUpdate);
+    vRef?.current.addEventListener('timeupdate', timeUpdate);
     return () => {
       if (vRef?.current) {
-        vRef.current.removeEventListener('timeupdate', timeUpdate);
+        vRef?.current?.removeEventListener('timeupdate', timeUpdate);
       }
     };
   }, [vRef]);
