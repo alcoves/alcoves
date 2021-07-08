@@ -121,7 +121,7 @@ function VideoPlayer({ thumbnail, url, id = 'bkenVideoPlayer' }) {
               {renderCenter()}
             </Box>
           </Flex>
-          <Flex w='100%' px='2'>
+          <Flex w='100%' px='2' align='end'>
             <Scrubber vRef={vRef} />
           </Flex>
           <Flex w='100%' px='2' justifyContent='space-between' alignContent='end'>
