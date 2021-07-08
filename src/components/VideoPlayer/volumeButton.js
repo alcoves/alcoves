@@ -67,7 +67,7 @@ function VolumeButton({ vRef }) {
   }
 
   return (
-    <IconButton variant='ghost'>
+    <IconButton variant='ghost' size='sm'>
       {renderVolumeIcon()}
     </IconButton>
   );

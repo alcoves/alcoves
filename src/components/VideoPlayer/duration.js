@@ -20,7 +20,7 @@ function Duration({ vRef, player = {} }) {
       );
     }
 
-    return `${videoDuration(vRef.current.currentTime)} / ${videoDuration(vRef.current.duration)}`;
+    return `${videoDuration(vRef?.current?.currentTime)} / ${videoDuration(vRef?.current?.duration)}`;
   }
 
   useEffect(() => {

@@ -31,7 +31,7 @@ function PlayButton({ vRef, size = '20px', chakraProps = { variant: 'ghost' } })
   };
 
   return (
-    <IconButton onClick={handleClick} {...chakraProps}>
+    <IconButton size='sm' onClick={handleClick} {...chakraProps}>
       {paused ? <IoPlayOutline {...options} /> : <IoPauseOutline {...options}/>}
     </IconButton>
   );

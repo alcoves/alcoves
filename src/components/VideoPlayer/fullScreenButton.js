@@ -4,7 +4,7 @@ import { IoExpand, } from 'react-icons/io5';
 
 function FullScreenButton({ vRef }) {
   return (
-    <IconButton variant='ghost'>
+    <IconButton variant='ghost' size='sm'>
       <IoExpand
         size='20px'
         color='white'

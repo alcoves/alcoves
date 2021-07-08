@@ -1,7 +1,11 @@
 import React, { useEffect, useState, } from 'react';
-import { Slider, SliderFilledTrack, SliderThumb, SliderTrack, } from '@chakra-ui/slider';
+import { Slider, SliderFilledTrack, SliderThumb, SliderTrack, } from '@chakra-ui/react';
 
 function Duration({ vRef = {} }) {
+  const bufferedLength = vRef?.current?.buffered?.length;
+  const bufferedEnd = bufferedLength ? vRef?.current?.buffered?.end(bufferedLength - 1) : 0;
+  // const bufferedStart = bufferedLength ? vRef?.current?.buffered?.start(0) : 0;
+
   const [progress, setProgress ] = useState(0);
 
   useEffect(() => {
@@ -30,19 +34,34 @@ function Duration({ vRef = {} }) {
   }, [vRef]);
 
   return (
-    <Slider 
+    <Slider
+      w='100%'
+      cursor='pointer'
+      focusThumbOnChange={false}
       onChange={(val) => {
         setProgress(val);
         vRef.current.currentTime = val;
       }} 
-      max={vRef.current.duration || 0}
-      w='100%' color='white' lf='10px' aria-label='volume-slider'
+      max={vRef?.current?.duration || 0}
       value={progress}
     >
-      <SliderTrack bg='gray.700'>
-        <SliderFilledTrack bg='gray.500' />
+
+      <Slider
+        w='100%'
+        h='5px' // important to align button
+        max={vRef?.current?.duration || 0}
+        lf='10px' aria-label='buffered'
+        value={bufferedEnd || progress}
+      >
+        <SliderTrack rounded='md' bg='rgba(160, 174, 192, .25)'>
+          <SliderFilledTrack bg='gray.500' rounded='md' />
+        </SliderTrack>
+      </Slider>
+      
+      <SliderTrack bg='transparent'>
+        <SliderFilledTrack bg='transparent' />
       </SliderTrack>
-      <SliderThumb />
+      <SliderThumb mr='2' h='16px' w='16px' bg='gray.500'/>
     </Slider>
   );
 }

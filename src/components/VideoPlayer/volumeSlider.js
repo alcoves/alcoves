@@ -26,7 +26,7 @@ function VolumeSlider({ vRef }) {
         <SliderTrack bg='gray.700'>
           <SliderFilledTrack bg='gray.500' />
         </SliderTrack>
-        <SliderThumb />
+        <SliderThumb bg='gray.500' />
       </Slider>
     </Box>
   );
