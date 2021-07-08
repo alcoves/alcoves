@@ -30,9 +30,9 @@ function index({ url, videos }) {
 }
 
 export async function getServerSideProps() {
-  const url = 'http://localhost:3000/api/videos';
-  const videos = await fetcher(url);
-  return { props: { videos, url } };
+  const urlPath = '/api/videos';
+  const videos = await fetcher(`http://localhost:3000${urlPath}`);
+  return { props: { videos, urlPath } };
 }
 
 export default index;
