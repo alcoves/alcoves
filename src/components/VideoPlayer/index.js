@@ -16,7 +16,6 @@ let idleTimer;
 function VideoPlayer({ thumbnail, url, id = 'bkenVideoPlayer' }) {
   const vRef = useRef(null);
   const cRef = useRef(null);
-  // const [ui, setUi] = useState(null);
   const [player, setPlayer] = useState(null);
   const [rotation, setRotation] = useState(0);
   const [controlsVisible, setControlsVisible] = useState(true);
@@ -74,7 +73,7 @@ function VideoPlayer({ thumbnail, url, id = 'bkenVideoPlayer' }) {
   }
 
   function renderCenter() {
-    if (player?.getLoadMode() === 1) {
+    if (vRef.current.currentTime < 1) {
       return <PlayButton
         size='100px'
         vRef={vRef}
@@ -122,10 +121,10 @@ function VideoPlayer({ thumbnail, url, id = 'bkenVideoPlayer' }) {
               {renderCenter()}
             </Box>
           </Flex>
-          <Flex w='100%' px='2' h='6' justifyContent='space-between'>
-            {Number.isFinite(vRef?.current?.duration) && <Scrubber vRef={vRef} />}
+          <Flex w='100%' px='2'>
+            <Scrubber vRef={vRef} />
           </Flex>
-          <Flex w='100%' px='2' h='6' mb='2' justifyContent='space-between' alignContent='end'>
+          <Flex w='100%' px='2' justifyContent='space-between' alignContent='end'>
             <Flex alignItems='center'>
               <PlayButton vRef={vRef} />
               <VolumeButton vRef={vRef} />

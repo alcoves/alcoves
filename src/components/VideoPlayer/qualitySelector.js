@@ -16,6 +16,7 @@ function QualitySelector({ player }) {
   return (
     <Menu placement='top'>
       <MenuButton
+        size='sm'
         as={Button}
         variant='ghost'
         rounded='none'
