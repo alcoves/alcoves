@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect, } from 'react';
 import qs from 'query-string';
 import shaka from 'shaka-player';
 import { Box, CircularProgress, Flex, } from '@chakra-ui/react';
+import screenfull from 'screenfull';
 import Scrubber from './scrubber';
 import Duration from './duration';
 import PlayButton from './playButton';
@@ -85,6 +86,12 @@ function VideoPlayer({ thumbnail, url, id = 'bkenVideoPlayer' }) {
     return <div/>;
   }
 
+  function toggleFullScreen() {
+    if (screenfull.isEnabled) {
+      screenfull.toggle(cRef?.current);
+    }
+  }
+
   return (
     <Box
       ref={cRef}
@@ -116,7 +123,10 @@ function VideoPlayer({ thumbnail, url, id = 'bkenVideoPlayer' }) {
           opacity={`${controlsVisible ? 1 : 0}`}
           background='linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.30) 90%, rgba(0,0,0,0.60) 100%)'
         >
-          <Flex w='100%' h='100%' flexDirection='column' justify='center' align='center' onClick={() => togglePlay()}>
+          <Flex w='100%' h='100%' flexDirection='column' justify='center' align='center'
+            onClick={() => togglePlay()}
+            onDoubleClick={() => toggleFullScreen()}
+          >
             <Box>
               {renderCenter()}
             </Box>
@@ -135,7 +145,7 @@ function VideoPlayer({ thumbnail, url, id = 'bkenVideoPlayer' }) {
               <QualitySelector player={player} />
               <Flex alignItems='center'>
                 <PictureInPictureButton vRef={vRef} />
-                <FullScreenButton vRef={vRef} />
+                <FullScreenButton toggle={toggleFullScreen} />
               </Flex>
             </Flex>
           </Flex>
