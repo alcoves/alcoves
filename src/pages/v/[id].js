@@ -12,8 +12,8 @@ import ShareModal from '../../components/ShareModal';
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
-export default function Video({ url, video: v }) {
-  const { data } = useSWR(url, fetcher, { initialData: v });
+export default function Video({ urlPath, video: v }) {
+  const { data } = useSWR(urlPath, fetcher, { initialData: v });
 
   useEffect(() => {
     axios.post(`/api/videos/${v.videoId}/views`).catch((err) =>{
@@ -85,7 +85,7 @@ export default function Video({ url, video: v }) {
 }
 
 export async function getServerSideProps({ params }) {
-  const url = `http://localhost:3000/api/videos/${params.id}`;
-  const video = await fetcher(url);
-  return { props: { video, url, id: params.id } };
+  const urlPath = `/api/videos/${params.id}`;
+  const video = await fetcher(`http://localhost:3000${urlPath}`);
+  return { props: { video, urlPath, id: params.id } };
 }
