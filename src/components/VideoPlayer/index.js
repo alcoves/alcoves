@@ -97,8 +97,12 @@ function VideoPlayer({ thumbnail, url, id = 'bkenVideoPlayer' }) {
       ref={cRef}
       onMouseMove={controlHover}
       onTouchStart={controlHover}
-      onMouseEnter={() => setControlsVisible(!player?.isBuffering())}
-      onMouseLeave={() => setControlsVisible(player?.isBuffering())}
+      onMouseEnter={() => setControlsVisible(true)}
+      onMouseLeave={() => {
+        if (!vRef?.current.paused) {
+          setControlsVisible(player?.isBuffering());
+        }
+      }}
       m='0px' minW='100%' lineHeight='0px' minH='280px'
       pos='relative' backgroundColor='rgba(0,0,0,.3)'
       cursor={`${controlsVisible ? 'auto' : 'none'}`}
