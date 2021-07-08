@@ -44,8 +44,8 @@ function Duration({ vRef = {} }) {
           setProgress(val);
           vRef.current.currentTime = val;
         }} 
-        max={vRef?.current?.duration || 0}
-        value={progress}
+        max={vRef?.current?.duration || 100}
+        value={progress || 0}
         aria-label='current'
       >
         <SliderTrack bg='transparent'>
@@ -58,8 +58,8 @@ function Duration({ vRef = {} }) {
           height='6px'
           id='buffer'
           aria-label='buffered'
-          value={bufferedEnd || progress}
-          max={vRef?.current?.duration || 0}
+          value={bufferedEnd}
+          max={vRef?.current?.duration || 100}
         >
           <SliderTrack rounded='md' bg='rgba(255, 255, 255, 0.2)'>
             <SliderFilledTrack bg='rgba(120, 120, 120, 1)' rounded='md' />
