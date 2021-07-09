@@ -31,16 +31,16 @@ jobs:
       - name: Deploy job
         uses: appleboy/ssh-action@master
         env:
-          NOMAD_TOKEN: ${{ secrets.NOMAD_TOKEN }}
           GITHUB_SHA: ${{ github.sha }}
+          NOMAD_TOKEN: ${{ secrets.NOMAD_TOKEN }}
         with:
           key: ${{ secrets.SSH_KEY }}
-          host: ${{ secrets.NOMAD_ADDRESS }}
           username: ${{ secrets.SSH_USER }}
-          envs: NOMAD_TOKEN
+          host: ${{ secrets.NOMAD_ADDRESS }}
+          envs: GITHUB_SHA,NOMAD_TOKEN
           script: |
             cd /root/reef && git fetch -p && git reset --hard ${GITHUB_SHA}
-            sed -i "s+:latest+:${GITHUB_SHA}+g" job.hcl
+            sed -i "s+:latest+:${GITHUB_SHA}+g" ./job.hcl
             nomad job run -token ${NOMAD_TOKEN} ./job.hcl
       - name: Cleanup Repository
         run: ./scripts/doco_registry_cleanup.sh
