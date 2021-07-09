@@ -39,7 +39,7 @@ jobs:
           host: ${{ secrets.NOMAD_ADDRESS }}
           username: ${{ secrets.SSH_USER }}
           source: "reef.json"
-          target: "reef.json"
+          target: "./"
       - name: Deploy job
         uses: appleboy/ssh-action@master
         env:
