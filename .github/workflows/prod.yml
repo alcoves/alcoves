@@ -32,7 +32,6 @@ jobs:
           sudo apt install unzip -y && unzip nomad_1.1.0_linux_amd64.zip
           sed -i "s+:latest+:${GITHUB_SHA}+g" job.hcl
           ./nomad job run -output job.hcl >> reef.json
-          echo ${NOMAD_TOKEN} > token.txt
       - name: Deploy job
         uses: appleboy/ssh-action@master
         env:
@@ -43,6 +42,8 @@ jobs:
           host: ${{ secrets.NOMAD_ADDRESS }}
           username: ${{ secrets.SSH_USER }}
           envs: NOMAD_JOB,NOMAD_TOKEN
-          script: nomad job run $NOMAD_JOB -token $NOMAD_TOKEN
+          script: |
+            echo ${NOMAD_JOB} >> reef.json
+            nomad job run reef.json -token $NOMAD_TOKEN
       - name: Cleanup Repository
         run: ./scripts/doco_registry_cleanup.sh
