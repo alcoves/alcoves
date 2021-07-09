@@ -26,15 +26,23 @@ jobs:
         run: doctl registry login --expiry-seconds 600
       - name: Push image to DigitalOcean Container Registry
         run: docker push registry.digitalocean.com/bken/reef --all-tags
-      - name: Deploy to Prod
-        env:
-          NOMAD_TOKEN: ${{ secrets.NOMAD_TOKEN }}
-          NOMAD_ADDRESS: ${{ secrets.NOMAD_ADDRESS }}
+      - name: Creating job file
         run: |
           wget -q https://releases.hashicorp.com/nomad/1.1.0/nomad_1.1.0_linux_amd64.zip
           sudo apt install unzip -y && unzip nomad_1.1.0_linux_amd64.zip
           sed -i "s+:latest+:${GITHUB_SHA}+g" job.hcl
-          ./nomad job run -output job.hcl >> job.json
-          curl --request POST --data @job.json "http://${NOMAD_ADDRESS}:4646/v1/jobs" -H "X-Nomad-Token: ${NOMAD_TOKEN}"
+          ./nomad job run -output job.hcl >> reef.json
+          echo ${NOMAD_TOKEN} > token.txt
+      - name: Deploy job
+        uses: appleboy/ssh-action@master
+        env:
+          NOMAD_JOB: cat ./reef.json
+          NOMAD_TOKEN: ${{ secrets.NOMAD_TOKEN }}
+        with:
+          key: ${{ secrets.SSH_KEY }}
+          host: ${{ secrets.NOMAD_ADDRESS }}
+          username: ${{ secrets.SSH_USER }}
+          envs: NOMAD_JOB,NOMAD_TOKEN
+          script: nomad job run $NOMAD_JOB -token $NOMAD_TOKEN
       - name: Cleanup Repository
         run: ./scripts/doco_registry_cleanup.sh
