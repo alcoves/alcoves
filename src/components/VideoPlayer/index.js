@@ -13,6 +13,7 @@ import FullScreenButton from './fullScreenButton';
 import PictureInPictureButton from './pictureInPictureButton';
 
 let idleTimer;
+let clickTimer;
 
 function VideoPlayer({ thumbnail, url, id = 'bkenVideoPlayer' }) {
   const vRef = useRef(null);
@@ -76,9 +77,10 @@ function VideoPlayer({ thumbnail, url, id = 'bkenVideoPlayer' }) {
   function renderCenter() {
     if (vRef.current.currentTime < 1) {
       return <PlayButton
-        size='100px'
+        size='50px'
         vRef={vRef}
-        chakraProps={{ variant: 'solid', rounded: 'md', h:'100%' }}
+        color='#eee'
+        chakraProps={{ variant: 'solid', rounded: 'xl', h:'100%', p:'10px' }}
       />;
     } if (player?.isBuffering()) {
       return <CircularProgress isIndeterminate />;
@@ -113,8 +115,8 @@ function VideoPlayer({ thumbnail, url, id = 'bkenVideoPlayer' }) {
         id={id}
         autoPlay
         ref={vRef}
-        disableRemotePlayback
         poster={thumbnail}
+        disableRemotePlayback
         style={{ top: 0, left: 0, width: '100%', height: '100%', background: 'black' }}
       />
 
@@ -128,12 +130,20 @@ function VideoPlayer({ thumbnail, url, id = 'bkenVideoPlayer' }) {
           background='linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.30) 90%, rgba(0,0,0,0.60) 100%)'
         >
           <Flex w='100%' h='100%' flexDirection='column' justify='center' align='center'
-            onClick={() => togglePlay()}
-            onDoubleClick={() => toggleFullScreen()}
+            onClick={(e) => {
+              clearTimeout(clickTimer);
+              if (e.detail === 1) {
+                clickTimer = setTimeout(() => {
+                  togglePlay();
+                }, 200);
+              } else if (e.detail === 2) {
+                clearTimeout(clickTimer);
+                toggleFullScreen();
+              }
+              e.preventDefault();
+            }}
           >
-            <Box>
-              {renderCenter()}
-            </Box>
+            <Box> {renderCenter()} </Box>
           </Flex>
           <Flex w='100%' px='2' align='end'>
             <Scrubber vRef={vRef} />

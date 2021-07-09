@@ -23,10 +23,10 @@ function VolumeSlider({ vRef }) {
         w='60px' color='white' lf='10px' aria-label='volume-slider'
         value={vRef.current.muted ? 0 : volume}
       >
-        <SliderTrack bg='gray.700'>
-          <SliderFilledTrack bg='gray.500' />
+        <SliderTrack bg='rgba(120, 120, 120, 1)'>
+          <SliderFilledTrack bg='#bf1e2e' />
         </SliderTrack>
-        <SliderThumb bg='gray.200' />
+        <SliderThumb bg='#bf1e2e' />
       </Slider>
     </Box>
   );
