@@ -2,7 +2,7 @@ import { Box, Flex, Heading, Progress, Button, } from '@chakra-ui/react';
 import axios from 'axios';
 import { useState, useCallback, } from 'react';
 import { useDropzone, } from 'react-dropzone';
-import chunkFile from '../utils/chunkFile';
+import chunkFile from '../../utils/chunkFile';
 
 export default function Upload({ refetch }) {
   const [files, setFiles] = useState([]);
