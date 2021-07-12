@@ -11,7 +11,7 @@ function getTotalProgress(file = {}, bytesUploaded = {}) {
   return parseInt(((totalBytesLoaded / file.size || 0) * 100).toFixed(0));
 }
 
-export default function UploadVideo({ file, refetch }) {
+export default function UploadVideo({ uploadId: localUploadId, file, refetch }) {
   const [message, setMessage] = useState('Loading');
   const [bytesUploaded, setBytesUploaded] = useState({});
 
@@ -34,7 +34,7 @@ export default function UploadVideo({ file, refetch }) {
     console.debug('Parsing response');
     const { uploadId, key, videoId, urls } = await (await uploadResponse).json();
 
-    console.log('Uploading files parts');
+    console.log('Uploading parts');
     const results = await Promise.all(chunks.map((chunk, i) => {
       console.log(`uploading part ${i} to ${urls[i]}`);
       return axios.put(urls[i], chunk, {
