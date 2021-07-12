@@ -33,7 +33,7 @@ export default function DeleteVideo({ id, refetch }) {
   return (
     <>
       <Box onClick={onOpen}>
-        Delete Video
+        Delete
       </Box>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

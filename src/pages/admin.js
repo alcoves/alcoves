@@ -23,7 +23,7 @@ async function reprocessThumbnail(id) {
   await axios.post('https://bk-det1.bken.dev/tidal/jobs/thumbnail', {
     videoId: id,
     webhookUrl: `https://bken.io/api/videos/${id}`,
-    rcloneSourceUri: `wasabi:cdn.bken.io/v/${id}/${id}.mp4`,
+    rcloneSourceUri: `wasabi:cdn.bken.io/v/${id}/original`,
     rcloneDestinationUri: `wasabi:cdn.bken.io/v/${id}/thumb.webp`,
   });
 }
@@ -33,7 +33,7 @@ async function reprocessVideo(id) {
     videoId: id,
     webhookUrl: `https://bken.io/api/videos/${id}`,
     rcloneDestinationUri: `wasabi:cdn.bken.io/v/${id}/pkg`,
-    rcloneSourceUri: `wasabi:cdn.bken.io/v/${id}/${id}.mp4`, // TODO :: Get this from db
+    rcloneSourceUri: `wasabi:cdn.bken.io/v/${id}/original`,
   });
 }
 
