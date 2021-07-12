@@ -40,6 +40,14 @@ function VideoPlayer({ thumbnail, url, id = 'bkenVideoPlayer' }) {
       const { t = 0 } = qs.parse(window.location.search);
       // console.log(`Seeking to ${t}`);
 
+      player.configure({
+        manifest: {
+          dash: {
+            ignoreEmptyAdaptationSet: true,
+          },
+        },
+      });
+
       player.load(url, t).then(() => {
         // console.debug('video has been loaded');
       }).catch((err) => {

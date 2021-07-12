@@ -1,4 +1,3 @@
-import mime from 'mime-types';
 import { nanoid, } from 'nanoid';
 import { getSession, } from 'next-auth/client';
 import { s3, } from '../../../utils/s3';
@@ -15,7 +14,7 @@ export default async function handler(req, res) {
         const { UploadId, Key } = await s3.createMultipartUpload({
           Bucket: 'cdn.bken.io',
           ContentType: type,
-          Key: `v/${videoId}/${videoId}.${mime.extension(type)}`,
+          Key: `v/${videoId}/original`,
         }).promise();
 
         const urls = [];
