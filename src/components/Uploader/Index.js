@@ -29,12 +29,8 @@ export default function Uploader({ refetch }) {
   }, []);
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
-  useEffect(() => {
-    console.log('Loading uploader component');
-    return function cleanup() {
-      console.log('running cleanup');
-      setFiles([]);
-    };
+  useEffect(() => function cleanup() {
+    setFiles([]);
   }, []);
 
   return (

@@ -39,6 +39,14 @@ function VideoPlayer({ link }) {
     const video = document.getElementById('studioVideoPlayer');
     const player = new shaka.Player(video);
 
+    player.configure({
+      manifest: {
+        dash: {
+          ignoreEmptyAdaptationSet: true,
+        },
+      },
+    });
+
     player.load(link).then(() => {
       console.log('The video has now been loaded!');
     }).catch((err) => {
@@ -74,7 +82,7 @@ export default function StudioVideo({ v = {}, refetch }) {
         >
           <Flex w='100%' h='100%' direction='column' p='2'>
             <Flex>
-              <EditVisibility id={video.videoId} visibility={video.visibility}/>
+              
               <Spacer/>
             </Flex>
             <Spacer/>
@@ -118,14 +126,16 @@ export default function StudioVideo({ v = {}, refetch }) {
           </Flex> 
         </Box>
         <Box p='2' bg='transparent' w='100%'>
-          <EditTitle id={video.videoId} title={video.title} />
+          <Flex direction='row'>
+            <Box mr='2'><EditVisibility id={video.videoId} visibility={video.visibility}/></Box>
+            <EditTitle id={video.videoId} title={video.title} />
+          </Flex>
           <Flex direction='column'>
             <Metadata v={v}/>
             <Text fontSize='xs' mx='5px' cursor='pointer'
               onClick={() => {navigator.clipboard.writeText(shareLink);}}
             >{shareLink}</Text>
           </Flex>
-
           <Flex pt='1' justifyContent='end'>
             <HStack>
               <Button
