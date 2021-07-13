@@ -8,6 +8,7 @@ import { Chakra, } from '../styles/chakra';
 
 function App({ Component, pageProps }) {
   const router = useRouter();
+  
   useEffect(() => {
     const handleRouteChange = (url) => {
       gtag.pageview(url);

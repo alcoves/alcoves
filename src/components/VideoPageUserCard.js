@@ -1,30 +1,31 @@
 import useSWR from 'swr';
-import { useRouter, } from 'next/router';
+import Link from 'next/link';
 import { Flex, Avatar, Heading, } from '@chakra-ui/react';
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
 function VideoPageUserCard({ id }) {
-  const router = useRouter();
   const { data } = useSWR(id ? `/api/users/${id}` : false, fetcher);
 
   if (data) {
     return (
       <Flex pt='4'>
-        <Avatar
-          size='md'
-          src={data.image}
-          cursor='pointer'
-          onClick={() => router.push(`/u/${id}`)}
-        />
-        <Heading
-          pl='4'
-          size='sm'
-          cursor='pointer'
-          onClick={() => router.push(`/u/${id}`)}
-        >
-          {data.name}
-        </Heading>
+        <Link href={`/u/${id}`}>
+          <Avatar
+            size='md'
+            src={data.image}
+            cursor='pointer'
+          />
+        </Link>
+        <Link href={`/u/${id}`}>
+          <Heading
+            pl='4'
+            size='sm'
+            cursor='pointer'
+          >
+            {data.name}
+          </Heading>
+        </Link>
       </Flex>
     );
   }

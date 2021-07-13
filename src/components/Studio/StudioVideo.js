@@ -15,13 +15,13 @@ import { Box, Flex, Progress , Text, Spacer, Modal,
   HStack, } from '@chakra-ui/react';
 import { useEffect, } from 'react';
 import { IoPlayOutline, } from 'react-icons/io5';
-import { useRouter, } from 'next/router';
 import useSWR from 'swr';
 import shaka from 'shaka-player';
 import EditTitle from './EditTitle';
 import videoDuration from '../../utils/videoDuration';
 import DeleteVideo from './DeleteVideo';
 import EditVisibility from './EditVisibility';
+import Link from 'next/Link';
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -63,7 +63,6 @@ function VideoPlayer({ link }) {
 }
 
 export default function StudioVideo({ v = {}, refetch }) {
-  const router = useRouter();
   const { data: video } = useSWR(
     `/api/videos/${v?.videoId}`, fetcher,
     { initialData: v, refreshInterval: v?.status === 'completed' ? 0 : 2000 }
@@ -138,13 +137,14 @@ export default function StudioVideo({ v = {}, refetch }) {
           </Flex>
           <Flex pt='1' justifyContent='end'>
             <HStack>
-              <Button
-                size='xs'
-                variant='outline'
-                disabled={video.status !== 'completed'}
-                onClick={() => { router.push(`/v/${video.videoId}`); }}
-              > Watch page
-              </Button>
+              <Link href={`/v/${video.videoId}`}>
+                <Button
+                  size='xs'
+                  variant='outline'
+                  disabled={video.status !== 'completed'}
+                > Watch page
+                </Button>
+              </Link>
               <Menu>
                 <MenuButton variant='outline' size='xs' as={Button}>
                   More
