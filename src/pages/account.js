@@ -1,5 +1,5 @@
 import { useSession, } from 'next-auth/client';
-import { Flex, Avatar, VStack, SkeletonCircle, Heading, SkeletonText, Text, Switch, } from '@chakra-ui/react';
+import { Flex, Avatar, VStack, SkeletonCircle, Heading, SkeletonText, Text, } from '@chakra-ui/react';
 import Layout from '../components/Layout';
 
 export default function Account() {

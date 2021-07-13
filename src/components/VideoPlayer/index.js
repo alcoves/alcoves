@@ -135,6 +135,7 @@ function VideoPlayer({ thumbnail, url, id = 'bkenVideoPlayer' }) {
           flexDirection='column' justifyContent='flex-end'
           background='rgb(255,255,255)' transition='opacity .1s ease-in'
           opacity={`${controlsVisible ? 1 : 0}`}
+          // eslint-disable-next-line
           background='linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.30) 90%, rgba(0,0,0,0.60) 100%)'
         >
           <Flex w='100%' h='100%' flexDirection='column' justify='center' align='center'

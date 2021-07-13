@@ -25,7 +25,7 @@ export default NextAuth({
       session.id = token.id;
       return Promise.resolve(session);
     },
-    redirect(url, _) {
+    redirect(url) {
       if (url === '/api/auth/signin') {
         return Promise.resolve('/');
       }
