@@ -12,13 +12,15 @@ import ShareModal from '../../components/ShareModal';
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
-export default function Video({ urlPath, video: v }) {
-  const { data } = useSWR(urlPath, fetcher, { initialData: v });
+export default function Video({ error, urlPath, video: v }) {
+  const { data } = useSWR(urlPath && !error, fetcher, { initialData: v });
 
   useEffect(() => {
-    axios.post(`/api/videos/${v.videoId}/views`).catch((err) =>{
-      console.error('error counting video view', err);
-    });
+    if (!error) {
+      axios.post(`/api/videos/${v.videoId}/views`).catch((err) =>{
+        console.error('error counting video view', err);
+      });
+    }
   }, []);
   
   if (data?.status === 'completed') {
@@ -70,6 +72,16 @@ export default function Video({ urlPath, video: v }) {
     );
   }
 
+  if (error) {
+    return (
+      <Layout>
+        <Flex justify='center' flexDirection='column' align='center' pt='25px'>
+          <Heading pb='25px'>There was an error loading the video</Heading>
+        </Flex>
+      </Layout>
+    );
+  }
+
   return (
     <Layout>
       <Flex justify='center' flexDirection='column' align='center' pt='25px'>
@@ -83,6 +95,11 @@ export default function Video({ urlPath, video: v }) {
 
 export async function getServerSideProps({ params }) {
   const urlPath = `/api/videos/${params.id}`;
-  const video = await fetcher(`http://localhost:3000${urlPath}`);
-  return { props: { video, urlPath, id: params.id } };
+  try {
+    const video = await fetcher(`http://localhost:3000${urlPath}`);
+    return { props: { video, urlPath, id: params.id } };
+  } catch (error) {
+    console.error(error);
+    return { props: { error: true, video: {}, urlPath, id: params.id } };
+  }
 }
