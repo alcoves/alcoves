@@ -41,8 +41,8 @@ export default function Navigation() {
               <MenuButton me='10px'>
                 <Avatar
                   h='30px' w='30px'
-                  name={session.user.name}
                   src={session.user.image}
+                  name={session.user.name[0]}
                   onClick={() => setOpen(!open)}
                 />
               </MenuButton>

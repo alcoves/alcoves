@@ -23,8 +23,9 @@ export default function studio() {
     }
   }, [data]);
   
-  if (!session || (!sessionLoading && !session)) {
+  if (!sessionLoading && !session) {
     router.push('/login');
+    return <div/>;
   }
 
   return (

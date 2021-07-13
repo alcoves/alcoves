@@ -21,7 +21,7 @@ import EditTitle from './EditTitle';
 import videoDuration from '../../utils/videoDuration';
 import DeleteVideo from './DeleteVideo';
 import EditVisibility from './EditVisibility';
-import Link from 'next/Link';
+import Link from 'next/link';
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
