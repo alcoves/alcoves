@@ -1,5 +1,5 @@
 import React, { useEffect, useState, } from 'react';
-import { Slider, SliderFilledTrack, SliderThumb, SliderTrack, Flex, Box, } from '@chakra-ui/react';
+import { Slider, SliderFilledTrack, SliderThumb, SliderTrack, Box, } from '@chakra-ui/react';
 
 function Duration({ vRef = {} }) {
   const bufferedLength = vRef?.current?.buffered?.length;

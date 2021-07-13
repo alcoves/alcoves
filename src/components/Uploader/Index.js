@@ -113,6 +113,11 @@ export default function Uploader({ refetch }) {
         </Flex>
       </Box>
       <Box>
+        <Text mt='2' textAlign='center'>
+          Please keep this page open while videos are uploading
+        </Text>
+      </Box>
+      <Box>
         {uploads.map(item => <UploadItem
           item={item}
           key={item.id}
