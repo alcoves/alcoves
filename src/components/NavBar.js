@@ -4,6 +4,7 @@ import { Flex, Spacer, Text, Switch, Box, Avatar, Img, Menu, MenuButton, MenuLis
 import { IoFilmOutline, IoVideocam, } from 'react-icons/io5';
 import isAdmin from '../utils/isAdmin';
 import Link from 'next/link';
+import Uploader from './Uploader';
 
 export default function Navigation() {
   const [session] = useSession();
@@ -26,11 +27,7 @@ export default function Navigation() {
       <Spacer />
       <Box p='1'>
         <Flex justify='center' align='center' h='100%'>
-          <Link href='/upload'>
-            <Button minW='auto' leftIcon={<IoVideocam />} me='2' size='sm'>
-              Upload
-            </Button>
-          </Link>       
+          <Box me='2'><Uploader/></Box>
           <Link href='/studio'>
             <Button minW='auto' leftIcon={<IoFilmOutline />} me='2' size='sm'>
               Studio
