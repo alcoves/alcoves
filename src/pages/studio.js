@@ -4,7 +4,6 @@ import { Box, Button, Flex, SimpleGrid, } from '@chakra-ui/react';
 import { useRouter, } from 'next/router';
 import { useEffect, useState, } from 'react';
 import Layout from '../components/Layout';
-import Uploader from '../components/Uploader/Index';
 import StudioVideo from '../components/Studio/StudioVideo';
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
@@ -24,7 +23,7 @@ export default function studio() {
     }
   }, [data]);
   
-  if (!sessionLoading && !session) {
+  if (!session || (!sessionLoading && !session)) {
     router.push('/login');
   }
 
@@ -33,7 +32,6 @@ export default function studio() {
       <Box p='4'>
         <Flex mb='2' justify='end'>
           <Button isLoading={isValidating} size='sm' onClick={mutate}>Refresh</Button>
-          <Uploader refetch={mutate}/>
         </Flex>
         <SimpleGrid columns={[1, 1, 3, 3, 4]} spacing='10px'>
           {videos.map((v, i) => <StudioVideo key={v?.videoId || i} v={v} refetch={mutate}/>)}
