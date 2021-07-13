@@ -1,10 +1,10 @@
 import { useState, } from 'react';
 import { signOut, useSession, } from 'next-auth/client';
 import { Flex, Spacer, Text, Switch, Box, Avatar, Img, Menu, MenuButton, MenuList, MenuItem, MenuDivider, Button, useColorMode, } from '@chakra-ui/react';
-import { IoFilmOutline, IoVideocam, } from 'react-icons/io5';
+import { IoFilmOutline, } from 'react-icons/io5';
 import isAdmin from '../utils/isAdmin';
 import Link from 'next/link';
-import Uploader from './Uploader';
+import Uploader from './Uploader/Index';
 
 export default function Navigation() {
   const [session] = useSession();
