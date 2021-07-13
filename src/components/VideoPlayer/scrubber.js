@@ -62,7 +62,7 @@ function Duration({ vRef = {} }) {
           max={vRef?.current?.duration || 100}
         >
           <SliderTrack rounded='md' bg='rgba(255, 255, 255, 0.2)'>
-            <SliderFilledTrack bg='rgba(120, 120, 120, 1)' rounded='md' />
+            <SliderFilledTrack bg='rgba(190, 190, 190, 1)' rounded='md' />
           </SliderTrack>
         </Slider>
       </Box>
