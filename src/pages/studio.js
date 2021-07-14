@@ -4,14 +4,14 @@ import { Box, Button, Flex, SimpleGrid, } from '@chakra-ui/react';
 import { useRouter, } from 'next/router';
 import { useEffect, useState, } from 'react';
 import Layout from '../components/Layout';
-import StudioVideo from '../components/Studio/StudioVideo';
+import StudioVideoCard from '../components/Studio/StudioVideoCard';
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
 export default function studio() {
   const router = useRouter();
   const [ session, sessionLoading ] = useSession();
-  const [videos, setVideos] = useState(new Array(8));
+  const [videos, setVideos] = useState([]);
   const { data, mutate, isValidating } = useSWR(session ?
     `/api/users/${session.id}/videos` :
     null, fetcher
@@ -34,8 +34,8 @@ export default function studio() {
         <Flex mb='2' justify='end'>
           <Button isLoading={isValidating} size='sm' onClick={mutate}>Refresh</Button>
         </Flex>
-        <SimpleGrid columns={[1, 1, 3, 3, 4]} spacing='10px'>
-          {videos.map((v, i) => <StudioVideo key={v?.videoId || i} v={v} refetch={mutate}/>)}
+        <SimpleGrid minChildWidth='350px' spacing='10px'>
+          {videos.map((v, i) => <StudioVideoCard key={v?.videoId || i} v={v}/>)}
         </SimpleGrid>
       </Box>
     </Layout>
