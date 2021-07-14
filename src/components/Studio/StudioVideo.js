@@ -12,7 +12,8 @@ import { Box, Flex, Progress , Text, Spacer, Modal,
   MenuItem,
   Skeleton,
   Button,
-  HStack, } from '@chakra-ui/react';
+  HStack,
+  ModalBody, } from '@chakra-ui/react';
 import { useEffect, } from 'react';
 import { IoPlayOutline, } from 'react-icons/io5';
 import useSWR from 'swr';
@@ -160,9 +161,11 @@ export default function StudioVideo({ v = {}, refetch }) {
         </Box>
         <Modal size='4xl' isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
-          <ModalContent maxH='80vh' backgroundColor='black'>
+          <ModalContent maxH='80vh'>
             <ModalCloseButton />
-            <VideoPlayer link={video.mpdLink}/>
+            <Box mt='50px'>
+              <VideoPlayer link={video.mpdLink}/>
+            </Box>
           </ModalContent>
         </Modal>
       </Skeleton>
