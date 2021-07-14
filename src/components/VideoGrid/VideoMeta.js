@@ -1,4 +1,4 @@
-import { Box, Grid, GridItem, Text, Avatar, Heading, } from '@chakra-ui/react';
+import { Flex, Text, Avatar, Heading, HStack, } from '@chakra-ui/react';
 import useSWR from 'swr';
 import moment from 'moment';
 import abbreviateNumber from '../../utils/abbreviateNumber';
@@ -12,34 +12,28 @@ export default function VideoMeta({ v }) {
   const metadata = `${abbreviateNumber(v.views)} views - ${createdAt}`;
 
   return (
-    <Grid
-      templateRows='repeat(2, 40px)'
-      templateColumns='repeat(5, 1fr)'
-      gap={1}
-    >
-      <GridItem rowSpan={2} colSpan={1}>
+    <HStack spacing='12px' py='2' align='start'>
+      <Flex>
         <Link href={`/u/${v.userId}`}>
           <Avatar
-            size='md'
+            h='40px'
+            w='40px'
             cursor='pointer'
             src={user?.image}
           />
         </Link>
-      </GridItem>
-      <GridItem colSpan={4}>
+      </Flex>
+      <Flex direction='column' overflow='hidden'>
         <Link href={`/v/${v.videoId}`}>
-          <Heading cursor='pointer' size='sm'>{v.title}</Heading>
+          <Heading noOfLines={2} cursor='pointer' size='sm'>
+            {v.title}
+          </Heading>
         </Link>
-       
-      </GridItem>
-      <GridItem colSpan={4} rowSpan={1}>
-        <Box>
-          <Link href={`/u/${v.userId}`}>
-            <Text cursor='pointer' fontSize='xs'>{user?.name}</Text>
-          </Link>
-          <Text fontSize='xs'>{metadata}</Text>
-        </Box>
-      </GridItem>
-    </Grid>
+        <Link href={`/u/${v.userId}`}>
+          <Text cursor='pointer' fontSize='xs'>{user?.name}</Text>
+        </Link>
+        <Text fontSize='xs'>{metadata}</Text>
+      </Flex>
+    </HStack>
   );
 }
