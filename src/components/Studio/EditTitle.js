@@ -1,10 +1,10 @@
 import axios from 'axios';
 import { useEffect, useState, } from 'react';
-import { Input, } from '@chakra-ui/react';
+import { Input, InputGroup, InputLeftAddon, } from '@chakra-ui/react';
 
 let timer;
 
-export default function EditTitle({ id, title: t }) {
+export default function EditTitle({ id, title: t, refetch }) {
   const [title, setTitle ] = useState(t);
   const [loading, setLoading] = useState(false);
 
@@ -18,6 +18,7 @@ export default function EditTitle({ id, title: t }) {
       console.log('setting title');
       setLoading(true);
       axios.patch(`/api/videos/${id}`, { title }).then(() => {
+        if (refetch) refetch();
         setLoading(false);
       }).catch((error) => {
         console.error(error);
@@ -27,14 +28,18 @@ export default function EditTitle({ id, title: t }) {
   }
 
   return (
-    <Input
-      w='100%'
-      size='sm'
-      value={title}
-      borderRadius='md'
-      isDisabled={loading}
-      placeholder='Enter a title'
-      onChange={({ target }) => setTitle(target.value)}
-    />
+    <InputGroup size='sm'>
+      <InputLeftAddon>
+        Title
+      </InputLeftAddon>
+      <Input
+        w='100%'
+        value={title}
+        variant='filled'
+        isDisabled={loading}
+        placeholder='Enter a title'
+        onChange={({ target }) => setTitle(target.value)}
+      />
+    </InputGroup>
   );
 }

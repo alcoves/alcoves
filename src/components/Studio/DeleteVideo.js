@@ -1,7 +1,6 @@
 import axios from 'axios';
 import {
   Button,
-  Box,
   Modal,
   useDisclosure,
   ModalOverlay,
@@ -32,9 +31,9 @@ export default function DeleteVideo({ id, refetch }) {
 
   return (
     <>
-      <Box onClick={onOpen}>
+      <Button size='sm' onClick={onOpen}>
         Delete
-      </Box>
+      </Button>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
