@@ -55,7 +55,7 @@ export default function Video({ error, urlPath, video: v }) {
         </Head>
         <Layout>
           <Box>
-            <VideoPlayer url={data.mpdLink} thumbnail={data.thumbnail}/>
+            <VideoPlayer theaterMode url={data.mpdLink} thumbnail={data.thumbnail}/>
             <Flex w='100%' justifyContent='center'>
               <Box p='4' w='1024px'>
                 <Heading as='h3' size='lg'>{data.title}</Heading>

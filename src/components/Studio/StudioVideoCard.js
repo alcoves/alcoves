@@ -17,8 +17,8 @@ import DeleteVideo from './DeleteVideo';
 import DirectLink from './DirectLink';
 import EditTitle from './EditTitle';
 import EditVisibility from './EditVisibility';
-import StudioVideoPlayer from './StudioVideoPlayer';
 import { IoGlobe, } from 'react-icons/io5';
+import VideoPlayer from '../VideoPlayer/index';
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -91,12 +91,14 @@ export default function StudioVideoCard({ v = {} }) {
         <Modal size='xl' isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
           <ModalContent>
-            <ModalHeader>{video?.title}</ModalHeader>
+            <ModalHeader>
+              Edit Video
+            </ModalHeader>
             <ModalCloseButton />
             <ModalBody>
               <Flex direction='column'>
                 <VStack align='start' spacing='4px' h='100%'>
-                  <StudioVideoPlayer link={video.mpdLink}/>
+                  <VideoPlayer url={video.mpdLink}/>
                   <Spacer/>
                   <EditTitle id={video.videoId} title={video.title} refetch={mutate}/>
                   <DirectLink id={video?.videoId}/>

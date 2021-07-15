@@ -8,7 +8,7 @@ export default function VideoGrid({ videos = [] }) {
     }
   }
   return (
-    <SimpleGrid minChildWidth='350px' spacing='10px'>
+    <SimpleGrid minChildWidth={[200, 350]} spacing='10px'>
       {videos.map(v => <VideoCard key={v.videoId} v={v} />)}
     </SimpleGrid>
   );

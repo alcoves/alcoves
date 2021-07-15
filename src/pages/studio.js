@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 import { useSession, } from 'next-auth/client';
-import { Box, Button, Flex, SimpleGrid, } from '@chakra-ui/react';
+import { Box, Button, Flex, SimpleGrid, useMediaQuery, } from '@chakra-ui/react';
 import { useRouter, } from 'next/router';
 import { useEffect, useState, } from 'react';
 import Layout from '../components/Layout';
@@ -34,7 +34,7 @@ export default function studio() {
         <Flex mb='2' justify='end'>
           <Button isLoading={isValidating} size='sm' onClick={mutate}>Refresh</Button>
         </Flex>
-        <SimpleGrid minChildWidth='350px' spacing='10px'>
+        <SimpleGrid minChildWidth={[200, 400]} spacing='10px'>
           {videos.map((v, i) => <StudioVideoCard key={v?.videoId || i} v={v}/>)}
         </SimpleGrid>
       </Box>

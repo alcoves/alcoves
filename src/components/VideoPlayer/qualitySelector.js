@@ -1,36 +1,24 @@
-import { Menu, MenuItem, Button, MenuButton, MenuList, Text, } from '@chakra-ui/react';
+import { Menu, MenuItem, Button, MenuButton, MenuList, Text, IconButton, } from '@chakra-ui/react';
 import { IoSettingsOutline, } from 'react-icons/io5';
 
 function QualitySelector({ player }) {
   const tracks = player?.getVariantTracks();
-  const selectedTrack = tracks.find((track) => track.active);
+  // const selectedTrack = tracks.find((track) => track.active);
   const abrEnabled = player.getConfiguration().abr.enabled;
-
-  function renderCurrentQuality() {
-    const currentTrackText = selectedTrack?.height ? `${selectedTrack?.height}p` : '';
-    if (abrEnabled) {
-      return <Text fontSize='xs'>Auto {currentTrackText}</Text>;
-    } return <Text fontSize='xs'>{currentTrackText}</Text>;
-  }
 
   return (
     <Menu placement='top'>
       <MenuButton
         size='sm'
-        as={Button}
+        as={IconButton}
         variant='ghost'
-        rounded='none'
-        rightIcon={<IoSettingsOutline size='20px'/>}
-      >
-        {renderCurrentQuality()}
-      </MenuButton>
+        icon={<IoSettingsOutline size='20px' />}
+      />
       <MenuList>
         {tracks.map((track) => {
           const menuText = `${track.height}p${track.frameRate}fps`;
-
           return (
             <MenuItem
-              py='4'
               key={track.id} value={track.id}
               onClick={() => {
                 console.log('setting track', track.height);
@@ -39,18 +27,22 @@ function QualitySelector({ player }) {
                 player.selectVariantTrack(track, true);
               }}
             >
-              {track.active ? <b>{menuText}</b> : <p>{menuText}</p>}
+              <Text fontSize='.85rem' fontWeight={track.active ? 800 : 400}>
+                {menuText}
+              </Text>
             </MenuItem>
           );
         })}
         <MenuItem
-          key='auto' value='Auto' py='4'
+          key='auto' value='Auto'
           onClick={() => {
             const config = { abr: { enabled: true } };
             player.configure(config);
           }}
         >
-          {abrEnabled ? <b>Auto</b> : <p>Auto</p>}
+          <Text fontSize='.85rem' fontWeight={abrEnabled ? 800 : 400}>
+            Auto
+          </Text>
         </MenuItem>
       </MenuList>
     </Menu>
