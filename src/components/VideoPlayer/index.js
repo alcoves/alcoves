@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect, } from 'react';
 import qs from 'query-string';
 import shaka from 'shaka-player';
-import { Box, CircularProgress, Flex, } from '@chakra-ui/react';
+import { Box, Flex, Spinner, } from '@chakra-ui/react';
 import screenfull from 'screenfull';
 import Scrubber from './scrubber';
 import Duration from './duration';
@@ -15,24 +15,39 @@ import PictureInPictureButton from './pictureInPictureButton';
 let idleTimer;
 let clickTimer;
 
-function VideoPlayer({ thumbnail, url, id = 'bkenVideoPlayer' }) {
+function VideoPlayer({ theaterMode, thumbnail, url, id = 'bkenVideoPlayer' }) {
   const vRef = useRef(null);
   const cRef = useRef(null);
   const [player, setPlayer] = useState(null);
-  const [rotation, setRotation] = useState(0);
+  // const [rotation, setRotation] = useState(0);
   const [controlsVisible, setControlsVisible] = useState(true);
+
+  function baseStyles() {
+    if (theaterMode) {
+      return {
+        width:'100%',
+        minHeight: '320px',
+        height:'calc((9 / 16) * 100vw)',
+        maxHeight: 'calc(100vh - 200px)',
+      };
+    }
+    return {
+      width: '100%',
+      height: '100%',
+    };
+  }
 
   useEffect(() => {
     const video = document.getElementById(id);
     setPlayer(new shaka.Player(video));
 
-    const orientationchange = window.addEventListener('orientationchange', (event) => {
-      setRotation(event.target.screen.orientation.angle);
-      console.log(`the orientation of the device is now ${event.target.screen.orientation.angle}`);
-    });
-    return () => {
-      window.removeEventListener('orientationchange', orientationchange);
-    };
+    // const orientationchange = window.addEventListener('orientationchange', (event) => {
+    //   setRotation(event.target.screen.orientation.angle);
+    //   console.log(`the orientation of the device is now ${event.target.screen.orientation.angle}`);
+    // });
+    // return () => {
+    //   window.removeEventListener('orientationchange', orientationchange);
+    // };
   }, []);
 
   useEffect(() => {
@@ -85,13 +100,13 @@ function VideoPlayer({ thumbnail, url, id = 'bkenVideoPlayer' }) {
   function renderCenter() {
     if (vRef.current.currentTime < 1) {
       return <PlayButton
-        size='50px'
+        size='40px'
         vRef={vRef}
         color='#eee'
-        chakraProps={{ variant: 'solid', rounded: 'xl', h:'100%', p:'10px' }}
+        chakraProps={{ variant: 'ghost', rounded: 'xl', h:'100%', p:'10px' }}
       />;
     } if (player?.isBuffering()) {
-      return <CircularProgress isIndeterminate />;
+      return <Spinner size='xl' color='#bf1e2e'/>;
     }
     return <div/>;
   }
@@ -113,11 +128,9 @@ function VideoPlayer({ thumbnail, url, id = 'bkenVideoPlayer' }) {
           setControlsVisible(player?.isBuffering());
         }
       }}
-      m='0px' minW='100%' lineHeight='0px' minH='280px'
       pos='relative' backgroundColor='rgba(0,0,0,.3)'
       cursor={`${controlsVisible ? 'auto' : 'none'}`}
-      height={`${rotation === 0 ? 'calc(100vh - 300px)' : 'calc(100vh - 48px)'}`}
-      maxHeight={`${rotation === 0 ? 'calc((9 /  16) * 100vw)' : 'calc(100vh - 48px)'}`}
+      {...baseStyles()}
     >
       <video
         id={id}
@@ -125,7 +138,7 @@ function VideoPlayer({ thumbnail, url, id = 'bkenVideoPlayer' }) {
         ref={vRef}
         poster={thumbnail}
         disableRemotePlayback
-        style={{ top: 0, left: 0, width: '100%', height: '100%', background: 'black' }}
+        style={{ width: '100%', height: '100%', background: 'black' }}
       />
 
       {player && vRef?.current && (
@@ -154,21 +167,21 @@ function VideoPlayer({ thumbnail, url, id = 'bkenVideoPlayer' }) {
           >
             <Box> {renderCenter()} </Box>
           </Flex>
-          <Flex w='100%' px='2' align='end'>
+          <Flex w='100%' direction='column' px='2'>
             <Scrubber vRef={vRef} />
-          </Flex>
-          <Flex w='100%' px='2' justifyContent='space-between' alignContent='end'>
-            <Flex alignItems='center'>
-              <PlayButton vRef={vRef} />
-              <VolumeButton vRef={vRef} />
-              <VolumeSlider vRef={vRef} />
-              <Duration player={player} vRef={vRef} />
-            </Flex>
-            <Flex alignItems='center'>
-              <QualitySelector player={player} />
+            <Flex w='100%' justifyContent='space-between' alignContent='end'>
               <Flex alignItems='center'>
-                <PictureInPictureButton vRef={vRef} />
-                <FullScreenButton toggle={toggleFullScreen} />
+                <PlayButton vRef={vRef} />
+                <VolumeButton vRef={vRef} />
+                <VolumeSlider vRef={vRef} />
+                <Duration player={player} vRef={vRef} />
+              </Flex>
+              <Flex alignItems='center'>
+                <QualitySelector player={player} />
+                <Flex alignItems='center'>
+                  <PictureInPictureButton vRef={vRef} />
+                  <FullScreenButton toggle={toggleFullScreen} />
+                </Flex>
               </Flex>
             </Flex>
           </Flex>

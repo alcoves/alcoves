@@ -9,7 +9,7 @@ function Duration({ vRef, player = {} }) {
     if (player?.isLive()) {
       return (
         <Flex>
-          <Text >
+          <Text isTruncated>
             {videoDuration(vRef.current.currentTime)}
           </Text>
           <Text cursor='pointer' onClick={() => player.seek(player.duration())}

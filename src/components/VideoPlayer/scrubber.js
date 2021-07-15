@@ -33,40 +33,27 @@ function Duration({ vRef = {} }) {
     };
   }, [vRef]);
 
+  const bufferPosPercentage = `${(bufferedEnd / vRef?.current?.duration || 0) * 100}% !important`;
+  
   return (
-    <Box w='100%' position='relative'>
-      <Slider
-        zIndex='2'
-        id='current'
-        cursor='pointer'
-        focusThumbOnChange={false}
-        onChange={(val) => {
-          setProgress(val);
-          vRef.current.currentTime = val;
-        }} 
-        max={vRef?.current?.duration || 100}
-        value={progress || 0}
-        aria-label='current'
-      >
-        <SliderTrack bg='transparent'>
-          <SliderFilledTrack bg='#bf1e2e' />
-        </SliderTrack>
-        <SliderThumb bg='#bf1e2e'/>
-      </Slider>
-      <Box position='absolute' w='100%' top='1'>
-        <Slider
-          height='6px'
-          id='buffer'
-          aria-label='buffered'
-          value={bufferedEnd}
-          max={vRef?.current?.duration || 100}
-        >
-          <SliderTrack rounded='md' bg='rgba(255, 255, 255, 0.2)'>
-            <SliderFilledTrack bg='rgba(190, 190, 190, 1)' rounded='md' />
-          </SliderTrack>
-        </Slider>
-      </Box>
-    </Box>
+    <Slider
+      id='current'
+      cursor='pointer'
+      focusThumbOnChange={false}
+      onChange={(val) => {
+        setProgress(val);
+        vRef.current.currentTime = val;
+      }} 
+      max={vRef?.current?.duration || 100}
+      value={progress || 0}
+      aria-label='current'
+    >
+      <SliderTrack bg='rgba(255, 255, 255, 0.2)'>
+        <SliderFilledTrack zIndex='1' bg='#bf1e2e' />
+        <SliderFilledTrack rounded='md' zIndex='-1' width={bufferPosPercentage} bg='rgba(190, 190, 190, 1)' />
+      </SliderTrack>
+      <SliderThumb bg='#bf1e2e'/>
+    </Slider>
   );
 }
 

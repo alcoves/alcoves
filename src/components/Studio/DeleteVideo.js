@@ -11,6 +11,7 @@ import {
   ModalCloseButton,
 } from '@chakra-ui/react';
 import { useState, } from 'react';
+import { IoTrashBin, } from 'react-icons/io5';
 
 export default function DeleteVideo({ id, refetch }) {
   const [loading, setLoading] = useState(false);
@@ -31,7 +32,7 @@ export default function DeleteVideo({ id, refetch }) {
 
   return (
     <>
-      <Button size='sm' onClick={onOpen}>
+      <Button size='sm' onClick={onOpen} leftIcon={<IoTrashBin/>}>
         Delete
       </Button>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -44,10 +45,16 @@ export default function DeleteVideo({ id, refetch }) {
             This action cannot be undone.
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme='red' mr={3} onClick={deleteVideo} isLoading={loading}>
+            <Button
+              mr={3} size='sm'
+              colorScheme='red'
+              isLoading={loading}
+              onClick={deleteVideo}
+              leftIcon={<IoTrashBin/>}
+            >
               Delete Forever
             </Button>
-            <Button variant='ghost' onClick={onClose}>Close</Button>
+            <Button size='sm' variant='ghost' onClick={onClose}>Close</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
