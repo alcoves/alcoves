@@ -5,34 +5,32 @@ import VideoMeta from './VideoMeta';
 
 export default function VideoCard({ v }) {
   return (
-    <Box>
-      <Skeleton isLoaded={Boolean(v.videoId)}>
-        <Link href={`/v/${v.videoId}`}>
-          <Box
+    <Skeleton isLoaded={Boolean(v.videoId)} maxW='400px'>
+      <Link href={`/v/${v.videoId}`}>
+        <Box
+          borderRadius='md'
+          boxShadow='inner'
+          w='100%' h='200px'
+          bgSize='cover' bgColor='black'
+          bgImage={`url("${v.thumbnail}")`}
+          cursor='pointer' position='relative'
+          bgPosition='center' bgRepeat='no-repeat'
+        >
+          <Text
+            px='1'
+            right={1}
+            bottom={1}
+            align='center'
+            justify='center'
             borderRadius='md'
-            boxShadow='inner'
-            w='100%' h='200px'
-            bgSize='cover' bgColor='black'
-            bgImage={`url("${v.thumbnail}")`}
-            cursor='pointer' position='relative'
-            bgPosition='center' bgRepeat='no-repeat'
-          >
-            <Text
-              px='1'
-              right={1}
-              bottom={1}
-              align='center'
-              justify='center'
-              borderRadius='md'
-              position='absolute'
-              bg='rgba(10, 10, 10, .4)'
-              color='gray.100' fontSize='xs' fontWeight='bold'>
-              {videoDuration(v.duration)}
-            </Text>
-          </Box>
-        </Link>
-        <VideoMeta v={v}/>
-      </Skeleton>
-    </Box>
+            position='absolute'
+            bg='rgba(10, 10, 10, .4)'
+            color='gray.100' fontSize='xs' fontWeight='bold'>
+            {videoDuration(v.duration)}
+          </Text>
+        </Box>
+      </Link>
+      <VideoMeta v={v}/>
+    </Skeleton>
   );
 }
