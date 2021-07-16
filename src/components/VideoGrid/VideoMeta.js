@@ -12,7 +12,7 @@ export default function VideoMeta({ v }) {
   const metadata = `${abbreviateNumber(v.views)} views - ${createdAt}`;
 
   return (
-    <HStack spacing='12px' py='2' align='start'>
+    <HStack spacing='12px' py='2' align='start' minH='75px'>
       <Flex>
         <Link href={`/u/${v.userId}`}>
           <Avatar
