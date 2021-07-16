@@ -27,7 +27,7 @@ export default function Uploader({ refetch }) {
     dispatch({ type: 'start', id: item.id });
     const chunks = chunkFile(item.file);
 
-    dispatch({ type: 'message', id: item.id, payload: 'Uploading' });
+    dispatch({ type: 'update', id: item.id, payload: { message: 'Uploading' } });
     const uploadResponse = fetch('/api/uploads', {
       method: 'POST',
       body: JSON.stringify({
@@ -51,7 +51,7 @@ export default function Uploader({ refetch }) {
       return acc;
     }, []);
   
-    dispatch({ type: 'message', id: item.id, payload: 'Validating' });
+    dispatch({ type: 'update', id: item.id, payload: { message: 'Validating' } });
     const video = document.createElement('video');
     video.preload = 'metadata';
 
@@ -71,10 +71,18 @@ export default function Uploader({ refetch }) {
         }),
       }).then(() => {
         if (refetch) refetch();
-        dispatch({ type: 'message', id: item.id, payload: 'Success!' });
+        dispatch({
+          id: item.id,
+          type: 'update',
+          payload: { message: 'Success!', completed: true },
+        });
       }).catch((error) => {
         console.error(error);
-        dispatch({ type: 'message', id: item.id, payload: 'Error!' });
+        dispatch({
+          id: item.id,
+          type: 'update',
+          payload: { message: 'Error!', completed: true },
+        });
       });
     };
 
