@@ -14,12 +14,12 @@ export default function UploadReducer(state, action) {
         file: action.payload,
       },
     ];
-  case 'message':
+  case 'update':
     return state.map(item => {
       if (item.id === action.id) {
         return {
           ...item,
-          message: action.payload,
+          ...action.payload,
         };
       }
       return item;
