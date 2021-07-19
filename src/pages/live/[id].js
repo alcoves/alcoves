@@ -1,6 +1,6 @@
 import { Flex, Text, } from '@chakra-ui/react';
 import Layout from '../../components/Layout';
-import VideoPlayer from '../../components/VideoPlayer/index';
+import VideoPlayer from '../../components/VideoPlayer/Index';
 
 export default function LiveVideo({ hlsUrl, dashUrl, id }) {
   return (
