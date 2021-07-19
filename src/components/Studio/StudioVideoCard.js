@@ -18,7 +18,7 @@ import DirectLink from './DirectLink';
 import EditTitle from './EditTitle';
 import EditVisibility from './EditVisibility';
 import { IoGlobe, } from 'react-icons/io5';
-import VideoPlayer from '../VideoPlayer/index';
+import VideoPlayer from '../VideoPlayer/Index';
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
