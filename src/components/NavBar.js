@@ -28,18 +28,21 @@ export default function Navigation() {
       <Box p='1'>
         <Flex justify='center' align='center' h='100%'>
           <Box me='2'><Uploader/></Box>
-          <Link href='/studio'>
+          <Box me='2'>
             <Tooltip
               label='Studio'
               openDelay={300}
               aria-label='studio'
             >
-              <IconButton
-                size='sm' me='2'
-                icon={<IoFilmOutline/>}
-              />
+              <Link href='/studio'>
+                <IconButton
+                  size='sm'
+                  icon={<IoFilmOutline/>}
+                />
+              </Link>
             </Tooltip>
-          </Link>
+          </Box>
+
           {session && session.user ?
             <Menu>
               <MenuButton me='10px'>
