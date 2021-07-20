@@ -10,6 +10,8 @@ import {
   Flex,
   Heading,
   Text,
+  Tooltip,
+  IconButton,
 } from '@chakra-ui/react';
 import { useCallback, useContext, useEffect, } from 'react';
 import { useDropzone, } from 'react-dropzone';
@@ -106,7 +108,17 @@ export default function Uploader({ refetch }) {
 
   return (
     <>
-      <Button leftIcon={<IoVideocam/>} ml='2' size='sm' onClick={onOpen}>Upload</Button>
+      <Tooltip
+        label='Upload'
+        openDelay={300}
+        aria-label='upload'
+      >
+        <IconButton
+          onClick={onOpen}
+          size='sm' ml='2'
+          icon={<IoVideocam/>}
+        />
+      </Tooltip>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>

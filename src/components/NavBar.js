@@ -1,6 +1,6 @@
 import { useState, } from 'react';
 import { signOut, useSession, } from 'next-auth/client';
-import { Flex, Spacer, Text, Switch, Box, Avatar, Img, Menu, MenuButton, MenuList, MenuItem, MenuDivider, Button, useColorMode, } from '@chakra-ui/react';
+import { Flex, Spacer, Text, Switch, Box, Avatar, Img, Menu, MenuButton, MenuList, MenuItem, MenuDivider, useColorMode, IconButton, Tooltip, } from '@chakra-ui/react';
 import { IoFilmOutline, } from 'react-icons/io5';
 import isAdmin from '../utils/isAdmin';
 import Link from 'next/link';
@@ -29,9 +29,16 @@ export default function Navigation() {
         <Flex justify='center' align='center' h='100%'>
           <Box me='2'><Uploader/></Box>
           <Link href='/studio'>
-            <Button minW='auto' leftIcon={<IoFilmOutline />} me='2' size='sm'>
-              Studio
-            </Button>
+            <Tooltip
+              label='Studio'
+              openDelay={300}
+              aria-label='studio'
+            >
+              <IconButton
+                size='sm' me='2'
+                icon={<IoFilmOutline/>}
+              />
+            </Tooltip>
           </Link>
           {session && session.user ?
             <Menu>
