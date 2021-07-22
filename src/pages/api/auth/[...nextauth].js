@@ -1,14 +1,16 @@
 import NextAuth from 'next-auth';
 import Providers from 'next-auth/providers';
-import Adapters from 'next-auth/adapters';
-import db from '../../../utils/db';
+import { PrismaAdapter, } from '@next-auth/prisma-adapter';
+import { PrismaClient, } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 export default NextAuth({
   pages: {
     newUser: '/studio',
     signIn: '/login',
   },
-  adapter: Adapters.Prisma.Adapter({ prisma: db }),
+  adapter: PrismaAdapter(prisma),
   providers: [
     Providers.Google({
       clientId: process.env.GOOGLE_ID,
@@ -32,5 +34,15 @@ export default NextAuth({
       // Send account information to bken api
       return Promise.resolve('/api/auth/signin');
     },
+    // signIn(props) {
+    // props = id, name, email, image
+    // const user = await db.user.findFirst({ where: { email: props.email } });
+    // if (!user.displayName) {
+    //   user.displayName = user.name;
+    // }
+    // await user.update;
+    // console.log(user);
+    // console.log('sign in callback');
+    // },
   },
 });
