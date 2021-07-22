@@ -12,12 +12,12 @@ import {
   Button,
   Flex,
   Box,
+  Text,
 } from '@chakra-ui/react';
 import moment from 'moment';
 import { useSession, } from 'next-auth/client';
 import axios from 'axios';
 import Layout from '../components/Layout';
-import isAdmin from '../utils/isAdmin';
 
 async function reprocessThumbnail(id) {
   await axios.post('https://bk-det1.bken.dev/tidal/jobs/thumbnail', {
@@ -46,66 +46,63 @@ async function reprocessAllThumbnails(videos) {
 }
 
 export default function Admin() {
-  const { session } = useSession();
-  const { data: videos } = useSWR('/api/videos?visibility=all');
+  const [session, loading] = useSession();
+  const { data: videos = [] } = useSWR('/api/videos?visibility=all');
 
-  if (session?.id && !isAdmin(session.id)) {
+  if (loading) return null;
+  if ((!loading && !session) || !session?.user?.isAdmin) {
     return (
       <Layout>
-        <div>
+        <Text>
           You must be an admin to view this page
-        </div>
+        </Text>
       </Layout>
     );
   }
 
-  if (videos?.length) {
-    return (
-      <Layout>
-        <Button onClick={() => reprocessAllVideos(videos)} my='4' ml='2' size='xs'>
-          Reprocess All Videos
-        </Button>
-        <Button onClick={() => reprocessAllThumbnails(videos)} my='4' ml='2' size='xs'>
-          Reprocess All Thumbnails
-        </Button>
-        <Table variant='simple' size='sm'>
-          <TableCaption> All Videos </TableCaption>
-          <Thead>
-            <Tr>
-              <Th>Thumbnail</Th>
-              <Th>Video ID</Th>
-              <Th>User ID</Th>
-              <Th>Status</Th>
-              <Th isNumeric>Percent Completed</Th>
-              <Th>Created At</Th>
+  return (
+    <Layout>
+      <Button onClick={() => reprocessAllVideos(videos)} my='4' ml='2' size='xs'>
+        Reprocess All Videos
+      </Button>
+      <Button onClick={() => reprocessAllThumbnails(videos)} my='4' ml='2' size='xs'>
+        Reprocess All Thumbnails
+      </Button>
+      <Table variant='simple' size='sm'>
+        <TableCaption> All Videos </TableCaption>
+        <Thead>
+          <Tr>
+            <Th>Thumbnail</Th>
+            <Th>Video ID</Th>
+            <Th>User ID</Th>
+            <Th>Status</Th>
+            <Th isNumeric>Percent Completed</Th>
+            <Th>Created At</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {videos.map((v) => (
+            <Tr key={v.id}>
+              <Td>
+                <Image height='50px' src={v.thumbnail} />
+                <Box>{v.duration}</Box>
+                <Box>{v.mpdLink}</Box>
+              </Td>
+              <Td><Link href={`/v/${v.id}`}>{v.id}</Link></Td>
+              <Td>{v.userId}</Td>
+              <Td>
+                <Flex direction='column'>
+                  {v.status}
+                  <Button id={v.id} onClick={() => reprocessVideo(v.id)} my='2' size='xs'>Reprocess Video</Button>
+                  <Button id={v.id} onClick={() => reprocessThumbnail(v.id)} my='2' size='xs'>Reprocess Thumbnail</Button>
+                </Flex>
+              </Td>
+              <Td isNumeric>{v.percentCompleted}</Td>
+              <Td>{moment(v.createdAt).fromNow()}</Td>
             </Tr>
-          </Thead>
-          <Tbody>
-            {videos.map((v) => (
-              <Tr key={v.id}>
-                <Td>
-                  <Image height='50px' src={v.thumbnail} />
-                  <Box>{v.duration}</Box>
-                  <Box>{v.mpdLink}</Box>
-                </Td>
-                <Td><Link href={`/v/${v.id}`}>{v.id}</Link></Td>
-                <Td>{v.userId}</Td>
-                <Td>
-                  <Flex direction='column'>
-                    {v.status}
-                    <Button id={v.id} onClick={() => reprocessVideo(v.id)} my='2' size='xs'>Reprocess Video</Button>
-                    <Button id={v.id} onClick={() => reprocessThumbnail(v.id)} my='2' size='xs'>Reprocess Thumbnail</Button>
-                  </Flex>
-                </Td>
-                <Td isNumeric>{v.percentCompleted}</Td>
-                <Td>{moment(v.createdAt).fromNow()}</Td>
-              </Tr>
-            ))}
-          </Tbody>
-        </Table>
-      </Layout>
-    );
-  }
-
-  return <Layout/>;
+          ))}
+        </Tbody>
+      </Table>
+    </Layout>
+  );
 }

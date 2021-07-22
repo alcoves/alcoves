@@ -10,7 +10,7 @@ const fetcher = (url) => fetch(url).then((res) => res.json());
 
 export default function studio() {
   const router = useRouter();
-  const [ session, sessionLoading ] = useSession();
+  const [ session, loading ] = useSession();
   const [videos, setVideos] = useState([]);
 
   const { data, mutate, isValidating } = useSWR(session ?
@@ -23,10 +23,11 @@ export default function studio() {
       setVideos(data);
     }
   }, [data]);
-  
-  if (!sessionLoading && !session) {
+
+  if (loading) return null;
+  if (!loading && !session) {
     router.push('/login');
-    return <div/>;
+    return null;
   }
 
   return (

@@ -2,7 +2,6 @@ import { useState, } from 'react';
 import { signOut, useSession, } from 'next-auth/client';
 import { Flex, Spacer, Text, Switch, Box, Avatar, Menu, MenuButton, MenuList, MenuItem, MenuDivider, useColorMode, IconButton, } from '@chakra-ui/react';
 import { IoFilmOutline, } from 'react-icons/io5';
-import isAdmin from '../utils/isAdmin';
 import Link from 'next/link';
 import Uploader from './Uploader/Index';
 import Image from 'next/image';
@@ -56,7 +55,7 @@ export default function Navigation() {
                 <Link href={'/account'}>
                   <MenuItem>Account</MenuItem>
                 </Link>
-                {session?.id && isAdmin(session.id) &&
+                {session?.user?.isAdmin &&
                   <Link href='/admin'>
                     <MenuItem>Admin</MenuItem>
                   </Link>
