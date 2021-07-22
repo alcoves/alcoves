@@ -26,6 +26,7 @@ export default function Account() {
             >
               <Heading size='sm'>
                 {session?.user?.name}
+                {session?.user?.isAdmin && ' (Admin)'}
               </Heading>
               <Text fontSize='.85rem'>{session?.user?.email}</Text>
               <Text fontSize='.85rem'>User ID: {session?.id}</Text>
