@@ -37,7 +37,7 @@ export default function Uploader({ refetch }) {
         chunks: chunks.length,
       }),
     });
-    const { uploadId, key, videoId, urls } = await (await uploadResponse).json();
+    const { uploadId, key, id, urls } = await (await uploadResponse).json();
 
     const results = await Promise.all(chunks.map((chunk, i) => {
       // console.log(`uploading part ${i} to ${urls[i]}`);
@@ -64,9 +64,9 @@ export default function Uploader({ refetch }) {
       fetch('/api/videos', {
         method: 'POST',
         body: JSON.stringify({
+          id,
           key,
           parts,
-          videoId,
           uploadId,
           duration,
           title: item.file.name.substring(0, item.file.name.lastIndexOf('.')) || item.file.name,

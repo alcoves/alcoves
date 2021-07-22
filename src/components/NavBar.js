@@ -15,7 +15,7 @@ export default function Navigation() {
   return (
     <Flex h='48px' bg={colorMode === 'dark' ? 'gray.700' : 'white'}>
       <Box p='1' cursor='pointer'>
-        <Link href='/'>
+        <a href='/'>
           <Image
             width={40}
             height={40}
@@ -24,7 +24,7 @@ export default function Navigation() {
             layout='fixed'
             src='/logo.png'
           />
-        </Link>
+        </a>
       </Box>
       <Spacer />
       <Box p='1'>

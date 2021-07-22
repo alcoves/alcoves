@@ -9,12 +9,12 @@ export default async function handler(req, res) {
     if (session) {
       if (req.method === 'POST') {
         const { type, chunks } = JSON.parse(req.body);
-        const videoId = nanoid();
+        const id = nanoid();
 
         const { UploadId, Key } = await s3.createMultipartUpload({
           Bucket: 'cdn.bken.io',
           ContentType: type,
-          Key: `v/${videoId}/original`,
+          Key: `v/${id}/original`,
         }).promise();
 
         const urls = [];
@@ -30,7 +30,7 @@ export default async function handler(req, res) {
           );
         }
 
-        res.send({ uploadId: UploadId, key: Key, urls, videoId });
+        res.send({ uploadId: UploadId, key: Key, urls, id });
       }
     } else {
       res.status(401).end();

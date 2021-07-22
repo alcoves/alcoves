@@ -7,7 +7,7 @@ export default async function handler(req, res) {
     if (req.method === 'GET') {
       const session = await getSession({ req });
       if (!session) return res.status(403).end();
-      const user = await db.user.findFirst({ where: { id: parseInt(req.query.id) } });
+      const user = await db.user.findFirst({ where: { id: req.query.id } });
 
       if (session.id === user.id) {
         const videos = await db.video.findMany({ where: { userId: user.id } });
@@ -21,7 +21,7 @@ export default async function handler(req, res) {
         const allObjects = await Promise.all(videos.map((v) => {
           return listObjects({
             Bucket: 'cdn.bken.io',
-            Prefix: `v/${v.videoId}`,
+            Prefix: `v/${v.id}`,
           });
         }));
 

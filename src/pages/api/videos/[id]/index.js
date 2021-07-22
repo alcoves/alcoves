@@ -3,7 +3,7 @@ import db from '../../../../utils/db';
 import { deleteFolder, } from '../../../../utils/s3';
 
 async function getVideo(req, res) {
-  const video = await db.video.findFirst({ where: { videoId: req.query.id } });
+  const video = await db.video.findFirst({ where: { id: req.query.id } });
   if (!video) return res.status(404).end();
   return res.json(video);
 }
@@ -13,7 +13,7 @@ async function deleteVideo(req, res) {
   if (!session) return res.status(401).end();
 
   // Ensure the authenticated user is the owner of the video
-  const video = await db.video.findUnique({ where: { videoId: req.query.id } });
+  const video = await db.video.findUnique({ where: { id: req.query.id } });
   if (video.userId !== session.id) return res.status(403).end();
 
   // Delete assets from cdn
@@ -23,14 +23,14 @@ async function deleteVideo(req, res) {
   });
 
   // Delete video from db
-  await db.video.delete({ where: { videoId: req.query.id } });
+  await db.video.delete({ where: { id: req.query.id } });
   res.status(200).end();
 }
 
 // This endpoint is where user's edit their videos
 // Tidal also uses this endpoint to webhook data in
 async function patchVideo(req, res) {
-  // const videoCheck = await db.video.findUnique({ where: { videoId: req.query.id } })
+  // const videoCheck = await db.video.findUnique({ where: { id: req.query.id } })
   // Ensure that the user requesting the delete has access
   // if (videoCheck.userId !== session.id) {
   //   return res.status(403).end()
@@ -55,7 +55,7 @@ async function patchVideo(req, res) {
 
   await db.video.update({
     data: update,
-    where: { videoId: req.query.id },
+    where: { id: req.query.id },
   });
   res.status(200).end();
 }

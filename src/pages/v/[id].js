@@ -17,7 +17,7 @@ export default function Video({ error, urlPath, video: v }) {
 
   useEffect(() => {
     if (!error) {
-      axios.post(`/api/videos/${v.videoId}/views`).catch((err) =>{
+      axios.post(`/api/videos/${v.id}/views`).catch((err) =>{
         console.error('error counting video view', err);
       });
     }
@@ -61,7 +61,7 @@ export default function Video({ error, urlPath, video: v }) {
                 <Heading as='h3' size='lg'>{data.title}</Heading>
                 <Flex justifyContent='space-between'>
                   <Text fontSize='sm'>{subHeader}</Text>
-                  <ShareModal link={`https://bken.io/v/${data.videoId}`}/>
+                  <ShareModal link={`https://bken.io/v/${data.id}`}/>
                 </Flex>
                 <VideoPageUserCard id={data.userId} />
               </Box>

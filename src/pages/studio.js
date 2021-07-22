@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 import { useSession, } from 'next-auth/client';
-import { Box, Button, Flex, SimpleGrid, useMediaQuery, } from '@chakra-ui/react';
+import { Box, Button, Flex, SimpleGrid, } from '@chakra-ui/react';
 import { useRouter, } from 'next/router';
 import { useEffect, useState, } from 'react';
 import Layout from '../components/Layout';
@@ -12,6 +12,7 @@ export default function studio() {
   const router = useRouter();
   const [ session, sessionLoading ] = useSession();
   const [videos, setVideos] = useState([]);
+
   const { data, mutate, isValidating } = useSWR(session ?
     `/api/users/${session.id}/videos` :
     null, fetcher
@@ -23,10 +24,10 @@ export default function studio() {
     }
   }, [data]);
   
-  if (!sessionLoading && !session) {
-    router.push('/login');
-    return <div/>;
-  }
+  // if (!sessionLoading && !session) {
+  //   router.push('/login');
+  //   return <div/>;
+  // }
 
   return (
     <Layout>
@@ -35,7 +36,7 @@ export default function studio() {
           <Button isLoading={isValidating} size='sm' onClick={mutate}>Refresh</Button>
         </Flex>
         <SimpleGrid minChildWidth={[200, 400]} spacing='10px'>
-          {videos.map((v, i) => <StudioVideoCard key={v?.videoId || i} v={v}/>)}
+          {videos.map((v, i) => <StudioVideoCard key={v?.id || i} v={v}/>)}
         </SimpleGrid>
       </Box>
     </Layout>
