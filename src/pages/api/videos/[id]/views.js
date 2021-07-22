@@ -32,7 +32,7 @@ export default async function handler(req, res) {
       if (session?.id) newView.userId = session.id.toString();
       await db.videoView.create({ data: newView });
       await db.video.update({ 
-        where: { videoId },
+        where: { id: videoId },
         data: {
           views: {
             increment: 1,
