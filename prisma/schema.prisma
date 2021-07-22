@@ -45,11 +45,10 @@ model User {
   image         String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  // videos        Video[]
+  videos        Video[]
   accounts      Account[]
   sessions      Session[]
 
-  Video Video[]
   @@map(name: "users")
 }
 
@@ -63,21 +62,6 @@ model VerificationRequest {
 
   @@unique([identifier, token])
   @@map(name: "verification_requests")
-}
-
-model VideoView {
-  id        Int      @id @default(autoincrement())
-  ip        String?
-  videoId   String?  @map(name: "video_id")
-  userId    String?  @map(name: "user_id")
-  createdAt DateTime @default(now()) @map(name: "created_at") @db.Timestamptz(6)
-  updatedAt DateTime @default(now()) @map(name: "updated_at") @db.Timestamptz(6)
-
-  @@index([ip], name: "ip")
-  @@index([userId], name: "viewsUserId")
-  @@index([videoId], name: "viewsVideoId")
-  @@index([createdAt], name: "viewsCreatedAt")
-  @@map(name: "video_views")
 }
 
 model Video {
@@ -99,4 +83,18 @@ model Video {
   @@index([visibility], name: "visibility")
   @@index([userId], name: "videosUserId")
   @@map(name: "videos")
+}
+
+model VideoView {
+  id        String    @id @default(cuid())
+  ip        String?
+  userId    String?   @map(name: "user_id")
+  videoId   String    @map(name: "video_id")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+
+  @@index([ip], name: "ip")
+  @@index([userId], name: "viewsUserId")
+  @@index([videoId], name: "viewsVideoId")
+  @@map(name: "video_views")
 }
