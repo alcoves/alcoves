@@ -79,6 +79,7 @@ export default async function handler(req, res) {
       const videos = await db.video.findMany({
         where,
         orderBy,
+        include: { user: true },
       });
       return res.json(videos);
     }
