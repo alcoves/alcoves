@@ -845,6 +845,11 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.0.tgz#87de7af9c231826fdd68ac7258f77c429e0e5fcf"
   integrity sha512-wdppn25U8z/2yiaT6YGquE6X8sSv7hNMWSXYSSU1jGv/yd6XqjXgTDJ8KP4NgjTXfJ3GbRjeeb8RTV7a/VpM+w==
 
+"@next-auth/prisma-adapter@^0.5.3":
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/@next-auth/prisma-adapter/-/prisma-adapter-0.5.3.tgz#ccb1b055870979c01217e47caccef56c45ce8596"
+  integrity sha512-pRC5rxfCamlE5F+4901w9F5PLil9HcXM5qUec4hHl3hRKcWqQ7x0nUv8MkjCFnhu5+SPv9wDz6/n2pOuRTyWjw==
+
 "@next-auth/prisma-legacy-adapter@0.0.1-canary.127":
   version "0.0.1-canary.127"
   resolved "https://registry.yarnpkg.com/@next-auth/prisma-legacy-adapter/-/prisma-legacy-adapter-0.0.1-canary.127.tgz#09223de6d0350e53afc4bd0dda056a2fde27d8d3"
