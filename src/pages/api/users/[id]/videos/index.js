@@ -12,7 +12,7 @@ export default async function handler(req, res) {
       // Anon user and or non-author user
       if (!session || req.query.id != session.id) {
         const videos = await db.video.findMany({
-          where: { userId: parseInt(req.query.id), visibility: 'public' },
+          where: { userId: req.query.id, visibility: 'public' },
           orderBy: { createdAt: 'desc' },
         });
         return res.send(videos);
@@ -20,14 +20,14 @@ export default async function handler(req, res) {
 
       if (visibility) {
         const videos = await db.video.findMany({
-          where: { userId: parseInt(req.query.id), visibility },
+          where: { userId: req.query.id, visibility },
           orderBy: { createdAt: 'desc' },
         });
         return res.send(videos);
       }
 
       const videos = await db.video.findMany({
-        where: { userId: parseInt(req.query.id) },
+        where: { userId: req.query.id },
         orderBy: { createdAt: 'desc' },
       });
       res.send(videos);

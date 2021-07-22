@@ -20,11 +20,12 @@ export default function VideoMeta({ v }) {
             w='40px'
             cursor='pointer'
             src={user?.image}
+            name={user?.name[0]}
           />
         </Link>
       </Flex>
       <Flex direction='column' overflow='hidden'>
-        <Link href={`/v/${v.videoId}`}>
+        <Link href={`/v/${v.id}`}>
           <Heading noOfLines={2} cursor='pointer' size='sm'>
             {v.title}
           </Heading>

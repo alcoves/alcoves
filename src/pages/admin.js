@@ -38,11 +38,11 @@ async function reprocessVideo(id) {
 }
 
 async function reprocessAllVideos(videos) {
-  await Promise.all(videos.map(({ videoId }) => reprocessVideo(videoId)));
+  await Promise.all(videos.map(({ id }) => reprocessVideo(id)));
 }
 
 async function reprocessAllThumbnails(videos) {
-  await Promise.all(videos.map(({ videoId }) => reprocessThumbnail(videoId)));
+  await Promise.all(videos.map(({ id }) => reprocessThumbnail(id)));
 }
 
 export default function Admin() {
@@ -82,19 +82,19 @@ export default function Admin() {
           </Thead>
           <Tbody>
             {videos.map((v) => (
-              <Tr key={v.videoId}>
+              <Tr key={v.id}>
                 <Td>
                   <Image height='50px' src={v.thumbnail} />
                   <Box>{v.duration}</Box>
                   <Box>{v.mpdLink}</Box>
                 </Td>
-                <Td><Link href={`/v/${v.videoId}`}>{v.videoId}</Link></Td>
+                <Td><Link href={`/v/${v.id}`}>{v.id}</Link></Td>
                 <Td>{v.userId}</Td>
                 <Td>
                   <Flex direction='column'>
                     {v.status}
-                    <Button id={v.videoId} onClick={() => reprocessVideo(v.videoId)} my='2' size='xs'>Reprocess Video</Button>
-                    <Button id={v.videoId} onClick={() => reprocessThumbnail(v.videoId)} my='2' size='xs'>Reprocess Thumbnail</Button>
+                    <Button id={v.id} onClick={() => reprocessVideo(v.id)} my='2' size='xs'>Reprocess Video</Button>
+                    <Button id={v.id} onClick={() => reprocessThumbnail(v.id)} my='2' size='xs'>Reprocess Thumbnail</Button>
                   </Flex>
                 </Td>
                 <Td isNumeric>{v.percentCompleted}</Td>

@@ -38,14 +38,14 @@ function Metadata({ v }) {
 
 export default function StudioVideoCard({ v = {} }) {
   const { data: video, mutate } = useSWR(
-    `/api/videos/${v?.videoId}`, fetcher,
+    `/api/videos/${v?.id}`, fetcher,
     { initialData: v, refreshInterval: v?.status === 'completed' ? 0 : 2000 }
   );
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <Box overflow='hidden'>
-      <Skeleton isLoaded={Boolean(video.videoId)}>
+      <Skeleton isLoaded={Boolean(video.id)}>
         <Box
           borderRadius='md'
           cursor='pointer'
@@ -100,12 +100,12 @@ export default function StudioVideoCard({ v = {} }) {
                 <VStack align='start' spacing='4px' h='100%'>
                   <VideoPlayer url={video.mpdLink}/>
                   <Spacer/>
-                  <EditTitle id={video.videoId} title={video.title} refetch={mutate}/>
-                  <DirectLink id={video?.videoId}/>
+                  <EditTitle id={video.id} title={video.title} refetch={mutate}/>
+                  <DirectLink id={video?.id}/>
                   {video.status === 'completed' &&
                     <Flex justify='space-between' w='100%' py='2'>
-                      <EditVisibility id={video.videoId} visibility={video.visibility}/>
-                      <DeleteVideo id={video.videoId} refetch={mutate}/>
+                      <EditVisibility id={video.id} visibility={video.visibility}/>
+                      <DeleteVideo id={video.id} refetch={mutate}/>
                     </Flex>
                   }
                 </VStack>

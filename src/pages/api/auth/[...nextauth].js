@@ -34,15 +34,5 @@ export default NextAuth({
       // Send account information to bken api
       return Promise.resolve('/api/auth/signin');
     },
-    // signIn(props) {
-    // props = id, name, email, image
-    // const user = await db.user.findFirst({ where: { email: props.email } });
-    // if (!user.displayName) {
-    //   user.displayName = user.name;
-    // }
-    // await user.update;
-    // console.log(user);
-    // console.log('sign in callback');
-    // },
   },
 });

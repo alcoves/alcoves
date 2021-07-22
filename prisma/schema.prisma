@@ -45,9 +45,11 @@ model User {
   image         String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  // videos        Video[]
   accounts      Account[]
   sessions      Session[]
 
+  Video Video[]
   @@map(name: "users")
 }
 
@@ -79,9 +81,9 @@ model VideoView {
 }
 
 model Video {
-  id               Int       @id @default(autoincrement())
-  userId           Int       @map(name: "user_id")
-  videoId          String    @unique @default(cuid()) @map(name: "video_id")
+  id               String    @id @default(cuid())
+  user             User      @relation(fields: [userId], references: [id])
+  userId           String    @map(name: "user_id")
   status           String    @default("queued")
   title            String    @default("new-upload")
   duration         Decimal   @default(0.0) @db.Decimal
@@ -95,7 +97,6 @@ model Video {
   deletedAt        DateTime? @map(name: "deleted_at") @db.Timestamptz(6)
 
   @@index([visibility], name: "visibility")
-  @@index([videoId], name: "videosVideoId")
   @@index([userId], name: "videosUserId")
   @@map(name: "videos")
 }

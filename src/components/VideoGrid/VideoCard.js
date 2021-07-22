@@ -5,8 +5,8 @@ import VideoMeta from './VideoMeta';
 
 export default function VideoCard({ v }) {
   return (
-    <Skeleton isLoaded={Boolean(v.videoId)} maxW='400px'>
-      <Link href={`/v/${v.videoId}`}>
+    <Skeleton isLoaded={Boolean(v.id)} maxW='400px'>
+      <Link href={`/v/${v.id}`}>
         <Box
           borderRadius='md'
           boxShadow='inner'
