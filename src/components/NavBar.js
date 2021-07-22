@@ -1,10 +1,11 @@
 import { useState, } from 'react';
 import { signOut, useSession, } from 'next-auth/client';
-import { Flex, Spacer, Text, Switch, Box, Avatar, Img, Menu, MenuButton, MenuList, MenuItem, MenuDivider, useColorMode, IconButton, } from '@chakra-ui/react';
+import { Flex, Spacer, Text, Switch, Box, Avatar, Menu, MenuButton, MenuList, MenuItem, MenuDivider, useColorMode, IconButton, } from '@chakra-ui/react';
 import { IoFilmOutline, } from 'react-icons/io5';
 import isAdmin from '../utils/isAdmin';
 import Link from 'next/link';
 import Uploader from './Uploader/Index';
+import Image from 'next/image';
 
 export default function Navigation() {
   const [session] = useSession();
@@ -13,14 +14,15 @@ export default function Navigation() {
 
   return (
     <Flex h='48px' bg={colorMode === 'dark' ? 'gray.700' : 'white'}>
-      <Box p='1'>
+      <Box p='1' cursor='pointer'>
         <Link href='/'>
-          <Img
+          <Image
+            width={40}
+            height={40}
+            quality={85}
             alt='Bken.io'
-            boxSize='40px'
-            cursor='pointer'
+            layout='fixed'
             src='/logo.png'
-            objectFit='cover'
           />
         </Link>
       </Box>

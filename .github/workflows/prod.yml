@@ -21,7 +21,7 @@ jobs:
         env:
           GITHUB_SHA: ${{ github.sha }}
         run: docker build
-          --build-arg REACT_APP_GIT_SHA=$GITHUB_SHA
+          --build-arg NEXT_PUBLIC_GIT_SHA=$GITHUB_SHA
           -t registry.digitalocean.com/bken/reef:latest
           -t registry.digitalocean.com/bken/reef:$GITHUB_SHA .
       - name: Login to DigitalOcean Docker Registry
