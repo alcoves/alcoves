@@ -105,7 +105,7 @@ export default function StudioVideoCard({ v = {} }) {
                   {video.status === 'completed' &&
                     <Flex justify='space-between' w='100%' py='2'>
                       <EditVisibility id={video.id} visibility={video.visibility}/>
-                      <DeleteVideo id={video.id} refetch={mutate}/>
+                      <DeleteVideo id={video.id} refetch={mutate} handleClose={onClose}/>
                     </Flex>
                   }
                 </VStack>

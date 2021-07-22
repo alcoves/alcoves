@@ -13,7 +13,7 @@ import {
 import { useState, } from 'react';
 import { IoTrashBin, } from 'react-icons/io5';
 
-export default function DeleteVideo({ id, refetch }) {
+export default function DeleteVideo({ id, refetch, handleClose }) {
   const [loading, setLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -26,6 +26,7 @@ export default function DeleteVideo({ id, refetch }) {
       console.error(error);
     } finally {
       if (refetch) refetch();
+      if (handleClose) handleClose(); 
       setLoading(false);
     }
   }
