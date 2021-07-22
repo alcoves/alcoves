@@ -24,10 +24,10 @@ export default function studio() {
     }
   }, [data]);
   
-  // if (!sessionLoading && !session) {
-  //   router.push('/login');
-  //   return <div/>;
-  // }
+  if (!sessionLoading && !session) {
+    router.push('/login');
+    return <div/>;
+  }
 
   return (
     <Layout>
