@@ -37,7 +37,14 @@ async function patchVideo(req, res) {
   // }
 
   const reqKeys = Object.keys(req.body);
-  const permittedKeys = ['status', 'percentCompleted', 'title', 'visibility', 'thumbnail' , 'mpdLink'];
+  const permittedKeys = [
+    'status',
+    'title',
+    'mpdLink',
+    'thumbnail',
+    'visibility',
+    'percentCompleted',
+  ];
   const update = permittedKeys.reduce((acc, cv) => {
     if (reqKeys.includes(cv)) {
       // This is where tidal webhooks land

@@ -1,7 +1,9 @@
 import Head from 'next/head';
 import moment from 'moment';
 import useSWR from 'swr';
-import { CircularProgress, Flex, Box, Text, Heading,  } from '@chakra-ui/react';
+import {
+  CircularProgress, Flex, Box, Text, Heading,  
+} from '@chakra-ui/react';
 import { useEffect, } from 'react';
 import axios from 'axios';
 import Layout from '../../components/Layout';
@@ -12,7 +14,9 @@ import ShareModal from '../../components/ShareModal';
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
-export default function Video({ error, urlPath, video: v }) {
+export default function Video({
+  error, urlPath, video: v, 
+}) {
   const { data } = useSWR(urlPath && !error, fetcher, { initialData: v });
 
   useEffect(() => {
@@ -97,9 +101,17 @@ export async function getServerSideProps({ params }) {
   const urlPath = `/api/videos/${params.id}`;
   try {
     const video = await fetcher(`http://localhost:3000${urlPath}`);
-    return { props: { video, urlPath, id: params.id } };
+    return {
+      props: {
+        video, urlPath, id: params.id, 
+      }, 
+    };
   } catch (error) {
     console.error(error);
-    return { props: { error: true, video: {}, urlPath, id: params.id } };
+    return {
+      props: {
+        error: true, video: {}, urlPath, id: params.id, 
+      }, 
+    };
   }
 }

@@ -1,4 +1,6 @@
-import { Button, Input, InputGroup, InputLeftAddon, InputRightAddon, } from '@chakra-ui/react';
+import {
+  Button, Input, InputGroup, InputLeftAddon, InputRightAddon, 
+} from '@chakra-ui/react';
 import Link from 'next/link';
 
 export default function DirectLink({ id }) {
@@ -22,7 +24,7 @@ export default function DirectLink({ id }) {
         <Button variant='ghost' size='xs' onClick={copyToClipboard}>
           Copy
         </Button>
-        <Link href={`/v/${id}`}>
+        <Link passHref href={`/v/${id}`}>
           <Button variant='ghost' size='xs'>
             Open
           </Button>

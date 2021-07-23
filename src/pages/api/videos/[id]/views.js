@@ -18,9 +18,7 @@ export default async function handler(req, res) {
         where: {
           id: videoId,
           ip: requestIP,
-          createdAt: {
-            gte: backdatedTimestamp,
-          },
+          createdAt: { gte: backdatedTimestamp },
         },
       });
 
@@ -33,11 +31,7 @@ export default async function handler(req, res) {
       await db.videoView.create({ data: newView });
       await db.video.update({ 
         where: { id: videoId },
-        data: {
-          views: {
-            increment: 1,
-          },
-        },
+        data: { views: { increment: 1 } },
       });
       return res.status(200).end();
     }

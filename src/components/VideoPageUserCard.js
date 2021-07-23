@@ -1,6 +1,8 @@
 import useSWR from 'swr';
 import Link from 'next/link';
-import { Flex, Avatar, Heading, } from '@chakra-ui/react';
+import {
+  Flex, Avatar, Heading, 
+} from '@chakra-ui/react';
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
@@ -10,7 +12,7 @@ function VideoPageUserCard({ id }) {
   if (data) {
     return (
       <Flex pt='4'>
-        <Link href={`/u/${id}`}>
+        <Link passHref href={`/u/${id}`}>
           <Avatar
             size='md'
             cursor='pointer'
@@ -18,7 +20,7 @@ function VideoPageUserCard({ id }) {
             name={data?.name[0]}
           />
         </Link>
-        <Link href={`/u/${id}`}>
+        <Link passHref href={`/u/${id}`}>
           <Heading
             pl='4'
             size='sm'

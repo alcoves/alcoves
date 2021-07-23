@@ -10,12 +10,15 @@ import {
   ModalBody,
   ModalCloseButton,
   useDisclosure,
-  Switch, } from '@chakra-ui/react';
+  Switch, 
+} from '@chakra-ui/react';
 import { useEffect, useState, } from 'react';
 import videoDuration from '../utils/videoDuration';
 
 export default function ShareModal({ link }) {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen, onOpen, onClose, 
+  } = useDisclosure();
   const [shareLink, setShareLink] = useState(link);
   const [currentTime, setCurrentTime] = useState(0);
 
@@ -54,13 +57,15 @@ export default function ShareModal({ link }) {
             </Flex>
           </ModalBody>
           <ModalFooter justifyContent='start'>
-            <Switch onChange={({ target }) => {
-              if (target.checked) {
-                setShareLink(`${shareLink}?t=${currentTime.toFixed(0)}`);
-              } else {
-                setShareLink(link);
-              }
-            }}/>
+            <Switch
+              onChange={({ target }) => {
+                if (target.checked) {
+                  setShareLink(`${shareLink}?t=${currentTime.toFixed(0)}`);
+                } else {
+                  setShareLink(link);
+                }
+              }}
+            />
             <Text mx='5px'>{videoDuration(currentTime.toFixed(0))}</Text>
           </ModalFooter>
         </ModalContent>

@@ -6,7 +6,7 @@ import VideoGrid from '../components/VideoGrid/Index';
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
-function index({ url, videos }) {
+export default function Index({ url, videos }) {
   const { data } = useSWR(url, fetcher, { initialData: videos });
 
   useEffect(() => {
@@ -18,12 +18,14 @@ function index({ url, videos }) {
       <Box px='2'>
         <Heading py='2'> Latest Videos </Heading>
         <VideoGrid videos={data} />
-        <ins className='adsbygoogle'
+        <ins
+          className='adsbygoogle'
           style={{ display:'block' }}
           data-ad-client='ca-pub-1017771648826122'
           data-ad-slot='1395737646'
           data-ad-format='auto'
-          data-full-width-responsive='true' />
+          data-full-width-responsive='true'
+        />
       </Box>
     </Layout>
   );
@@ -34,5 +36,3 @@ export async function getServerSideProps() {
   const videos = await fetcher(`http://localhost:3000${urlPath}`);
   return { props: { videos, urlPath } };
 }
-
-export default index;

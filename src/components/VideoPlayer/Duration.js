@@ -12,8 +12,15 @@ function Duration({ vRef, player = {} }) {
           <Text isTruncated>
             {videoDuration(vRef.current.currentTime)}
           </Text>
-          <Text cursor='pointer' onClick={() => player.seek(player.duration())}
-            ml='2' textTransform='uppercase' color='red.500' fontSize='.8rem' fontWeight='800'>
+          <Text
+            cursor='pointer'
+            onClick={() => player.seek(player.duration())}
+            ml='2'
+            textTransform='uppercase'
+            color='red.500'
+            fontSize='.8rem'
+            fontWeight='800'
+          >
             Live
           </Text>
         </Flex>

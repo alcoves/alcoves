@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { useState, } from 'react';
-import { Box, Button, Text, Tooltip, } from '@chakra-ui/react';
+import {
+  Box, Button, Text, Tooltip, 
+} from '@chakra-ui/react';
 import { IoEyeOff, IoEye, } from 'react-icons/io5';
 
 export default function EditVisibility({ id, visibility: v }) {
@@ -27,16 +29,20 @@ export default function EditVisibility({ id, visibility: v }) {
     return 'Unlisted videos are accessible to anyone with the link';
   }
 
+  const leftIcon = visibility === 'public' ?
+    <IoEye color='inherit'/> :
+    <IoEyeOff color='inherit'/>;
+
   return (
     <Box>
       <Tooltip openDelay={300} label={toolTipText()} aria-label='video-visibility'>
         <Button
           size='sm'
           isLoading={loading}
+          leftIcon={leftIcon}
           onClick={handleChange}
           aria-label='Toggle visibility'
           colorScheme={visibility === 'public' ? 'teal' : 'gray'}
-          leftIcon={visibility === 'public' ? <IoEye color='inherit'/> : <IoEyeOff color='inherit'/>}
         >
           <Text textTransform='capitalize'>
             {visibility}

@@ -1,6 +1,8 @@
 import React from 'react';
 import { IoLogoDiscord, } from 'react-icons/io5';
-import { Flex, HStack, Link, Text, useColorMode, } from '@chakra-ui/react';
+import {
+  Flex, HStack, Link, Text, useColorMode, 
+} from '@chakra-ui/react';
 
 const links = {
   github: `https://github.com/bkenio/reef/commit/${process.env.NEXT_PUBLIC_GIT_SHA}`,
