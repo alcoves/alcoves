@@ -1,7 +1,7 @@
 import useSWR from 'swr';
 import Head from 'next/head';
 import { useRouter, } from 'next/router';
-import { Box, Avatar, Flex, Heading, } from '@chakra-ui/react';
+import { Box, Avatar, Flex, Heading, Container, } from '@chakra-ui/react';
 import Layout from '../../components/Layout';
 import VideoGrid from '../../components/VideoGrid/Index';
 
@@ -21,15 +21,16 @@ function UserProfile({ id }) {
           <Flex direction='column' align='center'>
             <Avatar
               mt='2'
-              src={user?.image}
               w='75px' h='75px'
+              src={user?.image}
+              name={user?.name[0]}
             />
             <Heading size='lg'>{user?.name}</Heading>
           </Flex>
         </Flex>
-        <Box p='2'>
+        <Container maxW='3xl'>
           {videos && <VideoGrid videos={videos} />}
-        </Box>
+        </Container>
       </Layout>
     </>
   );

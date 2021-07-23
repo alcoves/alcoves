@@ -4,15 +4,12 @@ export default async function handler(req, res) {
   try {
     if (req.method === 'GET') {
       const user = await db.user.findFirst({ where: { id: req.query.id } });
-      if (user) {;
-        // TODO :: Replace this with explicit select statement
-        return res.send({
-          id: user.id,
-          name: user.name,
-          image: user.image,
-        });
-      }
-      return res.status(404).end();
+      if (!user) return res.status(404).end();
+      return res.send({
+        id: user.id,
+        name: user.name,
+        image: user.image,
+      });
     }
     res.status(400).end();
   } catch (error) {

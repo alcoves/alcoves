@@ -9,17 +9,19 @@ export default function VideoMeta({ v }) {
 
   return (
     <HStack spacing='12px' py='2' align='start' minH='75px'>
-      <Flex>
-        <Link href={`/u/${v.userId}`}>
-          <Avatar
-            h='40px'
-            w='40px'
-            cursor='pointer'
-            src={v?.user?.image}
-            name={v?.user?.name[0]}
-          />
-        </Link>
-      </Flex>
+      {v?.user &&
+        <Flex>
+          <Link href={`/u/${v.userId}`}>
+            <Avatar
+              h='40px'
+              w='40px'
+              cursor='pointer'
+              src={v?.user?.image}
+              name={v?.user?.name[0]}
+            />
+          </Link>
+        </Flex>
+      }
       <Flex direction='column' overflow='hidden'>
         <Link href={`/v/${v.id}`}>
           <Heading noOfLines={2} cursor='pointer' size='sm'>
