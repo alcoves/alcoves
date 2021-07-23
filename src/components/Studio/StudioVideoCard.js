@@ -1,5 +1,6 @@
 import moment from 'moment';
-import { Box, Flex, Progress , Text, Modal, VStack, Spacer,
+import {
+  Box, Flex, Progress , Text, Modal, VStack, Spacer,
   ModalOverlay,
   ModalContent,
   ModalCloseButton,
@@ -41,7 +42,9 @@ export default function StudioVideoCard({ v = {} }) {
     `/api/videos/${v?.id}`, fetcher,
     { initialData: v, refreshInterval: v?.status === 'completed' ? 0 : 2000 }
   );
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen, onOpen, onClose, 
+  } = useDisclosure();
 
   return (
     <Box overflow='hidden'>
@@ -50,8 +53,13 @@ export default function StudioVideoCard({ v = {} }) {
           borderRadius='md'
           cursor='pointer'
           onClick={onOpen}
-          w='100%' h='200px' bgImage={`url("${video.thumbnail}")`}
-          bgSize='cover' bgColor='black' bgPosition='center' bgRepeat='no-repeat'
+          w='100%'
+          h='200px'
+          bgImage={`url("${video.thumbnail}")`}
+          bgSize='cover'
+          bgColor='black'
+          bgPosition='center'
+          bgRepeat='no-repeat'
         >
           <Flex w='100%' h='100%' justify='center' align='center' direction='column' p='1'>
             <Flex></Flex>
@@ -62,8 +70,11 @@ export default function StudioVideoCard({ v = {} }) {
             <Spacer/>
             <Flex justify='end' w='100%'>
               <Flex
-                justify='center' align='center'
-                bg='rgba(10, 10, 10, .4)'borderRadius='md' px='1'
+                justify='center'
+                align='center'
+                bg='rgba(10, 10, 10, .4)'
+                borderRadius='md'
+                px='1'
               >
                 <Text color='gray.100' fontSize='xs' fontWeight='bold'>
                   {videoDuration(video.duration)}
@@ -74,11 +85,12 @@ export default function StudioVideoCard({ v = {} }) {
         </Box>
         <Box>
           <Box h='3px'>
-            {video.status !== 'completed' && <Progress
-              height='3px'
-              colorScheme='teal'
-              value={video?.percentCompleted}
-            />}
+            {video.status !== 'completed' &&
+              <Progress
+                height='3px'
+                colorScheme='teal'
+                value={video?.percentCompleted}
+              />}
           </Box>
           <Box p='2' bg='transparent' w='100%'>
             <Flex direction='column'>

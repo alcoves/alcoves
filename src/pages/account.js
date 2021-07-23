@@ -1,5 +1,7 @@
 import { useSession, } from 'next-auth/client';
-import { Flex, Avatar, VStack, SkeletonCircle, Heading, SkeletonText, Text, } from '@chakra-ui/react';
+import {
+  Flex, Avatar, VStack, SkeletonCircle, Heading, SkeletonText, Text, 
+} from '@chakra-ui/react';
 import Layout from '../components/Layout';
 import prettyBytes from 'pretty-bytes';
 import useSWR from 'swr';
@@ -13,15 +15,23 @@ export default function Account() {
       <Flex justify='center' pt='5' direction='row'>
         <Flex direction='column' rounded='lg' p='5' minW='400px'>
           <Flex direction='row' justify='center' w='100%' h='75px'>
-            <SkeletonCircle w='60px' h='60px' isLoaded={Boolean(!loadingSession && session?.user?.image)}>
+            <SkeletonCircle
+              w='60px'
+              h='60px'
+              isLoaded={Boolean(!loadingSession && session?.user?.image)}
+            >
               <Avatar
-                w='60px' h='60px'
+                w='60px'
+                h='60px'
                 src={session?.user?.image}
                 name={session?.user?.name[0]}
               />
             </SkeletonCircle>
             <SkeletonText
-              ml='5' w='100%' noOfLines={3} spacing={3}
+              ml='5'
+              w='100%'
+              noOfLines={3}
+              spacing={3}
               isLoaded={Boolean(!loadingSession && session?.user?.name)}
             >
               <Heading size='sm'>
@@ -33,7 +43,9 @@ export default function Account() {
             </SkeletonText>
           </Flex>
           <SkeletonText
-            w='100%' noOfLines={4} spacing={7}
+            w='100%'
+            noOfLines={4}
+            spacing={7}
             isLoaded={Boolean(data)}
           >
             <VStack w='100%'>

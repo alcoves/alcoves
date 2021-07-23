@@ -1,10 +1,14 @@
 import axios from 'axios';
 import { useEffect, useState, } from 'react';
-import { Input, InputGroup, InputLeftAddon, } from '@chakra-ui/react';
+import {
+  Input, InputGroup, InputLeftAddon, 
+} from '@chakra-ui/react';
 
 let timer;
 
-export default function EditTitle({ id, title: t, refetch }) {
+export default function EditTitle({
+  id, title: t, refetch, 
+}) {
   const [title, setTitle ] = useState(t);
   const [loading, setLoading] = useState(false);
 

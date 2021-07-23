@@ -13,7 +13,9 @@ import {
   Tooltip,
   IconButton,
 } from '@chakra-ui/react';
-import { useCallback, useContext, useEffect, } from 'react';
+import {
+  useCallback, useContext, useEffect, 
+} from 'react';
 import { useDropzone, } from 'react-dropzone';
 import { IoVideocam, } from 'react-icons/io5';
 import UploadItem from './UploadItem';
@@ -23,13 +25,17 @@ import { UploadContext, } from '../../context/UploadContext';
 
 export default function Uploader({ refetch }) {
   const { uploads, dispatch } = useContext(UploadContext);
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen, onOpen, onClose, 
+  } = useDisclosure();
 
   async function startUpload(item) {
     dispatch({ type: 'start', id: item.id });
     const chunks = chunkFile(item.file);
 
-    dispatch({ type: 'update', id: item.id, payload: { message: 'Uploading' } });
+    dispatch({
+      type: 'update', id: item.id, payload: { message: 'Uploading' }, 
+    });
     const uploadResponse = fetch('/api/uploads', {
       method: 'POST',
       body: JSON.stringify({
@@ -37,13 +43,17 @@ export default function Uploader({ refetch }) {
         chunks: chunks.length,
       }),
     });
-    const { uploadId, key, id, urls } = await (await uploadResponse).json();
+    const {
+      uploadId, key, id, urls, 
+    } = await (await uploadResponse).json();
 
     const results = await Promise.all(chunks.map((chunk, i) => {
       // console.log(`uploading part ${i} to ${urls[i]}`);
       return axios.put(urls[i], chunk, {
         onUploadProgress: e => {
-          dispatch({ type: 'progress', id: item.id, payload: { [i]: e.loaded } });
+          dispatch({
+            type: 'progress', id: item.id, payload: { [i]: e.loaded }, 
+          });
         },
       });
     }));
@@ -53,7 +63,9 @@ export default function Uploader({ refetch }) {
       return acc;
     }, []);
   
-    dispatch({ type: 'update', id: item.id, payload: { message: 'Validating' } });
+    dispatch({
+      type: 'update', id: item.id, payload: { message: 'Validating' }, 
+    });
     const video = document.createElement('video');
     video.preload = 'metadata';
 
@@ -115,7 +127,8 @@ export default function Uploader({ refetch }) {
       >
         <IconButton
           onClick={onOpen}
-          size='sm' ml='2'
+          size='sm'
+          ml='2'
           icon={<IoVideocam/>}
         />
       </Tooltip>
@@ -124,7 +137,14 @@ export default function Uploader({ refetch }) {
         <ModalContent>
           <ModalBody>
             <Flex direction='column'>
-              <Box mt='4' {...getRootProps()} borderWidth='2px' borderStyle='dashed' rounded='md' cursor='pointer'>
+              <Box
+                mt='4'
+                {...getRootProps()}
+                borderWidth='2px'
+                borderStyle='dashed'
+                rounded='md'
+                cursor='pointer'
+              >
                 <input {...getInputProps()} />
                 <Flex direction='column' justify='center' align='center' minH='200px'>
                   <IoVideocam size='40px'/>
@@ -133,12 +153,13 @@ export default function Uploader({ refetch }) {
                 </Flex>
               </Box>
               <Box>
-                {uploads.map(item => <UploadItem
-                  item={item}
-                  key={item.id}
-                  refetch={refetch}
-                  dispatch={dispatch}
-                />)}
+                {uploads.map(item =>
+                  <UploadItem
+                    item={item}
+                    key={item.id}
+                    refetch={refetch}
+                    dispatch={dispatch}
+                  />)}
               </Box>
             </Flex>
           </ModalBody>

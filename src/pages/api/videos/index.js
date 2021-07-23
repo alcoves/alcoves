@@ -7,7 +7,9 @@ import { getTidalURL, getWebhookURL, } from '../../../utils/tidal';
 async function createVideo(req, res) {
   const session = await getSession({ req });
   if (!session) return res.status(401).end();
-  const { duration, title, id, key, parts, uploadId } = JSON.parse(req.body);
+  const {
+    duration, title, id, key, parts, uploadId, 
+  } = JSON.parse(req.body);
 
   const user = await db.user.findUnique({ where: { email: session.user.email } });
   if (!user) res.status(401).end();
@@ -38,11 +40,7 @@ async function createVideo(req, res) {
     webhookUrl: getWebhookURL(id),
     rcloneSourceUri: `wasabi:cdn.bken.io/${key}`,
     rcloneDestinationUri: `wasabi:cdn.bken.io/v/${id}/pkg`,
-  }, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+  }, { headers: { 'Content-Type': 'application/json' } });
   res.status(200).end();
 
   console.info('Invoking tidal thumbnail job');
@@ -51,11 +49,7 @@ async function createVideo(req, res) {
     webhookUrl: getWebhookURL(id),
     rcloneSourceUri: `wasabi:cdn.bken.io/${key}`,
     rcloneDestinationUri: `wasabi:cdn.bken.io/v/${id}/thumb.webp`,
-  }, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+  }, { headers: { 'Content-Type': 'application/json' } });
   res.status(200).end();
 }
 

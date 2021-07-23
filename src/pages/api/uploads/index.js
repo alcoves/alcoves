@@ -30,7 +30,9 @@ export default async function handler(req, res) {
           );
         }
 
-        res.send({ uploadId: UploadId, key: Key, urls, id });
+        res.send({
+          uploadId: UploadId, key: Key, urls, id, 
+        });
       }
     } else {
       res.status(401).end();

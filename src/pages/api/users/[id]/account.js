@@ -16,7 +16,9 @@ export default async function handler(req, res) {
           acc.totalViews += cv.views;
           acc.totalDuration += parseFloat(cv.duration);
           return acc;
-        }, { totalDuration: 0, totalViews: 0, totalVideos: 0 });
+        }, {
+          totalDuration: 0, totalViews: 0, totalVideos: 0, 
+        });
 
         const allObjects = await Promise.all(videos.map((v) => {
           return listObjects({

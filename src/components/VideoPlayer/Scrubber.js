@@ -1,5 +1,7 @@
 import React, { useEffect, useState, } from 'react';
-import { Slider, SliderFilledTrack, SliderThumb, SliderTrack, Box, } from '@chakra-ui/react';
+import {
+  Slider, SliderFilledTrack, SliderThumb, SliderTrack, 
+} from '@chakra-ui/react';
 
 function Duration({ vRef = {} }) {
   const bufferedLength = vRef?.current?.buffered?.length;
@@ -50,7 +52,12 @@ function Duration({ vRef = {} }) {
     >
       <SliderTrack bg='rgba(255, 255, 255, 0.2)'>
         <SliderFilledTrack zIndex='1' bg='#bf1e2e' />
-        <SliderFilledTrack rounded='md' zIndex='-1' width={bufferPosPercentage} bg='rgba(190, 190, 190, 1)' />
+        <SliderFilledTrack
+          rounded='md'
+          zIndex='-1'
+          bg='rgba(190, 190, 190, 1)'
+          width={bufferPosPercentage}
+        />
       </SliderTrack>
       <SliderThumb bg='#bf1e2e'/>
     </Slider>

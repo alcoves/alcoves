@@ -25,7 +25,10 @@ function App({ Component, pageProps }) {
   return (
     <>
       <Head>
-        <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'/>
+        <meta
+          name='viewport'
+          content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'
+        />
       </Head>
       <UploadContext.Provider value={{ uploads, dispatch }}>
         <Provider session={pageProps.session}>

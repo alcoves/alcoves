@@ -1,4 +1,4 @@
-import { SimpleGrid,  } from '@chakra-ui/react';
+import { SimpleGrid, } from '@chakra-ui/react';
 import VideoCard from './VideoCard';
 
 export default function VideoGrid({ videos = [] }) {

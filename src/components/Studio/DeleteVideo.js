@@ -13,9 +13,13 @@ import {
 import { useState, } from 'react';
 import { IoTrashBin, } from 'react-icons/io5';
 
-export default function DeleteVideo({ id, refetch, handleClose }) {
+export default function DeleteVideo({
+  id, refetch, handleClose, 
+}) {
   const [loading, setLoading] = useState(false);
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen, onOpen, onClose, 
+  } = useDisclosure();
 
   async function deleteVideo() {
     try {
@@ -47,7 +51,8 @@ export default function DeleteVideo({ id, refetch, handleClose }) {
           </ModalBody>
           <ModalFooter>
             <Button
-              mr={3} size='sm'
+              mr={3}
+              size='sm'
               colorScheme='red'
               isLoading={loading}
               onClick={deleteVideo}

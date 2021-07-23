@@ -1,4 +1,6 @@
-import { Box, Text, Skeleton, } from '@chakra-ui/react';
+import {
+  Box, Text, Skeleton, 
+} from '@chakra-ui/react';
 import Link from 'next/link';
 import videoDuration from '../../utils/videoDuration';
 import VideoMeta from './VideoMeta';
@@ -6,15 +8,19 @@ import VideoMeta from './VideoMeta';
 export default function VideoCard({ v }) {
   return (
     <Skeleton isLoaded={Boolean(v.id)}>
-      <Link href={`/v/${v.id}`}>
+      <Link passHref href={`/v/${v.id}`}>
         <Box
           borderRadius='md'
           boxShadow='inner'
-          w='100%' h='200px'
-          bgSize='cover' bgColor='black'
+          w='100%'
+          h='200px'
+          bgSize='cover'
+          bgColor='black'
           bgImage={`url("${v.thumbnail}")`}
-          cursor='pointer' position='relative'
-          bgPosition='center' bgRepeat='no-repeat'
+          cursor='pointer'
+          position='relative'
+          bgPosition='center'
+          bgRepeat='no-repeat'
         >
           <Text
             px='1'
@@ -25,7 +31,10 @@ export default function VideoCard({ v }) {
             borderRadius='md'
             position='absolute'
             bg='rgba(10, 10, 10, .4)'
-            color='gray.100' fontSize='xs' fontWeight='bold'>
+            color='gray.100'
+            fontSize='xs'
+            fontWeight='bold'
+          >
             {videoDuration(v.duration)}
           </Text>
         </Box>

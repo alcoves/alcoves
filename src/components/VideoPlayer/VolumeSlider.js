@@ -1,4 +1,6 @@
-import { Box, Slider, SliderFilledTrack, SliderThumb, SliderTrack, } from '@chakra-ui/react';
+import {
+  Box, Slider, SliderFilledTrack, SliderThumb, SliderTrack, 
+} from '@chakra-ui/react';
 import React, { useEffect, useState, } from 'react';
 
 function VolumeSlider({ vRef }) {
@@ -19,8 +21,12 @@ function VolumeSlider({ vRef }) {
 
   return (
     <Box mx='2'>
-      <Slider onChange={handleChange} 
-        w='60px' color='white' lf='10px' aria-label='volume-slider'
+      <Slider
+        onChange={handleChange} 
+        w='60px'
+        color='white'
+        lf='10px'
+        aria-label='volume-slider'
         value={vRef.current.muted ? 0 : volume}
       >
         <SliderTrack bg='rgba(120, 120, 120, 1)'>

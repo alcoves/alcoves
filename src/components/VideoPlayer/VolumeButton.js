@@ -1,6 +1,11 @@
 import { IconButton, } from '@chakra-ui/react';
 import React, { useEffect, useState, } from 'react';
-import { IoVolumeHighOutline, IoVolumeLowOutline, IoVolumeMediumOutline, IoVolumeMuteOutline, } from 'react-icons/io5';
+import {
+  IoVolumeHighOutline,
+  IoVolumeLowOutline,
+  IoVolumeMediumOutline,
+  IoVolumeMuteOutline,
+} from 'react-icons/io5';
 
 function VolumeButton({ vRef }) {
   const [volume, setVolume] = useState(vRef.current.volume);

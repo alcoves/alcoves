@@ -1,6 +1,20 @@
 import { useState, } from 'react';
 import { signOut, useSession, } from 'next-auth/client';
-import { Flex, Spacer, Text, Switch, Box, Avatar, Menu, MenuButton, MenuList, MenuItem, MenuDivider, useColorMode, IconButton, } from '@chakra-ui/react';
+import {
+  Flex,
+  Spacer,
+  Text,
+  Switch,
+  Box,
+  Avatar,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuDivider,
+  useColorMode,
+  IconButton, 
+} from '@chakra-ui/react';
 import { IoFilmOutline, } from 'react-icons/io5';
 import Link from 'next/link';
 import Uploader from './Uploader/Index';
@@ -14,7 +28,7 @@ export default function Navigation() {
   return (
     <Flex h='48px' bg={colorMode === 'dark' ? 'gray.700' : 'white'}>
       <Box p='1' cursor='pointer'>
-        <a href='/'>
+        <Link href='/' passHref>
           <Image
             width={40}
             height={40}
@@ -23,14 +37,14 @@ export default function Navigation() {
             layout='fixed'
             src='/logo.png'
           />
-        </a>
+        </Link>
       </Box>
       <Spacer />
       <Box p='1'>
         <Flex justify='center' align='center' h='100%'>
           <Box me='2'><Uploader/></Box>
           <Box me='2'>
-            <Link href='/studio'>
+            <Link href='/studio' passHref>
               <IconButton
                 size='sm'
                 icon={<IoFilmOutline/>}
@@ -42,21 +56,22 @@ export default function Navigation() {
             <Menu>
               <MenuButton me='10px'>
                 <Avatar
-                  h='30px' w='30px'
+                  h='30px'
+                  w='30px'
                   src={session.user.image}
                   name={session.user.name[0]}
                   onClick={() => setOpen(!open)}
                 />
               </MenuButton>
               <MenuList minW='auto'>
-                <Link href={`/u/${session.id}`}>
+                <Link passHref href={`/u/${session.id}`}>
                   <MenuItem>Profile</MenuItem>
                 </Link>
-                <Link href={'/account'}>
+                <Link passHref href={'/account'}>
                   <MenuItem>Account</MenuItem>
                 </Link>
                 {session?.user?.isAdmin &&
-                  <Link href='/admin'>
+                  <Link passHref href='/admin'>
                     <MenuItem>Admin</MenuItem>
                   </Link>
                 }
@@ -75,7 +90,7 @@ export default function Navigation() {
             </Menu>
             :
             <Flex w='full' h='full' align='center' me='10px'>
-              <Link href='/login'>
+              <Link passHref href='/login'>
                 <Avatar h='30px' w='30px' cursor='pointer' />
               </Link>
             </Flex>

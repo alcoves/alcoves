@@ -1,6 +1,8 @@
 import useSWR from 'swr';
 import { useSession, } from 'next-auth/client';
-import { Box, Button, Flex, SimpleGrid, } from '@chakra-ui/react';
+import {
+  Box, Button, Flex, SimpleGrid, 
+} from '@chakra-ui/react';
 import { useRouter, } from 'next/router';
 import { useEffect, useState, } from 'react';
 import Layout from '../components/Layout';
@@ -8,12 +10,14 @@ import StudioVideoCard from '../components/Studio/StudioVideoCard';
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
-export default function studio() {
+export default function Studio() {
   const router = useRouter();
   const [ session, loading ] = useSession();
   const [videos, setVideos] = useState([]);
 
-  const { data, mutate, isValidating } = useSWR(session ?
+  const {
+    data, mutate, isValidating, 
+  } = useSWR(session ?
     `/api/users/${session.id}/videos` :
     null, fetcher
   );

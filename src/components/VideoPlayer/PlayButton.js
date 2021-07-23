@@ -2,7 +2,9 @@ import { IconButton, } from '@chakra-ui/react';
 import React, { useEffect, useState, } from 'react';
 import { IoPauseOutline, IoPlayOutline, } from 'react-icons/io5';
 
-function PlayButton({ vRef, color, size = '20px', chakraProps = { variant: 'ghost' } }) {
+function PlayButton({
+  vRef, color, size = '20px', chakraProps = { variant: 'ghost' }, 
+}) {
   const [paused, setPaused] = useState(vRef.current.paused);
 
   useEffect(() => {

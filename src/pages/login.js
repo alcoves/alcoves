@@ -1,4 +1,6 @@
-import { Button, Flex, Heading, Box, } from '@chakra-ui/react';
+import {
+  Button, Flex, Heading, Box, 
+} from '@chakra-ui/react';
 import Image from 'next/image';
 import { providers as getProviders, signIn, } from 'next-auth/client';
 
@@ -13,7 +15,8 @@ export default function Login({ providers }) {
             <Button
               my='2'
               isFullWidth
-              onClick={() => signIn(provider.id)}>
+              onClick={() => signIn(provider.id)}
+            >
               Log in with {provider.name}
             </Button>
           </Box>

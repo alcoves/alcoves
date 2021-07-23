@@ -1,4 +1,6 @@
-import { Menu, MenuItem, Button, MenuButton, MenuList, Text, IconButton, } from '@chakra-ui/react';
+import {
+  Menu, MenuItem, MenuButton, MenuList, Text, IconButton, 
+} from '@chakra-ui/react';
 import { IoSettingsOutline, } from 'react-icons/io5';
 
 function QualitySelector({ player }) {
@@ -19,7 +21,8 @@ function QualitySelector({ player }) {
           const menuText = `${track.height}p${track.frameRate}fps`;
           return (
             <MenuItem
-              key={track.id} value={track.id}
+              key={track.id}
+              value={track.id}
               onClick={() => {
                 console.log('setting track', track.height);
                 const config = { abr: { enabled: false } };
@@ -34,7 +37,8 @@ function QualitySelector({ player }) {
           );
         })}
         <MenuItem
-          key='auto' value='Auto'
+          key='auto'
+          value='Auto'
           onClick={() => {
             const config = { abr: { enabled: true } };
             player.configure(config);

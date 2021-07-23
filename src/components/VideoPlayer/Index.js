@@ -1,7 +1,11 @@
-import React, { useRef, useState, useEffect, } from 'react';
+import React, {
+  useRef, useState, useEffect, 
+} from 'react';
 import qs from 'query-string';
 import shaka from 'shaka-player';
-import { Box, Flex, Spinner, } from '@chakra-ui/react';
+import {
+  Box, Flex, Spinner, 
+} from '@chakra-ui/react';
 import screenfull from 'screenfull';
 import Scrubber from './Scrubber';
 import Duration from './Duration';
@@ -15,7 +19,9 @@ import PictureInPictureButton from './PictureInPictureButton';
 let idleTimer;
 let clickTimer;
 
-function VideoPlayer({ theaterMode, thumbnail, url, id = 'bkenVideoPlayer' }) {
+function VideoPlayer({
+  theaterMode, thumbnail, url, id = 'bkenVideoPlayer', 
+}) {
   const vRef = useRef(null);
   const cRef = useRef(null);
   const [player, setPlayer] = useState(null);
@@ -55,13 +61,7 @@ function VideoPlayer({ theaterMode, thumbnail, url, id = 'bkenVideoPlayer' }) {
       const { t = 0 } = qs.parse(window.location.search);
       // console.log(`Seeking to ${t}`);
 
-      player.configure({
-        manifest: {
-          dash: {
-            ignoreEmptyAdaptationSet: true,
-          },
-        },
-      });
+      player.configure({ manifest: { dash: { ignoreEmptyAdaptationSet: true } } });
 
       player.load(url, t).then(() => {
         // console.debug('video has been loaded');
@@ -99,12 +99,15 @@ function VideoPlayer({ theaterMode, thumbnail, url, id = 'bkenVideoPlayer' }) {
 
   function renderCenter() {
     if (vRef.current.currentTime < 1) {
-      return <PlayButton
-        size='40px'
-        vRef={vRef}
-        color='#eee'
-        chakraProps={{ variant: 'ghost', rounded: 'xl', h:'100%', p:'10px' }}
-      />;
+      return (
+        <PlayButton
+          size='40px'
+          vRef={vRef}
+          color='#eee'
+          chakraProps={{
+            variant: 'ghost', rounded: 'xl', h:'100%', p:'10px', 
+          }}
+        />);
     } if (player?.isBuffering()) {
       return <Spinner size='xl' color='#bf1e2e'/>;
     }
@@ -128,7 +131,8 @@ function VideoPlayer({ theaterMode, thumbnail, url, id = 'bkenVideoPlayer' }) {
           setControlsVisible(player?.isBuffering());
         }
       }}
-      pos='relative' backgroundColor='rgba(0,0,0,.3)'
+      pos='relative'
+      backgroundColor='rgba(0,0,0,.3)'
       cursor={`${controlsVisible ? 'auto' : 'none'}`}
       {...baseStyles()}
     >
@@ -138,20 +142,34 @@ function VideoPlayer({ theaterMode, thumbnail, url, id = 'bkenVideoPlayer' }) {
         ref={vRef}
         poster={thumbnail}
         disableRemotePlayback
-        style={{ width: '100%', height: '100%', background: 'black' }}
+        style={{
+          width: '100%', height: '100%', background: 'black', 
+        }}
       />
 
       {player && vRef?.current && (
         <Flex
-          top='0' left='0' w='100%' h='100%'
-          overflow='none' position='absolute' alignItems='center'
-          flexDirection='column' justifyContent='flex-end'
-          background='rgb(255,255,255)' transition='opacity .1s ease-in'
+          top='0'
+          left='0'
+          w='100%'
+          h='100%'
+          overflow='none'
+          position='absolute'
+          alignItems='center'
+          flexDirection='column'
+          justifyContent='flex-end'
+          background='rgb(255,255,255)'
+          transition='opacity .1s ease-in'
           opacity={`${controlsVisible ? 1 : 0}`}
           // eslint-disable-next-line
           background='linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.30) 90%, rgba(0,0,0,0.60) 100%)'
         >
-          <Flex w='100%' h='100%' flexDirection='column' justify='center' align='center'
+          <Flex
+            w='100%'
+            h='100%'
+            flexDirection='column'
+            justify='center'
+            align='center'
             onClick={(e) => {
               clearTimeout(clickTimer);
               if (e.detail === 1) {

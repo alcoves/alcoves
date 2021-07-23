@@ -84,7 +84,7 @@ export default function Admin() {
           {videos.map((v) => (
             <Tr key={v.id}>
               <Td>
-                <Image height='50px' src={v.thumbnail} />
+                <Image height='50px' src={v.thumbnail} alt='image'/>
                 <Box>{v.duration}</Box>
                 <Box>{v.mpdLink}</Box>
               </Td>
@@ -93,8 +93,12 @@ export default function Admin() {
               <Td>
                 <Flex direction='column'>
                   {v.status}
-                  <Button id={v.id} onClick={() => reprocessVideo(v.id)} my='2' size='xs'>Reprocess Video</Button>
-                  <Button id={v.id} onClick={() => reprocessThumbnail(v.id)} my='2' size='xs'>Reprocess Thumbnail</Button>
+                  <Button id={v.id} onClick={() => reprocessVideo(v.id)} my='2' size='xs'>
+                    Reprocess Video
+                  </Button>
+                  <Button id={v.id} onClick={() => reprocessThumbnail(v.id)} my='2' size='xs'>
+                    Reprocess Thumbnail
+                  </Button>
                 </Flex>
               </Td>
               <Td isNumeric>{v.percentCompleted}</Td>
