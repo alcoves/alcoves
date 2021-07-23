@@ -13,8 +13,9 @@ function VideoPageUserCard({ id }) {
         <Link href={`/u/${id}`}>
           <Avatar
             size='md'
-            src={data.image}
             cursor='pointer'
+            src={data?.image}
+            name={data?.name[0]}
           />
         </Link>
         <Link href={`/u/${id}`}>
@@ -23,7 +24,7 @@ function VideoPageUserCard({ id }) {
             size='sm'
             cursor='pointer'
           >
-            {data.name}
+            {data?.name}
           </Heading>
         </Link>
       </Flex>

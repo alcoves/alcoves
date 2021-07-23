@@ -16,8 +16,8 @@ export default function Account() {
             <SkeletonCircle w='60px' h='60px' isLoaded={Boolean(!loadingSession && session?.user?.image)}>
               <Avatar
                 w='60px' h='60px'
-                name={session?.user?.name}
                 src={session?.user?.image}
+                name={session?.user?.name[0]}
               />
             </SkeletonCircle>
             <SkeletonText
