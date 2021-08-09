@@ -48,7 +48,13 @@ export default function Video({
           <meta property='og:image:type' content='image/webp' />
           <meta property='og:image' content={data.thumbnail} />
           <meta property='og:image:secure_url' content={data.thumbnail} />
-
+          <meta property='og:video:url' content={`https://bken.io/embed/${data.id}`} />
+          <meta property='og:video:secure_url' content={`https://bken.io/embed/${data.id}`} />
+          <meta property='og:video:type' content='text/html'/>
+          <meta property='og:video:width' content='1280'/>
+          <meta property='og:video:height' content='720'/>
+          <meta property='og:video:tag' content='username'/>
+          <meta property='og:video:tag' content={data.title}/>
           <meta name='og:title' content={data.title} />
           <meta name='description' content={`Watch ${data.title} on bken.io`} />
           <meta name='twitter:card' content='player'/>
