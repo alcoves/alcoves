@@ -7,7 +7,7 @@ import {
   Th,
   Td,
   TableCaption,
-  Image,
+  Avatar,
   Link,
   Button,
   Flex,
@@ -88,7 +88,7 @@ export default function Admin() {
               <Td>
                 <Box
                   rounded='md'
-                  h='50px'
+                  h='80px'
                   position='relative'
                   bgImage={v.thumbnail}
                   bgSize='cover'
@@ -112,11 +112,26 @@ export default function Admin() {
                   </Flex>
                 </Box>
               </Td>
-              <Td><Link href={`/v/${v.id}`}>{v.id}</Link></Td>
               <Td>
-                {v.user.id}
-                {v.user.name}
-                {v.user.image}
+                <Link href={`/v/${v.id}`}>
+                  <Text fontWeight='bold' overflow='clip'>{v.title}</Text>
+                </Link>
+                <Text>{v.id}</Text>
+              </Td>
+              <Td>
+
+                <Flex>
+                  <Avatar
+                    size='sm'
+                    name={v.user.name}
+                    src={v.user.image}
+                  />
+                  <Flex direction='column' ml='2'>
+                    <Text fontWeight='bold'>{v.user.name}</Text>
+                    <Text fontSize='xs'>{v.user.id}</Text>
+                  </Flex>
+                </Flex>
+
               </Td>
               <Td>
                 <HStack direction='row' align='center'>
