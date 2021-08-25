@@ -4,11 +4,19 @@ import {
 } from '@chakra-ui/react';
 
 function Duration({ vRef = {} }) {
+  const [progress, setProgress ] = useState(0);
   const bufferedLength = vRef?.current?.buffered?.length;
   const bufferedEnd = bufferedLength ? vRef?.current?.buffered?.end(bufferedLength - 1) : 0;
   // const bufferedStart = bufferedLength ? vRef?.current?.buffered?.start(0) : 0;
 
-  const [progress, setProgress ] = useState(0);
+  function timePoll() {
+    // It is better to use request animation frame because it allows the browser
+    // to optimize when the fetch occurs
+    if (vRef?.current?.currentTime && !vRef?.current?.paused) {
+      setProgress(vRef.current.currentTime);
+    }
+    requestAnimationFrame(timePoll);
+  }
 
   useEffect(() => {
     if (vRef.current.currentTime) {
@@ -18,22 +26,9 @@ function Duration({ vRef = {} }) {
         setProgress(vRef.current.currentTime);
       }
     }
+
+    timePoll();
   }, []);
-
-  useEffect(() => {
-    function timeUpdate() {
-      if (vRef?.current?.currentTime) {
-        setProgress(vRef?.current?.currentTime);
-      }
-    }
-
-    vRef?.current.addEventListener('timeupdate', timeUpdate);
-    return () => {
-      if (vRef?.current) {
-        vRef?.current?.removeEventListener('timeupdate', timeUpdate);
-      }
-    };
-  }, [vRef]);
 
   const bufferPosPercentage = `${(bufferedEnd / vRef?.current?.duration || 0) * 100}% !important`;
   
