@@ -19,8 +19,8 @@
     "@emotion/styled": "^11.3.0",
     "@next-auth/prisma-adapter": "^0.5.4",
     "@prisma/client": "^2.30.0",
-    "autoprefixer": "^10.3.2",
-    "aws-sdk": "^2.976.0",
+    "autoprefixer": "^10.3.3",
+    "aws-sdk": "^2.978.0",
     "axios": "^0.21.1",
     "dayjs": "^1.10.6",
     "detect-browser": "^5.2.0",
@@ -42,7 +42,7 @@
     "screenfull": "^5.1.0",
     "shaka-player": "^3.2.0",
     "sitemap": "^7.0.0",
-    "swr": "^0.5.6"
+    "swr": "^1.0.0"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
