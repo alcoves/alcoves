@@ -1,6 +1,8 @@
+import axios from 'axios';
 import { getSession, } from 'next-auth/client';
 import db from '../../../../utils/db';
 import { deleteFolder, } from '../../../../utils/s3';
+import { getTidalURL, processVideo, } from '../../../../utils/tidal';
 
 async function getVideo(req, res) {
   const video = await db.video.findFirst({ where: { id: req.query.id } });
@@ -70,11 +72,17 @@ async function patchVideo(req, res) {
 export default async function handler(req, res) {
   try {
     if (req.method === 'GET') {
-      await getVideo(req, res);
+      const res = await axios.get(`${getTidalURL()}/videos/${req.query.id}`);
+      res.status(200).json({ data: res });
     } else if (req.method === 'PATCH') {
-      await patchVideo(req, res);
+      await axios.patch(`${getTidalURL()}/videos/${req.query.id}`);
+      res.status(200).end();
     } else if (req.method === 'DELETE') {
-      await deleteVideo(req, res);
+      return deleteVideo(req, res);
+    } else if (req.method === 'POST') {
+      const session = await getSession({ req });
+      if (!session) return res.status(403).end();
+      await processVideo(req.query.id);
     }
     res.status(400).end();
   } catch (error) {
