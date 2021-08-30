@@ -17,40 +17,21 @@ import {
   Menu,
   MenuButton,
   MenuList,
+  Progress,
   MenuItem,
 } from '@chakra-ui/react';
 import moment from 'moment';
 import { useSession, } from 'next-auth/client';
-import axios from 'axios';
 import Layout from '../components/Layout';
 import videoDuration from '../utils/videoDuration';
 import { IoArrowDown, IoSettingsOutline, } from 'react-icons/io5';
-
-async function reprocessThumbnail(id) {
-  await axios.post('https://bk-det1.bken.dev/tidal/jobs/thumbnail', {
-    videoId: id,
-    webhookUrl: `https://bken.io/api/videos/${id}`,
-    rcloneSourceUri: `wasabi:cdn.bken.io/v/${id}/original`,
-    rcloneDestinationUri: `wasabi:cdn.bken.io/v/${id}/thumb.webp`,
-  });
-}
-
-async function reprocessVideo(id) {
-  await axios.post('https://bk-det1.bken.dev/tidal/jobs/transcode', {
-    videoId: id,
-    webhookUrl: `https://bken.io/api/videos/${id}`,
-    rcloneDestinationUri: `wasabi:cdn.bken.io/v/${id}/pkg`,
-    rcloneSourceUri: `wasabi:cdn.bken.io/v/${id}/original`,
-  });
-}
-
-async function reprocessAllVideos(videos) {
-  await Promise.all(videos.map(({ id }) => reprocessVideo(id)));
-}
-
-async function reprocessAllThumbnails(videos) {
-  await Promise.all(videos.map(({ id }) => reprocessThumbnail(id)));
-}
+import {
+  processVideo, 
+  processAllVideos,
+  processThumbnail,
+  processAllThumbnails,
+} from '../utils/tidal';
+import axios from 'axios';
 
 export default function Admin() {
   const [session, loading] = useSession();
@@ -76,10 +57,10 @@ export default function Admin() {
               Actions
             </MenuButton>
             <MenuList>
-              <MenuItem onClick={() => reprocessAllVideos(videos)}>
+              <MenuItem onClick={() => processAllVideos(videos)}>
                 Reprocess All Videos
               </MenuItem>
-              <MenuItem onClick={() => reprocessAllThumbnails(videos)}>
+              <MenuItem onClick={() => processAllThumbnails(videos)}>
                 Reprocess All Thumbnails
               </MenuItem>
             </MenuList>
@@ -100,7 +81,7 @@ export default function Admin() {
               <Tr key={v.id}>
                 <Td>
                   <Box
-                    rounded='md'
+                    roundedTop='md'
                     h='50px'
                     w='100px'
                     position='relative'
@@ -125,6 +106,7 @@ export default function Admin() {
                       </Text>
                     </Flex>
                   </Box>
+                  <Progress maxW='100px' colorScheme='yellow' size='xs' value={v.percentCompleted}/>
                 </Td>
                 <Td>
                   <Link href={`/v/${v.id}`}>
@@ -152,10 +134,24 @@ export default function Admin() {
                       Actions
                     </MenuButton>
                     <MenuList>
-                      <MenuItem id={v.id} onClick={() => reprocessVideo(v.id)}>
+                      <MenuItem
+                        id={v.id}
+                        onClick={async () => {
+                          await axios.post(`/api/videos/${v.id}`).catch((error) => {
+                            console.error(error);
+                          });
+                        }}
+                      >
                         Reprocess Video
                       </MenuItem>
-                      <MenuItem id={v.id} onClick={() => reprocessThumbnail(v.id)}>
+                      <MenuItem
+                        id={v.id}
+                        onClick={async () => {
+                          await axios.post(`/api/videos/${v.id}/thumbnails`).catch((error) => {
+                            console.error(error);
+                          });
+                        }}
+                      >
                         Reprocess Thumbnail
                       </MenuItem>
                     </MenuList>
