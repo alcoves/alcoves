@@ -25,9 +25,9 @@ async function createThumbnail(id) {
     .catch(console.error);
 }
 
-async function createVideo(id, input) {
+async function createVideo(id) {
   await axios.post(`${getTidalURL()}/videos/${id}`,
-    { input },
+    { input: `https://cdn.bken.io/v/${id}/original` },
     { headers: getTidalHeaders() })
     .catch(console.error);
 }

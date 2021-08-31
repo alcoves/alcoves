@@ -1,8 +1,7 @@
-import axios from 'axios';
 import { getSession, } from 'next-auth/client';
 import db from '../../../../utils/db';
 import { deleteFolder, } from '../../../../utils/s3';
-import { getTidalURL, processVideo, } from '../../../../utils/tidal';
+import { createVideo, } from '../../../../utils/tidal';
 
 async function getVideo(req, res) {
   const video = await db.video.findFirst({ where: { id: req.query.id } });
@@ -29,15 +28,7 @@ async function deleteVideo(req, res) {
   res.status(200).end();
 }
 
-// This endpoint is where user's edit their videos
-// Tidal also uses this endpoint to webhook data in
 async function patchVideo(req, res) {
-  // const videoCheck = await db.video.findUnique({ where: { id: req.query.id } })
-  // Ensure that the user requesting the delete has access
-  // if (videoCheck.userId !== session.id) {
-  //   return res.status(403).end()
-  // }
-
   const reqKeys = Object.keys(req.body);
   const permittedKeys = [
     'status',
@@ -49,15 +40,7 @@ async function patchVideo(req, res) {
   ];
   const update = permittedKeys.reduce((acc, cv) => {
     if (reqKeys.includes(cv)) {
-      // This is where tidal webhooks land
-      // wasabi:cdn.bken.io/path are transformmed into https://cdn.bken.io/path
-      if (cv === 'mpdLink' || cv === 'thumbnail') {
-        if (req.body[cv]) {
-          acc[cv] = `https://${req.body[cv].split(':')[1]}`; // wasabi:cdn.bken.io/path
-        }
-      } else {
-        acc[cv] = req.body[cv];
-      }
+      acc[cv] = req.body[cv];
     }
     return acc;
   }, {});
@@ -72,17 +55,14 @@ async function patchVideo(req, res) {
 export default async function handler(req, res) {
   try {
     if (req.method === 'GET') {
-      const res = await axios.get(`${getTidalURL()}/videos/${req.query.id}`);
-      res.status(200).json({ data: res });
+      return getVideo(req, res);
     } else if (req.method === 'PATCH') {
-      await axios.patch(`${getTidalURL()}/videos/${req.query.id}`);
-      res.status(200).end();
+      return patchVideo(req, res);
     } else if (req.method === 'DELETE') {
       return deleteVideo(req, res);
     } else if (req.method === 'POST') {
-      const session = await getSession({ req });
-      if (!session) return res.status(403).end();
-      await processVideo(req.query.id);
+      await createVideo(req.query.id);
+      res.status(200).end();
     }
     res.status(400).end();
   } catch (error) {
