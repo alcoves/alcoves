@@ -25,12 +25,6 @@ import { useSession, } from 'next-auth/client';
 import Layout from '../components/Layout';
 import videoDuration from '../utils/videoDuration';
 import { IoArrowDown, IoSettingsOutline, } from 'react-icons/io5';
-import {
-  processVideo, 
-  processAllVideos,
-  processThumbnail,
-  processAllThumbnails,
-} from '../utils/tidal';
 import axios from 'axios';
 
 export default function Admin() {
@@ -57,10 +51,10 @@ export default function Admin() {
               Actions
             </MenuButton>
             <MenuList>
-              <MenuItem onClick={() => processAllVideos(videos)}>
+              <MenuItem>
                 Reprocess All Videos
               </MenuItem>
-              <MenuItem onClick={() => processAllThumbnails(videos)}>
+              <MenuItem>
                 Reprocess All Thumbnails
               </MenuItem>
             </MenuList>
@@ -106,7 +100,7 @@ export default function Admin() {
                       </Text>
                     </Flex>
                   </Box>
-                  <Progress maxW='100px' colorScheme='yellow' size='xs' value={v.percentCompleted}/>
+                  <Progress maxW='100px' colorScheme='green' size='xs' value={v.percentCompleted}/>
                 </Td>
                 <Td>
                   <Link href={`/v/${v.id}`}>
@@ -147,7 +141,7 @@ export default function Admin() {
                       <MenuItem
                         id={v.id}
                         onClick={async () => {
-                          await axios.post(`/api/videos/${v.id}/thumbnails`).catch((error) => {
+                          await axios.post(`/api/videos/${v.id}/thumbnail`).catch((error) => {
                             console.error(error);
                           });
                         }}
