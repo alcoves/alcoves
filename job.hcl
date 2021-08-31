@@ -24,20 +24,17 @@ job "reef" {
 
       template {
         data = <<EOH
-GOOGLE_ID="{{key "secrets/GOOGLE_ID"}}"
-GOOGLE_SECRET="{{key "secrets/GOOGLE_SECRET"}}"
 DO_API_KEY="{{key "secrets/DO_API_KEY"}}"
-NEXTAUTH_URL="{{key "secrets/NEXTAUTH_URL"}}"
-PG_CONNECTION_STRING="{{key "secrets/PG_CONNECTION_STRING"}}"
-WASABI_ENDPOINT="{{key "secrets/WASABI_ENDPOINT"}}"
-WASABI_ACCESS_KEY_ID="{{key "secrets/WASABI_ACCESS_KEY_ID"}}"
-WASABI_SECRET_ACCESS_KEY="{{key "secrets/WASABI_SECRET_ACCESS_KEY"}}"
-DISCORD_CLIENT_ID="{{key "secrets/DISCORD_CLIENT_ID"}}"
-DISCORD_CLIENT_SECRET="{{key "secrets/DISCORD_CLIENT_SECRET"}}"
         EOH
         
         env         = true
         destination = ".env"
+      }
+
+      template {
+        env         = true
+        destination = "secrets/reef/.env"
+        data        = "{{ key \"secrets/reef/.env\" }}"
       }
 
       constraint {
