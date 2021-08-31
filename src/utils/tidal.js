@@ -6,9 +6,8 @@ const TIDAL_API_KEY = process.env.TIDAL_API_KEY;
 
 export function getTidalURL() {
   if (NODE_ENV === 'production') {
-    return 'https://bken.io/tidal';
+    return 'https://tidal.bken.io';
   }
-  // return 'https://bken.io/tidal';
   return 'http://localhost:4000';
 }
 
@@ -19,31 +18,29 @@ function getTidalHeaders() {
   };
 }
 
-export async function processThumbnail(id) {
-  await axios.post(`${getTidalURL()}/videos/${id}/thumbnails`,
+async function createThumbnail(id) {
+  await axios.post(`${getTidalURL()}/videos/${id}/thumbnail`,
     { input: `https://cdn.bken.io/v/${id}/original` },
-    { headers: getTidalHeaders() }).catch((err) => {
-    console.error(err);
-  });
+    { headers: getTidalHeaders() })
+    .catch(console.error);
 }
 
-export async function processVideo(id) {
-  await axios.post(`${getTidalURL()}/videos`,
-    { input: '' },
-    { headers: getTidalHeaders() }).catch((err) => {
-    console.error(err);
-  });
+async function createVideo(id, input) {
+  await axios.post(`${getTidalURL()}/videos/${id}`,
+    { input },
+    { headers: getTidalHeaders() })
+    .catch(console.error);
 }
 
-export async function processAllVideos(videos) {
-  await Promise.all(videos.map(({ id }) => processVideo(id)));
-}
+// async function processAllVideos(videos) {
+//   await Promise.all(videos.map(({ id }) => createVideo(id)));
+// }
 
-export async function processAllThumbnails(videos) {
-  await Promise.all(videos.map(({ id }) => processThumbnail(id)));
-}
+// async function processAllThumbnails(videos) {
+//   await Promise.all(videos.map(({ id }) => createThumbnail(id)));
+// }
 
-export async function deleteVideo(req, res) {
+async function deleteVideo(req, res) {
   const session = await getSession({ req });
   if (!session) return res.status(403).end();
   
@@ -57,3 +54,9 @@ export async function deleteVideo(req, res) {
 
   res.status(200).end();
 }
+
+export {
+  createVideo,
+  deleteVideo,
+  createThumbnail
+};
