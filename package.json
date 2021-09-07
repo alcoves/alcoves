@@ -42,7 +42,7 @@
     "screenfull": "^5.1.0",
     "shaka-player": "^3.2.0",
     "sitemap": "^7.0.0",
-    "swr": "0.5.6"
+    "swr": "1.0.0"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
