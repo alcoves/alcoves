@@ -1,13 +1,9 @@
+/* eslint-disable import/first */
+require('dotenv').config();
+
 import express from 'express';
+import root from './routes/root'
 
 const app = express();
-
-const PORT = 3100;
-
-app.get('/', (req, res) => {
-    res.send('Well done!');
-})
-
-app.listen(PORT, () => {
-    console.log(`api.bken.io listening on port ${PORT}!`);
-})
+app.use(root)
+export default app
