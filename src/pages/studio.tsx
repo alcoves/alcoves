@@ -6,10 +6,7 @@ import { useEffect, useState } from 'react'
 import Layout from '../components/Layout'
 import StudioVideoCard from '../components/Studio/StudioVideoCard'
 import { fetcher } from '../utils/fetcher'
-
-interface Video {
-  id: string
-}
+import { Video } from '../types'
 
 export default function Studio() {
   const router = useRouter()
