@@ -3,8 +3,7 @@ import Link from 'next/link';
 import {
   Flex, Avatar, Heading, 
 } from '@chakra-ui/react';
-
-const fetcher = (url) => fetch(url).then((res) => res.json());
+import { fetcher, } from '../utils/fetcher';
 
 function VideoPageUserCard({ id }) {
   const { data } = useSWR(id ? `/api/users/${id}` : false, fetcher);

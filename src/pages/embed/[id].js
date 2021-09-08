@@ -2,13 +2,12 @@ import React from 'react';
 import useSWR from 'swr';
 import { Flex, } from '@chakra-ui/react';
 import VideoPlayer from '../../components/VideoPlayer/Index';
-
-const fetcher = (url) => fetch(url).then((res) => res.json());
+import { fetcher, } from '../../utils/fetcher';
 
 export default function Index({
   error, urlPath, video: v,  
 }) {
-  const { data } = useSWR(urlPath && !error, fetcher, { initialData: v });
+  const { data } = useSWR(urlPath && !error, fetcher, { fallbackData: v });
 
   return (
     <Flex h='100vh' w='100vw'>

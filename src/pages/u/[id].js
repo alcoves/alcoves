@@ -6,8 +6,7 @@ import {
 } from '@chakra-ui/react';
 import Layout from '../../components/Layout';
 import VideoGrid from '../../components/VideoGrid/Index';
-
-const fetcher = (url) => fetch(url).then((res) => res.json());
+import { fetcher, } from '../../utils/fetcher';
 
 function UserProfile({ id }) {
   const { data: user } = useSWR(`/api/users/${id}`, fetcher);

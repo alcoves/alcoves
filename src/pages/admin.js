@@ -26,10 +26,11 @@ import Layout from '../components/Layout';
 import videoDuration from '../utils/videoDuration';
 import { IoArrowDown, IoSettingsOutline, } from 'react-icons/io5';
 import axios from 'axios';
+import { fetcher } from '../utils/fetcher';
 
 export default function Admin() {
   const [session, loading] = useSession();
-  const { data: videos = [] } = useSWR('/api/videos?visibility=all');
+  const { data: videos } = useSWR('/api/videos?visibility=all', fetcher, { refreshInterval: 1000 * 10 });
 
   if (loading) return null;
   if ((!loading && !session) || !session?.user?.isAdmin) {
@@ -71,7 +72,7 @@ export default function Admin() {
             </Tr>
           </Thead>
           <Tbody>
-            {videos.map((v) => (
+            {videos?.map((v) => (
               <Tr key={v.id}>
                 <Td>
                   <Box

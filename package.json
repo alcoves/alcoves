@@ -18,9 +18,9 @@
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
     "@next-auth/prisma-adapter": "^0.5.4",
-    "@prisma/client": "^2.30.3",
+    "@prisma/client": "^3.0.1",
     "autoprefixer": "^10.3.4",
-    "aws-sdk": "^2.983.0",
+    "aws-sdk": "^2.984.0",
     "axios": "^0.21.4",
     "dayjs": "^1.10.6",
     "detect-browser": "^5.2.0",
@@ -33,7 +33,7 @@
     "next": "^11.1.2",
     "next-auth": "^3.29.0",
     "pretty-bytes": "^5.6.0",
-    "prisma": "^2.30.3",
+    "prisma": "^3.0.1",
     "query-string": "^7.0.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -42,7 +42,7 @@
     "screenfull": "^5.1.0",
     "shaka-player": "^3.2.0",
     "sitemap": "^7.0.0",
-    "swr": "0.5.6"
+    "swr": "1.0.0"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",

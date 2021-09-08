@@ -11,13 +11,12 @@ import VideoPlayer from '../../components/VideoPlayer/Index';
 import abbreviateNumber from '../../utils/abbreviateNumber';
 import VideoPageUserCard from '../../components/VideoPageUserCard';
 import ShareModal from '../../components/ShareModal';
-
-const fetcher = (url) => fetch(url).then((res) => res.json());
+import { fetcher, } from '../../utils/fetcher';
 
 export default function Video({
   error, urlPath, video: v, 
 }) {
-  const { data } = useSWR(urlPath && !error, fetcher, { initialData: v });
+  const { data } = useSWR(urlPath && !error, fetcher, { fallbackData: v });
 
   useEffect(() => {
     if (!error) {
