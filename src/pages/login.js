@@ -1,8 +1,6 @@
-import {
-  Button, Flex, Heading, Box, 
-} from '@chakra-ui/react';
-import Image from 'next/image';
-import { providers as getProviders, signIn, } from 'next-auth/client';
+import { Button, Flex, Heading, Box } from '@chakra-ui/react'
+import Image from 'next/image'
+import { providers as getProviders, signIn } from 'next-auth/client'
 
 export default function Login({ providers }) {
   return (
@@ -12,20 +10,16 @@ export default function Login({ providers }) {
         <Heading>Dive into bken</Heading>
         {Object.values(providers).map(provider => (
           <Box key={provider.name} w='full'>
-            <Button
-              my='2'
-              isFullWidth
-              onClick={() => signIn(provider.id)}
-            >
+            <Button my='2' isFullWidth onClick={() => signIn(provider.id)}>
               Log in with {provider.name}
             </Button>
           </Box>
         ))}
       </Flex>
     </Flex>
-  );
+  )
 }
 
 export async function getServerSideProps(ctx) {
-  return { props: { providers: await getProviders(ctx) } };
+  return { props: { providers: await getProviders(ctx) } }
 }

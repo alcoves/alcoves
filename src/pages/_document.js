@@ -1,19 +1,14 @@
-import React from 'react';
-import { ColorModeScript, } from '@chakra-ui/react';
-import Document, {
-  Html, Head, Main, NextScript, 
-} from 'next/document';
-import theme from '../styles/theme';
+import React from 'react'
+import { ColorModeScript } from '@chakra-ui/react'
+import Document, { Html, Head, Main, NextScript } from 'next/document'
+import theme from '../styles/theme'
 
 export default class MyDocument extends Document {
   render() {
-    return(
+    return (
       <Html>
         <Head>
-          <script
-            async
-            src='https://www.googletagmanager.com/gtag/js?id=G-ETPYPF2X0K'
-          />
+          <script async src='https://www.googletagmanager.com/gtag/js?id=G-ETPYPF2X0K' />
           <script
             dangerouslySetInnerHTML={{
               __html: `
@@ -28,7 +23,10 @@ export default class MyDocument extends Document {
           />
           <link rel='shortcut icon' href='./favicon.ico' />
           <link rel='preconnect' href='https://fonts.gstatic.com' />
-          <link href='https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800&display=swap' rel='stylesheet' />
+          <link
+            href='https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800&display=swap'
+            rel='stylesheet'
+          />
           <meta name='version' content='%REACT_APP_GIT_SHA%' />
         </Head>
         <body>
@@ -38,6 +36,6 @@ export default class MyDocument extends Document {
           <NextScript />
         </body>
       </Html>
-    );
+    )
   }
 }

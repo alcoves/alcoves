@@ -1,4 +1,4 @@
-import useSWR from 'swr';
+import useSWR from 'swr'
 import {
   Table,
   Thead,
@@ -19,28 +19,28 @@ import {
   MenuList,
   Progress,
   MenuItem,
-} from '@chakra-ui/react';
-import moment from 'moment';
-import { useSession, } from 'next-auth/client';
-import Layout from '../components/Layout';
-import videoDuration from '../utils/videoDuration';
-import { IoArrowDown, IoSettingsOutline, } from 'react-icons/io5';
-import axios from 'axios';
-import { fetcher } from '../utils/fetcher';
+} from '@chakra-ui/react'
+import moment from 'moment'
+import { useSession } from 'next-auth/client'
+import Layout from '../components/Layout'
+import videoDuration from '../utils/videoDuration'
+import { IoArrowDown, IoSettingsOutline } from 'react-icons/io5'
+import axios from 'axios'
+import { fetcher } from '../utils/fetcher'
 
 export default function Admin() {
-  const [session, loading] = useSession();
-  const { data: videos } = useSWR('/api/videos?visibility=all', fetcher, { refreshInterval: 1000 * 10 });
+  const [session, loading] = useSession()
+  const { data: videos } = useSWR('/api/videos?visibility=all', fetcher, {
+    refreshInterval: 1000 * 10,
+  })
 
-  if (loading) return null;
+  if (loading) return null
   if ((!loading && !session) || !session?.user?.isAdmin) {
     return (
       <Layout>
-        <Text>
-          You must be an admin to view this page
-        </Text>
+        <Text>You must be an admin to view this page</Text>
       </Layout>
-    );
+    )
   }
 
   return (
@@ -52,12 +52,8 @@ export default function Admin() {
               Actions
             </MenuButton>
             <MenuList>
-              <MenuItem>
-                Reprocess All Videos
-              </MenuItem>
-              <MenuItem>
-                Reprocess All Thumbnails
-              </MenuItem>
+              <MenuItem>Reprocess All Videos</MenuItem>
+              <MenuItem>Reprocess All Thumbnails</MenuItem>
             </MenuList>
           </Menu>
         </Box>
@@ -72,7 +68,7 @@ export default function Admin() {
             </Tr>
           </Thead>
           <Tbody>
-            {videos?.map((v) => (
+            {videos?.map(v => (
               <Tr key={v.id}>
                 <Td>
                   <Box
@@ -84,8 +80,7 @@ export default function Admin() {
                     bgSize='cover'
                     bgColor='black'
                     bgPosition='center'
-                    bgRepeat='no-repeat'
-                  >
+                    bgRepeat='no-repeat'>
                     <Flex
                       position='absolute'
                       right='0'
@@ -94,28 +89,25 @@ export default function Admin() {
                       align='center'
                       bg='rgba(10, 10, 10, .4)'
                       borderRadius='md'
-                      px='1'
-                    >
+                      px='1'>
                       <Text color='gray.100' fontSize='xs' fontWeight='bold'>
                         {videoDuration(v.duration)}
                       </Text>
                     </Flex>
                   </Box>
-                  <Progress maxW='100px' colorScheme='green' size='xs' value={v.percentCompleted}/>
+                  <Progress maxW='100px' colorScheme='green' size='xs' value={v.percentCompleted} />
                 </Td>
                 <Td>
                   <Link href={`/v/${v.id}`}>
-                    <Text fontWeight='bold' overflow='clip'>{v.title}</Text>
+                    <Text fontWeight='bold' overflow='clip'>
+                      {v.title}
+                    </Text>
                   </Link>
                   <Text>{v.id}</Text>
                 </Td>
                 <Td>
                   <Flex>
-                    <Avatar
-                      size='xs'
-                      name={v.user.name}
-                      src={v.user.image}
-                    />
+                    <Avatar size='xs' name={v.user.name} src={v.user.image} />
                     <Flex direction='column' ml='2'>
                       <Text fontWeight='bold'>{v.user.name}</Text>
                       <Text fontSize='xs'>{v.user.id}</Text>
@@ -132,21 +124,19 @@ export default function Admin() {
                       <MenuItem
                         id={v.id}
                         onClick={async () => {
-                          await axios.post(`/api/videos/${v.id}`).catch((error) => {
-                            console.error(error);
-                          });
-                        }}
-                      >
+                          await axios.post(`/api/videos/${v.id}`).catch(error => {
+                            console.error(error)
+                          })
+                        }}>
                         Reprocess Video
                       </MenuItem>
                       <MenuItem
                         id={v.id}
                         onClick={async () => {
-                          await axios.post(`/api/videos/${v.id}/thumbnail`).catch((error) => {
-                            console.error(error);
-                          });
-                        }}
-                      >
+                          await axios.post(`/api/videos/${v.id}/thumbnail`).catch(error => {
+                            console.error(error)
+                          })
+                        }}>
                         Reprocess Thumbnail
                       </MenuItem>
                     </MenuList>
@@ -158,5 +148,5 @@ export default function Admin() {
         </Table>
       </Flex>
     </Layout>
-  );
+  )
 }

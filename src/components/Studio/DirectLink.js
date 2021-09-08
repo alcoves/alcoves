@@ -1,25 +1,17 @@
-import {
-  Button, Input, InputGroup, InputLeftAddon, InputRightAddon, 
-} from '@chakra-ui/react';
-import Link from 'next/link';
+import { Button, Input, InputGroup, InputLeftAddon, InputRightAddon } from '@chakra-ui/react'
+import Link from 'next/link'
 
 export default function DirectLink({ id }) {
-  const shareLink = `https://bken.io/v/${id}`;
+  const shareLink = `https://bken.io/v/${id}`
 
   function copyToClipboard() {
-    navigator.clipboard.writeText(shareLink);
+    navigator.clipboard.writeText(shareLink)
   }
 
   return (
     <InputGroup size='sm'>
-      <InputLeftAddon>
-        Link
-      </InputLeftAddon>
-      <Input
-        isReadOnly={true}
-        variant='filled'
-        defaultValue={shareLink}
-      />
+      <InputLeftAddon>Link</InputLeftAddon>
+      <Input isReadOnly={true} variant='filled' defaultValue={shareLink} />
       <InputRightAddon>
         <Button variant='ghost' size='xs' onClick={copyToClipboard}>
           Copy
@@ -31,5 +23,5 @@ export default function DirectLink({ id }) {
         </Link>
       </InputRightAddon>
     </InputGroup>
-  );
+  )
 }

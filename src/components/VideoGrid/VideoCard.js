@@ -1,9 +1,7 @@
-import {
-  Box, Text, Skeleton, 
-} from '@chakra-ui/react';
-import Link from 'next/link';
-import videoDuration from '../../utils/videoDuration';
-import VideoMeta from './VideoMeta';
+import { Box, Text, Skeleton } from '@chakra-ui/react'
+import Link from 'next/link'
+import videoDuration from '../../utils/videoDuration'
+import VideoMeta from './VideoMeta'
 
 export default function VideoCard({ v }) {
   return (
@@ -20,8 +18,7 @@ export default function VideoCard({ v }) {
           cursor='pointer'
           position='relative'
           bgPosition='center'
-          bgRepeat='no-repeat'
-        >
+          bgRepeat='no-repeat'>
           <Text
             px='1'
             right={1}
@@ -33,13 +30,12 @@ export default function VideoCard({ v }) {
             bg='rgba(10, 10, 10, .4)'
             color='gray.100'
             fontSize='xs'
-            fontWeight='bold'
-          >
+            fontWeight='bold'>
             {videoDuration(v.duration)}
           </Text>
         </Box>
       </Link>
-      <VideoMeta v={v}/>
+      <VideoMeta v={v} />
     </Skeleton>
-  );
+  )
 }

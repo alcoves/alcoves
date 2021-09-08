@@ -1,4 +1,4 @@
-import { extendTheme, } from '@chakra-ui/react';
+import { extendTheme } from '@chakra-ui/react'
 
 const theme = extendTheme({
   // components: {
@@ -24,5 +24,5 @@ const theme = extendTheme({
     mono: 'Nunito Sans',
     heading: 'Nunito Sans',
   },
-});
-export default theme;
+})
+export default theme

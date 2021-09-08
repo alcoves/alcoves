@@ -10,48 +10,45 @@ import {
   ModalBody,
   ModalCloseButton,
   useDisclosure,
-  Switch, 
-} from '@chakra-ui/react';
-import { useEffect, useState, } from 'react';
-import videoDuration from '../utils/videoDuration';
+  Switch,
+} from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
+import videoDuration from '../utils/videoDuration'
 
 export default function ShareModal({ link }) {
-  const {
-    isOpen, onOpen, onClose, 
-  } = useDisclosure();
-  const [shareLink, setShareLink] = useState(link);
-  const [currentTime, setCurrentTime] = useState(0);
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const [shareLink, setShareLink] = useState(link)
+  const [currentTime, setCurrentTime] = useState(0)
 
   useEffect(() => {
-    const video = document.getElementById('bkenVideoPlayer');
-    setCurrentTime(video?.currentTime);
+    const video = document.getElementById('bkenVideoPlayer')
+    setCurrentTime(video?.currentTime)
     return function cleanup() {
-      setShareLink(link);
-    };
-  }, [isOpen]);
+      setShareLink(link)
+    }
+  }, [isOpen])
 
-  return(
+  return (
     <>
-      <Button onClick={onOpen} size='sm'>Share</Button>
+      <Button onClick={onOpen} size='sm'>
+        Share
+      </Button>
       <Modal w='1024px' isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Share</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Flex
-              w='100%'
-              direction='column'
-              alignItems='center'
-            >
-              <Text fontSize='sm' >{shareLink}</Text>
+            <Flex w='100%' direction='column' alignItems='center'>
+              <Text fontSize='sm'>{shareLink}</Text>
               <Button
                 my='10px'
                 w='100%'
                 size='sm'
                 variant='outline'
-                onClick={() => {navigator.clipboard.writeText(shareLink);}}
-              >
+                onClick={() => {
+                  navigator.clipboard.writeText(shareLink)
+                }}>
                 Copy
               </Button>
             </Flex>
@@ -60,9 +57,9 @@ export default function ShareModal({ link }) {
             <Switch
               onChange={({ target }) => {
                 if (target.checked) {
-                  setShareLink(`${shareLink}?t=${currentTime.toFixed(0)}`);
+                  setShareLink(`${shareLink}?t=${currentTime.toFixed(0)}`)
                 } else {
-                  setShareLink(link);
+                  setShareLink(link)
                 }
               }}
             />
@@ -71,5 +68,5 @@ export default function ShareModal({ link }) {
         </ModalContent>
       </Modal>
     </>
-  );
+  )
 }
