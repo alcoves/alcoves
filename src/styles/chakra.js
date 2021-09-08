@@ -1,20 +1,14 @@
-import {
-  ChakraProvider,
-  cookieStorageManager,
-  localStorageManager,
-} from '@chakra-ui/react';
-import theme from './theme';
+import { ChakraProvider, cookieStorageManager, localStorageManager } from '@chakra-ui/react'
+import theme from './theme'
 
 export function Chakra({ cookies, children }) {
   const colorModeManager =
-    typeof cookies === 'string'
-      ? cookieStorageManager(cookies)
-      : localStorageManager;
+    typeof cookies === 'string' ? cookieStorageManager(cookies) : localStorageManager
   return (
     <ChakraProvider theme={theme} colorModeManager={colorModeManager}>
       {children}
     </ChakraProvider>
-  );
+  )
 }
 
 export function getServerSideProps({ req }) {
@@ -24,5 +18,5 @@ export function getServerSideProps({ req }) {
       // undefined here, hence ?? is necessary
       cookies: req.headers.cookie ?? '',
     },
-  };
+  }
 }

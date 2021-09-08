@@ -1,14 +1,12 @@
-import { useSession, } from 'next-auth/client';
-import {
-  Flex, Avatar, VStack, SkeletonCircle, Heading, SkeletonText, Text, 
-} from '@chakra-ui/react';
-import Layout from '../components/Layout';
-import prettyBytes from 'pretty-bytes';
-import useSWR from 'swr';
+import { useSession } from 'next-auth/client'
+import { Flex, Avatar, VStack, SkeletonCircle, Heading, SkeletonText, Text } from '@chakra-ui/react'
+import Layout from '../components/Layout'
+import prettyBytes from 'pretty-bytes'
+import useSWR from 'swr'
 
 export default function Account() {
-  const [session, loadingSession] = useSession();
-  const { data } = useSWR(Boolean(session?.id) ? `/api/users/${session?.id}/account` : null);
+  const [session, loadingSession] = useSession()
+  const { data } = useSWR(Boolean(session?.id) ? `/api/users/${session?.id}/account` : null)
 
   return (
     <Layout>
@@ -18,22 +16,15 @@ export default function Account() {
             <SkeletonCircle
               w='60px'
               h='60px'
-              isLoaded={Boolean(!loadingSession && session?.user?.image)}
-            >
-              <Avatar
-                w='60px'
-                h='60px'
-                src={session?.user?.image}
-                name={session?.user?.name[0]}
-              />
+              isLoaded={Boolean(!loadingSession && session?.user?.image)}>
+              <Avatar w='60px' h='60px' src={session?.user?.image} name={session?.user?.name[0]} />
             </SkeletonCircle>
             <SkeletonText
               ml='5'
               w='100%'
               noOfLines={3}
               spacing={3}
-              isLoaded={Boolean(!loadingSession && session?.user?.name)}
-            >
+              isLoaded={Boolean(!loadingSession && session?.user?.name)}>
               <Heading size='sm'>
                 {session?.user?.name}
                 {session?.user?.isAdmin && ' (Admin)'}
@@ -42,12 +33,7 @@ export default function Account() {
               <Text fontSize='.85rem'>User ID: {session?.id}</Text>
             </SkeletonText>
           </Flex>
-          <SkeletonText
-            w='100%'
-            noOfLines={4}
-            spacing={7}
-            isLoaded={Boolean(data)}
-          >
+          <SkeletonText w='100%' noOfLines={4} spacing={7} isLoaded={Boolean(data)}>
             <VStack w='100%'>
               <Flex alignItems='center' justifyContent='space-between' w='100%'>
                 <Text>Videos Uploaded</Text>
@@ -70,5 +56,5 @@ export default function Account() {
         </Flex>
       </Flex>
     </Layout>
-  );
+  )
 }

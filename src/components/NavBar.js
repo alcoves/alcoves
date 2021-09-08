@@ -1,5 +1,5 @@
-import { useState, } from 'react';
-import { signOut, useSession, } from 'next-auth/client';
+import { useState } from 'react'
+import { signOut, useSession } from 'next-auth/client'
 import {
   Flex,
   Spacer,
@@ -13,46 +13,38 @@ import {
   MenuItem,
   MenuDivider,
   useColorMode,
-  IconButton, 
-} from '@chakra-ui/react';
-import { IoFilmOutline, } from 'react-icons/io5';
-import Link from 'next/link';
-import Uploader from './Uploader/Index';
-import Image from 'next/image';
+  IconButton,
+} from '@chakra-ui/react'
+import { IoFilmOutline } from 'react-icons/io5'
+import Link from 'next/link'
+import Uploader from './Uploader/Index'
+import Image from 'next/image'
 
 export default function Navigation() {
-  const [session] = useSession();
-  const [open, setOpen] = useState(false);
-  const { colorMode, toggleColorMode } = useColorMode();
+  const [session] = useSession()
+  const [open, setOpen] = useState(false)
+  const { colorMode, toggleColorMode } = useColorMode()
 
   return (
     <Flex h='48px' bg={colorMode === 'dark' ? 'gray.700' : 'white'}>
       <Box p='1' cursor='pointer'>
         <Link href='/' passHref>
-          <Image
-            width={40}
-            height={40}
-            quality={85}
-            alt='Bken.io'
-            layout='fixed'
-            src='/logo.png'
-          />
+          <Image width={40} height={40} quality={85} alt='Bken.io' layout='fixed' src='/logo.png' />
         </Link>
       </Box>
       <Spacer />
       <Box p='1'>
         <Flex justify='center' align='center' h='100%'>
-          <Box me='2'><Uploader/></Box>
+          <Box me='2'>
+            <Uploader />
+          </Box>
           <Box me='2'>
             <Link href='/studio' passHref>
-              <IconButton
-                size='sm'
-                icon={<IoFilmOutline/>}
-              />
+              <IconButton size='sm' icon={<IoFilmOutline />} />
             </Link>
           </Box>
 
-          {session && session.user ?
+          {session && session.user ? (
             <Menu>
               <MenuButton me='10px'>
                 <Avatar
@@ -70,33 +62,29 @@ export default function Navigation() {
                 <Link passHref href={'/account'}>
                   <MenuItem>Account</MenuItem>
                 </Link>
-                {session?.user?.isAdmin &&
+                {session?.user?.isAdmin && (
                   <Link passHref href='/admin'>
                     <MenuItem>Admin</MenuItem>
                   </Link>
-                }
+                )}
                 <MenuDivider />
                 <MenuItem onClick={toggleColorMode} closeOnSelect={false}>
                   <Text>Dark Theme</Text>
-                  <Switch
-                    ml='2'
-                    size='sm'
-                    isChecked={colorMode === 'dark'}
-                  />
+                  <Switch ml='2' size='sm' isChecked={colorMode === 'dark'} />
                 </MenuItem>
                 <MenuDivider />
                 <MenuItem onClick={signOut}>Log out</MenuItem>
               </MenuList>
             </Menu>
-            :
+          ) : (
             <Flex w='full' h='full' align='center' me='10px'>
               <Link passHref href='/login'>
                 <Avatar h='30px' w='30px' cursor='pointer' />
               </Link>
             </Flex>
-          }
+          )}
         </Flex>
       </Box>
     </Flex>
-  );
+  )
 }

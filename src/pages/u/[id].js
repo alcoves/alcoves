@@ -1,16 +1,14 @@
-import useSWR from 'swr';
-import Head from 'next/head';
-import { useRouter, } from 'next/router';
-import {
-  Avatar, Flex, Heading, Container, 
-} from '@chakra-ui/react';
-import Layout from '../../components/Layout';
-import VideoGrid from '../../components/VideoGrid/Index';
-import { fetcher, } from '../../utils/fetcher';
+import useSWR from 'swr'
+import Head from 'next/head'
+import { useRouter } from 'next/router'
+import { Avatar, Flex, Heading, Container } from '@chakra-ui/react'
+import Layout from '../../components/Layout'
+import VideoGrid from '../../components/VideoGrid/Index'
+import { fetcher } from '../../utils/fetcher'
 
 function UserProfile({ id }) {
-  const { data: user } = useSWR(`/api/users/${id}`, fetcher);
-  const { data: videos } = useSWR(`/api/users/${id}/videos?visibility=public`, fetcher);
+  const { data: user } = useSWR(`/api/users/${id}`, fetcher)
+  const { data: videos } = useSWR(`/api/users/${id}/videos?visibility=public`, fetcher)
 
   return (
     <>
@@ -20,27 +18,19 @@ function UserProfile({ id }) {
       <Layout>
         <Flex p='2' justify='center' align='center'>
           <Flex direction='column' align='center'>
-            <Avatar
-              mt='2'
-              w='75px'
-              h='75px'
-              src={user?.image}
-              name={user?.name[0]}
-            />
+            <Avatar mt='2' w='75px' h='75px' src={user?.image} name={user?.name[0]} />
             <Heading size='lg'>{user?.name}</Heading>
           </Flex>
         </Flex>
-        <Container maxW='3xl'>
-          {videos && <VideoGrid videos={videos} />}
-        </Container>
+        <Container maxW='3xl'>{videos && <VideoGrid videos={videos} />}</Container>
       </Layout>
     </>
-  );
+  )
 }
 
 export default function UserProfileIndex() {
-  const router = useRouter();
-  const { id } = router.query;
-  if (!id) return <div />;
-  return <UserProfile id={id} />;
+  const router = useRouter()
+  const { id } = router.query
+  if (!id) return <div />
+  return <UserProfile id={id} />
 }

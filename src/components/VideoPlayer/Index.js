@@ -1,51 +1,45 @@
-import React, {
-  useRef, useState, useEffect, 
-} from 'react';
-import qs from 'query-string';
-import shaka from 'shaka-player';
-import {
-  Box, Flex, Spinner, 
-} from '@chakra-ui/react';
-import screenfull from 'screenfull';
-import Scrubber from './Scrubber';
-import Duration from './Duration';
-import PlayButton from './PlayButton';
-import VolumeSlider from './VolumeSlider';
-import VolumeButton from './VolumeButton';
-import QualitySelector from './QualitySelector';
-import FullScreenButton from './FullScreenButton';
-import PictureInPictureButton from './PictureInPictureButton';
+import React, { useRef, useState, useEffect } from 'react'
+import qs from 'query-string'
+import shaka from 'shaka-player'
+import { Box, Flex, Spinner } from '@chakra-ui/react'
+import screenfull from 'screenfull'
+import Scrubber from './Scrubber'
+import Duration from './Duration'
+import PlayButton from './PlayButton'
+import VolumeSlider from './VolumeSlider'
+import VolumeButton from './VolumeButton'
+import QualitySelector from './QualitySelector'
+import FullScreenButton from './FullScreenButton'
+import PictureInPictureButton from './PictureInPictureButton'
 
-let idleTimer;
-let clickTimer;
+let idleTimer
+let clickTimer
 
-function VideoPlayer({
-  theaterMode, thumbnail, url, id = 'bkenVideoPlayer', 
-}) {
-  const vRef = useRef(null);
-  const cRef = useRef(null);
-  const [player, setPlayer] = useState(null);
+function VideoPlayer({ theaterMode, thumbnail, url, id = 'bkenVideoPlayer' }) {
+  const vRef = useRef(null)
+  const cRef = useRef(null)
+  const [player, setPlayer] = useState(null)
   // const [rotation, setRotation] = useState(0);
-  const [controlsVisible, setControlsVisible] = useState(true);
+  const [controlsVisible, setControlsVisible] = useState(true)
 
   function baseStyles() {
     if (theaterMode) {
       return {
-        width:'100%',
+        width: '100%',
         minHeight: '320px',
-        height:'calc((9 / 16) * 100vw)',
+        height: 'calc((9 / 16) * 100vw)',
         maxHeight: 'calc(100vh - 200px)',
-      };
+      }
     }
     return {
       width: '100%',
       height: '100%',
-    };
+    }
   }
 
   useEffect(() => {
-    const video = document.getElementById(id);
-    setPlayer(new shaka.Player(video));
+    const video = document.getElementById(id)
+    setPlayer(new shaka.Player(video))
 
     // const orientationchange = window.addEventListener('orientationchange', (event) => {
     //   setRotation(event.target.screen.orientation.angle);
@@ -54,47 +48,50 @@ function VideoPlayer({
     // return () => {
     //   window.removeEventListener('orientationchange', orientationchange);
     // };
-  }, []);
+  }, [])
 
   useEffect(() => {
     if (player) {
-      const { t = 0 } = qs.parse(window.location.search);
+      const { t = 0 } = qs.parse(window.location.search)
       // console.log(`Seeking to ${t}`);
 
-      player.configure({ manifest: { dash: { ignoreEmptyAdaptationSet: true } } });
+      player.configure({ manifest: { dash: { ignoreEmptyAdaptationSet: true } } })
 
-      player.load(url, t).then(() => {
-        // console.debug('video has been loaded');
-      }).catch((err) => {
-        console.error(err);
-      });
+      player
+        .load(url, t)
+        .then(() => {
+          // console.debug('video has been loaded');
+        })
+        .catch(err => {
+          console.error(err)
+        })
     }
-  }, [player]);
+  }, [player])
 
   function togglePlay() {
     if (vRef && vRef.current) {
-      const r = vRef.current;
-      r.paused ? r.play() : r.pause();
+      const r = vRef.current
+      r.paused ? r.play() : r.pause()
     }
   }
 
   useEffect(() => {
     function onKeydown(e) {
-      if (e.code === 'Space') togglePlay();
-    } 
-    window.addEventListener('keydown', onKeydown);
-    return () => window.removeEventListener('keydown', onKeydown);
-  });
+      if (e.code === 'Space') togglePlay()
+    }
+    window.addEventListener('keydown', onKeydown)
+    return () => window.removeEventListener('keydown', onKeydown)
+  })
 
   function controlHover() {
-    clearTimeout(idleTimer);
-    if (!controlsVisible) setControlsVisible(true);
+    clearTimeout(idleTimer)
+    if (!controlsVisible) setControlsVisible(true)
 
     idleTimer = setTimeout(() => {
       if (!vRef?.current?.paused) {
-        setControlsVisible(player?.isBuffering());
+        setControlsVisible(player?.isBuffering())
       }
-    }, 2000);
+    }, 2000)
   }
 
   function renderCenter() {
@@ -105,18 +102,23 @@ function VideoPlayer({
           vRef={vRef}
           color='#eee'
           chakraProps={{
-            variant: 'ghost', rounded: 'xl', h:'100%', p:'10px', 
+            variant: 'ghost',
+            rounded: 'xl',
+            h: '100%',
+            p: '10px',
           }}
-        />);
-    } if (player?.isBuffering()) {
-      return <Spinner size='xl' color='#bf1e2e'/>;
+        />
+      )
     }
-    return <div/>;
+    if (player?.isBuffering()) {
+      return <Spinner size='xl' color='#bf1e2e' />
+    }
+    return <div />
   }
 
   function toggleFullScreen() {
     if (screenfull.isEnabled) {
-      screenfull.toggle(cRef?.current);
+      screenfull.toggle(cRef?.current)
     }
   }
 
@@ -128,14 +130,13 @@ function VideoPlayer({
       onMouseEnter={() => setControlsVisible(true)}
       onMouseLeave={() => {
         if (!vRef?.current.paused) {
-          setControlsVisible(player?.isBuffering());
+          setControlsVisible(player?.isBuffering())
         }
       }}
       pos='relative'
       backgroundColor='rgba(0,0,0,.3)'
       cursor={`${controlsVisible ? 'auto' : 'none'}`}
-      {...baseStyles()}
-    >
+      {...baseStyles()}>
       <video
         id={id}
         autoPlay
@@ -143,7 +144,9 @@ function VideoPlayer({
         poster={thumbnail}
         disableRemotePlayback
         style={{
-          width: '100%', height: '100%', background: 'black', 
+          width: '100%',
+          height: '100%',
+          background: 'black',
         }}
       />
 
@@ -162,27 +165,25 @@ function VideoPlayer({
           transition='opacity .1s ease-in'
           opacity={`${controlsVisible ? 1 : 0}`}
           // eslint-disable-next-line
-          background='linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.30) 90%, rgba(0,0,0,0.60) 100%)'
-        >
+          background='linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.30) 90%, rgba(0,0,0,0.60) 100%)'>
           <Flex
             w='100%'
             h='100%'
             flexDirection='column'
             justify='center'
             align='center'
-            onClick={(e) => {
-              clearTimeout(clickTimer);
+            onClick={e => {
+              clearTimeout(clickTimer)
               if (e.detail === 1) {
                 clickTimer = setTimeout(() => {
-                  togglePlay();
-                }, 200);
+                  togglePlay()
+                }, 200)
               } else if (e.detail === 2) {
-                clearTimeout(clickTimer);
-                toggleFullScreen();
+                clearTimeout(clickTimer)
+                toggleFullScreen()
               }
-              e.preventDefault();
-            }}
-          >
+              e.preventDefault()
+            }}>
             <Box> {renderCenter()} </Box>
           </Flex>
           <Flex w='100%' direction='column' px='2'>
@@ -206,7 +207,7 @@ function VideoPlayer({
         </Flex>
       )}
     </Box>
-  );
+  )
 }
 
-export default VideoPlayer;
+export default VideoPlayer
