@@ -1,0 +1,3 @@
+-- This is the schema file for the bken database
+-- The API is responsible for the schema
+-- All migrations are run from these files
