@@ -20,8 +20,7 @@ import EditTitle from './EditTitle';
 import EditVisibility from './EditVisibility';
 import { IoGlobe, } from 'react-icons/io5';
 import VideoPlayer from '../VideoPlayer/Index';
-
-const fetcher = (url) => fetch(url).then((res) => res.json());
+import { fetcher, } from '../../utils/fetcher';
 
 function Metadata({ v }) {
   const createdAt = moment(v.createdAt).fromNow();
@@ -37,10 +36,10 @@ function Metadata({ v }) {
   );
 }
 
-export default function StudioVideoCard({ v = {} }) {
+export default function StudioVideoCard({ v = {}, refetchVideoList }) {
   const { data: video, mutate } = useSWR(
     `/api/videos/${v?.id}`, fetcher,
-    { initialData: v, refreshInterval: v?.status === 'completed' ? 0 : 2000 }
+    { fallbackData: v, refreshInterval: v?.status === 'completed' ? 0 : 2000 }
   );
   const {
     isOpen, onOpen, onClose, 
@@ -117,7 +116,7 @@ export default function StudioVideoCard({ v = {} }) {
                   {video.status === 'completed' &&
                     <Flex justify='space-between' w='100%' py='2'>
                       <EditVisibility id={video.id} visibility={video.visibility}/>
-                      <DeleteVideo id={video.id} refetch={mutate} handleClose={onClose}/>
+                      <DeleteVideo id={video.id} handleClose={onClose} refetchVideoList={refetchVideoList}/>
                     </Flex>
                   }
                 </VStack>

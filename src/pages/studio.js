@@ -7,8 +7,7 @@ import { useRouter, } from 'next/router';
 import { useEffect, useState, } from 'react';
 import Layout from '../components/Layout';
 import StudioVideoCard from '../components/Studio/StudioVideoCard';
-
-const fetcher = (url) => fetch(url).then((res) => res.json());
+import { fetcher, } from '../utils/fetcher';
 
 export default function Studio() {
   const router = useRouter();
@@ -41,7 +40,7 @@ export default function Studio() {
           <Button isLoading={isValidating} size='sm' onClick={mutate}>Refresh</Button>
         </Flex>
         <SimpleGrid minChildWidth={[200, 400]} spacing='10px'>
-          {videos.map((v, i) => <StudioVideoCard key={v?.id || i} v={v}/>)}
+          {videos.map((v, i) => <StudioVideoCard key={v?.id || i} v={v} refetchVideoList={mutate} />)}
         </SimpleGrid>
       </Box>
     </Layout>

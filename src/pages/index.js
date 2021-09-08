@@ -3,11 +3,10 @@ import useSWR from 'swr';
 import { Box, Heading, } from '@chakra-ui/react';
 import Layout from '../components/Layout';
 import VideoGrid from '../components/VideoGrid/Index';
-
-const fetcher = (url) => fetch(url).then((res) => res.json());
+import { fetcher, } from '../utils/fetcher';
 
 export default function Index({ url, videos }) {
-  const { data } = useSWR(url, fetcher, { initialData: videos });
+  const { data } = useSWR(url, fetcher, { fallbackData: videos });
 
   useEffect(() => {
     (window.adsbygoogle = window.adsbygoogle || []).push({});
