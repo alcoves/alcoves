@@ -10,3 +10,9 @@ export async function get(req: Request, res: Response) {
     return res.sendStatus(404)
   }
 }
+
+export async function list(req: Request, res: Response) {
+  const command = `select * from videos`
+  const { rows } = await query(command, [])
+  return res.status(200).json(rows)
+}
