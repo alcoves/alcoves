@@ -16,7 +16,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: yarn
       - run: yarn test
-  build:
+  transpile:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -29,3 +29,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: yarn
       - run: yarn build
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: docker build .
