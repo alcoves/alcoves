@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Videos Endpoint should respond 200 1`] = `
+Object {
+  "created_at": "2021-09-09T02:43:58.127Z",
+  "deleted_at": null,
+  "duration": "134.6000000000000",
+  "id": "OYtQ4YBeTIeiH5voS7W_T",
+  "mpd_link": "https://cdn.bken.io/v/OYtQ4YBeTIeiH5voS7W_T/pkg/manifest.mpd",
+  "percent_completed": "100",
+  "status": "completed",
+  "thumbnail": "https://cdn.bken.io/v/OYtQ4YBeTIeiH5voS7W_T/thumb.jpg",
+  "title": "Supreme Court",
+  "updated_at": "2021-09-09T02:43:58.127Z",
+  "user_id": "ckrf3a06e000t01mg1oft9cxd",
+  "views": 9,
+  "visibility": "public",
+}
+`;
