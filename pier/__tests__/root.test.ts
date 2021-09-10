@@ -3,8 +3,7 @@ import app from '../src/app'
 
 describe("Root Endpoint", () => {
   it('should respond 200', async () => {
-    const res = await request(app)
-      .get('/')
+    const res = await request(app).get('/')
     expect(res.statusCode).toEqual(200)
   })
 })
