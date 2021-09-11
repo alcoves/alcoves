@@ -8,7 +8,7 @@ RUN apk add git
 WORKDIR /usr/src/app
 COPY .  /usr/src/app/
 
-RUN yarn install --production
+RUN yarn install
 RUN yarn build
 
 EXPOSE 3000
