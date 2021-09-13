@@ -47,3 +47,13 @@ describe("Videos Endpoint", () => {
     expect(res.body).toEqual(testVideo)
   })
 })
+
+// describe('List Videos', () => {
+//   it('should return list of videos', async () => {
+
+//   })
+
+//   it('should return empty list of videos', async () => {
+    
+//   })
+// })
