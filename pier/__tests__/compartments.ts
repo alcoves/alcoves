@@ -3,13 +3,13 @@ import app from '../src/app'
 
 import { QueryResult } from 'pg'
 import { query } from '../src/config/db'
-import { Compartment } from '../src/types'
+import { pod } from '../src/types'
 
 jest.mock('../src/config/db')
 
-const testCompartment: Compartment = {
-  id: "test-compartment-id",
-  name: "Bken Test Compartment",
+const testpod: pod = {
+  id: "test-pod-id",
+  name: "Bken Test pod",
 }
 
 const mockQuery = query as jest.MockedFunction<typeof query>
@@ -19,41 +19,41 @@ describe("Videos Endpoint", () => {
     jest.clearAllMocks()
   })
 
-  it('should list compartments', async () => {
-    const res = await request(app).get('/compartments')
+  it('should list pods', async () => {
+    const res = await request(app).get('/pods')
     expect(res.statusCode).toEqual(200)
   })
 
-  it('should create a compartment', async () => {
-    const res = await request(app).post('/compartments')
+  it('should create a pod', async () => {
+    const res = await request(app).post('/pods')
     expect(res.statusCode).toEqual(200)
   })
 
-  it('should get a compartment', async () => {
-    mockQuery.mockResolvedValueOnce({ rows:[testCompartment] } as QueryResult)
-    const res = await request(app).get(`/compartments/${testCompartment.id}`)
+  it('should get a pod', async () => {
+    mockQuery.mockResolvedValueOnce({ rows:[testpod] } as QueryResult)
+    const res = await request(app).get(`/pods/${testpod.id}`)
     expect(res.statusCode).toEqual(200)
     expect(mockQuery).toHaveBeenNthCalledWith(1,
-      "select * from compartments where id = $1",
-      [testCompartment.id])
+      "select * from pods where id = $1",
+      [testpod.id])
   })
 
-  it('should fail to get a compartment', async () => {
+  it('should fail to get a pod', async () => {
     mockQuery.mockResolvedValueOnce({ rows:[] as unknown } as QueryResult)
-    const res = await request(app).get(`/compartments/404`)
+    const res = await request(app).get(`/pods/404`)
     expect(res.statusCode).toEqual(404)
     expect(mockQuery).toHaveBeenNthCalledWith(1,
-      "select * from compartments where id = $1",
+      "select * from pods where id = $1",
       ["404"])
   })
 
-  it('should patch a compartment', async () => {
-    const res = await request(app).patch('/compartments/id')
+  it('should patch a pod', async () => {
+    const res = await request(app).patch('/pods/id')
     expect(res.statusCode).toEqual(200)
   })
 
-  it('should delete a compartment', async () => {
-    const res = await request(app).delete('/compartments/id')
+  it('should delete a pod', async () => {
+    const res = await request(app).delete('/pods/id')
     expect(res.statusCode).toEqual(200)
   })
 })

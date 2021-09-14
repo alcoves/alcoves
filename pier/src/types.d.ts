@@ -14,7 +14,7 @@ export interface Video {
   status: "queued" | "processing" | "completed"
 }
 
-export interface Compartment {
+export interface pod {
   id: string
   name?: string
   updated_at?: string

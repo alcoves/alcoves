@@ -5,7 +5,7 @@ import {
   getById,
   patchById,
   deleteById,
-} from '../controllers/compartments'
+} from '../controllers/pods'
 
 const router = express.Router()
 

@@ -4,23 +4,23 @@ Bken API
 
 ### API Routes
 
-**Compartments**
+**pods**
 
-/compartments GET : list compartments
-/compartments POST : create compartment
+/pods GET : list pods
+/pods POST : create pod
 
-/compartments/:id GET : get compartment
-/compartments/:id PATCH : update compartment
-/compartments/:id DELETE : delete compartment
+/pods/:id GET : get pod
+/pods/:id PATCH : update pod
+/pods/:id DELETE : delete pod
 
-**Compartment Posts**
+**pod Posts**
 
-/compartments/:id/videos GET : list compartment videos
-/compartments/:id/videos POST : create a new post
-/compartments/:id/videos PATCH : update a post
-/compartments/:id/videos DELETE : delete a post
+/pods/:id/videos GET : list pod videos
+/pods/:id/videos POST : create a new post
+/pods/:id/videos PATCH : update a post
+/pods/:id/videos DELETE : delete a post
 
-/compartments/:id/videos/upload PUT : get signed links used for uploading
+/pods/:id/videos/upload PUT : get signed links used for uploading
 
 **Users**
 

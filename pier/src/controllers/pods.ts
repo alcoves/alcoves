@@ -6,11 +6,12 @@ export async function list(req: Request, res: Response) {
 }
 
 export async function create(req: Request, res: Response) {
+  const command = `insert into pods`
   return res.status(200).end()
 }
 
 export async function getById(req: Request, res: Response) {
-  const command = `select * from compartments where id = $1` 
+  const command = `select * from pods where id = $1` 
   const { rows } = await query(command, [req.params.id])
   if (rows?.length) {
     return res.status(200).json(rows[0])
