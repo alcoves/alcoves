@@ -13,3 +13,10 @@ export interface Video {
   visibility: "unlisted" | "public"
   status: "queued" | "processing" | "completed"
 }
+
+export interface Compartment {
+  id: string
+  name?: string
+  updated_at?: string
+  created_at?: string
+}
