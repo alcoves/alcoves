@@ -16,5 +16,8 @@
   "exclude": [
     "node_modules",
     "build"
-  ]
+  ],
+  "typeRoots": [
+    "./@types"
+  ],
 }

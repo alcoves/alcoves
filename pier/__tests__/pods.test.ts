@@ -1,11 +1,13 @@
 import request from 'supertest'
-import app from '../src/app'
+import app from '../app'
 
 import { QueryResult } from 'pg'
-import { query } from '../src/config/db'
-import { pod } from '../src/types'
+import { query } from '../config/db'
+import { auth } from '../lib/auth'
+import { pod } from '../types'
 
-jest.mock('../src/config/db')
+jest.mock('../config/db')
+jest.mock('../lib/auth')
 
 const testpod: pod = {
   id: "test-pod-id",
@@ -13,8 +15,9 @@ const testpod: pod = {
 }
 
 const mockQuery = query as jest.MockedFunction<typeof query>
+const mockAuth = auth as jest.MockedFunction<typeof auth>
 
-describe("Videos Endpoint", () => {
+describe("Pods Endpoint", () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })

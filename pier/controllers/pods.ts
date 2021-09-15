@@ -2,7 +2,11 @@ import { query } from '../config/db'
 import { Request, Response } from 'express'
 
 export async function list(req: Request, res: Response) {
-  return res.status(200).end()
+  console.log(req.headers.authorization)
+  const command = `select * from pod_memberships inner join pods p on p.id = pod_memberships.pod_id where user_id = $1`
+  // @ts-ignore
+  const { rows } = await query(command, [req.currentUser])
+  return res.status(200).json(rows)
 }
 
 export async function create(req: Request, res: Response) {

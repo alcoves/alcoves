@@ -1,10 +1,10 @@
 import { QueryResult } from 'pg'
 import request from 'supertest'
-import app from '../src/app'
-import { query } from '../src/config/db'
-import { Video } from '../src/types'
+import app from '../app'
+import { query } from '../config/db'
+import { Video } from '../types'
 
-jest.mock('../src/config/db')
+jest.mock('../config/db')
 
 const mockQuery = query as jest.MockedFunction<typeof query>
 
