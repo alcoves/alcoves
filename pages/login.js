@@ -1,8 +1,8 @@
 import { Button, Flex, Heading, Box } from '@chakra-ui/react'
 import Image from 'next/image'
-import { providers as getProviders, signIn } from 'next-auth/client'
+import { getProviders, signIn } from 'next-auth/client'
 
-export default function Login({ providers }) {
+export default function Login({ providers = [] }) {
   return (
     <Flex justify='center'>
       <Flex align='center' pt='10vh' direction='column'>

@@ -1,1 +1,1 @@
-export const fetcher = url => fetch(url).then(res => res.json())
+export const fetcher = (url, opts = {}) => fetch(url, opts).then(res => res.json())
