@@ -1,15 +1,19 @@
-import { Pool, QueryResult } from "pg"
+import { Db, MongoClient } from 'mongodb'
 
-const pool = new Pool({
-  ssl: {
-    rejectUnauthorized: false,
-  },
-})
+let cachedDb: Db
 
-export async function query(text: string, params: any[]): Promise<QueryResult<any>> {
-  const start = Date.now()
-  const res = await pool.query(text, params)
-  const duration = Date.now() - start
-  console.log("executed query", { text, duration, rows: res.rowCount })
-  return res
+export async function connectToDatabase() {
+  if (cachedDb) return cachedDb
+  
+  // @ts-ignore
+  const client: MongoClient = await MongoClient.connect(process.env.MONGODB_URI, {
+    tls: true,
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    tlsCAFile: './ca-certificate.crt'
+  })
+
+
+  cachedDb = client.db("bken")
+  return cachedDb
 }

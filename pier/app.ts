@@ -12,6 +12,6 @@ app.use(morgan('tiny'))
 
 app.use('/', root)
 app.use('/pods', pods)
-app.use('/videos', videos)
+// app.use('/videos', videos)
 
 export default app
