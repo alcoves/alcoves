@@ -12,12 +12,13 @@
     "forceConsistentCasingInFileNames": true,
     "outDir": "build",
     "noImplicitAny": true,
+    "typeRoots": [
+      "@types",
+      "node_modules/@types"
+    ],
   },
   "exclude": [
     "node_modules",
     "build"
-  ],
-  "typeRoots": [
-    "./@types"
   ],
 }

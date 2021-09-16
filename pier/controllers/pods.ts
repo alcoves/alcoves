@@ -4,9 +4,8 @@ import { Request, Response } from 'express'
 
 export async function list(req: Request, res: Response) {
   const db = await connectToDatabase()
-  // @ts-ignore
-  const pods = await db.collection('pods').find({ members: ObjectId(req.currentUser) }).toArray()
-  return res.json({ payload: pods })
+  const pods = await db.collection('pods').find({ members: new ObjectId(req.userId) }).toArray()
+  return res.json({ payload: pods  })
 }
 
 // export async function create(req: Request, res: Response) {

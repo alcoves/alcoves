@@ -9,7 +9,7 @@ export async function auth(req: Request, res: Response, next: NextFunction) {
     const decodedToken = jwt.verify(apiToken as string, process.env.JWT_SIGNING_KEY as string)
     console.log("Decoded Token", decodedToken)
     // @ts-ignore
-    req.currentUser = decodedToken.id
+    req.userId = decodedToken.id
     next()
   } else {
     return res.sendStatus(401)
