@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { signOut, useSession } from 'next-auth/client'
+import { signOut, useSession } from 'next-auth/react'
 import {
   Flex,
   Spacer,
@@ -21,7 +21,7 @@ import Uploader from './Uploader/Index'
 import Image from 'next/image'
 
 export default function Navigation() {
-  const [session] = useSession()
+  const { data: session } = useSession()
   const [open, setOpen] = useState(false)
   const { colorMode, toggleColorMode } = useColorMode()
 

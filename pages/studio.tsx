@@ -1,5 +1,5 @@
 import useSWR from 'swr'
-import { useSession } from 'next-auth/client'
+import { useSession } from 'next-auth/react'
 import { Box, Button, Flex, SimpleGrid } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
@@ -10,7 +10,7 @@ import { Video } from '../types'
 
 export default function Studio() {
   const router = useRouter()
-  const [session, loading] = useSession()
+  const { data: session, status } = useSession()
   const [videos, setVideos] = useState<Video[] | null>(null)
 
   const { data, mutate, isValidating } = useSWR(
@@ -24,8 +24,8 @@ export default function Studio() {
     }
   }, [data])
 
-  if (loading) return null
-  if (!loading && !session) {
+  if (status) return null
+  if (!status && !session) {
     router.push('/login')
     return null
   }

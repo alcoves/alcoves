@@ -1,11 +1,11 @@
-import { useSession } from 'next-auth/client'
+import { useSession } from 'next-auth/react'
 import { Flex, Avatar, VStack, SkeletonCircle, Heading, SkeletonText, Text } from '@chakra-ui/react'
 import Layout from '../components/Layout'
 import prettyBytes from 'pretty-bytes'
 import useSWR from 'swr'
 
 export default function Account() {
-  const [session, loadingSession] = useSession()
+  const { data: session, status } = useSession()
   const { data } = useSWR(Boolean(session?.id) ? `/api/users/${session?.id}/account` : null)
 
   return (
@@ -13,10 +13,7 @@ export default function Account() {
       <Flex justify='center' pt='5' direction='row'>
         <Flex direction='column' rounded='lg' p='5' minW='400px'>
           <Flex direction='row' justify='center' w='100%' h='75px'>
-            <SkeletonCircle
-              w='60px'
-              h='60px'
-              isLoaded={Boolean(!loadingSession && session?.user?.image)}>
+            <SkeletonCircle w='60px' h='60px' isLoaded={Boolean(!status && session?.user?.image)}>
               <Avatar w='60px' h='60px' src={session?.user?.image} name={session?.user?.name[0]} />
             </SkeletonCircle>
             <SkeletonText
@@ -24,7 +21,8 @@ export default function Account() {
               w='100%'
               noOfLines={3}
               spacing={3}
-              isLoaded={Boolean(!loadingSession && session?.user?.name)}>
+              isLoaded={Boolean(!status && session?.user?.name)}
+            >
               <Heading size='sm'>
                 {session?.user?.name}
                 {session?.user?.isAdmin && ' (Admin)'}

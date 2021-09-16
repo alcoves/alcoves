@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid'
-import { getSession } from 'next-auth/client'
+import { getSession } from 'next-auth/react'
 import { s3 } from '../../../utils/s3'
 
 // Created a signed url that is used by the client to upload a video

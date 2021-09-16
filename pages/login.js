@@ -1,6 +1,6 @@
 import { Button, Flex, Heading, Box } from '@chakra-ui/react'
 import Image from 'next/image'
-import { getProviders, signIn } from 'next-auth/client'
+import { getProviders, signIn } from 'next-auth/react'
 
 export default function Login({ providers = [] }) {
   return (

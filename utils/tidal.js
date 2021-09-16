@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { getSession } from 'next-auth/client'
+import { getSession } from 'next-auth/react'
 
 const TIDAL_API_KEY = process.env.TIDAL_API_KEY
 const TIDAL_URL = process.env.TIDAL_URL || 'https://tidal.bken.io'

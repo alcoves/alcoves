@@ -3,7 +3,12 @@ export default function ListPods({ data }) {
     <div>
       Here are the data
       {data?.map(p => {
-        return <div key={p.id}>{p.id}</div>
+        return (
+          <div key={p._id}>
+            {p._id}
+            <p>{p.name}</p>
+          </div>
+        )
       })}
     </div>
   )
