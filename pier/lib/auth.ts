@@ -1,19 +1,17 @@
+import jwt from 'jsonwebtoken'
 import { Request, Response, NextFunction } from "express"
 
 export async function auth(req: Request, res: Response, next: NextFunction) {
-  next()
-  // const apiKey = req?.headers['x-api-key']
-  // if (apiKey) {
-  //   const command = `select id from users where api_key = $1`
-  //   const { rows } = await query(command, [apiKey])
-  //   if (rows[0]?.id) {
-  //     // @ts-ignore
-  //     req.currentUser = rows[0].id
-  //     next()
-  //   } else {
-  //     res.sendStatus(401)
-  //   }
-  // } else {
-  //   return res.sendStatus(401)
-  // }
+  const apiKey = req?.headers['authorization']
+  const apiToken = apiKey?.split("Bearer ")[1]
+
+  if (apiToken) {
+    const decodedToken = jwt.verify(apiToken as string, process.env.JWT_SIGNING_KEY as string)
+    console.log("Decoded Token", decodedToken)
+    // @ts-ignore
+    req.currentUser = decodedToken.id
+    next()
+  } else {
+    return res.sendStatus(401)
+  }
 }

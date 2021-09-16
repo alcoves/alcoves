@@ -1,15 +1,12 @@
+import { ObjectId } from 'mongodb'
 import { connectToDatabase } from '../config/db'
 import { Request, Response } from 'express'
 
 export async function list(req: Request, res: Response) {
   const db = await connectToDatabase()
-  const pods = await db.collection('pods').find({}).toArray()
-  // console.log(req.headers.authorization)
-  // const command = `select * from pod_memberships inner join pods p on p.id = pod_memberships.pod_id where user_id = $1`
-  // // @ts-ignore
-  // const { rows } = await query(command, [req.currentUser])
-  // return res.status(200).json(rows)
-  return res.json({ pods })
+  // @ts-ignore
+  const pods = await db.collection('pods').find({ members: ObjectId(req.currentUser) }).toArray()
+  return res.json({ payload: pods })
 }
 
 // export async function create(req: Request, res: Response) {
