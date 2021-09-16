@@ -21,7 +21,7 @@ import {
   MenuItem,
 } from '@chakra-ui/react'
 import moment from 'moment'
-import { useSession } from 'next-auth/client'
+import { useSession } from 'next-auth/react'
 import Layout from '../components/Layout'
 import videoDuration from '../utils/videoDuration'
 import { IoArrowDown, IoSettingsOutline } from 'react-icons/io5'
@@ -29,13 +29,13 @@ import axios from 'axios'
 import { fetcher } from '../utils/fetcher'
 
 export default function Admin() {
-  const [session, loading] = useSession()
+  const { data: session, status } = useSession()
   const { data: videos } = useSWR('/api/videos?visibility=all', fetcher, {
     refreshInterval: 1000 * 10,
   })
 
-  if (loading) return null
-  if ((!loading && !session) || !session?.user?.isAdmin) {
+  if (status) return null
+  if ((!status && !session) || !session?.user?.isAdmin) {
     return (
       <Layout>
         <Text>You must be an admin to view this page</Text>
@@ -80,7 +80,8 @@ export default function Admin() {
                     bgSize='cover'
                     bgColor='black'
                     bgPosition='center'
-                    bgRepeat='no-repeat'>
+                    bgRepeat='no-repeat'
+                  >
                     <Flex
                       position='absolute'
                       right='0'
@@ -89,7 +90,8 @@ export default function Admin() {
                       align='center'
                       bg='rgba(10, 10, 10, .4)'
                       borderRadius='md'
-                      px='1'>
+                      px='1'
+                    >
                       <Text color='gray.100' fontSize='xs' fontWeight='bold'>
                         {videoDuration(v.duration)}
                       </Text>
@@ -127,7 +129,8 @@ export default function Admin() {
                           await axios.post(`/api/videos/${v.id}`).catch(error => {
                             console.error(error)
                           })
-                        }}>
+                        }}
+                      >
                         Reprocess Video
                       </MenuItem>
                       <MenuItem
@@ -136,7 +139,8 @@ export default function Admin() {
                           await axios.post(`/api/videos/${v.id}/thumbnail`).catch(error => {
                             console.error(error)
                           })
-                        }}>
+                        }}
+                      >
                         Reprocess Thumbnail
                       </MenuItem>
                     </MenuList>

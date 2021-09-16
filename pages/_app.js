@@ -1,7 +1,7 @@
 import '../styles/index.css'
 import React, { useEffect, useReducer } from 'react'
 import Head from 'next/head'
-import { Provider } from 'next-auth/client'
+import { SessionProvider } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import * as gtag from '../utils/gtag'
 import { Chakra } from '../styles/chakra'
@@ -31,11 +31,11 @@ function App({ Component, pageProps }) {
         />
       </Head>
       <UploadContext.Provider value={{ uploads, dispatch }}>
-        <Provider session={pageProps.session}>
+        <SessionProvider session={pageProps.session}>
           <Chakra cookies={pageProps.cookies}>
             <Component {...pageProps} />
           </Chakra>
-        </Provider>
+        </SessionProvider>
       </UploadContext.Provider>
     </>
   )

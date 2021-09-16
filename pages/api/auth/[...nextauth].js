@@ -1,48 +1,42 @@
+import jwt from 'jsonwebtoken'
 import NextAuth from 'next-auth'
-import Providers from 'next-auth/providers'
+import GoogleProvider from 'next-auth/providers/google'
+import DiscordProvider from 'next-auth/providers/discord'
 import { MongoDBAdapter } from '@next-auth/mongodb-adapter'
-import { MongoClient, ObjectId } from 'mongodb'
-
-const client = new MongoClient(process.env.MONGODB_URI, {
-  useUnifiedTopology: true,
-  useNewUrlParser: true,
-  tls: true,
-  tlsCAFile: './ca-certificate.crt',
-})
+import clientPromise from '../../../utils/db'
 
 export default async function auth(req, res) {
   return await NextAuth(req, res, {
     adapter: MongoDBAdapter({
-      db: (await client).db('bken'),
-      ObjectId,
+      db: (await clientPromise).db('bken'),
     }),
     pages: {
       newUser: '/studio',
       signIn: '/login',
     },
     providers: [
-      Providers.Google({
+      GoogleProvider({
         clientId: process.env.GOOGLE_ID,
         clientSecret: process.env.GOOGLE_SECRET,
         authorizationUrl:
           'https://accounts.google.com/o/oauth2/v2/auth?prompt=consent&access_type=offline&response_type=code',
       }),
-      Providers.Discord({
+      DiscordProvider({
         clientId: process.env.DISCORD_CLIENT_ID,
         clientSecret: process.env.DISCORD_CLIENT_SECRET,
       }),
     ],
     callbacks: {
-      async session(session, token) {
-        const user = await db.user.findFirst({ where: { id: token.id } })
-        session.id = token.id
-        const administrators = ['ckrf389hs000101mg5s6o4nvg']
-        session.user.apiKey = user.apiKey
-        session.user.isAdmin = administrators.includes(token?.id)
-        console.log(session)
+      async session({ session, user }) {
+        // We create an access token that is used in the bken api to validate the requesting user
+        session.accessToken = jwt.sign({ id: user.id }, process.env.JWT_SIGNING_KEY, {
+          expiresIn: '1hr',
+        })
+        session.id = user.id
+        console.log('Session', session)
         return session
       },
-      async redirect(url) {
+      async redirect({ url }) {
         if (url === '/api/auth/signin') {
           return '/'
         }

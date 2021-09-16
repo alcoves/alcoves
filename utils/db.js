@@ -3,9 +3,9 @@ import { MongoClient } from 'mongodb'
 
 const uri = process.env.MONGODB_URI
 const options = {
+  tls: true,
   useUnifiedTopology: true,
   useNewUrlParser: true,
-  // tls: true,
   tlsCAFile: './ca-certificate.crt',
 }
 

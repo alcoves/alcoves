@@ -1,4 +1,4 @@
-import { getSession } from 'next-auth/client'
+import { getSession } from 'next-auth/react'
 import db from '../../../../utils/db'
 import { deleteFolder } from '../../../../utils/s3'
 import { createVideo } from '../../../../utils/tidal'

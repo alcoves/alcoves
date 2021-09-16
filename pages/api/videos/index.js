@@ -1,4 +1,4 @@
-import { getSession } from 'next-auth/client'
+import { getSession } from 'next-auth/react'
 import db from '../../../utils/db'
 import { s3 } from '../../../utils/s3'
 import { createThumbnail, createVideo as CreateTidalVideo } from '../../../utils/tidal'

@@ -1,4 +1,4 @@
-import { getSession } from 'next-auth/client'
+import { getSession } from 'next-auth/react'
 import { createThumbnail } from '../../../../utils/tidal'
 
 export default async function handler(req, res) {
