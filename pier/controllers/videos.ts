@@ -1,12 +1,12 @@
 import mongoose from 'mongoose'
-import Video from '../models/video'
+import { Video } from '../lib/models'
 import { Request, Response } from 'express'
 
 export async function listVideos(req: Request, res: Response) {
   const filter = {
     pod: new mongoose.Types.ObjectId(req.params.podId),
   }
-  const videos = await Video.find(filter)
+  const videos = await Video.find(filter).populate("owner")
   return res.json({ data: videos  })
 }
 

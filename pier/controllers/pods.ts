@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import Pod from '../models/pod'
+import { Pod } from '../lib/models'
 import { Request, Response } from 'express'
 
 interface CreatePodInput {
