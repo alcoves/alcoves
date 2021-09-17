@@ -19,6 +19,7 @@ mongoose.connect(process.env.MONGODB_URI as string, {
 
 const app = express();
 app.use(cors())
+app.use(express.json())
 app.use(morgan('tiny'))
 
 app.use('/', root)
