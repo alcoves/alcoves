@@ -19,6 +19,7 @@ import { IoFilmOutline } from 'react-icons/io5'
 import Link from 'next/link'
 import Uploader from './Uploader/Index'
 import Image from 'next/image'
+import ListPods from './ListPods'
 
 export default function Navigation() {
   const { data: session } = useSession()
@@ -26,12 +27,13 @@ export default function Navigation() {
   const { colorMode, toggleColorMode } = useColorMode()
 
   return (
-    <Flex h='48px' bg={colorMode === 'dark' ? 'gray.700' : 'white'}>
+    <Flex h='48px' bg={colorMode === 'dark' ? 'gray.900' : 'white'}>
       <Box p='1' cursor='pointer'>
         <Link href='/' passHref>
           <Image width={40} height={40} quality={85} alt='Bken.io' layout='fixed' src='/logo.png' />
         </Link>
       </Box>
+      <ListPods />
       <Spacer />
       <Box p='1'>
         <Flex justify='center' align='center' h='100%'>
