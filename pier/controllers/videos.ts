@@ -1,18 +1,21 @@
-// import { query } from '../config/db'
-// import { Request, Response } from 'express'
+import mongoose from 'mongoose'
+import Video from '../models/video'
+import { Request, Response } from 'express'
 
-// export async function get(req: Request, res: Response) {
-//   const command = `select * from videos where id = $1` 
-//   const { rows } = await query(command, [req.params.id])
-//   if (rows?.length) {
-//     return res.status(200).json(rows[0])
-//   } else {
-//     return res.sendStatus(404)
-//   }
-// }
+export async function listVideos(req: Request, res: Response) {
+  const filter = {
+    pod: new mongoose.Types.ObjectId(req.params.podId),
+  }
+  const videos = await Video.find(filter)
+  return res.json({ data: videos  })
+}
 
-// export async function list(req: Request, res: Response) {
-//   const command = `select * from videos`
-//   const { rows } = await query(command, [])
-//   return res.status(200).json(rows)
-// }
+export async function getVideo(req: Request, res: Response) {
+  const filter = {
+    _id:  new mongoose.Types.ObjectId(req.params.videoId),
+    pod: new mongoose.Types.ObjectId(req.params.podId),
+  }
+  const video = await Video.findOne(filter)
+  if (video) return res.json({ data: video })
+  return res.sendStatus(404)
+}

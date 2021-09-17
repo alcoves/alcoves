@@ -5,4 +5,4 @@ export default mongoose.model("Pod", new mongoose.Schema({
   name: String,
   owner: { type : mongoose.Types.ObjectId, ref: 'User' },
   members: [{ type : mongoose.Types.ObjectId, ref: 'User' }],
-}))
+}, { timestamps: true }))

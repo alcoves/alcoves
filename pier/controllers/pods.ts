@@ -1,6 +1,5 @@
 import mongoose from 'mongoose'
 import Pod from '../models/pod'
-import { ObjectId } from 'mongodb'
 import { Request, Response } from 'express'
 
 interface CreatePodInput {
@@ -12,7 +11,7 @@ interface PatchPodInput {
 }
 
 export async function list(req: Request, res: Response) {
-  const pods = await Pod.find({ members: new ObjectId(req.userId) })
+  const pods = await Pod.find({ members: new mongoose.Types.ObjectId(req.userId) })
   return res.json({ data: pods  })
 }
 
@@ -29,8 +28,8 @@ export async function create(req: Request, res: Response) {
 
 export async function getById(req: Request, res: Response) {
   const filter = {
-    _id: new ObjectId(req.params.id),
-    members: new ObjectId(req.userId)
+    _id: new mongoose.Types.ObjectId(req.params.podId),
+    members: new mongoose.Types.ObjectId(req.userId)
   }
   const pod = await Pod.findOne(filter)
   if (pod) return res.json({ data: pod })
@@ -39,8 +38,8 @@ export async function getById(req: Request, res: Response) {
 
 export async function patchById(req: Request, res: Response) {
   const filter = {
-    _id: new ObjectId(req.params.id),
-    owner: new ObjectId(req.userId)
+    _id: new mongoose.Types.ObjectId(req.params.podId),
+    owner: new mongoose.Types.ObjectId(req.userId)
   }
   const patchPodInput: PatchPodInput = req.body
   const patch = await Pod.findOneAndUpdate(filter, {
@@ -52,8 +51,8 @@ export async function patchById(req: Request, res: Response) {
 
 export async function deleteById(req: Request, res: Response) {
   const filter = {
-    _id: new ObjectId(req.params.id),
-    owner: new ObjectId(req.userId)
+    _id: new mongoose.Types.ObjectId(req.params.podId),
+    owner: new mongoose.Types.ObjectId(req.userId)
   }
   const deleted = await Pod.findOneAndRemove(filter)
   if (deleted) return res.sendStatus(200)

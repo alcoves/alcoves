@@ -5,7 +5,6 @@ import cors from 'cors'
 import morgan from 'morgan'
 import express from 'express'
 import root from './routes/root'
-import videos from './routes/videos'
 import pods from './routes/pods'
 import mongoose, { ConnectOptions } from 'mongoose';
 
@@ -24,6 +23,5 @@ app.use(morgan('tiny'))
 
 app.use('/', root)
 app.use('/pods', pods)
-// app.use('/videos', videos)
 
 export default app
