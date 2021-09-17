@@ -48,7 +48,8 @@ export default function ShareModal({ link }) {
                 variant='outline'
                 onClick={() => {
                   navigator.clipboard.writeText(shareLink)
-                }}>
+                }}
+              >
                 Copy
               </Button>
             </Flex>
