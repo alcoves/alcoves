@@ -5,13 +5,14 @@ import { Avatar, HStack, IconButton } from '@chakra-ui/react'
 import { IoAdd } from 'react-icons/io5'
 import { getApiUrl } from '../utils/api'
 
+const fetchUrl = `${getApiUrl()}/pods`
+
 export default function ListPods(): JSX.Element {
-  const fetchUrl = `${getApiUrl()}/pods`
   const { data } = useSWR(fetchUrl, fetcher)
 
   return (
     <HStack h='100%' align='center'>
-      {data?.payload?.map(p => {
+      {data?.data?.map(p => {
         return (
           <Link key={p._id} href={`/pods/${p._id}`} passHref>
             <Avatar name={p.name} size='sm' cursor='pointer' />
