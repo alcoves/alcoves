@@ -6,6 +6,7 @@ import { getApiUrl } from '../../utils/api'
 import { fetcher } from '../../utils/fetcher'
 import { Spinner, Flex, Heading, HStack, Text } from '@chakra-ui/react'
 import { DeletePod } from '../../components/Pods/DeletePod'
+import VideoGrid from '../../components/VideoGrid/index'
 
 export default function Pod(): JSX.Element {
   const router = useRouter()
@@ -30,7 +31,7 @@ export default function Pod(): JSX.Element {
             <DeletePod id={pod.data._id} />
           </HStack>
         </Flex>
-        Here is the video grid component
+        <VideoGrid podId={pod.data._id} />
       </Flex>
     </Layout>
   )

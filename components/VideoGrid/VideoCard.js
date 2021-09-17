@@ -3,10 +3,10 @@ import Link from 'next/link'
 import videoDuration from '../../utils/videoDuration'
 import VideoMeta from './VideoMeta'
 
-export default function VideoCard({ v }) {
+export default function VideoCard({ v, podId }) {
   return (
-    <Skeleton isLoaded={Boolean(v.id)}>
-      <Link passHref href={`/v/${v.id}`}>
+    <Skeleton isLoaded={Boolean(v._id)} maxW='400px'>
+      <Link passHref href={`/pods/${podId}/v/${v._id}`}>
         <Box
           borderRadius='md'
           boxShadow='inner'
@@ -18,7 +18,8 @@ export default function VideoCard({ v }) {
           cursor='pointer'
           position='relative'
           bgPosition='center'
-          bgRepeat='no-repeat'>
+          bgRepeat='no-repeat'
+        >
           <Text
             px='1'
             right={1}
@@ -30,7 +31,8 @@ export default function VideoCard({ v }) {
             bg='rgba(10, 10, 10, .4)'
             color='gray.100'
             fontSize='xs'
-            fontWeight='bold'>
+            fontWeight='bold'
+          >
             {videoDuration(v.duration)}
           </Text>
         </Box>

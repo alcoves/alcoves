@@ -11,7 +11,7 @@ export default function VideoMeta({ v }) {
     <HStack spacing='12px' py='2' align='start' minH='75px'>
       {v?.user && (
         <Flex>
-          <Link passHref href={`/u/${v.userId}`}>
+          <Link passHref href={`/u/${v.owner._id}`}>
             <Avatar
               h='40px'
               w='40px'
@@ -23,12 +23,12 @@ export default function VideoMeta({ v }) {
         </Flex>
       )}
       <Flex direction='column' overflow='hidden'>
-        <Link passHref href={`/v/${v.id}`}>
+        <Link passHref href={`/v/${v._id}`}>
           <Heading noOfLines={2} cursor='pointer' size='sm'>
             {v.title}
           </Heading>
         </Link>
-        <Link passHref href={`/u/${v.userId}`}>
+        <Link passHref href={`/u/${v.owner._id}`}>
           <Text cursor='pointer' fontSize='xs'>
             {v?.user?.name}
           </Text>

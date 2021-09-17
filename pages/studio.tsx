@@ -40,7 +40,7 @@ export default function Studio() {
         </Flex>
         <SimpleGrid minChildWidth={[200, 400]} spacing='10px'>
           {videos?.map((v, i) => (
-            <StudioVideoCard key={v.id || i} v={v} refetchVideoList={mutate} />
+            <StudioVideoCard key={v._id || i} v={v} refetchVideoList={mutate} />
           ))}
         </SimpleGrid>
       </Box>
