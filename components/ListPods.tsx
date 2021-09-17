@@ -5,7 +5,7 @@ import { Avatar, HStack, IconButton } from '@chakra-ui/react'
 import { IoAdd } from 'react-icons/io5'
 import { getApiUrl } from '../utils/api'
 
-export default function ListPods() {
+export default function ListPods(): JSX.Element {
   const fetchUrl = `${getApiUrl()}/pods`
   const { data } = useSWR(fetchUrl, fetcher)
 
