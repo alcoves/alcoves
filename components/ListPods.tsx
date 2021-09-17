@@ -9,7 +9,6 @@ const fetchUrl = `${getApiUrl()}/pods`
 
 export default function ListPods(): JSX.Element {
   const { data } = useSWR(fetchUrl, fetcher)
-
   return (
     <>
       <HStack h='100%' align='center'>
