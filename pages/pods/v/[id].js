@@ -12,11 +12,13 @@ import ShareModal from '../../../components/ShareModal'
 import { fetcher } from '../../../utils/fetcher'
 
 export default function Video({ error, urlPath, video: v }) {
+  console.log('here')
+
   const { data } = useSWR(urlPath && !error, fetcher, { fallbackData: v })
 
   useEffect(() => {
     if (!error) {
-      axios.post(`/api/videos/${v.id}/views`).catch(err => {
+      axios.post(`/api/videos/${v._id}/views`).catch(err => {
         console.error('error counting video view', err)
       })
     }

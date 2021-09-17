@@ -1,8 +1,13 @@
 import NavBar from './NavBar'
 import Footer from './Footer'
+import { Box } from '@chakra-ui/layout'
 
 function Content({ children }) {
-  return <div style={{ minHeight: 'calc(100vh - 96px)' }}>{children}</div>
+  return (
+    <Box minH='calc(100vh - 96px)' p='4'>
+      {children}
+    </Box>
+  )
 }
 
 const Layout = ({ children }) => (
