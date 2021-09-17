@@ -39,7 +39,7 @@ export default function Navigation() {
           </a>
         </Link>
       </Box>
-      <ListPods />
+      {session && session.user && <ListPods />}
       <Spacer />
       <Box p='1'>
         <Flex justify='center' align='center' h='100%'>
