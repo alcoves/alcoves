@@ -4,12 +4,12 @@ import useSWR from 'swr'
 import { CircularProgress, Flex, Box, Text, Heading } from '@chakra-ui/react'
 import { useEffect } from 'react'
 import axios from 'axios'
-import Layout from '../../components/Layout'
-import VideoPlayer from '../../components/VideoPlayer/Index'
-import abbreviateNumber from '../../utils/abbreviateNumber'
-import VideoPageUserCard from '../../components/VideoPageUserCard'
-import ShareModal from '../../components/ShareModal'
-import { fetcher } from '../../utils/fetcher'
+import Layout from '../../../components/Layout'
+import VideoPlayer from '../../../components/VideoPlayer/Index'
+import abbreviateNumber from '../../../utils/abbreviateNumber'
+import VideoPageUserCard from '../../../components/VideoPageUserCard'
+import ShareModal from '../../../components/ShareModal'
+import { fetcher } from '../../../utils/fetcher'
 
 export default function Video({ error, urlPath, video: v }) {
   const { data } = useSWR(urlPath && !error, fetcher, { fallbackData: v })
