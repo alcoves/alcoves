@@ -13,11 +13,8 @@ import {
   MenuItem,
   MenuDivider,
   useColorMode,
-  IconButton,
 } from '@chakra-ui/react'
-import { IoFilmOutline } from 'react-icons/io5'
 import Link from 'next/link'
-import Uploader from './Uploader/Index'
 import Image from 'next/image'
 import ListPods from './ListPods'
 
@@ -29,23 +26,23 @@ export default function Navigation() {
   return (
     <Flex h='48px' bg={colorMode === 'dark' ? 'gray.900' : 'white'}>
       <Box p='1' cursor='pointer'>
-        <Link href='/' passHref>
-          <Image width={40} height={40} quality={85} alt='Bken.io' layout='fixed' src='/logo.png' />
+        <Link href='/'>
+          <a>
+            <Image
+              width={40}
+              height={40}
+              quality={85}
+              alt='Bken.io'
+              layout='fixed'
+              src='/logo.png'
+            />
+          </a>
         </Link>
       </Box>
       <ListPods />
       <Spacer />
       <Box p='1'>
         <Flex justify='center' align='center' h='100%'>
-          <Box me='2'>
-            <Uploader />
-          </Box>
-          <Box me='2'>
-            <Link href='/studio' passHref>
-              <IconButton size='sm' icon={<IoFilmOutline />} />
-            </Link>
-          </Box>
-
           {session && session.user ? (
             <Menu>
               <MenuButton me='10px'>
@@ -58,18 +55,6 @@ export default function Navigation() {
                 />
               </MenuButton>
               <MenuList minW='auto'>
-                <Link passHref href={`/u/${session.id}`}>
-                  <MenuItem>Profile</MenuItem>
-                </Link>
-                <Link passHref href={'/account'}>
-                  <MenuItem>Account</MenuItem>
-                </Link>
-                {session?.user?.isAdmin && (
-                  <Link passHref href='/admin'>
-                    <MenuItem>Admin</MenuItem>
-                  </Link>
-                )}
-                <MenuDivider />
                 <MenuItem onClick={toggleColorMode} closeOnSelect={false}>
                   <Text>Dark Theme</Text>
                   <Switch ml='2' size='sm' isChecked={colorMode === 'dark'} />
