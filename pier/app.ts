@@ -6,6 +6,7 @@ import morgan from 'morgan'
 import express from 'express'
 import root from './routes/root'
 import pods from './routes/pods'
+import hooks from './routes/hooks'
 import mongoose, { ConnectOptions } from 'mongoose';
 
 if (!process.env.MONGODB_URI) throw new Error("MONGODB_URI must be defined!")
@@ -23,5 +24,6 @@ app.use(morgan('tiny'))
 
 app.use('/', root)
 app.use('/pods', pods)
+app.use('/hooks', hooks)
 
 export default app
