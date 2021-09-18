@@ -29,7 +29,9 @@ export default async function auth(req, res) {
     callbacks: {
       async session({ session, user }) {
         // We create an access token that is used in the bken api to validate the requesting user
-        session.accessToken = jwt.sign({ id: user.id }, process.env.JWT_SIGNING_KEY, {
+        const jwtSecret = process.env.JWT_SECRET
+        const thirtySecondsAgo = Math.floor(Date.now() / 1000) - 30
+        session.accessToken = jwt.sign({ id: user.id, iat: thirtySecondsAgo }, jwtSecret, {
           expiresIn: '1hr',
         })
         session.id = user.id
