@@ -9,6 +9,7 @@ import {
 } from '../controllers/pods'
 import {
   listVideos,
+  createVideo,
   getVideo,
 } from '../controllers/videos'
 
@@ -21,6 +22,7 @@ router.patch('/:podId', auth, patchById)
 router.delete('/:podId', auth, deleteById)
 
 router.get('/:podId/videos', auth, listVideos)
+router.post('/:podId/videos', auth, createVideo)
 router.get('/:podId/videos/:videoId', auth, getVideo)
 
 export default router

@@ -18,7 +18,7 @@ export const Video = mongoose.model("Video", new mongoose.Schema({
   _id: mongoose.Types.ObjectId,
   status: String,
   title: String,
-  duration: Number,
+  duration: String,
   views: Number,
   pod: { type : mongoose.Types.ObjectId, ref: 'Pod' },
   owner: { type : mongoose.Types.ObjectId, ref: 'User' },
