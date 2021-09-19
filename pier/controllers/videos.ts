@@ -1,4 +1,4 @@
-import s3 from '../lib/s3'
+import s3, { deleteFolder } from '../lib/s3'
 import mongoose from 'mongoose'
 import { Video } from '../lib/models'
 import { Request, Response } from 'express'
@@ -42,4 +42,23 @@ export async function createVideo(req: Request, res: Response) {
   })
 
   return res.json({ data: signedUploadUrl })
+}
+
+export async function deleteVideo(req: Request, res: Response) {
+  const video = await Video.findOne({
+    _id: req.params.videoId,
+    owner: req.userId
+  })
+
+  // Double check that video._id is not null
+  // If null, entire s3 prefix could be wiped
+  if (video && video._id) {
+    await deleteFolder({
+      Bucket: 'cdn.bken.io',
+      Prefix: `v/${video._id}`,
+    })
+    await Video.findByIdAndDelete(video._id)
+    return res.sendStatus(200)
+  }
+  return res.sendStatus(403)
 }
