@@ -40,7 +40,6 @@ function VideoPlayer({ theaterMode, thumbnail, url, id = 'bkenVideoPlayer' }) {
   useEffect(() => {
     const video = document.getElementById(id)
     setPlayer(new shaka.Player(video))
-
     // const orientationchange = window.addEventListener('orientationchange', (event) => {
     //   setRotation(event.target.screen.orientation.angle);
     //   console.log(`the orientation of the device is now ${event.target.screen.orientation.angle}`);
@@ -54,13 +53,10 @@ function VideoPlayer({ theaterMode, thumbnail, url, id = 'bkenVideoPlayer' }) {
     if (player) {
       const { t = 0 } = qs.parse(window.location.search)
       // console.log(`Seeking to ${t}`);
-
-      player.configure({ manifest: { dash: { ignoreEmptyAdaptationSet: true } } })
-
       player
         .load(url, t)
         .then(() => {
-          // console.debug('video has been loaded');
+          console.debug('video has been loaded')
         })
         .catch(err => {
           console.error(err)
@@ -136,7 +132,8 @@ function VideoPlayer({ theaterMode, thumbnail, url, id = 'bkenVideoPlayer' }) {
       pos='relative'
       backgroundColor='rgba(0,0,0,.3)'
       cursor={`${controlsVisible ? 'auto' : 'none'}`}
-      {...baseStyles()}>
+      {...baseStyles()}
+    >
       <video
         id={id}
         autoPlay
@@ -183,7 +180,8 @@ function VideoPlayer({ theaterMode, thumbnail, url, id = 'bkenVideoPlayer' }) {
                 toggleFullScreen()
               }
               e.preventDefault()
-            }}>
+            }}
+          >
             <Box> {renderCenter()} </Box>
           </Flex>
           <Flex w='100%' direction='column' px='2'>

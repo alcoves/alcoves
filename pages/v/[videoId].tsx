@@ -1,46 +1,48 @@
 import Head from 'next/head'
 import moment from 'moment'
-import useSWR from 'swr'
-import { CircularProgress, Flex, Box, Text, Heading } from '@chakra-ui/react'
+import { Flex, Box, Text, Heading } from '@chakra-ui/react'
 import { useEffect } from 'react'
 import axios from 'axios'
-import Layout from '../../../components/Layout'
-import VideoPlayer from '../../../components/VideoPlayer/Index'
-import abbreviateNumber from '../../../utils/abbreviateNumber'
-import VideoPageUserCard from '../../../components/VideoPageUserCard'
-import ShareModal from '../../../components/ShareModal'
-import { fetcher } from '../../../utils/fetcher'
+import Layout from '../../components/Layout'
+import VideoPlayer from '../../components/VideoPlayer/Index'
+import abbreviateNumber from '../../utils/abbreviateNumber'
+import { fetcher } from '../../utils/fetcher'
+import { getApiUrl } from '../../utils/api'
 
-export default function Video({ error, urlPath, video: v }) {
-  console.log('here')
+// import useSWR from 'swr'
+// import ShareModal from '../../components/ShareModal'
+// import VideoPageUserCard from '../../../components/VideoPageUserCard'
 
-  const { data } = useSWR(urlPath && !error, fetcher, { fallbackData: v })
+export default function Video({ fetchUrl, error, video }): JSX.Element {
+  // const { data: video } = useSWR(fetchUrl ? fetchUrl : null, fetcher, {
+  //   fallbackData: v,
+  // })
 
   useEffect(() => {
     if (!error) {
-      axios.post(`/api/videos/${v._id}/views`).catch(err => {
+      axios.post(`/api/videos/${video._id}/views`).catch(err => {
         console.error('error counting video view', err)
       })
     }
   }, [])
 
-  if (data?.status === 'completed') {
-    const subHeader = `${abbreviateNumber(data.views)} views ·
-      ${moment(data.createdAt).fromNow()} · 
-      ${data.visibility}
+  if (video?.status === 'completed') {
+    const subHeader = `${abbreviateNumber(video.views)} views ·
+      ${moment(video.createdAt).fromNow()} ·
+      ${video.visibility}
     `
 
-    const videoUrl = `https://bken.io/v/${data.id}`
-    const embedUrl = `https://bken.io/embed/${data.id}`
+    const videoUrl = `https://bken.io/v/${video.id}`
+    const embedUrl = `https://bken.io/embed/${video.id}`
 
     return (
       <Box>
         <Head>
-          <title>{data.title}</title>
+          <title>{video.title}</title>
           <meta property='og:site_name' content='bken.io' />
           <meta property='og:url' content={videoUrl} />
-          <meta property='og:title' content={data.title} />
-          <meta property='og:image' content={data.thumbnail} />
+          <meta property='og:title' content={video.title} />
+          <meta property='og:image' content={video.thumbnailUrl} />
           <meta property='og:type' content='video.other' />
           <meta property='og:image:width' content='1280' />
           <meta property='og:image:height' content='720' />
@@ -52,32 +54,32 @@ export default function Video({ error, urlPath, video: v }) {
           <meta property='og:video:width' content='1280' />
           <meta property='og:video:height' content='720' />
           <meta property='og:video:tag' content='username' />
-          <meta property='og:video:tag' content={data.title} />
-          <meta name='og:title' content={data.title} />
-          <meta name='description' content={`Watch ${data.title} on bken.io`} />
+          <meta property='og:video:tag' content={video.title} />
+          <meta name='og:title' content={video.title} />
+          <meta name='description' content={`Watch ${video.title} on bken.io`} />
           <meta name='twitter:card' content='player' />
           <meta name='twitter:url' content={videoUrl} />
-          <meta name='twitter:title' content={data.title} />
+          <meta name='twitter:title' content={video.title} />
           <meta name='twitter:description' content='' />
           <meta name='twitter:site' content='@rustyguts' />
-          <meta name='twitter:image' content={data.thumbnail} />
+          <meta name='twitter:image' content={video.thumbnailUrl} />
           <meta name='twitter:player' content={embedUrl} />
           <meta name='twitter:player:width' content='1280' />
           <meta name='twitter:player:height' content='720' />
         </Head>
         <Layout>
           <Box>
-            <VideoPlayer theaterMode url={data.mpdLink} thumbnail={data.thumbnail} />
+            <VideoPlayer theaterMode url={video.mpdUrl} thumbnail={video.thumbnailUrl} />
             <Flex w='100%' justifyContent='center'>
               <Box p='4' w='1024px'>
                 <Heading as='h3' size='lg'>
-                  {data.title}
+                  {video.title}
                 </Heading>
                 <Flex justifyContent='space-between'>
                   <Text fontSize='sm'>{subHeader}</Text>
-                  <ShareModal link={`https://bken.io/v/${data.id}`} />
+                  {/* <ShareModal link={`https://bken.io/v/${video.id}`} /> */}
                 </Flex>
-                <VideoPageUserCard id={data.userId} />
+                {/* <VideoPageUserCard id={video.userId} /> */}
               </Box>
             </Flex>
           </Box>
@@ -100,32 +102,31 @@ export default function Video({ error, urlPath, video: v }) {
     <Layout>
       <Flex justify='center' flexDirection='column' align='center' pt='25px'>
         <Heading pb='25px'>This video is not quite ready</Heading>
-        {data.percentCompleted !== '100' && <CircularProgress value={data.percentCompleted} />}
-        <div>Status: {data.status}</div>
+        {/* {video.percentCompleted !== '100' && <CircularProgress value={video.percentCompleted} />} */}
+        <div>Status: {video.status}</div>
       </Flex>
     </Layout>
   )
 }
 
-export async function getServerSideProps({ params }) {
-  const urlPath = `/api/videos/${params.id}`
+export async function getServerSideProps(context) {
+  const { videoId } = context.params
+  const fetchUrl = `${getApiUrl()}/videos/${videoId}`
   try {
-    const video = await fetcher(`http://localhost:3000${urlPath}`)
+    const { data: video } = await fetcher(fetchUrl, context)
     return {
       props: {
         video,
-        urlPath,
-        id: params.id,
+        fetchUrl,
       },
     }
   } catch (error) {
     console.error(error)
     return {
       props: {
-        error: true,
+        fetchUrl,
         video: {},
-        urlPath,
-        id: params.id,
+        error: false,
       },
     }
   }
