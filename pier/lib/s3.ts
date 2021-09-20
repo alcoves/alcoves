@@ -30,10 +30,9 @@ export async function listObjects(params: AWS.S3.ListObjectsV2Request, items: AW
 
 export async function deleteFolder(params: AWS.S3.ListObjectsV2Request): Promise<Boolean> {
   const req: AWS.S3.ListObjectsV2Output = await s3.listObjectsV2(params).promise()
-
   await s3.deleteObjects({
     Bucket: 'cdn.bken.io',
-    Delete: { Objects: req?.Contents as AWS.S3.ObjectIdentifierList },
+    Delete: { Objects: req?.Contents?.map(({ Key }) => ({ Key })) as AWS.S3.ObjectIdentifierList },
   }).promise()
 
   if (req.NextContinuationToken) {
@@ -42,6 +41,5 @@ export async function deleteFolder(params: AWS.S3.ListObjectsV2Request): Promise
   }
   return true
 }
-
 
 export default s3
