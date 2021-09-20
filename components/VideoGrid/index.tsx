@@ -14,7 +14,7 @@ export default function VideoGrid(props: VideoGridProps): JSX.Element {
   return (
     <SimpleGrid minChildWidth={[200, 350]} spacing='10px'>
       {videos?.data?.map(v => (
-        <VideoCard key={v._id} v={v} podId={podId} />
+        <VideoCard key={v._id} podId={podId} v={v} />
       ))}
     </SimpleGrid>
   )

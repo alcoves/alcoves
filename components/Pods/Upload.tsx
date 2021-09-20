@@ -23,14 +23,19 @@ export function Upload(props: UploadProps): JSX.Element {
       console.log('Begin Video Upload', file)
       // Create video returns a url to begin the upload
       const { data } = await fetchMutate({
-        method: 'post',
-        data: { title: upload?.name },
-        url: `${getApiUrl()}/pods/${podId}/videos`,
+        method: 'get',
+        url: `${getApiUrl()}/pods/${podId}/videos/upload`,
       })
 
       // Upload file
-      await axios.put(data, upload)
-      console.log('file upload completed')
+      console.log('Signed URL fetched', data)
+      await axios.put(data.url, upload) // Uploads to s3
+      console.log('Upload to S3 complete')
+      await fetchMutate({
+        method: 'post',
+        url: `${getApiUrl()}/pods/${podId}/videos/${data._id}`,
+      }) // Enqueues jobs
+      console.log('Jobs successfully enqueued')
     } catch (error) {
       console.error(error)
     } finally {

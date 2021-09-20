@@ -3,11 +3,7 @@ import Footer from './Footer'
 import { Box } from '@chakra-ui/layout'
 
 function Content({ children }) {
-  return (
-    <Box minH='calc(100vh - 96px)' p='4'>
-      {children}
-    </Box>
-  )
+  return <Box minH='calc(100vh - 96px)'>{children}</Box>
 }
 
 const Layout = ({ children }) => (
