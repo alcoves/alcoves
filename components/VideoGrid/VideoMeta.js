@@ -1,14 +1,29 @@
-import { Flex, Text, Avatar, Heading, HStack } from '@chakra-ui/react'
+import { Flex, Text, Avatar, Heading, HStack, IconButton } from '@chakra-ui/react'
 import moment from 'moment'
 import abbreviateNumber from '../../utils/abbreviateNumber'
 import Link from 'next/link'
+import { IoTrash } from 'react-icons/io5'
+import { fetchMutate } from '../../utils/fetcher'
+import { getApiUrl } from '../../utils/api'
 
 export default function VideoMeta({ v }) {
   const createdAt = moment(v.createdAt).fromNow()
   const metadata = `${abbreviateNumber(v.views)} views - ${createdAt}`
 
+  async function handleDelete() {
+    try {
+      await fetchMutate({
+        method: 'delete',
+        url: `${getApiUrl()}/pods/${v.pod}/videos/${v._id}`,
+      })
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   return (
     <HStack spacing='12px' py='2' align='start' minH='75px'>
+      <IconButton onClick={handleDelete} size='sm' icon={<IoTrash />} />
       {v?.user && (
         <Flex>
           <Link passHref href={`/u/${v.owner._id}`}>
