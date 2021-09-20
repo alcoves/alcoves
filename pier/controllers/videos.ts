@@ -1,10 +1,11 @@
-import s3, { deleteFolder } from '../lib/s3'
+import s3, { deleteFolder, getSignedURL } from '../lib/s3'
 import mongoose from 'mongoose'
-import { Video } from '../lib/models'
+import { Job, Video } from '../lib/models'
 import { Request, Response } from 'express'
+import { getMetadata } from '../lib/video/getMetadata'
+import { getTranscodingJobs, getThumbnailJobs, getPackagingJobs } from '../lib/video/getJobs'
 interface CreateVideoInput {
   title: string
-  duration: number
 }
 
 export async function listVideos(req: Request, res: Response) {
@@ -17,7 +18,6 @@ export async function listVideos(req: Request, res: Response) {
 export async function getVideo(req: Request, res: Response) {
   const video = await Video.findOne({
     _id:  new mongoose.Types.ObjectId(req.params.videoId),
-    pod: new mongoose.Types.ObjectId(req.params.podId),
   })
   if (video) return res.json({ data: video })
   return res.sendStatus(404)
@@ -25,23 +25,47 @@ export async function getVideo(req: Request, res: Response) {
 
 export async function createVideo(req: Request, res: Response) {
   const createVideoInput: CreateVideoInput = req.body
+  const sourceURI = `cdn.bken.io/v/${req.params.videoId}/original`
+  const signedUrl = await getSignedURL(sourceURI)
+  const metadata = await getMetadata(signedUrl)
 
-  const video = await new Video({
-    _id: new mongoose.Types.ObjectId(),
-    status: 'uploading',
-    title: createVideoInput.title,
-    duration: createVideoInput.duration,
-    views: 0,
+  const thumbnailJobs = getThumbnailJobs(metadata, req.params.videoId, signedUrl)
+  const transcodeJobs = getTranscodingJobs(metadata, req.params.videoId, signedUrl)
+  const packagingJobs = getPackagingJobs(req.params.videoId)
+
+  await Job.insertMany([
+    ...thumbnailJobs,
+    ...transcodeJobs,
+    ...packagingJobs
+  ])
+
+  const video = await Video.findOneAndUpdate({
+    _id: new mongoose.Types.ObjectId(req.params.videoId),
+  }, {
+    _id: new mongoose.Types.ObjectId(req.params.videoId),
+    status: 'uploaded',
+    title: createVideoInput?.title || "New Upload",
+    duration: metadata.format.duration,
+    source: sourceURI,
+    hlsUrl: `https://cdn.bken.io/v/${req.params.videoId}/pkg/master.m3u8`,
+    mpdUrl: `https://cdn.bken.io/v/${req.params.videoId}/pkg/stream.mpd`,
+    thumbnailUrl: `https://cdn.bken.io/v/${req.params.videoId}/thumb.jpg`,
     pod: req.params.podId,
     owner: req.userId,
-  }).save()
+  }, {
+    new: true,
+    upsert: true
+  })
+  return res.json(video)
+}
 
+export async function createUploadUrl(req: Request, res: Response) {
+  const videoId = new mongoose.Types.ObjectId()
   const signedUploadUrl = await s3.getSignedUrlPromise('putObject', {
     Bucket: 'cdn.bken.io',
-    Key: `v/${video._id}/original`
+    Key: `v/${videoId}/original`
   })
-
-  return res.json({ data: signedUploadUrl })
+  return res.json({ data: { _id: videoId, url: signedUploadUrl } })
 }
 
 export async function deleteVideo(req: Request, res: Response) {

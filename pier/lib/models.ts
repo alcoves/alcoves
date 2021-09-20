@@ -19,7 +19,20 @@ export const Video = mongoose.model("Video", new mongoose.Schema({
   status: String,
   title: String,
   duration: String,
-  views: Number,
+  source: String,
+  thumbnailUrl: String,
+  hlsUrl: String,
+  mpdUrl: String,
+  views: { type: Number, default: 0 },
   pod: { type : mongoose.Types.ObjectId, ref: 'Pod' },
   owner: { type : mongoose.Types.ObjectId, ref: 'User' },
+}, { timestamps: true }))
+
+export const Job = mongoose.model("Job", new mongoose.Schema({
+  _id: mongoose.Types.ObjectId,
+  status: String,
+  type: String,
+  name: String,
+  ffmpegCommand: { type: String, required: false },
+  video: { type : mongoose.Types.ObjectId, ref: 'Video' },
 }, { timestamps: true }))

@@ -8,10 +8,11 @@ import {
   deleteById,
 } from '../controllers/pods'
 import {
+  getVideo,
   listVideos,
   createVideo,
-  getVideo,
-  deleteVideo
+  deleteVideo,
+  createUploadUrl
 } from '../controllers/videos'
 
 const router = express.Router()
@@ -23,10 +24,9 @@ router.patch('/:podId', auth, patchById)
 router.delete('/:podId', auth, deleteById)
 
 router.get('/:podId/videos', auth, listVideos)
-router.post('/:podId/videos', auth, createVideo)
+router.get('/:podId/videos/upload', auth, createUploadUrl)
 
-router.get('/:podId/videos/:videoId', auth, getVideo)
-// router.patch('/:podId/videos/:videoId', auth, getVideo)
+router.post('/:podId/videos/:videoId', auth, createVideo)
 router.delete('/:podId/videos/:videoId', auth, deleteVideo)
 
 export default router

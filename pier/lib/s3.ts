@@ -42,4 +42,13 @@ export async function deleteFolder(params: AWS.S3.ListObjectsV2Request): Promise
   return true
 }
 
+export async function getSignedURL(uri: string) {
+  const [Bucket, ...rest] = uri.split('/')
+  return s3.getSignedUrlPromise('getObject', {
+    Bucket,
+    Key: rest.join('/'),
+    Expires: 86400 * 7, // 7 days
+  })
+}
+
 export default s3
