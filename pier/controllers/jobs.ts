@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Job } from "../lib/models";
+import { Job, Video } from "../lib/models";
 
 export async function get(req: Request, res: Response) {
   // Highest priority jobs first
@@ -7,8 +7,10 @@ export async function get(req: Request, res: Response) {
   if (packagingJob) {
     const incompleteTranscodeFilter = {
       type: "transcode",
-      video: packagingJob._id,
-      status: { $ne: 'running' }, // TODO :: Replace with status ne 'completed'
+      // eslint-disable-next-line
+      // @ts-ignore
+      video: packagingJob.video,
+      status: { $ne: 'completed' },
     }
 
     const incompleteTranscodeJob = await Job.findOne(incompleteTranscodeFilter)
@@ -24,6 +26,19 @@ export async function get(req: Request, res: Response) {
   if (job) {
     await Job.updateOne({ _id: job._id }, { status: 'running' })
     return res.json(job)
+  }
+  return res.sendStatus(200)
+}
+
+export async function patch(req: Request, res: Response) {
+  const job = await Job.findOneAndUpdate({ _id: req.params.jobId }, { ...req.body })
+  // eslint-disable-next-line
+  // @ts-ignore
+  if (req.body.status === "completed" && job.type === 'package') {
+    console.log("Package job is done, updating video status")
+    // eslint-disable-next-line
+    // @ts-ignore
+    await Video.findOneAndUpdate({ _id: job.video }, { status: 'completed' })
   }
   return res.sendStatus(200)
 }

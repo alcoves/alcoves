@@ -11,7 +11,7 @@ interface CreateVideoInput {
 export async function listVideos(req: Request, res: Response) {
   const videos = await Video.find({
     pod: new mongoose.Types.ObjectId(req.params.podId),
-  }).populate("owner")
+  }).populate("owner").sort('-createdAt')
   return res.json({ data: videos  })
 }
 
