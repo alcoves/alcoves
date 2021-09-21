@@ -8,12 +8,12 @@ import { Chakra } from '../styles/chakra'
 import { UploadContext } from '../context/UploadContext'
 import UploadReducer from '../reducers/UploadReducer'
 
-function App({ Component, pageProps }) {
+function App({ Component, pageProps }): JSX.Element {
   const router = useRouter()
   const [uploads, dispatch] = useReducer(UploadReducer, [])
 
   useEffect(() => {
-    const handleRouteChange = url => {
+    const handleRouteChange = (url: string) => {
       gtag.pageview(url)
     }
     router.events.on('routeChangeComplete', handleRouteChange)
