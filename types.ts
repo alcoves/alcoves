@@ -8,4 +8,5 @@ export interface Video {
   views: number
   duration: number
   owner: User
+  thumbnailUrl: string
 }
