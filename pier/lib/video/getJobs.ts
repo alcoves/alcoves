@@ -30,7 +30,7 @@ export function getTranscodingJobs(m: Metadata, videoId: string, url: string) {
     type: 'transcode',
     status: 'queued',
     name: "transcode_360",
-    ffmpegCommand: getX264Args(m, 480, url),
+    ffmpegCommand: getX264Args(m, 480, 360, url),
   }]
 
   if (clampPreset(w, h, 1280, 720)) {
@@ -40,7 +40,7 @@ export function getTranscodingJobs(m: Metadata, videoId: string, url: string) {
       type: 'transcode',
       status: 'queued',
       name: "transcode_720",
-      ffmpegCommand: getX264Args(m, 1280, url),
+      ffmpegCommand: getX264Args(m, 1280, 720, url),
     })
   
   }
@@ -52,7 +52,7 @@ export function getTranscodingJobs(m: Metadata, videoId: string, url: string) {
       type: 'transcode',
       status: 'queued',
       name: "transcode_1080",
-      ffmpegCommand: getX264Args(m, 1920, url),
+      ffmpegCommand: getX264Args(m, 1920, 1080, url),
     })
   }
 
@@ -63,7 +63,7 @@ export function getTranscodingJobs(m: Metadata, videoId: string, url: string) {
       type: 'transcode',
       status: 'queued',
       name: "transcode_1440",
-      ffmpegCommand: getX264Args(m, 2560, url),
+      ffmpegCommand: getX264Args(m, 2560, 1440, url),
     })
   }
 
@@ -74,7 +74,7 @@ export function getTranscodingJobs(m: Metadata, videoId: string, url: string) {
       type: 'transcode',
       status: 'queued',
       name: "transcode_2160",
-      ffmpegCommand: getX264Args(m, 3840, url),
+      ffmpegCommand: getX264Args(m, 3840, 2160, url),
     })
   }
 

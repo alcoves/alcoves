@@ -10,13 +10,14 @@ function calcResizeFilter (w: number): string {
   return `scale=${w}:${w}:force_original_aspect_ratio=decrease,scale=trunc(iw/2)*2:trunc(ih/2)*2`
 }
 
-export function getX264Args (m: Metadata, width: number, url: string): string {
+export function getX264Args (m: Metadata, width: number, height: number, url: string): string {
   let videoFilter = calcResizeFilter(width)
   if (m.video.r_frame_rate) {
     console.info("Applying framerate to video filter")
     videoFilter += `,fps=fps=${m.video.r_frame_rate}`
   }
 
+  // https://superuser.com/questions/908280/what-is-the-correct-way-to-fix-keyframes-in-ffmpeg-for-dash
   const commands = [
     "-y",
     "-i", url,
@@ -27,7 +28,9 @@ export function getX264Args (m: Metadata, width: number, url: string): string {
     "-bf", "2",
     "-coder", "1",
     "-profile", "high",
-    `./${width}p.mp4`
+    "-x264opts", "keyint=48:min-keyint=48:no-scenecut",
+    "-pix_fmt", "yuv420p",
+    `./${height}p.mp4`
   ]
 
   if (m?.format?.bit_rate) {

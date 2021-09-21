@@ -5,5 +5,6 @@ import { get } from '../controllers/jobs'
 const router = express.Router()
 
 router.get('/', get)
+// router.patch('/:jobId', patch)
 
 export default router
