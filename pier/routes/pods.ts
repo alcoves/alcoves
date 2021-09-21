@@ -8,10 +8,8 @@ import {
   deleteById,
 } from '../controllers/pods'
 import {
-  getVideo,
   listVideos,
   createVideo,
-  deleteVideo,
   createUploadUrl
 } from '../controllers/videos'
 
@@ -27,6 +25,5 @@ router.get('/:podId/videos', auth, listVideos)
 router.get('/:podId/videos/upload', auth, createUploadUrl)
 
 router.post('/:podId/videos/:videoId', auth, createVideo)
-router.delete('/:podId/videos/:videoId', auth, deleteVideo)
 
 export default router
