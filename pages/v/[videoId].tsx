@@ -8,6 +8,7 @@ import VideoPlayer from '../../components/VideoPlayer/Index'
 import abbreviateNumber from '../../utils/abbreviateNumber'
 import { fetcher } from '../../utils/fetcher'
 import { getApiUrl } from '../../utils/api'
+import { GetSessionParams } from 'next-auth/react'
 
 // import useSWR from 'swr'
 // import ShareModal from '../../components/ShareModal'
@@ -26,67 +27,13 @@ export default function Video({ fetchUrl, error, video }): JSX.Element {
     }
   }, [])
 
-  if (video?.status === 'completed') {
-    const subHeader = `${abbreviateNumber(video.views)} views ·
+  const subHeader = `${abbreviateNumber(video.views)} views ·
       ${moment(video.createdAt).fromNow()} ·
       ${video.visibility}
     `
 
-    const videoUrl = `https://bken.io/v/${video.id}`
-    const embedUrl = `https://bken.io/embed/${video.id}`
-
-    return (
-      <Box>
-        <Head>
-          <title>{video.title}</title>
-          <meta property='og:site_name' content='bken.io' />
-          <meta property='og:url' content={videoUrl} />
-          <meta property='og:title' content={video.title} />
-          <meta property='og:image' content={video.thumbnailUrl} />
-          <meta property='og:type' content='video.other' />
-          <meta property='og:image:width' content='1280' />
-          <meta property='og:image:height' content='720' />
-          <meta property='og:image:type' content='image/webp' />
-          <meta property='og:description' content='' />
-          <meta property='og:video:url' content={embedUrl} />
-          <meta property='og:video:secure_url' content={embedUrl} />
-          <meta property='og:video:type' content='text/html' />
-          <meta property='og:video:width' content='1280' />
-          <meta property='og:video:height' content='720' />
-          <meta property='og:video:tag' content='username' />
-          <meta property='og:video:tag' content={video.title} />
-          <meta name='og:title' content={video.title} />
-          <meta name='description' content={`Watch ${video.title} on bken.io`} />
-          <meta name='twitter:card' content='player' />
-          <meta name='twitter:url' content={videoUrl} />
-          <meta name='twitter:title' content={video.title} />
-          <meta name='twitter:description' content='' />
-          <meta name='twitter:site' content='@rustyguts' />
-          <meta name='twitter:image' content={video.thumbnailUrl} />
-          <meta name='twitter:player' content={embedUrl} />
-          <meta name='twitter:player:width' content='1280' />
-          <meta name='twitter:player:height' content='720' />
-        </Head>
-        <Layout>
-          <Box>
-            <VideoPlayer theaterMode url={video.mpdUrl} thumbnail={video.thumbnailUrl} />
-            <Flex w='100%' justifyContent='center'>
-              <Box p='4' w='1024px'>
-                <Heading as='h3' size='lg'>
-                  {video.title}
-                </Heading>
-                <Flex justifyContent='space-between'>
-                  <Text fontSize='sm'>{subHeader}</Text>
-                  {/* <ShareModal link={`https://bken.io/v/${video.id}`} /> */}
-                </Flex>
-                {/* <VideoPageUserCard id={video.userId} /> */}
-              </Box>
-            </Flex>
-          </Box>
-        </Layout>
-      </Box>
-    )
-  }
+  const videoUrl = `https://bken.io/v/${video.id}`
+  const embedUrl = `https://bken.io/embed/${video.id}`
 
   if (error) {
     return (
@@ -99,21 +46,75 @@ export default function Video({ fetchUrl, error, video }): JSX.Element {
   }
 
   return (
-    <Layout>
-      <Flex justify='center' flexDirection='column' align='center' pt='25px'>
-        <Heading pb='25px'>This video is not quite ready</Heading>
-        {/* {video.percentCompleted !== '100' && <CircularProgress value={video.percentCompleted} />} */}
-        <div>Status: {video.status}</div>
-      </Flex>
-    </Layout>
+    <Box>
+      <Head>
+        <title>{video.title}</title>
+        <meta property='og:site_name' content='bken.io' />
+        <meta property='og:url' content={videoUrl} />
+        <meta property='og:title' content={video.title} />
+        <meta property='og:image' content={video.thumbnailUrl} />
+        <meta property='og:type' content='video.other' />
+        <meta property='og:image:width' content='1280' />
+        <meta property='og:image:height' content='720' />
+        <meta property='og:image:type' content='image/webp' />
+        <meta property='og:description' content='' />
+        <meta property='og:video:url' content={embedUrl} />
+        <meta property='og:video:secure_url' content={embedUrl} />
+        <meta property='og:video:type' content='text/html' />
+        <meta property='og:video:width' content='1280' />
+        <meta property='og:video:height' content='720' />
+        <meta property='og:video:tag' content='username' />
+        <meta property='og:video:tag' content={video.title} />
+        <meta name='og:title' content={video.title} />
+        <meta name='description' content={`Watch ${video.title} on bken.io`} />
+        <meta name='twitter:card' content='player' />
+        <meta name='twitter:url' content={videoUrl} />
+        <meta name='twitter:title' content={video.title} />
+        <meta name='twitter:description' content='' />
+        <meta name='twitter:site' content='@rustyguts' />
+        <meta name='twitter:image' content={video.thumbnailUrl} />
+        <meta name='twitter:player' content={embedUrl} />
+        <meta name='twitter:player:width' content='1280' />
+        <meta name='twitter:player:height' content='720' />
+      </Head>
+      <Layout>
+        <Box>
+          <VideoPlayer theaterMode url={video.mpdUrl} thumbnail={video.thumbnailUrl} />
+          <Flex w='100%' justifyContent='center'>
+            <Box p='4' w='1024px'>
+              <Heading as='h3' size='lg'>
+                {video.title}
+              </Heading>
+              <Flex justifyContent='space-between'>
+                <Text fontSize='sm'>{subHeader}</Text>
+                {/* <ShareModal link={`https://bken.io/v/${video.id}`} /> */}
+              </Flex>
+              {/* <VideoPageUserCard id={video.userId} /> */}
+            </Box>
+          </Flex>
+        </Box>
+      </Layout>
+    </Box>
   )
+
+  // return (
+  //   <Layout>
+  //     <Flex justify='center' flexDirection='column' align='center' pt='25px'>
+  //       <Heading pb='25px'>This video is not quite ready</Heading>
+  //       {/* {video.percentCompleted !== '100' && <CircularProgress value={video.percentCompleted} />} */}
+  //       <div>Status: {video.status}</div>
+  //     </Flex>
+  //   </Layout>
+  // )
 }
 
-export async function getServerSideProps(context) {
-  const { videoId } = context.params
+export async function getServerSideProps(context: unknown): Promise<unknown> {
+  // eslint-disable-next-line
+  // @ts-ignore
+  const { videoId } = context?.params
   const fetchUrl = `${getApiUrl()}/videos/${videoId}`
   try {
-    const { data: video } = await fetcher(fetchUrl, context)
+    const { data: video } = await fetcher(fetchUrl, context as GetSessionParams)
     return {
       props: {
         video,

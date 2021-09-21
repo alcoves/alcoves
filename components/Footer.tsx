@@ -8,7 +8,7 @@ const links = {
   statusPage: 'https://bken.statuspage.io',
 }
 
-export default function Footer() {
+export default function Footer(): JSX.Element {
   const { colorMode } = useColorMode()
 
   const colors = {

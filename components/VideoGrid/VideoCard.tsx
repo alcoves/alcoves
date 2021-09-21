@@ -1,9 +1,11 @@
 import { Box, Text, Skeleton } from '@chakra-ui/react'
 import Link from 'next/link'
+import { Video } from '../../types'
 import videoDuration from '../../utils/videoDuration'
-import VideoMeta from './VideoMeta'
+// import VideoMeta from './VideoMeta'
 
-export default function VideoCard({ v }) {
+export default function VideoCard(props: { v: Video }): JSX.Element {
+  const { v } = props
   return (
     <Skeleton isLoaded={Boolean(v._id)} maxW='400px'>
       <Link passHref href={`/v/${v._id}`}>
@@ -37,7 +39,7 @@ export default function VideoCard({ v }) {
           </Text>
         </Box>
       </Link>
-      <VideoMeta v={v} />
+      {/* <VideoMeta v={v} /> */}
     </Skeleton>
   )
 }
