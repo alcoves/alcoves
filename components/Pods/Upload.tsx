@@ -1,22 +1,21 @@
 import axios from 'axios'
-import { ChangeEvent, useEffect, useState } from 'react'
+import { Box, Progress } from '@chakra-ui/react'
+import { useDropzone } from 'react-dropzone'
 import { getApiUrl } from '../../utils/api'
 import { fetchMutate } from '../../utils/fetcher'
+import { useCallback, useEffect, useState } from 'react'
+import { useSWRConfig } from 'swr'
 
-interface UploadProps {
-  podId: string
-}
-
-export function Upload(props: UploadProps): JSX.Element {
+export function Upload(props: { podId: string }): JSX.Element {
+  const { mutate } = useSWRConfig()
   const { podId } = props
+  const [progress, setProgress] = useState(0)
   const [upload, setUpload] = useState<File | null>(null)
-
-  function handleChange(e: ChangeEvent<HTMLInputElement>) {
-    console.log('handle change', e.target.files)
-    // eslint-disable-next-line
-    // @ts-ignore
-    setUpload(e?.target?.files[0])
-  }
+  const onDrop = useCallback(acceptedFiles => {
+    console.log(acceptedFiles)
+    setUpload(acceptedFiles[0])
+  }, [])
+  const { getRootProps, getInputProps } = useDropzone({ onDrop })
 
   async function uploadFile(file: File) {
     try {
@@ -29,7 +28,11 @@ export function Upload(props: UploadProps): JSX.Element {
 
       // Upload file
       console.log('Signed URL fetched', data)
-      await axios.put(data.url, upload) // Uploads to s3
+      await axios.put(data.url, upload, {
+        onUploadProgress: e => {
+          setProgress((e.loaded / e.total) * 100)
+        },
+      }) // Uploads to s3
       console.log('Upload to S3 complete')
       await fetchMutate({
         method: 'post',
@@ -39,6 +42,8 @@ export function Upload(props: UploadProps): JSX.Element {
     } catch (error) {
       console.error(error)
     } finally {
+      mutate(`${getApiUrl()}/pods`)
+      setProgress(0)
       setUpload(null)
     }
   }
@@ -49,13 +54,11 @@ export function Upload(props: UploadProps): JSX.Element {
 
   return (
     <>
-      <input
-        type='file'
-        multiple={false}
-        accept='video/mp4'
-        onChange={handleChange}
-        disabled={Boolean(upload)}
-      />
+      <Box {...getRootProps()}>
+        <input {...getInputProps()} />
+        {'Upload Here'}
+      </Box>
+      {progress ? <Progress value={progress} w='200px' colorScheme='green' size='xs' /> : null}
     </>
   )
 }
