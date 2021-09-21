@@ -1,10 +1,10 @@
 import express from 'express'
-import { get } from '../controllers/jobs'
-// import { tidalAuth } from '../middlewares/auth'
+import { get, patch } from '../controllers/jobs'
+import { tidalAuth } from '../middlewares/auth'
 
 const router = express.Router()
 
 router.get('/', get)
-// router.patch('/:jobId', patch)
+router.patch('/:jobId', tidalAuth, patch)
 
 export default router
