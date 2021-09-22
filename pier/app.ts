@@ -6,9 +6,9 @@ import morgan from 'morgan'
 import express from 'express'
 import root from './routes/root'
 import pods from './routes/pods'
-import jobs from './routes/jobs'
 import videos from './routes/videos'
 import mongoose, { ConnectOptions } from 'mongoose';
+import { favicon } from "./middlewares/favicon"
 
 if (!process.env.MONGODB_URI) throw new Error("MONGODB_URI must be defined!")
 mongoose.connect(process.env.MONGODB_URI as string, {
@@ -22,10 +22,10 @@ const app = express();
 app.use(cors())
 app.use(express.json())
 app.use(morgan('tiny'))
+app.use(favicon)
 
 app.use('/', root)
 app.use('/pods', pods)
-app.use('/jobs', jobs)
 app.use('/videos', videos)
 
 export default app

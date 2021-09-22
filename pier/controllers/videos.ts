@@ -1,9 +1,10 @@
-import s3, { deleteFolder, getSignedURL } from '../lib/s3'
 import mongoose from 'mongoose'
-import { Job, Video } from '../lib/models'
+import createThumbnail from '../lib/createThumbnail'
+import { Video } from '../lib/models'
 import { Request, Response } from 'express'
-import { getMetadata } from '../lib/video/getMetadata'
-import { getTranscodingJobs, getThumbnailJobs, getPackagingJobs } from '../lib/video/getJobs'
+import s3, { deleteFolder, getSignedURL } from '../lib/s3'
+import { getMetadata } from '../lib/getMetadata'
+
 interface CreateVideoInput {
   title: string
 }
@@ -25,31 +26,21 @@ export async function getVideo(req: Request, res: Response) {
 
 export async function createVideo(req: Request, res: Response) {
   const createVideoInput: CreateVideoInput = req.body
-  const sourceURI = `cdn.bken.io/v/${req.params.videoId}/original`
-  const signedUrl = await getSignedURL(sourceURI)
+  const signedUrl = await getSignedURL({
+    Bucket: 'cdn.bken.io',
+    Key: `v/${req.params.videoId}/original`
+  })
+  await createThumbnail(signedUrl,
+    { Bucket: 'cdn.bken.io', Key: `v/${req.params.videoId}/thumbnail.jpg` })
   const metadata = await getMetadata(signedUrl)
-
-  const thumbnailJobs = getThumbnailJobs(metadata, req.params.videoId, signedUrl)
-  const transcodeJobs = getTranscodingJobs(metadata, req.params.videoId, signedUrl)
-  const packagingJobs = getPackagingJobs(req.params.videoId)
-
-  await Job.insertMany([
-    ...thumbnailJobs,
-    ...transcodeJobs,
-    ...packagingJobs
-  ])
 
   const video = await Video.findOneAndUpdate({
     _id: new mongoose.Types.ObjectId(req.params.videoId),
   }, {
     _id: new mongoose.Types.ObjectId(req.params.videoId),
-    status: 'uploaded',
+    status: 'completed',
     title: createVideoInput?.title || "New Upload",
     duration: metadata.format.duration,
-    source: sourceURI,
-    hlsUrl: `https://cdn.bken.io/v/${req.params.videoId}/pkg/master.m3u8`,
-    mpdUrl: `https://cdn.bken.io/v/${req.params.videoId}/pkg/stream.mpd`,
-    thumbnailUrl: `https://cdn.bken.io/v/${req.params.videoId}/thumb.jpg`,
     pod: req.params.podId,
     owner: req.userId,
   }, {
@@ -76,7 +67,7 @@ export async function deleteVideo(req: Request, res: Response) {
 
   // Double check that video._id is not null
   // If null, entire s3 prefix could be wiped
-  if (video && video._id) {
+  if (video && video._id.toString() === req.params.videoId) {
     await deleteFolder({
       Bucket: 'cdn.bken.io',
       Prefix: `v/${video._id}`,
