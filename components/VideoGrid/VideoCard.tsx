@@ -7,7 +7,7 @@ import { useRouter } from 'next/router'
 export default function VideoCard(props: { v: Video }): JSX.Element {
   const router = useRouter()
   const { v } = props
-  const thumbnailUrl = `https://cdn.bken.io/v/${v._id}/thumbnail.jpg`
+  const thumbnailUrl = `https://cdn.bken.io/v/${v.tidal}/thumbnail.jpg`
 
   return (
     <Skeleton isLoaded={Boolean(v._id)} maxW='400px'>
@@ -37,9 +37,9 @@ export default function VideoCard(props: { v: Video }): JSX.Element {
               borderRadius='md'
               px='1'
             >
-              <Text color='gray.100' fontSize='xs' fontWeight='bold'>
+              {/* <Text color='gray.100' fontSize='xs' fontWeight='bold'>
                 {videoDuration(v.duration)}
-              </Text>
+              </Text> */}
             </Flex>
           </Flex>
         </Flex>

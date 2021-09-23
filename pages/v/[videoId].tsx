@@ -13,8 +13,8 @@ import { GetSessionParams } from 'next-auth/react'
 export default function Video({ error, video }): JSX.Element {
   const videoUrl = `https://bken.io/v/${video.id}`
   const embedUrl = `https://bken.io/embed/${video.id}`
-  const hlsUrl = `${getTidalUrl()}/assets/${video.tidalAssetId}.m3u8`
-  const thumbnailUrl = `https://cdn.bken.io/v/${video._id}/thumbnail.jpg`
+  const hlsUrl = `${getTidalUrl()}/assets/${video.tidal}.m3u8`
+  const thumbnailUrl = `https://cdn.bken.io/v/${video.tidal}/thumbnail.jpg`
 
   useEffect(() => {
     if (!error) {
