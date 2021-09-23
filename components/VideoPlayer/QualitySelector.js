@@ -1,10 +1,13 @@
 import { Menu, MenuItem, MenuButton, MenuList, Text, IconButton } from '@chakra-ui/react'
 import { IoSettingsOutline } from 'react-icons/io5'
 
-function QualitySelector({ player }) {
-  const tracks = player?.getVariantTracks()
-  // const selectedTrack = tracks.find((track) => track.active);
-  const abrEnabled = player.getConfiguration().abr.enabled
+function QualitySelector({ hls }) {
+  const levels = hls?.levels
+  const abrEnabled = hls?.autoLevelEnabled
+
+  if (!levels) {
+    return null
+  }
 
   return (
     <Menu placement='top'>
@@ -15,19 +18,22 @@ function QualitySelector({ player }) {
         icon={<IoSettingsOutline size='20px' />}
       />
       <MenuList>
-        {tracks.map(track => {
-          const menuText = `${track.height}p${track.frameRate}fps`
+        {levels.map(level => {
+          const menuText = `${level.height}p`
           return (
             <MenuItem
-              key={track.id}
-              value={track.id}
+              key={level.id}
+              value={level.id}
               onClick={() => {
-                console.log('setting track', track.height)
-                const config = { abr: { enabled: false } }
-                player.configure(config)
-                player.selectVariantTrack(track, true)
-              }}>
-              <Text fontSize='.85rem' fontWeight={track.active ? 800 : 400}>
+                // Set level to specific level
+                // Disable automatic switching
+                // console.log('setting level', level.height)
+                // const config = { abr: { enabled: false } }
+                // player.configure(config)
+                // player.selectVariantTrack(level, true)
+              }}
+            >
+              <Text fontSize='.85rem' fontWeight={level.active ? 800 : 400}>
                 {menuText}
               </Text>
             </MenuItem>
@@ -37,9 +43,11 @@ function QualitySelector({ player }) {
           key='auto'
           value='Auto'
           onClick={() => {
-            const config = { abr: { enabled: true } }
-            player.configure(config)
-          }}>
+            // Enable autoamtic switching
+            // const config = { abr: { enabled: true } }
+            // player.configure(config)
+          }}
+        >
           <Text fontSize='.85rem' fontWeight={abrEnabled ? 800 : 400}>
             Auto
           </Text>

@@ -24,6 +24,7 @@
     "dayjs": "^1.10.7",
     "detect-browser": "^5.2.0",
     "framer-motion": "4.1.17",
+    "hls.js": "^1.0.10",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
     "mime-types": "^2.1.32",

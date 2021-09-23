@@ -1,6 +1,6 @@
+import Hls from 'hls.js'
 import React, { useRef, useState, useEffect } from 'react'
 import qs from 'query-string'
-import shaka from 'shaka-player'
 import { Box, Flex, Spinner } from '@chakra-ui/react'
 import screenfull from 'screenfull'
 import Scrubber from './Scrubber'
@@ -18,8 +18,7 @@ let clickTimer
 function VideoPlayer({ theaterMode, thumbnail, url, id = 'bkenVideoPlayer' }) {
   const vRef = useRef(null)
   const cRef = useRef(null)
-  const [player, setPlayer] = useState(null)
-  // const [rotation, setRotation] = useState(0);
+  const [hls, setHls] = useState(null)
   const [controlsVisible, setControlsVisible] = useState(true)
 
   function baseStyles() {
@@ -38,31 +37,33 @@ function VideoPlayer({ theaterMode, thumbnail, url, id = 'bkenVideoPlayer' }) {
   }
 
   useEffect(() => {
-    const video = document.getElementById(id)
-    setPlayer(new shaka.Player(video))
-    // const orientationchange = window.addEventListener('orientationchange', (event) => {
-    //   setRotation(event.target.screen.orientation.angle);
-    //   console.log(`the orientation of the device is now ${event.target.screen.orientation.angle}`);
-    // });
-    // return () => {
-    //   window.removeEventListener('orientationchange', orientationchange);
-    // };
-  }, [])
+    let hls
+    if (vRef?.current) {
+      const video = vRef?.current
 
-  useEffect(() => {
-    if (player) {
-      const { t = 0 } = qs.parse(window.location.search)
-      // console.log(`Seeking to ${t}`);
-      player
-        .load(url, t)
-        .then(() => {
-          console.debug('video has been loaded')
+      if (!url.includes('.m3u8') || video.canPlayType('application/vnd.apple.mpegurl')) {
+        // Play original fallback or native m3u8 support
+        video.src = url
+      } else if (Hls.isSupported()) {
+        // This will run in all other modern browsers
+        hls = new Hls({
+          capLevelToPlayerSize: true,
         })
-        .catch(err => {
-          console.error(err)
-        })
+        hls.loadSource(url)
+        hls.attachMedia(video)
+        setHls(hls)
+        setControlsVisible(true)
+      } else {
+        console.error("This is a legacy browser that doesn't support MSE")
+      }
     }
-  }, [player])
+
+    return () => {
+      if (hls) {
+        hls.destroy()
+      }
+    }
+  }, [vRef, url])
 
   function togglePlay() {
     if (vRef && vRef.current) {
@@ -79,19 +80,28 @@ function VideoPlayer({ theaterMode, thumbnail, url, id = 'bkenVideoPlayer' }) {
     return () => window.removeEventListener('keydown', onKeydown)
   })
 
+  console.log(controlsVisible)
+
   function controlHover() {
     clearTimeout(idleTimer)
     if (!controlsVisible) setControlsVisible(true)
 
     idleTimer = setTimeout(() => {
       if (!vRef?.current?.paused) {
-        setControlsVisible(player?.isBuffering())
+        if (vRef?.current?.networkState === vRef?.current?.NETWORK_LOADING) {
+          // The user agent is actively trying to download data.
+          setControlsVisible(true)
+        }
+        if (vRef?.current?.readyState < vRef?.current?.HAVE_FUTURE_DATA) {
+          // There is not enough data to keep playing from this point
+          setControlsVisible(true)
+        }
       }
     }, 2000)
   }
 
   function renderCenter() {
-    if (vRef.current.currentTime < 1) {
+    if (vRef?.current?.currentTime < 1) {
       return (
         <PlayButton
           size='40px'
@@ -106,9 +116,9 @@ function VideoPlayer({ theaterMode, thumbnail, url, id = 'bkenVideoPlayer' }) {
         />
       )
     }
-    if (player?.isBuffering()) {
-      return <Spinner size='xl' color='#bf1e2e' />
-    }
+    // if (vRef.current.networkState === vRef?.current?.NETWORK_LOADING) {
+    //   return <Spinner size='xl' color='#bf1e2e' />
+    // }
     return <div />
   }
 
@@ -126,7 +136,8 @@ function VideoPlayer({ theaterMode, thumbnail, url, id = 'bkenVideoPlayer' }) {
       onMouseEnter={() => setControlsVisible(true)}
       onMouseLeave={() => {
         if (!vRef?.current.paused) {
-          setControlsVisible(player?.isBuffering())
+          // TODO :: keep controls visible if buffering
+          setControlsVisible(false)
         }
       }}
       pos='relative'
@@ -136,8 +147,10 @@ function VideoPlayer({ theaterMode, thumbnail, url, id = 'bkenVideoPlayer' }) {
     >
       <video
         id={id}
+        muted
         autoPlay
         ref={vRef}
+        playsInline
         poster={thumbnail}
         disableRemotePlayback
         style={{
@@ -147,7 +160,7 @@ function VideoPlayer({ theaterMode, thumbnail, url, id = 'bkenVideoPlayer' }) {
         }}
       />
 
-      {player && vRef?.current && (
+      {Boolean(vRef.current) ? (
         <Flex
           top='0'
           left='0'
@@ -191,10 +204,10 @@ function VideoPlayer({ theaterMode, thumbnail, url, id = 'bkenVideoPlayer' }) {
                 <PlayButton vRef={vRef} />
                 <VolumeButton vRef={vRef} />
                 <VolumeSlider vRef={vRef} />
-                <Duration player={player} vRef={vRef} />
+                <Duration vRef={vRef} />
               </Flex>
               <Flex alignItems='center'>
-                <QualitySelector player={player} />
+                <QualitySelector hls={hls} />
                 <Flex alignItems='center'>
                   <PictureInPictureButton vRef={vRef} />
                   <FullScreenButton toggle={toggleFullScreen} />
@@ -203,7 +216,7 @@ function VideoPlayer({ theaterMode, thumbnail, url, id = 'bkenVideoPlayer' }) {
             </Flex>
           </Flex>
         </Flex>
-      )}
+      ) : null}
     </Box>
   )
 }

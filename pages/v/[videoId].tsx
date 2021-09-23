@@ -7,17 +7,14 @@ import Layout from '../../components/Layout'
 import VideoPlayer from '../../components/VideoPlayer/Index'
 import abbreviateNumber from '../../utils/abbreviateNumber'
 import { fetcher } from '../../utils/fetcher'
-import { getApiUrl } from '../../utils/api'
+import { getApiUrl, getTidalUrl } from '../../utils/api'
 import { GetSessionParams } from 'next-auth/react'
 
-// import useSWR from 'swr'
-// import ShareModal from '../../components/ShareModal'
-// import VideoPageUserCard from '../../../components/VideoPageUserCard'
-
-export default function Video({ fetchUrl, error, video }): JSX.Element {
-  // const { data: video } = useSWR(fetchUrl ? fetchUrl : null, fetcher, {
-  //   fallbackData: v,
-  // })
+export default function Video({ error, video }): JSX.Element {
+  const videoUrl = `https://bken.io/v/${video.id}`
+  const embedUrl = `https://bken.io/embed/${video.id}`
+  const hlsUrl = `${getTidalUrl()}/assets/${video.tidalAssetId}.m3u8`
+  const thumbnailUrl = `https://cdn.bken.io/v/${video._id}/thumbnail.jpg`
 
   useEffect(() => {
     if (!error) {
@@ -32,9 +29,6 @@ export default function Video({ fetchUrl, error, video }): JSX.Element {
       ${video.visibility}
     `
 
-  const videoUrl = `https://bken.io/v/${video.id}`
-  const embedUrl = `https://bken.io/embed/${video.id}`
-
   if (error) {
     return (
       <Layout>
@@ -45,6 +39,17 @@ export default function Video({ fetchUrl, error, video }): JSX.Element {
     )
   }
 
+  // if (video.status !== 'completed') {
+  //   return (
+  //     <Layout>
+  //       <Flex justify='center' flexDirection='column' align='center' pt='25px'>
+  //         <Heading pb='25px'>This video is not quite ready</Heading>
+  //         <div>Status: {video.status}</div>
+  //       </Flex>
+  //     </Layout>
+  //   )
+  // }
+
   return (
     <Box>
       <Head>
@@ -52,7 +57,7 @@ export default function Video({ fetchUrl, error, video }): JSX.Element {
         <meta property='og:site_name' content='bken.io' />
         <meta property='og:url' content={videoUrl} />
         <meta property='og:title' content={video.title} />
-        <meta property='og:image' content={video.thumbnailUrl} />
+        <meta property='og:image' content={thumbnailUrl} />
         <meta property='og:type' content='video.other' />
         <meta property='og:image:width' content='1280' />
         <meta property='og:image:height' content='720' />
@@ -72,14 +77,14 @@ export default function Video({ fetchUrl, error, video }): JSX.Element {
         <meta name='twitter:title' content={video.title} />
         <meta name='twitter:description' content='' />
         <meta name='twitter:site' content='@rustyguts' />
-        <meta name='twitter:image' content={video.thumbnailUrl} />
+        <meta name='twitter:image' content={thumbnailUrl} />
         <meta name='twitter:player' content={embedUrl} />
         <meta name='twitter:player:width' content='1280' />
         <meta name='twitter:player:height' content='720' />
       </Head>
       <Layout>
         <Box>
-          <VideoPlayer theaterMode url={video.mpdUrl} thumbnail={video.thumbnailUrl} />
+          <VideoPlayer theaterMode url={hlsUrl} thumbnail={thumbnailUrl} />
           <Flex w='100%' justifyContent='center'>
             <Box p='4' w='1024px'>
               <Heading as='h3' size='lg'>
@@ -89,23 +94,12 @@ export default function Video({ fetchUrl, error, video }): JSX.Element {
                 <Text fontSize='sm'>{subHeader}</Text>
                 {/* <ShareModal link={`https://bken.io/v/${video.id}`} /> */}
               </Flex>
-              {/* <VideoPageUserCard id={video.userId} /> */}
             </Box>
           </Flex>
         </Box>
       </Layout>
     </Box>
   )
-
-  // return (
-  //   <Layout>
-  //     <Flex justify='center' flexDirection='column' align='center' pt='25px'>
-  //       <Heading pb='25px'>This video is not quite ready</Heading>
-  //       {/* {video.percentCompleted !== '100' && <CircularProgress value={video.percentCompleted} />} */}
-  //       <div>Status: {video.status}</div>
-  //     </Flex>
-  //   </Layout>
-  // )
 }
 
 export async function getServerSideProps(context: unknown): Promise<unknown> {

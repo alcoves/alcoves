@@ -36,6 +36,7 @@ export function Upload(props: { podId: string }): JSX.Element {
       console.log('Upload to S3 complete')
       await fetchMutate({
         method: 'post',
+        data: { title: file.name },
         url: `${getApiUrl()}/pods/${podId}/videos/${data._id}`,
       }) // Enqueues jobs
       console.log('Jobs successfully enqueued')

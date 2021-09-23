@@ -31,7 +31,6 @@ export default class MyDocument extends Document {
           <meta name='version' content='%REACT_APP_GIT_SHA%' />
         </Head>
         <body>
-          <script async src='//cdn.jsdelivr.net/npm/hls.js@latest' />
           <script async src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js' />
           <ColorModeScript initialColorMode={theme.config.initialColorMode} />
           <Main />

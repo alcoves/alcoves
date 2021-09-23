@@ -2,28 +2,10 @@ import { Text, Flex } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import videoDuration from '../../utils/videoDuration'
 
-function Duration({ vRef, player = {} }) {
+function Duration({ vRef }) {
   const [time, setTime] = useState('0:00 / 0:00')
 
   function formatDuration() {
-    if (player?.isLive()) {
-      return (
-        <Flex>
-          <Text isTruncated>{videoDuration(vRef.current.currentTime)}</Text>
-          <Text
-            cursor='pointer'
-            onClick={() => player.seek(player.duration())}
-            ml='2'
-            textTransform='uppercase'
-            color='red.500'
-            fontSize='.8rem'
-            fontWeight='800'>
-            Live
-          </Text>
-        </Flex>
-      )
-    }
-
     return `${videoDuration(vRef?.current?.currentTime)} / ${videoDuration(
       vRef?.current?.duration
     )}`
