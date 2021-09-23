@@ -1,5 +1,5 @@
-import mongoose from 'mongoose'
-import { Video } from '../lib/models'
+import { Types } from 'mongoose'
+import { Video } from '../models/models'
 import { createAsset, deleteAsset } from '../lib/tidal'
 import { Request, Response } from 'express'
 import s3, { getSignedURL } from '../lib/s3'
@@ -10,14 +10,14 @@ interface CreateVideoInput {
 
 export async function listVideos(req: Request, res: Response) {
   const videos = await Video.find({
-    pod: new mongoose.Types.ObjectId(req.params.podId),
+    owner: new Types.ObjectId(req.params.podId),
   }).populate("owner").sort('-createdAt')
   return res.json({ data: videos  })
 }
 
 export async function getVideo(req: Request, res: Response) {
   const video = await Video.findOne({
-    _id:  new mongoose.Types.ObjectId(req.params.videoId),
+    _id: new Types.ObjectId(req.params.videoId),
   })
   if (video) return res.json({ data: video })
   return res.sendStatus(404)
@@ -34,9 +34,9 @@ export async function createVideo(req: Request, res: Response) {
   console.log("Tidal Asset", asset)
 
   const video = await Video.findOneAndUpdate({
-    _id: new mongoose.Types.ObjectId(req.params.videoId),
+    _id: new Types.ObjectId(req.params.videoId),
   }, {
-    _id: new mongoose.Types.ObjectId(req.params.videoId),
+    _id: new Types.ObjectId(req.params.videoId),
     title: createVideoInput?.title || "New Upload",
     tidal: asset._id,
     pod: req.params.podId,
@@ -50,7 +50,7 @@ export async function createVideo(req: Request, res: Response) {
 }
 
 export async function createUploadUrl(req: Request, res: Response) {
-  const videoId = new mongoose.Types.ObjectId()
+  const videoId = new Types.ObjectId()
   const signedUploadUrl = await s3.getSignedUrlPromise('putObject', {
     Bucket: 'cdn.bken.io',
     Key: `source/${videoId}/original`
