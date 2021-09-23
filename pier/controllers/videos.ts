@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 import { Video } from '../lib/models'
 import { createAsset, deleteAsset } from '../lib/tidal'
 import { Request, Response } from 'express'
-import s3, { deleteFolder, getSignedURL } from '../lib/s3'
+import s3, { getSignedURL } from '../lib/s3'
 
 interface CreateVideoInput {
   title: string
@@ -38,7 +38,7 @@ export async function createVideo(req: Request, res: Response) {
   }, {
     _id: new mongoose.Types.ObjectId(req.params.videoId),
     title: createVideoInput?.title || "New Upload",
-    tidalAssetId: asset._id,
+    tidal: asset._id,
     pod: req.params.podId,
     owner: req.userId,
   }, {
@@ -64,15 +64,13 @@ export async function deleteVideo(req: Request, res: Response) {
     owner: req.userId
   })
 
-  // Double check that video._id is not null
-  // If null, entire s3 prefix could be wiped
-  // await deleteAsset()
-
   if (video && video._id.toString() === req.params.videoId) {
-    await deleteFolder({
+    // @ts-ignore
+    await deleteAsset(video.tidal)
+    await s3.deleteObject({
       Bucket: 'cdn.bken.io',
-      Prefix: `source/${video._id}`,
-    })
+      Key: `source/${video._id}`,
+    }).promise()
     await Video.findByIdAndDelete(video._id)
     return res.sendStatus(200)
   }

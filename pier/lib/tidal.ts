@@ -15,6 +15,6 @@ export async function createAsset(input: string) {
 }
 
 export async function deleteAsset(assetId: string) {
-  const { data } = await axios.delete(`${getTidalUrl()}/assets/${assetId}`)
-  return data
+  const deleteUrl = `${getTidalUrl()}/assets/${assetId.toString()}`
+  await axios.delete(deleteUrl).catch((e) => console.error(e))
 }

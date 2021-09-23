@@ -9,6 +9,7 @@ export interface Video {
   updated_at: string
   deleted_at?: string
   mpd_link: string
+  tidal: string
   user_id: string
   visibility: "unlisted" | "public"
   status: "queued" | "processing" | "completed"
