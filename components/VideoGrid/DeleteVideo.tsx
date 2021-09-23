@@ -13,12 +13,10 @@ import {
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import { IoTrash } from 'react-icons/io5'
-import { useSWRConfig } from 'swr'
 import { getApiUrl } from '../../utils/api'
 import { fetchMutate } from '../../utils/fetcher'
 
 export default function DeleteVideo(props: { id: string }): JSX.Element {
-  const { mutate } = useSWRConfig()
   const [loading, setLoading] = useState(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -32,9 +30,6 @@ export default function DeleteVideo(props: { id: string }): JSX.Element {
     } catch (error) {
       console.error(error)
     } finally {
-      mutate(`${getApiUrl()}/`, async stuff => {
-        console.log(stuff)
-      })
       onClose()
       setLoading(false)
     }
