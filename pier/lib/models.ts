@@ -16,10 +16,8 @@ export const User = mongoose.model("User", new mongoose.Schema({
 
 export const Video = mongoose.model("Video", new mongoose.Schema({
   _id: mongoose.Types.ObjectId,
-  status: String,
   title: String,
-  duration: String,
-  views: { type: Number, default: 0 },
+  tidalAssetId: mongoose.Types.ObjectId,
   pod: { type : mongoose.Types.ObjectId, ref: 'Pod' },
   owner: { type : mongoose.Types.ObjectId, ref: 'User' },
 }, { timestamps: true }))

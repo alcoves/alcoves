@@ -7,9 +7,8 @@ import express from 'express'
 import root from './routes/root'
 import pods from './routes/pods'
 import videos from './routes/videos'
-import manifests from './routes/manifests'
-import mongoose, { ConnectOptions } from 'mongoose';
 import { favicon } from "./middlewares/favicon"
+import mongoose, { ConnectOptions } from 'mongoose';
 
 if (!process.env.MONGODB_URI) throw new Error("MONGODB_URI must be defined!")
 mongoose.connect(process.env.MONGODB_URI as string, {
@@ -28,6 +27,5 @@ app.use(favicon)
 app.use('/', root)
 app.use('/pods', pods)
 app.use('/videos', videos)
-app.use('/manifests', manifests)
 
 export default app
