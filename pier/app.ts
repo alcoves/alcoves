@@ -7,6 +7,7 @@ import express from 'express'
 import root from './routes/root'
 import pods from './routes/pods'
 import videos from './routes/videos'
+import manifests from './routes/manifests'
 import mongoose, { ConnectOptions } from 'mongoose';
 import { favicon } from "./middlewares/favicon"
 
@@ -27,5 +28,6 @@ app.use(favicon)
 app.use('/', root)
 app.use('/pods', pods)
 app.use('/videos', videos)
+app.use('/manifests', manifests)
 
 export default app
