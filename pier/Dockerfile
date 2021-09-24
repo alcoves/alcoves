@@ -1,6 +1,4 @@
-FROM alpine:latest
-
-RUN apk add --no-cache nodejs yarn
+FROM node:16-alpine
 
 COPY . .
 
