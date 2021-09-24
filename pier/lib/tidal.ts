@@ -1,10 +1,10 @@
 import axios from 'axios'
 
 function getTidalUrl() {
-  if (process.env.NODE_ENV !== 'production') {
-    return `http://localhost:3200`
+  if (process.env.TIDAL_API_URL) {
+    return process.env.TIDAL_API_URL
   }
-  return `https://tidal.bken.io`
+  throw new Error('TIDAL_API_URL is undefined')
 }
 
 export async function createAsset(input: string) {
