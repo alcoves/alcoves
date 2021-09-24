@@ -6,8 +6,8 @@ export function getApiUrl(): string {
 }
 
 export function getTidalUrl(): string {
-  if (process.env.TIDAL_API_URL) {
-    return process.env.TIDAL_API_URL
+  if (process.env.NEXT_PUBLIC_TIDAL_API_URL) {
+    return process.env.NEXT_PUBLIC_TIDAL_API_URL
   }
-  throw new Error('TIDAL_API_URL is undefined')
+  throw new Error('NEXT_PUBLIC_TIDAL_API_URL is undefined')
 }
