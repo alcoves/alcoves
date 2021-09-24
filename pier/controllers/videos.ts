@@ -10,7 +10,7 @@ interface CreateVideoInput {
 
 export async function listVideos(req: Request, res: Response) {
   const videos = await Video.find({
-    owner: new Types.ObjectId(req.params.podId),
+    pod: new Types.ObjectId(req.params.podId),
   }).populate("owner").sort('-createdAt')
   return res.json({ data: videos  })
 }
@@ -38,9 +38,10 @@ export async function createVideo(req: Request, res: Response) {
   }, {
     _id: new Types.ObjectId(req.params.videoId),
     title: createVideoInput?.title || "New Upload",
+    status: 'uploading',
     tidal: asset._id,
-    pod: req.params.podId,
     owner: req.userId,
+    pod: req.params.podId,
   }, {
     new: true,
     upsert: true

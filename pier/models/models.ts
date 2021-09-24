@@ -1,3 +1,4 @@
+import {getAsset } from '../lib/tidal'
 import{ Schema, model, Types, PopulatedDoc  } from "mongoose"
 
 export interface PodInterface {
@@ -16,7 +17,10 @@ export interface UserInterface {
 
 export interface VideoInterface {
   _id: Types.ObjectId,
-  title: String,
+  title: string,
+  views: number,
+  status: string,
+  duration: string,
   tidal: Types.ObjectId,
   pod: PopulatedDoc<PodInterface & Document>,
   owner: PopulatedDoc<UserInterface & Document>,
@@ -39,10 +43,33 @@ const userSchema = new Schema<UserInterface>({
 const videoSchema = new Schema<VideoInterface>({
   _id: Schema.Types.ObjectId,
   title: String,
+  status: String,
   tidal: Schema.Types.ObjectId,
+  views: { type: Number, default: 0 },
+  duration: { type: String, default: '' },
   pod: { type : Schema.Types.ObjectId, ref: 'Pod' },
   owner: { type : Schema.Types.ObjectId, ref: 'User' },
 }, { timestamps: true })
+
+videoSchema.post('find', async function(result) {
+  for (const video of result) {
+    const timeOffset = 12 * 60 * 60 * 1000 // 12 hours
+    const isStale = new Date().getTime() > video.updatedAt.getTime() + timeOffset
+    if (video.status !== 'completed' || isStale) {
+      console.log("Hydrating video with fresh tidal waves", { status: video.status, isStale })
+      const tidalVideo = await getAsset(video.tidal)
+      video.views = tidalVideo.views
+      video.duration = tidalVideo.duration
+      const completedRenditions = tidalVideo.renditions.filter((r: { status: string }) => r.status === 'completed')
+      if (completedRenditions.length) {
+        video.status = 'completed'
+      } else {
+        video.status = 'processing'
+      }
+      await video.save()
+    }
+  }
+});
 
 export const Pod = model<PodInterface>("Pod", podSchema)
 export const User = model<UserInterface>("User", userSchema)
