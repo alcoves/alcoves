@@ -10,7 +10,7 @@
     "skipLibCheck": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "build",
+    "outDir": "dist",
     "noImplicitAny": true,
     "typeRoots": [
       "@types",
@@ -19,6 +19,6 @@
   },
   "exclude": [
     "node_modules",
-    "build"
+    "dist"
   ],
 }

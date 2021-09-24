@@ -1,4 +1,4 @@
-job "bken_api" {
+job "api" {
   priority    = 100
   datacenters = ["nyc3"]
   type        = "service"
@@ -19,7 +19,7 @@ job "bken_api" {
       port "bken_api_port" { to = 3100 }
     }
 
-    task "api_api" {
+    task "api" {
       driver = "docker"
 
       template {
