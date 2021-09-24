@@ -37,9 +37,9 @@ export default function VideoCard(props: { v: Video }): JSX.Element {
               borderRadius='md'
               px='1'
             >
-              {/* <Text color='gray.100' fontSize='xs' fontWeight='bold'>
+              <Text color='gray.100' fontSize='xs' fontWeight='bold'>
                 {videoDuration(v.duration)}
-              </Text> */}
+              </Text>
             </Flex>
           </Flex>
         </Flex>
