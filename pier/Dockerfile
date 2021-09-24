@@ -8,4 +8,4 @@ RUN yarn
 RUN yarn build
 
 EXPOSE 3100
-CMD "yarn start"
+CMD yarn start
