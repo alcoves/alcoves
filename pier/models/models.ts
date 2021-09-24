@@ -52,22 +52,27 @@ const videoSchema = new Schema<VideoInterface>({
 }, { timestamps: true })
 
 videoSchema.post('find', async function(result) {
-  for (const video of result) {
-    const timeOffset = 12 * 60 * 60 * 1000 // 12 hours
-    const isStale = new Date().getTime() > video.updatedAt.getTime() + timeOffset
-    if (video.status !== 'completed' || isStale) {
-      console.log("Hydrating video with fresh tidal waves", { status: video.status, isStale })
-      const tidalVideo = await getAsset(video.tidal)
-      video.views = tidalVideo.views
-      video.duration = tidalVideo.duration
-      const completedRenditions = tidalVideo.renditions.filter((r: { status: string }) => r.status === 'completed')
-      if (completedRenditions.length) {
-        video.status = 'completed'
-      } else {
-        video.status = 'processing'
+  try {
+    for (const video of result) {
+      const timeOffset = 12 * 60 * 60 * 1000 // 12 hours
+      const isStale = new Date().getTime() > video.updatedAt.getTime() + timeOffset
+      if (video.status !== 'completed' || isStale) {
+        console.log("Hydrating video with fresh tidal waves", { status: video.status, isStale })
+        const tidalVideo = await getAsset(video.tidal)
+        video.views = tidalVideo.views
+        video.duration = tidalVideo.duration
+        const completedRenditions = tidalVideo.renditions.filter((r: { status: string }) => r.status === 'completed')
+        if (completedRenditions.length) {
+          video.status = 'completed'
+        } else {
+          video.status = 'processing'
+        }
+        await video.save()
       }
-      await video.save()
     }
+  } catch(error) {
+    console.error("There was an error hydrating videos from tidal")
+    console.error(error)
   }
 });
 
