@@ -31,8 +31,6 @@ export async function createVideo(req: Request, res: Response) {
   })
 
   const asset = await createAsset(signedUrl)
-  console.log("Tidal Asset", asset)
-
   const video = await Video.findOneAndUpdate({
     _id: new Types.ObjectId(req.params.videoId),
   }, {
