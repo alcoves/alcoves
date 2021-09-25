@@ -34,7 +34,7 @@ DO_API_KEY="{{key "secrets/DO_API_KEY"}}"
       template {
         env         = true
         destination = "secrets/reef/.env"
-        data        = "{{ key \"secrets/reef/.env\" }}"
+        data        = "{{ key \"secrets/reef/.env.prod\" }}"
       }
 
       constraint {
