@@ -1,12 +1,17 @@
 // This approach is taken from https://github.com/vercel/next.js/tree/canary/examples/with-mongodb
+import fs from 'fs'
 import { MongoClient } from 'mongodb'
 
 const uri = process.env.MONGODB_URI
+if (process.env.MONGODB_TLS_CA) {
+  fs.writeFileSync('./db.crt', process.env.MONGODB_TLS_CA)
+}
+
 const options = {
   tls: true,
-  useUnifiedTopology: true,
+  tlsCAFile: './db.crt',
   useNewUrlParser: true,
-  tlsCAFile: './ca-certificate.crt',
+  useUnifiedTopology: true,
 }
 
 let client
