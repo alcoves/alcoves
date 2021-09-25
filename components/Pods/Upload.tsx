@@ -55,11 +55,22 @@ export function Upload(props: { podId: string }): JSX.Element {
 
   return (
     <>
-      <Box {...getRootProps()}>
-        <input {...getInputProps()} />
-        {'Upload Here'}
+      <Box
+        {...getRootProps()}
+        border='dashed'
+        borderWidth='2px'
+        borderStyle='dashed'
+        rounded='md'
+        cursor='pointer'
+        p='4px 10px 4px 10px'
+      >
+        <input {...getInputProps()} disabled={Boolean(progress)} />
+        {progress ? (
+          <Progress value={progress} w='200px' colorScheme='green' size='xs' />
+        ) : (
+          'Upload Here'
+        )}
       </Box>
-      {progress ? <Progress value={progress} w='200px' colorScheme='green' size='xs' /> : null}
     </>
   )
 }

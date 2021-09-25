@@ -15,6 +15,7 @@ interface Props {
   videos: Video[]
   podFetchUrl: string
   videoFetchUrl: string
+  videoRefreshInterval: number
 }
 
 export default function PodView(props: Props): JSX.Element {
@@ -23,6 +24,7 @@ export default function PodView(props: Props): JSX.Element {
   })
   const { data: videos } = useSWR(props.videoFetchUrl, fetcher, {
     fallbackData: props.videos,
+    refreshInterval: props.videoRefreshInterval,
   })
 
   if (!pod?.data) {
@@ -61,12 +63,20 @@ export async function getServerSideProps(context) {
   const pod = await fetcher(podFetchUrl, context as GetSessionParams)
   const videos = await fetcher(videoFetchUrl, context as GetSessionParams)
 
+  const videoRefreshInterval = videos?.data?.reduce((acc: number, cv: { status: string }) => {
+    if (cv.status !== 'completed') acc = 2000
+    return acc
+  }, null)
+
+  console.log(videoRefreshInterval)
+
   return {
     props: {
       pod,
       videos,
       podFetchUrl,
       videoFetchUrl,
+      // videoRefreshInterval,
     },
   }
 }
