@@ -17,16 +17,17 @@ WORKDIR /app
 ENV PORT 3000
 ENV NODE_ENV production
 
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S nextjs -u 1001
+# Disabled because this limits write access to the file system
+# We need to write to the FS for mongodb TLS certs
+# RUN addgroup -g 1001 -S nodejs
+# RUN adduser -S nextjs -u 1001
+# USER nextjs
 
 COPY --from=builder /app/next.config.js ./
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
-
-USER nextjs
 
 EXPOSE 3000
 ENV NEXT_TELEMETRY_DISABLED 1
