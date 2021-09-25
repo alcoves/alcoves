@@ -41,5 +41,3 @@ jobs:
             cd /root/reef && git fetch -p && git reset --hard ${GITHUB_SHA}
             sed -i "s+:latest+:${GITHUB_SHA}+g" ./dev.hcl
             nomad job run -token ${NOMAD_TOKEN} ./dev.hcl
-      - name: Cleanup Repository
-        run: ./scripts/doco_registry_cleanup.sh
