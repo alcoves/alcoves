@@ -61,7 +61,7 @@ videoSchema.post('find', async function(result) {
         const tidalVideo = await getAsset(video.tidal)
         video.views = tidalVideo.views
         video.duration = tidalVideo.duration
-        const completedRenditions = tidalVideo.renditions.filter((r: { status: string }) => r.status === 'completed')
+        const completedRenditions = tidalVideo?.renditions.filter((r: { status: string }) => r.status === 'completed')
         if (completedRenditions.length) {
           video.status = 'completed'
         } else {

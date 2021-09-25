@@ -28,4 +28,3 @@ export async function deleteAsset(assetId: string) {
   const deleteUrl = `${getTidalUrl()}/assets/${assetId.toString()}`
   await axios.delete(deleteUrl, tidalOptions).catch((e) => console.error(e))
 }
-
