@@ -8,11 +8,13 @@ import VideoPlayer from '../../components/VideoPlayer/Index'
 import abbreviateNumber from '../../utils/abbreviateNumber'
 import { fetcher } from '../../utils/fetcher'
 import { getApiUrl, getTidalUrl } from '../../utils/api'
-import { GetSessionParams } from 'next-auth/react'
+import { GetServerSidePropsContext } from 'next'
+import { Video } from '../../types'
 
-export default function Video({ error, video }): JSX.Element {
-  const videoUrl = `https://bken.io/v/${video.id}`
-  const embedUrl = `https://bken.io/embed/${video.id}`
+export default function VideoPage(props: { error: boolean; video: Video }): JSX.Element {
+  const { error, video } = props
+  const videoUrl = `https://bken.io/v/${video._id}`
+  const embedUrl = `https://bken.io/embed/${video._id}`
   const hlsUrl = `${getTidalUrl()}/assets/${video.tidal}.m3u8`
   const thumbnailUrl = `https://cdn.bken.io/v/${video.tidal}/thumbnail.jpg`
 
@@ -25,30 +27,28 @@ export default function Video({ error, video }): JSX.Element {
   }, [])
 
   const subHeader = `${abbreviateNumber(video.views)} views ·
-      ${moment(video.createdAt).fromNow()} ·
-      ${video.visibility}
-    `
+      ${moment(video.createdAt).fromNow()}`
 
   if (error) {
     return (
       <Layout>
         <Flex justify='center' flexDirection='column' align='center' pt='25px'>
-          <Heading pb='25px'>There was an error loading the video</Heading>
+          <Heading pb='25px'>There was anf error loading the video</Heading>
         </Flex>
       </Layout>
     )
   }
 
-  // if (video.status !== 'completed') {
-  //   return (
-  //     <Layout>
-  //       <Flex justify='center' flexDirection='column' align='center' pt='25px'>
-  //         <Heading pb='25px'>This video is not quite ready</Heading>
-  //         <div>Status: {video.status}</div>
-  //       </Flex>
-  //     </Layout>
-  //   )
-  // }
+  if (video.status !== 'completed') {
+    return (
+      <Layout>
+        <Flex justify='center' flexDirection='column' align='center' pt='25px'>
+          <Heading pb='25px'>This video is not quite ready</Heading>
+          <div>Status: {video.status}</div>
+        </Flex>
+      </Layout>
+    )
+  }
 
   return (
     <Box>
@@ -102,13 +102,13 @@ export default function Video({ error, video }): JSX.Element {
   )
 }
 
-export async function getServerSideProps(context: unknown): Promise<unknown> {
+export async function getServerSideProps(context: GetServerSidePropsContext): Promise<unknown> {
   // eslint-disable-next-line
   // @ts-ignore
   const { videoId } = context?.params
   const fetchUrl = `${getApiUrl()}/videos/${videoId}`
   try {
-    const { data: video } = await fetcher(fetchUrl, context as GetSessionParams)
+    const { data: video } = await fetcher(fetchUrl, context)
     return {
       props: {
         video,

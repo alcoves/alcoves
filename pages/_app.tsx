@@ -1,16 +1,18 @@
 import '../styles/index.css'
-import React, { useEffect, useReducer } from 'react'
+import React, { useEffect } from 'react'
 import Head from 'next/head'
+import { AppProps } from 'next/app'
 import { SessionProvider } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import * as gtag from '../utils/gtag'
 import { Chakra } from '../styles/chakra'
-import { UploadContext } from '../context/UploadContext'
-import UploadReducer from '../reducers/UploadReducer'
+// import { UploadContext } from '../context/UploadContext'
+// import UploadReducer from '../reducers/UploadReducer'
 
-function App({ Component, pageProps }): JSX.Element {
+function App(props: AppProps): JSX.Element {
+  const { Component, pageProps } = props
   const router = useRouter()
-  const [uploads, dispatch] = useReducer(UploadReducer, [])
+  // const [uploads, dispatch] = useReducer(UploadReducer, [])
 
   useEffect(() => {
     const handleRouteChange = (url: string) => {
@@ -30,13 +32,13 @@ function App({ Component, pageProps }): JSX.Element {
           content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'
         />
       </Head>
-      <UploadContext.Provider value={{ uploads, dispatch }}>
-        <SessionProvider session={pageProps.session}>
-          <Chakra cookies={pageProps.cookies}>
-            <Component {...pageProps} />
-          </Chakra>
-        </SessionProvider>
-      </UploadContext.Provider>
+      {/* <UploadContext.Provider value={{ uploads, dispatch }}> */}
+      <SessionProvider session={pageProps.session}>
+        <Chakra cookies={pageProps.cookies}>
+          <Component {...pageProps} />
+        </Chakra>
+      </SessionProvider>
+      {/* </UploadContext.Provider> */}
     </>
   )
 }
