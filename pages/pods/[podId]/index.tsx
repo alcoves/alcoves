@@ -7,8 +7,8 @@ import { Spinner, Flex, Heading, HStack, Avatar } from '@chakra-ui/react'
 import { DeletePod } from '../../../components/Pods/DeletePod'
 import VideoGrid from '../../../components/VideoGrid/index'
 import { Upload } from '../../../components/Pods/Upload'
-import { GetSessionParams } from 'next-auth/react'
 import { Pod, Video } from '../../../types'
+import { GetServerSidePropsContext } from 'next'
 
 interface Props {
   pod: Pod
@@ -54,14 +54,14 @@ export default function PodView(props: Props): JSX.Element {
   )
 }
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
   // eslint-disable-next-line
   // @ts-ignore
   const { podId } = context?.params
   const podFetchUrl = `${getApiUrl()}/pods/${podId}`
   const videoFetchUrl = `${podFetchUrl}/videos`
-  const pod = await fetcher(podFetchUrl, context as GetSessionParams)
-  const videos = await fetcher(videoFetchUrl, context as GetSessionParams)
+  const pod = await fetcher(podFetchUrl, context)
+  const videos = await fetcher(videoFetchUrl, context)
 
   const videoRefreshInterval = videos?.data?.reduce((acc: number, cv: { status: string }) => {
     if (cv.status !== 'completed') acc = 2000

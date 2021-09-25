@@ -22,6 +22,6 @@ export default function Login(props: { providers: Provider[] }): JSX.Element {
   )
 }
 
-export async function getServerSideProps(ctx) {
-  return { props: { providers: await getProviders(ctx) } }
+export async function getServerSideProps() {
+  return { props: { providers: await getProviders() } }
 }
