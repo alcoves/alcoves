@@ -35,7 +35,7 @@ export default async function auth(req, res) {
           expiresIn: '1hr',
         })
         session.id = user.id
-        console.log('Session', session)
+        // console.log('Session', session)
         return session
       },
       async redirect({ url }) {
