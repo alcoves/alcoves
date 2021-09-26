@@ -59,10 +59,11 @@ videoSchema.post('find', async function(result) {
       if (video.status !== 'completed' || isStale) {
         console.log("Hydrating video with fresh tidal waves", { status: video.status, isStale })
         const tidalVideo = await getAsset(video.tidal)
+        console.log("Tidal Asset to hydrate", tidalVideo)
         video.views = tidalVideo.views
         video.duration = tidalVideo.duration
         const completedRenditions = tidalVideo?.renditions.filter((r: { status: string }) => r.status === 'completed')
-        console.log('renditions', completedRenditions)
+        console.log('renditions',  tidalVideo.renditions, completedRenditions)
         if (completedRenditions.length) {
           video.status = 'completed'
         } else {

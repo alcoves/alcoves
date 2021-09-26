@@ -8,8 +8,7 @@ const tidalOptions: AxiosRequestConfig = {
 }
 
 function getTidalUrl() {
-  if (process.env.TIDAL_API_URL) return process.env.TIDAL_API_URL
-  throw new Error('TIDAL_API_URL is undefined')
+  return process.env.TIDAL_API_URL
 }
 
 export async function getAsset(id: Types.ObjectId) {
