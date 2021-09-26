@@ -16,7 +16,7 @@ import {
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import Image from 'next/image'
-import ListPods from './ListPods'
+import ListPods from './Pods/ListPods'
 
 export default function Navigation() {
   const { data: session } = useSession()

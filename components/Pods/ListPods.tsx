@@ -1,8 +1,8 @@
 import useSWR from 'swr'
 import Link from 'next/link'
-import { fetcher } from '../utils/fetcher'
+import { fetcher } from '../../utils/fetcher'
 import { Avatar, HStack } from '@chakra-ui/react'
-import { getApiUrl } from '../utils/api'
+import { getApiUrl } from '../../utils/api'
 import CreatePod from './CreatePod'
 
 const fetchUrl = `${getApiUrl()}/pods`
