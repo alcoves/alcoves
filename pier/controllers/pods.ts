@@ -1,5 +1,5 @@
 import  { Types } from 'mongoose'
-import { Pod } from '../models/models'
+import { Pod, Video } from '../models/models'
 import { Request, Response } from 'express'
 
 interface CreatePodInput {
@@ -53,7 +53,11 @@ export async function deleteById(req: Request, res: Response) {
     _id: new Types.ObjectId(req.params.podId),
     owner: new Types.ObjectId(req.userId)
   }
-  const deleted = await Pod.findOneAndRemove(filter)
-  if (deleted) return res.sendStatus(200)
+  const podVideo = await Video.findOne({ pod: new Types.ObjectId(req.params.podId) })
+  console.log("podVideo", podVideo)
+  if (!podVideo) {
+    const deleted = await Pod.findOneAndRemove(filter)
+    if (deleted) return res.sendStatus(200)
+  }
   return res.sendStatus(400)
 }
