@@ -12,10 +12,10 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import { IoAdd } from 'react-icons/io5'
-import { getApiUrl } from '../utils/api'
+import { getApiUrl } from '../../utils/api'
 import { useState } from 'react'
 import { useSWRConfig } from 'swr'
-import { fetchMutate } from '../utils/fetcher'
+import { fetchMutate } from '../../utils/fetcher'
 
 export default function CreatePod() {
   const { mutate } = useSWRConfig()
