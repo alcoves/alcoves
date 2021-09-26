@@ -8,6 +8,10 @@ interface CreateVideoInput {
   title: string
 }
 
+function getSourceVideoURI(id: string): string {
+  return `source/${id}/original`
+}
+
 export async function listVideos(req: Request, res: Response) {
   const videos = await Video.find({
     pod: new Types.ObjectId(req.params.podId),
@@ -25,21 +29,22 @@ export async function getVideo(req: Request, res: Response) {
 
 export async function createVideo(req: Request, res: Response) {
   const createVideoInput: CreateVideoInput = req.body
+  const { videoId, podId } = req.params
   const signedUrl = await getSignedURL({
     Bucket: 'cdn.bken.io',
-    Key: `source/${req.params.videoId}/original`
+    Key: getSourceVideoURI(videoId)
   })
 
   const asset = await createAsset(signedUrl)
   const video = await Video.findOneAndUpdate({
-    _id: new Types.ObjectId(req.params.videoId),
+    _id: new Types.ObjectId(videoId),
   }, {
-    _id: new Types.ObjectId(req.params.videoId),
+    _id: new Types.ObjectId(videoId),
     title: createVideoInput?.title || "New Upload",
     status: 'uploading',
     tidal: asset._id,
     owner: req.userId,
-    pod: req.params.podId,
+    pod: podId,
   }, {
     new: true,
     upsert: true
@@ -68,7 +73,7 @@ export async function deleteVideo(req: Request, res: Response) {
     await deleteAsset(video.tidal)
     await s3.deleteObject({
       Bucket: 'cdn.bken.io',
-      Key: `source/${video._id}`,
+      Key: getSourceVideoURI(video._id)
     }).promise()
     await Video.findByIdAndDelete(video._id)
     return res.sendStatus(200)
