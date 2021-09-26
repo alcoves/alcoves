@@ -62,6 +62,7 @@ videoSchema.post('find', async function(result) {
         video.views = tidalVideo.views
         video.duration = tidalVideo.duration
         const completedRenditions = tidalVideo?.renditions.filter((r: { status: string }) => r.status === 'completed')
+        console.log('renditions', completedRenditions)
         if (completedRenditions.length) {
           video.status = 'completed'
         } else {
