@@ -77,7 +77,7 @@ export default function PodView(props: Props): JSX.Element {
   )
 }
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
+export async function getServerSideProps(context: GetServerSidePropsContext): Promise<unknown> {
   // eslint-disable-next-line
   // @ts-ignore
   const { podId } = context?.params
@@ -91,15 +91,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return acc
   }, null)
 
-  console.log(videoRefreshInterval)
-
   return {
     props: {
       pod,
       videos,
       podFetchUrl,
       videoFetchUrl,
-      // videoRefreshInterval,
+      videoRefreshInterval,
     },
   }
 }
