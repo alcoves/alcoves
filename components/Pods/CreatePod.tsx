@@ -60,7 +60,7 @@ export default function CreatePod() {
             <Button colorScheme='gray' mr={3} onClick={onClose}>
               Close
             </Button>
-            <Button loading={loading} colorScheme='teal' onClick={createPod}>
+            <Button isLoading={loading} colorScheme='teal' onClick={createPod}>
               Create
             </Button>
           </ModalFooter>

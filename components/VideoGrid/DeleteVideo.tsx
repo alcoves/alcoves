@@ -51,7 +51,7 @@ export default function DeleteVideo(props: { id: string }): JSX.Element {
             <Button colorScheme='blue' variant='ghost' mr={3} onClick={onClose}>
               Close
             </Button>
-            <Button onClick={handleDelete} colorScheme='red' loading={loading} variant='solid'>
+            <Button onClick={handleDelete} colorScheme='red' isLoading={loading} variant='solid'>
               Delete
             </Button>
           </ModalFooter>

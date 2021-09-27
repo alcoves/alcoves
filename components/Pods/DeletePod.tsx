@@ -48,10 +48,10 @@ export function DeletePod(props: DeletePodProps): JSX.Element {
     <>
       <IconButton
         size='sm'
-        loading={loading}
         colorScheme='red'
         variant='outline'
         onClick={onOpen}
+        isLoading={loading}
         aria-label='delete-pod'
         icon={<IoTrash size='15px' />}
       />
@@ -69,7 +69,7 @@ export function DeletePod(props: DeletePodProps): JSX.Element {
             <Button colorScheme='blue' variant='ghost' mr={3} onClick={onClose}>
               Close
             </Button>
-            <Button onClick={handleDelete} colorScheme='red' loading={loading} variant='solid'>
+            <Button onClick={handleDelete} colorScheme='red' isLoading={loading} variant='solid'>
               Delete
             </Button>
           </ModalFooter>
