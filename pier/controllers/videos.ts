@@ -4,7 +4,15 @@ import { createAsset, deleteAsset } from '../lib/tidal'
 import { Request, Response } from 'express'
 import s3, { getSignedURL } from '../lib/s3'
 
+interface Multipart {
+  ETag: string
+  PartNumber: number
+}
+
 interface CreateVideoInput {
+  key: string
+  parts: Multipart[]
+  uploadId: string
   title: string
 }
 
@@ -28,8 +36,16 @@ export async function getVideo(req: Request, res: Response) {
 }
 
 export async function createVideo(req: Request, res: Response) {
-  const createVideoInput: CreateVideoInput = req.body
+  const { key, uploadId, parts, title = "New Upload" }: CreateVideoInput = req.body
   const { videoId, podId } = req.params
+
+  await s3.completeMultipartUpload({
+    Key: key,
+    UploadId: uploadId,
+    Bucket: 'cdn.bken.io',
+    MultipartUpload: { Parts: parts },
+  }).promise();
+
   const signedUrl = await getSignedURL({
     Bucket: 'cdn.bken.io',
     Key: getSourceVideoURI(videoId)
@@ -40,11 +56,11 @@ export async function createVideo(req: Request, res: Response) {
     _id: new Types.ObjectId(videoId),
   }, {
     _id: new Types.ObjectId(videoId),
-    title: createVideoInput?.title || "New Upload",
-    status: 'uploading',
+    title,
+    pod: podId,
     tidal: asset._id,
     owner: req.userId,
-    pod: podId,
+    status: 'processing',
   }, {
     new: true,
     upsert: true
@@ -55,11 +71,34 @@ export async function createVideo(req: Request, res: Response) {
 
 export async function createUploadUrl(req: Request, res: Response) {
   const videoId = new Types.ObjectId()
-  const signedUploadUrl = await s3.getSignedUrlPromise('putObject', {
+  const { chunks } = req.body
+
+  const { UploadId, Key } = await s3.createMultipartUpload({
     Bucket: 'cdn.bken.io',
-    Key: `source/${videoId}/original`
-  })
-  return res.json({ data: { _id: videoId, url: signedUploadUrl } })
+    // ContentType: type,
+    Key: `source/${videoId}/original`,
+  }).promise();
+
+  const urls = [];
+  for (let i = 1; i <= chunks; i++) {
+    urls.push(
+      s3.getSignedUrl('uploadPart', {
+        Key,
+        UploadId,
+        PartNumber: i,
+        Expires: 43200,
+        Bucket: 'cdn.bken.io',
+      })
+    );
+  }
+
+  return res.json({ data: {
+    urls,
+    key: Key,
+    _id: videoId,
+    uploadId: UploadId,
+  }
+})
 }
 
 export async function deleteVideo(req: Request, res: Response) {

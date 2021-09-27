@@ -22,7 +22,7 @@ router.patch('/:podId', auth, patchById)
 router.delete('/:podId', auth, deleteById)
 
 router.get('/:podId/videos', auth, listVideos)
-router.get('/:podId/videos/upload', auth, createUploadUrl)
+router.post('/:podId/videos/upload', auth, createUploadUrl)
 
 router.post('/:podId/videos/:videoId', auth, createVideo)
 
