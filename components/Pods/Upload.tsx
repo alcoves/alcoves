@@ -36,9 +36,11 @@ function RenderUpload(props: { file: File; podId: string }) {
       const results = await Promise.all(
         chunks.map((chunk, i) => {
           console.log(`uploading part ${i} to ${urls[i]}`)
+          let deltaUploaded = 0
           return axios.put(urls[i], chunk, {
             onUploadProgress: e => {
-              setBytesUploaded(p => p + e.loaded)
+              deltaUploaded = e.loaded - deltaUploaded
+              setBytesUploaded(p => p + deltaUploaded)
             },
           })
         })
