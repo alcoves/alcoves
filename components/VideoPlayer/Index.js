@@ -147,7 +147,6 @@ function VideoPlayer({ theaterMode, thumbnail, url, id = 'bkenVideoPlayer' }) {
     >
       <video
         id={id}
-        muted
         autoPlay
         ref={vRef}
         playsInline
