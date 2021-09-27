@@ -7,8 +7,9 @@ export default function Index(): JSX.Element {
     <Layout>
       <Flex direction='column' align='center' pt='10'>
         <Heading> Ahoy! </Heading>
-        <Text> bken.io is a video sharing website for groups (pods) of people (dolphins)</Text>
-        <Text> Create a pod and start sharing videos with friends! </Text>
+        <Text> bken.io is a collabrative video hosting site.</Text>
+        <Text> We are still in alpha and adding new features all the time.</Text>
+        <Text> Sign in and start sharing videos with friends! </Text>
       </Flex>
     </Layout>
   )
