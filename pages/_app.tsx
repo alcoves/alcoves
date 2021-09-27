@@ -6,13 +6,10 @@ import { SessionProvider } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import * as gtag from '../utils/gtag'
 import { Chakra } from '../styles/chakra'
-// import { UploadContext } from '../context/UploadContext'
-// import UploadReducer from '../reducers/UploadReducer'
 
 function App(props: AppProps): JSX.Element {
   const { Component, pageProps } = props
   const router = useRouter()
-  // const [uploads, dispatch] = useReducer(UploadReducer, [])
 
   useEffect(() => {
     const handleRouteChange = (url: string) => {
@@ -32,13 +29,11 @@ function App(props: AppProps): JSX.Element {
           content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'
         />
       </Head>
-      {/* <UploadContext.Provider value={{ uploads, dispatch }}> */}
       <SessionProvider session={pageProps.session}>
         <Chakra cookies={pageProps.cookies}>
           <Component {...pageProps} />
         </Chakra>
       </SessionProvider>
-      {/* </UploadContext.Provider> */}
     </>
   )
 }
