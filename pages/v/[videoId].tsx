@@ -1,8 +1,6 @@
 import Head from 'next/head'
 import moment from 'moment'
 import { Flex, Box, Text, Heading } from '@chakra-ui/react'
-import { useEffect } from 'react'
-import axios from 'axios'
 import Layout from '../../components/Layout'
 import VideoPlayer from '../../components/VideoPlayer/Index'
 import abbreviateNumber from '../../utils/abbreviateNumber'
@@ -17,14 +15,6 @@ export default function VideoPage(props: { error: boolean; video: Video }): JSX.
   const embedUrl = `https://bken.io/embed/${video._id}`
   const hlsUrl = `${getTidalUrl()}/assets/${video.tidal}.m3u8`
   const thumbnailUrl = `https://cdn.bken.io/v/${video.tidal}/thumbnail.jpg`
-
-  useEffect(() => {
-    if (!error) {
-      axios.post(`/api/videos/${video._id}/views`).catch(err => {
-        console.error('error counting video view', err)
-      })
-    }
-  }, [])
 
   const subHeader = `${abbreviateNumber(video.views)} views ·
       ${moment(video.createdAt).fromNow()}`
