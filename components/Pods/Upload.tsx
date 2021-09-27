@@ -21,6 +21,7 @@ function RenderUpload(props: { file: File; podId: string }) {
 
   async function startUpload() {
     try {
+      setBytesUploaded(0)
       setStatus('uploading')
       console.log('Begin Video Upload', file)
       const chunks = chunkFile(file)
@@ -36,11 +37,12 @@ function RenderUpload(props: { file: File; podId: string }) {
       const results = await Promise.all(
         chunks.map((chunk, i) => {
           console.log(`uploading part ${i} to ${urls[i]}`)
-          let deltaUploaded = 0
+          let lastBytesLoaded = 0
           return axios.put(urls[i], chunk, {
             onUploadProgress: e => {
-              deltaUploaded = e.loaded - deltaUploaded
+              const deltaUploaded = e.loaded - lastBytesLoaded
               setBytesUploaded(p => p + deltaUploaded)
+              lastBytesLoaded = e.loaded
             },
           })
         })
@@ -76,24 +78,23 @@ function RenderUpload(props: { file: File; podId: string }) {
     startUpload()
   }, [])
 
-  if (percentCompleted <= 100 && status !== 'completed') {
-    return (
-      <Box py='2' w='200px'>
-        <Text fontSize='xs' isTruncated>
-          {file.name}
-        </Text>
-        <Progress
-          hasStripe
-          size='xs'
-          value={percentCompleted}
-          isAnimated={status === 'uploading'}
-          colorScheme={status === 'error' ? 'red' : 'green'}
-        />
-      </Box>
-    )
-  }
-
-  return null
+  return (
+    <Box py='2' w='200px'>
+      <Text fontSize='xs' isTruncated>
+        {file.name}
+      </Text>
+      <Progress
+        hasStripe
+        size='xs'
+        value={percentCompleted}
+        isAnimated={status === 'uploading'}
+        colorScheme={status === 'error' ? 'red' : 'green'}
+      />
+      <Text fontSize='xs' isTruncated>
+        {percentCompleted.toFixed(2)}
+      </Text>
+    </Box>
+  )
 }
 
 export function Upload(props: { podId: string }): JSX.Element {
