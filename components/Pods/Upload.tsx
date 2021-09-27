@@ -15,15 +15,14 @@ interface MultipartResponse {
 function RenderUpload(props: { file: File; podId: string }) {
   const { mutate } = useSWRConfig()
   const { file, podId } = props
-  const [started, setStarted] = useState(false)
-  const [completed, setCompleted] = useState(false)
+  const [status, setStatus] = useState('starting')
   const [bytesUploaded, setBytesUploaded] = useState(0)
+  const percentCompleted = (bytesUploaded / file.size) * 100
 
   async function startUpload() {
     try {
-      setStarted(true)
+      setStatus('uploading')
       console.log('Begin Video Upload', file)
-
       const chunks = chunkFile(file)
 
       const {
@@ -51,6 +50,7 @@ function RenderUpload(props: { file: File; podId: string }) {
       })
 
       console.log('Multipart Upload Complete')
+      setStatus('finishing')
       await fetchMutate({
         method: 'post',
         data: {
@@ -61,22 +61,20 @@ function RenderUpload(props: { file: File; podId: string }) {
         },
         url: `${getApiUrl()}/pods/${podId}/videos/${_id}`,
       })
+      setStatus('completed')
     } catch (error) {
+      setStatus('error')
       console.error(error)
     } finally {
-      mutate(`getApiUrl()}/pods/${podId}/videos/`)
-      setBytesUploaded(0)
-      setCompleted(true)
+      mutate(`${getApiUrl()}/pods/${podId}/videos/`)
     }
   }
 
   useEffect(() => {
-    if (file && !started) {
-      startUpload()
-    }
-  }, [file, podId, started])
+    startUpload()
+  }, [])
 
-  if (bytesUploaded || completed || !started) {
+  if (percentCompleted <= 100 && status !== 'completed') {
     return (
       <Box py='2' w='200px'>
         <Text fontSize='xs' isTruncated>
@@ -85,9 +83,9 @@ function RenderUpload(props: { file: File; podId: string }) {
         <Progress
           hasStripe
           size='xs'
-          isAnimated
-          colorScheme='green'
-          value={(bytesUploaded / file.size) * 100}
+          value={percentCompleted}
+          isAnimated={status === 'uploading'}
+          colorScheme={status === 'error' ? 'red' : 'green'}
         />
       </Box>
     )
