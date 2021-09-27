@@ -31,7 +31,7 @@ export async function listVideos(req: Request, res: Response) {
 export async function getVideo(req: Request, res: Response) {
   const video = await Video.findOne({
     _id: new Types.ObjectId(req.params.videoId),
-  })
+  }).populate('owner')
   if (video) return res.json({ data: video })
   return res.sendStatus(404)
 }

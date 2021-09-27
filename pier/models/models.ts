@@ -1,3 +1,4 @@
+import moment from 'moment'
 import {getAsset } from '../lib/tidal'
 import{ Schema, model, Types, PopulatedDoc  } from "mongoose"
 
@@ -54,16 +55,17 @@ const videoSchema = new Schema<VideoInterface>({
 videoSchema.post('find', async function(result) {
   try {
     for (const video of result) {
-      const timeOffset = 12 * 60 * 60 * 1000 // 12 hours
-      const isStale = new Date().getTime() > video.updatedAt.getTime() + timeOffset
+      const updatedAt = moment(video.updatedAt).utc()
+      const currentTime = moment().utc()
+      const isStale = currentTime.diff(updatedAt, 'hours') > 12
+
       if (video.status !== 'completed' || isStale) {
-        console.log("Hydrating video with fresh tidal waves", { status: video.status, isStale })
+        // console.log("Hydrating video with fresh tidal waves", { _id: video._id, status: video.status, isStale })
         const tidalVideo = await getAsset(video.tidal)
-        console.log("Tidal Asset to hydrate", tidalVideo)
         video.views = tidalVideo.views
         video.duration = tidalVideo.duration
+        video.updatedAt = moment().utc() // Important to update this here because mongo will noop if data doesn't change
         const completedRenditions = tidalVideo?.renditions.filter((r: { status: string }) => r.status === 'completed')
-        console.log('renditions',  tidalVideo.renditions, completedRenditions)
         if (completedRenditions.length) {
           video.status = 'completed'
         } else {
