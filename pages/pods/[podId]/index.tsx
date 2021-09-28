@@ -1,4 +1,4 @@
-import useSWR from 'swr'
+import useSWR, { useSWRConfig } from 'swr'
 import Layout from '../../../components/Layout'
 
 import { getApiUrl } from '../../../utils/api'
@@ -7,29 +7,23 @@ import { Spinner, Flex, Input, Avatar, HStack } from '@chakra-ui/react'
 import { DeletePod } from '../../../components/Pods/DeletePod'
 import VideoGrid from '../../../components/VideoGrid/index'
 import { Upload } from '../../../components/Pods/Upload'
-import { Pod, Video } from '../../../types'
-import { GetServerSidePropsContext } from 'next'
 import { ChangeEvent } from 'react'
 import { useSession } from 'next-auth/react'
-
-interface Props {
-  pod: Pod
-  videos: Video[]
-  podFetchUrl: string
-  videoFetchUrl: string
-  videoRefreshInterval: number
-}
+import { useRouter } from 'next/router'
 
 let timer: NodeJS.Timeout
 
-export default function PodView(props: Props): JSX.Element {
+export default function PodView(): JSX.Element {
+  const { mutate } = useSWRConfig()
+  const router = useRouter()
+  const { podId } = router.query
   const { data: session } = useSession()
-  const { data: pod, mutate: mutatePod } = useSWR(props.podFetchUrl, fetcher, {
-    fallbackData: props.pod,
-  })
-  const { data: videos } = useSWR(props.videoFetchUrl, fetcher, {
-    fallbackData: props.videos,
-    refreshInterval: props.videoRefreshInterval,
+  const { data: pod, mutate: mutatePod } = useSWR(
+    podId ? `${getApiUrl()}/pods/${podId}` : null,
+    fetcher
+  )
+  const { data: videos } = useSWR(podId ? `${getApiUrl()}/pods/${podId}/videos` : null, fetcher, {
+    refreshInterval: 10000,
   })
 
   function handlePodNameChange(e: ChangeEvent<HTMLInputElement>) {
@@ -38,16 +32,19 @@ export default function PodView(props: Props): JSX.Element {
       await fetchMutate({
         method: 'patch',
         data: { name: e.target.value },
-        url: props.podFetchUrl,
+        url: `${getApiUrl()}/pods/${podId}`,
       })
       mutatePod()
+      mutate(`${getApiUrl()}/pods`)
     }, 750)
   }
 
-  if (!pod?.data) {
+  if (!pod?.data || !videos?.data) {
     return (
       <Layout>
-        <Spinner />
+        <Flex p='40px' justify='center'>
+          <Spinner />
+        </Flex>
       </Layout>
     )
   }
@@ -79,29 +76,4 @@ export default function PodView(props: Props): JSX.Element {
       </Flex>
     </Layout>
   )
-}
-
-export async function getServerSideProps(context: GetServerSidePropsContext): Promise<unknown> {
-  // eslint-disable-next-line
-  // @ts-ignore
-  const { podId } = context?.params
-  const podFetchUrl = `${getApiUrl()}/pods/${podId}`
-  const videoFetchUrl = `${podFetchUrl}/videos`
-  const pod = await fetcher(podFetchUrl, context)
-  const videos = await fetcher(videoFetchUrl, context)
-
-  const videoRefreshInterval = videos?.data?.reduce((acc: number, cv: { status: string }) => {
-    if (cv.status !== 'completed') acc = 2000
-    return acc
-  }, 0)
-
-  return {
-    props: {
-      pod,
-      videos,
-      podFetchUrl,
-      videoFetchUrl,
-      videoRefreshInterval,
-    },
-  }
 }
