@@ -4,8 +4,8 @@ import { useSWRConfig } from 'swr'
 import { getApiUrl } from '../../utils/api'
 import { useDropzone } from 'react-dropzone'
 import { fetchMutate } from '../../utils/fetcher'
-import { Text, Box, Progress } from '@chakra-ui/react'
 import { useCallback, useEffect, useState } from 'react'
+import { Text, Box, Progress, useColorModeValue } from '@chakra-ui/react'
 
 interface MultipartResponse {
   ETag: string
@@ -112,11 +112,13 @@ export function Upload(props: { podId: string }): JSX.Element {
       <Box
         {...getRootProps()}
         border='dashed'
-        borderWidth='2px'
+        borderWidth='1px'
         borderStyle='dashed'
         rounded='md'
         cursor='pointer'
-        p='4px 10px 4px 10px'
+        color={useColorModeValue('gray.600, gray.200')}
+        p='20px'
+        w='100%'
       >
         <input {...getInputProps()} multiple />
         {'Upload Here'}

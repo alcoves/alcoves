@@ -40,8 +40,7 @@ export default function DeleteVideo(props: { id: string; podId: string }): JSX.E
 
   return (
     <>
-      <IconButton aria-label='delete-video' onClick={onOpen} size='sm' icon={<IoTrash />} />
-
+      <IconButton size='sm' onClick={onOpen} aria-label='delete-video' icon={<IoTrash />} />
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>

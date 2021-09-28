@@ -49,13 +49,12 @@ export function DeletePod(props: DeletePodProps): JSX.Element {
       <IconButton
         size='sm'
         colorScheme='red'
-        variant='outline'
+        variant='solid'
         onClick={onOpen}
         isLoading={loading}
         aria-label='delete-pod'
         icon={<IoTrash size='15px' />}
       />
-
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
