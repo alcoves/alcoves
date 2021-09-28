@@ -46,8 +46,6 @@ export default function MoveVideo(props: { id: string; podId: string }): JSX.Ele
     }
   }
 
-  console.log(pods?.data)
-
   return (
     <>
       <IconButton aria-label='delete-video' onClick={onOpen} size='sm' icon={<IoSend />} />
