@@ -3,20 +3,18 @@ import { signOut, useSession } from 'next-auth/react'
 import {
   Flex,
   Spacer,
-  Text,
-  Switch,
   Box,
   Avatar,
   Menu,
   MenuButton,
   MenuList,
   MenuItem,
-  MenuDivider,
   useColorMode,
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import Image from 'next/image'
 import ListPods from './Pods/ListPods'
+import { IoMoon, IoSunny } from 'react-icons/io5'
 
 export default function Navigation() {
   const { data: session } = useSession()
@@ -43,6 +41,9 @@ export default function Navigation() {
       <Spacer />
       <Box p='1'>
         <Flex justify='center' align='center' h='100%'>
+          <Flex cursor='pointer' onClick={toggleColorMode} justify='center' mx='4'>
+            {colorMode === 'dark' ? <IoMoon /> : <IoSunny />}
+          </Flex>
           {session && session.user ? (
             <Menu>
               <MenuButton me='10px'>
@@ -55,11 +56,6 @@ export default function Navigation() {
                 />
               </MenuButton>
               <MenuList minW='auto'>
-                <MenuItem onClick={toggleColorMode} closeOnSelect={false}>
-                  <Text>Dark Theme</Text>
-                  <Switch ml='2' size='sm' isChecked={colorMode === 'dark'} />
-                </MenuItem>
-                <MenuDivider />
                 <MenuItem onClick={signOut}>Log out</MenuItem>
               </MenuList>
             </Menu>
