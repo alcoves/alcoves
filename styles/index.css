@@ -117,3 +117,22 @@ a:active {
 video {
   outline: none;
 }
+
+/* Video.js */
+
+/* Change all text and icon colors in the player. */
+.vjs-bken.video-js {
+  color: #bf1e2e;
+}
+
+/* Change the border of the big play button. */
+.vjs-bken .vjs-big-play-button {
+  border-color: #bf1e2e;
+}
+
+/* Change the color of various "bars". */
+.vjs-bken .vjs-volume-level,
+.vjs-bken .vjs-play-progress,
+.vjs-bken .vjs-slider-bar {
+  background: #bf1e2e;
+}

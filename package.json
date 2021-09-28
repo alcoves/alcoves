@@ -19,6 +19,7 @@
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
     "@next-auth/mongodb-adapter": "^0.0.2-next.276",
+    "@videojs/themes": "^1.0.1",
     "aws-sdk": "^2.989.0",
     "axios": "^0.21.4",
     "dayjs": "^1.10.7",
@@ -41,11 +42,13 @@
     "react-icons": "^4.2.0",
     "screenfull": "^5.1.0",
     "shaka-player": "^3.2.0",
-    "swr": "1.0.1"
+    "swr": "1.0.1",
+    "video.js": "^7.15.4"
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",
     "@types/react": "^17.0.21",
+    "@types/video.js": "^7.3.27",
     "@typescript-eslint/eslint-plugin": "^4.31.1",
     "babel-eslint": "^10.1.0",
     "eslint": "^7.32.0",
