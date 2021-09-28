@@ -10,13 +10,13 @@ import {
   Text,
   Fade,
   Avatar,
-  Box,
   HStack,
   VStack,
   Spinner,
   InputGroup,
   InputRightElement,
   Button,
+  useColorModeValue,
 } from '@chakra-ui/react'
 import { ChangeEvent, useState } from 'react'
 import { fetchMutate } from '../../utils/fetcher'
@@ -72,13 +72,14 @@ export default function VideoMeta(props: { v: Video }): JSX.Element {
           </InputRightElement>
         </InputGroup>
       ) : (
-        <Box w='100%' passHref rounded='md' fontSize='sm' p='5px 15px 5px 15px'>
+        <Text w='100%' isTruncated passHref rounded='md' fontSize='sm' p='5px 15px 5px 15px'>
           {v.title}
-        </Box>
+        </Text>
       )}
       <Flex w='100%' justify='space-between' align='center'>
         <Text
-          maxW='100px'
+          maxW='200px'
+          color={useColorModeValue('gray.800', 'gray.300')}
           fontSize='xs'
           isTruncated
           onClick={() => {
@@ -97,7 +98,12 @@ export default function VideoMeta(props: { v: Video }): JSX.Element {
           Copy Link
         </Button>
       </Flex>
-      <HStack spacing='12px' justify='space-between' w='100%'>
+      <HStack
+        w='100%'
+        spacing='12px'
+        justify='space-between'
+        color={useColorModeValue('gray.700', 'gray.300')}
+      >
         <Flex>
           <Link passHref href={`/u/${v.owner._id}`}>
             <Avatar

@@ -26,6 +26,8 @@ export default function PodView(): JSX.Element {
     refreshInterval: 10000,
   })
 
+  const isOwner = pod?.data?.owner === session?.id
+
   function handlePodNameChange(e: ChangeEvent<HTMLInputElement>) {
     clearTimeout(timer)
     timer = setTimeout(async () => {
@@ -52,24 +54,23 @@ export default function PodView(): JSX.Element {
   return (
     <Layout>
       <Flex direction='column' p='4'>
-        <Flex direction='column'>
-          <Flex direction='column' align='center' pb='4'>
+        <Flex w='100%' justify='center'>
+          <Flex direction='column' align='center' pb='4' maxW='300px'>
             <Avatar name={pod.data.name} size='xl' mb='4' />
-            <Input
-              my='2'
-              maxW='300px'
-              size='sm'
-              rounded='md'
-              variant='filled'
-              defaultValue={pod.data.name}
-              onChange={handlePodNameChange}
-            />
+            <Flex my='2'>
+              <Input
+                mr='2'
+                w='100%'
+                size='sm'
+                rounded='md'
+                variant='filled'
+                defaultValue={pod.data.name}
+                onChange={handlePodNameChange}
+              />
+              {isOwner && <DeletePod id={pod.data._id} />}
+            </Flex>
             <Upload podId={pod.data._id} />
-            {pod.data.owner === session?.id && (
-              <HStack py='2'>
-                <DeletePod id={pod.data._id} />
-              </HStack>
-            )}
+            <HStack align='end' py='2'></HStack>
           </Flex>
         </Flex>
         <VideoGrid videos={videos.data} />
