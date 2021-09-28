@@ -11,7 +11,7 @@ export default async function auth(req, res) {
       db: (await clientPromise).db('bken'),
     }),
     pages: {
-      newUser: '/studio',
+      newUser: '/',
       signIn: '/login',
     },
     providers: [
