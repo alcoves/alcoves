@@ -25,7 +25,7 @@ export default function PodView(props: Props): JSX.Element {
   const { data: pod, mutate: mutatePod } = useSWR(props.podFetchUrl, fetcher, {
     fallbackData: props.pod,
   })
-  const { data: videos } = useSWR(props.videoFetchUrl, fetcher, {
+  const { data: videos, mutate: mutateVideos } = useSWR(props.videoFetchUrl, fetcher, {
     fallbackData: props.videos,
     refreshInterval: props.videoRefreshInterval,
   })

@@ -1,14 +1,13 @@
 import useSWR from 'swr'
 import { fetcher } from '../../utils/fetcher'
-import { Box, Avatar, HStack, Tooltip } from '@chakra-ui/react'
+import { Avatar, HStack, Tooltip } from '@chakra-ui/react'
 import { getApiUrl } from '../../utils/api'
 import CreatePod from './CreatePod'
 import { useRouter } from 'next/router'
 
-const fetchUrl = `${getApiUrl()}/pods`
-
 export default function ListPods(): JSX.Element {
   const router = useRouter()
+  const fetchUrl = `${getApiUrl()}/pods`
   const { data } = useSWR(fetchUrl, fetcher)
   return (
     <>

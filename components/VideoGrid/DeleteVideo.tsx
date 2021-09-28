@@ -13,10 +13,12 @@ import {
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import { IoTrash } from 'react-icons/io5'
+import { useSWRConfig } from 'swr'
 import { getApiUrl } from '../../utils/api'
 import { fetchMutate } from '../../utils/fetcher'
 
-export default function DeleteVideo(props: { id: string }): JSX.Element {
+export default function DeleteVideo(props: { id: string; podId: string }): JSX.Element {
+  const { mutate } = useSWRConfig()
   const [loading, setLoading] = useState(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -32,6 +34,7 @@ export default function DeleteVideo(props: { id: string }): JSX.Element {
     } finally {
       onClose()
       setLoading(false)
+      mutate(`${getApiUrl()}/pods/${props.podId}/videos`)
     }
   }
 
