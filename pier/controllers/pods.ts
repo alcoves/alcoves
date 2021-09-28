@@ -10,12 +10,12 @@ interface PatchPodInput {
   name: string
 }
 
-export async function list(req: Request, res: Response) {
+export async function listPods(req: Request, res: Response) {
   const pods = await Pod.find({ members: new Types.ObjectId(req.userId) })
   return res.json({ data: pods  })
 }
 
-export async function create(req: Request, res: Response) {
+export async function createPod(req: Request, res: Response) {
   const createPodInput: CreatePodInput = req.body
   await new Pod({
     _id: new Types.ObjectId(),
@@ -26,16 +26,16 @@ export async function create(req: Request, res: Response) {
   return res.sendStatus(201)
 }
 
-export async function getById(req: Request, res: Response) {
+export async function getPodById(req: Request, res: Response) {
   const filter = {
     _id: new Types.ObjectId(req.params.podId),
   }
-  const pod = await Pod.findOne(filter)
+  const pod = await Pod.findOne(filter).populate('members')
   if (pod) return res.json({ data: pod })
   return res.sendStatus(404)
 }
 
-export async function patchById(req: Request, res: Response) {
+export async function patchPodById(req: Request, res: Response) {
   const filter = {
     _id: new Types.ObjectId(req.params.podId),
     owner: new Types.ObjectId(req.userId)
@@ -48,7 +48,7 @@ export async function patchById(req: Request, res: Response) {
   return res.sendStatus(400)
 }
 
-export async function deleteById(req: Request, res: Response) {
+export async function deletePodById(req: Request, res: Response) {
   const filter = {
     _id: new Types.ObjectId(req.params.podId),
     owner: new Types.ObjectId(req.userId)

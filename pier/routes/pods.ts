@@ -1,11 +1,11 @@
 import express from 'express'
 import { auth } from '../middlewares/auth'
 import {
-  list,
-  create,
-  getById,
-  patchById,
-  deleteById,
+  listPods,
+  createPod,
+  getPodById,
+  patchPodById,
+  deletePodById,
 } from '../controllers/pods'
 import {
   listVideos,
@@ -15,11 +15,11 @@ import {
 
 const router = express.Router()
 
-router.get('/', auth, list)
-router.post('/', auth, create)
-router.get('/:podId', auth, getById)
-router.patch('/:podId', auth, patchById)
-router.delete('/:podId', auth, deleteById)
+router.get('/', auth, listPods)
+router.post('/', auth, createPod)
+router.get('/:podId', auth, getPodById)
+router.patch('/:podId', auth, patchPodById)
+router.delete('/:podId', auth, deletePodById)
 
 router.get('/:podId/videos', auth, listVideos)
 router.post('/:podId/videos/upload', auth, createUploadUrl)

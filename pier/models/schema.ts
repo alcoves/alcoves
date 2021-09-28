@@ -7,7 +7,7 @@ const patchVideoSchema = joi.object({
 
 export default function validateSchema(method: string, body: string) {
   switch (method) {
-    case 'patchVideo':
+    case 'patchVideoById':
       return patchVideoSchema.validate(body)
     default:
       return { value: null, error: 'invalid schema validation method' }

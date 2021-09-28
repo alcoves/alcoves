@@ -28,7 +28,7 @@ export async function listVideos(req: Request, res: Response) {
   return res.json({ data: videos  })
 }
 
-export async function getVideo(req: Request, res: Response) {
+export async function getVideoById(req: Request, res: Response) {
   const video = await Video.findOne({
     _id: new Types.ObjectId(req.params.videoId),
   }).populate('owner')
@@ -102,7 +102,7 @@ export async function createUploadUrl(req: Request, res: Response) {
 })
 }
 
-export async function deleteVideo(req: Request, res: Response) {
+export async function deleteVideoById(req: Request, res: Response) {
   const video = await Video.findOne({
     _id: req.params.videoId,
     owner: req.userId
@@ -121,8 +121,8 @@ export async function deleteVideo(req: Request, res: Response) {
   return res.sendStatus(403)
 }
 
-export async function patchVideo(req: Request, res: Response) {
-  const { value, error } = validateSchema('patchVideo', req.body)
+export async function patchVideoById(req: Request, res: Response) {
+  const { value, error } = validateSchema('patchVideoById', req.body)
   if (error) return res.status(400).send(error)
 
   const video = await Video.findOneAndUpdate({ _id: req.params.videoId, owner: req.userId }, {
