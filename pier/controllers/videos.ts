@@ -126,7 +126,7 @@ export async function patchVideo(req: Request, res: Response) {
   if (error) return res.status(400).send(error)
 
   const video = await Video.findOneAndUpdate({ _id: req.params.videoId, owner: req.userId }, {
-    title: value.title
+    ...value
   })
   
   if (video) return res.status(200).end()
