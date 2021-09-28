@@ -15,7 +15,7 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react'
 import { useState } from 'react'
-import { IoSend } from 'react-icons/io5'
+import { IoReturnDownForward } from 'react-icons/io5'
 import useSWR, { useSWRConfig } from 'swr'
 import { Pod } from '../../types'
 import { getApiUrl } from '../../utils/api'
@@ -51,7 +51,12 @@ export default function MoveVideo(props: { id: string; podId: string }): JSX.Ele
 
   return (
     <>
-      <IconButton aria-label='delete-video' onClick={onOpen} size='sm' icon={<IoSend />} />
+      <IconButton
+        aria-label='delete-video'
+        onClick={onOpen}
+        size='sm'
+        icon={<IoReturnDownForward />}
+      />
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>

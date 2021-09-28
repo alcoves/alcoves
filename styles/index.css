@@ -117,3 +117,11 @@ a:active {
 video {
   outline: none;
 }
+
+.vjs-bken.video-js {
+  color: #fff;
+}
+
+.vjs-bken.video-js .vjs-control-bar {
+  background-color: rgba(0, 0, 0, 0.5);
+}

@@ -18,7 +18,7 @@ export default function VideoPlayer(props: VideoJsPlayerOptions): JSX.Element {
 
   return (
     <div data-vjs-player>
-      <video ref={onVideo} className='video-js vjs-big-play-centered' playsInline />
+      <video ref={onVideo} className='vjs-bken video-js vjs-big-play-centered' playsInline />
     </div>
   )
 }

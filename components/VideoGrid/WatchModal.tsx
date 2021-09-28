@@ -1,7 +1,7 @@
 import VideoPlayer from '../VideoPlayer'
 import { Video } from '../../types'
 import { getTidalUrl } from '../../utils/api'
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton } from '@chakra-ui/react'
+import { Box, Modal, ModalOverlay, ModalContent, ModalCloseButton } from '@chakra-ui/react'
 
 export default function WatchModal(props: {
   isOpen: boolean
@@ -29,11 +29,12 @@ export default function WatchModal(props: {
   }
 
   return (
-    <Modal isCentered closeOnEsc isOpen={isOpen} onClose={onClose}>
+    <Modal autoFocus={false} isCentered closeOnEsc isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent maxW='1280px'>
-        <ModalHeader>{v.title}</ModalHeader>
-        <ModalCloseButton />
+        <Box zIndex={1000}>
+          <ModalCloseButton bg='rgba(0,0,0,.3)' />
+        </Box>
         <VideoPlayer {...videoJsOptions} />
       </ModalContent>
     </Modal>

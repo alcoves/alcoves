@@ -24,6 +24,7 @@ import { getApiUrl } from '../../utils/api'
 import MoveVideo from './MoveVideo'
 import { useSWRConfig } from 'swr'
 import router from 'next/router'
+import { IoLink } from 'react-icons/io5'
 
 let timer: NodeJS.Timeout
 
@@ -36,6 +37,7 @@ export default function VideoMeta(props: { v: Video }): JSX.Element {
   const metadata = `${abbreviateNumber(v.views)} views - ${createdAt}`
 
   const shareLink = `${window?.location?.href?.split('/pods')[0]}/v/${v._id}`
+  const isOwner = v?.owner?._id === session?.id
 
   function handleTitleChange(e: ChangeEvent<HTMLInputElement>) {
     clearTimeout(timer)
@@ -74,14 +76,25 @@ export default function VideoMeta(props: { v: Video }): JSX.Element {
           {v.title}
         </Box>
       )}
-      <Flex w='100%' justify='end'>
-        <Button
-          size='xs'
+      <Flex w='100%' justify='space-between' align='center'>
+        <Text
+          maxW='100px'
+          fontSize='xs'
+          isTruncated
           onClick={() => {
             router.push(shareLink)
           }}
         >
-          Link
+          {shareLink}
+        </Text>
+        <Button
+          size='xs'
+          leftIcon={<IoLink />}
+          onClick={() => {
+            navigator.clipboard.writeText(shareLink)
+          }}
+        >
+          Copy Link
         </Button>
       </Flex>
       <HStack spacing='12px' justify='space-between' w='100%'>
@@ -104,12 +117,10 @@ export default function VideoMeta(props: { v: Video }): JSX.Element {
             <Text fontSize='xs'>{metadata}</Text>
           </Flex>
         </Flex>
-        {v.owner._id === session?.id && (
-          <HStack spacing={1}>
-            <DeleteVideo podId={v.pod} id={v._id} />
-            <MoveVideo podId={v.pod} id={v._id} />
-          </HStack>
-        )}
+        <HStack spacing={1}>
+          {isOwner && <DeleteVideo podId={v.pod} id={v._id} />}
+          {isOwner && <MoveVideo podId={v.pod} id={v._id} />}
+        </HStack>
       </HStack>
     </VStack>
   )
