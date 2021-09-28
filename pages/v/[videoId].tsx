@@ -103,15 +103,8 @@ export default function VideoPage(props: { error: boolean; video: Video }): JSX.
   )
 }
 
-// width: '100%',
-// minHeight: '320px',
-// height: 'calc((9 / 16) * 100vw)',
-// maxHeight: 'calc(100vh - 200px)',
-
 export async function getServerSideProps(context: GetServerSidePropsContext): Promise<unknown> {
-  // eslint-disable-next-line
-  // @ts-ignore
-  const { videoId } = context?.params
+  const { videoId } = context.params!
   const fetchUrl = `${getApiUrl()}/videos/${videoId}`
   try {
     const { data: video } = await fetcher(fetchUrl, context)
