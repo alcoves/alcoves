@@ -12,6 +12,7 @@ import {
   ModalCloseButton,
   useDisclosure,
   Button,
+  useColorModeValue,
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import { IoSend } from 'react-icons/io5'
@@ -28,6 +29,8 @@ export default function MoveVideo(props: { id: string; podId: string }): JSX.Ele
 
   const fetchUrl = `${getApiUrl()}/pods`
   const { data: pods } = useSWR(fetchUrl, fetcher)
+
+  const selectedBg = useColorModeValue('gray.100', 'gray.600')
 
   async function handleMove() {
     try {
@@ -66,9 +69,9 @@ export default function MoveVideo(props: { id: string; podId: string }): JSX.Ele
                   my='2'
                   key={p._id}
                   rounded='md'
-                  bg={selectedPodId === p._id ? 'gray.500' : 'gray.600'}
                   align='center'
                   cursor='pointer'
+                  bg={selectedPodId === p._id ? selectedBg : ''}
                   onClick={() => {
                     setSelectedPodId(p._id)
                   }}
