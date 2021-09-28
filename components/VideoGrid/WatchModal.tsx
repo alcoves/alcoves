@@ -1,48 +1,41 @@
-import React from 'react'
-import VideoJS from './VideoJS' // point to where the functional component is stored
+import VideoPlayer from '../VideoPlayer'
+import { Video } from '../../types'
+import { getTidalUrl } from '../../utils/api'
+import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton } from '@chakra-ui/react'
 
-export default function WatchModal(): JSX.Element {
-  const playerRef = React.useRef(null)
+export default function WatchModal(props: {
+  isOpen: boolean
+  onOpen: () => void
+  onClose: () => void
+  v: Video
+}): JSX.Element {
+  const { isOpen, onClose, v } = props
+
+  const hlsUrl = `${getTidalUrl()}/assets/${v.tidal}.m3u8`
+  const thumbnailUrl = `https://cdn.bken.io/v/${v.tidal}/thumbnail.jpg`
 
   const videoJsOptions = {
     fluid: true,
     autoplay: true,
     controls: true,
     responsive: true,
+    poster: thumbnailUrl,
     sources: [
       {
-        src: 'https://cdn.bken.io/v/61515dd1f1f1d2abf155cfe9/61515dd1f1f1d2abf155cfed/stream.m3u8',
+        src: hlsUrl,
         type: 'application/x-mpegURL',
       },
     ],
   }
 
-  const handlePlayerReady = (player: string) => {
-    playerRef.current = player
-
-    // you can handle player events here
-    player.on('waiting', () => {
-      console.log('player is waiting')
-    })
-
-    player.on('dispose', () => {
-      console.log('player will dispose')
-    })
-  }
-
-  // const changePlayerOptions = () => {
-  //   // you can update the player through the Video.js player instance
-  //   if (!playerRef.current) {
-  //     return;
-  //   }
-  //   // [update player through instance's api]
-  //   playerRef.current.src([{src: 'http://ex.com/video.mp4', type: 'video/mp4'}]);
-  //   playerRef.current.autoplay(false);
-  // };
-
   return (
-    <>
-      <VideoJS options={videoJsOptions} onReady={handlePlayerReady} />
-    </>
+    <Modal isCentered closeOnEsc isOpen={isOpen} onClose={onClose}>
+      <ModalOverlay />
+      <ModalContent maxW='1280px'>
+        <ModalHeader>{v.title}</ModalHeader>
+        <ModalCloseButton />
+        <VideoPlayer {...videoJsOptions} />
+      </ModalContent>
+    </Modal>
   )
 }
