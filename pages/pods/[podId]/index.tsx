@@ -10,6 +10,7 @@ import { Upload } from '../../../components/Pods/Upload'
 import { Pod, Video } from '../../../types'
 import { GetServerSidePropsContext } from 'next'
 import { ChangeEvent } from 'react'
+import { useSession } from 'next-auth/react'
 
 interface Props {
   pod: Pod
@@ -22,10 +23,11 @@ interface Props {
 let timer: NodeJS.Timeout
 
 export default function PodView(props: Props): JSX.Element {
+  const { data: session } = useSession()
   const { data: pod, mutate: mutatePod } = useSWR(props.podFetchUrl, fetcher, {
     fallbackData: props.pod,
   })
-  const { data: videos, mutate: mutateVideos } = useSWR(props.videoFetchUrl, fetcher, {
+  const { data: videos } = useSWR(props.videoFetchUrl, fetcher, {
     fallbackData: props.videos,
     refreshInterval: props.videoRefreshInterval,
   })
@@ -66,9 +68,11 @@ export default function PodView(props: Props): JSX.Element {
               onChange={handlePodNameChange}
             />
             <Upload podId={pod.data._id} />
-            <HStack py='2'>
-              <DeletePod id={pod.data._id} />
-            </HStack>
+            {pod.data.owner === session?.id && (
+              <HStack py='2'>
+                <DeletePod id={pod.data._id} />
+              </HStack>
+            )}
           </Flex>
         </Flex>
         <VideoGrid videos={videos.data} />
