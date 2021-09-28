@@ -1,7 +1,7 @@
 import useSWR from 'swr'
 import Link from 'next/link'
 import { fetcher } from '../../utils/fetcher'
-import { Avatar, HStack } from '@chakra-ui/react'
+import { Avatar, HStack, Tooltip } from '@chakra-ui/react'
 import { getApiUrl } from '../../utils/api'
 import CreatePod from './CreatePod'
 
@@ -15,7 +15,9 @@ export default function ListPods(): JSX.Element {
         {data?.data?.map((p: { _id: string; name: string }) => {
           return (
             <Link key={p._id} href={`/pods/${p._id}`} passHref>
-              <Avatar name={p.name} size='sm' cursor='pointer' />
+              <Tooltip label={p.name}>
+                <Avatar name={p.name} size='sm' cursor='pointer' />
+              </Tooltip>
             </Link>
           )
         })}
