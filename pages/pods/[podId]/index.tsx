@@ -89,7 +89,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext): Pr
   const videoRefreshInterval = videos?.data?.reduce((acc: number, cv: { status: string }) => {
     if (cv.status !== 'completed') acc = 2000
     return acc
-  }, null)
+  }, 0)
 
   return {
     props: {
