@@ -111,14 +111,14 @@ export function Upload(props: { podId: string }): JSX.Element {
     <>
       <Box
         {...getRootProps()}
-        border='dashed'
-        borderWidth='1px'
-        borderStyle='dashed'
-        rounded='md'
-        cursor='pointer'
-        color={useColorModeValue('gray.600, gray.200')}
         p='20px'
         w='100%'
+        rounded='md'
+        border='dashed'
+        cursor='pointer'
+        borderWidth='1px'
+        borderStyle='dashed'
+        color={useColorModeValue('gray.600', 'gray.200')}
       >
         <input {...getInputProps()} multiple />
         {'Upload Here'}
