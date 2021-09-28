@@ -19,7 +19,7 @@ export default function Footer(): JSX.Element {
 
   return (
     <Flex h='48px' w='100%' px='5' justify='space-between' align='center' bg={colors.bgColor}>
-      <Flex direction='column'>
+      <Flex direction='column' w='100px'>
         <Text fontSize='.7rem' color={colors.text1}>
           {`© ${new Date().getFullYear()} Bken, Inc.`}
         </Text>
@@ -38,7 +38,7 @@ export default function Footer(): JSX.Element {
         </HStack>
       </Flex>
 
-      <Flex>
+      <Flex w='100px' justify='end'>
         <HStack>
           <Text fontSize='.7rem' color={colors.text1}>
             <Link href={links.statusPage}>Status</Link>
