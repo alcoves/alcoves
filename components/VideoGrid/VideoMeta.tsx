@@ -20,11 +20,14 @@ import {
 import { ChangeEvent, useState } from 'react'
 import { fetchMutate } from '../../utils/fetcher'
 import { getApiUrl } from '../../utils/api'
+import MoveVideo from './MoveVideo'
+import { useSWRConfig } from 'swr'
 
 let timer: NodeJS.Timeout
 
 export default function VideoMeta(props: { v: Video }): JSX.Element {
   const { v } = props
+  const { mutate } = useSWRConfig()
   const { data: session } = useSession()
   const [saving, setSaving] = useState(false)
   const createdAt = moment(v.createdAt).fromNow()
@@ -40,6 +43,7 @@ export default function VideoMeta(props: { v: Video }): JSX.Element {
         url: `${getApiUrl()}/videos/${v._id}`,
       })
       setSaving(false)
+      mutate(`${getApiUrl()}/pods/${v.pod}/videos`)
     }, 750)
   }
 
@@ -88,7 +92,10 @@ export default function VideoMeta(props: { v: Video }): JSX.Element {
             <Text fontSize='xs'>{metadata}</Text>
           </Flex>
         </Flex>
-        <DeleteVideo id={v._id} />
+        <HStack spacing={1}>
+          <DeleteVideo podId={v.pod} id={v._id} />
+          <MoveVideo podId={v.pod} id={v._id} />
+        </HStack>
       </HStack>
     </VStack>
   )
