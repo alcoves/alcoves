@@ -2,7 +2,7 @@ import Head from 'next/head'
 import moment from 'moment'
 import { Flex, Box, Text, Heading } from '@chakra-ui/react'
 import Layout from '../../components/Layout'
-import VideoPlayer from '../../components/VideoPlayer/Index'
+import VideoPlayer from '../../components/VideoPlayer'
 import abbreviateNumber from '../../utils/abbreviateNumber'
 import { fetcher } from '../../utils/fetcher'
 import { getApiUrl, getTidalUrl } from '../../utils/api'
@@ -18,6 +18,20 @@ export default function VideoPage(props: { error: boolean; video: Video }): JSX.
 
   const subHeader = `${abbreviateNumber(video.views)} views ·
       ${moment(video.createdAt).fromNow()}`
+
+  const videoJsOptions = {
+    fluid: true,
+    autoplay: true,
+    controls: true,
+    responsive: true,
+    poster: thumbnailUrl,
+    sources: [
+      {
+        src: hlsUrl,
+        type: 'application/x-mpegURL',
+      },
+    ],
+  }
 
   if (error) {
     return (
@@ -72,25 +86,27 @@ export default function VideoPage(props: { error: boolean; video: Video }): JSX.
         <meta name='twitter:player:width' content='1280' />
         <meta name='twitter:player:height' content='720' />
       </Head>
-      <Layout>
-        <Box>
-          <VideoPlayer theaterMode url={hlsUrl} thumbnail={thumbnailUrl} />
-          <Flex w='100%' justifyContent='center'>
-            <Box p='4' w='1024px'>
-              <Heading as='h3' size='lg'>
-                {video.title}
-              </Heading>
-              <Flex justifyContent='space-between'>
-                <Text fontSize='sm'>{subHeader}</Text>
-                {/* <ShareModal link={`https://bken.io/v/${video.id}`} /> */}
-              </Flex>
-            </Box>
-          </Flex>
+      <Flex h='100vh' w='100vw' align='center' justify='center' direction='column'>
+        <Box width='100%' maxW='calc((16 / 9) * 80vh)'>
+          <VideoPlayer {...videoJsOptions} />
+          <Box pt='4'>
+            <Heading as='h3' size='lg'>
+              {video.title}
+            </Heading>
+            <Flex justifyContent='space-between'>
+              <Text fontSize='sm'>{subHeader}</Text>
+            </Flex>
+          </Box>
         </Box>
-      </Layout>
+      </Flex>
     </Box>
   )
 }
+
+// width: '100%',
+// minHeight: '320px',
+// height: 'calc((9 / 16) * 100vw)',
+// maxHeight: 'calc(100vh - 200px)',
 
 export async function getServerSideProps(context: GetServerSidePropsContext): Promise<unknown> {
   // eslint-disable-next-line

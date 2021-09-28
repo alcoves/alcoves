@@ -1,28 +1,28 @@
 import VideoMeta from './VideoMeta'
 import videoDuration from '../../utils/videoDuration'
 import { Video } from '../../types'
-import { Spacer, Flex, Box, Text, Skeleton, Spinner } from '@chakra-ui/react'
-import { useRouter } from 'next/router'
+import { Spacer, Flex, Box, Text, Skeleton, Spinner, useDisclosure } from '@chakra-ui/react'
+import WatchModal from './WatchModal'
 
 export default function VideoCard(props: { v: Video }): JSX.Element {
-  const router = useRouter()
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
   const { v } = props
   const thumbnailUrl = `https://cdn.bken.io/v/${v.tidal}/thumbnail.jpg`
 
   return (
     <Skeleton isLoaded={Boolean(v._id)} maxW='400px'>
-      {/* <Link passHref href={}> */}
       <Box
-        borderRadius='md'
-        cursor='pointer'
         w='100%'
         h='200px'
         bgSize='cover'
         bgColor='black'
+        cursor='pointer'
+        onClick={onOpen}
+        borderRadius='md'
         bgPosition='center'
         bgRepeat='no-repeat'
         bgImage={`url("${thumbnailUrl}")`}
-        onClick={() => router.push(`/v/${v._id}`)}
       >
         <Flex w='100%' h='100%' justify='center' align='center' direction='column' p='1'>
           <Flex></Flex>
@@ -44,8 +44,8 @@ export default function VideoCard(props: { v: Video }): JSX.Element {
           </Flex>
         </Flex>
       </Box>
+      <WatchModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} v={v} />
       <VideoMeta v={v} />
-      {/* </Link> */}
     </Skeleton>
   )
 }

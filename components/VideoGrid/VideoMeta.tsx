@@ -10,18 +10,20 @@ import {
   Text,
   Fade,
   Avatar,
-  Heading,
+  Box,
   HStack,
   VStack,
   Spinner,
   InputGroup,
   InputRightElement,
+  Button,
 } from '@chakra-ui/react'
 import { ChangeEvent, useState } from 'react'
 import { fetchMutate } from '../../utils/fetcher'
 import { getApiUrl } from '../../utils/api'
 import MoveVideo from './MoveVideo'
 import { useSWRConfig } from 'swr'
+import router from 'next/router'
 
 let timer: NodeJS.Timeout
 
@@ -32,6 +34,8 @@ export default function VideoMeta(props: { v: Video }): JSX.Element {
   const [saving, setSaving] = useState(false)
   const createdAt = moment(v.createdAt).fromNow()
   const metadata = `${abbreviateNumber(v.views)} views - ${createdAt}`
+
+  const shareLink = `${window?.location?.href?.split('/pods')[0]}/v/${v._id}`
 
   function handleTitleChange(e: ChangeEvent<HTMLInputElement>) {
     clearTimeout(timer)
@@ -66,12 +70,20 @@ export default function VideoMeta(props: { v: Video }): JSX.Element {
           </InputRightElement>
         </InputGroup>
       ) : (
-        <Link passHref href={`/v/${v._id}`}>
-          <Heading noOfLines={2} cursor='pointer' size='sm'>
-            {v.title}
-          </Heading>
-        </Link>
+        <Box w='100%' passHref rounded='md' fontSize='sm' p='5px 15px 5px 15px'>
+          {v.title}
+        </Box>
       )}
+      <Flex w='100%' justify='end'>
+        <Button
+          size='xs'
+          onClick={() => {
+            router.push(shareLink)
+          }}
+        >
+          Link
+        </Button>
+      </Flex>
       <HStack spacing='12px' justify='space-between' w='100%'>
         <Flex>
           <Link passHref href={`/u/${v.owner._id}`}>
