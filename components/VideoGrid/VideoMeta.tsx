@@ -92,10 +92,12 @@ export default function VideoMeta(props: { v: Video }): JSX.Element {
             <Text fontSize='xs'>{metadata}</Text>
           </Flex>
         </Flex>
-        <HStack spacing={1}>
-          <DeleteVideo podId={v.pod} id={v._id} />
-          <MoveVideo podId={v.pod} id={v._id} />
-        </HStack>
+        {v.owner._id === session?.id && (
+          <HStack spacing={1}>
+            <DeleteVideo podId={v.pod} id={v._id} />
+            <MoveVideo podId={v.pod} id={v._id} />
+          </HStack>
+        )}
       </HStack>
     </VStack>
   )
