@@ -20,16 +20,13 @@ export default function VideoPage(props: { video: Video }): JSX.Element {
 
   const videoJsOptions = {
     fluid: true,
+    liveui: true,
     autoplay: true,
     controls: true,
     responsive: true,
+    liveTracker: true,
     poster: thumbnailUrl,
-    sources: [
-      {
-        src: hlsUrl,
-        type: 'application/x-mpegURL',
-      },
-    ],
+    sources: [{ src: hlsUrl }],
   }
 
   if (video) {
