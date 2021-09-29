@@ -11,7 +11,6 @@ import { Flex, Box, Text, Heading } from '@chakra-ui/react'
 export default function VideoPage(props: { video: Video }): JSX.Element {
   const { video } = props
   const videoUrl = `https://bken.io/v/${video?._id}`
-  const embedUrl = `https://bken.io/embed/${video?._id}`
   const hlsUrl = `${getTidalUrl()}/assets/${video?.tidal}.m3u8`
   const thumbnailUrl = `https://cdn.bken.io/v/${video?.tidal}/thumbnail.jpg`
 
