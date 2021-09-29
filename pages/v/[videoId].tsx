@@ -47,18 +47,10 @@ export default function VideoPage(props: { video: Video }): JSX.Element {
           <meta property='og:url' content={videoUrl} />
           <meta property='og:title' content={video.title} />
           <meta property='og:image' content={thumbnailUrl} />
-          <meta property='og:type' content='video.other' />
           <meta property='og:image:width' content='1280' />
           <meta property='og:image:height' content='720' />
-          <meta property='og:image:type' content='image/webp' />
-          <meta property='og:description' content='' />
-          <meta property='og:video:url' content={embedUrl} />
-          <meta property='og:video:secure_url' content={embedUrl} />
-          <meta property='og:video:type' content='text/html' />
-          <meta property='og:video:width' content='1280' />
-          <meta property='og:video:height' content='720' />
-          <meta property='og:video:tag' content='username' />
-          <meta property='og:video:tag' content={video.title} />
+          <meta property='og:image:type' content='image/jpeg' />
+          <meta property='og:description' content='Watch this video on bken.io' />
           <meta name='og:title' content={video.title} />
           <meta name='description' content={`Watch ${video.title} on bken.io`} />
           <meta name='twitter:card' content='player' />
@@ -67,9 +59,6 @@ export default function VideoPage(props: { video: Video }): JSX.Element {
           <meta name='twitter:description' content='' />
           <meta name='twitter:site' content='@rustyguts' />
           <meta name='twitter:image' content={thumbnailUrl} />
-          <meta name='twitter:player' content={embedUrl} />
-          <meta name='twitter:player:width' content='1280' />
-          <meta name='twitter:player:height' content='720' />
         </Head>
         <Flex h='100vh' w='100vw' align='center' justify='center' direction='column'>
           <Box width='100%' maxW='calc((16 / 9) * 80vh)'>
