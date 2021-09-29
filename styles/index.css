@@ -125,3 +125,38 @@ video {
 .vjs-bken.video-js .vjs-control-bar {
   background-color: rgba(0, 0, 0, 0.5);
 }
+
+.vjs-bken.video-js .vjs-play-progress {
+  background-color: #bf1e2e;
+}
+
+.vjs-bken.video-js .vjs-progress-holder {
+  height: 0.35rem;
+}
+
+.vjs-bken.video-js .vjs-play-progress:before {
+  font-size: 1rem;
+}
+
+.vjs-bken.video-js .vjs-play-progress:before .vjs-slider-bar {
+  background-color: #bf1e2e;
+}
+
+.vjs-bken.video-js .vjs-big-play-button {
+  border: none;
+  border-radius: 50%;
+  height: 50px;
+  width: 50px;
+  margin-top: -25px;
+  margin-left: -25px;
+  background-color: #bf1e2e;
+}
+
+.vjs-bken.video-js .vjs-big-play-button:hover {
+  background-color: #bf1e2e;
+}
+
+.vjs-bken.video-js:hover .vjs-big-play-button,
+.video-js .vjs-big-play-button:focus {
+  background-color: #bf1e2e;
+}
