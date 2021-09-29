@@ -7,6 +7,19 @@ import { fetchMutate } from '../../utils/fetcher'
 import { useCallback, useEffect, useState } from 'react'
 import { Text, Box, Progress, useColorModeValue } from '@chakra-ui/react'
 
+const acceptedTypes = [
+  'video/mp4',
+  'video/mpeg',
+  'video/webm',
+  'video/3gpp',
+  'video/x-m4v',
+  'video/mp2t',
+  'video/quicktime',
+  'video/x-msvideo',
+  'video/x-matroska',
+  'video/vnd.dlna.mpeg-tts',
+]
+
 interface MultipartResponse {
   ETag: string
   PartNumber: number
@@ -70,7 +83,7 @@ function RenderUpload(props: { file: File; podId: string }) {
       setStatus('error')
       console.error(error)
     } finally {
-      mutate(`${getApiUrl()}/pods/${podId}/videos/`)
+      mutate(`${getApiUrl()}/pods/${podId}/videos`)
     }
   }
 
@@ -105,7 +118,10 @@ export function Upload(props: { podId: string }): JSX.Element {
     acceptedFiles.map((f: File) => setUploads((p: File[]) => [...p, f]))
   }, [])
 
-  const { getRootProps, getInputProps } = useDropzone({ onDrop })
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    accept: acceptedTypes.join(', '),
+  })
 
   return (
     <>
