@@ -41,7 +41,10 @@
     "screenfull": "^5.1.0",
     "shaka-player": "^3.2.0",
     "swr": "1.0.1",
-    "video.js": "^7.15.4"
+    "video.js": "^7.15.4",
+    "videojs-contrib-quality-levels": "^2.1.0",
+    "videojs-hls-quality-selector": "^1.1.4",
+    "videojs-persist": "^0.1.2"
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",

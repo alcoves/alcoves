@@ -16,16 +16,13 @@ export default function WatchModal(props: {
 
   const videoJsOptions = {
     fluid: true,
+    liveui: true,
     autoplay: true,
     controls: true,
     responsive: true,
+    liveTracker: true,
     poster: thumbnailUrl,
-    sources: [
-      {
-        src: hlsUrl,
-        type: 'application/x-mpegURL',
-      },
-    ],
+    sources: [{ src: hlsUrl }],
   }
 
   return (
