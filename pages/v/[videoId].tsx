@@ -37,7 +37,7 @@ export default function VideoPage(props: { video: Video }): JSX.Element {
       return (
         <Flex justify='center' flexDirection='column' align='center' pt='25px'>
           <Heading pb='25px'>Video is processing</Heading>
-          <div>Status: {video?.status}</div>
+          <div>Status: {video.status}</div>
         </Flex>
       )
     }
