@@ -72,7 +72,7 @@ export default function VideoMeta(props: { v: Video }): JSX.Element {
           </InputRightElement>
         </InputGroup>
       ) : (
-        <Text w='100%' isTruncated passHref rounded='md' fontSize='sm' p='5px 15px 5px 15px'>
+        <Text w='100%' isTruncated rounded='md' fontSize='sm' p='5px 15px 5px 15px'>
           {v.title}
         </Text>
       )}
