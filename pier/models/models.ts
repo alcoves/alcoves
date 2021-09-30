@@ -59,7 +59,7 @@ videoSchema.post('find', async function(result) {
       const currentTime = moment().utc()
       const isStale = currentTime.diff(updatedAt, 'hours') > 12
 
-      if (video.status !== 'completed' || isStale) {
+      if (isStale || video.status !== 'completed') {
         // console.log("Hydrating video with fresh tidal waves", { _id: video._id, status: video.status, isStale })
         const tidalVideo = await getAsset(video.tidal)
         video.views = tidalVideo.views
