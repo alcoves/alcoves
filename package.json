@@ -37,7 +37,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-dropzone": "^11.4.0",
-    "react-icons": "^4.2.0",
+    "react-icons": "^4.3.1",
     "screenfull": "^5.1.0",
     "shaka-player": "^3.2.0",
     "swr": "1.0.1",
