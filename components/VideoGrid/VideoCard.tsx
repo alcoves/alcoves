@@ -11,7 +11,7 @@ export default function VideoCard(props: { v: Video }): JSX.Element {
   const thumbnailUrl = `https://cdn.bken.io/v/${v.tidal}/thumbnail.jpg`
 
   return (
-    <Skeleton isLoaded={Boolean(v._id)} maxW='400px'>
+    <Skeleton isLoaded={Boolean(v._id)}>
       <Box
         w='100%'
         h='200px'
