@@ -1,8 +1,18 @@
 import VideoMeta from './VideoMeta'
 import videoDuration from '../../utils/videoDuration'
 import { Video } from '../../types'
-import { Spacer, Flex, Box, Text, Skeleton, Spinner, useDisclosure } from '@chakra-ui/react'
+import {
+  Spacer,
+  Flex,
+  Box,
+  Text,
+  Skeleton,
+  Spinner,
+  useDisclosure,
+  Tooltip,
+} from '@chakra-ui/react'
 import WatchModal from './WatchModal'
+import { IoAlertCircle } from 'react-icons/io5'
 
 export default function VideoCard(props: { v: Video }): JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -25,9 +35,17 @@ export default function VideoCard(props: { v: Video }): JSX.Element {
         bgImage={`url("${thumbnailUrl}")`}
       >
         <Flex w='100%' h='100%' justify='center' align='center' direction='column' p='1'>
-          <Flex></Flex>
           <Spacer />
-          <Flex>{v.status !== 'completed' && <Spinner color='#ffcc00' />}</Flex>
+          {v.status === 'errored' && (
+            <Box>
+              <Tooltip label='Unable to process video, we will remove it soon'>
+                <Box>
+                  <IoAlertCircle color='#bf1e2e' size='35px' />
+                </Box>
+              </Tooltip>
+            </Box>
+          )}
+          {v.status === 'processing' && <Spinner color='#ffcc00' />}
           <Spacer />
           <Flex justify='end' w='100%'>
             <Flex
