@@ -66,7 +66,10 @@ videoSchema.post('find', async function(result) {
         video.duration = tidalVideo.duration
         video.updatedAt = moment().utc() // Important to update this here because mongo will noop if data doesn't change
         const completedRenditions = tidalVideo?.renditions.filter((r: { status: string }) => r.status === 'completed')
-        if (completedRenditions.length) {
+        const erroredRenditions = tidalVideo?.renditions.filter((r: { status: string }) => r.status === 'errored')
+        if (erroredRenditions.length) {
+          video.status = 'errored'
+        } else if (completedRenditions.length) {
           video.status = 'completed'
         } else {
           video.status = 'processing'
