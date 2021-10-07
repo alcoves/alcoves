@@ -23,7 +23,6 @@ import { fetchMutate } from '../../utils/fetcher'
 import { getApiUrl } from '../../utils/api'
 import MoveVideo from './MoveVideo'
 import { useSWRConfig } from 'swr'
-import router from 'next/router'
 import { IoLink } from 'react-icons/io5'
 
 let timer: NodeJS.Timeout
@@ -77,17 +76,11 @@ export default function VideoMeta(props: { v: Video }): JSX.Element {
         </Text>
       )}
       <Flex w='100%' justify='space-between' align='center'>
-        <Text
-          maxW='200px'
-          color={useColorModeValue('gray.800', 'gray.300')}
-          fontSize='xs'
-          isTruncated
-          onClick={() => {
-            router.push(shareLink)
-          }}
-        >
-          {shareLink}
-        </Text>
+        <Link passHref href={shareLink}>
+          <Text fontSize='xs' isTruncated cursor='pointer'>
+            {shareLink}
+          </Text>
+        </Link>
         <Button
           size='xs'
           leftIcon={<IoLink />}
