@@ -24,6 +24,7 @@ export default function VideoPage(props: { video: Video }): JSX.Element {
     controls: true,
     responsive: true,
     liveTracker: true,
+    aspectRatio: '16:9',
     poster: thumbnailUrl,
     sources: [{ src: hlsUrl }],
   }
@@ -59,7 +60,7 @@ export default function VideoPage(props: { video: Video }): JSX.Element {
           <meta name='twitter:site' content='@rustyguts' />
           <meta name='twitter:image' content={thumbnailUrl} />
         </Head>
-        <Flex h='100vh' w='100vw' align='center' justify='center' direction='column'>
+        <Flex h='100vh' w='100vw' align='center' justify='start' direction='column' p='20px'>
           <Box width='100%' maxW='calc((16 / 9) * 80vh)'>
             <VideoPlayer {...videoJsOptions} />
             <Box pt='4'>

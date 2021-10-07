@@ -21,6 +21,7 @@ export default function WatchModal(props: {
     controls: true,
     responsive: true,
     liveTracker: true,
+    aspectRatio: '16:9',
     poster: thumbnailUrl,
     sources: [{ src: hlsUrl }],
   }
