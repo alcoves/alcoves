@@ -89,14 +89,14 @@ export default function VideoPage(props: { video: Video }): JSX.Element {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext): Promise<unknown> {
-  const { videoId } = context.params!
-  const fetchUrl = `${getApiUrl()}/videos/${videoId}`
+  const { id } = context.params!
+  const fetchUrl = `${getApiUrl()}/videos/${id}`
 
   try {
     const { data: video } = await fetcher(fetchUrl, context)
     if (video) return { props: { video } }
   } catch (error) {
-    console.error('error fetching video')
+    console.error('error fetching video', error, id, fetchUrl)
     return { notFound: true }
   }
 
