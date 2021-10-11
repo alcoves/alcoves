@@ -3,7 +3,7 @@ import { Types } from 'mongoose'
 
 const tidalOptions: AxiosRequestConfig = {
   headers: {
-    'X-API-Key': process.env.TIDAL_API_KEY
+    'X-API-Key': process.env?.TIDAL_API_KEY || ''
   }
 }
 
