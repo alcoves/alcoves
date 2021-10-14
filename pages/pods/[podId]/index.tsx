@@ -10,6 +10,7 @@ import { Upload } from '../../../components/Pods/Upload'
 import { ChangeEvent } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
+import ListMembers from '../../../components/Pods/ListMembers'
 
 let timer: NodeJS.Timeout
 
@@ -57,6 +58,7 @@ export default function PodView(): JSX.Element {
         <Flex w='100%' justify='center'>
           <Flex direction='column' align='center' pb='4' maxW='300px'>
             <Avatar name={pod.data.name} size='xl' mb='4' />
+            <ListMembers members={pod.data.members} />
             <Flex my='2'>
               <Input
                 mr='2'
