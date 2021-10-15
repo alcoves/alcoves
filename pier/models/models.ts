@@ -1,5 +1,5 @@
 import moment from 'moment'
-import {getAsset } from '../lib/tidal'
+import { hydrationQueue } from '../lib/tidal'
 import{ Schema, model, Types, PopulatedDoc  } from "mongoose"
 
 export interface PodInterface {
@@ -52,34 +52,13 @@ const videoSchema = new Schema<VideoInterface>({
   owner: { type : Schema.Types.ObjectId, ref: 'User' },
 }, { timestamps: true })
 
-videoSchema.post('find', async function(result) {
-  try {
-    for (const video of result) {
-      const updatedAt = moment(video.updatedAt).utc()
-      const currentTime = moment().utc()
-      const isStale = currentTime.diff(updatedAt, 'hours') > 12
-
-      if (isStale || video.status !== 'completed') {
-        // console.log("Hydrating video with fresh tidal waves", { _id: video._id, status: video.status, isStale })
-        const tidalVideo = await getAsset(video.tidal)
-        video.views = tidalVideo.views
-        video.duration = tidalVideo.duration
-        video.updatedAt = moment().utc() // Important to update this here because mongo will noop if data doesn't change
-        const completedRenditions = tidalVideo?.renditions.filter((r: { status: string }) => r.status === 'completed')
-        const erroredRenditions = tidalVideo?.renditions.filter((r: { status: string }) => r.status === 'errored')
-        if (erroredRenditions.length) {
-          video.status = 'errored'
-        } else if (completedRenditions.length) {
-          video.status = 'completed'
-        } else {
-          video.status = 'processing'
-        }
-        await video.save()
-      }
+videoSchema.post('find', function(result: any) {
+  for (const video of result) {
+    const updatedAt = moment(video.updatedAt).utc()
+    const isStale = moment().utc().diff(updatedAt, 'hours') > 12
+    if (isStale || video.status !== 'completed') {
+      hydrationQueue.push(video);
     }
-  } catch(error) {
-    console.error("There was an error hydrating videos from tidal")
-    console.error(error)
   }
 });
 

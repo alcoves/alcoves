@@ -1,5 +1,7 @@
-import axios, { AxiosRequestConfig } from 'axios'
+import async from 'async'
+import moment from 'moment'
 import { Types } from 'mongoose'
+import axios, { AxiosRequestConfig } from 'axios'
 
 const tidalOptions: AxiosRequestConfig = {
   headers: {
@@ -27,3 +29,38 @@ export async function deleteAsset(assetId: string) {
   const deleteUrl = `${getTidalUrl()}/assets/${assetId.toString()}`
   await axios.delete(deleteUrl, tidalOptions)
 }
+
+// Hydration logic
+export const hydrationQueue = async.queue(async (video: any, callback) => {
+  try {
+    console.log("Hydrating video with fresh tidal waves", { _id: video._id, status: video.status })
+    const tidalVideo = await getAsset(video.tidal)
+    video.views = tidalVideo.views
+    video.duration = tidalVideo.duration
+    video.updatedAt = moment().utc() // Important to update this here because mongo will noop if data doesn't change
+    const completedRenditions = tidalVideo?.renditions.filter((r: { status: string }) => r.status === 'completed')
+    const erroredRenditions = tidalVideo?.renditions.filter((r: { status: string }) => r.status === 'errored')
+    if (erroredRenditions.length) {
+      video.status = 'errored'
+    } else if (completedRenditions.length) {
+      video.status = 'completed'
+    } else {
+      video.status = 'processing'
+    }
+    await video.save()
+  } catch (error) {
+    console.error("Error hydrating", error)
+  } finally {
+    callback();
+  }
+}, 4);
+
+// assign a callback
+hydrationQueue.drain(() => {
+  console.log('all items have been processed');
+});
+
+// assign an error callback
+hydrationQueue.error((err, task) => {
+  console.error('task experienced an error');
+});
