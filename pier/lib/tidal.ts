@@ -12,12 +12,12 @@ function getTidalUrl() {
 }
 
 export async function getAsset(id: Types.ObjectId) {
-  const { data } = await axios.get(`${getTidalUrl()}/assets/${id}`, tidalOptions)
+  const { data }: any = await axios.get(`${getTidalUrl()}/assets/${id}`, tidalOptions)
   return data.data
 }
 
 export async function createAsset(input: string) {
-  const { data } = await axios.post(`${getTidalUrl()}/assets`, {
+  const { data }: any = await axios.post(`${getTidalUrl()}/assets`, {
     input,
   }, tidalOptions)
   return data.data
