@@ -30,29 +30,28 @@ export async function deleteAsset(assetId: string) {
   await axios.delete(deleteUrl, tidalOptions)
 }
 
-// Hydration logic
-export const hydrationQueue = async.queue(async (video: any, callback) => {
-  try {
-    console.log("Hydrating video with fresh tidal waves", { _id: video._id, status: video.status })
-    const tidalVideo = await getAsset(video.tidal)
-    video.views = tidalVideo.views
-    video.duration = tidalVideo.duration
-    video.updatedAt = moment().utc() // Important to update this here because mongo will noop if data doesn't change
-    const completedRenditions = tidalVideo?.renditions.filter((r: { status: string }) => r.status === 'completed')
-    const erroredRenditions = tidalVideo?.renditions.filter((r: { status: string }) => r.status === 'errored')
-    if (erroredRenditions.length) {
-      video.status = 'errored'
-    } else if (completedRenditions.length) {
-      video.status = 'completed'
-    } else {
-      video.status = 'processing'
-    }
-    await video.save()
-  } catch (error) {
-    console.error("Error hydrating", error)
-  } finally {
-    callback();
+export async function hydrateVideo(video: any) {
+  console.log("Hydrating video with fresh tidal waves", { _id: video._id, status: video.status })
+  const tidalVideo = await getAsset(video.tidal)
+  video.views = tidalVideo.views
+  video.duration = tidalVideo.duration
+  video.updatedAt = moment().utc() // Important to update this here because mongo will noop if data doesn't change
+  const completedRenditions = tidalVideo?.renditions.filter((r: { status: string }) => r.status === 'completed')
+  const erroredRenditions = tidalVideo?.renditions.filter((r: { status: string }) => r.status === 'errored')
+  if (erroredRenditions.length) {
+    video.status = 'errored'
+  } else if (completedRenditions.length) {
+    video.status = 'completed'
+  } else {
+    video.status = 'processing'
   }
+  await video.save()
+}
+
+export const hydrationQueue = async.queue((video: any, callback) => {
+  hydrateVideo(video).then(() => callback()).catch((error) => {
+    console.error("Error hydrating", error)
+  })
 }, 4);
 
 // assign a callback

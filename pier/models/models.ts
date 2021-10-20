@@ -1,5 +1,5 @@
 import moment from 'moment'
-import { hydrationQueue } from '../lib/tidal'
+import { hydrationQueue, hydrateVideo } from '../lib/tidal'
 import{ Schema, model, Types, PopulatedDoc  } from "mongoose"
 
 export interface PodInterface {
@@ -52,11 +52,16 @@ const videoSchema = new Schema<VideoInterface>({
   owner: { type : Schema.Types.ObjectId, ref: 'User' },
 }, { timestamps: true })
 
-videoSchema.post('find', function(result: any) {
+videoSchema.post('find', async function(result: any) {
   for (const video of result) {
     const updatedAt = moment(video.updatedAt).utc()
     const isStale = moment().utc().diff(updatedAt, 'hours') > 12
-    if (isStale || video.status !== 'completed') {
+
+    // Videos that are processing are hydrated in the request cycle
+    // Stale videos are pushed to a queue to minimize request times
+    if (video.status !== 'completed') {
+      await hydrateVideo(video)
+    } else if (isStale) {
       hydrationQueue.push(video);
     }
   }
