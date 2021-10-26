@@ -7,7 +7,7 @@ import { Spinner, Flex, Input, Avatar, HStack } from '@chakra-ui/react'
 import { DeletePod } from '../../../components/Pods/DeletePod'
 import VideoGrid from '../../../components/VideoGrid/Index'
 import { Upload } from '../../../components/Pods/Upload'
-import { ChangeEvent } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import ListMembers from '../../../components/Pods/ListMembers'
@@ -26,21 +26,23 @@ export default function PodView(): JSX.Element {
   const { data: videos } = useSWR(podId ? `${getApiUrl()}/pods/${podId}/videos` : null, fetcher, {
     refreshInterval: 10000,
   })
-
+  const [name, setName] = useState(pod?.data?.name || '')
   const isOwner = pod?.data?.owner === session?.id
 
-  function handlePodNameChange(e: ChangeEvent<HTMLInputElement>) {
-    clearTimeout(timer)
-    timer = setTimeout(async () => {
-      await fetchMutate({
-        method: 'patch',
-        data: { name: e.target.value },
-        url: `${getApiUrl()}/pods/${podId}`,
-      })
-      mutatePod()
-      mutate(`${getApiUrl()}/pods`)
-    }, 750)
-  }
+  useEffect(() => {
+    if (name) {
+      clearTimeout(timer)
+      timer = setTimeout(async () => {
+        await fetchMutate({
+          method: 'patch',
+          data: { name },
+          url: `${getApiUrl()}/pods/${podId}`,
+        })
+        mutatePod()
+        mutate(`${getApiUrl()}/pods`)
+      }, 750)
+    }
+  }, [name])
 
   if (!pod?.data || !videos?.data) {
     return (
@@ -66,8 +68,10 @@ export default function PodView(): JSX.Element {
                 size='sm'
                 rounded='md'
                 variant='filled'
-                defaultValue={pod.data.name}
-                onChange={handlePodNameChange}
+                value={pod.data.name}
+                onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                  setName(event.target.value)
+                }}
               />
               {isOwner && <DeletePod id={pod.data._id} />}
             </Flex>
