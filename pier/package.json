@@ -13,8 +13,8 @@
     "dev": "ts-node-dev index.ts --max_old_space_size=8192"
   },
   "dependencies": {
-    "async": "^3.2.1",
-    "aws-sdk": "^2.1014.0",
+    "async": "^3.2.2",
+    "aws-sdk": "^2.1018.0",
     "axios": "^0.24.0",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
