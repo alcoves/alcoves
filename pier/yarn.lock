@@ -638,10 +638,10 @@
     "@types/qs" "*"
     "@types/serve-static" "*"
 
-"@types/fluent-ffmpeg@^2.1.18":
-  version "2.1.18"
-  resolved "https://registry.yarnpkg.com/@types/fluent-ffmpeg/-/fluent-ffmpeg-2.1.18.tgz#72246c2f8c0f0a590aefc1cdbe13736c73f22a81"
-  integrity sha512-LTteOx3RUmnPlKkvhvW9aGOHdJYyEtIiRBVbYVO/zPU65ZYQelbPJ+zBBT+IXup7doMvxVstX7NMoUTWKZOhww==
+"@types/fluent-ffmpeg@^2.1.19":
+  version "2.1.19"
+  resolved "https://registry.yarnpkg.com/@types/fluent-ffmpeg/-/fluent-ffmpeg-2.1.19.tgz#564710b3d8d1c8a2be9db9bd9ce6dcd450a73779"
+  integrity sha512-Zn20PcPe0HbsUM7i0qNpGrZWXLCfh9xI4LJ3ovtiao4RDKmmosFmHeyxozpeqLYyZeRkZIHeb5IqrK3bld2Yjw==
   dependencies:
     "@types/node" "*"
 
@@ -914,10 +914,10 @@ asynckit@^0.4.0:
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
   integrity sha1-x57Zf380y48robyXkLzDZkdLS3k=
 
-aws-sdk@*, aws-sdk@^2.1021.0:
-  version "2.1021.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1021.0.tgz#00b9251f9d9c36adf6c47f0d5fb4aeb47ef2148e"
-  integrity sha512-UT8YOh6Qb0vo27vSzXQQvl5ACAk2PGbPm6Qq7pLeGfGiqYlCY2ru77finzp8Jj8J4ilfK05AlJ1F8mZ1ZjqF9Q==
+aws-sdk@*, aws-sdk@^2.1023.0:
+  version "2.1023.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1023.0.tgz#0de16e4e8878ccec4fcd0146322dcf94fdbe09ba"
+  integrity sha512-RAI8sUfK+00yL9i3xz5kbM3+t/0mjjnKhKyauXAlJN4seDYtIX5+BqMghpkZwvLBdi6idXIuz+FHWETHZccyuA==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
@@ -1143,9 +1143,9 @@ camelcase@^6.2.0:
   integrity sha512-c7wVvbw3f37nuobQNtgsgG9POC9qMbNuMQmTCqZv23b6MIz0fcYpBiOlv9gEN/hdLdnZTDQhg6e9Dq5M1vKvfg==
 
 caniuse-lite@^1.0.30001274:
-  version "1.0.30001276"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001276.tgz#7049685eb972eb09c0ecbb57227b489d76244fb1"
-  integrity sha512-psUNoaG1ilknZPxi8HuhQWobuhLqtYSRUxplfVkEJdgZNB9TETVYGSBtv4YyfAdGvE6gn2eb0ztiXqHoWJcGnw==
+  version "1.0.30001278"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001278.tgz#51cafc858df77d966b17f59b5839250b24417fff"
+  integrity sha512-mpF9KeH8u5cMoEmIic/cr7PNS+F5LWBk0t2ekGT60lFf0Wq+n9LspAj0g3P+o7DQhD3sUdlMln4YFAWhFYn9jg==
 
 chalk@^2.0.0:
   version "2.4.2"
@@ -1449,9 +1449,9 @@ ee-first@1.1.1:
   integrity sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0=
 
 electron-to-chromium@^1.3.886:
-  version "1.3.888"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.888.tgz#243204af9b4c928ac45e47dbbe7bc44c30e65bf0"
-  integrity sha512-5iD1zgyPpFER4kJ716VsA4MxQ6x405dxdFNCEK2mITL075VHO5ResjY0xzQUZguCww/KlBxCA6JmBA9sDt1PRw==
+  version "1.3.890"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.890.tgz#e7143b659f73dc4d0512d1ae4baeb0fb9e7bc835"
+  integrity sha512-VWlVXSkv0cA/OOehrEyqjUTHwV8YXCPTfPvbtoeU2aHR21vI4Ejh5aC4AxUwOmbLbBgb6Gd3URZahoCxtBqCYQ==
 
 emittery@^0.8.1:
   version "0.8.1"
