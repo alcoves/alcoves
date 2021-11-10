@@ -1,67 +1,54 @@
-import { Button, Flex } from '@chakra-ui/react'
+import { Box, Flex } from '@chakra-ui/react'
 import Layout from '../../../components/Layout'
 import { useEffect } from 'react'
 
-let peer
+// import PeerJS from 'peerjs'
+// const CHANNEL_ID = 'bken-123'
+// let peer: PeerJS
+
+const userMediaParams = { audio: { echoCancellation: true }, video: true }
 
 export default function Stream() {
-  useEffect(() => {
-    const fn = async () => {
-      peer = (await import('peerjs')).default
-      // set it to state here
-
-      console.log(peer)
-
-      // const conn = peer.connect('123')
-      // // on open will be launch when you successfully connect to PeerServer
-      // conn.on('open', function () {
-      //   // here you have conn.id
-      //   conn.send('hi!')
-      // })
-
-      // peer.on('connection', function (conn) {
-      //   conn.on('data', function (data) {
-      //     // Will print 'hi!'
-      //     console.log(data)
-      //   })
-      // })
+  function addVideoStream(video: any, stream: any) {
+    video.srcObject = stream
+    video.onloadedmetadata = function () {
+      video.play()
     }
-    fn()
+  }
+
+  useEffect(() => {
+    window?.navigator.mediaDevices.getUserMedia(userMediaParams).then(stream => {
+      const myVideo = document.getElementById('my-video')
+      addVideoStream(myVideo, stream)
+    })
+
+    // import('peerjs').then(({ default: Peer }) => {
+    //   peer = new Peer(CHANNEL_ID)
+    //   peer.on('open', function (id) {
+    //     console.log('My peer ID is: ' + id)
+    //   })
+
+    //   window?.navigator.mediaDevices.getUserMedia(userMediaParams).then(stream => {
+    //     const myVideo = document.getElementById('my-video')
+    //     addVideoStream(myVideo, stream)
+    //     peer.on('call', call => {
+    //       call.answer(stream)
+    //       const video = document.getElementById('video-1')
+    //       call.on('stream', userVideoStream => {
+    //         addVideoStream(video, userVideoStream)
+    //       })
+    //     })
+    //   })
+    // })
   }, [])
-
-  function call() {
-    const getUserMedia = window.navigator.mediaDevices.getUserMedia
-    getUserMedia({ audio: true, video: true })
-      .then(stream => {
-        const call = peer.call('123', stream)
-        call.on('stream', function (remoteStream) {
-          // Show stream in some video/canvas element.
-        })
-      })
-      .catch(error => {
-        console.log('Failed to get local stream', error)
-      })
-  }
-
-  function answer() {
-    const getUserMedia = window.navigator.mediaDevices.getUserMedia
-    getUserMedia({ audio: true, video: true })
-      .then(stream => {
-        call.answer(stream) // Answer the call with an A/V stream.
-        call.on('stream', function (remoteStream) {
-          // Show stream in some video/canvas element.
-        })
-      })
-      .catch(error => {
-        console.log('Failed to get local stream', error)
-      })
-  }
 
   return (
     <Layout>
-      <Button onClick={call}>Call</Button>
-      <Button onClick={answer}>Answer</Button>
-      <Flex>Click to stream</Flex>
+      <Flex justify='center' mt='10' w='100%' h='100%'>
+        <Box borderRadius='5px' width='800px'>
+          <video width='805px' id='my-video' muted />
+        </Box>
+      </Flex>
     </Layout>
   )
 }
