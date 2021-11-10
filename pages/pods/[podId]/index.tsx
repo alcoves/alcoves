@@ -3,7 +3,7 @@ import Layout from '../../../components/Layout'
 
 import { getApiUrl } from '../../../utils/api'
 import { fetcher, fetchMutate } from '../../../utils/fetcher'
-import { Button, Spinner, Flex, Input, Avatar, HStack } from '@chakra-ui/react'
+import { Spinner, Flex, Input, Avatar, HStack } from '@chakra-ui/react'
 import { DeletePod } from '../../../components/Pods/DeletePod'
 import VideoGrid from '../../../components/VideoGrid/Index'
 import { Upload } from '../../../components/Pods/Upload'
@@ -76,10 +76,6 @@ export default function PodView(): JSX.Element {
               />
               {isOwner && <DeletePod id={pod.data._id} />}
             </Flex>
-        <Button onClick={() => {
-          console.log('router', router)
-          router.push(`${router.asPath}/stream`)
-        }}>Stream</Button>
             <Upload podId={pod.data._id} />
             <HStack align='end' py='2'></HStack>
           </Flex>
