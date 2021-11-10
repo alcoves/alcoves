@@ -3,7 +3,7 @@ import Layout from '../../../components/Layout'
 
 import { getApiUrl } from '../../../utils/api'
 import { fetcher, fetchMutate } from '../../../utils/fetcher'
-import { Spinner, Flex, Input, Avatar, HStack } from '@chakra-ui/react'
+import { Button, Spinner, Flex, Input, Avatar, HStack } from '@chakra-ui/react'
 import { DeletePod } from '../../../components/Pods/DeletePod'
 import VideoGrid from '../../../components/VideoGrid/Index'
 import { Upload } from '../../../components/Pods/Upload'
@@ -15,6 +15,7 @@ import ListMembers from '../../../components/Pods/ListMembers'
 let timer: NodeJS.Timeout
 
 export default function PodView(): JSX.Element {
+
   const { mutate } = useSWRConfig()
   const router = useRouter()
   const { podId } = router.query
@@ -75,6 +76,10 @@ export default function PodView(): JSX.Element {
               />
               {isOwner && <DeletePod id={pod.data._id} />}
             </Flex>
+        <Button onClick={() => {
+          console.log('router', router)
+          router.push(`${router.asPath}/stream`)
+        }}>Stream</Button>
             <Upload podId={pod.data._id} />
             <HStack align='end' py='2'></HStack>
           </Flex>
