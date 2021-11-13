@@ -1,7 +1,7 @@
-import app from './app'
+import server from './app'
 
 const PORT = process.env.PORT || 3100;
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`api.bken.io listening on port ${PORT}!`);
 })
