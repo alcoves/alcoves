@@ -8,6 +8,7 @@ import morgan from 'morgan'
 import express from 'express'
 import root from './routes/root'
 import pods from './routes/pods'
+import auth from './routes/auth'
 import videos from './routes/videos'
 import { Server } from 'socket.io'
 import { favicon } from "./middlewares/favicon"
@@ -37,6 +38,7 @@ app.use(morgan('tiny'))
 app.use(favicon)
 
 app.use('/', root)
+app.use('/auth', auth)
 app.use('/pods', pods)
 app.use('/videos', videos)
 

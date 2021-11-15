@@ -70,3 +70,24 @@ videoSchema.post('find', async function(result: any) {
 export const Pod = model<PodInterface>("Pod", podSchema)
 export const User = model<UserInterface>("User", userSchema)
 export const Video = model<VideoInterface>("Video", videoSchema)
+
+// New stuff
+
+export interface UserInterface2 {
+  _id: Types.ObjectId,
+  email: string,
+  password: string,
+}
+
+const userSchema2 = new Schema<UserInterface2>({
+  _id: Schema.Types.ObjectId,
+  password: { type: String, required: true },
+  email: { 
+    type: String,
+    unique: true,
+    required: true,
+    match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
+  },
+}, { timestamps: true })
+
+export const User2 = model<UserInterface2>("BkenUser", userSchema2)
