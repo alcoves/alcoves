@@ -32,6 +32,7 @@ export async function login(req: Request, res: Response) {
 
   res.cookie("bken_jwt", jwtToken, {
     httpOnly: true,
+    sameSite: 'none',
     expires: dayjs().add(7, "days").toDate(),
     secure: process.env.NODE_ENV !== "development",
   });

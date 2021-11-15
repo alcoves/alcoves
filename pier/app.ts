@@ -29,14 +29,13 @@ if (process.env.MONGODB_URI) {
   } as ConnectOptions);
 }
 
-const originUrl = process.env.NODE_ENV === 'development' ? "http://localhost:3000" : "https://api.bken.io"
-console.log(`Origin URL: ${originUrl}`)
-
 const app = express();
+
+const origins = ['http://localhost:3000', 'https://bken.io',  'https://api.bken.io']
 
 app.use(cors({
   credentials: true,
-  origin: originUrl,
+  origin: origins
 }))
 
 app.use(express.json())
@@ -51,7 +50,7 @@ app.use('/videos', videos)
 const server = http.createServer(app)
 const io = new Server(server, {
   cors: {
-    origin: originUrl
+    origin: origins
   }
 });
 
