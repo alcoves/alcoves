@@ -14,8 +14,7 @@ import { Server } from 'socket.io'
 import { favicon } from "./middlewares/favicon"
 import mongoose, { ConnectOptions } from 'mongoose';
 
-if (process.env.NODE_ENV === 'production') {
-  if (!process.env.MONGODB_URI) throw new Error("MONGODB_URI must be defined!")
+if (process.env.MONGODB_URI) {
   if (process.env.MONGODB_TLS_CA) {
     fs.writeFileSync("./db.crt", process.env.MONGODB_TLS_CA)
   } else {
@@ -30,9 +29,16 @@ if (process.env.NODE_ENV === 'production') {
   } as ConnectOptions);
 }
 
+const originUrl = process.env.NODE_ENV === 'development' ? "http://localhost:3000" : "https://api.bken.io"
+console.log(`Origin URL: ${originUrl}`)
+
 const app = express();
 
-app.use(cors())
+app.use(cors({
+  credentials: true,
+  origin: originUrl,
+}))
+
 app.use(express.json())
 app.use(morgan('tiny'))
 app.use(favicon)
@@ -45,7 +51,7 @@ app.use('/videos', videos)
 const server = http.createServer(app)
 const io = new Server(server, {
   cors: {
-    origin: '*'
+    origin: originUrl
   }
 });
 

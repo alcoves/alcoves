@@ -76,13 +76,17 @@ export const Video = model<VideoInterface>("Video", videoSchema)
 export interface UserInterface2 {
   _id: Types.ObjectId,
   email: string,
+  image: string,
+  username: string,
   password: string,
 }
 
 const userSchema2 = new Schema<UserInterface2>({
   _id: Schema.Types.ObjectId,
+  image: { type: String },
   password: { type: String, required: true },
-  email: { 
+  username: {type: String, required: true },
+  email: {
     type: String,
     unique: true,
     required: true,

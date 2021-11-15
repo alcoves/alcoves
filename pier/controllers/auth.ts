@@ -1,5 +1,6 @@
 
 
+import dayjs from 'dayjs'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import  { Types } from 'mongoose'
@@ -14,9 +15,9 @@ if (process.env.JWT_SECRET) {
   throw new Error('process.env.JWT_SECRET must be defined!')
 }
 
-function getToken(email: string, userId: string): string {
+function getToken(id: string, email: string, username: string): string {
  return jwt.sign(
-  { email, userId }, JWT_SECRET, { expiresIn: "1h"}
+  { id, email, username }, JWT_SECRET, { expiresIn: "1h"}
 );
 }
 
@@ -26,9 +27,17 @@ export async function login(req: Request, res: Response) {
 
   const compare = await bcrypt.compare(req.body.password, user.password)
   if (!compare) return res.status(401)
-  
+
+  const jwtToken = getToken(user._id, user.email, user.username)
+
+  res.cookie("bken_jwt", jwtToken, {
+    httpOnly: true,
+    expires: dayjs().add(7, "days").toDate(),
+    secure: process.env.NODE_ENV !== "development",
+  });
+
   return res.status(200).send({
-    token: getToken(user.email, user._id),
+    token: jwtToken,
   })
 }
 export async function register(req: Request, res: Response) {
@@ -40,9 +49,18 @@ export async function register(req: Request, res: Response) {
     _id: new Types.ObjectId(),
     password: hash,
     email: req.body.email,
+    username: req.body.username,
   }).save()
 
+  const jwtToken = getToken(user._id, user.email, user.username)
+
+  res.cookie("bken_jwt", jwtToken, {
+    httpOnly: true,
+    expires: dayjs().add(7, "days").toDate(),
+    secure: process.env.NODE_ENV !== "development",
+  });
+
   return res.status(200).send({
-    token: getToken(user.email, user._id),
+    token: jwtToken,
   })
 }
