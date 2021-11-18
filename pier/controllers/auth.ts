@@ -31,10 +31,10 @@ export async function login(req: Request, res: Response) {
   const jwtToken = getToken(user._id, user.email, user.username)
 
   res.cookie("bken_jwt", jwtToken, {
+    secure: false,
     httpOnly: true,
     sameSite: 'none',
     expires: dayjs().add(7, "days").toDate(),
-    secure: process.env.NODE_ENV !== "development",
   });
 
   return res.status(200).send({
@@ -56,9 +56,9 @@ export async function register(req: Request, res: Response) {
   const jwtToken = getToken(user._id, user.email, user.username)
 
   res.cookie("bken_jwt", jwtToken, {
+    secure: false,
     httpOnly: true,
     expires: dayjs().add(7, "days").toDate(),
-    secure: process.env.NODE_ENV !== "development",
   });
 
   return res.status(200).send({
