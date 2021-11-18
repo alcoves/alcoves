@@ -30,12 +30,12 @@ export async function login(req: Request, res: Response) {
 
   const jwtToken = getToken(user._id, user.email, user.username)
 
-  res.cookie("bken_jwt", jwtToken, {
-    secure: false,
-    httpOnly: true,
-    sameSite: 'none',
-    expires: dayjs().add(7, "days").toDate(),
-  });
+  // res.cookie("bken_jwt", jwtToken, {
+  //   secure: false,
+  //   httpOnly: true,
+  //   sameSite: 'none',
+  //   expires: dayjs().add(7, "days").toDate(),
+  // });
 
   return res.status(200).send({
     token: jwtToken,
@@ -55,11 +55,12 @@ export async function register(req: Request, res: Response) {
 
   const jwtToken = getToken(user._id, user.email, user.username)
 
-  res.cookie("bken_jwt", jwtToken, {
-    secure: false,
-    httpOnly: true,
-    expires: dayjs().add(7, "days").toDate(),
-  });
+  // res.cookie("bken_jwt", jwtToken, {
+  //   secure: false,
+  //   httpOnly: true,
+  //   sameSite: 'none',
+  //   expires: dayjs().add(7, "days").toDate(),
+  // });
 
   return res.status(200).send({
     token: jwtToken,
