@@ -22,10 +22,10 @@ const typeDefs = `
 
   type Query {
     ping: String!
-    login(input: LoginInput): AuthenticationResponse!
   }
 
   type Mutation {
+    login(input: LoginInput): AuthenticationResponse!
     register(input: RegisterInput): AuthenticationResponse!
   }
 `
