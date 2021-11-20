@@ -2,6 +2,7 @@ import dotenv from "dotenv"
 dotenv.config()
 
 import fs from 'fs-extra'
+import { GraphQLServer } from 'graphql-yoga'
 import mongoose, { ConnectOptions } from 'mongoose';
 
 if (process.env.MONGODB_URI) {
@@ -19,24 +20,18 @@ if (process.env.MONGODB_URI) {
   } as ConnectOptions);
 }
 
-import { ApolloServer, gql } from 'apollo-server'
-
-const typeDefs = gql`
+const typeDefs = `
   type Query {
-    "A simple type for getting started!"
-    hello: String
+    ping: String!
   }
-`;
+`
 
 const resolvers = {
   Query: {
-    hello: () => 'world',
+    ping: () => "pong!",
   },
 };
 
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-});
+const server = new GraphQLServer({ typeDefs, resolvers })
 
 export default server
