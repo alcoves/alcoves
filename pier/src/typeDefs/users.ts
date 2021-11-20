@@ -20,11 +20,11 @@ const typeDefs = `
     accessToken: String!
   }
 
-  type Query {
+  extend type Query {
     ping: String!
   }
 
-  type Mutation {
+  extend type Mutation {
     login(input: LoginInput): AuthenticationResponse!
     register(input: RegisterInput): AuthenticationResponse!
   }
