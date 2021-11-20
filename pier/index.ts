@@ -1,7 +1,7 @@
 import server from './app'
 
-const PORT = process.env.PORT || 3100;
+const port = process.env.PORT || 4000;
 
-server.listen(PORT, () => {
-  console.log(`api.bken.io listening on port ${PORT}!`);
-})
+server.listen({ port }).then(({ url }) => {
+  console.log(`🚀 Server ready at ${url}`);
+});

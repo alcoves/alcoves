@@ -1,15 +1,14 @@
 name: Deploy
 env:
   DO_API_KEY: ${{ secrets.DO_API_KEY }}
-  NOMAD_TOKEN: ${{ secrets.NOMAD_TOKEN }}
-  NOMAD_ADDRESS: ${{ secrets.NOMAD_ADDRESS }}
 on:
   push:
     branches:
+      - dev
       - main
 jobs:
-  deploy:
-    name: Deploy
+  container:
+    name: Container
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -22,23 +21,20 @@ jobs:
           GITHUB_SHA: ${{ github.sha }}
         run: docker build
           --build-arg NEXT_PUBLIC_GIT_SHA=$GITHUB_SHA
-          -t registry.digitalocean.com/bken/api:latest
-          -t registry.digitalocean.com/bken/api:$GITHUB_SHA .
+          -t registry.digitalocean.com/bken/pier:$GITHUB_SHA .
       - name: Login to DigitalOcean Docker Registry
         run: doctl registry login --expiry-seconds 600
       - name: Push image to DigitalOcean Container Registry
-        run: docker push registry.digitalocean.com/bken/api --all-tags
-      - name: Deploy job
-        uses: appleboy/ssh-action@master
-        env:
-          GITHUB_SHA: ${{ github.sha }}
-          NOMAD_TOKEN: ${{ secrets.NOMAD_TOKEN }}
-        with:
-          key: ${{ secrets.SSH_KEY }}
-          username: ${{ secrets.SSH_USER }}
-          host: ${{ secrets.NOMAD_ADDRESS }}
-          envs: GITHUB_SHA,NOMAD_TOKEN
-          script: |
-            cd /root/api && git fetch -p && git reset --hard ${GITHUB_SHA}
-            sed -i "s+:latest+:${GITHUB_SHA}+g" ./jobs/api.hcl
-            nomad job run -token ${NOMAD_TOKEN} ./jobs/api.hcl
+        run: docker push registry.digitalocean.com/bken/pier --all-tags
+  # deploy_dev:
+  #   name: Deploy Dev
+  #   needs: container
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Install doctl
+  #       uses: digitalocean/action-doctl@v2
+  #       with:
+  #         token: ${{ secrets.DO_API_KEY }}
+  #     - name: Deploy dev
+  #       run: doctl app create-deployment 123 

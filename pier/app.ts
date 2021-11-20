@@ -1,17 +1,7 @@
 import dotenv from "dotenv"
 dotenv.config()
 
-import cors from 'cors'
-import http from 'http'
 import fs from 'fs-extra'
-import morgan from 'morgan'
-import express from 'express'
-import root from './routes/root'
-import pods from './routes/pods'
-import auth from './routes/auth'
-import videos from './routes/videos'
-import { Server } from 'socket.io'
-import { favicon } from "./middlewares/favicon"
 import mongoose, { ConnectOptions } from 'mongoose';
 
 if (process.env.MONGODB_URI) {
@@ -29,45 +19,24 @@ if (process.env.MONGODB_URI) {
   } as ConnectOptions);
 }
 
-const app = express();
+import { ApolloServer, gql } from 'apollo-server'
 
-app.use(cors())
-
-app.use(express.json())
-app.use(morgan('tiny'))
-app.use(favicon)
-
-app.use('/', root)
-app.use('/auth', auth)
-app.use('/pods', pods)
-app.use('/videos', videos)
-
-const server = http.createServer(app)
-const io = new Server(server, {
-  cors: {
-    origin: "*"
+const typeDefs = gql`
+  type Query {
+    "A simple type for getting started!"
+    hello: String
   }
-});
+`;
 
-io.on('connection', (socket) => {
-  socket.on('disconnect', () => {
-    console.log('user disconnected');
-  });
+const resolvers = {
+  Query: {
+    hello: () => 'world',
+  },
+};
 
-  socket.on("join-room", (roomId, peerId, username) => {
-    console.log(`${username} as ${peerId} joined room ${roomId}`)
-    socket.join(roomId);
-    socket.to(roomId).emit("user-connected", peerId, username);
-
-    socket.on('disconnect', () => {
-      console.log('user disconnected');
-      socket.to(roomId).emit("user-disconnected", peerId);
-    });
-
-    // socket.on("message", (message) => {
-    //   io.to(roomId).emit("createMessage", message, userName);
-    // });
-  });
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
 });
 
 export default server
