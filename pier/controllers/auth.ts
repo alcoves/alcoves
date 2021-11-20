@@ -44,7 +44,7 @@ export async function login(req: Request, res: Response) {
 export async function register(req: Request, res: Response) {
   const userExists = await User2.findOne({email: req.body.email})
   if (userExists) return res.sendStatus(400)
-  const hash = await bcrypt.hash(req.body.password, 10)
+  const hash = 
   
   const user = await new User2({
     _id: new Types.ObjectId(),

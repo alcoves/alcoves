@@ -11,7 +11,7 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": "dist",
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "typeRoots": [
       "@types",
       "node_modules/@types"

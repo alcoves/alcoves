@@ -5,6 +5,9 @@ import fs from 'fs-extra'
 import { GraphQLServer } from 'graphql-yoga'
 import mongoose, { ConnectOptions } from 'mongoose';
 
+import userTypeDefs from './typeDefs/users'
+import userResolvers from './resolvers/users'
+
 if (process.env.MONGODB_URI) {
   if (process.env.MONGODB_TLS_CA) {
     fs.writeFileSync("./db.crt", process.env.MONGODB_TLS_CA)
@@ -20,18 +23,6 @@ if (process.env.MONGODB_URI) {
   } as ConnectOptions);
 }
 
-const typeDefs = `
-  type Query {
-    ping: String!
-  }
-`
-
-const resolvers = {
-  Query: {
-    ping: () => "pong!",
-  },
-};
-
-const server = new GraphQLServer({ typeDefs, resolvers })
+const server = new GraphQLServer({ typeDefs: [userTypeDefs], resolvers: [userResolvers] })
 
 export default server
