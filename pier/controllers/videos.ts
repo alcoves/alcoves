@@ -1,4 +1,3 @@
-import validateSchema from '../models/schema'
 import { Types } from 'mongoose'
 import { Video } from '../models/models'
 import { createAsset, deleteAsset } from '../lib/tidal'
@@ -121,14 +120,14 @@ export async function deleteVideoById(req: Request, res: Response) {
   return res.sendStatus(403)
 }
 
-export async function patchVideoById(req: Request, res: Response) {
-  const { value, error } = validateSchema('patchVideoById', req.body)
-  if (error) return res.status(400).send(error)
+// export async function patchVideoById(req: Request, res: Response) {
+//   const { value, error } = validateSchema('patchVideoById', req.body)
+//   if (error) return res.status(400).send(error)
 
-  const video = await Video.findOneAndUpdate({ _id: req.params.videoId, owner: req.userId }, {
-    ...value
-  })
+//   const video = await Video.findOneAndUpdate({ _id: req.params.videoId, owner: req.userId }, {
+//     ...value
+//   })
   
-  if (video) return res.status(200).end()
-  return res.status(400)
-}
+//   if (video) return res.status(200).end()
+//   return res.status(400)
+// }
