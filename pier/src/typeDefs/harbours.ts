@@ -5,8 +5,8 @@ const typeDefs = `
 
   type Harbour {
     _id: ID!
-    email: String!
-    username: String!
+    owner: User!
+    name: String!
   }
 
   extend type Query {

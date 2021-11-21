@@ -8,7 +8,8 @@ const resolvers = {
     },
   },
   Mutation: {
-    createHarbour: async (_, { input: { name } }) => {
+    createHarbour: async (_, { input: { name } }, { user }) => {
+      if (!user) return new Error('Requires auth')
       return new Harbour({
         _id: new Types.ObjectId(),
         name,

@@ -2,6 +2,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 import fs from 'fs-extra'
+import jwt from 'jsonwebtoken'
 import { GraphQLServer } from 'graphql-yoga'
 import mongoose, { ConnectOptions } from 'mongoose'
 
@@ -30,8 +31,22 @@ if (process.env.MONGODB_URI) {
 }
 
 const server = new GraphQLServer({
-  typeDefs: [rootTypeDefs, userTypeDefs, harbourTypeDefs],
+  context: ({ request }) => {
+    if (request.headers.authorization) {
+      const token = request.headers.authorization.split('Bearer ')[1]
+      if (token) {
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET || '')
+        if (decodedToken) {
+          // eslint-disable-next-line
+          // @ts-ignore
+          return { user: decodedToken }
+        }
+      }
+    }
+    return {}
+  },
   resolvers: [userResolvers, harbourResolvers],
+  typeDefs: [rootTypeDefs, userTypeDefs, harbourTypeDefs],
 })
 
 export default server
