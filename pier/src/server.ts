@@ -20,19 +20,24 @@ import messageResolvers from './resolvers/messages'
 if (process.env.MONGODB_URI) {
   if (process.env.MONGODB_TLS_CA) {
     fs.writeFileSync('./db.crt', process.env.MONGODB_TLS_CA)
+    mongoose.connect(
+      process.env.MONGODB_URI as string,
+      {
+        tls: true,
+        tlsCAFile: './db.crt',
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      } as ConnectOptions
+    )
   } else {
-    throw new Error('MONGODB_TLS_CA must be defined!')
+    mongoose.connect(
+      process.env.MONGODB_URI as string,
+      {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      } as ConnectOptions
+    )
   }
-
-  mongoose.connect(
-    process.env.MONGODB_URI as string,
-    {
-      tls: true,
-      tlsCAFile: './db.crt',
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    } as ConnectOptions
-  )
 }
 
 const pubsub = new PubSub()
