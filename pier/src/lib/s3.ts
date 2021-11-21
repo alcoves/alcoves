@@ -16,7 +16,7 @@ const s3 = new AWS.S3({
   endpoint: process.env.WASABI_ENDPOINT,
 })
 
-export async function getSignedURL(urlParams: { Bucket: string, Key: string }) {
+export async function getSignedURL(urlParams: { Bucket: string; Key: string }) {
   return s3.getSignedUrlPromise('getObject', {
     Key: urlParams.Key,
     Bucket: urlParams.Bucket,
