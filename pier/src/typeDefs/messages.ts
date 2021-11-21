@@ -1,17 +1,28 @@
 const typeDefs = `
-  type Message {
-    _id: ID!
-    user: String!
+  input CreateMessageInput {
     channel: String!
     content: String!
   }
 
+  type Message {
+    _id: ID!
+    user: User!
+    channel: Channel!
+    content: String!
+    updatedAt: String!
+    createdAt: String!
+  }
+
   extend type Query {
-    getMessages: [Harbour!]!
+    getChannelMessages(channel: String!): [Message!]!
   }
 
   extend type Mutation {
-    createMessage(content: String): Message!
+    createMessage(input: CreateMessageInput!): Message!
+  }
+
+  extend type Subscription {
+    channelMessages: [Message!]!
   }
 `
 

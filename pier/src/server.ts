@@ -3,8 +3,8 @@ dotenv.config()
 
 import fs from 'fs-extra'
 import jwt from 'jsonwebtoken'
-import { GraphQLServer } from 'graphql-yoga'
 import mongoose, { ConnectOptions } from 'mongoose'
+import { GraphQLServer, PubSub } from 'graphql-yoga'
 
 import rootTypeDefs from './typeDefs/root'
 import userTypeDefs from './typeDefs/users'
@@ -35,6 +35,8 @@ if (process.env.MONGODB_URI) {
   )
 }
 
+const pubsub = new PubSub()
+
 const server = new GraphQLServer({
   context: ({ request }) => {
     if (request.headers.authorization) {
@@ -44,15 +46,15 @@ const server = new GraphQLServer({
         if (decodedToken) {
           // eslint-disable-next-line
           // @ts-ignore
-          return { user: decodedToken }
+          return { user: decodedToken, pubsub }
         }
       }
     }
 
-    return {}
+    return { pubsub }
   },
-  resolvers: [userResolvers, harbourResolvers, channelResolvers],
-  typeDefs: [rootTypeDefs, userTypeDefs, harbourTypeDefs, channelTypeDefs],
+  resolvers: [userResolvers, harbourResolvers, channelResolvers, messageResolvers],
+  typeDefs: [rootTypeDefs, userTypeDefs, harbourTypeDefs, channelTypeDefs, messageTypeDefs],
 })
 
 export default server

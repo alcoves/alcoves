@@ -11,7 +11,8 @@ const typeDefs = `
   }
 
   type User {
-    id: ID!
+    _id: ID!
+    image: String
     email: String!
     username: String!
   }
