@@ -39,13 +39,11 @@ const pubsub = new PubSub()
 
 const server = new GraphQLServer({
   context: ({ request }) => {
-    if (request.headers.authorization) {
+    if (request?.headers?.authorization) {
       const token = request.headers.authorization.split('Bearer ')[1]
       if (token) {
         const decodedToken = jwt.verify(token, process.env.JWT_SECRET || '')
         if (decodedToken) {
-          // eslint-disable-next-line
-          // @ts-ignore
           return { user: decodedToken, pubsub }
         }
       }

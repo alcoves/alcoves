@@ -4,6 +4,11 @@ const typeDefs = `
     content: String!
   }
 
+  input GetChannelInput {
+    skip: Int!
+    channel: String!
+  }
+
   type Message {
     _id: ID!
     user: User!
@@ -14,7 +19,7 @@ const typeDefs = `
   }
 
   extend type Query {
-    getChannelMessages(channel: String!): [Message!]!
+    getChannelMessages(input: GetChannelInput!): [Message!]!
   }
 
   extend type Mutation {
@@ -22,7 +27,7 @@ const typeDefs = `
   }
 
   extend type Subscription {
-    channelMessages: [Message!]!
+    channelMessages(channelId: String!): Message!
   }
 `
 
