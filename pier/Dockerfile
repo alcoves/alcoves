@@ -5,5 +5,5 @@ COPY . .
 RUN yarn
 RUN yarn build
 
-EXPOSE 3100
+EXPOSE 4000
 CMD yarn start
