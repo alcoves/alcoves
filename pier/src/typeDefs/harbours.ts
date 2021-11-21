@@ -7,10 +7,13 @@ const typeDefs = `
     _id: ID!
     owner: User!
     name: String!
+    image: String!
+    channels: [Channel!]!
   }
 
   extend type Query {
-    getHarbour(_id: ID!): Harbour!
+    getHarbours: [Harbour!]!
+    getHarbour(_id: String!): Harbour!
   }
 
   extend type Mutation {

@@ -9,8 +9,13 @@ import mongoose, { ConnectOptions } from 'mongoose'
 import rootTypeDefs from './typeDefs/root'
 import userTypeDefs from './typeDefs/users'
 import harbourTypeDefs from './typeDefs/harbours'
+import channelTypeDefs from './typeDefs/channels'
+import messageTypeDefs from './typeDefs/messages'
+
 import userResolvers from './resolvers/users'
 import harbourResolvers from './resolvers/harbours'
+import channelResolvers from './resolvers/channels'
+import messageResolvers from './resolvers/messages'
 
 if (process.env.MONGODB_URI) {
   if (process.env.MONGODB_TLS_CA) {
@@ -43,10 +48,11 @@ const server = new GraphQLServer({
         }
       }
     }
+
     return {}
   },
-  resolvers: [userResolvers, harbourResolvers],
-  typeDefs: [rootTypeDefs, userTypeDefs, harbourTypeDefs],
+  resolvers: [userResolvers, harbourResolvers, channelResolvers],
+  typeDefs: [rootTypeDefs, userTypeDefs, harbourTypeDefs, channelTypeDefs],
 })
 
 export default server
