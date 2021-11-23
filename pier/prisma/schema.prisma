@@ -10,10 +10,36 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id       String @id @default(cuid())
-  email    String @unique
-  username String
-  password String
+model Channel {
+  id        String  @id @default(cuid())
+  name      String
+  harbour   Harbour @relation(fields: [harbourId], references: [id])
+  harbourId String
+}
+
+model Membership {
+  id     String @id @default(cuid())
+  role   String
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model Message {
+  id String @id @default(cuid())
+}
+
+model Harbour {
+  id       String    @id @default(cuid())
+  name     String
   image    String?
+  channels Channel[]
+}
+
+model User {
+  id         String       @id @default(cuid())
+  email      String       @unique
+  username   String
+  password   String
+  image      String?
+  Membership Membership[]
 }
