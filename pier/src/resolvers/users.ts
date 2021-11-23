@@ -1,7 +1,6 @@
+import db from '../lib/db'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import { Types } from 'mongoose'
-import { User } from '../models/User'
 
 let JWT_SECRET: string
 
@@ -21,26 +20,25 @@ const resolvers = {
   },
   Mutation: {
     login: async (_, { input: { email, password } }) => {
-      const user = await User.findOne({ email })
+      const user = await db.user.findUnique({ where: { email } })
       if (!user) throw new Error('error')
-
       const compare = await bcrypt.compare(password, user.password)
       if (!compare) throw new Error('error')
-
-      return { accessToken: getToken(user._id, user.email, user.username) }
+      return { accessToken: getToken(user.id, user.email, user.username) }
     },
     register: async (_, { input: { email, username, password } }) => {
-      const userExists = await User.findOne({ email })
+      const userExists = await db.user.findUnique({ where: { email } })
       if (userExists) throw new Error('error')
 
-      const user = await new User({
-        email: email,
-        username: username,
-        _id: new Types.ObjectId(),
-        password: await bcrypt.hash(password, 10),
-      }).save()
+      const user = await db.user.create({
+        data: {
+          email,
+          username,
+          password: await bcrypt.hash(password, 10),
+        },
+      })
 
-      return { accessToken: getToken(user._id, user.email, user.username) }
+      return { accessToken: getToken(user.id, user.email, user.username) }
     },
   },
 }

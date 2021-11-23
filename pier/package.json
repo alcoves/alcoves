@@ -12,6 +12,7 @@
     "dev": "ts-node-dev src/index.ts"
   },
   "dependencies": {
+    "@prisma/client": "^3.5.0",
     "async": "^3.2.2",
     "aws-sdk": "^2.1033.0",
     "axios": "^0.24.0",
