@@ -11,7 +11,7 @@ export const userTypeDefs = `
   }
 
   type User {
-    _id: ID!
+    id: ID!
     image: String
     email: String!
     username: String!

@@ -20,7 +20,12 @@ const rootTypeDefs = `
   }
 `
 
-export = {
-  typeDefs: [rootTypeDefs, userTypeDefs, channelTypeDefs, harbourTypeDefs, messageTypeDefs],
-  resolvers: [userResolvers, channelResolvers, harbourResolvers, messageResolvers],
-}
+export const typeDefs = [
+  rootTypeDefs,
+  userTypeDefs,
+  channelTypeDefs,
+  harbourTypeDefs,
+  messageTypeDefs,
+]
+
+export const resolvers = [userResolvers, channelResolvers, harbourResolvers, messageResolvers]

@@ -10,33 +10,37 @@ export const harbourResolvers = {
   Query: {
     getHarbours: async (_, __, { user }) => {
       if (!user) return new Error('Requires auth')
-      const memberships = await Membership.find({ user: user.id })
-        .populate('harbour')
-        .sort('-createdAt')
+      const memberships = await db.membership.findMany({
+        where: { userId: user.id },
+        include: { harbour: true },
+      })
       return memberships.map(({ harbour }) => {
         return harbour
       })
     },
-    getHarbour: (_, { _id }) => {
+    getHarbour: (_, { id }) => {
       // TODO :: check that the user is a member of this harbour
-      return Harbour.findById({ _id })
+      return db.harbour.findUnique({ where: { id } })
     },
   },
   Mutation: {
     createHarbour: async (_, { input }, { user }) => {
       if (!user) return new Error('Requires auth')
       // TODO :: run through transaction helper
-      const harbour = await new Harbour({
-        _id: new Types.ObjectId(),
-        name: input.name,
-      }).save()
 
-      await new Membership({
-        role: 'owner',
-        _id: new Types.ObjectId(),
-        user: new Types.ObjectId(user.id),
-        harbour: new Types.ObjectId(harbour._id),
-      }).save()
+      const harbour = await db.harbour.create({
+        data: {
+          name: input.name,
+        },
+      })
+
+      await db.membership.create({
+        data: {
+          role: 'owner',
+          userId: user.id,
+          harbourId: harbour.id,
+        },
+      })
 
       return harbour
     },

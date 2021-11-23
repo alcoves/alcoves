@@ -4,16 +4,16 @@ export const harbourTypeDefs = `
   }
 
   type Harbour {
-    _id: ID!
+    id: ID!
     owner: User!
     name: String!
-    image: String!
+    image: String
     channels: [Channel!]!
   }
 
   extend type Query {
     getHarbours: [Harbour!]!
-    getHarbour(_id: String!): Harbour!
+    getHarbour(id: String!): Harbour!
   }
 
   extend type Mutation {

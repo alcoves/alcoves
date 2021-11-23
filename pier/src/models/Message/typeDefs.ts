@@ -10,7 +10,7 @@ export const messageTypeDefs = `
   }
 
   type Message {
-    _id: ID!
+    id: ID!
     user: User!
     channel: Channel!
     content: String!

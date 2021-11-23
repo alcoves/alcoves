@@ -5,7 +5,7 @@ export const channelTypeDefs = `
   }
 
   type Channel {
-    _id: ID!
+    id: ID!
     name: String!
   }
 
