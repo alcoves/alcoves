@@ -1,7 +1,7 @@
 import { Types } from 'mongoose'
 import { Message } from '../models/Message'
 
-const resolvers = {
+export const messageResolvers = {
   Query: {
     getChannelMessages: (_, { input: { channel, skip } }, { user }) => {
       if (!user) throw new Error('Requires auth')
@@ -33,5 +33,3 @@ const resolvers = {
     },
   },
 }
-
-export default resolvers

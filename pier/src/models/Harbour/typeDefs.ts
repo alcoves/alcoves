@@ -1,4 +1,4 @@
-const typeDefs = `
+export const harbourTypeDefs = `
   input CreateHarbourInput {
     name: String!
   }
@@ -20,5 +20,3 @@ const typeDefs = `
     createHarbour(input: CreateHarbourInput): Harbour!
   }
 `
-
-export default typeDefs

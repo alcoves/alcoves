@@ -1,12 +1,9 @@
-import { Types } from 'mongoose'
-import { Channel } from '../models/Channel'
-import { Harbour } from '../models/Harbour'
-import { Membership } from '../models/Membership'
+import db from '../../lib/db'
 
-const resolvers = {
+export const harbourResolvers = {
   Harbour: {
-    channels: async ({ _id }) => {
-      const channels = await Channel.find({ harbour: _id })
+    channels: async ({ id }) => {
+      const channels = await db.channel.findMany({ where: { harbourId: id } })
       return channels
     },
   },
@@ -45,5 +42,3 @@ const resolvers = {
     },
   },
 }
-
-export default resolvers

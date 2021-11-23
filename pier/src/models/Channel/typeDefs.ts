@@ -1,4 +1,4 @@
-const typeDefs = `
+export const channelTypeDefs = `
   input CreateChannelInput {
     name: String!
     harbourId: String!
@@ -13,5 +13,3 @@ const typeDefs = `
     createChannel(input: CreateChannelInput): Channel!
   }
 `
-
-export default typeDefs

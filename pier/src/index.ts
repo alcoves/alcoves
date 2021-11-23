@@ -4,17 +4,7 @@ dotenv.config()
 import db from './lib/db'
 import jwt from 'jsonwebtoken'
 import { GraphQLServer, PubSub } from 'graphql-yoga'
-
-import rootTypeDefs from './typeDefs/root'
-import userTypeDefs from './typeDefs/users'
-import harbourTypeDefs from './typeDefs/harbours'
-import channelTypeDefs from './typeDefs/channels'
-import messageTypeDefs from './typeDefs/messages'
-
-import userResolvers from './resolvers/users'
-import harbourResolvers from './resolvers/harbours'
-import channelResolvers from './resolvers/channels'
-import messageResolvers from './resolvers/messages'
+import { typeDefs, resolvers } from './models/index'
 
 async function main() {
   const pubsub = new PubSub()
@@ -33,8 +23,8 @@ async function main() {
 
       return { pubsub }
     },
-    resolvers: [userResolvers, harbourResolvers, channelResolvers, messageResolvers],
-    typeDefs: [rootTypeDefs, userTypeDefs, harbourTypeDefs, channelTypeDefs, messageTypeDefs],
+    resolvers,
+    typeDefs,
   })
 
   server.start(() => console.log('Server is running on localhost:4000'))

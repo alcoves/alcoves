@@ -1,4 +1,4 @@
-const typeDefs = `
+export const userTypeDefs = `
   input RegisterInput {
     email: String!
     username: String!
@@ -30,5 +30,3 @@ const typeDefs = `
     register(input: RegisterInput): AuthenticationResponse!
   }
 `
-
-export default typeDefs

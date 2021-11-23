@@ -1,4 +1,4 @@
-const typeDefs = `
+export const messageTypeDefs = `
   input CreateMessageInput {
     channel: String!
     content: String!
@@ -30,5 +30,3 @@ const typeDefs = `
     channelMessages(channelId: String!): Message!
   }
 `
-
-export default typeDefs

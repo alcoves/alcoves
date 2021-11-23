@@ -1,4 +1,4 @@
-import db from '../lib/db'
+import db from '../../lib/db'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
@@ -14,7 +14,7 @@ function getToken(id: string, email: string, username: string): string {
   return jwt.sign({ id, email, username }, JWT_SECRET, { expiresIn: '30d' })
 }
 
-const resolvers = {
+export const userResolvers = {
   Query: {
     ping: () => 'pong!',
   },
@@ -42,5 +42,3 @@ const resolvers = {
     },
   },
 }
-
-export default resolvers

@@ -1,7 +1,7 @@
 import { Types } from 'mongoose'
 import { Channel } from '../models/Channel'
 
-const resolvers = {
+export const channelResolvers = {
   Mutation: {
     createChannel: async (_, { input }, { user }) => {
       if (!user) return new Error('Requires auth')
@@ -15,5 +15,3 @@ const resolvers = {
     },
   },
 }
-
-export default resolvers
