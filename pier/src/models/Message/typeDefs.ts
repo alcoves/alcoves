@@ -27,6 +27,6 @@ export const messageTypeDefs = `
   }
 
   extend type Subscription {
-    channelMessages(channelId: String!): Message!
+    channelMessages(channelId: String!): [Message!]!
   }
 `

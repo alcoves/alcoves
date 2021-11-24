@@ -6,7 +6,7 @@ export const messageResolvers = {
       if (!user) throw new Error('Requires auth')
       return db.message.findMany({
         skip,
-        take: 2000,
+        take: 300,
         where: { channelId: channel },
         include: { user: true },
         orderBy: [
@@ -34,7 +34,7 @@ export const messageResolvers = {
         },
       })
 
-      pubsub.publish(input.channel, { channelMessages: message })
+      pubsub.publish(input.channel, { channelMessages: [message] })
       return message
     },
   },
