@@ -23,7 +23,7 @@
     "axios": "^0.24.0",
     "dayjs": "^1.10.7",
     "detect-browser": "^5.2.1",
-    "framer-motion": "5.2.1",
+    "framer-motion": "5.3.3",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
     "mime-types": "^2.1.34",
