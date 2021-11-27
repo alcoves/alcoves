@@ -4,9 +4,9 @@ export const messageTypeDefs = `
     content: String!
   }
 
-  input GetChannelInput {
-    skip: Int!
-    channel: String!
+  input GetChannelMessagesInput {
+    before: Float
+    channelId: String!
   }
 
   type Message {
@@ -19,7 +19,7 @@ export const messageTypeDefs = `
   }
 
   extend type Query {
-    getChannelMessages(input: GetChannelInput!): [Message!]!
+    getChannelMessages(input: GetChannelMessagesInput!): [Message!]!
   }
 
   extend type Mutation {

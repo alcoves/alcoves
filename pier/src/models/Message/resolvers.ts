@@ -2,12 +2,18 @@ import db from '../../lib/db'
 
 export const messageResolvers = {
   Query: {
-    getChannelMessages: (_, { input: { channel, skip } }, { user }) => {
+    getChannelMessages: (_, { input: { channelId, before } }, { user }) => {
       if (!user) throw new Error('Requires auth')
+      const where: any = { channelId }
+      if (before) {
+        where.createdAt = {
+          lt: new Date(before),
+        }
+      }
+
       return db.message.findMany({
-        skip,
-        take: 300,
-        where: { channelId: channel },
+        take: 20,
+        where,
         include: { user: true },
         orderBy: [
           {
