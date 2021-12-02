@@ -1,24 +1,15 @@
 import { useState } from 'react'
-import { signOut, useSession } from 'next-auth/react'
 import {
   Flex,
   Spacer,
   Box,
-  Avatar,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
   useColorMode,
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import Image from 'next/image'
-import ListPods from './Pods/ListPods'
 import { IoMoon, IoSunny } from 'react-icons/io5'
 
 export default function Navigation() {
-  const { data: session } = useSession()
-  const [open, setOpen] = useState(false)
   const { colorMode, toggleColorMode } = useColorMode()
 
   return (
@@ -37,35 +28,12 @@ export default function Navigation() {
           </a>
         </Link>
       </Box>
-      {session && session.user && <ListPods />}
       <Spacer />
       <Box p='1'>
         <Flex justify='center' align='center' h='100%'>
           <Flex cursor='pointer' onClick={toggleColorMode} justify='center' mx='4'>
             {colorMode === 'dark' ? <IoMoon /> : <IoSunny />}
           </Flex>
-          {session && session.user ? (
-            <Menu>
-              <MenuButton me='10px'>
-                <Avatar
-                  h='30px'
-                  w='30px'
-                  src={session.user.image}
-                  name={session.user.name[0]}
-                  onClick={() => setOpen(!open)}
-                />
-              </MenuButton>
-              <MenuList minW='auto'>
-                <MenuItem onClick={signOut}>Log out</MenuItem>
-              </MenuList>
-            </Menu>
-          ) : (
-            <Flex w='full' h='full' align='center' me='10px'>
-              <Link passHref href='/login'>
-                <Avatar h='30px' w='30px' cursor='pointer' />
-              </Link>
-            </Flex>
-          )}
         </Flex>
       </Box>
     </Flex>
