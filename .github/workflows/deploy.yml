@@ -1,8 +1,4 @@
 name: Deploy
-env:
-  DO_API_KEY: ${{ secrets.DO_API_KEY }}
-  NOMAD_TOKEN: ${{ secrets.NOMAD_TOKEN }}
-  NOMAD_ADDRESS: ${{ secrets.NOMAD_ADDRESS }}
 on:
   push:
     branches:
@@ -11,6 +7,8 @@ jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
+    env:
+      DO_API_KEY: ${{ secrets.DO_API_KEY }}
     steps:
       - uses: actions/checkout@v2
       - name: Install doctl
@@ -28,17 +26,15 @@ jobs:
         run: doctl registry login --expiry-seconds 600
       - name: Push image to DigitalOcean Container Registry
         run: docker push registry.digitalocean.com/bken/reef --all-tags
-      - name: Deploy job
+      - name: Deploy to server
         uses: appleboy/ssh-action@master
-        env:
-          GITHUB_SHA: ${{ github.sha }}
-          NOMAD_TOKEN: ${{ secrets.NOMAD_TOKEN }}
         with:
           key: ${{ secrets.SSH_KEY }}
+          host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
-          host: ${{ secrets.NOMAD_ADDRESS }}
-          envs: GITHUB_SHA,NOMAD_TOKEN
           script: |
-            cd /root/reef && git fetch -p && git reset --hard ${GITHUB_SHA}
-            sed -i "s+:latest+:${GITHUB_SHA}+g" ./job.hcl
-            nomad job run -token ${NOMAD_TOKEN} ./job.hcl
+            doctl registry login --expiry-seconds 600
+            docker pull registry.digitalocean.com/bken/reef:$GITHUB_SHA
+            docker stop reef
+            docker rm reef
+            docker run -d --name reef -p 80:3000 registry.digitalocean.com/bken/reef:$GITHUB_SHA
