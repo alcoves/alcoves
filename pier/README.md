@@ -23,3 +23,16 @@ npx prisma db pull
 Push the Prisma schema state to the database
 npx prisma db push
 ```
+
+### Env
+
+```
+JWT_SECRET
+
+DATABASE_URL
+PGB_DATABASE_URL
+
+SPACES_ENDPOINT
+SPACES_ACCESS_KEY_ID
+SPACES_SECRET_ACCESS_KEY
+```

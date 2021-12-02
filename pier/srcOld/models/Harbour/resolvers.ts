@@ -1,4 +1,4 @@
-import db from '../../lib/db'
+import db from '../../../src/config/db'
 
 export const harbourResolvers = {
   Harbour: {

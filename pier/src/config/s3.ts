@@ -2,8 +2,8 @@ import AWS from 'aws-sdk'
 
 AWS.config.update({
   region: 'us-east-2',
-  accessKeyId: process.env.WASABI_ACCESS_KEY_ID,
-  secretAccessKey: process.env.WASABI_SECRET_ACCESS_KEY,
+  accessKeyId: process.env.SPACES_ACCESS_KEY_ID,
+  secretAccessKey: process.env.SPACES_SECRET_ACCESS_KEY,
   maxRetries: 8,
   httpOptions: {
     timeout: 5000,
@@ -13,7 +13,7 @@ AWS.config.update({
 
 const s3 = new AWS.S3({
   signatureVersion: 'v4',
-  endpoint: process.env.WASABI_ENDPOINT,
+  endpoint: process.env.SPACES_ENDPOINT,
 })
 
 export async function getSignedURL(urlParams: { Bucket: string; Key: string }) {
