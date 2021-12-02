@@ -1,15 +1,14 @@
 name: Deploy
-env:
-  DO_API_KEY: ${{ secrets.DO_API_KEY }}
 on:
   push:
     branches:
-      - dev
       - main
 jobs:
-  container:
-    name: Container
+  deploy:
+    name: Deploy
     runs-on: ubuntu-latest
+    env:
+      DO_API_KEY: ${{ secrets.DO_API_KEY }}
     steps:
       - uses: actions/checkout@v2
       - name: Install doctl
@@ -21,20 +20,21 @@ jobs:
           GITHUB_SHA: ${{ github.sha }}
         run: docker build
           --build-arg NEXT_PUBLIC_GIT_SHA=$GITHUB_SHA
+          -t registry.digitalocean.com/bken/pier:latest
           -t registry.digitalocean.com/bken/pier:$GITHUB_SHA .
       - name: Login to DigitalOcean Docker Registry
         run: doctl registry login --expiry-seconds 600
       - name: Push image to DigitalOcean Container Registry
         run: docker push registry.digitalocean.com/bken/pier --all-tags
-  # deploy_dev:
-  #   name: Deploy Dev
-  #   needs: container
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: Install doctl
-  #       uses: digitalocean/action-doctl@v2
-  #       with:
-  #         token: ${{ secrets.DO_API_KEY }}
-  #     - name: Deploy dev
-  #       run: doctl app create-deployment 123 
+      - name: Deploy to server
+        uses: appleboy/ssh-action@master
+        with:
+          key: ${{ secrets.SSH_KEY }}
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          script: |
+            doctl registry login --expiry-seconds 600
+            docker pull registry.digitalocean.com/bken/pier:latest
+            docker stop pier
+            docker rm pier
+            docker run -d --name pier -p 80:4000 registry.digitalocean.com/bken/pier:latest
