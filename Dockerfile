@@ -9,9 +9,7 @@ FROM node:16-alpine AS builder
 WORKDIR /app
 COPY . .
 COPY --from=deps /app/node_modules ./node_modules
-RUN yarn build && yarn install --production --ignore-scripts --prefer-offline
-
-RUN rm -rf .cache
+RUN yarn build && yarn install --production --ignore-scripts --prefer-offline && rm -rf .next/.cache
 
 FROM node:16-alpine AS runner
 WORKDIR /app
