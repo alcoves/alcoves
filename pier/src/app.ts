@@ -5,6 +5,8 @@ import registerRoute from './routes/register'
 
 const app = express()
 
+app.use(express.json())
+
 app.use(rootRoute)
 app.use(loginRoute)
 app.use(registerRoute)

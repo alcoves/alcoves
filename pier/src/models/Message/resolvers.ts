@@ -1,4 +1,4 @@
-import db from '../../../src/config/db'
+import db from '../../config/db'
 
 export const messageResolvers = {
   Query: {

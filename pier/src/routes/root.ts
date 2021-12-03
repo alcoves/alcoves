@@ -1,9 +1,8 @@
 import express from 'express'
+import { rootController } from '../controllers/root'
 
 const router = express.Router()
 
-router.get('/', (req, res) => {
-  res.sendStatus(200)
-})
+router.get('/', rootController)
 
 export default router

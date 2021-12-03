@@ -1,4 +1,4 @@
-import db from '../../../src/config/db'
+import db from '../../config/db'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
