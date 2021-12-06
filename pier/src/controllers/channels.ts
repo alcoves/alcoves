@@ -10,7 +10,10 @@ export async function getChannels(req, res) {
     where: { harbourId: req.params.harbourId },
   })
 
-  return res.json(channels)
+  return res.json({
+    status: 'success',
+    payload: { channels },
+  })
 }
 
 export async function createChannel(req, res) {
@@ -26,5 +29,8 @@ export async function createChannel(req, res) {
     },
   })
 
-  return res.json(channel)
+  return res.json({
+    status: 'success',
+    payload: { channel },
+  })
 }

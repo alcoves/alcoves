@@ -1,7 +1,9 @@
 import db from '../config/db'
 
 export function createHarbour(req, res) {
-  return res.sendStatus(200)
+  return res.json({
+    status: 'success',
+  })
 }
 
 export async function getHarbours(req, res) {
@@ -11,9 +13,12 @@ export async function getHarbours(req, res) {
   })
 
   return res.json({
-    harbours: memberships.map(({ harbour }) => {
-      return harbour
-    }),
+    status: 'success',
+    payload: {
+      harbours: memberships.map(({ harbour }) => {
+        return harbour
+      }),
+    },
   })
 }
 
@@ -24,6 +29,7 @@ export async function getHarbourById(req, res) {
   })
 
   return res.json({
-    harbour: membership?.harbour,
+    status: 'success',
+    payload: { harbour: membership?.harbour },
   })
 }
