@@ -11,7 +11,7 @@ export async function loginController(req, res) {
   const compare = await bcrypt.compare(password, user.password)
   if (!compare) return res.status(401).send('email or password incorrect')
 
-  return res.status(200).send({
+  return res.json({
     accessToken: getToken(user.id, user.email, user.username),
   })
 }
