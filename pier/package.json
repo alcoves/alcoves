@@ -10,6 +10,7 @@
     "build": "tsc",
     "test": "jest",
     "start": "node ./dist/src/index.js",
+    "predev": "npx prisma generate",
     "dev": "ts-node-dev src/index.ts"
   },
   "dependencies": {
