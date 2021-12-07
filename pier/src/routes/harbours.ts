@@ -10,7 +10,7 @@ router.get('/', auth, getHarbours)
 router.post('/', auth, createHarbour)
 router.get('/:harbourId', auth, getHarbourById)
 router.get('/:harbourId/channels', auth, getChannels)
-router.post('/:harboudId/channels', auth, createChannel)
+router.post('/:harbourId/channels', auth, createChannel)
 router.get('/:harbourId/channels/:channelId/messages', auth, getMessages)
 router.post('/:harbourId/channels/:channelId/messages', auth, createMessage)
 

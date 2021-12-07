@@ -21,11 +21,13 @@ export async function createChannel(req, res) {
     where: { userId: req.user.id, harbourId: req.params.harbourId },
   })
 
+  console.log(req.body, req.params)
+
   if (!hasMembership) return res.sendStatus(403)
   const channel = await db.channel.create({
     data: {
       name: req.body.name,
-      harbourId: req.body.harbourId,
+      harbourId: req.params.harbourId,
     },
   })
 
