@@ -36,7 +36,7 @@ model Membership {
 }
 
 model Message {
-  id        String  @id @default(cuid())
+  id        Int     @id @default(autoincrement())
   content   String
   user      User    @relation(fields: [userId], references: [id])
   userId    String
