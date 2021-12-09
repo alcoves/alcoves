@@ -12,7 +12,7 @@ export async function loginController(req, res) {
   if (!compare) return res.status(401).send('email or password incorrect')
 
   return res.json({
-    accessToken: getToken(user.id, user.email, user.username),
+    accessToken: getToken(user.id, user.email, user.username, user.image || ''),
   })
 }
 
@@ -31,7 +31,7 @@ export async function registerController(req, res) {
   })
 
   return res.json({
-    accessToken: getToken(user.id, user.email, user.username),
+    accessToken: getToken(user.id, user.email, user.username, user.image || ''),
   })
 }
 

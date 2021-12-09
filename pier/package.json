@@ -21,7 +21,9 @@
     "dotenv": "^10.0.0",
     "express": "^5.0.0-alpha.8",
     "jsonwebtoken": "^8.5.1",
+    "mime-types": "^2.1.34",
     "morgan": "^1.10.0",
+    "sharp": "^0.29.3",
     "socket.io": "^4.4.0"
   },
   "devDependencies": {

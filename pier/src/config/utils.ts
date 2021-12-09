@@ -8,6 +8,6 @@ if (process.env.JWT_SECRET) {
   throw new Error('process.env.JWT_SECRET must be defined!')
 }
 
-export function getToken(id: string, email: string, username: string): string {
-  return jwt.sign({ id, email, username }, JWT_SECRET, { expiresIn: '30d' })
+export function getToken(id: string, email: string, username: string, image: string): string {
+  return jwt.sign({ id, email, username, image }, JWT_SECRET, { expiresIn: '30d' })
 }

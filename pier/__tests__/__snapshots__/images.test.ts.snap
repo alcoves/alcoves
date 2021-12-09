@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`optimizeUserAvatar  1`] = `
+Object {
+  "channels": 3,
+  "chromaSubsampling": "4:2:0",
+  "density": 72,
+  "depth": "uchar",
+  "format": "jpeg",
+  "hasAlpha": false,
+  "hasProfile": false,
+  "height": 250,
+  "isProgressive": true,
+  "size": 5052,
+  "space": "srgb",
+  "width": 250,
+}
+`;
