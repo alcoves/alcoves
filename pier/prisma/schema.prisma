@@ -11,11 +11,11 @@ datasource db {
 }
 
 model Channel {
-  id        String    @id @default(cuid())
-  name      String
-  harbour   Harbour   @relation(fields: [harbourId], references: [id])
-  harbourId String
-  Message   Message[]
+  id       String    @id @default(cuid())
+  name     String
+  harbor   Harbor    @relation(fields: [harborId], references: [id])
+  harborId String
+  Message  Message[]
 
   // Timestamps
   updatedAt DateTime @updatedAt
@@ -23,12 +23,12 @@ model Channel {
 }
 
 model Membership {
-  id        String  @id @default(cuid())
-  role      String
-  userId    String
-  user      User    @relation(fields: [userId], references: [id])
-  harbourId String
-  harbour   Harbour @relation(fields: [harbourId], references: [id])
+  id       String @id @default(cuid())
+  role     String
+  userId   String
+  user     User   @relation(fields: [userId], references: [id])
+  harborId String
+  harbor   Harbor @relation(fields: [harborId], references: [id])
 
   // Timestamps
   updatedAt DateTime @updatedAt
@@ -48,7 +48,7 @@ model Message {
   createdAt DateTime @default(now())
 }
 
-model Harbour {
+model Harbor {
   id       String    @id @default(cuid())
   name     String
   image    String?
