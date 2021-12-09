@@ -1,8 +1,15 @@
 import db from '../config/db'
 
-export function createHarbor(req, res) {
+export async function createHarbor(req, res) {
+  const harbor = await db.harbor.create({
+    data: { name: req.body.name },
+  })
+  await db.membership.create({
+    data: { role: 'owner', userId: req.user.id, harborId: harbor.id },
+  })
   return res.json({
     status: 'success',
+    payload: { harbor },
   })
 }
 
