@@ -20,7 +20,7 @@ async function main() {
 
     socket.on('join', token => {
       console.log('token', token)
-      // Go get the harbours a user can join
+      // Go get the harbors a user can join
       socket.join(['shack'])
     })
 

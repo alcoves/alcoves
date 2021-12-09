@@ -2,7 +2,7 @@ import db from '../config/db'
 
 export async function createMessage(req, res) {
   const hasMembership = await db.membership.findFirst({
-    where: { userId: req.user.id, harbourId: req.params.harbourId },
+    where: { userId: req.user.id, harborId: req.params.harborId },
   })
   if (!hasMembership) return res.sendStatus(403)
 
@@ -28,7 +28,7 @@ export async function createMessage(req, res) {
 
 export async function getMessages(req, res) {
   const hasMembership = await db.membership.findFirst({
-    where: { userId: req.user.id, harbourId: req.params.harbourId },
+    where: { userId: req.user.id, harborId: req.params.harborId },
   })
   if (!hasMembership) return res.sendStatus(403)
 
