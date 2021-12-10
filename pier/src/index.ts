@@ -1,6 +1,7 @@
 import http from 'http'
 import app from './app'
 import db from './config/db'
+import jwt from 'jsonwebtoken'
 import { Server } from 'socket.io'
 
 const port = 4000
@@ -18,10 +19,16 @@ async function main() {
   io.on('connection', socket => {
     console.log('a user connected')
 
-    socket.on('join', token => {
-      console.log('token', token)
-      // Go get the harbors a user can join
-      socket.join(['shack'])
+    socket.on('join', async token => {
+      const user: any = jwt.decode(token)
+      const memberships = await db.membership.findMany({
+        where: { userId: user.id },
+      })
+      const harborIds = memberships.map(membership => {
+        return membership.harborId
+      })
+      console.log(`${user.id} is joining ${JSON.stringify(harborIds)}`)
+      socket.join(harborIds)
     })
 
     socket.on('ping', () => {

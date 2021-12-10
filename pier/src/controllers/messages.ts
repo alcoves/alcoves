@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client'
 import db from '../config/db'
 
 export async function createMessage(req, res) {
@@ -18,7 +19,7 @@ export async function createMessage(req, res) {
   })
 
   // Dispatches new messages to connected clients
-  req.app.get('io').to('shack').emit('message', message)
+  req.app.get('io').to(req.params.harborId).emit('message', message)
 
   return res.json({
     status: 'success',
@@ -32,32 +33,25 @@ export async function getMessages(req, res) {
   })
   if (!hasMembership) return res.sendStatus(403)
 
-  // setInterval(() => {
-  //   console.log('loop')
-  //   io.to('shack').emit('heartbeat')
-  // }, 500)
-
-  const messageQuery = {
+  const messageParams: Prisma.MessageFindManyArgs = {
     take: 50,
     include: { user: true },
+    orderBy: [{ id: 'desc' }],
     where: { channelId: req.params.channelId },
-    // orderBy: [
-    //   {
-    //     createdAt: 'desc',
-    //   },
-    // ],
   }
 
-  // if (cursor) {
-  //   where.createdAt = {
-  //     lt: new Date(before),
-  //   }
-  // }
+  if (req.query.before) {
+    messageParams.skip = 1
+    messageParams.orderBy = [{ id: 'desc' }]
+    messageParams.cursor = {
+      id: parseInt(req.query.before),
+    }
+  }
+
+  const messages = await db.message.findMany(messageParams)
 
   return res.json({
     status: 'success',
-    payload: {
-      messages: await db.message.findMany(messageQuery),
-    },
+    payload: { messages },
   })
 }
