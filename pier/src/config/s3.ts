@@ -25,3 +25,4 @@ export async function getSignedURL(urlParams: { Bucket: string; Key: string }) {
 }
 
 export default s3
+export const defaultBucket = 'cdn.bken.io'

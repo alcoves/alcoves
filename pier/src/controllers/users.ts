@@ -1,6 +1,7 @@
 import db from '../config/db'
-import s3 from '../config/s3'
-import { optimizeUserAvatar, parseDataURIScheme } from '../service/images'
+import mime from 'mime-types'
+import s3, { defaultBucket } from '../config/s3'
+import { optimizeUserAvatar, parseDataURIScheme, getAvatarUploadKey } from '../service/images'
 
 export async function patchUser(req, res) {
   let userIdToModify = req.params.userId
@@ -12,19 +13,15 @@ export async function patchUser(req, res) {
     const parsedDataURIScheme = parseDataURIScheme(req.body.image)
     if (parsedDataURIScheme) {
       const imageBuffer = await optimizeUserAvatar(parsedDataURIScheme)
-
       const res = await s3
         .upload({
-          Key: 'test.jpg',
           Body: imageBuffer,
-          Bucket: 'cdn.bken.io',
-          ContentType: parsedDataURIScheme.contentType,
+          Bucket: defaultBucket,
+          ContentType: mime.contentType(parsedDataURIScheme.contentType),
+          Key: getAvatarUploadKey(req.user.id, parsedDataURIScheme.contentType),
         })
         .promise()
-
-      console.log('res', res)
-
-      userUpdate.image = `https://cdn.bken.io/test.jpg`
+      userUpdate.image = `https://cdn.bken.io/${res.Key}`
     }
   }
 

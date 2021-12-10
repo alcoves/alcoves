@@ -1,12 +1,17 @@
+import cuid from 'cuid'
 import sharp from 'sharp'
 import mime from 'mime-types'
-import s3 from '../config/s3'
-import { ManagedUpload } from 'aws-sdk/clients/s3'
 
 interface DataURIScheme {
   data: string
   encoding: string
   contentType: string
+}
+
+export function getAvatarUploadKey(userId: string, contentType: string) {
+  const imageId = cuid()
+  const extention = mime.extension(contentType)
+  return `avatars/${userId}/${imageId}.${extention}`
 }
 
 // Parses https://en.wikipedia.org/wiki/Data_URI_scheme
@@ -28,11 +33,11 @@ export async function optimizeUserAvatar(dataUri: DataURIScheme) {
   try {
     const imageBuffer = Buffer.from(dataUri.data, 'base64')
     const image = await sharp(imageBuffer)
-      .resize(250, 250, {
+      .resize(500, 500, {
         fit: 'contain',
       })
       .jpeg({
-        quality: 80,
+        quality: 85,
         progressive: true,
       })
       .toBuffer()
