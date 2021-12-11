@@ -3,7 +3,7 @@ import { Provider } from 'next-auth/providers'
 import { getProviders, signIn } from 'next-auth/react'
 import { Button, Flex, Heading, Box } from '@chakra-ui/react'
 
-export default function Login(props: { providers: Provider[] }): JSX.Element {
+export default function Login(props: { providers: Provider[] }) {
   const { providers } = props
   return (
     <Flex justify='center'>

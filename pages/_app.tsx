@@ -1,25 +1,14 @@
 import '../styles/index.css'
-import React, { useEffect } from 'react'
+
+import React from 'react'
 import Head from 'next/head'
+import theme from '../styles/theme'
 import { AppProps } from 'next/app'
+import { ChakraProvider } from '@chakra-ui/react'
 import { SessionProvider } from 'next-auth/react'
-import { useRouter } from 'next/router'
-import * as gtag from '../utils/gtag'
-import { Chakra } from '../styles/chakra'
 
-function App(props: AppProps): JSX.Element {
+function App(props: AppProps) {
   const { Component, pageProps } = props
-  const router = useRouter()
-
-  useEffect(() => {
-    const handleRouteChange = (url: string) => {
-      gtag.pageview(url)
-    }
-    router.events.on('routeChangeComplete', handleRouteChange)
-    return () => {
-      router.events.off('routeChangeComplete', handleRouteChange)
-    }
-  }, [router.events])
 
   return (
     <>
@@ -29,11 +18,11 @@ function App(props: AppProps): JSX.Element {
           content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'
         />
       </Head>
-      <SessionProvider session={pageProps.session}>
-        <Chakra cookies={pageProps.cookies}>
+      <ChakraProvider theme={theme}>
+        <SessionProvider session={pageProps.session}>
           <Component {...pageProps} />
-        </Chakra>
-      </SessionProvider>
+        </SessionProvider>
+      </ChakraProvider>
     </>
   )
 }

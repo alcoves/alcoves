@@ -1,19 +1,13 @@
-import { useState } from 'react'
-import {
-  Flex,
-  Spacer,
-  Box,
-  useColorMode,
-} from '@chakra-ui/react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { IoMoon, IoSunny } from 'react-icons/io5'
+import { Flex, Spacer, Box, useColorMode } from '@chakra-ui/react'
 
 export default function Navigation() {
   const { colorMode, toggleColorMode } = useColorMode()
 
   return (
-    <Flex h='48px' bg={colorMode === 'dark' ? 'gray.900' : 'white'}>
+    <Flex h='48px'>
       <Box p='1' cursor='pointer'>
         <Link href='/'>
           <a>
