@@ -3,11 +3,13 @@ import '../styles/index.css'
 import React from 'react'
 import Head from 'next/head'
 import theme from '../styles/theme'
+import useUser from '../hooks/useUser'
 import { AppProps } from 'next/app'
+import { UserContext } from '../contexts/user'
 import { ChakraProvider } from '@chakra-ui/react'
-import { SessionProvider } from 'next-auth/react'
 
 function App(props: AppProps) {
+  const userState = useUser()
   const { Component, pageProps } = props
 
   return (
@@ -19,9 +21,9 @@ function App(props: AppProps) {
         />
       </Head>
       <ChakraProvider theme={theme}>
-        <SessionProvider session={pageProps.session}>
+        <UserContext.Provider value={userState}>
           <Component {...pageProps} />
-        </SessionProvider>
+        </UserContext.Provider>
       </ChakraProvider>
     </>
   )
