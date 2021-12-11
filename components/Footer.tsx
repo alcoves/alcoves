@@ -8,20 +8,19 @@ const links = {
   statusPage: 'https://bken.statuspage.io',
 }
 
-export default function Footer(): JSX.Element {
+export default function Footer() {
   const { colorMode } = useColorMode()
 
   const colors = {
-    bgColor: colorMode === 'dark' ? 'gray.900' : 'gray.100',
     text1: colorMode === 'dark' ? 'gray.400' : 'gray.700',
     text2: colorMode === 'dark' ? 'gray.500' : 'gray.800',
   }
 
   return (
-    <Flex h='48px' w='100%' px='5' justify='space-between' align='center' bg={colors.bgColor}>
+    <Flex h='auto' w='100%' justify='space-between' align='center'>
       <Flex direction='column' w='100px'>
         <Text fontSize='.7rem' color={colors.text1}>
-          {`© ${new Date().getFullYear()} Bken, Inc.`}
+          {`Terms`}
         </Text>
         <Text fontSize='.6rem' color={colors.text1}>
           <Link href={links.github}>{process.env.NEXT_PUBLIC_GIT_SHA}</Link>

@@ -1,16 +1,18 @@
 import NavBar from './NavBar'
-import Footer from './Footer'
-import { Box } from '@chakra-ui/layout'
+import Sidebar from './Sidebar'
+import { Flex } from '@chakra-ui/layout'
 
 function Content(props: { children: React.ReactNode }) {
-  return <Box minH='calc(100vh - 96px)'>{props.children}</Box>
+  return <Flex>{props.children}</Flex>
 }
 
-const Layout = (props: { children: React.ReactNode }): JSX.Element => (
+const Layout = (props: { children: React.ReactNode }) => (
   <>
     <NavBar />
-    <Content>{props.children}</Content>
-    <Footer />
+    <Flex minH='calc(100vh - 48px)'>
+      <Sidebar />
+      <Content>{props.children}</Content>
+    </Flex>
   </>
 )
 
