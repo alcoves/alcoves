@@ -1,21 +1,18 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Layout from '../components/Layout'
 import { Flex, Heading, Text } from '@chakra-ui/react'
+import { UserContext } from '../contexts/user'
+import { useRouter } from 'next/router'
 
 export default function Index() {
-  const loggedIn = true
+  const router = useRouter()
+  const { loading, authenticated } = useContext(UserContext)
 
-  if (loggedIn) {
-    return <Layout>This should be the My Bken component</Layout>
+  if (!loading && !authenticated) {
+    // TODO :: Splash page here
+    router.push('/login')
+    return null
   }
 
-  return (
-    <Flex h='100vh' w='100vw' justify='center'>
-      <Flex direction='column' align='center' pt='10'>
-        <Heading> Ahoy! </Heading>
-        <Text> {"We're working on something big"} </Text>
-        <Text> If you participated in our alpha, thank you! More details to come</Text>
-      </Flex>
-    </Flex>
-  )
+  return <Layout>This should be the My Bken component</Layout>
 }

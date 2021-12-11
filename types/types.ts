@@ -1,26 +1,16 @@
 export interface User {
-  _id: string
-  name: string
+  id: string
+  iat: number
+  exp: number
   email: string
   image: string
+  username: string
 }
 
-export interface Pod {
-  _id: string
-  name: string
-  owner: string
-  members: string[] & User[]
-}
-
-export interface Video {
-  _id: string
-  title: string
-  views: number
-  status: string
-  duration: string
-  tidal: string
-  pod: string & Pod
-  owner: string & User
-  createdAt: Date
-  updatedAt: Date
+export interface UserState {
+  user?: User | null
+  loading?: boolean
+  logout?: () => void
+  authenticated?: boolean
+  login?: (token: string) => void
 }
