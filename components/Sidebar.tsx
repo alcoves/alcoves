@@ -34,9 +34,9 @@ export default function Sidebar() {
           letterSpacing='.1rem'
           textTransform='uppercase'
         >
-          Compartments
+          Pods
         </Heading>
-        <div>Shared bken here</div>
+        <div>Shared pods here</div>
       </VStack>
       <Footer />
     </Flex>
