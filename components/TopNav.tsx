@@ -2,6 +2,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { IoMoon, IoSunny } from 'react-icons/io5'
 import { Flex, Spacer, Box, useColorMode } from '@chakra-ui/react'
+import AvatarMenu from './AvatarMenu'
 
 export default function Navigation() {
   const { colorMode, toggleColorMode } = useColorMode()
@@ -28,6 +29,7 @@ export default function Navigation() {
           <Flex cursor='pointer' onClick={toggleColorMode} justify='center' mx='4'>
             {colorMode === 'dark' ? <IoMoon /> : <IoSunny />}
           </Flex>
+          <AvatarMenu />
         </Flex>
       </Box>
     </Flex>

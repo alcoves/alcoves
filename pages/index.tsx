@@ -1,8 +1,7 @@
-import React, { useContext } from 'react'
 import Layout from '../components/Layout'
-import { Flex, Heading, Text } from '@chakra-ui/react'
-import { UserContext } from '../contexts/user'
 import { useRouter } from 'next/router'
+import React, { useContext } from 'react'
+import { UserContext } from '../contexts/user'
 
 export default function Index() {
   const router = useRouter()

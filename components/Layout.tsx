@@ -1,4 +1,4 @@
-import NavBar from './NavBar'
+import TopNav from './TopNav'
 import Sidebar from './Sidebar'
 import { Flex } from '@chakra-ui/layout'
 
@@ -8,7 +8,7 @@ function Content(props: { children: React.ReactNode }) {
 
 const Layout = (props: { children: React.ReactNode }) => (
   <>
-    <NavBar />
+    <TopNav />
     <Flex minH='calc(100vh - 48px)'>
       <Sidebar />
       <Content>{props.children}</Content>

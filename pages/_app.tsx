@@ -12,6 +12,8 @@ function App(props: AppProps) {
   const userState = useUser()
   const { Component, pageProps } = props
 
+  if (!userState) return null
+
   return (
     <>
       <Head>
