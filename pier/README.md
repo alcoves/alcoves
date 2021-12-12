@@ -36,23 +36,3 @@ SPACES_ENDPOINT
 SPACES_ACCESS_KEY_ID
 SPACES_SECRET_ACCESS_KEY
 ```
-
-### Gateway Events
-
-The websocket gateway handles updating clients with the freshest data possible. A number of events are used to make this possible
-
-Typically, the flow goes like this.
-
-- Connect to gateway
-- Join rooms (harbor) using an accessToken
-  - You are joined with all the harbors you have access to, plus a global event channel
-
-Events
-
-```
-// Global
-
-ping -> pong
-status -> returns system status
-
-```

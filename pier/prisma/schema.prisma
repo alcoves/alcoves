@@ -1,75 +1,79 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-generator client {
-  provider = "prisma-client-js"
-}
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-model Channel {
-  id       String    @id @default(cuid())
-  name     String
-  harbor   Harbor    @relation(fields: [harborId], references: [id])
-  harborId String
-  Message  Message[]
-
-  // Timestamps
-  updatedAt DateTime @updatedAt
-  createdAt DateTime @default(now())
-}
-
-model Membership {
-  id       String @id @default(cuid())
-  role     String
-  userId   String
-  user     User   @relation(fields: [userId], references: [id])
-  harborId String
-  harbor   Harbor @relation(fields: [harborId], references: [id])
-
-  // Timestamps
-  updatedAt DateTime @updatedAt
-  createdAt DateTime @default(now())
-}
-
-model Message {
-  id        Int     @id @default(autoincrement())
-  content   String
-  user      User    @relation(fields: [userId], references: [id])
-  userId    String
-  channel   Channel @relation(fields: [channelId], references: [id])
-  channelId String
-
-  // Timestamps
-  updatedAt DateTime @updatedAt
-  createdAt DateTime @default(now())
-}
-
-model Harbor {
-  id       String    @id @default(cuid())
-  name     String
-  image    String?
-  channels Channel[]
-
-  // Timestamps
-  updatedAt  DateTime     @updatedAt
-  createdAt  DateTime     @default(now())
-  Membership Membership[]
+generator client {
+  provider = "prisma-client-js"
 }
 
 model User {
-  id         String       @id @default(cuid())
-  email      String       @unique
-  username   String
-  password   String
-  image      String?
-  Message    Message[]
-  Membership Membership[]
+  id          String       @id @default(cuid())
+  email       String       @unique
+  username    String
+  password    String
+  image       String?
+  medias      Media[]
+  memberships Membership[]
+  updatedAt   DateTime     @updatedAt
+  createdAt   DateTime     @default(now())
+}
 
-  // Timestamps
+model Pod {
+  id          String       @id @default(cuid())
+  name        String
+  image       String?
+  medias      Media[]
+  memberships Membership[]
+  updatedAt   DateTime     @updatedAt
+  createdAt   DateTime     @default(now())
+}
+
+model Membership {
+  id        String   @id @default(cuid())
+  role      String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  podId     String
+  pod       Pod      @relation(fields: [podId], references: [id])
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
 }
+
+model Media {
+  id          Int      @id @default(autoincrement())
+  size        Int
+  title       String
+  originalUrl String
+  filename    String
+  mimeType    String
+  podId       String
+  pod         Pod      @relation(fields: [podId], references: [id])
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
+}
+
+// Media Metadata
+// {
+// "creationTime": string,
+// "width": string,
+// "height": string,
+
+// // Union field metadata can be only one of the following:
+// "photo": {
+// "cameraMake": string,
+// "cameraModel": string,
+// "focalLength": number,
+// "apertureFNumber": number,
+// "isoEquivalent": integer,
+// "exposureTime": string
+// },
+// "video": {
+// "cameraMake": string,
+// "cameraModel": string,
+// "fps": number,
+// "status": enum (VideoProcessingStatus) UNSPECIFIED PROCESSING READY FAILED
+// }
+// }
