@@ -8,9 +8,9 @@ export interface User {
 }
 
 export interface UserState {
-  user?: User | null
-  loading?: boolean
-  logout?: () => void
-  authenticated?: boolean
-  login?: (token: string) => void
+  user: User | null
+  loading: boolean
+  authenticated: boolean
+  logout: () => void
+  login: (token: string) => void
 }

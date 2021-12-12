@@ -19,44 +19,31 @@ export default function useUser(): UserState {
 
   function login(token: string) {
     cookies.set('token', token)
-    router.push('/')
+    const user = jwt<User>(token)
+    if (user && user.id) {
+      if (Date.now() >= user.exp * 1000) {
+        logout()
+        setAuthenticated(false)
+        setLoading(false)
+      } else {
+        setUser(user)
+        setAuthenticated(true)
+        setLoading(false)
+        router.push('/')
+      }
+    } else {
+      setLoading(false)
+    }
   }
 
   useEffect(() => {
     const jwtToken = cookies.get('token')
     if (jwtToken) {
-      const user = jwt<User>(jwtToken)
-      if (user && user.id) {
-        if (Date.now() >= user.exp * 1000) {
-          logout()
-          setAuthenticated(false)
-          setLoading(false)
-        } else {
-          setUser(user)
-          setAuthenticated(true)
-          setLoading(false)
-        }
-      } else {
-        setLoading(false)
-      }
+      login(jwtToken)
     } else {
       setLoading(false)
     }
   }, [])
 
   return { user, authenticated, loading, logout, login }
-}
-
-export function getUserSync(): any {
-  const jwtToken = cookies.get('token')
-  if (jwtToken) {
-    const user = jwt<User>(jwtToken)
-    if (Date.now() >= user.exp * 1000) {
-      cookies.remove('token')
-      window.location.replace('/login')
-    } else {
-      return { user }
-    }
-  }
-  return null
 }

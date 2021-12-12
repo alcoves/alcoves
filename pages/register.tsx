@@ -1,17 +1,17 @@
 import axios from 'axios'
-import useUser from '../hooks/useUser'
-import React, { useState } from 'react'
-import { useRouter } from 'next/router'
-import { Text, Box, Flex, Input, Heading, Button } from '@chakra-ui/react'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { UserContext } from '../contexts/user'
+import React, { useContext, useState } from 'react'
+import { Text, Box, Flex, Input, Heading, Button } from '@chakra-ui/react'
 
 export default function Register() {
   const router = useRouter()
-  const { authenticated, login } = useUser()
   const [email, setEmail] = useState('')
   const [errorMsg, setErrorMsg] = useState('')
   const [password, setPassword] = useState('')
   const [username, setUsername] = useState('')
+  const { authenticated, login } = useContext(UserContext)
 
   async function handleRegister() {
     try {
