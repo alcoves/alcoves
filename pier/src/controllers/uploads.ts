@@ -1,15 +1,15 @@
 import cuid from 'cuid'
+import mime from 'mime-types'
 import s3, { defaultBucket } from '../config/s3'
 
 export async function create(req, res) {
-  const uploadId = cuid()
   const { chunks } = req.body
 
   const { UploadId, Key } = await s3
     .createMultipartUpload({
       Bucket: defaultBucket,
       ContentType: req.body.contentType,
-      Key: `uploads/${uploadId}/original`,
+      Key: `uploads/${cuid()}/${cuid()}.${mime.extension(req.body.contentType)}`,
     })
     .promise()
 
@@ -32,8 +32,7 @@ export async function create(req, res) {
       upload: {
         urls,
         key: Key,
-        uploadId: uploadId, // Do we need this?
-        multipartUploadId: UploadId,
+        uploadId: UploadId,
       },
     },
   })

@@ -1,7 +1,33 @@
 import db from '../config/db'
 import { Prisma } from '@prisma/client'
+import s3, { defaultBucket } from '../config/s3'
+import { CompletedPart, CompletedPartList } from 'aws-sdk/clients/s3'
 
 export async function create(req, res) {
+  console.log('BODY', req.body)
+  // TODO :: Make this work for greater than 1000 part uploads
+  const { Parts } = await s3
+    .listParts({
+      Key: req.body.key,
+      Bucket: defaultBucket,
+      UploadId: req.body.uploadId,
+    })
+    .promise()
+
+  const mappedParts: CompletedPart[] =
+    Parts?.map(({ ETag, PartNumber }) => {
+      return { ETag, PartNumber } as CompletedPart
+    }) || []
+
+  await s3
+    .completeMultipartUpload({
+      Key: req.body.key,
+      Bucket: defaultBucket,
+      UploadId: req.body.uploadId,
+      MultipartUpload: { Parts: mappedParts },
+    })
+    .promise()
+
   // const hasMembership = await db.membership.findFirst({
   //   where: { userId: req.user.id, podId: req.params.podId },
   // })
