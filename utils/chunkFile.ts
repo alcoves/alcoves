@@ -1,6 +1,6 @@
 const DEFAULT_CHUNK_SIZE = 10000000 * 2 // 20mb
 
-export default function chunkFile(file, chunkSize = DEFAULT_CHUNK_SIZE) {
+export default function chunkFile(file: File, chunkSize = DEFAULT_CHUNK_SIZE) {
   let end
   let blob
   let start

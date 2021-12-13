@@ -1,6 +1,6 @@
-import Cookies from 'js-cookie'
+import axios from '../utils/axios'
 import { useState } from 'react'
-import axios, { AxiosRequestConfig } from 'axios'
+import { AxiosRequestConfig } from 'axios'
 
 export default function useLazyRequest(options?: AxiosRequestConfig): any {
   const [data, setData] = useState(null)
@@ -9,10 +9,6 @@ export default function useLazyRequest(options?: AxiosRequestConfig): any {
 
   async function executeRequest(inputOverides: any) {
     try {
-      axios.defaults.headers.common = {
-        Authorization: `Bearer ${Cookies.get('token')}`,
-      }
-
       const res = await axios({
         ...options,
         ...inputOverides,

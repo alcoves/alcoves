@@ -14,3 +14,15 @@ export interface UserState {
   logout: () => void
   login: (token: string) => void
 }
+
+export interface UploadsState {
+  uploads: Upload[]
+  addUpload: (file: File) => Promise<void>
+}
+
+export interface Upload {
+  file: File
+  status: string
+  completed: number
+  uploadUrls: string[]
+}

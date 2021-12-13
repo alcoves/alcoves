@@ -1,5 +1,5 @@
-import axios from 'axios'
 import Link from 'next/link'
+import axios from '../utils/axios'
 import { useRouter } from 'next/router'
 import { UserContext } from '../contexts/user'
 import React, { useContext, useState } from 'react'

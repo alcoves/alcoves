@@ -1,22 +1,15 @@
 import Footer from './Footer'
+import Upload from './Upload'
 import { useRouter } from 'next/router'
+import { IoRadioOutline } from 'react-icons/io5'
 import { Button, Flex, Heading, VStack } from '@chakra-ui/react'
-import { IoCloudUploadOutline, IoRadioOutline } from 'react-icons/io5'
 
 export default function Sidebar() {
   const { pathname } = useRouter()
   return (
     <Flex p='2' direction='column' justify='space-between' minH='100%' w='220px'>
       <VStack spacing='4px'>
-        <Button
-          w='100%'
-          size='lg'
-          variant='ghost'
-          justifyContent='flex-start'
-          leftIcon={<IoCloudUploadOutline size='25px' />}
-        >
-          Upload
-        </Button>
+        <Upload />
         <Button
           w='100%'
           size='lg'
