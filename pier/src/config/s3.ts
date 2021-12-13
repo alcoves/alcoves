@@ -24,5 +24,25 @@ export async function getSignedURL(urlParams: { Bucket: string; Key: string }) {
   })
 }
 
+export async function deleteFolder({ Bucket, Prefix }: { Bucket: string; Prefix: string }) {
+  // TODO :: Make this work for more than 1000 keys
+  // TODO :: Add check to make sure it will never delete an entire pod
+  const { Contents } = await s3.listObjectsV2({ Bucket, Prefix }).promise()
+  const deleteObjects: any =
+    Contents?.map(({ Key }) => {
+      return { Key }
+    }) || []
+
+  return s3
+    .deleteObjects({
+      Bucket,
+      Delete: {
+        Quiet: false,
+        Objects: deleteObjects,
+      },
+    })
+    .promise()
+}
+
 export default s3
 export const defaultBucket = 'cdn.bken.io'

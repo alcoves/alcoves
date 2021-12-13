@@ -41,18 +41,24 @@ model Membership {
 }
 
 model Media {
-  id          Int      @id @default(autoincrement())
-  size        Int
-  title       String
-  originalUrl String
-  filename    String
-  mimeType    String
-  podId       String
-  pod         Pod      @relation(fields: [podId], references: [id])
-  userId      String
-  user        User     @relation(fields: [userId], references: [id])
-  updatedAt   DateTime @updatedAt
-  createdAt   DateTime @default(now())
+  id        Int         @id @default(autoincrement())
+  size      Int
+  title     String
+  url       String
+  type      String
+  podId     String
+  status    MediaStatus @default(UPLOADING)
+  pod       Pod         @relation(fields: [podId], references: [id])
+  userId    String
+  user      User        @relation(fields: [userId], references: [id])
+  updatedAt DateTime    @updatedAt
+  createdAt DateTime    @default(now())
+}
+
+enum MediaStatus {
+  UPLOADING
+  PROCESSING
+  READY
 }
 
 // Media Metadata

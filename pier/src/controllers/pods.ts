@@ -31,7 +31,7 @@ export async function list(req, res) {
 
 export async function getById(req, res) {
   const membership = await db.membership.findFirst({
-    where: { userId: req.user.id, podId: req.params.pod },
+    where: { userId: req.user.id, podId: req.params.podId },
     include: { pod: true },
   })
 
@@ -39,4 +39,26 @@ export async function getById(req, res) {
     status: 'success',
     payload: { pod: membership?.pod },
   })
+}
+
+export async function del(req, res) {
+  const { podId } = req.params
+  const hasMembership = await db.membership.findFirst({
+    where: { userId: req.user.id, podId },
+  })
+  if (!hasMembership) return res.sendStatus(403)
+
+  const hasMedia = await db.media.findFirst({
+    where: { podId },
+  })
+  if (hasMedia) return res.sendStatus(400)
+
+  await db.membership.deleteMany({
+    where: { podId },
+  })
+  await db.pod.delete({
+    where: { id: podId },
+  })
+
+  return res.sendStatus(200)
 }
