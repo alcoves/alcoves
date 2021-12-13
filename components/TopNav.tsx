@@ -24,7 +24,7 @@ export default function Navigation() {
         </Link>
       </Box>
       <Spacer />
-      <Box p='1'>
+      <Box px='4'>
         <Flex justify='center' align='center' h='100%'>
           <Flex cursor='pointer' onClick={toggleColorMode} justify='center' mx='4'>
             {colorMode === 'dark' ? <IoMoon /> : <IoSunny />}
