@@ -7,7 +7,7 @@ export default function useLazyRequest(options?: AxiosRequestConfig): any {
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
 
-  async function executeRequest(inputOverides: any) {
+  async function executeRequest(inputOverides: AxiosRequestConfig) {
     try {
       const res = await axios({
         ...options,

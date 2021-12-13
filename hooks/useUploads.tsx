@@ -5,29 +5,35 @@ import { Upload, UploadsState } from '../types/types'
 
 const bypassInterceptorAxios = axios.create()
 
+// const upload = {
+//   id: '',
+//   file: {},
+//   key: '',
+//   urls: [],
+//   status: '',
+//   uploadId: '',
+//   progress: {
+//     completed: 22.5,
+//     lastBytesUploaded: 0,
+//   },
+// }
+
 export default function useUploads(): UploadsState {
   const [uploads, setUploads] = useState<Upload[]>([])
 
-  function updateUpload(name: string, update: any) {
-    const index = uploads.findIndex(u => {
-      return u?.file?.name === name
-    })
-    if (index) {
-      uploads[index] = { ...uploads[index], ...update }
-      // Force an update
-    }
-  }
-
-  async function addUpload(file: File) {
+  async function addUpload(file: File, podId: string | string[]) {
     try {
       // Add new upload
       setUploads((prev: any) => [...prev, { file, status: 'started' }])
       const chunks = chunkFile(file)
 
       // Get signedURLS
-      const { data } = await axios.post('http://localhost:4000/uploads', {
+      const { data } = await axios.post('http://localhost:4000/media', {
+        podId,
+        type: file.type,
+        size: file.size,
+        filename: file.name,
         chunks: chunks.length,
-        contentType: file.type,
       })
 
       console.log('createUploadRes data', data.payload)
@@ -48,15 +54,16 @@ export default function useUploads(): UploadsState {
         })
       )
 
-      await axios.post('http://localhost:4000/media', {
+      await axios.put('http://localhost:4000/media/', {
+        id: data?.payload?.media.id,
         key: data?.payload?.upload.key,
         uploadId: data?.payload?.upload.uploadId,
       })
     } catch (error) {
       console.log(`failed to upload ${file}`)
-      updateUpload(file.name, { status: 'failed' })
+      // updateUpload(file.name, { status: 'failed' })
     } finally {
-      updateUpload(file.name, { status: 'completed' })
+      // updateUpload(file.name, { status: 'completed' })
     }
   }
 
