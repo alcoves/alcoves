@@ -13,5 +13,5 @@ export default function Index() {
     return null
   }
 
-  return <Layout>This should be the My Bken component</Layout>
+  return <Layout>This is the bken activity feed</Layout>
 }
