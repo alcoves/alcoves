@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@chakra-ui/react": "^1.6.12",
-    "@emotion/react": "^11.5.0",
+    "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.3.0",
     "@next-auth/mongodb-adapter": "0.0.2-next.276",
     "aws-sdk": "^2.1025.0",
