@@ -62,3 +62,17 @@ export async function del(req, res) {
 
   return res.sendStatus(200)
 }
+
+export async function patchById(req, res) {
+  const pod = await db.pod.update({
+    where: { id: req.params.podId },
+    data: {
+      ...req.body, // TODO :: Please validate the body here
+    },
+  })
+
+  return res.json({
+    status: 'success',
+    payload: { pod },
+  })
+}
