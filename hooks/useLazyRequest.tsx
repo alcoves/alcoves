@@ -9,6 +9,7 @@ export default function useLazyRequest(options?: AxiosRequestConfig): any {
 
   async function executeRequest(inputOverides: AxiosRequestConfig) {
     try {
+      setLoading(true)
       const res = await axios({
         ...options,
         ...inputOverides,

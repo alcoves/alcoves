@@ -1,9 +1,15 @@
+import useLazyRequest from '../../hooks/useLazyRequest'
+import { useSWRConfig } from 'swr'
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
+import { IoAddSharp } from 'react-icons/io5'
 import {
+  Text,
+  Flex,
   Modal,
   Input,
   Button,
   ModalBody,
-  IconButton,
   ModalHeader,
   ModalFooter,
   ModalOverlay,
@@ -11,16 +17,13 @@ import {
   useDisclosure,
   ModalCloseButton,
 } from '@chakra-ui/react'
-import { useState } from 'react'
-import { useSWRConfig } from 'swr'
-import { IoAddSharp } from 'react-icons/io5'
-import useLazyRequest from '../../hooks/useLazyRequest'
 
 export default function CreatePod() {
+  const router = useRouter()
   const { mutate } = useSWRConfig()
   const [podName, setPodName] = useState('')
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [createPod, { loading }] = useLazyRequest({
+  const [createPod, { data, loading, error }] = useLazyRequest({
     method: 'POST',
     url: 'http://localhost:4000/pods',
   })
@@ -30,23 +33,37 @@ export default function CreatePod() {
       await createPod({
         data: { name: podName },
       })
-      onClose()
     } catch (error) {
       console.error(error)
-    } finally {
-      mutate('http://localhost:4000/pods')
     }
   }
 
+  useEffect(() => {
+    if (!error && data && !loading) {
+      mutate('http://localhost:4000/pods')
+      onClose()
+      console.log(data)
+      router.push(`/pods/${data?.payload?.pod?.id}`)
+    }
+  }, [data, loading, error])
+
   return (
     <>
-      <IconButton
-        size='xs'
+      <Button
+        px='2'
+        w='100%'
         variant='ghost'
         onClick={onOpen}
         aria-label='create-pod'
-        icon={<IoAddSharp size='15px' />}
-      />
+        justifyContent='flex-start'
+        leftIcon={
+          <Flex justify='center' align='center' borderRadius='50%' w='32px' h='32px' bg='teal.500'>
+            <IoAddSharp size='24px' />
+          </Flex>
+        }
+      >
+        <Text>Create</Text>
+      </Button>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
@@ -55,9 +72,15 @@ export default function CreatePod() {
           <ModalCloseButton />
           <ModalBody>
             <Input
+              autoFocus
               value={podName}
               onChange={e => {
                 setPodName(e.target.value)
+              }}
+              onKeyUp={e => {
+                if (e.key === 'Enter') {
+                  handleSubmit()
+                }
               }}
             />
           </ModalBody>

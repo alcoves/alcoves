@@ -1,11 +1,12 @@
-import { Menu, MenuButton, MenuList, MenuItem, Avatar } from '@chakra-ui/react'
 import { useContext } from 'react'
 import { UserContext } from '../contexts/user'
+import { Menu, MenuButton, MenuList, MenuItem, Avatar } from '@chakra-ui/react'
 
 export default function AvatarMenu() {
   const { user, logout } = useContext(UserContext)
+
   return (
-    <Menu>
+    <Menu id='avatar-menu' isLazy>
       <MenuButton
         size='sm'
         as={Avatar}
