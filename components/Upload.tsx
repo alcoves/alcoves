@@ -1,6 +1,6 @@
 import { useCallback, useContext } from 'react'
 import { useDropzone } from 'react-dropzone'
-import { Center, Button } from '@chakra-ui/react'
+import { Center, Button, Box } from '@chakra-ui/react'
 import { IoCloudUploadOutline } from 'react-icons/io5'
 import { UploadsContext } from '../contexts/uploads'
 import { useRouter } from 'next/router'
@@ -27,16 +27,11 @@ export default function Upload() {
   })
 
   return (
-    <Center {...getRootProps()}>
+    <Box {...getRootProps()}>
       <input {...getInputProps()} />
-      <Button
-        size='lg'
-        variant='ghost'
-        justifyContent='flex-start'
-        leftIcon={<IoCloudUploadOutline size='25px' />}
-      >
+      <Button justifyContent='flex-start' leftIcon={<IoCloudUploadOutline size='25px' />}>
         Upload
       </Button>
-    </Center>
+    </Box>
   )
 }

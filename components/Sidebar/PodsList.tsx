@@ -8,21 +8,22 @@ export default function PodsList() {
 
   if (!isLoading && data) {
     return (
-      <VStack spacing='2px' w='100%'>
+      <VStack spacing='2' w='100%'>
         {data?.payload?.pods?.map((p: any) => {
           const variant = query.podId === p.id ? 'solid' : 'ghost'
           return (
             <Button
+              px='2'
               w='100%'
               key={p.id}
-              justifyContent='flex-start'
               variant={variant}
+              justifyContent='flex-start'
+              leftIcon={<Avatar name={p.name} size='sm' />}
               onClick={() => {
                 push(`/pods/${p.id}`)
               }}
             >
-              <Avatar mr='2' name={p.name} size='xs' />
-              <Text fontSize='.85rem'>{p.name}</Text>
+              <Text isTruncated>{p.name}</Text>
             </Button>
           )
         })}

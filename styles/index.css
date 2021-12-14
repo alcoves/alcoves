@@ -2,9 +2,3 @@ body {
   margin: 0;
   padding: 0;
 }
-
-video {
-  /* override other styles to make responsive */
-  width: 100% !important;
-  height: auto !important;
-}
