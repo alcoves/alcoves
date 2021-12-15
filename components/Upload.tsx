@@ -1,9 +1,9 @@
-import { useCallback, useContext } from 'react'
-import { useDropzone } from 'react-dropzone'
-import { Center, Button, Box } from '@chakra-ui/react'
-import { IoCloudUploadOutline } from 'react-icons/io5'
-import { UploadsContext } from '../contexts/uploads'
 import { useRouter } from 'next/router'
+import { useDropzone } from 'react-dropzone'
+import { Button, Box } from '@chakra-ui/react'
+import { useCallback, useContext } from 'react'
+import { UploadsContext } from '../contexts/uploads'
+import { IoCloudUploadOutline } from 'react-icons/io5'
 
 const acceptedContentTypes = ['.jpg', '.png', '.gif', '.mp4']
 

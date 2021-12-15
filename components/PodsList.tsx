@@ -1,8 +1,8 @@
-import usePods from '../../hooks/usePods'
+import usePods from '../hooks/usePods'
 import { useRouter } from 'next/router'
 import { Avatar, Button, Text, VStack } from '@chakra-ui/react'
 
-export default function PodsList() {
+export default function PodsList({ expanded }: any) {
   const { data, isLoading } = usePods()
   const { push, query } = useRouter()
 
@@ -23,7 +23,7 @@ export default function PodsList() {
                 push(`/pods/${p.id}`)
               }}
             >
-              <Text isTruncated>{p.name}</Text>
+              {expanded && <Text>{p.name}</Text>}
             </Button>
           )
         })}
