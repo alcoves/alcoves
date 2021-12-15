@@ -8,7 +8,8 @@ import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { fetcher } from '../../utils/axios'
 import { usePod } from '../../hooks/usePods'
-import { Box, Button, Flex, HStack, SimpleGrid } from '@chakra-ui/react'
+import { Box, Button, Flex, HStack, SimpleGrid, Wrap } from '@chakra-ui/react'
+import MediaItem from '../../components/Pods/MediaItem'
 
 function PodMedia() {
   const router = useRouter()
@@ -31,7 +32,7 @@ function PodMedia() {
   }
 
   function handleClick(e: any, id: number) {
-    if (e.shiftKey) {
+    if (e.ctrlKey) {
       const index = selected.indexOf(id)
       console.log('shift detected', index)
       if (index > -1) {
@@ -39,8 +40,6 @@ function PodMedia() {
       } else {
         setSelected(prev => [...prev, id])
       }
-    } else {
-      console.log('just your standard old clickkywoo')
     }
   }
 
@@ -59,7 +58,7 @@ function PodMedia() {
 
   return (
     <Box w='100%'>
-      <HStack>
+      <Wrap>
         <Upload />
         <Button colorScheme='red' onClick={deleteSelected} isDisabled={!selected.length}>
           Delete Selected
@@ -67,53 +66,19 @@ function PodMedia() {
         <Button colorScheme='red' onClick={deletePod} isDisabled={data?.payload?.media?.length}>
           Delete Pod
         </Button>
-      </HStack>
-      <SimpleGrid minChildWidth='300px' spacing='8px'>
+      </Wrap>
+      <SimpleGrid pt='4' minChildWidth={['100%', '400px']} spacing='4px'>
         {data?.payload?.media?.map((m: any) => {
-          if (m.type.includes('image/')) {
-            return (
-              <Box
-                id={m.id}
-                key={m.id}
-                cursor='pointer'
-                direction='column'
-                position='relative'
-                onClick={e => handleClick(e, m.id)}
-              >
-                <Box
-                  zIndex={1}
-                  w='100%'
-                  h='100%'
-                  position='absolute'
-                  _hover={{ bg: 'rgba(0,0,0,.1)' }}
-                />
-                <Box
-                  w='100%'
-                  h='300px'
-                  rounded='sm'
-                  backgroundSize='cover'
-                  backgroundImage={m.url}
-                  backgroundPosition='center'
-                  backgroundRepeat='no-repeat'
-                  border={selected.includes(m.id) ? 'solid teal 2px' : 'none'}
-                ></Box>
-              </Box>
-            )
-          } else if (m.type.includes('video/')) {
-            // Show thumbnail URL
-            return (
-              <Box
-                w='400px'
-                h='400px'
-                onClick={e => handleClick(e, m.id)}
-                border={selected.includes(m.id) ? 'solid teal 2px' : 'none'}
-              >
-                <video width='100%' height='100%' controls key={m.id} src={m.url} />
-              </Box>
-            )
-          } else {
-            return null
-          }
+          return (
+            <Box
+              key={m.id}
+              rounded='md'
+              onClick={e => handleClick(e, m.id)}
+              border={selected.includes(m.id) ? 'solid teal 2px' : 'solid transparent 2px'}
+            >
+              <MediaItem m={m} />
+            </Box>
+          )
         })}
       </SimpleGrid>
     </Box>

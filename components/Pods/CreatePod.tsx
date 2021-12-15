@@ -16,6 +16,7 @@ import {
   ModalContent,
   useDisclosure,
   ModalCloseButton,
+  IconButton,
 } from '@chakra-ui/react'
 
 export default function CreatePod() {
@@ -49,21 +50,16 @@ export default function CreatePod() {
 
   return (
     <>
-      <Button
+      <IconButton
         px='2'
         w='100%'
+        maxW='60px'
         variant='ghost'
         onClick={onOpen}
         aria-label='create-pod'
-        justifyContent='flex-start'
-        leftIcon={
-          <Flex justify='center' align='center' borderRadius='50%' w='32px' h='32px' bg='teal.500'>
-            <IoAddSharp size='24px' />
-          </Flex>
-        }
-      >
-        <Text>Create</Text>
-      </Button>
+        justifyContent='center'
+        icon={<IoAddSharp size='24px' />}
+      />
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

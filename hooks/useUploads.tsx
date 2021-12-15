@@ -2,6 +2,7 @@ import axios from '../utils/axios'
 import chunkFile from '../utils/chunkFile'
 import { useState } from 'react'
 import { Upload, UploadsState } from '../types/types'
+import { useSWRConfig } from 'swr'
 
 const bypassInterceptorAxios = axios.create()
 
@@ -19,6 +20,7 @@ const bypassInterceptorAxios = axios.create()
 // }
 
 export default function useUploads(): UploadsState {
+  const { mutate } = useSWRConfig()
   const [uploads, setUploads] = useState<Upload[]>([])
 
   async function addUpload(file: File, podId: string | string[]) {
@@ -64,6 +66,7 @@ export default function useUploads(): UploadsState {
       // updateUpload(file.name, { status: 'failed' })
     } finally {
       // updateUpload(file.name, { status: 'completed' })
+      mutate(`http://localhost:4000/media?podId=${podId}`)
     }
   }
 
