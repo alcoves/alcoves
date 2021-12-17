@@ -1,16 +1,12 @@
-import PodAvatar from './PodAvatar'
 import useLazyRequest from '../../hooks/useLazyRequest'
-import { useState } from 'react'
 import { useSWRConfig } from 'swr'
-import { IoSaveSharp } from 'react-icons/io5'
-import { Flex, Input, Spinner, InputGroup, InputRightElement } from '@chakra-ui/react'
+import { Editable, EditablePreview, EditableInput } from '@chakra-ui/react'
 
 export default function PodName({ pod }: any) {
   const { mutate } = useSWRConfig()
-  const [name, setName] = useState(pod?.name)
-  const [updateName, { loading }] = useLazyRequest()
+  const [updateName] = useLazyRequest()
 
-  async function handleName() {
+  async function handleName(name: string) {
     try {
       await updateName({
         data: { name },
@@ -25,29 +21,18 @@ export default function PodName({ pod }: any) {
   }
 
   return (
-    <InputGroup size='sm'>
-      <Input
-        size='lg'
-        variant='filled'
-        defaultValue={pod?.name}
-        onKeyUp={e => {
-          if (e.key === 'Enter') {
-            handleName()
-          }
-        }}
-        onChange={e => {
-          setName(e.target.value)
-        }}
-      />
-      <InputRightElement h='100%' cursor='pointer' pr='4'>
-        {name !== pod?.name ? (
-          loading ? (
-            <Spinner size='sm' />
-          ) : (
-            <IoSaveSharp onClick={handleName} color='green.500' size='20px' />
-          )
-        ) : null}
-      </InputRightElement>
-    </InputGroup>
+    <Editable
+      fontSize='1.3rem'
+      fontWeight='700'
+      defaultValue={pod?.name}
+      onSubmit={value => {
+        if (value !== pod?.name) {
+          handleName(value)
+        }
+      }}
+    >
+      <EditablePreview />
+      <EditableInput />
+    </Editable>
   )
 }

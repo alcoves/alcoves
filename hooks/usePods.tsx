@@ -3,9 +3,17 @@ import { useEffect, useState } from 'react'
 import { fetcher } from '../utils/axios'
 
 export default function usePods() {
+  const [pods, setPods] = useState([])
   const { data, error } = useSWR(`http://localhost:4000/pods`, fetcher)
+
+  useEffect(() => {
+    if (data?.payload?.pods?.length) {
+      setPods(data?.payload?.pods)
+    }
+  }, [data])
+
   return {
-    data,
+    pods,
     isError: error,
     isLoading: !error && !data,
   }

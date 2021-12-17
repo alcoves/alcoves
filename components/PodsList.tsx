@@ -1,30 +1,34 @@
 import usePods from '../hooks/usePods'
 import { useRouter } from 'next/router'
-import { Avatar, Button, Text, VStack } from '@chakra-ui/react'
+import { Avatar, Flex, Text, VStack } from '@chakra-ui/react'
 
 export default function PodsList({ expanded }: any) {
-  const { data, isLoading } = usePods()
+  const { pods, isLoading } = usePods()
   const { push, query } = useRouter()
 
-  if (!isLoading && data) {
+  if (!isLoading && pods) {
     return (
-      <VStack spacing='2' w='100%'>
-        {data?.payload?.pods?.map((p: any) => {
-          const variant = query.podId === p.id ? 'solid' : 'ghost'
+      <VStack spacing='1' w='100%'>
+        {pods.map((p: any) => {
+          const isSelected = query.podId === p.id ? true : false
           return (
-            <Button
-              px='2'
+            <Flex
+              py='1'
               w='100%'
               key={p.id}
-              variant={variant}
-              justifyContent='flex-start'
-              leftIcon={<Avatar name={p.name} size='sm' />}
+              rounded='sm'
+              align='center'
+              cursor='pointer'
+              _hover={{ bg: 'gray.700' }}
+              justifyContent={expanded ? 'flex-start' : 'center'}
+              borderLeft={isSelected ? 'solid white 2px' : 'solid transparent 2px'}
               onClick={() => {
                 push(`/pods/${p.id}`)
               }}
             >
+              <Avatar mx='2' name={p.name} size='sm' />
               {expanded && <Text>{p.name}</Text>}
-            </Button>
+            </Flex>
           )
         })}
       </VStack>
