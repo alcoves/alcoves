@@ -18,7 +18,7 @@ function PodMedia() {
   const { pod } = usePod(podId)
   const [selected, setSelected] = useState<number[]>([])
   const { data, mutate } = useSWR(
-    podId ? `http://localhost:4000/media?podId=${podId}` : null,
+    podId ? `http://localhost:4000/pods/${podId}/media` : null,
     fetcher
   )
 
@@ -35,8 +35,8 @@ function PodMedia() {
 
   async function deleteSelected() {
     try {
-      await axios.delete('http://localhost:4000/media', {
-        data: { mediaReferenceIds: selected, podId },
+      await axios.delete(`http://localhost:4000/pods/${podId}/media`, {
+        data: { mediaReferenceIds: selected },
       })
     } catch (error) {
       console.error(error)
@@ -56,7 +56,7 @@ function PodMedia() {
           aria-label='delete-selected'
           isDisabled={!selected.length}
         />
-        {pod?.isDefault && <ShareMedia podId={podId} mediaItemIds={selected} />}
+        {pod?.isDefault && <ShareMedia podId={podId} mediaReferenceIds={selected} />}
         <PodSettings />
       </Wrap>
       <SimpleGrid pt='4' minChildWidth={['100%', '400px']} spacing='4px'>
