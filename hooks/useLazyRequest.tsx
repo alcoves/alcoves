@@ -10,6 +10,8 @@ export default function useLazyRequest(options?: AxiosRequestConfig): any {
   async function executeRequest(inputOverides: AxiosRequestConfig) {
     try {
       setLoading(true)
+      setData(null)
+      setError(null)
       const res = await axios({
         ...options,
         ...inputOverides,
@@ -17,7 +19,7 @@ export default function useLazyRequest(options?: AxiosRequestConfig): any {
       setData(res.data)
     } catch (error: any) {
       setData(null)
-      setError(error)
+      setError(error.message)
     } finally {
       setLoading(false)
     }

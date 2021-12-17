@@ -31,7 +31,6 @@ export default function useUploads(): UploadsState {
 
       // Get signedURLS
       const { data } = await axios.post('http://localhost:4000/media', {
-        podId,
         type: file.type,
         size: file.size,
         filename: file.name,

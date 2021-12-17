@@ -6,6 +6,7 @@ import { IoMenu } from 'react-icons/io5'
 import { useContext, useEffect, useState } from 'react'
 import AvatarMenu from './AvatarMenu'
 import { UserContext } from '../contexts/user'
+import Upload from './Upload'
 
 export default function Sidebar() {
   const { user } = useContext(UserContext)
@@ -50,6 +51,9 @@ export default function Sidebar() {
               Home
             </Heading>
           )}
+        </Flex>
+        <Flex w='100%' pb='2'>
+          <Upload expanded={expanded} />
         </Flex>
         <PodsList expanded={expanded} />
         <CreatePod />
