@@ -2,8 +2,11 @@ import db from '../config/db'
 import { Prisma } from '@prisma/client'
 
 export async function listPodMedia(req, res) {
+  const { podId } = req.params
+  const { id: userId } = req.user
+
   const hasMembership = await db.membership.findFirst({
-    where: { userId: req.user.id, podId: req.query.podId },
+    where: { userId, podId },
   })
   if (!hasMembership) return res.sendStatus(403)
 
@@ -23,7 +26,7 @@ export async function listPodMedia(req, res) {
       },
     },
     orderBy: [{ id: 'desc' }],
-    where: { podId: req.query.podId },
+    where: { podId },
   }
 
   if (req.query.before) {

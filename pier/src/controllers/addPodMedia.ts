@@ -2,18 +2,20 @@ import db from '../config/db'
 
 export async function addPodMedia(req, res) {
   const { podId } = req.params
-  const { mediaItemIds = [] } = req.body
-  if (!podId || !mediaItemIds?.length) return res.sendStatus(400)
+  const { mediaReferenceIds = [] } = req.body
+  if (!podId || !mediaReferenceIds?.length) return res.sendStatus(400)
 
   const hasMembership = await db.membership.findFirst({
     where: { userId: req.user.id, podId },
+    include: { pod: true },
   })
   if (!hasMembership) return res.sendStatus(403)
+  if (hasMembership?.pod.isDefault) return res.sendStatus(400)
 
   const mediaItems = await db.mediaReference.findMany({
     where: {
       id: {
-        in: mediaItemIds,
+        in: mediaReferenceIds,
       },
     },
     include: {
@@ -38,8 +40,8 @@ export async function addPodMedia(req, res) {
   }
 
   await db.mediaReference.createMany({
-    data: mediaItemIds.map(mediaId => {
-      return { podId, mediaId }
+    data: mediaReferenceIds.map((mediaRefId, index) => {
+      return { podId, mediaId: mediaItems[index].media.id }
     }),
     skipDuplicates: true,
   })

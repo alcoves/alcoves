@@ -10,10 +10,11 @@ export async function createUpload(req, res) {
     include: { pod: true },
   })
 
-  const defaultPod = memberships.filter(membership => {
+  const defaultPodMembership = memberships.filter(membership => {
     return membership.pod.isDefault
-  })[0]
-  if (!defaultPod) return res.sendStatus(403)
+  })
+  const defaultPodId = defaultPodMembership?.[0]?.pod?.id
+  if (!defaultPodId) return res.sendStatus(403)
 
   const media = await db.mediaItem.create({
     data: {
@@ -31,7 +32,7 @@ export async function createUpload(req, res) {
   await db.mediaReference.create({
     data: {
       mediaId: media.id,
-      podId: defaultPod.id,
+      podId: defaultPodId,
     },
   })
 
@@ -39,7 +40,7 @@ export async function createUpload(req, res) {
     .createMultipartUpload({
       Bucket: defaultBucket,
       ContentType: type,
-      Key: `files/${defaultPod.id}/${media.id}/${media.id}.${mime.extension(type)}`,
+      Key: `files/${defaultPodId}/${media.id}/${media.id}.${mime.extension(type)}`,
     })
     .promise()
 

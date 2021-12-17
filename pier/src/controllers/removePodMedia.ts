@@ -3,51 +3,12 @@ import { defaultBucket, deleteFolder } from '../config/s3'
 
 export async function removePodMedia(req, res) {
   const { podId } = req.params
-  const { mediaItemIds = [] } = req.body
+  const { mediaReferenceIds } = req.body
   const hasMembership = await db.membership.findFirst({
     where: { userId: req.user.id, podId },
   })
   if (!hasMembership) return res.sendStatus(403)
-
-  const mediaItems = await db.mediaItem.findMany({
-    where: {
-      id: {
-        in: mediaItemIds,
-      },
-    },
-    include: {
-      user: true,
-    },
-  })
-
-  // Caller must own the media requested to un-share
-  const mediaNotOwnedByAuthenticatedUser = mediaItems.filter(m => {
-    return m.user.id !== req.user.id
-  })
-  if (mediaNotOwnedByAuthenticatedUser?.length) {
-    return res.sendStatus(403)
-  }
-
-  await db.mediaReference.deleteMany({
-    where: {
-      podId,
-      mediaId: {
-        in: mediaItemIds,
-      },
-    },
-  })
-
-  return res.sendStatus(200)
-}
-
-export async function del(req, res) {
-  const { podId, mediaReferenceIds } = req.body
-  if (!podId || !mediaReferenceIds?.length) return res.sendStatus(400)
-
-  const hasMembership = await db.membership.findFirst({
-    where: { userId: req.user.id, podId },
-  })
-  if (!hasMembership) return res.sendStatus(403)
+  if (!mediaReferenceIds?.length) return res.sendStatus(400)
 
   const pod = await db.pod.findFirst({ where: { id: podId } })
 
@@ -82,6 +43,5 @@ export async function del(req, res) {
       }
     })
   )
-
   return res.sendStatus(200)
 }
