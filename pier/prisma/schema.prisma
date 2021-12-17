@@ -13,17 +13,7 @@ model User {
   username    String
   password    String
   image       String?
-  medias      Media[]
-  memberships Membership[]
-  updatedAt   DateTime     @updatedAt
-  createdAt   DateTime     @default(now())
-}
-
-model Pod {
-  id          String       @id @default(cuid())
-  name        String
-  image       String?
-  medias      Media[]
+  media       MediaItem[]
   memberships Membership[]
   updatedAt   DateTime     @updatedAt
   createdAt   DateTime     @default(now())
@@ -31,7 +21,7 @@ model Pod {
 
 model Membership {
   id        String   @id @default(cuid())
-  role      String
+  role      Role
   userId    String
   user      User     @relation(fields: [userId], references: [id])
   podId     String
@@ -40,46 +30,52 @@ model Membership {
   createdAt DateTime @default(now())
 }
 
-model Media {
-  id        Int         @id @default(autoincrement())
-  size      Int
-  title     String
-  url       String
-  type      String
-  podId     String
-  status    MediaStatus @default(UPLOADING)
-  pod       Pod         @relation(fields: [podId], references: [id])
-  userId    String
-  user      User        @relation(fields: [userId], references: [id])
-  updatedAt DateTime    @updatedAt
-  createdAt DateTime    @default(now())
+model Pod {
+  id          String           @id @default(cuid())
+  isDefault   Boolean          @default(false)
+  name        String
+  image       String?
+  memberships Membership[]
+  media       MediaReference[]
+  updatedAt   DateTime         @updatedAt
+  createdAt   DateTime         @default(now())
+}
+
+model MediaItem {
+  id           String           @id @default(cuid())
+  size         Int
+  title        String
+  url          String
+  duration     Float            @default(0)
+  thumbnailUrl String           @default("")
+  type         String
+  status       MediaStatus      @default(CREATED)
+  userId       String
+  user         User             @relation(fields: [userId], references: [id])
+  pods         MediaReference[]
+  updatedAt    DateTime         @updatedAt
+  createdAt    DateTime         @default(now())
+}
+
+model MediaReference {
+  id      Int       @id @default(autoincrement())
+  mediaId String
+  media   MediaItem @relation(fields: [mediaId], references: [id])
+  podId   String
+  pod     Pod       @relation(fields: [podId], references: [id])
+
+  @@unique([podId, mediaId])
 }
 
 enum MediaStatus {
-  UPLOADING
+  CREATED
   PROCESSING
   READY
+  ERROR
 }
 
-// Media Metadata
-// {
-// "creationTime": string,
-// "width": string,
-// "height": string,
-
-// // Union field metadata can be only one of the following:
-// "photo": {
-// "cameraMake": string,
-// "cameraModel": string,
-// "focalLength": number,
-// "apertureFNumber": number,
-// "isoEquivalent": integer,
-// "exposureTime": string
-// },
-// "video": {
-// "cameraMake": string,
-// "cameraModel": string,
-// "fps": number,
-// "status": enum (VideoProcessingStatus) UNSPECIFIED PROCESSING READY FAILED
-// }
-// }
+enum Role {
+  OWNER // Reserved for the default user pod
+  ADMIN // For pods that you created
+  MEMBER // For pods shared to you
+}

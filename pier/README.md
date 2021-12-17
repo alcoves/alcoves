@@ -36,3 +36,24 @@ SPACES_ENDPOINT
 SPACES_ACCESS_KEY_ID
 SPACES_SECRET_ACCESS_KEY
 ```
+
+### Endpoints
+
+```
+/login POST :: Logs the user in
+/register POST :: Creates a user account
+
+/uploads POST :: Creates a media item in the users default pod, returns urls for uploading
+/uploads PUT :: Completes the multipart upload
+
+/pods GET :: list pods
+/pods POST :: Create pod
+
+/pods/:podId DELETE :: Delete pod by id
+/pods/:podId GET :: get pod by id
+/pods/:podId PATCH :: Patch pod by id
+
+/pods/:podId/media GET :: List pod media by podId
+/pods/:podId/media DELETE :: Delete/unshare media from default/non-default pods
+
+```

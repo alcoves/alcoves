@@ -1,6 +1,6 @@
 import express from 'express'
 import { auth } from '../middlewares/auth'
-import { patchUser } from '../controllers/users'
+import { patchUser } from '../controllers/patchUser'
 
 const router = express.Router()
 
