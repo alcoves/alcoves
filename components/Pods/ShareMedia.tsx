@@ -19,10 +19,10 @@ import useLazyRequest from '../../hooks/useLazyRequest'
 
 export default function ShareMedia({
   podId,
-  mediaItemIds,
+  mediaReferenceIds,
 }: {
   podId: string | string[] | undefined
-  mediaItemIds: number[]
+  mediaReferenceIds: number[]
 }) {
   const { pods } = usePods()
   const [selectedPod, setSelectedPod] = useState<any>(null)
@@ -32,8 +32,8 @@ export default function ShareMedia({
   function handleShare() {
     addMedia({
       method: 'POST',
-      data: { mediaItemIds },
-      url: `http://localhost:4000/pods/${podId}/share`,
+      data: { mediaReferenceIds },
+      url: `http://localhost:4000/pods/${selectedPod.id}/media`,
     })
   }
 
@@ -54,7 +54,7 @@ export default function ShareMedia({
         onClick={onOpen}
         colorScheme='teal'
         leftIcon={<IoShare />}
-        isDisabled={!mediaItemIds.length}
+        isDisabled={!mediaReferenceIds.length}
       >
         Share
       </Button>
@@ -92,9 +92,9 @@ export default function ShareMedia({
             </Button>
             <Button isLoading={loading} variant='ghost' onClick={handleShare}>
               {`Share ${
-                mediaItemIds.length > 1
-                  ? `${mediaItemIds.length} items`
-                  : `${mediaItemIds.length} item`
+                mediaReferenceIds.length > 1
+                  ? `${mediaReferenceIds.length} items`
+                  : `${mediaReferenceIds.length} item`
               }`}
             </Button>
           </ModalFooter>

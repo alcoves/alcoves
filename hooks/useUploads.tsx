@@ -30,7 +30,7 @@ export default function useUploads(): UploadsState {
       const chunks = chunkFile(file)
 
       // Get signedURLS
-      const { data } = await axios.post('http://localhost:4000/media', {
+      const { data } = await axios.post('http://localhost:4000/uploads', {
         type: file.type,
         size: file.size,
         filename: file.name,
@@ -55,7 +55,7 @@ export default function useUploads(): UploadsState {
         })
       )
 
-      await axios.put('http://localhost:4000/media/', {
+      await axios.put('http://localhost:4000/uploads', {
         id: data?.payload?.media.id,
         key: data?.payload?.upload.key,
         uploadId: data?.payload?.upload.uploadId,
@@ -65,7 +65,7 @@ export default function useUploads(): UploadsState {
       // updateUpload(file.name, { status: 'failed' })
     } finally {
       // updateUpload(file.name, { status: 'completed' })
-      mutate(`http://localhost:4000/media?podId=${podId}`)
+      mutate(`http://localhost:4000/pods/${podId}/media`)
     }
   }
 
