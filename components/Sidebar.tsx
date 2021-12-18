@@ -1,18 +1,18 @@
+import Upload from './Upload'
 import PodsList from './PodsList'
+import AvatarMenu from './AvatarMenu'
 import CreatePod from './Pods/CreatePod'
 import { useRouter } from 'next/router'
-import { Button, Flex, Heading, useMediaQuery, VStack } from '@chakra-ui/react'
 import { IoMenu } from 'react-icons/io5'
-import { useContext, useEffect, useState } from 'react'
-import AvatarMenu from './AvatarMenu'
 import { UserContext } from '../contexts/user'
-import Upload from './Upload'
+import { useContext, useEffect, useState } from 'react'
+import { Button, Flex, Heading, IconButton, useMediaQuery, VStack } from '@chakra-ui/react'
 
 export default function Sidebar() {
-  const { user } = useContext(UserContext)
-  const [isMobile] = useMediaQuery('(max-width: 768px)')
-  const [menuWidth, setMenuWith] = useState('220px')
   const { push } = useRouter()
+  const { user } = useContext(UserContext)
+  const [menuWidth, setMenuWith] = useState('220px')
+  const [isMobile] = useMediaQuery('(max-width: 768px)')
 
   useEffect(() => {
     if (isMobile) {
@@ -37,22 +37,9 @@ export default function Sidebar() {
     <Flex p='2' h='100%' w={menuWidth} minW={menuWidth} direction='column' justify='space-between'>
       <VStack spacing='4'>
         <Flex w='100%' align='center' justifyContent={justify} onClick={toggleResize}>
-          <Button
-            justifyContent={justify}
-            w='100%'
-            maxW='52px'
-            onClick={toggleResize}
-            aria-label='home'
-          >
-            <IoMenu />
-          </Button>
-          {expanded && (
-            <Heading pl='3' size='sm' onClick={() => push('/')}>
-              Home
-            </Heading>
-          )}
+          <IconButton variant='ghost' w='45px' aria-label='upload' icon={<IoMenu size='20px' />} />
         </Flex>
-        <Flex w='100%' pb='2'>
+        <Flex w='100%'>
           <Upload expanded={expanded} />
         </Flex>
         <PodsList expanded={expanded} />
@@ -68,8 +55,8 @@ export default function Sidebar() {
           )}
 
           {/* <Flex cursor='pointer' onClick={toggleColorMode} justify='center' mx='2'>
-          {colorMode === 'dark' ? <IoMoon /> : <IoSunny />}
-        </Flex> */}
+            {colorMode === 'dark' ? <IoMoon /> : <IoSunny />}
+          </Flex> */}
         </Flex>
       </Flex>
     </Flex>

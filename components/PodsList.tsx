@@ -1,6 +1,7 @@
 import usePods from '../hooks/usePods'
 import { useRouter } from 'next/router'
-import { Avatar, Flex, Text, VStack } from '@chakra-ui/react'
+import { IoPeople, IoStar } from 'react-icons/io5'
+import { Box, Flex, Text, VStack } from '@chakra-ui/react'
 
 export default function PodsList({ expanded }: any) {
   const { pods, isLoading } = usePods()
@@ -26,7 +27,15 @@ export default function PodsList({ expanded }: any) {
                 push(`/pods/${p.id}`)
               }}
             >
-              <Avatar mx='2' name={p.name} size='sm' />
+              {p?.isDefault ? (
+                <Box mx='2'>
+                  <IoStar size='20px' color='#ffcc00' />
+                </Box>
+              ) : (
+                <Box mx='2'>
+                  <IoPeople size='20px' />
+                </Box>
+              )}
               {expanded && <Text>{p.name}</Text>}
             </Flex>
           )

@@ -1,26 +1,22 @@
 import useSWR from 'swr'
-import axios from '../../utils/axios'
 import Layout from '../../components/Layout'
 import PodName from '../../components/Pods/PodName'
-import MediaItem from '../../components/Pods/MediaItem'
+import MediaItem from '../../components/Media/MediaItem'
 import ShareMedia from '../../components/Pods/ShareMedia'
+import RemoveMedia from '../../components/Pods/RemoveMedia'
 import PodSettings from '../../components/Pods/PodSettings'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { fetcher } from '../../utils/axios'
 import { usePod } from '../../hooks/usePods'
-import { IoTrashBin } from 'react-icons/io5'
-import { Box, Flex, IconButton, SimpleGrid, Wrap } from '@chakra-ui/react'
+import { Box, Flex, SimpleGrid, Text, Wrap } from '@chakra-ui/react'
 
 function PodMedia() {
   const router = useRouter()
   const { podId } = router.query
   const { pod } = usePod(podId)
   const [selected, setSelected] = useState<number[]>([])
-  const { data, mutate } = useSWR(
-    podId ? `http://localhost:4000/pods/${podId}/media` : null,
-    fetcher
-  )
+  const { data } = useSWR(podId ? `http://localhost:4000/pods/${podId}/media` : null, fetcher)
 
   function handleSelect(e: any, id: number) {
     if (e.ctrlKey) {
@@ -33,29 +29,14 @@ function PodMedia() {
     }
   }
 
-  async function deleteSelected() {
-    try {
-      await axios.delete(`http://localhost:4000/pods/${podId}/media`, {
-        data: { mediaReferenceIds: selected },
-      })
-    } catch (error) {
-      console.error(error)
-    } finally {
-      mutate()
-      setSelected([])
-    }
+  function resetSelection() {
+    setSelected([])
   }
 
   return (
     <Box w='100%'>
       <Wrap>
-        <IconButton
-          colorScheme='red'
-          icon={<IoTrashBin />}
-          onClick={deleteSelected}
-          aria-label='delete-selected'
-          isDisabled={!selected.length}
-        />
+        <RemoveMedia resetSelection={resetSelection} podId={podId} mediaReferenceIds={selected} />
         {pod?.isDefault && <ShareMedia podId={podId} mediaReferenceIds={selected} />}
         <PodSettings />
       </Wrap>
@@ -87,8 +68,11 @@ export default function Pod() {
   return (
     <Layout>
       <Flex key={pod?.id} direction='column' align='start' w='100%' px='4' pb='2'>
-        <Flex py='4'>
+        <Flex py='4' direction='column'>
           <PodName pod={pod} />
+          <Text fontSize='.85rem' fontStyle='italic'>
+            {pod?.isDefault && 'This is your default pod'}
+          </Text>
         </Flex>
         <PodMedia />
       </Flex>

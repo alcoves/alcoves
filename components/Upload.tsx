@@ -1,11 +1,11 @@
 import { useRouter } from 'next/router'
 import { useDropzone } from 'react-dropzone'
-import { Box, Button } from '@chakra-ui/react'
+import { Box, Button, IconButton } from '@chakra-ui/react'
 import { useCallback, useContext } from 'react'
 import { IoCloudUpload } from 'react-icons/io5'
 import { UploadsContext } from '../contexts/uploads'
 
-const acceptedContentTypes = ['.jpg', '.png', '.gif', '.mp4']
+const acceptedContentTypes = ['.mp4']
 
 export default function Upload({ expanded }: { expanded: boolean }) {
   const router = useRouter()
@@ -29,9 +29,13 @@ export default function Upload({ expanded }: { expanded: boolean }) {
   return (
     <Box {...getRootProps()} w='100%'>
       <input {...getInputProps()} />
-      <Button w='100%' aria-label='upload' leftIcon={<IoCloudUpload size='20px' />}>
-        {expanded ? 'Upload' : ''}
-      </Button>
+      {expanded ? (
+        <Button w='100%' aria-label='upload' leftIcon={<IoCloudUpload size='20px' />}>
+          Upload
+        </Button>
+      ) : (
+        <IconButton w='100%' aria-label='upload' icon={<IoCloudUpload size='20px' />} />
+      )}
     </Box>
   )
 }
