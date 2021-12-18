@@ -90,7 +90,12 @@ export default function ShareMedia({
             <Button colorScheme='blue' mr={3} onClick={onClose}>
               Close
             </Button>
-            <Button isLoading={loading} variant='ghost' onClick={handleShare}>
+            <Button
+              variant='ghost'
+              isLoading={loading}
+              onClick={handleShare}
+              isDisabled={!selectedPod?.id}
+            >
               {`Share ${
                 mediaReferenceIds.length > 1
                   ? `${mediaReferenceIds.length} items`

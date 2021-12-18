@@ -1,10 +1,6 @@
 import {
   Box,
   useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalCloseButton,
   Flex,
   Text,
   Editable,
@@ -12,25 +8,16 @@ import {
   EditableInput,
   Avatar,
   Spinner,
-  // HStack,
-  // TagLabel,
-  // TagCloseButton,
-  // Tag,
 } from '@chakra-ui/react'
 import duration from '../../utils/duration'
+import MediaItemModal from './MediaItemModal'
 
 export default function MediaItem({ m }: any) {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
     <>
-      <Modal size='6xl' isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalCloseButton />
-          <video autoPlay controls src={m.url} />
-        </ModalContent>
-      </Modal>
+      <MediaItemModal isOpen={isOpen} onClose={onClose} m={m} />
       <Box
         id={m.id}
         key={m.id}
@@ -78,6 +65,7 @@ export default function MediaItem({ m }: any) {
           h='200px'
           rounded='md'
           backgroundSize='cover'
+          backgroundColor='black'
           backgroundPosition='center'
           backgroundRepeat='no-repeat'
           backgroundImage={m.thumbnailUrl || m.url}

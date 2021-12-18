@@ -4,8 +4,6 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { IoAddSharp } from 'react-icons/io5'
 import {
-  Text,
-  Flex,
   Modal,
   Input,
   Button,
