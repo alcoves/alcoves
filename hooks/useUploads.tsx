@@ -1,8 +1,8 @@
 import axios from '../utils/axios'
 import chunkFile from '../utils/chunkFile'
 import { useState } from 'react'
-import { Upload, UploadsState } from '../types/types'
 import { useSWRConfig } from 'swr'
+import { Upload, UploadsState } from '../types/types'
 
 const bypassInterceptorAxios = axios.create()
 
