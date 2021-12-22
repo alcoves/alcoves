@@ -1,41 +1,14 @@
-import { useRouter } from 'next/router'
-import { useDropzone } from 'react-dropzone'
-import { Box, Button, IconButton } from '@chakra-ui/react'
-import { useCallback, useContext } from 'react'
-import { IoCloudUpload } from 'react-icons/io5'
-import { UploadsContext } from '../contexts/uploads'
+import { Upload } from '../types/types'
+import { Box, Progress, Text } from '@chakra-ui/react'
 
-const acceptedContentTypes = ['.mp4']
-
-export default function Upload({ expanded }: { expanded: boolean }) {
-  const router = useRouter()
-  const podId = router.query.podId
-  const { addUpload } = useContext(UploadsContext)
-
-  const onDrop = useCallback(acceptedFiles => {
-    console.log('acceptedFiles', acceptedFiles)
-    if (podId) {
-      acceptedFiles.map((f: File) => addUpload(f, podId))
-    }
-  }, [])
-
-  const { getRootProps, getInputProps } = useDropzone({
-    onDrop,
-    maxFiles: 50,
-    multiple: true,
-    accept: acceptedContentTypes.join(', '),
-  })
-
+export default function UploadItem({ upload }: { upload: Upload }) {
+  const progress = (upload.completed / upload.file.size) * 100
   return (
-    <Box {...getRootProps()} w='100%'>
-      <input {...getInputProps()} />
-      {expanded ? (
-        <Button w='100%' aria-label='upload' leftIcon={<IoCloudUpload size='20px' />}>
-          Upload
-        </Button>
-      ) : (
-        <IconButton w='100%' aria-label='upload' icon={<IoCloudUpload size='20px' />} />
-      )}
+    <Box bg='gray.900' rounded='sm'>
+      <Box p='2'>
+        <Text>{upload.file.name}</Text>
+      </Box>
+      <Progress h='1' value={progress} />
     </Box>
   )
 }

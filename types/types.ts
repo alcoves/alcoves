@@ -17,7 +17,7 @@ export interface UserState {
 
 export interface UploadsState {
   uploads: Upload[]
-  addUpload: (file: File, podId: string | string[]) => Promise<void>
+  addUpload: (file: File) => Promise<void>
 }
 
 export interface Upload {
