@@ -1,15 +1,13 @@
-import Upload from './Upload'
 import PodsList from './PodsList'
 import AvatarMenu from './AvatarMenu'
 import CreatePod from './Pods/CreatePod'
-import { useRouter } from 'next/router'
+import UploadButton from './UploadButton'
 import { IoMenu } from 'react-icons/io5'
 import { UserContext } from '../contexts/user'
 import { useContext, useEffect, useState } from 'react'
-import { Button, Flex, Heading, IconButton, useMediaQuery, VStack } from '@chakra-ui/react'
+import { Flex, Heading, IconButton, useMediaQuery, VStack } from '@chakra-ui/react'
 
 export default function Sidebar() {
-  const { push } = useRouter()
   const { user } = useContext(UserContext)
   const [menuWidth, setMenuWith] = useState('220px')
   const [isMobile] = useMediaQuery('(max-width: 768px)')
@@ -40,7 +38,7 @@ export default function Sidebar() {
           <IconButton variant='ghost' w='45px' aria-label='upload' icon={<IoMenu size='20px' />} />
         </Flex>
         <Flex w='100%'>
-          <Upload expanded={expanded} />
+          <UploadButton expanded={expanded} />
         </Flex>
         <PodsList expanded={expanded} />
         <CreatePod />
