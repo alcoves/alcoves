@@ -8,7 +8,6 @@ import {
   Heading,
   Button,
   ModalBody,
-  Box,
 } from '@chakra-ui/react'
 
 export default function MediaItemModal({ isOpen, onClose, m }: any) {

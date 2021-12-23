@@ -1,7 +1,6 @@
 import useSWR from 'swr'
 import Layout from '../../components/Layout'
 import PodName from '../../components/Pods/PodName'
-import UploadList from '../../components/UploadList'
 import MediaItem from '../../components/Media/MediaItem'
 import ShareMedia from '../../components/Pods/ShareMedia'
 import RemoveMedia from '../../components/Pods/RemoveMedia'
@@ -41,7 +40,6 @@ function PodMedia() {
         {pod?.isDefault && <ShareMedia podId={podId} mediaReferenceIds={selected} />}
         <PodSettings />
       </Wrap>
-      {pod?.isDefault ? <UploadList /> : null}
       <SimpleGrid pt='4' minChildWidth={['100%', '400px']} spacing='4px'>
         {data?.payload?.media?.map((mediaReference: any) => {
           return (
