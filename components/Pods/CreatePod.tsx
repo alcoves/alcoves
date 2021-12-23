@@ -17,7 +17,7 @@ import {
   IconButton,
 } from '@chakra-ui/react'
 
-export default function CreatePod() {
+export default function CreatePod({ expanded }: { expanded: boolean }) {
   const router = useRouter()
   const { mutate } = useSWRConfig()
   const [podName, setPodName] = useState('')
@@ -48,16 +48,19 @@ export default function CreatePod() {
 
   return (
     <>
-      <IconButton
-        px='2'
-        w='100%'
-        maxW='60px'
-        variant='ghost'
-        onClick={onOpen}
-        aria-label='create-pod'
-        justifyContent='center'
-        icon={<IoAddSharp size='24px' />}
-      />
+      {expanded ? (
+        <Button size='sm' w='100%' onClick={onOpen} leftIcon={<IoAddSharp size='24px' />}>
+          Create
+        </Button>
+      ) : (
+        <IconButton
+          w='100%'
+          size='sm'
+          onClick={onOpen}
+          aria-label='create-pod'
+          icon={<IoAddSharp size='20px' />}
+        />
+      )}
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

@@ -41,7 +41,7 @@ export default function Sidebar() {
           <UploadButton expanded={expanded} />
         </Flex>
         <PodsList expanded={expanded} />
-        <CreatePod />
+        <CreatePod expanded={expanded} />
       </VStack>
       <Flex w='100%' justify='flex-start'>
         <Flex w='100%' justifyContent={justify} align='center'>
