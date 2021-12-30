@@ -17,11 +17,11 @@ import { useEffect } from 'react'
 import { useSWRConfig } from 'swr'
 
 export default function RemoveMedia({
-  podId,
+  pod,
   resetSelection,
   mediaReferenceIds,
 }: {
-  podId: string | string[] | undefined
+  pod: any
   resetSelection: () => void
   mediaReferenceIds: number[]
 }) {
@@ -33,17 +33,19 @@ export default function RemoveMedia({
     removeMedia({
       method: 'DELETE',
       data: { mediaReferenceIds },
-      url: `http://localhost:4000/pods/${podId}/media`,
+      url: `http://localhost:4000/pods/${pod.id}/media`,
     })
   }
 
   useEffect(() => {
     if (!loading && !error && data) {
-      mutate(`http://localhost:4000/pods/${podId}/media`)
+      mutate(`http://localhost:4000/pods/${pod.id}/media`)
       resetSelection()
       onClose()
     }
   }, [data, error, loading])
+
+  const headerText = pod?.isDefault ? 'Delete Media' : 'Unshare Media'
 
   return (
     <>
@@ -58,17 +60,27 @@ export default function RemoveMedia({
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Share Media</ModalHeader>
+          <ModalHeader>{headerText}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Text>Are you sure you want to remove these items from this pod?</Text>
+            {pod?.isDefault ? (
+              <Text>
+                Are you sure you want to permenantly delete the selected items? This action is
+                irreversible!
+              </Text>
+            ) : (
+              <Text>
+                Are you sure you want to remove the selected media? The owner will still have access
+                to the selected media
+              </Text>
+            )}
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme='blue' mr={3} onClick={onClose}>
+            <Button colorScheme='blue' mr={3} variant='ghost' onClick={onClose}>
               Close
             </Button>
-            <Button isLoading={loading} variant='ghost' onClick={handleRemove}>
-              Unshare
+            <Button colorScheme='red' isLoading={loading} onClick={handleRemove}>
+              {pod?.isDefault ? 'Delete Forever' : 'Remove from pod'}
             </Button>
           </ModalFooter>
         </ModalContent>
