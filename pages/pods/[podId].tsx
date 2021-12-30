@@ -36,8 +36,14 @@ function PodMedia() {
   return (
     <Box w='100%'>
       <Wrap>
-        <RemoveMedia resetSelection={resetSelection} podId={podId} mediaReferenceIds={selected} />
-        {pod?.isDefault && <ShareMedia podId={podId} mediaReferenceIds={selected} />}
+        {pod?.isDefault ? (
+          <>
+            <RemoveMedia pod={pod} mediaReferenceIds={selected} resetSelection={resetSelection} />
+            <ShareMedia podId={pod.id} mediaReferenceIds={selected} />
+          </>
+        ) : (
+          <RemoveMedia pod={pod} mediaReferenceIds={selected} resetSelection={resetSelection} />
+        )}
         <PodSettings />
       </Wrap>
       <SimpleGrid pt='4' minChildWidth={['100%', '400px']} spacing='4px'>
