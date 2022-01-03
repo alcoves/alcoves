@@ -1,4 +1,4 @@
-import path from 'path'
+import cuid from 'cuid'
 import db from '../config/db'
 import { CompletedPart } from 'aws-sdk/clients/s3'
 import s3, { defaultBucket, deleteFolder } from '../config/s3'
@@ -142,10 +142,11 @@ export async function completeVideoUpload(req, res) {
     Bucket: defaultBucket,
   })
 
-  const thumbnailKey = key.replace(path.parse(key).ext, '.jpg')
+  const thumbnailFilename = `${cuid()}.jpg`
+  const thumbnailKey = `v/${videoId}/thumbnails/${thumbnailFilename}`
   await createThumbnail(signedVideoUrl, {
-    Bucket: defaultBucket,
     Key: thumbnailKey,
+    Bucket: defaultBucket,
   })
 
   const metadata = await getMetadata(signedVideoUrl)
@@ -161,10 +162,10 @@ export async function completeVideoUpload(req, res) {
     data: {
       progress: 100,
       status: 'READY',
+      thumbnailFilename,
       size: s3HeadRes.ContentLength,
       width: metadata.video.width,
       height: metadata.video.height,
-      thumbnailFilename: thumbnailKey,
       framerate: parseFramerate(metadata.video.r_frame_rate),
       length: metadata.format.duration || metadata.video.duration || 0,
     },
