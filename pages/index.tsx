@@ -1,4 +1,5 @@
 import Layout from '../components/Layout'
+import Library from '../components/Library/Index'
 import { useRouter } from 'next/router'
 import React, { useContext } from 'react'
 import { UserContext } from '../contexts/user'
@@ -13,5 +14,9 @@ export default function Index() {
     return null
   }
 
-  return <Layout>This is the bken activity feed</Layout>
+  return (
+    <Layout>
+      <Library />
+    </Layout>
+  )
 }

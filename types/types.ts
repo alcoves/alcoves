@@ -26,3 +26,19 @@ export interface Upload {
   completed: number
   uploadUrls: string[]
 }
+
+export interface Video {
+  id: string
+  user: User
+  title: string
+  status: string
+  length: number
+  progress: number
+  libraryId: string
+  thumbnailFilename: string
+}
+
+export interface User {
+  image: string
+  username: string
+}

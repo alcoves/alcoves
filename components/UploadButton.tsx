@@ -1,3 +1,4 @@
+import UploadList from './UploadList'
 import { useDropzone } from 'react-dropzone'
 import {
   Button,
@@ -16,7 +17,6 @@ import {
 import { useCallback, useContext } from 'react'
 import { IoCloudUpload } from 'react-icons/io5'
 import { UploadsContext } from '../contexts/uploads'
-import UploadList from './UploadList'
 
 const acceptedContentTypes = ['.mp4']
 
@@ -50,7 +50,12 @@ export default function UploadButton({ expanded }: { expanded: boolean }) {
           Upload
         </Button>
       ) : (
-        <IconButton w='100%' aria-label='open-upload' icon={<IoCloudUpload size='20px' />} />
+        <IconButton
+          w='100%'
+          aria-label='open-upload'
+          onClick={onOpen}
+          icon={<IoCloudUpload size='20px' />}
+        />
       )}
 
       <Modal size='3xl' isOpen={isOpen} onClose={onClose}>

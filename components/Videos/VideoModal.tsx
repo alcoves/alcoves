@@ -9,8 +9,18 @@ import {
   Button,
   ModalBody,
 } from '@chakra-ui/react'
+import { Video } from '../../types/types'
+import { getOriginalUrl } from '../../utils/urls'
 
-export default function MediaItemModal({ isOpen, onClose, m }: any) {
+export default function MediaItemModal({
+  v,
+  isOpen,
+  onClose,
+}: {
+  v: Video
+  isOpen: boolean
+  onClose: () => void
+}) {
   const playerRef = useRef(null)
 
   const videoJsOptions = {
@@ -20,8 +30,8 @@ export default function MediaItemModal({ isOpen, onClose, m }: any) {
     responsive: true,
     sources: [
       {
-        src: m.url,
-        type: m.type,
+        type: 'video/mp4',
+        src: getOriginalUrl(v.id),
       },
     ],
   }
@@ -44,10 +54,10 @@ export default function MediaItemModal({ isOpen, onClose, m }: any) {
           <ModalCloseButton />
           <Player options={videoJsOptions} onReady={handlePlayerReady} />
           <ModalBody>
-            <Heading size='md'>{m.title}</Heading>
+            <Heading size='md'>{v.title}</Heading>
             <Button> Optimize </Button>
             <Button> Delete source file </Button>
-            <pre>{JSON.stringify(m, null, 2)}</pre>
+            <pre>{JSON.stringify(v, null, 2)}</pre>
           </ModalBody>
         </ModalContent>
       </Modal>
