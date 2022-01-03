@@ -1,9 +1,9 @@
 import path from 'path'
 import db from '../config/db'
-import mime from 'mime-types'
 import { CompletedPart } from 'aws-sdk/clients/s3'
 import s3, { defaultBucket, deleteFolder } from '../config/s3'
 import { createThumbnail, getMetadata, parseFramerate } from '../service/videos'
+import { Video } from '@prisma/client'
 
 export async function patchLibrary(req, res) {
   return res.sendStatus(200)
@@ -37,11 +37,15 @@ export async function createLibraryVideo(req, res) {
   })
   if (!userLibrary) return res.sendStatus(400)
 
-  await db.video.create({
+  const video = await db.video.create({
     data: {
       userId: req.user.id,
       libraryId: userLibrary.id,
     },
+  })
+
+  return res.json({
+    payload: video,
   })
 }
 
@@ -71,7 +75,7 @@ export async function createVideoUpload(req, res) {
     .createMultipartUpload({
       ContentType: type,
       Bucket: defaultBucket,
-      Key: `v/${libraryId}/${video.id}/original`,
+      Key: `v/${video.id}/original`,
     })
     .promise()
 
@@ -148,7 +152,7 @@ export async function completeVideoUpload(req, res) {
   const s3HeadRes = await s3
     .headObject({
       Bucket: defaultBucket,
-      Key: `v/${libraryId}/${videoId}/original`,
+      Key: `v/${videoId}/original`,
     })
     .promise()
 
@@ -172,24 +176,27 @@ export async function completeVideoUpload(req, res) {
   })
 }
 
-export async function deleteLibraryVideo(req, res) {
-  const { libraryId, videoId } = req.params
+export async function deleteLibraryVideos(req, res) {
+  const { ids } = req.body
+  const { libraryId } = req.params
+  if (!ids || !libraryId) return res.sendStatus(400)
 
-  const hasOwnership = await db.video.findFirst({
-    where: { id: videoId, userId: req.user.id, libraryId },
-  })
-  if (!hasOwnership) return res.sendStatus(403)
-
-  // TODO :: Delete videos referenced by collections
-
-  await deleteFolder({
-    Bucket: defaultBucket,
-    Prefix: `v/${libraryId}/${videoId}`,
+  const videosToDelete = await db.video.findMany({
+    where: {
+      libraryId,
+      id: { in: ids },
+      userId: req.user.id,
+    },
   })
 
-  await db.video.delete({
-    where: { id: videoId },
-  })
+  await Promise.all(
+    videosToDelete.map(async (v: Video) => {
+      if (v.userId === req.user.id && v.libraryId === libraryId) {
+        await db.video.delete({ where: { id: v.id } })
+        await deleteFolder({ Bucket: defaultBucket, Prefix: `v/${v.id}` })
+      }
+    })
+  )
 
   return res.sendStatus(200)
 }
