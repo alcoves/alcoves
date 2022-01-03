@@ -4,12 +4,10 @@ import { nanoid } from 'nanoid'
 import { useSWRConfig } from 'swr'
 import { useEffect, useState } from 'react'
 import { Upload, UploadsState } from '../types/types'
-import usePods from './usePods'
 
 const bypassInterceptorAxios = axios.create()
 
 export default function useUploads(): UploadsState {
-  const { pods } = usePods()
   const { mutate } = useSWRConfig()
   const [uploads, setUploads] = useState<any>({})
 
@@ -44,15 +42,27 @@ export default function useUploads(): UploadsState {
       // console.log('Starting upload of item', upload)
       upload.status = 'started'
       updateItem(id, upload)
-
       const chunks = chunkFile(upload.file)
 
-      const { data } = await axios.post('http://localhost:4000/uploads', {
-        type: upload.file.type,
-        size: upload.file.size,
-        filename: upload.file.name,
-        chunks: chunks.length,
-      })
+      const { data: listLibraries } = await axios.get('http://localhost:4000/libraries')
+      const libraryId = listLibraries.payload[0].id
+
+      const { data: createVideoRes } = await axios.post(
+        `http://localhost:4000/libraries/${libraryId}/videos`,
+        {
+          title: upload.file.name,
+        }
+      )
+
+      const videoId = createVideoRes.payload.id
+
+      const { data } = await axios.post(
+        `http://localhost:4000/libraries/${libraryId}/videos/${videoId}/upload`,
+        {
+          type: upload.file.type,
+          chunks: chunks.length,
+        }
+      )
 
       // console.log('createUploadRes data', data.payload)
       const urls: string[] = data?.payload?.upload?.urls || []
@@ -76,23 +86,16 @@ export default function useUploads(): UploadsState {
         })
       )
 
-      await axios.put('http://localhost:4000/uploads', {
-        id: data?.payload?.media.id,
+      await axios.put(`http://localhost:4000/libraries/${libraryId}/videos/${videoId}/upload`, {
         key: data?.payload?.upload.key,
         uploadId: data?.payload?.upload.uploadId,
       })
+
+      mutate(`http://localhost:4000/lbraries/${libraryId}/videos`)
     } catch (error) {
       // console.log('Error uploading')
       upload.status = 'error'
       updateItem(id, upload)
-    } finally {
-      // console.log('Completing Upload')
-      // removeItem(id)
-
-      const defaultPod = pods.filter((p: any) => p.isDefault)
-      if (defaultPod.length) {
-        mutate(`http://localhost:4000/pods/${defaultPod[0].id}/media`)
-      }
     }
   }
 

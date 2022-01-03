@@ -1,3 +1,5 @@
+import VideoModal from './VideoModal'
+import duration from '../../utils/duration'
 import {
   Box,
   useDisclosure,
@@ -9,18 +11,18 @@ import {
   Avatar,
   Spinner,
 } from '@chakra-ui/react'
-import duration from '../../utils/duration'
-import MediaItemModal from './MediaItemModal'
+import { Video } from '../../types/types'
+import { getThumanailUrl } from '../../utils/urls'
 
-export default function MediaItem({ m }: any) {
+export default function VideoItem({ v }: { v: Video }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
     <>
-      <MediaItemModal isOpen={isOpen} onClose={onClose} m={m} />
+      <VideoModal isOpen={isOpen} onClose={onClose} v={v} />
       <Box
-        id={m.id}
-        key={m.id}
+        id={v.id}
+        key={v.id}
         cursor='pointer'
         direction='column'
         position='relative'
@@ -41,20 +43,22 @@ export default function MediaItem({ m }: any) {
           _hover={{ bg: 'rgba(0,0,0,.1)' }}
         >
           <Flex justify='space-between'>
-            <Box>
-              <Avatar name={m.user.username} size='xs' src={m.user.image} />
-            </Box>
+            {v?.user?.username && (
+              <Box>
+                <Avatar name={v.user.username} size='xs' src={v.user.image} />
+              </Box>
+            )}
             <Flex align='center' bg='rgba(0,0,0,.6)' px='1' py='.5' rounded='md'>
               <Text fontSize='.8rem' fontWeight='700'>
-                {duration(m.duration)}
+                {duration(v.length)}
               </Text>
             </Flex>
           </Flex>
           <Flex align='center' direction='column'>
-            {m.status === 'OPTIMIZING' && (
+            {v.status === 'PROCESSING' && (
               <>
                 <Spinner />
-                <Text fontWeight='700'>{m.status}</Text>
+                <Text fontWeight='700'>{v.status}</Text>
               </>
             )}
           </Flex>
@@ -68,15 +72,15 @@ export default function MediaItem({ m }: any) {
           backgroundColor='black'
           backgroundPosition='center'
           backgroundRepeat='no-repeat'
-          backgroundImage={m.thumbnailUrl || m.url}
+          backgroundImage={getThumanailUrl(v.id, v.thumbnailFilename)}
         />
       </Box>
       <Box pt='1' pb='4'>
         <Editable
-          defaultValue={m.title}
+          defaultValue={v.title}
           onSubmit={value => {
-            if (value !== m.title) {
-              // Edit the title
+            if (value !== v.title) {
+              // TODO :: Edit the title
               console.log('submit', value)
             }
           }}
@@ -84,14 +88,6 @@ export default function MediaItem({ m }: any) {
           <EditablePreview pl='2' />
           <EditableInput pl='2' />
         </Editable>
-        {/* <HStack>
-          {['1', '2', '3'].map(size => (
-            <Tag size='sm' key={size} variant='solid' colorScheme='teal'>
-              <TagLabel>Green</TagLabel>
-              <TagCloseButton />
-            </Tag>
-          ))}
-        </HStack> */}
       </Box>
     </>
   )

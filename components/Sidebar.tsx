@@ -1,11 +1,11 @@
-import PodsList from './PodsList'
+// import PodsList from './PodsList'
 import AvatarMenu from './AvatarMenu'
-import CreatePod from './Pods/CreatePod'
-import UploadButton from './UploadButton'
-import { IoMenu } from 'react-icons/io5'
+// import CreatePod from './Pods/CreatePod'
+// import UploadButton from './UploadButton'
+import { IoBook, IoMenu } from 'react-icons/io5'
 import { UserContext } from '../contexts/user'
 import { useContext, useEffect, useState } from 'react'
-import { Flex, Heading, IconButton, useMediaQuery, VStack } from '@chakra-ui/react'
+import { Button, Flex, Heading, IconButton, useMediaQuery, VStack } from '@chakra-ui/react'
 
 export default function Sidebar() {
   const { user } = useContext(UserContext)
@@ -37,11 +37,12 @@ export default function Sidebar() {
         <Flex w='100%' align='center' justifyContent={justify} onClick={toggleResize}>
           <IconButton variant='ghost' w='45px' aria-label='upload' icon={<IoMenu size='20px' />} />
         </Flex>
-        <Flex w='100%'>
-          <UploadButton expanded={expanded} />
-        </Flex>
-        <PodsList expanded={expanded} />
-        <CreatePod expanded={expanded} />
+        <Button w='100%' leftIcon={<IoBook />}>
+          Library
+        </Button>
+        {/* <LibraryButton /> */}
+        {/* <PodsList expanded={expanded} /> */}
+        {/* <CreatePod expanded={expanded} /> */}
       </VStack>
       <Flex w='100%' justify='flex-start'>
         <Flex w='100%' justifyContent={justify} align='center'>

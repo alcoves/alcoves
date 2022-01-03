@@ -1,7 +1,7 @@
 import useSWR from 'swr'
 import Layout from '../../components/Layout'
 import PodName from '../../components/Pods/PodName'
-import MediaItem from '../../components/Media/MediaItem'
+import Video from '../../components/Videos/VideoItem'
 import ShareMedia from '../../components/Pods/ShareMedia'
 import RemoveMedia from '../../components/Pods/RemoveMedia'
 import PodSettings from '../../components/Pods/PodSettings'
@@ -57,7 +57,7 @@ function PodMedia() {
                 selected.includes(mediaReference.id) ? 'solid teal 2px' : 'solid transparent 2px'
               }
             >
-              <MediaItem m={mediaReference?.media} />
+              <Video m={mediaReference?.media} />
             </Box>
           )
         })}
