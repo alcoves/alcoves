@@ -7,7 +7,9 @@ import { Box, SimpleGrid } from '@chakra-ui/react'
 
 export default function LibraryGrid({ libraryId }: { libraryId: string }) {
   const [selected, setSelected] = useState<string[]>([])
-  const { data } = useSWR(`http://localhost:4000/libraries/${libraryId}/videos`, fetcher)
+  const { data } = useSWR(`http://localhost:4000/libraries/${libraryId}/videos`, fetcher, {
+    refreshInterval: 3000,
+  })
 
   function handleSelect(e: any, id: string) {
     if (e.ctrlKey) {
