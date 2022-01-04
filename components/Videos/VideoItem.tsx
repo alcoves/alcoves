@@ -10,6 +10,7 @@ import {
   EditableInput,
   Avatar,
   Spinner,
+  Progress,
 } from '@chakra-ui/react'
 import { Video } from '../../types/types'
 import { getThumanailUrl } from '../../utils/urls'
@@ -58,6 +59,7 @@ export default function VideoItem({ v }: { v: Video }) {
             {v.status === 'PROCESSING' && (
               <>
                 <Spinner />
+                <Progress mt='2' h='4px' w='100px' value={v.progress} />
                 <Text fontWeight='700'>{v.status}</Text>
               </>
             )}
