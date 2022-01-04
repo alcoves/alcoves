@@ -91,7 +91,7 @@ export default function useUploads(): UploadsState {
         uploadId: data?.payload?.upload.uploadId,
       })
 
-      mutate(`http://localhost:4000/lbraries/${libraryId}/videos`)
+      mutate(`http://localhost:4000/libraries/${libraryId}/videos`)
     } catch (error) {
       // console.log('Error uploading')
       upload.status = 'error'

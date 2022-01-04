@@ -10,7 +10,7 @@ import {
   ModalBody,
 } from '@chakra-ui/react'
 import { Video } from '../../types/types'
-import { getOriginalUrl } from '../../utils/urls'
+import { getOptimizedUrl, getOriginalUrl } from '../../utils/urls'
 
 export default function MediaItemModal({
   v,
@@ -29,6 +29,10 @@ export default function MediaItemModal({
     controls: true,
     responsive: true,
     sources: [
+      {
+        type: 'video/mp4',
+        src: getOptimizedUrl(v.id),
+      },
       {
         type: 'video/mp4',
         src: getOriginalUrl(v.id),

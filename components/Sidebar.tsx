@@ -1,13 +1,12 @@
-// import PodsList from './PodsList'
 import AvatarMenu from './AvatarMenu'
-// import CreatePod from './Pods/CreatePod'
-// import UploadButton from './UploadButton'
-import { IoBook, IoMenu } from 'react-icons/io5'
+import { useRouter } from 'next/router'
 import { UserContext } from '../contexts/user'
+import { IoBook, IoMenu } from 'react-icons/io5'
 import { useContext, useEffect, useState } from 'react'
 import { Button, Flex, Heading, IconButton, useMediaQuery, VStack } from '@chakra-ui/react'
 
 export default function Sidebar() {
+  const router = useRouter()
   const { user } = useContext(UserContext)
   const [menuWidth, setMenuWith] = useState('220px')
   const [isMobile] = useMediaQuery('(max-width: 768px)')
@@ -37,12 +36,9 @@ export default function Sidebar() {
         <Flex w='100%' align='center' justifyContent={justify} onClick={toggleResize}>
           <IconButton variant='ghost' w='45px' aria-label='upload' icon={<IoMenu size='20px' />} />
         </Flex>
-        <Button w='100%' leftIcon={<IoBook />}>
+        <Button onClick={() => router.push('/')} w='100%' leftIcon={<IoBook />}>
           Library
         </Button>
-        {/* <LibraryButton /> */}
-        {/* <PodsList expanded={expanded} /> */}
-        {/* <CreatePod expanded={expanded} /> */}
       </VStack>
       <Flex w='100%' justify='flex-start'>
         <Flex w='100%' justifyContent={justify} align='center'>
@@ -52,10 +48,6 @@ export default function Sidebar() {
               <Heading size='xs'>{user?.username}</Heading>
             </Flex>
           )}
-
-          {/* <Flex cursor='pointer' onClick={toggleColorMode} justify='center' mx='2'>
-            {colorMode === 'dark' ? <IoMoon /> : <IoSunny />}
-          </Flex> */}
         </Flex>
       </Flex>
     </Flex>
