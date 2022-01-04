@@ -60,6 +60,57 @@ export async function createThumbnail(
   })
 }
 
+function getVideoFilter(width: number): string {
+  return `-vf scale=${width}:${width}:force_original_aspect_ratio=decrease,scale=trunc(iw/2)*2:trunc(ih/2)*2`
+}
+
+function getX264(bandwidth: number): string {
+  return `-c:v libx264 -crf 24 -maxrate ${bandwidth}k -bufsize ${
+    bandwidth * 2
+  }k -preset faster -force_key_frames expr:gte(t,n_forced*2)`
+}
+
+export async function optimizeOriginal(
+  inputUrl: string,
+  uploadParams: S3.PutObjectRequest
+): Promise<void> {
+  const tmpDir = await fs.mkdtemp('/tmp/bken-')
+  const tmpFilePath = `${tmpDir}/optimized.mp4`
+  const optmizedCmd =
+    '-c:a aac -b:a 128k -ar 44100 -c:v libx264 -crf 23 -preset medium -force_key_frames expr:gte(t,n_forced*2)'
+
+  return new Promise((resolve, reject) => {
+    ffmpeg(inputUrl)
+      .outputOptions(optmizedCmd.split(' '))
+      .output(tmpFilePath)
+      .on('start', function (commandLine) {
+        console.log('Spawned Ffmpeg with command: ' + commandLine)
+      })
+      .on('error', function (err) {
+        console.log('An error occurred: ' + err.message)
+        reject(err.message)
+      })
+      .on('end', function () {
+        s3.upload({
+          ...uploadParams,
+          ContentType: 'video/h264',
+          Body: fs.createReadStream(tmpFilePath),
+        })
+          .promise()
+          .then(() => {
+            fs.removeSync(tmpDir)
+            resolve()
+          })
+          .catch(() => {
+            fs.removeSync(tmpDir)
+            console.error('Failed to upload')
+            reject()
+          })
+      })
+      .run()
+  })
+}
+
 function transformFfprobeToMetadata(rawMeta: FfprobeData): Metadata {
   // When analyzing a video, we assume that the first video track found is the
   // only video track We don't error when a container has multiple video tracks,
@@ -104,5 +155,25 @@ export function parseFramerate(r_frame_rate: string): number {
     framerate = parseFloat(r_frame_rate)
   }
 
-  return framerate
+  if (framerate <= 15.1 && framerate >= 14.9) {
+    return 15
+  }
+
+  if (framerate <= 25.1 && framerate >= 23.9) {
+    return 24
+  }
+
+  if (framerate <= 30.1 && framerate >= 29.9) {
+    return 30
+  }
+
+  if (framerate <= 60.1 && framerate >= 59.9) {
+    return 60
+  }
+
+  if (framerate > 60.1) {
+    return 60
+  }
+
+  return Math.round(framerate)
 }

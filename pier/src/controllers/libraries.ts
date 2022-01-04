@@ -1,9 +1,8 @@
-import cuid from 'cuid'
 import db from '../config/db'
+import { Video } from '@prisma/client'
 import { CompletedPart } from 'aws-sdk/clients/s3'
 import s3, { defaultBucket, deleteFolder } from '../config/s3'
-import { createThumbnail, getMetadata, parseFramerate } from '../service/videos'
-import { Video } from '@prisma/client'
+import { dispatchJob } from '../service/tidal'
 
 export async function patchLibrary(req, res) {
   return res.sendStatus(200)
@@ -58,18 +57,15 @@ export async function createVideoUpload(req, res) {
   })
   if (!userLibrary) return res.sendStatus(404)
 
-  const video = await db.video.update({
+  const video = await db.video.findFirst({
     where: {
       id: videoId,
-    },
-    data: {
-      userId: req.user.id,
-      libraryId: libraryId,
     },
     include: {
       user: true,
     },
   })
+  if (!video) return res.sendStatus(400)
 
   const { UploadId, Key } = await s3
     .createMultipartUpload({
@@ -106,75 +102,73 @@ export async function createVideoUpload(req, res) {
 }
 
 export async function completeVideoUpload(req, res) {
-  const { libraryId, videoId } = req.params
+  const { videoId } = req.params
   const { key, uploadId } = req.body
 
-  const userOwnsVideo = await db.video.findFirst({
-    where: { id: videoId, userId: req.params.id },
-  })
-  if (!userOwnsVideo) return res.sendStatus(403)
-
-  // TODO :: Make this work for greater than 1000 part uploads
-  const { Parts } = await s3
-    .listParts({
-      Key: key,
-      UploadId: uploadId,
-      Bucket: defaultBucket,
+  try {
+    const userOwnsVideo = await db.video.findFirst({
+      where: { id: videoId, userId: req.params.id },
     })
-    .promise()
+    if (!userOwnsVideo) return res.sendStatus(403)
 
-  const mappedParts: CompletedPart[] =
-    Parts?.map(({ ETag, PartNumber }) => {
-      return { ETag, PartNumber } as CompletedPart
-    }) || []
+    // TODO :: Make this work for greater than 1000 part uploads
+    const { Parts } = await s3
+      .listParts({
+        Key: key,
+        UploadId: uploadId,
+        Bucket: defaultBucket,
+      })
+      .promise()
 
-  await s3
-    .completeMultipartUpload({
-      Key: key,
-      UploadId: uploadId,
-      Bucket: defaultBucket,
-      MultipartUpload: { Parts: mappedParts },
+    const mappedParts: CompletedPart[] =
+      Parts?.map(({ ETag, PartNumber }) => {
+        return { ETag, PartNumber } as CompletedPart
+      }) || []
+
+    await s3
+      .completeMultipartUpload({
+        Key: key,
+        UploadId: uploadId,
+        Bucket: defaultBucket,
+        MultipartUpload: { Parts: mappedParts },
+      })
+      .promise()
+
+    const s3HeadRes = await s3
+      .headObject({
+        Bucket: defaultBucket,
+        Key: `v/${videoId}/original`,
+      })
+      .promise()
+
+    const video = await db.video.update({
+      where: { id: videoId },
+      data: {
+        size: s3HeadRes.ContentLength,
+      },
     })
-    .promise()
 
-  const signedVideoUrl = await s3.getSignedUrlPromise('getObject', {
-    Key: key,
-    Bucket: defaultBucket,
-  })
-
-  const thumbnailFilename = `${cuid()}.jpg`
-  const thumbnailKey = `v/${videoId}/thumbnails/${thumbnailFilename}`
-  await createThumbnail(signedVideoUrl, {
-    Key: thumbnailKey,
-    Bucket: defaultBucket,
-  })
-
-  const metadata = await getMetadata(signedVideoUrl)
-  const s3HeadRes = await s3
-    .headObject({
-      Bucket: defaultBucket,
-      Key: `v/${videoId}/original`,
+    // Ask Tidal to generate metadata. This is an asyncronous process
+    // After this. Tidal will respond via webhook as a POST /hooks/tidal/videos/:videoId
+    // This webhook will contain the metadata. When the job is seen, other jobs (thumbnailing and transcoding) will be dispatched
+    await dispatchJob('metadata', {
+      entityId: video.id,
+      input: {
+        key,
+        bucket: defaultBucket,
+      },
     })
-    .promise()
 
-  const video = await db.video.update({
-    where: { id: videoId },
-    data: {
-      progress: 100,
-      status: 'READY',
-      thumbnailFilename,
-      size: s3HeadRes.ContentLength,
-      width: metadata.video.width,
-      height: metadata.video.height,
-      framerate: parseFramerate(metadata.video.r_frame_rate),
-      length: metadata.format.duration || metadata.video.duration || 0,
-    },
-  })
-
-  return res.json({
-    status: 'success',
-    payload: video,
-  })
+    return res.json({
+      status: 'success',
+      payload: video,
+    })
+  } catch (error) {
+    await db.video.update({
+      where: { id: videoId },
+      data: { status: 'ERROR' },
+    })
+  }
 }
 
 export async function deleteLibraryVideos(req, res) {
