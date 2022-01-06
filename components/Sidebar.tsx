@@ -5,6 +5,7 @@ import { IoBook, IoMenu } from 'react-icons/io5'
 import { useContext, useEffect, useState } from 'react'
 import { Button, Flex, Heading, IconButton, useMediaQuery, VStack } from '@chakra-ui/react'
 import UploadButton from './UploadButton'
+import UsageQuota from './UsageQuota'
 
 export default function Sidebar() {
   const router = useRouter()
@@ -42,7 +43,8 @@ export default function Sidebar() {
           Library
         </Button>
       </VStack>
-      <Flex w='100%' justify='flex-start'>
+      <Flex w='100%' justify='flex-start' direction='column'>
+        <UsageQuota />
         <Flex w='100%' justifyContent={justify} align='center'>
           <AvatarMenu />
           {expanded && (

@@ -7,6 +7,8 @@ import {
   Heading,
   Button,
   ModalBody,
+  Spinner,
+  Box,
 } from '@chakra-ui/react'
 import { Video } from '../../types/types'
 import { getHlsUrl } from '../../utils/urls'
@@ -26,7 +28,13 @@ export default function MediaItemModal({
         <ModalOverlay />
         <ModalContent>
           <ModalCloseButton />
-          <Player src={getHlsUrl(v.id)} />
+          {v.status === 'READY' ? (
+            <Player src={getHlsUrl(v.id)} />
+          ) : (
+            <Box w='100%' h='300px'>
+              <Spinner />
+            </Box>
+          )}
           <ModalBody>
             <Heading size='md'>{v.title}</Heading>
             <Button> Optimize </Button>
