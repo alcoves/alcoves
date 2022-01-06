@@ -35,3 +35,22 @@ export async function patchUser(req, res) {
     payload: { user },
   })
 }
+
+export async function getUserAccount(req, res) {
+  if (req.user.id !== req.params.userId) return res.sendStatus(403)
+
+  const agg = await db.video.aggregate({
+    _sum: {
+      size: true,
+    },
+    where: {
+      userId: req.user.id,
+    },
+  })
+
+  return res.json({
+    payload: {
+      usedStorage: agg._sum.size,
+    },
+  })
+}

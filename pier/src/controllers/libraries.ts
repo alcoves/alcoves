@@ -145,7 +145,7 @@ export async function completeVideoUpload(req, res) {
     const video = await db.video.update({
       where: { id: videoId },
       data: {
-        size: s3HeadRes.ContentLength,
+        size: Math.abs(s3HeadRes.ContentLength || 0),
       },
     })
 
