@@ -3,6 +3,7 @@ import morgan from 'morgan'
 import express from 'express'
 import rootRoutes from './routes/root'
 import userRoutes from './routes/users'
+import authRoutes from './routes/auth'
 import webhookRoutes from './routes/webhooks'
 import libraryRoutes from './routes/libraries'
 
@@ -13,6 +14,7 @@ app.use(morgan('tiny'))
 app.use(express.json({ limit: '5mb' }))
 
 app.use(rootRoutes)
+app.use('/auth', authRoutes)
 app.use('/users', userRoutes)
 app.use('/webhooks', webhookRoutes)
 app.use('/libraries', libraryRoutes)

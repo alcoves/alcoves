@@ -14,8 +14,7 @@ export async function recieveTidalWebhook(req, res) {
       await db.video.update({
         where: { id: data.entityId },
         data: {
-          // lastJobId: id,
-          status: 'READY',
+          status: 'PROCESSING',
           width: returnValue.video.width,
           height: returnValue.video.height,
           framerate: parseFramerate(returnValue.video.r_frame_rate),
@@ -35,7 +34,7 @@ export async function recieveTidalWebhook(req, res) {
         },
       })
 
-      await dispatchJob('transcode', {
+      await dispatchJob('transcode/hls', {
         entityId: data.entityId,
         input: {
           bucket: defaultBucket,
@@ -43,7 +42,7 @@ export async function recieveTidalWebhook(req, res) {
         },
         output: {
           bucket: defaultBucket,
-          key: `v/${data.entityId}/optimized`,
+          path: `v/${data.entityId}/hls`,
         },
       })
 
@@ -56,7 +55,7 @@ export async function recieveTidalWebhook(req, res) {
         },
       })
       return res.sendStatus(200)
-    case 'transcode':
+    case 'package-hls':
       if (isFailed) {
         await db.video.update({
           where: { id: data.entityId },
@@ -78,6 +77,6 @@ export async function recieveTidalWebhook(req, res) {
       return res.sendStatus(200)
     default:
       console.error('Unknown webhook event')
-      return res.sendStatus(400)
+      return res.sendStatus(200)
   }
 }

@@ -11,7 +11,7 @@ model User {
   id        String    @id @default(cuid())
   email     String    @unique
   username  String
-  password  String
+  password  String?
   image     String?
   videos    Video[]
   library   Library[]
@@ -24,7 +24,7 @@ model User {
 
 model Library {
   id        String   @id @default(cuid())
-  userId    String
+  userId    String   @unique
   user      User     @relation(fields: [userId], references: [id])
   videos    Video[]
   updatedAt DateTime @updatedAt
@@ -40,8 +40,8 @@ model Video {
   width             Int         @default(0)
   height            Int         @default(0)
   framerate         Int         @default(0)
-  title             String      @default("")
   thumbnailFilename String      @default("")
+  title             String      @default("New upload")
   status            MediaStatus @default(CREATED)
   userId            String
   user              User        @relation(fields: [userId], references: [id])

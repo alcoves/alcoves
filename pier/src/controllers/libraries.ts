@@ -21,6 +21,7 @@ export async function listUserLibraries(req, res) {
 export async function listLibraryVideos(req, res) {
   const { libraryId } = req.params
   const videos = await db.video.findMany({
+    orderBy: [{ createdAt: 'desc' }],
     where: { libraryId, userId: req.user.id },
   })
   return res.json({

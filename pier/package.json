@@ -23,6 +23,7 @@
     "express": "^5.0.0-alpha.8",
     "fluent-ffmpeg": "^2.1.2",
     "fs-extra": "^10.0.0",
+    "google-auth-library": "^7.11.0",
     "jsonwebtoken": "^8.5.1",
     "mime-types": "^2.1.34",
     "morgan": "^1.10.0",
