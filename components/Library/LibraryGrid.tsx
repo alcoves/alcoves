@@ -26,6 +26,10 @@ export default function LibraryGrid({ libraryId }: { libraryId: string }) {
     setSelected([])
   }
 
+  if (data && !data?.payload?.length) {
+    return <Box>Upload some content to get started!</Box>
+  }
+
   if (data) {
     return (
       <Box>

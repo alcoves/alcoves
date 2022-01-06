@@ -4,6 +4,7 @@ import { UserContext } from '../contexts/user'
 import { IoBook, IoMenu } from 'react-icons/io5'
 import { useContext, useEffect, useState } from 'react'
 import { Button, Flex, Heading, IconButton, useMediaQuery, VStack } from '@chakra-ui/react'
+import UploadButton from './UploadButton'
 
 export default function Sidebar() {
   const router = useRouter()
@@ -34,8 +35,9 @@ export default function Sidebar() {
     <Flex p='2' h='100%' w={menuWidth} minW={menuWidth} direction='column' justify='space-between'>
       <VStack spacing='4'>
         <Flex w='100%' align='center' justifyContent={justify} onClick={toggleResize}>
-          <IconButton variant='ghost' w='45px' aria-label='upload' icon={<IoMenu size='20px' />} />
+          <IconButton variant='ghost' w='45px' aria-label='menu' icon={<IoMenu size='20px' />} />
         </Flex>
+        <UploadButton expanded={expanded} />
         <Button onClick={() => router.push('/')} w='100%' leftIcon={<IoBook />}>
           Library
         </Button>

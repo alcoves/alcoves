@@ -1,6 +1,5 @@
 import useSWR from 'swr'
 import LibraryGrid from './LibraryGrid'
-import UploadButton from '../UploadButton'
 import { Box } from '@chakra-ui/react'
 import { fetcher } from '../../utils/axios'
 
@@ -11,7 +10,6 @@ export default function Library() {
 
   return (
     <Box p='4' w='100%'>
-      <UploadButton expanded={false} />
       <LibraryGrid libraryId={libraryId} />
     </Box>
   )

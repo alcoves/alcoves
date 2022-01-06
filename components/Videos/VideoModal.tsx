@@ -1,5 +1,4 @@
 import Player from './Player'
-import { useRef } from 'react'
 import {
   Modal,
   ModalOverlay,
@@ -10,7 +9,7 @@ import {
   ModalBody,
 } from '@chakra-ui/react'
 import { Video } from '../../types/types'
-import { getOptimizedUrl, getOriginalUrl } from '../../utils/urls'
+import { getHlsUrl } from '../../utils/urls'
 
 export default function MediaItemModal({
   v,
@@ -21,42 +20,13 @@ export default function MediaItemModal({
   isOpen: boolean
   onClose: () => void
 }) {
-  const playerRef = useRef(null)
-
-  const videoJsOptions = {
-    fluid: true,
-    autoplay: true,
-    controls: true,
-    responsive: true,
-    sources: [
-      {
-        type: 'video/mp4',
-        src: getOptimizedUrl(v.id),
-      },
-      {
-        type: 'video/mp4',
-        src: getOriginalUrl(v.id),
-      },
-    ],
-  }
-
-  const handlePlayerReady = (player: any) => {
-    playerRef.current = player
-    player.on('waiting', () => {
-      console.log('player is waiting')
-    })
-    player.on('dispose', () => {
-      console.log('player will dispose')
-    })
-  }
-
   return (
     <>
       <Modal size='6xl' isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalCloseButton />
-          <Player options={videoJsOptions} onReady={handlePlayerReady} />
+          <Player src={getHlsUrl(v.id)} />
           <ModalBody>
             <Heading size='md'>{v.title}</Heading>
             <Button> Optimize </Button>
