@@ -50,7 +50,7 @@ export async function createLibraryVideo(req, res) {
 }
 
 export async function createVideoUpload(req, res) {
-  const { libraryId, videoId } = req.params
+  const { libraryId, videoId, title } = req.params
   const { chunks, type } = req.body
 
   const userLibrary = await db.library.findFirst({
@@ -58,9 +58,12 @@ export async function createVideoUpload(req, res) {
   })
   if (!userLibrary) return res.sendStatus(404)
 
-  const video = await db.video.findFirst({
+  const video = await db.video.update({
     where: {
       id: videoId,
+    },
+    data: {
+      title,
     },
     include: {
       user: true,
