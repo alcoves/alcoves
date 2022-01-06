@@ -9,6 +9,7 @@ import {
   ModalBody,
   Spinner,
   Box,
+  Flex,
 } from '@chakra-ui/react'
 import { Video } from '../../types/types'
 import { getHlsUrl } from '../../utils/urls'
@@ -31,14 +32,12 @@ export default function MediaItemModal({
           {v.status === 'READY' ? (
             <Player src={getHlsUrl(v.id)} />
           ) : (
-            <Box w='100%' h='300px'>
+            <Flex justify='center' align='center' w='100%' h='300px'>
               <Spinner />
-            </Box>
+            </Flex>
           )}
           <ModalBody>
             <Heading size='md'>{v.title}</Heading>
-            <Button> Optimize </Button>
-            <Button> Delete source file </Button>
             <pre>{JSON.stringify(v, null, 2)}</pre>
           </ModalBody>
         </ModalContent>

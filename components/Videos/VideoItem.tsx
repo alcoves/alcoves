@@ -63,6 +63,13 @@ export default function VideoItem({ v }: { v: Video }) {
                 <Text fontWeight='700'>{v.status}</Text>
               </>
             )}
+            {v.status === 'ERROR' && (
+              <>
+                <Text fontWeight='700' color='red.500'>
+                  {v.status}
+                </Text>
+              </>
+            )}
           </Flex>
           <Flex />
         </Flex>
