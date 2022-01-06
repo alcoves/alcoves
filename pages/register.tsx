@@ -1,9 +1,13 @@
+import { GoogleLogin } from 'react-google-login'
+
 import Link from 'next/link'
 import axios from '../utils/axios'
 import { useRouter } from 'next/router'
 import { UserContext } from '../contexts/user'
 import React, { useContext, useState } from 'react'
 import { Text, Box, Flex, Input, Heading, Button } from '@chakra-ui/react'
+
+const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ''
 
 export default function Register() {
   const router = useRouter()
@@ -15,12 +19,25 @@ export default function Register() {
 
   async function handleRegister() {
     try {
-      const res = await axios.post('http://localhost:4000/register', {
+      const res = await axios.post('http://localhost:4000/auth/register', {
         email,
         username,
         password,
       })
       login(res.data.accessToken)
+    } catch (error: any) {
+      setErrorMsg(error.message)
+    }
+  }
+
+  async function handleLoginGoogle(response: any) {
+    try {
+      if (response.tokenId) {
+        const res = await axios.post('http://localhost:4000/auth/google', {
+          token: response.tokenId,
+        })
+        login(res.data.accessToken)
+      }
     } catch (error: any) {
       setErrorMsg(error.message)
     }
@@ -41,6 +58,22 @@ export default function Register() {
           <Flex justify='center'>
             <Text color='brand.red'>{errorMsg}</Text>
           </Flex>
+          <GoogleLogin
+            clientId={clientId}
+            onSuccess={handleLoginGoogle}
+            cookiePolicy={'single_host_origin'}
+            onFailure={() => {
+              setErrorMsg('There was an error')
+            }}
+            render={({ onClick, disabled }: any) => {
+              return (
+                <Button isDisabled={disabled} onClick={onClick} my='1'>
+                  Register With Google
+                </Button>
+              )
+            }}
+          />
+          <Box bgColor='gray.900' h='3px' w='100%' my='1' borderRadius='4' mt='4' />
           <Input
             mt='4'
             type='email'

@@ -30,8 +30,13 @@ export default function UploadButton({ expanded }: { expanded: boolean }) {
     acceptedFiles.map((f: File) => addUpload(f))
   }, [])
 
+  function onDropRejected() {
+    console.error('There was an error')
+  }
+
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
+    onDropRejected,
     maxFiles: 50,
     multiple: true,
     accept: acceptedContentTypes.join(', '),

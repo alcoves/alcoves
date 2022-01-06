@@ -1,9 +1,12 @@
 import Link from 'next/link'
 import axios from '../utils/axios'
 import { useRouter } from 'next/router'
+import GoogleLogin from 'react-google-login'
 import { UserContext } from '../contexts/user'
 import React, { useContext, useState } from 'react'
 import { Text, Box, Flex, Input, Heading, Button } from '@chakra-ui/react'
+
+const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ''
 
 export default function Login() {
   const router = useRouter()
@@ -14,9 +17,20 @@ export default function Login() {
 
   async function handleLogin() {
     try {
-      const res = await axios.post('http://localhost:4000/login', {
+      const res = await axios.post('http://localhost:4000/auth/login', {
         email,
         password,
+      })
+      login(res.data.accessToken)
+    } catch (error: any) {
+      setErrorMsg(error.message)
+    }
+  }
+
+  async function handleLoginGoogle(response: any) {
+    try {
+      const res = await axios.post('http://localhost:4000/auth/google', {
+        token: response.tokenId,
       })
       login(res.data.accessToken)
     } catch (error: any) {
@@ -39,6 +53,22 @@ export default function Login() {
           <Flex justify='center'>
             <Text color='brand.red'>{errorMsg}</Text>
           </Flex>
+          <GoogleLogin
+            clientId={clientId}
+            onSuccess={handleLoginGoogle}
+            cookiePolicy={'single_host_origin'}
+            onFailure={() => {
+              setErrorMsg('There was an error')
+            }}
+            render={({ onClick, disabled }: any) => {
+              return (
+                <Button isDisabled={disabled} onClick={onClick} my='1'>
+                  Login With Google
+                </Button>
+              )
+            }}
+          />
+          <Box bgColor='gray.900' h='3px' w='100%' my='1' borderRadius='4' mt='4' />
           <Input
             mt='4'
             type='email'
