@@ -1,8 +1,9 @@
+import path from 'path'
 import db from '../config/db'
 import { Video } from '@prisma/client'
+import { dispatchJob } from '../service/tidal'
 import { CompletedPart } from 'aws-sdk/clients/s3'
 import s3, { defaultBucket, deleteFolder } from '../config/s3'
-import { dispatchJob } from '../service/tidal'
 
 export async function patchLibrary(req, res) {
   return res.sendStatus(200)
@@ -30,6 +31,7 @@ export async function listLibraryVideos(req, res) {
 }
 
 export async function createLibraryVideo(req, res) {
+  const { title } = req.body
   const { libraryId } = req.params
 
   const userLibrary = await db.library.findFirst({
@@ -41,6 +43,7 @@ export async function createLibraryVideo(req, res) {
     data: {
       userId: req.user.id,
       libraryId: userLibrary.id,
+      title: path.parse(title).name,
     },
   })
 
@@ -50,7 +53,7 @@ export async function createLibraryVideo(req, res) {
 }
 
 export async function createVideoUpload(req, res) {
-  const { libraryId, videoId, title } = req.params
+  const { libraryId, videoId } = req.params
   const { chunks, type } = req.body
 
   const userLibrary = await db.library.findFirst({
@@ -58,12 +61,9 @@ export async function createVideoUpload(req, res) {
   })
   if (!userLibrary) return res.sendStatus(404)
 
-  const video = await db.video.update({
+  const video = await db.video.findFirst({
     where: {
       id: videoId,
-    },
-    data: {
-      title,
     },
     include: {
       user: true,
