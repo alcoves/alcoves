@@ -2,7 +2,7 @@ name: Deploy
 on:
   push:
     branches:
-      - main
+      - dev
 jobs:
   deploy:
     name: Deploy
@@ -37,4 +37,4 @@ jobs:
             docker pull registry.digitalocean.com/bken/pier:latest
             docker stop pier
             docker rm pier
-            docker run -d --name pier -p 80:4000 registry.digitalocean.com/bken/pier:latest
+            docker run -d --name pier -p 80:4000 -v /root/pier.env:/app/.env registry.digitalocean.com/bken/pier:latest
