@@ -20,7 +20,9 @@ jobs:
         with:
           token: ${{ secrets.DO_API_KEY }}
       - name: Generate Prisma Schema
-        run: npx prisma generate
+        run: |
+          npx prisma generate
+          mv node_modules/.prisma ./.prisma
       - name: Build container image
         env:
           GITHUB_SHA: ${{ github.sha }}
