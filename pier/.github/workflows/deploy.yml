@@ -15,11 +15,17 @@ jobs:
         uses: digitalocean/action-doctl@v2
         with:
           token: ${{ secrets.DO_API_KEY }}
+      - name: Generate Prisma Schema
+        uses: actions/setup-node@v2
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        with:
+          node-version: '16'
+        run: npx prisma generate
       - name: Build container image
         env:
           GITHUB_SHA: ${{ github.sha }}
         run: docker build
-          --build-arg NEXT_PUBLIC_GIT_SHA=$GITHUB_SHA
           -t registry.digitalocean.com/bken/pier:latest
           -t registry.digitalocean.com/bken/pier:$GITHUB_SHA .
       - name: Login to DigitalOcean Docker Registry
@@ -37,4 +43,4 @@ jobs:
             docker pull registry.digitalocean.com/bken/pier:latest
             docker stop pier
             docker rm pier
-            docker run -d --name pier -p 80:4000 -v /root/pier.env:/app/.env registry.digitalocean.com/bken/pier:latest
+            docker run -d --name pier -p 80:4000 --env-file ./pier.env registry.digitalocean.com/bken/pier:latest
