@@ -33,7 +33,7 @@ model Library {
 
 model Video {
   id                String      @id @default(cuid())
-  size              Int         @default(0)
+  size              Int         @default(0) // Size in megabytes
   length            Float       @default(0)
   views             Int         @default(0)
   progress          Float       @default(0)

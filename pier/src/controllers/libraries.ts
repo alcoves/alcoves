@@ -30,6 +30,33 @@ export async function listLibraryVideos(req, res) {
   })
 }
 
+export async function getLibraryVideo(req, res) {
+  const { libraryId, videoId } = req.params
+  const video = await db.video.findFirst({
+    where: { id: videoId, libraryId, userId: req.user.id },
+  })
+
+  const { ContentLength } = await s3
+    .headObject({
+      Bucket: defaultBucket,
+      Key: `v/${videoId}/original`,
+    })
+    .promise()
+
+  if (ContentLength) {
+    await db.video.update({
+      where: { id: videoId },
+      data: {
+        size: Math.round(ContentLength / 1048576),
+      },
+    })
+  }
+
+  return res.json({
+    payload: video,
+  })
+}
+
 export async function createLibraryVideo(req, res) {
   const { title } = req.body
   const { libraryId } = req.params
@@ -138,7 +165,7 @@ export async function completeVideoUpload(req, res) {
       })
       .promise()
 
-    const s3HeadRes = await s3
+    const { ContentLength = 0 } = await s3
       .headObject({
         Bucket: defaultBucket,
         Key: `v/${videoId}/original`,
@@ -148,7 +175,7 @@ export async function completeVideoUpload(req, res) {
     const video = await db.video.update({
       where: { id: videoId },
       data: {
-        size: Math.abs(s3HeadRes.ContentLength || 0),
+        size: Math.round(ContentLength / 1048576),
       },
     })
 
