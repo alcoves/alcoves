@@ -35,23 +35,6 @@ export async function getLibraryVideo(req, res) {
   const video = await db.video.findFirst({
     where: { id: videoId, libraryId, userId: req.user.id },
   })
-
-  const { ContentLength } = await s3
-    .headObject({
-      Bucket: defaultBucket,
-      Key: `v/${videoId}/original`,
-    })
-    .promise()
-
-  if (ContentLength) {
-    await db.video.update({
-      where: { id: videoId },
-      data: {
-        size: Math.round(ContentLength / 1048576),
-      },
-    })
-  }
-
   return res.json({
     payload: video,
   })
