@@ -33,13 +33,13 @@ export default function DeleteVideos({
     removeMedia({
       method: 'DELETE',
       data: { ids: videoIds },
-      url: `http://localhost:4000/libraries/${libraryId}/videos`,
+      url: `${process.env.NEXT_PUBLIC_API_URL}/libraries/${libraryId}/videos`,
     })
   }
 
   useEffect(() => {
     if (!loading && !error && data) {
-      mutate(`http://localhost:4000/libraries/${libraryId}/videos`)
+      mutate(`${process.env.NEXT_PUBLIC_API_URL}/libraries/${libraryId}/videos`)
       resetSelection()
       onClose()
     }

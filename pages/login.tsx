@@ -17,7 +17,7 @@ export default function Login() {
 
   async function handleLogin() {
     try {
-      const res = await axios.post('http://localhost:4000/auth/login', {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
         email,
         password,
       })
@@ -29,7 +29,7 @@ export default function Login() {
 
   async function handleLoginGoogle(response: any) {
     try {
-      const res = await axios.post('http://localhost:4000/auth/google', {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/google`, {
         token: response.tokenId,
       })
       login(res.data.accessToken)

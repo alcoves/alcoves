@@ -16,7 +16,10 @@ function PodMedia() {
   const { podId } = router.query
   const { pod } = usePod(podId)
   const [selected, setSelected] = useState<number[]>([])
-  const { data } = useSWR(podId ? `http://localhost:4000/pods/${podId}/media` : null, fetcher)
+  const { data } = useSWR(
+    podId ? `${process.env.NEXT_PUBLIC_API_URL}/pods/${podId}/media` : null,
+    fetcher
+  )
 
   function handleSelect(e: any, id: number) {
     if (e.ctrlKey) {

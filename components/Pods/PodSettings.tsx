@@ -28,13 +28,13 @@ export default function PodSettings() {
   function handleDelete() {
     deletePod({
       method: 'DELETE',
-      url: `http://localhost:4000/pods/${podId}`,
+      url: `${process.env.NEXT_PUBLIC_API_URL}/pods/${podId}`,
     })
   }
 
   useEffect(() => {
     if (data && !error && !loading) {
-      mutate('http://localhost:4000/pods')
+      mutate(`${process.env.NEXT_PUBLIC_API_URL}/pods`)
       router.push('/')
     }
   }, [data, error, loading])

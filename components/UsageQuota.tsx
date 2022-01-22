@@ -3,23 +3,12 @@ import useUser from '../hooks/useUser'
 import { fetcher } from '../utils/axios'
 import { Flex, Progress, Text } from '@chakra-ui/react'
 
-const twoGb = 2147483648
-
-function getReadableFileSizeString(fileSizeInBytes: number) {
-  let i = -1
-  const byteUnits = [' kB', ' MB', ' GB', ' TB', 'PB', 'EB', 'ZB', 'YB']
-  do {
-    fileSizeInBytes = fileSizeInBytes / 1024
-    i++
-  } while (fileSizeInBytes > 1024)
-
-  return Math.max(fileSizeInBytes, 0.1).toFixed(1) + byteUnits[i]
-}
+const twoGbInMb = 2000
 
 export default function UsageQuota() {
   const { user } = useUser()
   const { data } = useSWR(
-    user?.id ? `http://localhost:4000/users/${user.id}/account` : null,
+    user?.id ? `${process.env.NEXT_PUBLIC_API_URL}/users/${user.id}/account` : null,
     fetcher
   )
 
@@ -36,7 +25,7 @@ export default function UsageQuota() {
   // TODO :: Show progress as circular in collapsed view
 
   if (data) {
-    const percentageUsed = (data.payload.usedStorage / twoGb) * 100
+    const percentageUsed = (data.payload.usedStorage / twoGbInMb) * 100
     const quotaColorSchema = getQuotaColorSchema(percentageUsed)
     return (
       <Flex direction='column'>
@@ -48,9 +37,7 @@ export default function UsageQuota() {
           value={percentageUsed}
         />
         <Flex py='1' justify='space-between'>
-          <Text fontSize='.6rem'>
-            {getReadableFileSizeString(data.payload.usedStorage)} / 2GB Used
-          </Text>
+          <Text fontSize='.6rem'>{`${data.payload.usedStorage} / 2000mb Used`}</Text>
         </Flex>
       </Flex>
     )

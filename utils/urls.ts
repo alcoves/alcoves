@@ -7,7 +7,7 @@ export function getOptimizedUrl(id: string): string {
 }
 
 export function getHlsUrl(id: string): string {
-  return `${process.env.NEXT_PUBLIC_CDN_URL}/v/${id}/hls/master.m3u8`
+  return `${process.env.NEXT_PUBLIC_CDN_URL}/v/${id}/hls/main.m3u8`
 }
 
 export function getThumanailUrl(id: string, thumbnailFilename: string): string {
