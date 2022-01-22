@@ -44,11 +44,13 @@ export default function useUploads(): UploadsState {
       updateItem(id, upload)
       const chunks = chunkFile(upload.file)
 
-      const { data: listLibraries } = await axios.get('http://localhost:4000/libraries')
+      const { data: listLibraries } = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/libraries`
+      )
       const libraryId = listLibraries.payload[0].id
 
       const { data: createVideoRes } = await axios.post(
-        `http://localhost:4000/libraries/${libraryId}/videos`,
+        `${process.env.NEXT_PUBLIC_API_URL}/libraries/${libraryId}/videos`,
         {
           title: upload.file.name,
         }
@@ -57,7 +59,7 @@ export default function useUploads(): UploadsState {
       const videoId = createVideoRes.payload.id
 
       const { data } = await axios.post(
-        `http://localhost:4000/libraries/${libraryId}/videos/${videoId}/upload`,
+        `${process.env.NEXT_PUBLIC_API_URL}/libraries/${libraryId}/videos/${videoId}/upload`,
         {
           type: upload.file.type,
           chunks: chunks.length,
@@ -86,12 +88,15 @@ export default function useUploads(): UploadsState {
         })
       )
 
-      await axios.put(`http://localhost:4000/libraries/${libraryId}/videos/${videoId}/upload`, {
-        key: data?.payload?.upload.key,
-        uploadId: data?.payload?.upload.uploadId,
-      })
+      await axios.put(
+        `${process.env.NEXT_PUBLIC_API_URL}/libraries/${libraryId}/videos/${videoId}/upload`,
+        {
+          key: data?.payload?.upload.key,
+          uploadId: data?.payload?.upload.uploadId,
+        }
+      )
 
-      mutate(`http://localhost:4000/libraries/${libraryId}/videos`)
+      mutate(`${process.env.NEXT_PUBLIC_API_URL}/libraries/${libraryId}/videos`)
     } catch (error) {
       // console.log('Error uploading')
       upload.status = 'error'

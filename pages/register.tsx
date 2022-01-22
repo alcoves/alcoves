@@ -19,7 +19,7 @@ export default function Register() {
 
   async function handleRegister() {
     try {
-      const res = await axios.post('http://localhost:4000/auth/register', {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, {
         email,
         username,
         password,
@@ -33,7 +33,7 @@ export default function Register() {
   async function handleLoginGoogle(response: any) {
     try {
       if (response.tokenId) {
-        const res = await axios.post('http://localhost:4000/auth/google', {
+        const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/google`, {
           token: response.tokenId,
         })
         login(res.data.accessToken)

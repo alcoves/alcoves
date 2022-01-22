@@ -11,12 +11,12 @@ export default function PodName({ pod }: any) {
       await updateName({
         data: { name },
         method: 'PATCH',
-        url: `http://localhost:4000/pods/${pod?.id}`,
+        url: `${process.env.NEXT_PUBLIC_API_URL}/pods/${pod?.id}`,
       })
     } catch (error) {
       console.error(error)
     } finally {
-      mutate('http://localhost:4000/pods')
+      mutate(`${process.env.NEXT_PUBLIC_API_URL}/pods`)
     }
   }
 

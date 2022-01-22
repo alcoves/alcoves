@@ -33,7 +33,7 @@ export default function ShareMedia({
     addMedia({
       method: 'POST',
       data: { mediaReferenceIds },
-      url: `http://localhost:4000/pods/${selectedPod.id}/media`,
+      url: `${process.env.NEXT_PUBLIC_API_URL}/pods/${selectedPod.id}/media`,
     })
   }
 

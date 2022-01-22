@@ -4,7 +4,7 @@ import { fetcher } from '../utils/axios'
 
 export default function usePods() {
   const [pods, setPods] = useState([])
-  const { data, error } = useSWR(`http://localhost:4000/pods`, fetcher)
+  const { data, error } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/pods`, fetcher)
 
   useEffect(() => {
     if (data?.payload?.pods?.length) {
@@ -21,7 +21,7 @@ export default function usePods() {
 
 export function usePod(podId: string | string[] | null | undefined): any {
   const [pod, setPod] = useState()
-  const { data, error } = useSWR(`http://localhost:4000/pods`, fetcher)
+  const { data, error } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/pods`, fetcher)
 
   useEffect(() => {
     if (podId) {

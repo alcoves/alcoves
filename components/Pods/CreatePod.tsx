@@ -24,7 +24,7 @@ export default function CreatePod({ expanded }: { expanded: boolean }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [createPod, { data, loading, error }] = useLazyRequest({
     method: 'POST',
-    url: 'http://localhost:4000/pods',
+    url: `${process.env.NEXT_PUBLIC_API_URL}/pods`,
   })
 
   async function handleSubmit() {
@@ -39,7 +39,7 @@ export default function CreatePod({ expanded }: { expanded: boolean }) {
 
   useEffect(() => {
     if (!error && data && !loading) {
-      mutate('http://localhost:4000/pods')
+      mutate(`${process.env.NEXT_PUBLIC_API_URL}/pods`)
       onClose()
       console.log(data)
       router.push(`/pods/${data?.payload?.pod?.id}`)
