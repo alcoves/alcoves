@@ -9,6 +9,11 @@ FROM node:16-alpine AS builder
 WORKDIR /app
 COPY . .
 COPY --from=deps /app/node_modules ./node_modules
+
+ENV NEXT_PUBLIC_CDN_URL="https://cdn.bken.io"
+ENV NEXT_PUBLIC_API_URL="https://api.bken.io"
+ENV NEXT_PUBLIC_GOOGLE_CLIENT_ID="432277291238-ne4inevmqif8a3sp4su8tle443ovbfp3.apps.googleusercontent.com"
+
 RUN yarn build && yarn install --production --ignore-scripts --prefer-offline && rm -rf .next/.cache
 
 FROM node:16-alpine AS runner
