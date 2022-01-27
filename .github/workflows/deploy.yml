@@ -37,5 +37,5 @@ jobs:
             docker pull registry.digitalocean.com/bken/reef:latest
             docker stop reef
             docker rm reef
-            docker run -d --name reef -p 80:3000 registry.digitalocean.com/bken/reef:latest
+            docker run -d --name reef -p 80:3000 --env-file ./reef.env registry.digitalocean.com/bken/reef:latest
             docker image prune -f
