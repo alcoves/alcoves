@@ -1,9 +1,9 @@
 import useSWR from 'swr'
 import Layout from '../../components/Layout'
 import PodName from '../../components/Pods/PodName'
-import Video from '../../components/Videos/VideoItem'
+// import Video from '../../components/Videos/VideoItem'
 import ShareMedia from '../../components/Pods/ShareMedia'
-import RemoveMedia from '../../components/Pods/RemoveMedia'
+// import RemoveMedia from '../../components/Pods/RemoveMedia'
 import PodSettings from '../../components/Pods/PodSettings'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
@@ -32,20 +32,21 @@ function PodMedia() {
     }
   }
 
-  function resetSelection() {
-    setSelected([])
-  }
+  // function resetSelection() {
+  //   setSelected([])
+  // }
 
   return (
     <Box w='100%'>
       <Wrap>
         {pod?.isDefault ? (
           <>
-            <RemoveMedia pod={pod} mediaReferenceIds={selected} resetSelection={resetSelection} />
+            {/* <RemoveMedia pod={pod} mediaReferenceIds={selected} resetSelection={resetSelection} /> */}
             <ShareMedia podId={pod.id} mediaReferenceIds={selected} />
           </>
         ) : (
-          <RemoveMedia pod={pod} mediaReferenceIds={selected} resetSelection={resetSelection} />
+          <div />
+          // <RemoveMedia pod={pod} mediaReferenceIds={selected} resetSelection={resetSelection} />
         )}
         <PodSettings />
       </Wrap>
@@ -60,7 +61,7 @@ function PodMedia() {
                 selected.includes(mediaReference.id) ? 'solid teal 2px' : 'solid transparent 2px'
               }
             >
-              <Video m={mediaReference?.media} />
+              {/* <Video m={mediaReference?.media} /> */}
             </Box>
           )
         })}
