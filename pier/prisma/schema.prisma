@@ -15,6 +15,7 @@ model User {
   image     String?
   videos    Video[]
   library   Library[]
+  isAdmin   Boolean   @default(false)
   updatedAt DateTime  @updatedAt
   createdAt DateTime  @default(now())
 
@@ -103,6 +104,11 @@ enum MediaStatus {
   PROCESSING
   READY
   ERROR
+}
+
+enum UserRole {
+  MEMBER
+  ADMIN
 }
 
 // enum Role {
