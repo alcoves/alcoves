@@ -42,6 +42,7 @@ async function main() {
 
   server.listen(port, () => {
     console.log(`listening on *:${port}`)
+    console.log(`Tidal URL: ${process.env.TIDAL_URL}`)
   })
 }
 
