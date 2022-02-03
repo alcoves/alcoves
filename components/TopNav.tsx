@@ -6,7 +6,7 @@ export default function Navigation() {
   const { colorMode, toggleColorMode } = useColorMode()
 
   return (
-    <Flex h='48px' w='100%' justify='flex-end'>
+    <Flex h='50px' w='100%' justify='flex-end'>
       <Flex justify='center' align='center' pr='1'>
         <Flex cursor='pointer' onClick={toggleColorMode} justify='center' mx='2'>
           {colorMode === 'dark' ? <IoMoon /> : <IoSunny />}

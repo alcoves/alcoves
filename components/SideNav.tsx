@@ -32,7 +32,14 @@ export default function Sidebar() {
   const expanded = menuWidth !== '70px' ? true : false
 
   return (
-    <Flex p='2' h='100%' w={menuWidth} minW={menuWidth} direction='column' justify='space-between'>
+    <Flex
+      p='2'
+      h='calc(100vh - 50px)'
+      w={menuWidth}
+      minW={menuWidth}
+      direction='column'
+      justify='space-between'
+    >
       <VStack spacing='2'>
         <Flex w='100%' align='center' justifyContent={justify} onClick={toggleResize}>
           <IconButton variant='ghost' w='45px' aria-label='menu' icon={<IoMenu size='20px' />} />
