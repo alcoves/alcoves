@@ -1,18 +1,18 @@
 import AvatarMenu from './AvatarMenu'
-import { IoMoon, IoSunny } from 'react-icons/io5'
-import { Flex, useColorMode } from '@chakra-ui/react'
+import UploadButton from './UploadButton'
+import SidebarDrawer from './SidebarDrawer'
+import { Flex, HStack } from '@chakra-ui/react'
 
-export default function Navigation() {
-  const { colorMode, toggleColorMode } = useColorMode()
-
+export default function TopNav() {
   return (
-    <Flex h='50px' w='100%' justify='flex-end'>
-      <Flex justify='center' align='center' pr='1'>
-        <Flex cursor='pointer' onClick={toggleColorMode} justify='center' mx='2'>
-          {colorMode === 'dark' ? <IoMoon /> : <IoSunny />}
-        </Flex>
-        <AvatarMenu />
+    <Flex h='50px' justify='space-between' align='center'>
+      <Flex align='center'>
+        <SidebarDrawer />
       </Flex>
+      <HStack pr='1'>
+        <UploadButton />
+        <AvatarMenu />
+      </HStack>
     </Flex>
   )
 }
