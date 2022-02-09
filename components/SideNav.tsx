@@ -5,7 +5,7 @@ import LibraryButton from './LibraryButton'
 import { IoMenu } from 'react-icons/io5'
 import { UserContext } from '../contexts/user'
 import { useContext, useEffect, useState } from 'react'
-import { Flex, Heading, IconButton, useMediaQuery, VStack } from '@chakra-ui/react'
+import { Flex, IconButton, useMediaQuery, VStack } from '@chakra-ui/react'
 
 export default function Sidebar() {
   const { user } = useContext(UserContext)
@@ -44,19 +44,10 @@ export default function Sidebar() {
         <Flex w='100%' align='center' justifyContent={justify} onClick={toggleResize}>
           <IconButton variant='ghost' w='45px' aria-label='menu' icon={<IoMenu size='20px' />} />
         </Flex>
-        <UploadButton expanded={expanded} />
         <LibraryButton expanded={expanded} />
       </VStack>
       <Flex w='100%' justify='flex-start' direction='column'>
         <UsageQuota />
-        <Flex w='100%' justifyContent={justify} align='center'>
-          <AvatarMenu />
-          {expanded && (
-            <Flex py='1' pl='2'>
-              <Heading size='xs'>{user?.username}</Heading>
-            </Flex>
-          )}
-        </Flex>
       </Flex>
     </Flex>
   )
