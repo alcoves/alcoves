@@ -20,7 +20,7 @@ import { UploadsContext } from '../contexts/uploads'
 
 const acceptedContentTypes = ['.mp4']
 
-export default function UploadButton({ expanded }: { expanded: boolean }) {
+export default function UploadButton() {
   const { onOpen, onClose, isOpen } = useDisclosure()
   const { uploads, addUpload } = useContext(UploadsContext)
   const inProgressUpload = Object.values(uploads).filter(u => u.file.size !== u.completed)
@@ -44,25 +44,17 @@ export default function UploadButton({ expanded }: { expanded: boolean }) {
 
   return (
     <>
-      {expanded ? (
-        <Button
-          w='100%'
-          onClick={onOpen}
-          leftIcon={
-            Boolean(inProgressUpload.length) ? <Spinner size='xs' /> : <IoCloudUpload size='20px' />
-          }
-        >
-          Upload
-        </Button>
-      ) : (
-        <IconButton
-          w='100%'
-          aria-label='open-upload'
-          onClick={onOpen}
-          icon={<IoCloudUpload size='20px' />}
-        />
-      )}
-
+      <Button
+        w='100%'
+        size='sm'
+        variant='ghost'
+        onClick={onOpen}
+        leftIcon={
+          Boolean(inProgressUpload.length) ? <Spinner size='xs' /> : <IoCloudUpload size='20px' />
+        }
+      >
+        Upload
+      </Button>
       <Modal size='3xl' isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>

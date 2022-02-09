@@ -1,7 +1,7 @@
 import useSWR from 'swr'
 import useUser from '../hooks/useUser'
 import { fetcher } from '../utils/axios'
-import { Flex, Progress, Text } from '@chakra-ui/react'
+import { Box, Tooltip, CircularProgress, CircularProgressLabel } from '@chakra-ui/react'
 
 const twoGbInMb = 2000
 
@@ -14,7 +14,7 @@ export default function UsageQuota() {
 
   function getQuotaColorSchema(percentageUsed: number) {
     console.log(percentageUsed)
-    if (percentageUsed > 100) {
+    if (percentageUsed >= 100) {
       return 'red'
     } else if (percentageUsed > 70) {
       return 'orange'
@@ -22,24 +22,18 @@ export default function UsageQuota() {
     return 'teal'
   }
 
-  // TODO :: Show progress as circular in collapsed view
-
   if (data) {
-    const percentageUsed = (data.payload.usedStorage / twoGbInMb) * 100
+    let percentageUsed = (data.payload.usedStorage / twoGbInMb) * 100
+    if (percentageUsed > 100) percentageUsed = 100
     const quotaColorSchema = getQuotaColorSchema(percentageUsed)
     return (
-      <Flex direction='column'>
-        <Progress
-          w='100%'
-          colorScheme={quotaColorSchema}
-          rounded='md'
-          h='5px'
-          value={percentageUsed}
-        />
-        <Flex py='1' justify='space-between'>
-          <Text fontSize='.6rem'>{`${data.payload.usedStorage} / 2000mb Used`}</Text>
-        </Flex>
-      </Flex>
+      <Tooltip label={`${percentageUsed}% used`} aria-label='A tooltip' placement='right'>
+        <Box w='50px' h='50px'>
+          <CircularProgress size='50px' color={quotaColorSchema} value={percentageUsed}>
+            <CircularProgressLabel>{Math.round(percentageUsed)}%</CircularProgressLabel>
+          </CircularProgress>
+        </Box>
+      </Tooltip>
     )
   }
 
