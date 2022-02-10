@@ -36,7 +36,7 @@ export default function Layout(props: { children: React.ReactNode }) {
         </DrawerContent>
       </Drawer>
 
-      <Flex zIndex={1000} h='50px' justify='space-between' align='center'>
+      <Flex h='50px' justify='space-between' align='center'>
         <Flex align='center' pl='1'>
           {!isLargerThan1000 && (
             <IconButton

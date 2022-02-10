@@ -37,7 +37,6 @@ export default function VideoItem({ v }: { v: Video }) {
           p='1'
           w='100%'
           h='100%'
-          zIndex={1}
           direction='column'
           position='absolute'
           justify='space-between'

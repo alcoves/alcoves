@@ -42,3 +42,11 @@ export interface User {
   image: string
   username: string
 }
+
+export interface Pod {
+  id: string
+  name: string
+  image: string
+  updatedAt: string
+  createdAt: string
+}
