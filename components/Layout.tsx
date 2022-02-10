@@ -1,3 +1,4 @@
+import NavMenu from './NavMenu'
 import AvatarMenu from './AvatarMenu'
 import UploadButton from './UploadButton'
 import {
@@ -15,7 +16,6 @@ import {
 } from '@chakra-ui/react'
 import { useRef } from 'react'
 import { IoMenu } from 'react-icons/io5'
-import NavMenu from './NavMenu'
 
 export default function Layout(props: { children: React.ReactNode }) {
   const btnRef = useRef(null)
@@ -36,7 +36,7 @@ export default function Layout(props: { children: React.ReactNode }) {
         </DrawerContent>
       </Drawer>
 
-      <Flex h='50px' justify='space-between' align='center'>
+      <Flex zIndex={1000} h='50px' justify='space-between' align='center'>
         <Flex align='center' pl='1'>
           {!isLargerThan1000 && (
             <IconButton
@@ -54,16 +54,20 @@ export default function Layout(props: { children: React.ReactNode }) {
           <AvatarMenu />
         </HStack>
       </Flex>
-      <Flex>
-        {isLargerThan1000 && (
-          <Flex borderRight='solid grey 1px' w='200px' maxW='200px'>
+      {isLargerThan1000 ? (
+        <Flex w='100%'>
+          <Flex w='200px' maxW='200px' minW='200px'>
             <NavMenu />
           </Flex>
-        )}
-        <Flex w='100%' direction='column' overflowY='scroll'>
-          <Flex h='calc(100vh - 50px)'>{props.children}</Flex>
+          <Flex h='calc(100vh - 50px)' w='100%' overflowY='auto'>
+            {props.children}
+          </Flex>
         </Flex>
-      </Flex>
+      ) : (
+        <Flex h='calc(100vh - 50px)' w='100%' overflowY='auto'>
+          {props.children}
+        </Flex>
+      )}
     </Box>
   )
 }

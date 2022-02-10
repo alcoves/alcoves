@@ -29,7 +29,7 @@ export default function useUser(): UserState {
         setUser(user)
         setAuthenticated(true)
         setLoading(false)
-        router.push('/')
+        // router.push('/')
       }
     } else {
       setLoading(false)
