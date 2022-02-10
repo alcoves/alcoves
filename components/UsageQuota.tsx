@@ -13,7 +13,6 @@ export default function UsageQuota() {
   )
 
   function getQuotaColorSchema(percentageUsed: number) {
-    console.log(percentageUsed)
     if (percentageUsed >= 100) {
       return 'red'
     } else if (percentageUsed > 70) {
