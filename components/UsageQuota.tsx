@@ -1,7 +1,7 @@
 import useSWR from 'swr'
 import useUser from '../hooks/useUser'
 import { fetcher } from '../utils/axios'
-import { Box, Tooltip, CircularProgress, CircularProgressLabel } from '@chakra-ui/react'
+import { Box, Text, Heading, Progress } from '@chakra-ui/react'
 
 const twoGbInMb = 2000
 
@@ -12,7 +12,7 @@ export default function UsageQuota() {
     fetcher
   )
 
-  function getQuotaColorSchema(percentageUsed: number) {
+  function getquotaColorScheme(percentageUsed: number) {
     if (percentageUsed >= 100) {
       return 'red'
     } else if (percentageUsed > 70) {
@@ -24,15 +24,13 @@ export default function UsageQuota() {
   if (data) {
     let percentageUsed = (data.payload.usedStorage / twoGbInMb) * 100
     if (percentageUsed > 100) percentageUsed = 100
-    const quotaColorSchema = getQuotaColorSchema(percentageUsed)
+    const quotaColorScheme = getquotaColorScheme(percentageUsed)
     return (
-      <Tooltip label={`${percentageUsed}% used`} aria-label='A tooltip' placement='right'>
-        <Box w='50px' h='50px'>
-          <CircularProgress size='50px' color={quotaColorSchema} value={percentageUsed}>
-            <CircularProgressLabel>{Math.round(percentageUsed)}%</CircularProgressLabel>
-          </CircularProgress>
-        </Box>
-      </Tooltip>
+      <Box w='100%'>
+        <Heading size='sm'>Quota</Heading>
+        <Text fontSize='.8rem'>{`${percentageUsed}% of quota used`}</Text>
+        <Progress my='1' h='1' rounded='md' value={percentageUsed} colorScheme={quotaColorScheme} />
+      </Box>
     )
   }
 
