@@ -4,28 +4,15 @@ import { useRouter } from 'next/router'
 import GoogleLogin from 'react-google-login'
 import { UserContext } from '../contexts/user'
 import React, { useContext, useState } from 'react'
-import { Text, Box, Flex, Input, Heading, Button } from '@chakra-ui/react'
+import { Text, Box, Flex, Heading, Button } from '@chakra-ui/react'
+import { IoLogoGoogle } from 'react-icons/io5'
 
 const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ''
 
 export default function Login() {
   const router = useRouter()
-  const [email, setEmail] = useState('')
   const [errorMsg, setErrorMsg] = useState('')
-  const [password, setPassword] = useState('')
   const { authenticated, login } = useContext(UserContext)
-
-  async function handleLogin() {
-    try {
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
-        email,
-        password,
-      })
-      login(res.data.accessToken)
-    } catch (error: any) {
-      setErrorMsg(error.message)
-    }
-  }
 
   async function handleLoginGoogle(response: any) {
     try {
@@ -47,7 +34,7 @@ export default function Login() {
     <Box>
       <Flex justify='center' align='top'>
         <Flex w='300px' mt='100px' direction='column'>
-          <Flex justify='center'>
+          <Flex mb='4' justify='center'>
             <Heading size='lg'>Hello there!</Heading>
           </Flex>
           <Flex justify='center'>
@@ -62,41 +49,17 @@ export default function Login() {
             }}
             render={({ onClick, disabled }: any) => {
               return (
-                <Button isDisabled={disabled} onClick={onClick} my='1'>
-                  Login With Google
+                <Button
+                  my='1'
+                  onClick={onClick}
+                  isDisabled={disabled}
+                  leftIcon={<IoLogoGoogle size='20px' />}
+                >
+                  Log in with Google
                 </Button>
               )
             }}
           />
-          <Box bgColor='gray.900' h='3px' w='100%' my='1' borderRadius='4' mt='4' />
-          <Input
-            mt='4'
-            type='email'
-            variant='filled'
-            placeholder='email'
-            onChange={e => setEmail(e.target.value)}
-          />
-          <Input
-            mt='4'
-            type='password'
-            variant='filled'
-            placeholder='password'
-            onKeyPress={e => {
-              if (e.key === 'Enter') {
-                handleLogin()
-              }
-            }}
-            onChange={e => setPassword(e.target.value)}
-          />
-          <Button
-            mt='4'
-            _hover={{ bg: 'teal.500' }}
-            onClick={() => {
-              handleLogin()
-            }}
-          >
-            Login
-          </Button>
           <Flex fontSize='.8rem' w='100%' justify='center' p='2'>
             <Link href='/register'>Or register a new account</Link>
           </Flex>
