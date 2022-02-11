@@ -3,7 +3,6 @@ import { useDropzone } from 'react-dropzone'
 import {
   Button,
   Flex,
-  IconButton,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -15,7 +14,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import { useCallback, useContext } from 'react'
-import { IoCloudUpload } from 'react-icons/io5'
+import { IoCloudUploadOutline } from 'react-icons/io5'
 import { UploadsContext } from '../contexts/uploads'
 
 const acceptedContentTypes = ['.mp4']
@@ -50,7 +49,11 @@ export default function UploadButton() {
         variant='ghost'
         onClick={onOpen}
         leftIcon={
-          Boolean(inProgressUpload.length) ? <Spinner size='xs' /> : <IoCloudUpload size='20px' />
+          Boolean(inProgressUpload.length) ? (
+            <Spinner size='xs' />
+          ) : (
+            <IoCloudUploadOutline size='20px' />
+          )
         }
       >
         Upload
@@ -65,7 +68,7 @@ export default function UploadButton() {
               <input {...getInputProps()} />
               <Button
                 aria-label='upload'
-                leftIcon={<IoCloudUpload size='20px' />}
+                leftIcon={<IoCloudUploadOutline size='20px' />}
                 rightIcon={Boolean(inProgressUpload.length) ? <Spinner size='xs' /> : <></>}
               >
                 Select Files
