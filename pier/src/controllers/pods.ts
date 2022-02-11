@@ -5,9 +5,8 @@ export async function listPods(req, res) {
     where: { userId: req.user.id },
     include: { pod: true },
   })
-  if (!memberships.length) return res.sendStatus(400)
   return res.json({
-    payload: memberships.map(m => m.pod),
+    payload: memberships.map(m => m.pod) || [],
   })
 }
 
