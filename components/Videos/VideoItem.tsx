@@ -8,24 +8,34 @@ import {
   Editable,
   EditablePreview,
   EditableInput,
-  Avatar,
   Spinner,
   Progress,
 } from '@chakra-ui/react'
 import { Video } from '../../types/types'
 import { getThumanailUrl } from '../../utils/urls'
+import { IoCheckbox, IoCheckboxOutline } from 'react-icons/io5'
 
-export default function VideoItem({ v }: { v: Video }) {
+export default function VideoItem({
+  v,
+  isSelected,
+  handleSelect,
+}: {
+  v: Video
+  handleSelect: any
+  isSelected: boolean
+}) {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
-    <>
+    <Box
+      rounded='md'
+      id={v.id}
+      key={v.id}
+      border={isSelected ? 'solid teal 2px' : 'solid transparent 2px'}
+    >
       <VideoModal isOpen={isOpen} onClose={onClose} v={v} />
       <Box
-        id={v.id}
-        key={v.id}
         cursor='pointer'
-        direction='column'
         position='relative'
         onClick={e => {
           if (!e.shiftKey && !e.ctrlKey) {
@@ -43,15 +53,22 @@ export default function VideoItem({ v }: { v: Video }) {
           _hover={{ bg: 'rgba(0,0,0,.1)' }}
         >
           <Flex justify='space-between'>
-            {v?.user?.username && (
-              <Box>
-                <Avatar name={v.user.username} size='xs' src={v.user.image} />
-              </Box>
-            )}
             <Flex align='center' bg='rgba(0,0,0,.6)' px='1' py='.5' rounded='md'>
               <Text fontSize='.8rem' fontWeight='800' color='#ffffff'>
                 {duration(v.length)}
               </Text>
+            </Flex>
+            <Flex
+              onClick={e => {
+                e.stopPropagation()
+                handleSelect(e, v.id)
+              }}
+            >
+              {isSelected ? (
+                <IoCheckbox color='teal' size='20px' />
+              ) : (
+                <IoCheckboxOutline size='20px' />
+              )}
             </Flex>
           </Flex>
           <Flex align='center' direction='column'>
@@ -97,6 +114,6 @@ export default function VideoItem({ v }: { v: Video }) {
           <EditableInput pl='2' />
         </Editable>
       </Box>
-    </>
+    </Box>
   )
 }
