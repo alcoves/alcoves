@@ -49,7 +49,7 @@ export default function VideoItem({ v }: { v: Video }) {
               </Box>
             )}
             <Flex align='center' bg='rgba(0,0,0,.6)' px='1' py='.5' rounded='md'>
-              <Text fontSize='.8rem' fontWeight='700'>
+              <Text fontSize='.8rem' fontWeight='800' color='#ffffff'>
                 {duration(v.length)}
               </Text>
             </Flex>
