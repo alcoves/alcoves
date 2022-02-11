@@ -1,31 +1,34 @@
 import UsageQuota from './UsageQuota'
 import { useRouter } from 'next/router'
+import { ReactElement } from 'react'
+import { IoBookOutline, IoPeopleOutline } from 'react-icons/io5'
 import { Button, Flex, VStack } from '@chakra-ui/react'
 
-export default function NavMenu() {
+function NavButton({ text, icon, path }: { text: string; icon: ReactElement; path: string }) {
   const router = useRouter()
+  const variant = router.pathname === path ? 'solid' : 'ghost'
 
+  return (
+    <Button
+      w='100%'
+      size='md'
+      leftIcon={icon}
+      colorScheme='teal'
+      variant={variant}
+      justifyContent='start'
+      onClick={() => router.push(path)}
+    >
+      {text}
+    </Button>
+  )
+}
+
+export default function NavMenu() {
   return (
     <Flex w='100%' direction='column'>
       <VStack p='1' spacing='1'>
-        <Button onClick={() => router.push('/')} w='100%' size='sm' variant='ghost'>
-          Library
-        </Button>
-        <Button onClick={() => router.push('/pods')} w='100%' size='sm' variant='ghost'>
-          Pods
-        </Button>
-        <Button isDisabled={true} w='100%' size='sm' variant='ghost'>
-          Settings
-        </Button>
-        <Button isDisabled={true} w='100%' size='sm' variant='ghost'>
-          Feedback
-        </Button>
-        <Button isDisabled={true} w='100%' size='sm' variant='ghost'>
-          Help
-        </Button>
-        <Button isDisabled={true} w='100%' size='sm' variant='ghost'>
-          Links
-        </Button>
+        <NavButton text='Library' icon={<IoBookOutline size='20px' />} path='/' />
+        <NavButton text='Pods' icon={<IoPeopleOutline size='20px' />} path='/pods' />
         <UsageQuota />
       </VStack>
     </Flex>
