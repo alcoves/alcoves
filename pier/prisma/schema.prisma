@@ -55,16 +55,16 @@ model Membership {
   id        String   @id @default(cuid())
   role      PodRole  @default(MEMBER)
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   podId     String
-  pod       Pod      @relation(fields: [podId], references: [id])
+  pod       Pod      @relation(fields: [podId], references: [id], onDelete: Cascade)
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
 }
 
 model Pod {
   id          String       @id @default(cuid())
-  name        String
+  name        String       @default("New Pod")
   image       String?
   videos      VideoOnPod[]
   memberships Membership[]
