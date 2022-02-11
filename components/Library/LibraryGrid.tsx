@@ -16,13 +16,11 @@ export default function LibraryGrid({ libraryId }: { libraryId: string }) {
   )
 
   function handleSelect(e: any, id: string) {
-    if (e.ctrlKey) {
-      const index = selected.indexOf(id)
-      if (index > -1) {
-        setSelected(prev => prev.filter(Id => Id !== id))
-      } else {
-        setSelected(prev => [...prev, id])
-      }
+    const index = selected.indexOf(id)
+    if (index > -1) {
+      setSelected(prev => prev.filter(Id => Id !== id))
+    } else {
+      setSelected(prev => [...prev, id])
     }
   }
 
@@ -43,14 +41,12 @@ export default function LibraryGrid({ libraryId }: { libraryId: string }) {
         <SimpleGrid pt='1' minChildWidth={['100%', '400px']} spacing='4px'>
           {data?.payload?.map((v: any) => {
             return (
-              <Box
+              <VideoItem
+                v={v}
                 key={v.id}
-                rounded='sm'
-                onClick={e => handleSelect(e, v.id)}
-                border={selected.includes(v.id) ? 'solid teal 2px' : 'solid transparent 2px'}
-              >
-                <VideoItem v={v} />
-              </Box>
+                handleSelect={handleSelect}
+                isSelected={selected.includes(v.id)}
+              />
             )
           })}
         </SimpleGrid>
