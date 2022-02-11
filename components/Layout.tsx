@@ -4,6 +4,7 @@ import UploadButton from './UploadButton'
 import {
   Box,
   Flex,
+  Text,
   HStack,
   Drawer,
   DrawerBody,
@@ -27,10 +28,21 @@ export default function Layout(props: { children: React.ReactNode }) {
       <Drawer placement='left' onClose={onClose} isOpen={isOpen} finalFocusRef={btnRef}>
         <DrawerOverlay />
         <DrawerContent w='200px' maxW='200px'>
-          <DrawerHeader h='50px' borderBottomWidth='1px'>
-            bken
+          <DrawerHeader h='50px' borderBottomWidth='1px' p='1'>
+            <Flex align='center'>
+              <IconButton
+                w='45px'
+                variant='ghost'
+                onClick={onClose}
+                aria-label='menu'
+                icon={<IoMenu size='20px' />}
+              />
+              <Text fontSize='1rem' pl='2'>
+                bken.io
+              </Text>
+            </Flex>
           </DrawerHeader>
-          <DrawerBody>
+          <DrawerBody p='1'>
             <NavMenu />
           </DrawerBody>
         </DrawerContent>
@@ -48,7 +60,9 @@ export default function Layout(props: { children: React.ReactNode }) {
               icon={<IoMenu size='20px' />}
             />
           )}
-          <Box pl='2'>bken.io</Box>
+          <Text fontSize='1rem' pl='2'>
+            bken.io
+          </Text>
         </Flex>
         <HStack pr='1'>
           <UploadButton />
