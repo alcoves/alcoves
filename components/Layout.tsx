@@ -48,6 +48,7 @@ export default function Layout(props: { children: React.ReactNode }) {
               icon={<IoMenu size='20px' />}
             />
           )}
+          <Box pl='2'>bken.io</Box>
         </Flex>
         <HStack pr='1'>
           <UploadButton />
@@ -59,12 +60,12 @@ export default function Layout(props: { children: React.ReactNode }) {
           <Flex w='200px' maxW='200px' minW='200px'>
             <NavMenu />
           </Flex>
-          <Flex h='calc(100vh - 50px)' w='100%' overflowY='auto'>
+          <Flex h='calc(100vh - 50px)' w='100%' p='1' overflowY='auto'>
             {props.children}
           </Flex>
         </Flex>
       ) : (
-        <Flex h='calc(100vh - 50px)' w='100%' overflowY='auto'>
+        <Flex h='calc(100vh - 50px)' w='100%' p='1' overflowY='auto'>
           {props.children}
         </Flex>
       )}

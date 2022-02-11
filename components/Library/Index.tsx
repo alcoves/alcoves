@@ -9,7 +9,7 @@ export default function Library() {
   if (!libraryId) return null
 
   return (
-    <Box p='4' w='100%'>
+    <Box w='100%'>
       <LibraryGrid libraryId={libraryId} />
     </Box>
   )
