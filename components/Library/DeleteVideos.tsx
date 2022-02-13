@@ -49,7 +49,7 @@ export default function DeleteVideos({
     <>
       <IconButton
         colorScheme='red'
-        icon={<IoTrashBin />}
+        icon={<IoTrashBin size='20px' />}
         onClick={onOpen}
         aria-label='delete-selected'
         isDisabled={!videoIds.length}
