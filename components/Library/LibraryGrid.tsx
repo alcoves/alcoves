@@ -3,7 +3,8 @@ import VideoItem from '../Videos/VideoItem'
 import DeleteVideos from './DeleteVideos'
 import { useState } from 'react'
 import { fetcher } from '../../utils/axios'
-import { Box, Flex, SimpleGrid } from '@chakra-ui/react'
+import { Box, Flex, HStack, SimpleGrid } from '@chakra-ui/react'
+import ShareVideos from './ShareVideos'
 
 export default function LibraryGrid({ libraryId }: { libraryId: string }) {
   const [selected, setSelected] = useState<string[]>([])
@@ -35,9 +36,10 @@ export default function LibraryGrid({ libraryId }: { libraryId: string }) {
   if (data) {
     return (
       <Box>
-        <Flex w='100%' justify='end'>
+        <HStack w='100%' justify='end' spacing='1'>
+          <ShareVideos libraryId={libraryId} videoIds={selected} resetSelection={resetSelection} />
           <DeleteVideos libraryId={libraryId} videoIds={selected} resetSelection={resetSelection} />
-        </Flex>
+        </HStack>
         <SimpleGrid pt='1' minChildWidth={['100%', '400px']} spacing='4px'>
           {data?.payload?.map((v: any) => {
             return (
