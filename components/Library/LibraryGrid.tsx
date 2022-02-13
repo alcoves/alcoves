@@ -37,7 +37,7 @@ export default function LibraryGrid({ libraryId }: { libraryId: string }) {
     return (
       <Box>
         <HStack w='100%' justify='end' spacing='1'>
-          <ShareVideos libraryId={libraryId} videoIds={selected} resetSelection={resetSelection} />
+          {/* <ShareVideos libraryId={libraryId} videoIds={selected} resetSelection={resetSelection} /> */}
           <DeleteVideos libraryId={libraryId} videoIds={selected} resetSelection={resetSelection} />
         </HStack>
         <SimpleGrid pt='1' minChildWidth={['100%', '400px']} spacing='4px'>
