@@ -28,7 +28,7 @@ export default function NavMenu() {
     <Flex p='1' w='100%' h='100%' direction='column' justify='space-between'>
       <VStack spacing='1'>
         <NavButton text='Library' icon={<IoBookOutline size='20px' />} path='/' />
-        <NavButton text='Pods' icon={<IoPeopleOutline size='20px' />} path='/pods' />
+        {/* <NavButton text='Pods' icon={<IoPeopleOutline size='20px' />} path='/pods' /> */}
       </VStack>
       <Flex direction='column' mb='4'>
         <Box p='2'>
