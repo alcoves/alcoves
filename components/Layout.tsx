@@ -15,13 +15,22 @@ import {
   useDisclosure,
   useMediaQuery,
 } from '@chakra-ui/react'
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { IoMenu } from 'react-icons/io5'
 
 export default function Layout(props: { children: React.ReactNode }) {
   const btnRef = useRef(null)
-  const [isLargerThan1000] = useMediaQuery('(min-width: 1000px)')
+  const [isLargerThan1000, setIsLargerThan1000] = useState(false)
+  const [isLargerThan1000_MQ] = useMediaQuery('(min-width: 1000px)')
   const { isOpen, onOpen, onClose } = useDisclosure()
+
+  // Workaround for media query bug
+  // https://github.com/chakra-ui/chakra-ui/issues/3124
+  useEffect(() => {
+    if (isLargerThan1000_MQ !== isLargerThan1000) {
+      setIsLargerThan1000(isLargerThan1000_MQ)
+    }
+  }, [isLargerThan1000_MQ, isLargerThan1000])
 
   return (
     <Box>
@@ -75,14 +84,14 @@ export default function Layout(props: { children: React.ReactNode }) {
           <Flex w='200px' maxW='200px' minW='200px'>
             <NavMenu />
           </Flex>
-          <Flex h='calc(100vh - 50px)' w='100%' p='1' overflowY='scroll'>
+          <Box h='calc(100vh - 50px)' w='100%' p='1' overflowY='scroll'>
             {props.children}
-          </Flex>
+          </Box>
         </Flex>
       ) : (
-        <Flex h='calc(100vh - 50px)' w='100%' p='1' overflowY='scroll'>
+        <Box h='calc(100vh - 50px)' w='100%' p='1' overflowY='scroll'>
           {props.children}
-        </Flex>
+        </Box>
       )}
     </Box>
   )

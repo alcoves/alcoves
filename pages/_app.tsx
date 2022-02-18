@@ -8,6 +8,7 @@ import { AppProps } from 'next/app'
 import { UserContext } from '../contexts/user'
 import { ChakraProvider } from '@chakra-ui/react'
 import { UploadsContext } from '../contexts/uploads'
+import Head from 'next/head'
 
 function App(props: AppProps) {
   const userState = useUser()
@@ -17,13 +18,18 @@ function App(props: AppProps) {
   if (!userState) return null
 
   return (
-    <ChakraProvider theme={theme}>
-      <UserContext.Provider value={userState}>
-        <UploadsContext.Provider value={uploadsState}>
-          <Component {...pageProps} />
-        </UploadsContext.Provider>
-      </UserContext.Provider>
-    </ChakraProvider>
+    <>
+      <Head>
+        <meta name='viewport' content='width=device-width,initial-scale=1.0' />
+      </Head>
+      <ChakraProvider theme={theme}>
+        <UserContext.Provider value={userState}>
+          <UploadsContext.Provider value={uploadsState}>
+            <Component {...pageProps} />
+          </UploadsContext.Provider>
+        </UserContext.Provider>
+      </ChakraProvider>
+    </>
   )
 }
 
