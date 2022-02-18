@@ -3,8 +3,7 @@ import VideoItem from '../Videos/VideoItem'
 import DeleteVideos from './DeleteVideos'
 import { useState } from 'react'
 import { fetcher } from '../../utils/axios'
-import { Box, Flex, HStack, SimpleGrid } from '@chakra-ui/react'
-import ShareVideos from './ShareVideos'
+import { Box, HStack, SimpleGrid } from '@chakra-ui/react'
 
 export default function LibraryGrid({ libraryId }: { libraryId: string }) {
   const [selected, setSelected] = useState<string[]>([])
