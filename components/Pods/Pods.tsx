@@ -1,27 +1,24 @@
-import CreatePod from './CreatePod'
 import { useRouter } from 'next/router'
 import { Pod } from '../../types/types'
-import { Box, Heading, Wrap } from '@chakra-ui/react'
+import { Avatar, Box, Flex, Heading } from '@chakra-ui/react'
 
 export default function Pods({ pods }: { pods: Pod[] }) {
   const router = useRouter()
   return (
-    <Box>
-      <CreatePod />
-      <Wrap>
-        {pods.map((p: Pod) => {
-          return (
-            <Box key={p.id} cursor='pointer' onClick={() => router.push(`/pods/${p.id}`)}>
-              <Box bg='black' w='300px' h='150px' rounded='md' p='2'>
-                <Box>{p.id}</Box>
-              </Box>
+    <Flex direction='column' align='center' w='100%'>
+      {pods.map((p: Pod) => {
+        return (
+          <Flex key={p.id} cursor='pointer' onClick={() => router.push(`/pods/${p.id}`)} p='2'>
+            <Avatar name={p.name} />
+            <Flex direction='column'>
+              <Box>{p.id}</Box>
               <Heading my='2' size='sm'>
                 {p.name}
               </Heading>
-            </Box>
-          )
-        })}
-      </Wrap>
-    </Box>
+            </Flex>
+          </Flex>
+        )
+      })}
+    </Flex>
   )
 }
