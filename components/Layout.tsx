@@ -69,17 +69,18 @@ export default function Layout(props: { children: React.ReactNode }) {
           <AvatarMenu />
         </HStack>
       </Flex>
+
       {isLargerThan1000 ? (
         <Flex w='100%'>
           <Flex w='200px' maxW='200px' minW='200px'>
             <NavMenu />
           </Flex>
-          <Flex h='calc(100vh - 50px)' w='100%' p='1' overflowY='auto'>
+          <Flex h='calc(100vh - 50px)' w='100%' p='1' overflowY='scroll'>
             {props.children}
           </Flex>
         </Flex>
       ) : (
-        <Flex h='calc(100vh - 50px)' w='100%' p='1' overflowY='auto'>
+        <Flex h='calc(100vh - 50px)' w='100%' p='1' overflowY='scroll'>
           {props.children}
         </Flex>
       )}
