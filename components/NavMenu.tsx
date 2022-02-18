@@ -2,7 +2,7 @@ import UsageQuota from './UsageQuota'
 import { useRouter } from 'next/router'
 import { ReactElement } from 'react'
 import { Box, Button, Flex, VStack } from '@chakra-ui/react'
-import { IoBookOutline, IoPeopleOutline } from 'react-icons/io5'
+import { IoBookOutline } from 'react-icons/io5'
 
 function NavButton({ text, icon, path }: { text: string; icon: ReactElement; path: string }) {
   const router = useRouter()
