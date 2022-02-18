@@ -9,10 +9,10 @@ Object {
   "format": "jpeg",
   "hasAlpha": false,
   "hasProfile": false,
-  "height": 250,
+  "height": 500,
   "isProgressive": true,
-  "size": 5052,
+  "size": 12550,
   "space": "srgb",
-  "width": 250,
+  "width": 500,
 }
 `;
