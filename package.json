@@ -17,7 +17,7 @@
   "dependencies": {
     "@chakra-ui/react": "^1.8.3",
     "@emotion/react": "^11.7.1",
-    "@emotion/styled": "^11.6.0",
+    "@emotion/styled": "^11.8.1",
     "axios": "^0.26.0",
     "framer-motion": "6.2.6",
     "js-cookie": "^3.0.1",
