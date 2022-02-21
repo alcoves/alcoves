@@ -1,3 +1,7 @@
+export function getAPIUrl(): string {
+  return `${process.env.NEXT_PUBLIC_API_URL}`
+}
+
 export function getOriginalUrl(id: string): string {
   return `${process.env.NEXT_PUBLIC_CDN_URL}/v/${id}/original`
 }
