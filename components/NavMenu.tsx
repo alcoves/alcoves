@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { IoHomeOutline } from 'react-icons/io5'
+import { IoAddOutline, IoBookOutline, IoHomeOutline } from 'react-icons/io5'
 import {
   Button,
   Menu,
@@ -15,17 +15,26 @@ export default function NavMenu() {
 
   return (
     <Menu>
-      <MenuButton variant='ghost' size='sm' as={Button} leftIcon={<IoHomeOutline />}>
+      <MenuButton variant='ghost' size='sm' as={Button} leftIcon={<IoHomeOutline size='15px' />}>
         Home
       </MenuButton>
       <MenuList>
-        <MenuGroup title='Events'>
+        <MenuItem
+          icon={<IoBookOutline size='20px' />}
+          onClick={() => {
+            router.push('/library')
+          }}
+        >
+          My Library
+        </MenuItem>
+        <MenuGroup title='Pods'>
           <MenuItem
+            icon={<IoAddOutline size='20px' />}
             onClick={() => {
-              router.push('/events/russian-ukranian-war')
+              router.push('/pods/create')
             }}
           >
-            Russian Ukranian War
+            Create Pod
           </MenuItem>
         </MenuGroup>
         <MenuDivider />
@@ -35,6 +44,13 @@ export default function NavMenu() {
           }}
         >
           About
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            router.push('/terms')
+          }}
+        >
+          Terms
         </MenuItem>
       </MenuList>
     </Menu>
