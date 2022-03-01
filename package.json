@@ -15,14 +15,14 @@
     "build": "next build --no-lint"
   },
   "dependencies": {
-    "@chakra-ui/react": "^1.8.3",
-    "@emotion/react": "^11.7.1",
-    "@emotion/styled": "^11.6.0",
+    "@chakra-ui/react": "^1.8.5",
+    "@emotion/react": "^11.8.1",
+    "@emotion/styled": "^11.8.1",
     "axios": "^0.26.0",
-    "framer-motion": "6.1",
+    "framer-motion": "6.2.8",
     "js-cookie": "^3.0.1",
     "jwt-decode": "^3.1.2",
-    "luxon": "^2.3.0",
+    "luxon": "^2.3.1",
     "nanoid": "^3.3.1",
     "next": "^12.1.0",
     "react": "^17.0.2",
@@ -32,7 +32,7 @@
     "react-hls-player": "^3.0.7",
     "react-icons": "^4.3.1",
     "sharp": "^0.30.1",
-    "swr": "^1.2.0"
+    "swr": "^1.2.2"
   },
   "devDependencies": {
     "@types/js-cookie": "^3.0.1",
@@ -40,11 +40,11 @@
     "@types/peerjs": "^1.1.0",
     "@types/react": "^17.0.38",
     "@types/video.js": "^7.3.31",
-    "@typescript-eslint/eslint-plugin": "5.12.0",
+    "@typescript-eslint/eslint-plugin": "5.12.1",
     "babel-eslint": "^10.1.0",
     "eslint": "8.9.0",
     "eslint-config-next": "^12.1.0",
-    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-prettier": "^8.4.0",
     "eslint-plugin-prettier": "^4.0.0",
     "prettier": "^2.5.1",
     "ts-jest": "27.1.3",

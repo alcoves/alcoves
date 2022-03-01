@@ -1,43 +1,58 @@
-import UsageQuota from './UsageQuota'
 import { useRouter } from 'next/router'
-import { ReactElement } from 'react'
-import { Box, Button, Flex, VStack } from '@chakra-ui/react'
-import { IoBookOutline, IoPeopleOutline } from 'react-icons/io5'
-
-function NavButton({ text, icon, path }: { text: string; icon: ReactElement; path: string }) {
-  const router = useRouter()
-  const variant = router.pathname === path ? 'solid' : 'ghost'
-
-  return (
-    <Button
-      w='100%'
-      size='md'
-      leftIcon={icon}
-      variant={variant}
-      colorScheme='teal'
-      justifyContent='start'
-      onClick={() => router.push(path)}
-    >
-      {text}
-    </Button>
-  )
-}
+import { IoAddOutline, IoBookOutline, IoHomeOutline } from 'react-icons/io5'
+import {
+  Button,
+  Menu,
+  MenuItem,
+  MenuList,
+  MenuButton,
+  MenuGroup,
+  MenuDivider,
+} from '@chakra-ui/react'
 
 export default function NavMenu() {
+  const router = useRouter()
+
   return (
-    <Flex p='1' w='100%' h='100%' direction='column' justify='space-between'>
-      <VStack spacing='1'>
-        <NavButton text='Library' icon={<IoBookOutline size='20px' />} path='/' />
-        <NavButton text='Pods' icon={<IoPeopleOutline size='20px' />} path='/pods' />
-      </VStack>
-      <Flex direction='column' mb='4'>
-        <Box p='2'>
-          <UsageQuota />
-        </Box>
-        <Flex w='100%' justify='space-evenly'>
-          <Box fontSize='.75rem'> Terms </Box>
-        </Flex>
-      </Flex>
-    </Flex>
+    <Menu>
+      <MenuButton variant='ghost' size='sm' as={Button} leftIcon={<IoHomeOutline size='15px' />}>
+        Home
+      </MenuButton>
+      <MenuList>
+        <MenuItem
+          icon={<IoBookOutline size='20px' />}
+          onClick={() => {
+            router.push('/library')
+          }}
+        >
+          My Library
+        </MenuItem>
+        <MenuGroup title='Pods'>
+          <MenuItem
+            icon={<IoAddOutline size='20px' />}
+            onClick={() => {
+              router.push('/pods/create')
+            }}
+          >
+            Create Pod
+          </MenuItem>
+        </MenuGroup>
+        <MenuDivider />
+        <MenuItem
+          onClick={() => {
+            router.push('/about')
+          }}
+        >
+          About
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            router.push('/terms')
+          }}
+        >
+          Terms
+        </MenuItem>
+      </MenuList>
+    </Menu>
   )
 }
