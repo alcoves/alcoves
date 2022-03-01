@@ -19,14 +19,6 @@ export default function NavMenu() {
         Home
       </MenuButton>
       <MenuList>
-        <MenuItem
-          icon={<IoBookOutline size='20px' />}
-          onClick={() => {
-            router.push('/library')
-          }}
-        >
-          My Library
-        </MenuItem>
         <MenuGroup title='Pods'>
           <MenuItem
             icon={<IoAddOutline size='20px' />}

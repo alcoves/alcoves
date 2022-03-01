@@ -5,7 +5,7 @@ export default function Home() {
     <Flex w='100%'>
       <Flex direction='column' justify='center'>
         <Heading size='sm' p='2'>
-          This page displays the most subscribed public pods
+          This page display a feed from all subscribed pods
         </Heading>
       </Flex>
     </Flex>
