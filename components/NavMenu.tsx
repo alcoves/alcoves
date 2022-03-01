@@ -1,6 +1,14 @@
 import { useRouter } from 'next/router'
 import { IoHomeOutline } from 'react-icons/io5'
-import { Button, Menu, MenuItem, MenuList, MenuButton, MenuGroup } from '@chakra-ui/react'
+import {
+  Button,
+  Menu,
+  MenuItem,
+  MenuList,
+  MenuButton,
+  MenuGroup,
+  MenuDivider,
+} from '@chakra-ui/react'
 
 export default function NavMenu() {
   const router = useRouter()
@@ -20,6 +28,14 @@ export default function NavMenu() {
             Russian Ukranian War
           </MenuItem>
         </MenuGroup>
+        <MenuDivider />
+        <MenuItem
+          onClick={() => {
+            router.push('/about')
+          }}
+        >
+          About
+        </MenuItem>
       </MenuList>
     </Menu>
   )
