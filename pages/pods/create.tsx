@@ -51,7 +51,7 @@ export default function CreatePod() {
               onChange={inputHandler}
             />
             <Box>
-              <Heading size='sm'>Community type</Heading>
+              <Heading size='sm'>Pod type</Heading>
             </Box>
 
             <RadioGroup defaultValue='1'>
