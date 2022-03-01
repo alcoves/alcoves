@@ -6,6 +6,7 @@ import { UserContext } from '../contexts/user'
 import React, { useContext, useState } from 'react'
 import { Text, Box, Flex, Heading, Button } from '@chakra-ui/react'
 import { IoLogoGoogle } from 'react-icons/io5'
+import { getAPIUrl } from '../utils/urls'
 
 const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ''
 
@@ -16,7 +17,7 @@ export default function Login() {
 
   async function handleLoginGoogle(response: any) {
     try {
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/google`, {
+      const res = await axios.post(`${getAPIUrl()}/auth/google`, {
         token: response.tokenId,
       })
       login(res.data.accessToken)

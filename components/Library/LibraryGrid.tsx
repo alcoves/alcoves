@@ -4,16 +4,13 @@ import DeleteVideos from './DeleteVideos'
 import { useState } from 'react'
 import { fetcher } from '../../utils/axios'
 import { Box, HStack, SimpleGrid } from '@chakra-ui/react'
+import { getAPIUrl } from '../../utils/urls'
 
 export default function LibraryGrid({ libraryId }: { libraryId: string }) {
   const [selected, setSelected] = useState<string[]>([])
-  const { data } = useSWR(
-    `${process.env.NEXT_PUBLIC_API_URL}/libraries/${libraryId}/videos`,
-    fetcher,
-    {
-      refreshInterval: 3000,
-    }
-  )
+  const { data } = useSWR(`${getAPIUrl()}/libraries/${libraryId}/videos`, fetcher, {
+    refreshInterval: 3000,
+  })
 
   function handleSelect(e: any, id: string) {
     const index = selected.indexOf(id)

@@ -1,5 +1,5 @@
-import Card from '../components/Card'
-import Layout from '../components/Layout'
+import Card from '../../../components/Card'
+import Layout from '../../../components/Layout'
 import { useDropzone } from 'react-dropzone'
 import { useCallback, useEffect, useState } from 'react'
 import { Box, Flex, Heading, Input, Progress, Text, useColorMode, VStack } from '@chakra-ui/react'

@@ -14,6 +14,7 @@ import {
 import { useEffect } from 'react'
 import { useSWRConfig } from 'swr'
 import { IoTrashBin } from 'react-icons/io5'
+import { getAPIUrl } from '../../utils/urls'
 
 export default function DeleteVideos({
   videoIds,
@@ -33,13 +34,13 @@ export default function DeleteVideos({
     removeMedia({
       method: 'DELETE',
       data: { ids: videoIds },
-      url: `${process.env.NEXT_PUBLIC_API_URL}/libraries/${libraryId}/videos`,
+      url: `${getAPIUrl()}/libraries/${libraryId}/videos`,
     })
   }
 
   useEffect(() => {
     if (!loading && !error && data) {
-      mutate(`${process.env.NEXT_PUBLIC_API_URL}/libraries/${libraryId}/videos`)
+      mutate(`${getAPIUrl()}/libraries/${libraryId}/videos`)
       resetSelection()
       onClose()
     }

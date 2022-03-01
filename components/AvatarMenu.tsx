@@ -1,13 +1,12 @@
 import { useContext } from 'react'
-import { UserContext } from '../contexts/user'
-import { IoMoon, IoSunny } from 'react-icons/io5'
-import { Menu, MenuButton, MenuList, MenuItem, Avatar, Flex, useColorMode } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
+import { UserContext } from '../contexts/user'
+import { IoLogOutOutline, IoPersonOutline } from 'react-icons/io5'
+import { Menu, MenuButton, MenuList, MenuItem, Avatar } from '@chakra-ui/react'
 
 export default function AvatarMenu() {
   const router = useRouter()
   const { user, logout } = useContext(UserContext)
-  const { colorMode, toggleColorMode } = useColorMode()
 
   return (
     <Menu id='avatar-menu' isLazy>
@@ -20,11 +19,12 @@ export default function AvatarMenu() {
         name={user?.username}
       />
       <MenuList>
-        <Flex h='30px' cursor='pointer' onClick={toggleColorMode} justify='center' mx='2'>
-          {colorMode === 'dark' ? <IoMoon /> : <IoSunny />}
-        </Flex>
-        <MenuItem onClick={() => router.push('/account')}>Account</MenuItem>
-        <MenuItem onClick={logout}>Logout</MenuItem>
+        <MenuItem icon={<IoPersonOutline size='20px' />} onClick={() => router.push('/account')}>
+          Account
+        </MenuItem>
+        <MenuItem icon={<IoLogOutOutline size='20px' />} onClick={logout}>
+          Logout
+        </MenuItem>
       </MenuList>
     </Menu>
   )

@@ -1,4 +1,5 @@
 import Layout from '../../components/Layout'
+import useLazyRequest from '../../hooks/useLazyRequest'
 import {
   Box,
   Button,
@@ -12,24 +13,33 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 import { IoLockClosed } from 'react-icons/io5'
-import { useState } from 'react'
+import { getAPIUrl } from '../../utils/urls'
 
 export default function CreatePod() {
+  const router = useRouter()
   const [podName, setPodName] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [createPodRequest, { data, loading, error }] = useLazyRequest()
 
   function inputHandler(e: any) {
     setPodName(e.target.value)
   }
 
-  async function createPod() {
-    try {
-      setLoading(true)
-    } catch (error) {
-      setLoading(false)
-    }
+  async function handleCreate() {
+    await createPodRequest({
+      method: 'POST',
+      data: { name: podName },
+      url: `${getAPIUrl()}/pods`,
+    })
   }
+
+  useEffect(() => {
+    if (data) {
+      router.push(`/pods/${data.id}`)
+    }
+  }, [router, data])
 
   return (
     <Layout>
@@ -49,6 +59,11 @@ export default function CreatePod() {
               value={podName}
               placeholder='Pod name'
               onChange={inputHandler}
+              onKeyPress={(e: any) => {
+                if (e?.key === 'Enter') {
+                  handleCreate()
+                }
+              }}
             />
             <Box>
               <Heading size='sm'>Pod type</Heading>
@@ -66,8 +81,11 @@ export default function CreatePod() {
             </RadioGroup>
           </VStack>
 
-          <Flex w='100%' justify='end' mt='4'>
-            <Button isLoading={loading} colorScheme='teal' onClick={createPod}>
+          <Flex w='100%' justify='end' mt='4' direction='column'>
+            <Text my='2' color='red.500'>
+              {error}
+            </Text>
+            <Button isLoading={loading} colorScheme='teal' onClick={handleCreate}>
               Create
             </Button>
           </Flex>

@@ -1,37 +1,35 @@
-import axios from 'axios'
+import useLazyRequest from '../../hooks/useLazyRequest'
+import { useRouter } from 'next/router'
 import { getAPIUrl } from '../../utils/urls'
 import { Box, Button } from '@chakra-ui/react'
 import { IoRemoveCircleOutline } from 'react-icons/io5'
-import { useState } from 'react'
-import { useRouter } from 'next/router'
+import { useSWRConfig } from 'swr'
 
 export default function DeletePod({ id }: { id: string }) {
   const router = useRouter()
-  const [loading, setLoading] = useState(false)
+  const { mutate } = useSWRConfig()
+  const [deletePod, { error, loading }] = useLazyRequest()
 
   async function handleDelete() {
-    try {
-      setLoading(true)
-      const deleteUrl = `${getAPIUrl()}/pods/${id}`
-      await axios.delete(deleteUrl)
-      setLoading(false)
-      router.push('/pods')
-    } catch (error) {
-      setLoading(false)
-      console.error(error)
-      alert(error)
-    }
+    await deletePod({
+      method: 'DELETE',
+      url: `${getAPIUrl()}/pods/${id}`,
+    })
+
+    mutate(`${getAPIUrl()}/pods`)
+    router.push('/')
   }
 
   return (
     <Box>
       <Button
+        size='sm'
         colorScheme='red'
         isLoading={loading}
         onClick={handleDelete}
         leftIcon={<IoRemoveCircleOutline size='20px' />}
       >
-        Delete Pod
+        {error ? 'Failed!' : 'Delete Pod'}
       </Button>
     </Box>
   )
