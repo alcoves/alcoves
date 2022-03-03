@@ -40,6 +40,7 @@ export default function VideoItem({ v }: { v: Video }) {
           position='absolute'
           justify='space-between'
           _hover={{ bg: 'rgba(0,0,0,.1)' }}
+          onMouseOver={() => setIsHovering(true)}
           onMouseEnter={() => setIsHovering(true)}
           onMouseLeave={() => setIsHovering(false)}
         >
