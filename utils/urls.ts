@@ -2,18 +2,18 @@ export function getAPIUrl(): string {
   return `${process.env.NEXT_PUBLIC_API_URL}`
 }
 
-export function getOriginalUrl(id: string): string {
-  return `${process.env.NEXT_PUBLIC_CDN_URL}/v/${id}/original`
+export function getOriginalUrl(cdnUrl: string): string {
+  return `${cdnUrl}/original`
 }
 
-export function getOptimizedUrl(id: string): string {
-  return `${process.env.NEXT_PUBLIC_CDN_URL}/v/${id}/optimized`
+export function getOptimizedUrl(cdnUrl: string): string {
+  return `${cdnUrl}/optimized`
 }
 
-export function getHlsUrl(id: string): string {
-  return `${process.env.NEXT_PUBLIC_CDN_URL}/v/${id}/hls/main.m3u8`
+export function getHlsUrl(cdnUrl: string): string {
+  return `${cdnUrl}/hls/main.m3u8`
 }
 
-export function getThumanailUrl(id: string, thumbnailFilename: string): string {
-  return `${process.env.NEXT_PUBLIC_CDN_URL}/v/${id}/thumbnails/${thumbnailFilename}`
+export function getThumanailUrl(cdnUrl: string): string {
+  return `${cdnUrl}/thumbnail.jpg`
 }

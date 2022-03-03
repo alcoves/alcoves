@@ -84,7 +84,7 @@ export default function VideoItem({ v }: { v: Video }) {
           backgroundColor='black'
           backgroundPosition='center'
           backgroundRepeat='no-repeat'
-          backgroundImage={getThumanailUrl(v.id, v.thumbnailFilename)}
+          backgroundImage={getThumanailUrl(v.cdnUrl)}
         />
       </Box>
       <Box pt='1' pb='4'>
