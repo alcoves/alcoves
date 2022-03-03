@@ -30,12 +30,11 @@ export interface Upload {
 export interface Video {
   id: string
   user: User
+  cdnUrl: string
   title: string
   status: string
   length: number
   progress: number
-  libraryId: string
-  thumbnailFilename: string
 }
 
 export interface User {
