@@ -4,11 +4,9 @@ import chunkFile from '../../utils/chunkFile'
 import useLazyRequest from '../../hooks/useLazyRequest'
 import { useEffect, useState } from 'react'
 import { getAPIUrl } from '../../utils/urls'
-import { Flex, Progress, Spinner, Text, useTheme } from '@chakra-ui/react'
-import { useWarnIfUploading } from '../../hooks/useWarnIfUploading'
 import { IoCheckmarkCircle } from 'react-icons/io5'
-
-import { green } from '@chakra-ui/color'
+import { useWarnIfUploading } from '../../hooks/useWarnIfUploading'
+import { Flex, Progress, Spinner, Text, useTheme } from '@chakra-ui/react'
 
 const bypassInterceptorAxios = axios.create()
 
