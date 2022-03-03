@@ -1,11 +1,26 @@
 import Card from '../../../components/Card'
 import Layout from '../../../components/Layout'
+import useLazyRequest from '../../../hooks/useLazyRequest'
+import { useRouter } from 'next/router'
 import { useDropzone } from 'react-dropzone'
+import { getAPIUrl } from '../../../utils/urls'
 import { useCallback, useEffect, useState } from 'react'
 import { Box, Flex, Heading, Input, Progress, Text, useColorMode, VStack } from '@chakra-ui/react'
 
-function UploadItem({ file }: { file: any }) {
+function UploadItem({ file, podId }: { file: any; podId: string | string[] | undefined }) {
   const [progress, setProgress] = useState(0)
+  const [createVideoRequest, { data, error, loading }] = useLazyRequest()
+
+  async function createVideo() {
+    if (podId) {
+      await createVideoRequest({
+        method: 'POST',
+        data: { title: file.name },
+        url: `${getAPIUrl()}/pods/${podId}/videos`,
+      })
+      setProgress(100)
+    }
+  }
 
   useEffect(() => {
     console.log('library item mounted', file)
@@ -14,10 +29,10 @@ function UploadItem({ file }: { file: any }) {
     // Get presigned post request url
     // Start file upload
 
-    setTimeout(() => {
-      setProgress(100)
-    }, 1000)
+    createVideo()
   }, [])
+
+  console.log({ data, error, loading })
 
   return (
     <Card>
@@ -31,7 +46,8 @@ function UploadItem({ file }: { file: any }) {
   )
 }
 
-export default function LibraryUpload() {
+export default function PodUpload() {
+  const router = useRouter()
   const { colorMode } = useColorMode()
   const [files, setFiles] = useState([]) as any
   const onDrop = useCallback(acceptedFiles => {
@@ -62,7 +78,7 @@ export default function LibraryUpload() {
             <VStack direction='column' mt='4'>
               <Heading size='md'> Uploading Queue </Heading>
               {files.map((f: any, i: number) => (
-                <UploadItem key={i} file={f} />
+                <UploadItem key={i} file={f} podId={router.query.podId} />
               ))}
             </VStack>
           ) : null}

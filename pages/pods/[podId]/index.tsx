@@ -1,16 +1,18 @@
 import useSWR from 'swr'
 import Layout from '../../../components/Layout'
 import DeletePod from '../../../components/Pods/DeletePod'
+import ManageMembers from '../../../components/Pods/ManageMembers'
 import { useRouter } from 'next/router'
 import { IoAdd } from 'react-icons/io5'
 import { fetcher } from '../../../utils/axios'
-import { Flex, Editable, EditablePreview, EditableInput, Button } from '@chakra-ui/react'
 import { getAPIUrl } from '../../../utils/urls'
+import { Flex, HStack, Editable, EditablePreview, EditableInput, Button } from '@chakra-ui/react'
+import PodMediaGrid from '../../../components/Pods/MediaGrid'
 
 export default function PodPage() {
   const router = useRouter()
   const { data } = useSWR(
-    router.query.id ? `${getAPIUrl()}/pods/${router.query.id}` : null,
+    router.query.podId ? `${getAPIUrl()}/pods/${router.query.podId}` : null,
     fetcher
   )
 
@@ -31,7 +33,7 @@ export default function PodPage() {
           <EditablePreview pl='2' />
           <EditableInput pl='2' />
         </Editable>
-        <Flex>
+        <HStack mt='4'>
           <Button
             size='sm'
             leftIcon={<IoAdd />}
@@ -39,7 +41,11 @@ export default function PodPage() {
           >
             Add Media
           </Button>
+          <ManageMembers />
           <DeletePod id={data?.payload?.id} />
+        </HStack>
+        <Flex mt='2' w='100%'>
+          <PodMediaGrid podId={data?.payload?.id} />
         </Flex>
       </Layout>
     )
