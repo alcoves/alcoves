@@ -4,12 +4,17 @@ import chunkFile from '../../utils/chunkFile'
 import useLazyRequest from '../../hooks/useLazyRequest'
 import { useEffect, useState } from 'react'
 import { getAPIUrl } from '../../utils/urls'
-import { Flex, Progress, Text } from '@chakra-ui/react'
+import { Flex, Progress, Spinner, Text, useTheme } from '@chakra-ui/react'
 import { useWarnIfUploading } from '../../hooks/useWarnIfUploading'
+import { IoCheckmarkCircle } from 'react-icons/io5'
+
+import { green } from '@chakra-ui/color'
 
 const bypassInterceptorAxios = axios.create()
 
 export default function UploadVideo({ file }: { file: any }) {
+  const theme = useTheme()
+
   const chunks = chunkFile(file)
   const [uploading, setUploading] = useState(false)
   const [bytesUploaded, setBytesUploaded] = useState(0)
@@ -41,11 +46,13 @@ export default function UploadVideo({ file }: { file: any }) {
 
   useEffect(() => {
     console.log('creating video')
-    createVideoRequest({
-      method: 'POST',
-      data: { title: file.name },
-      url: `${getAPIUrl()}/videos`,
-    })
+    if (!createVideoData) {
+      createVideoRequest({
+        method: 'POST',
+        data: { title: file.name },
+        url: `${getAPIUrl()}/videos`,
+      })
+    }
   }, [])
 
   useEffect(() => {
@@ -111,9 +118,15 @@ export default function UploadVideo({ file }: { file: any }) {
   return (
     <Card>
       <Flex w='100%' direction='column' p='2'>
-        <Flex>
+        <Flex justify='space-between' p='2'>
           <Text fontWeight={600}>{file.name}</Text>
+          {!uploading ? (
+            <IoCheckmarkCircle size='24px' color={theme.colors.teal['400']} />
+          ) : (
+            <Spinner />
+          )}
         </Flex>
+
         <Progress
           mt='1'
           h='2px'
