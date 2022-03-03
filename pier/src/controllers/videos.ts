@@ -5,79 +5,64 @@ import { dispatchJob } from '../service/tidal'
 import { CompletedPart } from 'aws-sdk/clients/s3'
 import s3, { defaultBucket, deleteFolder } from '../config/s3'
 
-export async function patchLibrary(req, res) {
-  return res.sendStatus(200)
-}
-
-export async function listUserLibraries(req, res) {
-  const libraries = await db.library.findMany({
+export async function listVideos(req, res) {
+  const videos = await db.video.findMany({
     where: { userId: req.user.id },
   })
-  if (!libraries?.length) return res.sendStatus(400)
-  return res.json({
-    payload: libraries,
-  })
+  return res.json({ payload: videos })
 }
 
-export async function listLibraryVideos(req, res) {
-  const { libraryId } = req.params
-  const videos = await db.video.findMany({
-    orderBy: [{ createdAt: 'desc' }],
-    where: { libraryId, userId: req.user.id },
-  })
-  return res.json({
-    payload: videos,
-  })
-}
-
-export async function getLibraryVideo(req, res) {
-  const { libraryId, videoId } = req.params
-  const video = await db.video.findFirst({
-    where: { id: videoId, libraryId, userId: req.user.id },
-  })
-  return res.json({
-    payload: video,
-  })
-}
-
-export async function createLibraryVideo(req, res) {
+export async function createVideo(req, res) {
   const { title } = req.body
-  const { libraryId } = req.params
-
-  const userLibrary = await db.library.findFirst({
-    where: { id: libraryId, userId: req.user.id },
-  })
-  if (!userLibrary) return res.sendStatus(400)
-
+  const { id: userId } = req.user
   const video = await db.video.create({
     data: {
-      userId: req.user.id,
-      libraryId: userLibrary.id,
+      userId,
       title: path.parse(title).name,
     },
   })
+  return res.json({ payload: video })
+}
 
-  return res.json({
-    payload: video,
+export async function updateVideo(req, res) {
+  const { title } = req.body
+  const { videoId } = req.params
+  const { id: userId } = req.user
+
+  const video = await db.video.findFirst({
+    where: { id: videoId, userId },
   })
+  if (!video) return res.sendStatus(400)
+
+  const updatedVideo = await db.video.update({
+    data: { title },
+    where: { id: video.id },
+  })
+  return res.json({ payload: updatedVideo })
+}
+
+export async function deleteVideo(req, res) {
+  const { videoId } = req.params
+  const { id: userId } = req.user
+
+  const video = await db.video.findFirst({
+    where: { id: videoId, userId },
+  })
+  if (!video) return res.sendStatus(400)
+
+  await deleteFolder({ Bucket: defaultBucket, Prefix: `v/${video.id}` })
+  await db.video.delete({ where: { id: video.id } })
+  return res.sendStatus(200)
 }
 
 export async function createVideoUpload(req, res) {
-  const { libraryId, videoId } = req.params
+  const { videoId } = req.params
+  const { id: userId } = req.user
   const { chunks, type } = req.body
 
-  const userLibrary = await db.library.findFirst({
-    where: { id: libraryId, userId: req.user.id },
-  })
-  if (!userLibrary) return res.sendStatus(404)
-
   const video = await db.video.findFirst({
-    where: {
-      id: videoId,
-    },
-    include: {
-      user: true,
-    },
+    include: { user: true },
+    where: { id: videoId, userId },
   })
   if (!video) return res.sendStatus(400)
 
@@ -88,7 +73,6 @@ export async function createVideoUpload(req, res) {
       Key: `v/${video.id}/original`,
     })
     .promise()
-
   const urls: string[] = []
   for (let i = 0; i < chunks; i++) {
     urls.push(
@@ -103,7 +87,6 @@ export async function createVideoUpload(req, res) {
   }
 
   return res.json({
-    status: 'success',
     payload: {
       video,
       upload: {
@@ -117,11 +100,12 @@ export async function createVideoUpload(req, res) {
 
 export async function completeVideoUpload(req, res) {
   const { videoId } = req.params
+  const { id: userId } = req.user
   const { key, uploadId } = req.body
 
   try {
     const userOwnsVideo = await db.video.findFirst({
-      where: { id: videoId, userId: req.params.id },
+      where: { id: videoId, userId },
     })
     if (!userOwnsVideo) return res.sendStatus(403)
 
@@ -167,12 +151,8 @@ export async function completeVideoUpload(req, res) {
     // This webhook will contain the metadata. When the job is seen, other jobs (thumbnailing and transcoding) will be dispatched
     await dispatchJob('metadata', {
       entityId: video.id,
-      input: {
-        key,
-        bucket: defaultBucket,
-      },
+      input: { key, bucket: defaultBucket },
     })
-
     return res.json({
       status: 'success',
       payload: video,
@@ -183,29 +163,4 @@ export async function completeVideoUpload(req, res) {
       data: { status: 'ERROR' },
     })
   }
-}
-
-export async function deleteLibraryVideos(req, res) {
-  const { ids } = req.body
-  const { libraryId } = req.params
-  if (!ids || !libraryId) return res.sendStatus(400)
-
-  const videosToDelete = await db.video.findMany({
-    where: {
-      libraryId,
-      id: { in: ids },
-      userId: req.user.id,
-    },
-  })
-
-  await Promise.all(
-    videosToDelete.map(async (v: Video) => {
-      if (v.userId === req.user.id && v.libraryId === libraryId) {
-        await db.video.delete({ where: { id: v.id } })
-        await deleteFolder({ Bucket: defaultBucket, Prefix: `v/${v.id}` })
-      }
-    })
-  )
-
-  return res.sendStatus(200)
 }

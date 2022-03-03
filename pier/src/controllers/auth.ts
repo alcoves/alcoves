@@ -20,12 +20,6 @@ export async function loginGoogleSso(req, res) {
     create: { username: name, email, image: picture },
   })
 
-  await db.library.upsert({
-    where: { userId: user.id },
-    update: {},
-    create: { userId: user.id },
-  })
-
   return res.json({
     accessToken: getToken(user.id, user.email, user.username, user.image || ''),
   })

@@ -8,90 +8,40 @@ generator client {
 }
 
 model User {
-  id          String       @id @default(cuid())
-  email       String       @unique
-  username    String
-  image       String?
-  videos      Video[]
-  library     Library[]
-  memberships Membership[]
-  isAdmin     Boolean      @default(false)
-  updatedAt   DateTime     @updatedAt
-  createdAt   DateTime     @default(now())
-}
-
-model Library {
   id        String   @id @default(cuid())
-  userId    String   @unique
-  user      User     @relation(fields: [userId], references: [id])
+  email     String   @unique
+  username  String
+  image     String?
   videos    Video[]
+  isAdmin   Boolean  @default(false)
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
 }
 
 model Video {
-  id                String       @id @default(cuid())
-  size              Int          @default(0) // Size in megabytes
-  length            Float        @default(0)
-  views             Int          @default(0)
-  progress          Float        @default(0)
-  width             Int          @default(0)
-  height            Int          @default(0)
-  framerate         Int          @default(0)
-  thumbnailFilename String       @default("")
-  title             String       @default("New upload")
-  status            MediaStatus  @default(CREATED)
+  id                String      @id @default(cuid())
+  shortId           String      @unique @default(cuid())
+  size              Int         @default(0) // Size in megabytes
+  length            Float       @default(0)
+  views             Int         @default(0)
+  progress          Float       @default(0)
+  width             Int         @default(0)
+  height            Int         @default(0)
+  framerate         Int         @default(0)
+  thumbnailFilename String      @default("") // TODO :: Deprecate
+  title             String      @default("New upload")
+  status            MediaStatus @default(CREATED)
   userId            String
-  user              User         @relation(fields: [userId], references: [id])
-  libraryId         String
-  library           Library      @relation(fields: [libraryId], references: [id])
-  updatedAt         DateTime     @updatedAt
-  createdAt         DateTime     @default(now())
-  pods              VideoOnPod[]
-}
-
-model Membership {
-  id        String   @id @default(cuid())
-  role      PodRole  @default(MEMBER)
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  podId     String
-  pod       Pod      @relation(fields: [podId], references: [id], onDelete: Cascade)
-  updatedAt DateTime @updatedAt
-  createdAt DateTime @default(now())
-}
-
-model Pod {
-  id          String       @id @default(cuid())
-  name        String       @default("New Pod")
-  image       String?
-  videos      VideoOnPod[]
-  memberships Membership[]
-  updatedAt   DateTime     @updatedAt
-  createdAt   DateTime     @default(now())
-}
-
-model VideoOnPod {
-  id      Int    @id @default(autoincrement())
-  videoId String
-  video   Video  @relation(fields: [videoId], references: [id])
-  podId   String
-  pod     Pod    @relation(fields: [podId], references: [id])
-
-  // unique reference to an item shared to a pod
-  // Could add things here like is the item highlighted
-
-  @@unique([podId, videoId])
-}
-
-enum PodRole {
-  OWNER
-  MEMBER
+  user              User        @relation(fields: [userId], references: [id])
+  updatedAt         DateTime    @updatedAt
+  createdAt         DateTime    @default(now())
 }
 
 enum MediaStatus {
-  CREATED
-  PROCESSING
   READY
   ERROR
+  CREATED
+  UPLOADED
+  UPLOADING
+  PROCESSING
 }

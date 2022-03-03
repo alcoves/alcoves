@@ -26,7 +26,11 @@ export async function getSignedURL(urlParams: { Bucket: string; Key: string }) {
 
 export async function deleteFolder({ Bucket, Prefix }: { Bucket: string; Prefix: string }) {
   // TODO :: Make this work for more than 1000 keys
-  // TODO :: Add check to make sure it will never delete an entire pod
+
+  if (Prefix.length < 1) {
+    throw new Error('Delete folder prefix must be greater than 0')
+  }
+
   const { Contents } = await s3.listObjectsV2({ Bucket, Prefix }).promise()
   const deleteObjects: any =
     Contents?.map(({ Key }) => {
@@ -45,4 +49,4 @@ export async function deleteFolder({ Bucket, Prefix }: { Bucket: string; Prefix:
 }
 
 export default s3
-export const defaultBucket = 'cdn.bken.io'
+export const defaultBucket = process.env.DEFAULT_BUCKET as string

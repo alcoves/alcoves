@@ -1,7 +1,6 @@
 import http from 'http'
 import app from './app'
 import db from './config/db'
-// import jwt from 'jsonwebtoken'
 import { Server } from 'socket.io'
 
 const port = 4000
