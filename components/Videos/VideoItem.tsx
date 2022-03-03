@@ -1,38 +1,27 @@
 import VideoModal from './VideoModal'
+import DeleteVideo from './DeleteVideo'
 import duration from '../../utils/duration'
-import {
-  Box,
-  useDisclosure,
-  Flex,
-  Text,
-  Editable,
-  EditablePreview,
-  EditableInput,
-  Spinner,
-  Progress,
-} from '@chakra-ui/react'
+import { useState } from 'react'
 import { Video } from '../../types/types'
 import { getThumanailUrl } from '../../utils/urls'
-import { IoCheckbox, IoCheckboxOutline } from 'react-icons/io5'
+import {
+  Box,
+  Flex,
+  Text,
+  Spinner,
+  Progress,
+  Editable,
+  EditableInput,
+  useDisclosure,
+  EditablePreview,
+} from '@chakra-ui/react'
 
-export default function VideoItem({
-  v,
-  isSelected,
-  handleSelect,
-}: {
-  v: Video
-  handleSelect: any
-  isSelected: boolean
-}) {
+export default function VideoItem({ v }: { v: Video }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const [isHovering, setIsHovering] = useState(false)
 
   return (
-    <Box
-      rounded='md'
-      id={v.id}
-      key={v.id}
-      border={isSelected ? 'solid teal 2px' : 'solid transparent 2px'}
-    >
+    <Box rounded='md' id={v.id} key={v.id}>
       <VideoModal isOpen={isOpen} onClose={onClose} v={v} />
       <Box
         cursor='pointer'
@@ -51,6 +40,8 @@ export default function VideoItem({
           position='absolute'
           justify='space-between'
           _hover={{ bg: 'rgba(0,0,0,.1)' }}
+          onMouseEnter={() => setIsHovering(true)}
+          onMouseLeave={() => setIsHovering(false)}
         >
           <Flex justify='space-between'>
             <Flex align='center' bg='rgba(0,0,0,.6)' px='1' py='.5' rounded='md'>
@@ -59,16 +50,12 @@ export default function VideoItem({
               </Text>
             </Flex>
             <Flex
+              visibility={isHovering ? 'visible' : 'hidden'}
               onClick={e => {
                 e.stopPropagation()
-                handleSelect(e, v.id)
               }}
             >
-              {isSelected ? (
-                <IoCheckbox color='teal' size='20px' />
-              ) : (
-                <IoCheckboxOutline size='20px' />
-              )}
+              <DeleteVideo videoId={v.id} />
             </Flex>
           </Flex>
           <Flex align='center' direction='column'>

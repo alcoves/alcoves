@@ -1,11 +1,11 @@
 import React from 'react'
-import Home from '../components/Home'
 import Layout from '../components/Layout'
+import Upload from '../components/Upload/Upload'
 
-export default function Index() {
+export default function UploadPage() {
   return (
     <Layout>
-      <Home />
+      <Upload />
     </Layout>
   )
 }

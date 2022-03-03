@@ -39,18 +39,6 @@ export default function LibraryGrid({ libraryId }: { libraryId: string }) {
           {/* <ShareVideos libraryId={libraryId} videoIds={selected} resetSelection={resetSelection} /> */}
           <DeleteVideos libraryId={libraryId} videoIds={selected} resetSelection={resetSelection} />
         </HStack>
-        <SimpleGrid pt='1' minChildWidth={['100%', '400px']} spacing='4px'>
-          {data?.payload?.map((v: any) => {
-            return (
-              <VideoItem
-                v={v}
-                key={v.id}
-                handleSelect={handleSelect}
-                isSelected={selected.includes(v.id)}
-              />
-            )
-          })}
-        </SimpleGrid>
       </Box>
     )
   }
