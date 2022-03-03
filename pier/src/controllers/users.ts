@@ -21,7 +21,7 @@ export async function patchUser(req, res) {
           Key: getAvatarUploadKey(req.user.id, parsedDataURIScheme.contentType),
         })
         .promise()
-      userUpdate.image = `https://cdn.bken.io/${res.Key}`
+      userUpdate.image = `https://${process.env.CDN_HOSTNAME}/${res.Key}`
     }
   }
 

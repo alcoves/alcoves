@@ -1,4 +1,3 @@
-import cuid from 'cuid'
 import db from '../config/db'
 import { TidalWebhookBody } from '../types'
 import { defaultBucket } from '../config/s3'
@@ -30,7 +29,7 @@ export async function recieveTidalWebhook(req, res) {
         },
         output: {
           bucket: defaultBucket,
-          key: `v/${data.entityId}/thumbnails/${cuid()}.jpg`,
+          key: `v/${data.entityId}/thumbnail.jpg`,
         },
       })
 
@@ -48,12 +47,7 @@ export async function recieveTidalWebhook(req, res) {
 
       return res.sendStatus(200)
     case 'thumbnail':
-      await db.video.update({
-        where: { id: data.entityId },
-        data: {
-          thumbnailFilename: returnValue.thumbnailFilename,
-        },
-      })
+      // The thumbnail was successfully processed
       return res.sendStatus(200)
     case 'package-hls':
       if (isFailed) {

@@ -1,6 +1,5 @@
 import path from 'path'
 import db from '../config/db'
-import { Video } from '@prisma/client'
 import { dispatchJob } from '../service/tidal'
 import { CompletedPart } from 'aws-sdk/clients/s3'
 import s3, { defaultBucket, deleteFolder } from '../config/s3'
@@ -8,6 +7,7 @@ import s3, { defaultBucket, deleteFolder } from '../config/s3'
 export async function listVideos(req, res) {
   const videos = await db.video.findMany({
     where: { userId: req.user.id },
+    orderBy: { createdAt: 'desc' },
   })
   return res.json({ payload: videos })
 }
@@ -86,6 +86,15 @@ export async function createVideoUpload(req, res) {
     )
   }
 
+  await db.video.update({
+    where: { id: videoId },
+    data: {
+      type,
+      status: 'UPLOADING',
+      cdnUrl: `https://${process.env.CDN_HOSTNAME}/v/${video.id}`,
+    },
+  })
+
   return res.json({
     payload: {
       video,
@@ -143,6 +152,13 @@ export async function completeVideoUpload(req, res) {
       where: { id: videoId },
       data: {
         size: Math.round(ContentLength / 1048576),
+      },
+    })
+
+    await db.video.update({
+      where: { id: videoId },
+      data: {
+        status: 'UPLOADED',
       },
     })
 
