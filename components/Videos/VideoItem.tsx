@@ -1,9 +1,10 @@
 import VideoModal from './VideoModal'
 import DeleteVideo from './DeleteVideo'
 import duration from '../../utils/duration'
-import { useState } from 'react'
+import useLazyRequest from '../../hooks/useLazyRequest'
+import { useEffect, useState } from 'react'
 import { Video } from '../../types/types'
-import { getThumanailUrl } from '../../utils/urls'
+import { getAPIUrl, getThumanailUrl } from '../../utils/urls'
 import {
   Box,
   Flex,
@@ -16,9 +17,28 @@ import {
   EditablePreview,
 } from '@chakra-ui/react'
 
+const AUTOSAVE_INTERVAL = 1000
+
 export default function VideoItem({ v }: { v: Video }) {
+  const [patchVideo] = useLazyRequest()
+  const [title, setTitle] = useState(v.title)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [isHovering, setIsHovering] = useState(false)
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (title !== v.title) {
+        patchVideo({
+          method: 'PATCH',
+          data: { title },
+          url: `${getAPIUrl()}/videos/${v.id}`,
+        })
+      }
+    }, AUTOSAVE_INTERVAL)
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [title])
 
   return (
     <Box rounded='md' id={v.id} key={v.id}>
@@ -90,12 +110,9 @@ export default function VideoItem({ v }: { v: Video }) {
       </Box>
       <Box pt='1' pb='4'>
         <Editable
-          defaultValue={v.title}
-          onSubmit={value => {
-            if (value !== v.title) {
-              // TODO :: Edit the title
-              console.log('submit', value)
-            }
+          defaultValue={title}
+          onChange={value => {
+            setTitle(value)
           }}
         >
           <EditablePreview pl='2' />
