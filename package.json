@@ -32,6 +32,7 @@
     "react-hls-player": "^3.0.7",
     "react-icons": "^4.3.1",
     "sharp": "^0.30.2",
+    "socket.io-client": "^4.4.1",
     "swr": "^1.2.2"
   },
   "devDependencies": {
