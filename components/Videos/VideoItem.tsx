@@ -85,7 +85,7 @@ export default function VideoItem({ v }: { v: Video }) {
           backgroundColor='black'
           backgroundPosition='center'
           backgroundRepeat='no-repeat'
-          backgroundImage={getThumanailUrl(v.cdnUrl)}
+          backgroundImage={v.progress > 25 ? getThumanailUrl(v.cdnUrl) : undefined}
         />
       </Box>
       <Box pt='1' pb='4'>
