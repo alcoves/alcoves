@@ -1,23 +1,24 @@
-import useSWR from 'swr'
+// import useSWR from 'swr'
 import { useRouter } from 'next/router'
-import { IoAddOutline, IoHomeOutline } from 'react-icons/io5'
+import { BiAnchor } from 'react-icons/bi'
+import { IoHomeOutline } from 'react-icons/io5'
 import {
-  Avatar,
+  // Avatar,
   Button,
   Menu,
   MenuItem,
   MenuList,
   MenuButton,
-  MenuGroup,
-  MenuDivider,
+  // MenuGroup,
+  // MenuDivider,
 } from '@chakra-ui/react'
-import { Pod } from '../types/types'
-import { fetcher } from '../utils/axios'
-import { getAPIUrl } from '../utils/urls'
+// import { Pod } from '../types/types'
+// import { fetcher } from '../utils/axios'
+// import { getAPIUrl } from '../utils/urls'
 
 export default function NavMenu() {
   const router = useRouter()
-  const { data, error } = useSWR(`${getAPIUrl()}/pods`, fetcher)
+  // const { data, error } = useSWR(`${getAPIUrl()}/pods`, fetcher)
 
   return (
     <Menu>
@@ -25,13 +26,21 @@ export default function NavMenu() {
         size='sm'
         as={Button}
         variant='ghost'
-        isLoading={!data && !error}
+        // isLoading={!data && !error}
         leftIcon={<IoHomeOutline size='15px' />}
       >
         Home
       </MenuButton>
       <MenuList>
-        <MenuGroup title='Pods'>
+        <MenuItem
+          icon={<BiAnchor size='24px' />}
+          onClick={() => {
+            router.push('/')
+          }}
+        >
+          My Library
+        </MenuItem>
+        {/* <MenuGroup title='Pods'>
           <MenuItem
             icon={<IoAddOutline size='24px' />}
             onClick={() => {
@@ -54,7 +63,7 @@ export default function NavMenu() {
             )
           })}
         </MenuGroup>
-        <MenuDivider />
+        <MenuDivider /> */}
         <MenuItem
           onClick={() => {
             router.push('/about')
