@@ -22,8 +22,8 @@ export async function recieveTidalWebhook(req, res) {
             length: returnValue.format.duration || returnValue.video.duration || 0,
           },
         })
-        .then(({ userId }) => {
-          io.to(userId).emit('update.videos')
+        .then(video => {
+          io.to(video.userId).emit('update.video', video)
         })
 
       await dispatchJob('thumbnail', {
@@ -64,8 +64,8 @@ export async function recieveTidalWebhook(req, res) {
               status: 'ERROR',
             },
           })
-          .then(({ userId }) => {
-            io.to(userId).emit('update.videos')
+          .then(video => {
+            io.to(video.userId).emit('update.video', video)
           })
       } else {
         await db.video
@@ -76,9 +76,8 @@ export async function recieveTidalWebhook(req, res) {
               status: progress === 100 ? 'READY' : 'PROCESSING',
             },
           })
-          .then(({ userId }) => {
-            console.log('progress', progress)
-            io.to(userId).emit('update.videos')
+          .then(video => {
+            io.to(video.userId).emit('update.video', video)
           })
       }
 

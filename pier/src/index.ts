@@ -18,10 +18,15 @@ app.set('io', io)
 async function main() {
   io.on('connection', socket => {
     console.log('connection established')
-    socket.on('join', async token => {
+
+    socket.on('join', token => {
       const user: any = jwt.decode(token)
-      console.log(`${user.id} is joining`)
-      socket.join(user.id)
+      if (user.id) {
+        console.log(`${user.id} is joining`)
+        socket.join(user.id)
+      } else {
+        console.log(`user ${user} tried to join`)
+      }
     })
 
     socket.on('ping', () => {
