@@ -1,5 +1,4 @@
 // import useSWR from 'swr'
-import { BiAnchor } from 'react-icons/bi'
 import {
   // Avatar,
   Button,
@@ -10,8 +9,9 @@ import {
   // MenuGroup,
   // MenuDivider,
 } from '@chakra-ui/react'
-import { IoHomeOutline } from 'react-icons/io5'
 import { useRouter } from 'next/router'
+import { BiAnchor } from 'react-icons/bi'
+import { IoHomeOutline } from 'react-icons/io5'
 // import { Pod } from '../types/types'
 // import { fetcher } from '../utils/axios'
 // import { getAPIUrl } from '../utils/urls'

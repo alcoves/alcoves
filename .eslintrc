@@ -1,30 +1,40 @@
 {
   "plugins": [
     "@typescript-eslint",
-    "prettier",
-    "sort-imports-es6-autofix"
+    "prettier"
   ],
   "extends": [
     "next",
     "next/core-web-vitals",
     "plugin:@typescript-eslint/recommended",
-    "prettier"
+    "prettier",
+    "plugin:import/recommended",
+    "plugin:import/typescript"
   ],
   "rules": {
     "prettier/prettier": [
       "error"
     ],
-    "sort-imports-es6-autofix/sort-imports-es6": [
-      2,
+    "import/no-unresolved": "off",
+    "import/named": "warn",
+    "import/namespace": "warn",
+    "import/no-named-as-default": "off",
+    "import/export": "warn",
+    "import/order": [
+      "error",
       {
-        "ignoreCase": false,
-        "ignoreMemberSort": false,
-        "memberSyntaxSortOrder": [
-          "none",
-          "all",
-          "single",
-          "multiple"
-        ]
+        "groups": [
+          "builtin",
+          "external",
+          "parent",
+          "sibling",
+          "index"
+        ],
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
       }
     ],
     "@typescript-eslint/no-unused-vars": "error",

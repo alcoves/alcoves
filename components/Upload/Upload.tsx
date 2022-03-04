@@ -1,10 +1,12 @@
-import UploadVideo from './UploadVideo'
 import { Box, Button, Flex, Heading, VStack } from '@chakra-ui/react'
-import { IoCloudUpload } from 'react-icons/io5'
-import { getAPIUrl } from '../../utils/urls'
 import { useCallback, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
+import { IoCloudUpload } from 'react-icons/io5'
 import { useSWRConfig } from 'swr'
+
+import { getAPIUrl } from '../../utils/urls'
+
+import UploadVideo from './UploadVideo'
 
 export default function Upload() {
   const { mutate } = useSWRConfig()

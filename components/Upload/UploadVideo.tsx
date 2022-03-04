@@ -1,12 +1,13 @@
-import Card from '../Card'
-import axios from 'axios'
-import chunkFile from '../../utils/chunkFile'
-import useLazyRequest from '../../hooks/useLazyRequest'
 import { Flex, Progress, Spinner, Text, useTheme } from '@chakra-ui/react'
-import { IoCheckmarkCircle } from 'react-icons/io5'
-import { getAPIUrl } from '../../utils/urls'
+import axios from 'axios'
 import { useEffect, useState } from 'react'
+import { IoCheckmarkCircle } from 'react-icons/io5'
+
+import useLazyRequest from '../../hooks/useLazyRequest'
 import { useWarnIfUploading } from '../../hooks/useWarnIfUploading'
+import chunkFile from '../../utils/chunkFile'
+import { getAPIUrl } from '../../utils/urls'
+import Card from '../Card'
 
 const bypassInterceptorAxios = axios.create()
 

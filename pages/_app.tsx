@@ -1,12 +1,13 @@
 import '../styles/index.css'
 
+import { ChakraProvider } from '@chakra-ui/react'
+import { AppProps } from 'next/app'
 import Head from 'next/head'
 import React from 'react'
-import theme from '../styles/theme'
-import useUser from '../hooks/useUser'
-import { AppProps } from 'next/app'
-import { ChakraProvider } from '@chakra-ui/react'
+
 import { UserContext } from '../contexts/user'
+import useUser from '../hooks/useUser'
+import theme from '../styles/theme'
 
 function App(props: AppProps) {
   const userState = useUser()

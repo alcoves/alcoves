@@ -1,8 +1,9 @@
 import { Avatar, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react'
-import { IoLogOutOutline, IoPersonOutline } from 'react-icons/io5'
-import { UserContext } from '../contexts/user'
-import { useContext } from 'react'
 import { useRouter } from 'next/router'
+import { useContext } from 'react'
+import { IoLogOutOutline, IoPersonOutline } from 'react-icons/io5'
+
+import { UserContext } from '../contexts/user'
 
 export default function AvatarMenu() {
   const router = useRouter()
