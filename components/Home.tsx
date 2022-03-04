@@ -30,8 +30,6 @@ export default function Home() {
     }
   }, [])
 
-  console.log('is this slow', data?.payload[0].progress)
-
   return (
     <SimpleGrid pt='1' minChildWidth={['100%', '400px']} spacing='4px'>
       {data?.payload?.map((v: any) => {
