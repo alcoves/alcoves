@@ -1,8 +1,8 @@
+import AvatarMenu from './AvatarMenu'
 import Image from 'next/image'
 import NavMenu from './NavMenu'
-import AvatarMenu from './AvatarMenu'
-import { useRouter } from 'next/router'
 import { Box, Flex, HStack, Text, useColorMode } from '@chakra-ui/react'
+import { useRouter } from 'next/router'
 
 export default function Layout(props: { children: React.ReactNode }) {
   const router = useRouter()

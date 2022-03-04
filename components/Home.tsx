@@ -1,11 +1,11 @@
-import useSWR from 'swr'
+import Upload from './Upload/Upload'
+import VideoGrid from './Videos/VideoGrid'
 import cookies from 'js-cookie'
 import io from 'socket.io-client'
+import useSWR from 'swr'
 import { fetcher } from '../utils/axios'
 import { getAPIUrl } from '../utils/urls'
 import { useEffect } from 'react'
-import VideoGrid from './Videos/VideoGrid'
-import Upload from './Upload/Upload'
 
 let socket: any
 

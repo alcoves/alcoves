@@ -1,14 +1,5 @@
 import Player from './Player'
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  Heading,
-  ModalBody,
-  Spinner,
-  Flex,
-  AspectRatio,
-} from '@chakra-ui/react'
+import { Flex, Heading, Modal, ModalContent, ModalOverlay, Spinner } from '@chakra-ui/react'
 import { Video } from '../../types/types'
 import { getHlsUrl } from '../../utils/urls'
 

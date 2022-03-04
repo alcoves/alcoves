@@ -1,19 +1,19 @@
 import useLazyRequest from '../../hooks/useLazyRequest'
-import { useSWRConfig } from 'swr'
-import { getAPIUrl } from '../../utils/urls'
-import { IoTrashSharp } from 'react-icons/io5'
 import {
   Button,
+  IconButton,
   Modal,
   ModalBody,
-  IconButton,
+  ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
   ModalOverlay,
   useDisclosure,
-  ModalCloseButton,
 } from '@chakra-ui/react'
+import { IoTrashSharp } from 'react-icons/io5'
+import { getAPIUrl } from '../../utils/urls'
+import { useSWRConfig } from 'swr'
 
 export default function DeleteVideo({ videoId }: { videoId: string }) {
   const { mutate } = useSWRConfig()

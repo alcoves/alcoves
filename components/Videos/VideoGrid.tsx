@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'
 import VideoItem from '../Videos/VideoItem'
-import { Video } from '../../types/types'
 import { SimpleGrid } from '@chakra-ui/react'
+import { Video } from '../../types/types'
+import { useEffect, useState } from 'react'
 
 export default function VideoGrid({ _videos, socket }: { _videos: Video[]; socket: any }) {
   const [videos, setVideos] = useState({})

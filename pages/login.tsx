@@ -1,11 +1,11 @@
-import Link from 'next/link'
-import axios from '../utils/axios'
-import { useRouter } from 'next/router'
 import GoogleLogin from 'react-google-login'
-import { UserContext } from '../contexts/user'
+import Link from 'next/link'
 import React, { useContext, useState } from 'react'
-import { Text, Box, Flex, Heading, Button } from '@chakra-ui/react'
+import axios from '../utils/axios'
+import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react'
 import { IoLogoGoogle } from 'react-icons/io5'
+import { UserContext } from '../contexts/user'
+import { useRouter } from 'next/router'
 
 const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ''
 
