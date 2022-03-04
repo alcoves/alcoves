@@ -1,4 +1,5 @@
 import db from '../config/db'
+import { io } from '../index'
 import { TidalWebhookBody } from '../types'
 import { defaultBucket } from '../config/s3'
 import { dispatchJob } from '../service/tidal'
@@ -10,16 +11,20 @@ export async function recieveTidalWebhook(req, res) {
 
   switch (name) {
     case 'metadata':
-      await db.video.update({
-        where: { id: data.entityId },
-        data: {
-          status: 'PROCESSING',
-          width: returnValue.video.width,
-          height: returnValue.video.height,
-          framerate: parseFramerate(returnValue.video.r_frame_rate),
-          length: returnValue.format.duration || returnValue.video.duration || 0,
-        },
-      })
+      await db.video
+        .update({
+          where: { id: data.entityId },
+          data: {
+            status: 'PROCESSING',
+            width: returnValue.video.width,
+            height: returnValue.video.height,
+            framerate: parseFramerate(returnValue.video.r_frame_rate),
+            length: returnValue.format.duration || returnValue.video.duration || 0,
+          },
+        })
+        .then(({ userId }) => {
+          io.to(userId).emit('update.videos')
+        })
 
       await dispatchJob('thumbnail', {
         entityId: data.entityId,
@@ -51,21 +56,30 @@ export async function recieveTidalWebhook(req, res) {
       return res.sendStatus(200)
     case 'package-hls':
       if (isFailed) {
-        await db.video.update({
-          where: { id: data.entityId },
-          data: {
-            progress,
-            status: 'ERROR',
-          },
-        })
+        await db.video
+          .update({
+            where: { id: data.entityId },
+            data: {
+              progress,
+              status: 'ERROR',
+            },
+          })
+          .then(({ userId }) => {
+            io.to(userId).emit('update.videos')
+          })
       } else {
-        await db.video.update({
-          where: { id: data.entityId },
-          data: {
-            progress,
-            status: progress === 100 ? 'READY' : 'PROCESSING',
-          },
-        })
+        await db.video
+          .update({
+            where: { id: data.entityId },
+            data: {
+              progress,
+              status: progress === 100 ? 'READY' : 'PROCESSING',
+            },
+          })
+          .then(({ userId }) => {
+            console.log('progress', progress)
+            io.to(userId).emit('update.videos')
+          })
       }
 
       return res.sendStatus(200)
