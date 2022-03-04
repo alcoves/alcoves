@@ -1,6 +1,6 @@
 import Layout from '../components/Layout'
+import { Box, Button, useColorMode } from '@chakra-ui/react'
 import { IoMoon, IoSunny } from 'react-icons/io5'
-import { Button, Box, useColorMode } from '@chakra-ui/react'
 
 export default function Account() {
   const { colorMode, toggleColorMode } = useColorMode()

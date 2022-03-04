@@ -1,10 +1,10 @@
-import { useSWRConfig } from 'swr'
 import UploadVideo from './UploadVideo'
-import { useDropzone } from 'react-dropzone'
-import { useCallback, useState } from 'react'
 import { Box, Button, Flex, Heading, VStack } from '@chakra-ui/react'
 import { IoCloudUpload } from 'react-icons/io5'
 import { getAPIUrl } from '../../utils/urls'
+import { useCallback, useState } from 'react'
+import { useDropzone } from 'react-dropzone'
+import { useSWRConfig } from 'swr'
 
 export default function Upload() {
   const { mutate } = useSWRConfig()
@@ -18,7 +18,6 @@ export default function Upload() {
     if (index > -1) {
       const newArray = files
       newArray.splice(index, 1)
-      console.log('newArray', newArray)
       setFiles(newArray)
       mutate(`${getAPIUrl()}/videos`)
     }

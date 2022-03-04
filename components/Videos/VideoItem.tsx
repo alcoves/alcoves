@@ -1,21 +1,21 @@
-import VideoModal from './VideoModal'
 import DeleteVideo from './DeleteVideo'
+import VideoModal from './VideoModal'
 import duration from '../../utils/duration'
 import useLazyRequest from '../../hooks/useLazyRequest'
-import { useEffect, useState } from 'react'
-import { Video } from '../../types/types'
-import { getAPIUrl, getThumanailUrl } from '../../utils/urls'
 import {
   Box,
-  Flex,
-  Text,
-  Spinner,
-  Progress,
   Editable,
   EditableInput,
-  useDisclosure,
   EditablePreview,
+  Flex,
+  Progress,
+  Spinner,
+  Text,
+  useDisclosure,
 } from '@chakra-ui/react'
+import { Video } from '../../types/types'
+import { getAPIUrl, getThumanailUrl } from '../../utils/urls'
+import { useEffect, useState } from 'react'
 
 const AUTOSAVE_INTERVAL = 1000
 

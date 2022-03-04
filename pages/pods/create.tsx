@@ -4,8 +4,8 @@ import {
   Box,
   Button,
   Flex,
-  Heading,
   HStack,
+  Heading,
   Input,
   Radio,
   RadioGroup,
@@ -13,10 +13,10 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
-import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
 import { IoLockClosed } from 'react-icons/io5'
 import { getAPIUrl } from '../../utils/urls'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 
 export default function CreatePod() {
   const router = useRouter()
