@@ -7,13 +7,17 @@ import { getAPIUrl } from '../../utils/urls'
 import { IoCheckmarkCircle } from 'react-icons/io5'
 import { useWarnIfUploading } from '../../hooks/useWarnIfUploading'
 import { Flex, Progress, Spinner, Text, useTheme } from '@chakra-ui/react'
-import { useSWRConfig } from 'swr'
 
 const bypassInterceptorAxios = axios.create()
 
-export default function UploadVideo({ file }: { file: any }) {
+export default function UploadVideo({
+  file,
+  removeFromList,
+}: {
+  file: any
+  removeFromList: () => void
+}) {
   const theme = useTheme()
-  const { mutate } = useSWRConfig()
 
   const chunks = chunkFile(file)
   const [uploading, setUploading] = useState(false)
@@ -105,17 +109,16 @@ export default function UploadVideo({ file }: { file: any }) {
             url: `${getAPIUrl()}/videos/${videoId}/upload`,
           })
           setUploading(false)
-          mutate(`${getAPIUrl()}/videos`)
         })
         .catch(error => {
           console.error('something failed while uploading chunks', error)
           setUploading(false)
-          mutate(`${getAPIUrl()}/videos`)
+        })
+        .finally(() => {
+          removeFromList()
         })
     }
   }, [createVideoUploadData])
-
-  console.log(uploading)
 
   return (
     <Card>
