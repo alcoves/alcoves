@@ -2,8 +2,8 @@ import Image from 'next/image'
 import NavMenu from './NavMenu'
 import AvatarMenu from './AvatarMenu'
 import { useRouter } from 'next/router'
-import { IoCloudUpload } from 'react-icons/io5'
-import { Box, Flex, Text, HStack, useColorMode, Button } from '@chakra-ui/react'
+import { Box, Flex, Text, HStack, useColorMode } from '@chakra-ui/react'
+import Upload from './Upload/Upload'
 
 export default function Layout(props: { children: React.ReactNode }) {
   const router = useRouter()
@@ -38,14 +38,7 @@ export default function Layout(props: { children: React.ReactNode }) {
           </Box>
         </Flex>
         <HStack pr='1'>
-          <Button
-            size='sm'
-            variant='ghost'
-            leftIcon={<IoCloudUpload size='18px' />}
-            onClick={() => router.push('/upload')}
-          >
-            Upload
-          </Button>
+          <Upload />
           <AvatarMenu />
         </HStack>
       </Flex>
