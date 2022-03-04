@@ -1,7 +1,9 @@
-import Player from './Player'
 import { Flex, Heading, Modal, ModalContent, ModalOverlay, Spinner } from '@chakra-ui/react'
+
 import { Video } from '../../types/types'
 import { getHlsUrl } from '../../utils/urls'
+
+import Player from './Player'
 
 export default function MediaItemModal({
   v,
