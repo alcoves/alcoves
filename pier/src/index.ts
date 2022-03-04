@@ -21,7 +21,7 @@ async function main() {
 
     socket.on('join', token => {
       const user: any = jwt.decode(token)
-      if (user.id) {
+      if (user?.id) {
         console.log(`${user.id} is joining`)
         socket.join(user.id)
       } else {
