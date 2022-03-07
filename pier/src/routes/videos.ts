@@ -7,12 +7,16 @@ import {
   deleteVideo,
   createVideoUpload,
   completeVideoUpload,
+  getVideo,
 } from '../controllers/videos'
 
 const router = express.Router()
 
 router.get('/', auth, listVideos)
 router.post('/', auth, createVideo)
+
+// Endpoint is used to display public videos on v/${videoId}
+router.get('/:videoId', getVideo)
 
 router.patch('/:videoId', auth, updateVideo)
 router.delete('/:videoId', auth, deleteVideo)

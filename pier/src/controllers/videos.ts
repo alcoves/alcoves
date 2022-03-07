@@ -12,6 +12,14 @@ export async function listVideos(req, res) {
   return res.json({ payload: videos })
 }
 
+export async function getVideo(req, res) {
+  const { videoId } = req.params
+  const video = await db.video.findUnique({
+    where: { id: videoId },
+  })
+  return res.json({ payload: video })
+}
+
 export async function createVideo(req, res) {
   const { title } = req.body
   const { id: userId } = req.user
