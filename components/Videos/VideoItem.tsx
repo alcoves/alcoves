@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Editable,
   EditableInput,
   EditablePreview,
@@ -10,11 +11,12 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
+import { IoLinkSharp } from 'react-icons/io5'
 
 import useLazyRequest from '../../hooks/useLazyRequest'
 import { Video } from '../../types/types'
 import duration from '../../utils/duration'
-import { getAPIUrl, getThumanailUrl } from '../../utils/urls'
+import { getAPIUrl, getShareUrl, getThumanailUrl } from '../../utils/urls'
 
 import DeleteVideo from './DeleteVideo'
 import VideoModal from './VideoModal'
@@ -26,6 +28,8 @@ export default function VideoItem({ v }: { v: Video }) {
   const [title, setTitle] = useState(v.title)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [isHovering, setIsHovering] = useState(false)
+
+  const shareUrl = getShareUrl(v.id)
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -41,6 +45,17 @@ export default function VideoItem({ v }: { v: Video }) {
       clearTimeout(timer)
     }
   }, [title])
+
+  function copyLinkToClipboard() {
+    navigator.clipboard.writeText(shareUrl).then(
+      function () {
+        /* clipboard successfully set */
+      },
+      function () {
+        /* clipboard write failed */
+      }
+    )
+  }
 
   return (
     <Box rounded='md' id={v.id} key={v.id}>
@@ -120,6 +135,19 @@ export default function VideoItem({ v }: { v: Video }) {
           <EditablePreview pl='2' />
           <EditableInput pl='2' />
         </Editable>
+        <Flex justify='space-between' align='center'>
+          <Text fontSize='.9rem' pl='2'>
+            {shareUrl}
+          </Text>
+          <Button
+            ml='2'
+            size='xs'
+            onClick={copyLinkToClipboard}
+            leftIcon={<IoLinkSharp size='14px' />}
+          >
+            Copy
+          </Button>
+        </Flex>
       </Box>
     </Box>
   )
