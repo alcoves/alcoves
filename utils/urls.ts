@@ -17,3 +17,7 @@ export function getHlsUrl(cdnUrl: string): string {
 export function getThumanailUrl(cdnUrl: string): string {
   return `${cdnUrl}/thumbnail.jpg`
 }
+
+export function getShareUrl(id: string) {
+  return `${window?.location?.href}v/${id}`
+}
