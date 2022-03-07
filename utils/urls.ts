@@ -18,6 +18,9 @@ export function getThumanailUrl(cdnUrl: string): string {
   return `${cdnUrl}/thumbnail.jpg`
 }
 
-export function getShareUrl(id: string) {
+export function getPublicUrl(id: string) {
+  if (typeof window !== 'undefined') {
+    return `${window?.location?.href}v/${id}`
+  }
   return `https://bken.io/v/${id}`
 }

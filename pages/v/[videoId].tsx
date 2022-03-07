@@ -5,10 +5,10 @@ import Head from 'next/head'
 
 import Player from '../../components/Videos/Player'
 import { Video } from '../../types/types'
-import { getAPIUrl, getShareUrl, getThumanailUrl } from '../../utils/urls'
+import { getAPIUrl, getPublicUrl, getThumanailUrl } from '../../utils/urls'
 
 export default function VideoPage({ v }: { v: Video }) {
-  const publicURL = getShareUrl(v.id)
+  const publicURL = getPublicUrl(v.id)
   const ogDescription = 'Watch this video on bken.io'
   const thumbnailURL = getThumanailUrl(v.cdnUrl)
 
