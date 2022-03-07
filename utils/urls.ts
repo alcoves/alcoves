@@ -19,5 +19,5 @@ export function getThumanailUrl(cdnUrl: string): string {
 }
 
 export function getShareUrl(id: string) {
-  return `${window?.location?.href}v/${id}`
+  return `https://bken.io/v/${id}`
 }
