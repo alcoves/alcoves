@@ -5,6 +5,7 @@ import {
   EditableInput,
   EditablePreview,
   Flex,
+  Link,
   Progress,
   Spinner,
   Text,
@@ -16,7 +17,7 @@ import { IoLinkSharp } from 'react-icons/io5'
 import useLazyRequest from '../../hooks/useLazyRequest'
 import { Video } from '../../types/types'
 import duration from '../../utils/duration'
-import { getAPIUrl, getShareUrl, getThumanailUrl } from '../../utils/urls'
+import { getAPIUrl, getPublicUrl, getThumanailUrl } from '../../utils/urls'
 
 import DeleteVideo from './DeleteVideo'
 import VideoModal from './VideoModal'
@@ -24,12 +25,11 @@ import VideoModal from './VideoModal'
 const AUTOSAVE_INTERVAL = 1000
 
 export default function VideoItem({ v }: { v: Video }) {
+  const shareUrl = getPublicUrl(v.id)
   const [patchVideo] = useLazyRequest()
   const [title, setTitle] = useState(v.title)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [isHovering, setIsHovering] = useState(false)
-
-  const shareUrl = getShareUrl(v.id)
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -127,6 +127,7 @@ export default function VideoItem({ v }: { v: Video }) {
       </Box>
       <Box pt='1' pb='4'>
         <Editable
+          fontWeight={600}
           defaultValue={title}
           onChange={value => {
             setTitle(value)
@@ -136,9 +137,9 @@ export default function VideoItem({ v }: { v: Video }) {
           <EditableInput pl='2' />
         </Editable>
         <Flex justify='space-between' align='center'>
-          <Text fontSize='.9rem' pl='2'>
+          <Link href={shareUrl} fontSize='.9rem' pl='2'>
             {shareUrl}
-          </Text>
+          </Link>
           <Button
             ml='2'
             size='xs'
