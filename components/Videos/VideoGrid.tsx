@@ -16,7 +16,7 @@ export default function VideoGrid({ _videos, socket }: { _videos: Video[]; socke
   }, [_videos])
 
   useEffect(() => {
-    const videoListener = (updatedVideo: Video) => {
+    const updateVideo = (updatedVideo: Video) => {
       const updatedObject: any = {}
       updatedObject[updatedVideo.id] = updatedVideo
       setVideos(previous => {
@@ -27,10 +27,13 @@ export default function VideoGrid({ _videos, socket }: { _videos: Video[]; socke
       })
     }
 
-    socket.on('update.video', videoListener)
+    // Add addVideo
+    // Add removeVideo
+
+    socket.on('update.video', updateVideo)
 
     return () => {
-      socket.off('update.video', videoListener)
+      socket.off('update.video', updateVideo)
     }
   }, [])
 
