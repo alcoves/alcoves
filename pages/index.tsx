@@ -7,16 +7,13 @@ import useUser from '../hooks/useUser'
 
 export default function Index() {
   const { user, loading } = useUser()
-  console.log(user, loading)
 
   if (loading) return null
-  if (user) {
-    return (
-      <Layout>
-        <Library />
-      </Layout>
-    )
-  } else {
-    return <Landing />
-  }
+  if (!user) return <Landing />
+
+  return (
+    <Layout>
+      <Library />
+    </Layout>
+  )
 }

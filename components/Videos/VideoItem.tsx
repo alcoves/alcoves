@@ -105,11 +105,9 @@ export default function VideoItem({ v }: { v: Video }) {
               </>
             )}
             {v.status === 'ERROR' && (
-              <>
-                <Text fontWeight='700' color='red.500'>
-                  {v.status}
-                </Text>
-              </>
+              <Text fontWeight='700' color='red.500'>
+                {v.status}
+              </Text>
             )}
           </Flex>
           <Flex />
@@ -137,7 +135,7 @@ export default function VideoItem({ v }: { v: Video }) {
           <EditableInput pl='2' />
         </Editable>
         <Flex justify='space-between' align='center'>
-          <Link href={shareUrl} fontSize='.9rem' pl='2'>
+          <Link href={shareUrl} fontSize='.9rem' pl='2' isTruncated>
             {shareUrl}
           </Link>
           <Button
