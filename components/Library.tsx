@@ -1,3 +1,4 @@
+import { Spinner } from '@chakra-ui/react'
 import cookies from 'js-cookie'
 import { useEffect } from 'react'
 import io from 'socket.io-client'
@@ -23,11 +24,11 @@ export default function Home() {
     }
   }, [])
 
-  if (data?.payload.length && socket) {
+  if (socket) {
     return (
       <>
         <Upload />
-        <VideoGrid _videos={data?.payload} socket={socket} />
+        {data?.payload.length ? <VideoGrid _videos={data?.payload} socket={socket} /> : null}
       </>
     )
   }
