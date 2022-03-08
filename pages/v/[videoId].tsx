@@ -1,4 +1,4 @@
-import { Box, Flex, Link } from '@chakra-ui/react'
+import { Box, Flex, Heading, Link } from '@chakra-ui/react'
 import axios from 'axios'
 import { GetServerSidePropsContext } from 'next'
 import Head from 'next/head'
@@ -36,6 +36,11 @@ export default function VideoPage({ v }: { v: Video }) {
       <Flex w='100vw' h='100vh' justify='space-between' align='center' direction='column'>
         <Box>
           <Player v={v} />
+          <Flex bg='gray.700'>
+            <Heading p='2' size='md'>
+              {v?.title}
+            </Heading>
+          </Flex>
         </Box>
         <Box pb='2'>
           <Link href='https://bken.io'>bken.io</Link>
