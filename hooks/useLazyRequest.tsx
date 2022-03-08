@@ -1,6 +1,7 @@
-import axios from '../utils/axios'
-import { useState } from 'react'
 import { AxiosRequestConfig } from 'axios'
+import { useState } from 'react'
+
+import axios from '../utils/axios'
 
 export default function useLazyRequest(options?: AxiosRequestConfig): any {
   const [data, setData] = useState(null)

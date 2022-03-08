@@ -8,7 +8,7 @@ import { Video } from '../../types/types'
 import { getAPIUrl, getPublicUrl, getThumanailUrl } from '../../utils/urls'
 
 export default function VideoPage({ v }: { v: Video }) {
-  const publicURL = getPublicUrl(v.id)
+  const publicURL = getPublicUrl(v?.id)
   const ogDescription = 'Watch this video on bken.io'
   const thumbnailURL = getThumanailUrl(v.cdnUrl)
 

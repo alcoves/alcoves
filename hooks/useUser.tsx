@@ -1,7 +1,8 @@
-import jwt from 'jwt-decode'
 import cookies from 'js-cookie'
+import jwt from 'jwt-decode'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
+
 import { User, UserState } from '../types/types'
 
 export default function useUser(): UserState {
@@ -22,14 +23,15 @@ export default function useUser(): UserState {
     const user = jwt<User>(token)
     if (user && user.id) {
       if (Date.now() >= user.exp * 1000) {
+        // This is where we could refresh the user token
         logout()
         setAuthenticated(false)
         setLoading(false)
+        router.push('/')
       } else {
         setUser(user)
         setAuthenticated(true)
         setLoading(false)
-        // router.push('/')
       }
     } else {
       setLoading(false)

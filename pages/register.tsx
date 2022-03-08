@@ -58,7 +58,7 @@ export default function Register() {
                   isDisabled={disabled}
                   leftIcon={<IoLogoGoogle size='20px' />}
                 >
-                  Register with Google
+                  Log in with Google
                 </Button>
               )
             }}
