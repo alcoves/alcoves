@@ -9,15 +9,15 @@ export const useWarnIfUploading = (unsavedChanges: boolean, callback: () => bool
       const routeChangeStart = () => {
         const ok = callback()
         if (!ok) {
-          router.events.emit('routeChangeError')
+          router?.events.emit('routeChangeError')
           throw 'Abort route change. Please ignore this error.'
         }
       }
-      router.events.on('routeChangeStart', routeChangeStart)
+      router?.events.on('routeChangeStart', routeChangeStart)
 
       return () => {
-        router.events.off('routeChangeStart', routeChangeStart)
+        router?.events.off('routeChangeStart', routeChangeStart)
       }
     }
-  }, [unsavedChanges, callback, router.events])
+  }, [unsavedChanges, callback, router?.events])
 }
