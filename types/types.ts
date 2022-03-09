@@ -15,16 +15,12 @@ export interface UserState {
   login: (token: string) => void
 }
 
-export interface UploadsState {
-  uploads: Upload[]
-  addUpload: (file: File) => Promise<void>
-}
-
 export interface Upload {
   file: File
-  status: string
-  completed: number
-  uploadUrls: string[]
+  id: string
+  loading: boolean
+  started: boolean
+  bytesUploaded: number
 }
 
 export interface Video {

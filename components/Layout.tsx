@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 
 import AvatarMenu from './AvatarMenu'
 import NavMenu from './NavMenu'
+import UploadToast from './Upload/UploadToast'
 
 export default function Layout(props: { children: React.ReactNode }) {
   const router = useRouter()
@@ -11,6 +12,7 @@ export default function Layout(props: { children: React.ReactNode }) {
 
   return (
     <Box>
+      <UploadToast />
       <Flex
         h='50px'
         align='center'
