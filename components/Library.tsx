@@ -1,4 +1,3 @@
-import { Spinner } from '@chakra-ui/react'
 import cookies from 'js-cookie'
 import { useEffect } from 'react'
 import io from 'socket.io-client'
@@ -7,7 +6,7 @@ import useSWR from 'swr'
 import { fetcher } from '../utils/axios'
 import { getAPIUrl } from '../utils/urls'
 
-import Upload from './Upload/Upload'
+import Upload from './Upload/UploadButton'
 import VideoGrid from './Videos/VideoGrid'
 
 let socket: any

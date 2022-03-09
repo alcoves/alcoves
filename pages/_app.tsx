@@ -4,12 +4,13 @@ import { ChakraProvider } from '@chakra-ui/react'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
 import React from 'react'
+import { RecoilRoot } from 'recoil'
 
 import { UserContext } from '../contexts/user'
 import useUser from '../hooks/useUser'
 import theme from '../styles/theme'
 
-function App(props: AppProps) {
+export default function App(props: AppProps) {
   const userState = useUser()
   const { Component, pageProps } = props
   if (!userState) return null
@@ -22,13 +23,13 @@ function App(props: AppProps) {
           content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'
         />
       </Head>
-      <ChakraProvider theme={theme}>
-        <UserContext.Provider value={userState}>
-          <Component {...pageProps} />
-        </UserContext.Provider>
-      </ChakraProvider>
+      <RecoilRoot>
+        <ChakraProvider theme={theme}>
+          <UserContext.Provider value={userState}>
+            <Component {...pageProps} />
+          </UserContext.Provider>
+        </ChakraProvider>
+      </RecoilRoot>
     </>
   )
 }
-
-export default App
