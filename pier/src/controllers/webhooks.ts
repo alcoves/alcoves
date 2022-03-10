@@ -67,7 +67,9 @@ export async function recieveTidalWebhook(req, res) {
           })
           .then(video => {
             io.to(video.userId).emit('update.video', video)
-            discordWebHook(`FAILED :: https://bken.io/v/${video.id}`)
+            discordWebHook(`FAILED :: https://bken.io/v/${video.id}`).catch(error => {
+              console.error(error)
+            })
           })
       } else {
         await db.video
@@ -81,7 +83,9 @@ export async function recieveTidalWebhook(req, res) {
           .then(video => {
             io.to(video.userId).emit('update.video', video)
             if (video.status === 'READY') {
-              discordWebHook(`https://bken.io/v/${video.id}`)
+              discordWebHook(`https://bken.io/v/${video.id}`).catch(error => {
+                console.error(error)
+              })
             }
           })
       }
