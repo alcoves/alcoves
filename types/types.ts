@@ -15,6 +15,13 @@ export interface UserState {
   login: (token?: string) => void
 }
 
+export interface UploadState {
+  uploads: Upload[]
+  start: () => void
+  add: (file: File) => void
+  remove: (id: string) => void
+}
+
 export interface Upload {
   file: File
   id: string

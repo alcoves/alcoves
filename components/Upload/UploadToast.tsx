@@ -1,13 +1,12 @@
 import { Flex, Heading, VStack } from '@chakra-ui/react'
-import { useRecoilValue } from 'recoil'
 
 import { useWarnIfUploading } from '../../hooks/useWarnIfUploading'
-import { recoilUploads } from '../../recoil/store'
+import { uploadsStore } from '../../stores/uploads'
 
 import UploadVideo from './UploadVideo'
 
 export default function UploadToast() {
-  const uploads = useRecoilValue(recoilUploads)
+  const { uploads } = uploadsStore()
 
   useWarnIfUploading(uploads.length > 0, () => {
     return confirm('Warning! You still have videos uploading!')

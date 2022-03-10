@@ -79,9 +79,9 @@ export default function UploadVideo({ id, file }: { id: string; file: File }) {
     }
 
     console.info('useEffect has loaded')
-    if (status === 'waiting') {
-      uploadVideo()
-    }
+    // if (status === 'waiting') {
+    //   uploadVideo()
+    // }
   }, [])
 
   useEffect(() => {
