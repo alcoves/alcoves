@@ -27,15 +27,13 @@ export default function UploadButton() {
 
   return (
     <>
-      <Flex direction='column' align='center'>
-        <Box w='100%'>
-          <Flex w='120px' {...getRootProps()} align='center' justify='start' py='1'>
-            <input {...getInputProps()} />
-            <Button size='sm' w='100%' leftIcon={<IoCloudUpload size='18px' />}>
-              Upload
-            </Button>
-          </Flex>
-        </Box>
+      <Flex direction='column' align='end' justify='center'>
+        <Flex w='120px' {...getRootProps()} align='center' justify='start' py='1'>
+          <input {...getInputProps()} />
+          <Button size='sm' w='100%' leftIcon={<IoCloudUpload size='18px' />}>
+            Upload
+          </Button>
+        </Flex>
       </Flex>
     </>
   )
