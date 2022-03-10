@@ -1,7 +1,18 @@
-name: Node.js Checks
-on: push
+name: Tests
+on: pull_request
 jobs:
-  transpile:
+  test:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 16
+      - run: yarn
+      - run: yarn lint
+  compile:
+    name: Build Code
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -10,17 +21,3 @@ jobs:
           node-version: 16
       - run: yarn
       - run: yarn build
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 16
-      - run: yarn
-      - run: yarn test
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - run: docker build .

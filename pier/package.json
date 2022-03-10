@@ -10,6 +10,7 @@
     "build": "tsc",
     "test": "jest",
     "dev": "nodemon",
+    "lint": "eslint",
     "start": "node ./dist/src/index.js"
   },
   "dependencies": {
