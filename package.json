@@ -1,10 +1,10 @@
 {
   "name": "reef",
   "main": "index.js",
-  "license": "MPL-2.0",
+  "license": "UNLICENSED",
   "private": false,
-  "version": "0.0.1",
-  "author": "Brendan Kennedy <brenwken@gmail.com>",
+  "version": "0.0.3",
+  "author": "Brendan Kennedy <brendan@bken.io>",
   "repository": "git@github.com:bkenio/reef.git",
   "description": "frontend for bken.io",
   "scripts": {
