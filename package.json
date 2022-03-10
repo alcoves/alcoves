@@ -34,7 +34,8 @@
     "recoil": "^0.6.1",
     "sharp": "^0.30.2",
     "socket.io-client": "^4.4.1",
-    "swr": "^1.2.2"
+    "swr": "^1.2.2",
+    "zustand": "^3.7.1"
   },
   "devDependencies": {
     "@types/js-cookie": "^3.0.1",
