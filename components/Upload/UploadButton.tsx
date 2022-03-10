@@ -1,27 +1,18 @@
-import { Box, Button, Flex } from '@chakra-ui/react'
-import { nanoid } from 'nanoid'
+import { Button, Flex } from '@chakra-ui/react'
 import { useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { IoCloudUpload } from 'react-icons/io5'
-import { useSetRecoilState } from 'recoil'
 
-import { recoilUploads } from '../../recoil/store'
-import { Upload } from '../../types/types'
+import { uploadsStore } from '../../stores/uploads'
 
 export default function UploadButton() {
-  const setUploads = useSetRecoilState(recoilUploads)
+  const { add } = uploadsStore()
+
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
-      const newUploads: Upload[] = acceptedFiles.map((f: File) => {
-        return {
-          file: f,
-          id: nanoid(),
-        }
-      })
-
-      setUploads(prev => [...prev, ...newUploads])
+      acceptedFiles.map((file: File) => add(file))
     },
-    [setUploads]
+    [add]
   )
   const { getRootProps, getInputProps } = useDropzone({ onDrop })
 
