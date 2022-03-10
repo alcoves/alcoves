@@ -80,7 +80,9 @@ export async function recieveTidalWebhook(req, res) {
           })
           .then(video => {
             io.to(video.userId).emit('update.video', video)
-            discordWebHook(`https://bken.io/v/${video.id}`)
+            if (video.status === 'READY') {
+              discordWebHook(`https://bken.io/v/${video.id}`)
+            }
           })
       }
 
