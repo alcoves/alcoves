@@ -16,9 +16,6 @@ export default function UploadButton() {
         return {
           file: f,
           id: nanoid(),
-          loading: true,
-          started: false,
-          bytesUploaded: 0,
         }
       })
 
