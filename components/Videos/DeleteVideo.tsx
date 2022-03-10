@@ -53,7 +53,7 @@ export default function DeleteVideo({ videoId }: { videoId: string }) {
             Are you sure you want to permenantly delete this video? This action is irreversible!
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme='blue' isLoading={loading} mr={3} variant='ghost' onClick={onClose}>
+            <Button colorScheme='blue' mr={3} variant='ghost' onClick={onClose}>
               Close
             </Button>
             <Button colorScheme='red' isLoading={loading} onClick={handleRemove}>

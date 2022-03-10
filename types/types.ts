@@ -18,9 +18,6 @@ export interface UserState {
 export interface Upload {
   file: File
   id: string
-  loading: boolean
-  started: boolean
-  bytesUploaded: number
 }
 
 export interface Video {

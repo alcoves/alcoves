@@ -1,13 +1,17 @@
 import { Flex, Heading, VStack } from '@chakra-ui/react'
 import { useRecoilValue } from 'recoil'
 
+import { useWarnIfUploading } from '../../hooks/useWarnIfUploading'
 import { recoilUploads } from '../../recoil/store'
 
 import UploadVideo from './UploadVideo'
 
 export default function UploadToast() {
   const uploads = useRecoilValue(recoilUploads)
-  console.log('upload toast', uploads)
+
+  useWarnIfUploading(uploads.length === 0, () => {
+    return confirm('Warning! You still have videos uploading!')
+  })
 
   if (uploads?.length) {
     return (
@@ -28,7 +32,7 @@ export default function UploadToast() {
         </Flex>
         <VStack spacing={1} align='start' maxH='70vh' overflowY='auto'>
           {uploads.map(upload => {
-            return <UploadVideo key={upload.id} upload={upload} />
+            return <UploadVideo key={upload.id} id={upload.id} file={upload.file} />
           })}
         </VStack>
       </Flex>
