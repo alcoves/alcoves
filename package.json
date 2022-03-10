@@ -3,7 +3,7 @@
   "main": "index.js",
   "license": "UNLICENSED",
   "private": false,
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": "Brendan Kennedy <brendan@bken.io>",
   "repository": "git@github.com:bkenio/reef.git",
   "description": "frontend for bken.io",
