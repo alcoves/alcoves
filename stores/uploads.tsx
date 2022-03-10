@@ -3,7 +3,7 @@ import create from 'zustand'
 
 import { Upload, UploadState } from '../types/types'
 
-export const uploadsStore = create<UploadState>((set: any, get: any) => {
+export const uploadsStore = create<UploadState>((set: any) => {
   return {
     uploads: [],
     add: (file: File) => {
@@ -17,14 +17,13 @@ export const uploadsStore = create<UploadState>((set: any, get: any) => {
         ],
       }))
     },
-    remove: (id: string) => {
-      set((state: UploadState) => ({
-        todos: state.uploads.filter(u => u.id !== id),
-      }))
-    },
-    start: async () => {
-      // Starts an upload
-      // Updates state along the way
+    remove: (index: number) => {
+      console.log('Removing', index)
+      set((state: UploadState) => {
+        const newArray = state.uploads
+        newArray.splice(index, 1)
+        return { uploads: newArray }
+      })
     },
   }
 })

@@ -1,32 +1,25 @@
 import { Flex, Progress, Text } from '@chakra-ui/react'
 import axios from 'axios'
 import { useCallback, useEffect, useState } from 'react'
-import { useRecoilState } from 'recoil'
 import { useSWRConfig } from 'swr'
 
-import { recoilUploads } from '../../recoil/store'
+import { uploadsStore } from '../../stores/uploads'
 import chunkFile from '../../utils/chunkFile'
 import { getAPIUrl } from '../../utils/urls'
 
 const bypassInterceptorAxios = axios.create()
 
-function removeItemAtIndex(arr: any[], index: number) {
-  return [...arr.slice(0, index), ...arr.slice(index + 1)]
-}
-
 export default function UploadVideo({ id, file }: { id: string; file: File }) {
   const { mutate } = useSWRConfig()
+  const { uploads, remove } = uploadsStore()
   const [status, setStatus] = useState('waiting')
   const [bytesUploaded, setBytesUploaded] = useState(0)
-
-  const [uploads, setUploads] = useRecoilState(recoilUploads)
   const index = uploads.findIndex(u => u.id === id)
 
   const deleteItem = useCallback(() => {
-    const newList = removeItemAtIndex(uploads, index)
-    setUploads(newList)
+    remove(index)
     mutate(`${getAPIUrl()}/videos`)
-  }, [index, mutate, uploads, setUploads])
+  }, [index, mutate, remove])
 
   useEffect(() => {
     async function uploadVideo() {
@@ -79,9 +72,9 @@ export default function UploadVideo({ id, file }: { id: string; file: File }) {
     }
 
     console.info('useEffect has loaded')
-    // if (status === 'waiting') {
-    //   uploadVideo()
-    // }
+    if (status === 'waiting') {
+      uploadVideo()
+    }
   }, [])
 
   useEffect(() => {
