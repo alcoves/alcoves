@@ -1,32 +1,32 @@
 import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import GoogleLogin from 'react-google-login'
 import { IoLogoGoogle } from 'react-icons/io5'
 
-import { UserContext } from '../contexts/user'
+import { userStore } from '../stores/user'
 import axios from '../utils/axios'
 
 const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ''
 
 export default function Login() {
+  const user = userStore()
   const router = useRouter()
   const [errorMsg, setErrorMsg] = useState('')
-  const { authenticated, login } = useContext(UserContext)
 
   async function handleLoginGoogle(response: any) {
     try {
       const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/google`, {
         token: response.tokenId,
       })
-      login(res.data.accessToken)
+      user.login(res.data.accessToken)
     } catch (error: any) {
       setErrorMsg(error.message)
     }
   }
 
-  if (authenticated) {
+  if (user.authenticated) {
     router.push('/')
     return null
   }

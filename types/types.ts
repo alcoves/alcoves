@@ -12,7 +12,7 @@ export interface UserState {
   loading: boolean
   authenticated: boolean
   logout: () => void
-  login: (token: string) => void
+  login: (token?: string) => void
 }
 
 export interface Upload {

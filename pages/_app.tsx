@@ -3,17 +3,19 @@ import '../styles/index.css'
 import { ChakraProvider } from '@chakra-ui/react'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { RecoilRoot } from 'recoil'
 
-import { UserContext } from '../contexts/user'
-import useUser from '../hooks/useUser'
+import { userStore } from '../stores/user'
 import theme from '../styles/theme'
 
 export default function App(props: AppProps) {
-  const userState = useUser()
+  const user = userStore()
   const { Component, pageProps } = props
-  if (!userState) return null
+
+  useEffect(() => {
+    user.login()
+  }, [])
 
   return (
     <>
@@ -25,9 +27,7 @@ export default function App(props: AppProps) {
       </Head>
       <RecoilRoot>
         <ChakraProvider theme={theme}>
-          <UserContext.Provider value={userState}>
-            <Component {...pageProps} />
-          </UserContext.Provider>
+          <Component {...pageProps} />
         </ChakraProvider>
       </RecoilRoot>
     </>

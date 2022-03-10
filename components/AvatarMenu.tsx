@@ -1,13 +1,12 @@
 import { Avatar, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
-import { useContext } from 'react'
 import { IoLogOutOutline, IoPersonOutline } from 'react-icons/io5'
 
-import { UserContext } from '../contexts/user'
+import { userStore } from '../stores/user'
 
 export default function AvatarMenu() {
+  const { user, logout } = userStore()
   const router = useRouter()
-  const { user, logout } = useContext(UserContext)
 
   return (
     <Menu id='avatar-menu' isLazy>
