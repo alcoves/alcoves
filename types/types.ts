@@ -17,9 +17,8 @@ export interface UserState {
 
 export interface UploadState {
   uploads: Upload[]
-  start: () => void
   add: (file: File) => void
-  remove: (id: string) => void
+  remove: (index: number) => void
 }
 
 export interface Upload {
