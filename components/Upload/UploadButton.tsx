@@ -5,6 +5,8 @@ import { IoCloudUpload } from 'react-icons/io5'
 
 import { uploadsStore } from '../../stores/uploads'
 
+const TEN_GB = 1000000000 * 10
+
 export default function UploadButton() {
   const { add } = uploadsStore()
 
@@ -14,7 +16,12 @@ export default function UploadButton() {
     },
     [add]
   )
-  const { getRootProps, getInputProps } = useDropzone({ onDrop })
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    maxFiles: 50,
+    maxSize: TEN_GB,
+    accept: 'video/*',
+  })
 
   return (
     <>
