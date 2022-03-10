@@ -9,7 +9,7 @@ import UploadVideo from './UploadVideo'
 export default function UploadToast() {
   const uploads = useRecoilValue(recoilUploads)
 
-  useWarnIfUploading(uploads.length === 0, () => {
+  useWarnIfUploading(uploads.length > 0, () => {
     return confirm('Warning! You still have videos uploading!')
   })
 
