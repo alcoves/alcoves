@@ -33,18 +33,20 @@ export default function VideoPage({ v }: { v: Video }) {
         <meta name='twitter:description' content={ogDescription} />
         <meta name='twitter:image' content={thumbnailURL} />
       </Head>
-      <Flex w='100vw' h='100vh' justify='space-between' align='center' direction='column'>
-        <Box>
-          <Player v={v} />
-          <Flex bg='gray.700'>
-            <Heading p='2' size='md'>
-              {v?.title}
-            </Heading>
-          </Flex>
+      <Flex w='100vw' h='100vh' align='center' justify='center' direction='column'>
+        <Box rounded='lg' overflow='hidden' boxShadow='#0000008a 0 0 40px'>
+          <Player
+            v={v}
+            style={{
+              maxHeight: '100vh',
+              objectFit: 'cover',
+            }}
+          />
         </Box>
-        <Box pb='2'>
-          <Link href='https://bken.io'>bken.io</Link>
-        </Box>
+
+        {/* <Box mt='4' alignSelf='start'>
+          <Heading size='md'>{v?.title}</Heading>
+        </Box> */}
       </Flex>
     </>
   )

@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react'
 import { Video } from '../../types/types'
 import { getHlsUrl, getThumanailUrl } from '../../utils/urls'
 
-export default function Player({ v }: { v: Video }) {
+export default function Player({ v, style = {} }: { v: Video; style?: any }) {
   const vRef = useRef(null)
   const thumbnailUrl = `${getThumanailUrl(v?.cdnUrl)}`
 
@@ -20,16 +20,5 @@ export default function Player({ v }: { v: Video }) {
     }
   }, [])
 
-  return (
-    <video
-      style={{
-        minHeight: '400px',
-        maxHeight: '80vh',
-      }}
-      ref={vRef}
-      controls={true}
-      autoPlay={true}
-      poster={thumbnailUrl}
-    />
-  )
+  return <video ref={vRef} style={style} controls={true} autoPlay={false} poster={thumbnailUrl} />
 }
