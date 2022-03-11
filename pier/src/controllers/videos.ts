@@ -3,12 +3,29 @@ import db from '../config/db'
 import { dispatchJob } from '../service/tidal'
 import { CompletedPart } from 'aws-sdk/clients/s3'
 import s3, { defaultBucket, deleteFolder } from '../config/s3'
+import { io } from '..'
 
 export async function listVideos(req, res) {
-  const videos = await db.video.findMany({
+  const { take, after } = req.query
+
+  const query: any = {
+    take: take || 20,
     where: { userId: req.user.id },
     orderBy: { createdAt: 'desc' },
-  })
+  }
+
+  if (after) {
+    const [idCursor, createdAtCursor] = after.split('_')
+    query.skip = 1
+    query.cursor = {}
+    query.cursor.id_createdAt = {
+      id: idCursor,
+      createdAt: createdAtCursor,
+    }
+  }
+
+  const videos = await db.video.findMany(query)
+
   return res.json({ payload: videos })
 }
 
@@ -29,6 +46,7 @@ export async function createVideo(req, res) {
       title: path.parse(title).name,
     },
   })
+  io.to(video.userId).emit('videos.add', video)
   return res.json({ payload: video })
 }
 
@@ -60,6 +78,7 @@ export async function deleteVideo(req, res) {
 
   await deleteFolder({ Bucket: defaultBucket, Prefix: `v/${video.id}` })
   await db.video.delete({ where: { id: video.id } })
+  io.to(video.userId).emit('videos.remove', video.id)
   return res.sendStatus(200)
 }
 
