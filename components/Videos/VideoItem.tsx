@@ -97,7 +97,7 @@ export default function VideoItem({ v }: { v: Video }) {
             </Flex>
           </Flex>
           <Flex align='center' direction='column'>
-            {v.status === 'PROCESSING' && (
+            {v.status !== 'READY' && (
               <>
                 <Spinner />
                 <Progress mt='2' h='4px' w='100px' value={v.progress} />

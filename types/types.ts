@@ -34,6 +34,8 @@ export interface Video {
   status: string
   length: number
   progress: number
+  createdAt: string
+  updatedAt: string
 }
 
 export interface User {
