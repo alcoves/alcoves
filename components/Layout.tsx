@@ -43,9 +43,7 @@ export default function Layout(props: { children: React.ReactNode }) {
           <AvatarMenu />
         </HStack>
       </Flex>
-      <Box h='calc(100vh - 50px)' p='2'>
-        {props.children}
-      </Box>
+      <Box h='calc(100vh - 50px)'>{props.children}</Box>
     </Box>
   )
 }

@@ -5,7 +5,7 @@ import Layout from '../components/Layout'
 export default function Terms() {
   return (
     <Layout>
-      <Box>Terms Page</Box>
+      <Box p='2'>Terms Page</Box>
     </Layout>
   )
 }

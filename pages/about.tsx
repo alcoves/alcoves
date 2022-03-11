@@ -5,7 +5,7 @@ import Layout from '../components/Layout'
 export default function About() {
   return (
     <Layout>
-      <Box>About Page</Box>
+      <Box p='2'>About Page</Box>
     </Layout>
   )
 }

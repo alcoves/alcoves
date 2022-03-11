@@ -8,14 +8,16 @@ export default function Account() {
 
   return (
     <Layout>
-      <Box>Account page</Box>
-      <Button
-        size='sm'
-        onClick={toggleColorMode}
-        leftIcon={colorMode === 'dark' ? <IoMoon /> : <IoSunny />}
-      >
-        Theme
-      </Button>
+      <Box p='2'>
+        Account page
+        <Button
+          size='sm'
+          onClick={toggleColorMode}
+          leftIcon={colorMode === 'dark' ? <IoMoon /> : <IoSunny />}
+        >
+          Theme
+        </Button>
+      </Box>
     </Layout>
   )
 }
