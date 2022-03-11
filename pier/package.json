@@ -1,6 +1,6 @@
 {
   "name": "pier",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "src/index.js",
   "repository": "git@github.com:bkenio/pier.git",
   "author": "Brendan Kennedy <brendan@bken.io>",
