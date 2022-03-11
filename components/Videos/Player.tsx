@@ -20,5 +20,5 @@ export default function Player({ v, style = {} }: { v: Video; style?: any }) {
     }
   }, [])
 
-  return <video ref={vRef} style={style} controls={true} autoPlay={false} poster={thumbnailUrl} />
+  return <video ref={vRef} style={style} controls={true} autoPlay={true} poster={thumbnailUrl} />
 }
