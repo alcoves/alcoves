@@ -1,47 +1,66 @@
-import { SimpleGrid } from '@chakra-ui/react'
-import { useEffect, useState } from 'react'
+import { Button, Flex, SimpleGrid } from '@chakra-ui/react'
+import axios from 'axios'
+import cookies from 'js-cookie'
+import { useEffect } from 'react'
+import { io } from 'socket.io-client'
 
+import { useVideos } from '../../stores/videos'
 import { Video } from '../../types/types'
+import { getAPIUrl } from '../../utils/urls'
 import VideoItem from '../Videos/VideoItem'
 
-export default function VideoGrid({ _videos, socket }: { _videos: Video[]; socket: any }) {
-  const [videos, setVideos] = useState({})
+let socket: any
+
+export default function VideoGrid() {
+  const { videos, add, set, remove, update, loadMore } = useVideos()
 
   useEffect(() => {
-    const obj: any = {}
-    for (const video of _videos) {
-      obj[video.id] = video
-    }
-    setVideos(obj)
-  }, [_videos])
+    socket = io(`${getAPIUrl()}`)
+    const jwtToken = cookies.get('token')
+    socket.emit('join', jwtToken)
 
-  useEffect(() => {
-    const updateVideo = (updatedVideo: Video) => {
-      const updatedObject: any = {}
-      updatedObject[updatedVideo.id] = updatedVideo
-      setVideos(previous => {
-        return {
-          ...previous,
-          ...updatedObject,
-        }
-      })
-    }
-
-    // Add addVideo
-    // Add removeVideo
-
-    socket.on('update.video', updateVideo)
+    axios.get(`${getAPIUrl()}/videos?limit=20`).then(({ data }) => {
+      set(data.payload)
+    })
 
     return () => {
-      socket.off('update.video', updateVideo)
+      socket.close()
     }
   }, [])
 
+  async function handleLoadMore() {
+    if (videos.length) {
+      const lastVideo = videos[videos.length - 1]
+      const cursorQuery = `${lastVideo.id}_${lastVideo.createdAt}`
+      const fetchURL = `${getAPIUrl()}/videos?limit=20&after=${cursorQuery}`
+      const { data } = await axios.get(fetchURL)
+
+      loadMore(data?.payload)
+    }
+  }
+
+  useEffect(() => {
+    socket.on('videos.add', add)
+    socket.on('videos.remove', remove)
+    socket.on('videos.update', update)
+
+    return () => {
+      socket.off('videos.add', add)
+      socket.off('videos.remove', remove)
+      socket.off('videos.update', update)
+    }
+  }, [add, remove, update])
+
   return (
-    <SimpleGrid pt='1' minChildWidth={['100%', '400px']} spacing='4px'>
-      {Object.values(videos)?.map((v: any) => {
-        return <VideoItem v={v} key={v.id} />
-      })}
-    </SimpleGrid>
+    <Flex direction='column'>
+      <SimpleGrid pt='1' minChildWidth={['100%', '400px']} spacing='4px'>
+        {videos.map((v: Video) => {
+          return <VideoItem v={v} key={v.id} />
+        })}
+      </SimpleGrid>
+      <Button isDisabled={!videos.length} onClick={handleLoadMore} w='300px' alignSelf='center'>
+        Load More
+      </Button>
+    </Flex>
   )
 }

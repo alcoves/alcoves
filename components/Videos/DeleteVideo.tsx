@@ -10,14 +10,13 @@ import {
   ModalOverlay,
   useDisclosure,
 } from '@chakra-ui/react'
+import { useEffect } from 'react'
 import { IoTrashSharp } from 'react-icons/io5'
-import { useSWRConfig } from 'swr'
 
 import useLazyRequest from '../../hooks/useLazyRequest'
 import { getAPIUrl } from '../../utils/urls'
 
 export default function DeleteVideo({ videoId }: { videoId: string }) {
-  const { mutate } = useSWRConfig()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [removeMedia, { loading }] = useLazyRequest()
 
@@ -27,7 +26,6 @@ export default function DeleteVideo({ videoId }: { videoId: string }) {
         method: 'DELETE',
         url: `${getAPIUrl()}/videos/${videoId}`,
       })
-      mutate(`${getAPIUrl()}/videos`)
       onClose()
     } catch (error) {
       console.error(error)

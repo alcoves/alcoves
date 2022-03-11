@@ -18,7 +18,6 @@ export const uploadsStore = create<UploadState>((set: any) => {
       }))
     },
     remove: (index: number) => {
-      console.log('Removing', index)
       set((state: UploadState) => {
         const newArray = state.uploads
         newArray.splice(index, 1)
