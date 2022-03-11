@@ -1,4 +1,4 @@
-import { Box, Flex, Heading, Link } from '@chakra-ui/react'
+import { Flex, Heading, Link } from '@chakra-ui/react'
 import axios from 'axios'
 import { GetServerSidePropsContext } from 'next'
 import Head from 'next/head'
