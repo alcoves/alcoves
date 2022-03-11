@@ -30,6 +30,8 @@ export interface Video {
   id: string
   user: User
   cdnUrl: string
+  width: number
+  height: number
   title: string
   status: string
   length: number
