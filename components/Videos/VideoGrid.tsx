@@ -26,7 +26,7 @@ export default function VideoGrid() {
     return () => {
       socket.close()
     }
-  }, [])
+  }, [set])
 
   async function handleLoadMore() {
     if (videos.length) {
