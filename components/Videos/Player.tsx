@@ -1,10 +1,11 @@
+import { Box } from '@chakra-ui/react'
 import Hls from 'hls.js'
 import { useEffect, useRef } from 'react'
 
 import { Video } from '../../types/types'
 import { getHlsUrl, getThumanailUrl } from '../../utils/urls'
 
-export default function Player({ v, style = {} }: { v: Video; style?: any }) {
+export default function Player({ v }: { v: Video }) {
   const vRef = useRef(null)
   const thumbnailUrl = `${getThumanailUrl(v?.cdnUrl)}`
 
@@ -20,5 +21,27 @@ export default function Player({ v, style = {} }: { v: Video; style?: any }) {
     }
   }, [])
 
-  return <video ref={vRef} style={style} controls={true} autoPlay={true} poster={thumbnailUrl} />
+  return (
+    <Box
+      h='auto'
+      w='auto'
+      maxW='100%'
+      maxH='100%'
+      rounded='md'
+      overflow='hidden'
+      boxShadow='#0000008a 0 0 40px'
+    >
+      <video
+        style={{
+          width: '100%',
+          maxHeight: '100%',
+          objectFit: 'cover',
+        }}
+        ref={vRef}
+        controls={true}
+        autoPlay={true}
+        poster={thumbnailUrl}
+      />
+    </Box>
+  )
 }

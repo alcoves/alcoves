@@ -33,28 +33,30 @@ export default function VideoPage({ v }: { v: Video }) {
         <meta name='twitter:description' content={ogDescription} />
         <meta name='twitter:image' content={thumbnailURL} />
       </Head>
-      <Flex w='100vw' h='100vh' align='center' justify='center' direction='column'>
-        <Flex p='2' textAlign='start' w='100%' maxW='90vw'>
+      <Flex w='100vw' h='100vh' justify='start' align='center' direction='column'>
+        <Flex px='16' pt='4' h='auto' maxH='calc(100% - 100px)'>
+          <Player v={v} />
+        </Flex>
+        <Flex
+          pt='4'
+          px='4'
+          pb='1'
+          w='100%'
+          h='100px'
+          maxW='600px'
+          align='start'
+          textAlign='start'
+          direction='column'
+          justify='space-between'
+        >
           <Heading size='sm' fontWeight='800'>
             {v.title}
           </Heading>
-        </Flex>
-        <Flex rounded='md' justify='center' overflow='hidden' boxShadow='#0000008a 0 0 40px'>
-          <Player
-            v={v}
-            style={{
-              width: '100%',
-              height: '100%',
-              maxWidth: '90vw',
-              maxHeight: '90vh',
-              objectFit: 'cover',
-            }}
-          />
-        </Flex>
-        <Flex p='2'>
-          <Heading size='sm' fontWeight='800'>
-            <Link href='https://bken.io'>bken.io</Link>
-          </Heading>
+          <Flex justify='center' w='100%'>
+            <Heading size='xs' fontWeight='600'>
+              <Link href='https://bken.io'>bken.io</Link>
+            </Heading>
+          </Flex>
         </Flex>
       </Flex>
     </>

@@ -1,4 +1,4 @@
-import { Heading, Modal, ModalContent, ModalOverlay } from '@chakra-ui/react'
+import { Box, Heading, Modal, ModalContent, ModalOverlay } from '@chakra-ui/react'
 
 import { Video } from '../../types/types'
 
@@ -13,15 +13,26 @@ export default function MediaItemModal({
   isOpen: boolean
   onClose: () => void
 }) {
+  let size
+  const aspectRatio = v.height / v.width
+
+  if (aspectRatio >= 1) {
+    size = 'xs'
+  } else {
+    size = '2xl'
+  }
+
   return (
     <>
-      <Modal isCentered isOpen={isOpen} onClose={onClose}>
+      <Modal size={size} isCentered isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent w='auto' maxW='80vw' bg='transparent' boxShadow='none' p='4'>
+        <ModalContent bg='transparent' boxShadow='none' p='4'>
           <Heading pb='2' size='md'>
             {v?.title}
           </Heading>
-          <Player v={v} />
+          <Box>
+            <Player v={v} />
+          </Box>
         </ModalContent>
       </Modal>
     </>
