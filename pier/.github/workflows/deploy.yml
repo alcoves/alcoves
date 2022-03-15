@@ -14,13 +14,23 @@ jobs:
       GITHUB_SHA: ${{ github.sha }}
       DO_API_KEY: ${{ secrets.DO_API_KEY }}
       REGISTRY: registry.digitalocean.com/bken/pier
+
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
 
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
           token: ${{ secrets.DO_API_KEY }}
+
+      - name: Generate Prisma Schema
+        run: |
+          npx prisma generate
+          mv node_modules/.prisma ./.prisma
 
       - name: Build container image
         run: docker build
