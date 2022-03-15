@@ -170,15 +170,15 @@ export async function completeVideoUpload(req, res) {
 
     const { ContentLength = 0 } = await s3
       .headObject({
+        Key: key,
         Bucket: defaultBucket,
-        Key: `v/${videoId}/original`,
       })
       .promise()
 
     const video = await db.video.update({
       where: { id: videoId },
       data: {
-        size: Math.round(ContentLength / 1048576),
+        size: Math.round(ContentLength / 1048576), // Bytes to MB
       },
     })
 

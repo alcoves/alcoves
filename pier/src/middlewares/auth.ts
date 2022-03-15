@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken'
-import { userInfo } from 'os'
 import db from '../config/db'
 
 export const auth = (req, res, next) => {
