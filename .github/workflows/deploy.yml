@@ -8,34 +8,30 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
     env:
+      GITHUB_SHA: ${{ github.sha }}
       DO_API_KEY: ${{ secrets.DO_API_KEY }}
     steps:
       - uses: actions/checkout@v2
+
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
           token: ${{ secrets.DO_API_KEY }}
+
       - name: Build container image
-        env:
-          GITHUB_SHA: ${{ github.sha }}
         run: docker build
           --build-arg NEXT_PUBLIC_GIT_SHA=$GITHUB_SHA
           -t registry.digitalocean.com/bken/reef:latest
           -t registry.digitalocean.com/bken/reef:$GITHUB_SHA .
+
       - name: Login to DigitalOcean Docker Registry
         run: doctl registry login --expiry-seconds 600
+
       - name: Push image to DigitalOcean Container Registry
         run: docker push registry.digitalocean.com/bken/reef --all-tags
-      - name: Deploy to server
-        uses: appleboy/ssh-action@master
-        with:
-          key: ${{ secrets.SSH_KEY }}
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          script: |
-            doctl registry login --expiry-seconds 600
-            docker pull registry.digitalocean.com/bken/reef:latest
-            docker stop reef
-            docker rm reef
-            docker run -d --name reef -p 80:3000 --env-file ./reef.env registry.digitalocean.com/bken/reef:latest
-            docker image prune -f
+
+      - name: Save DigitalOcean kubeconfig with short-lived credentials
+        run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 bken
+
+      - name: Update cluster image
+        run: kubectl set image deployment/reef reef=registry.digitalocean.com/bken/reef:$GITHUB_SHA
