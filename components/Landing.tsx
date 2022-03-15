@@ -42,9 +42,13 @@ export default function Landing() {
           </Button>
         </HStack>
       </Flex>
-      <Flex mt='4' justify='center' align='center' direction='column'>
-        <Heading size='2xl'> For moments that matter </Heading>
-        <Text fontSize='1rem'>bken is a place to save and share videos </Text>
+      <Flex mt='4' p='4' justify='center' align='center' direction='column'>
+        <Heading textAlign='center' size='xl'>
+          For moments that matter
+        </Heading>
+        <Text textAlign='center' mt='3' fontSize='1rem'>
+          bken is a place to save and share videos
+        </Text>
       </Flex>
     </Flex>
   )

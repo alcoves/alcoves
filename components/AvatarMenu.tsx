@@ -22,7 +22,7 @@ export default function AvatarMenu() {
         <MenuItem icon={<IoPersonOutline size='20px' />} onClick={() => router.push('/account')}>
           Account
         </MenuItem>
-        <MenuItem icon={<IoLogOutOutline size='20px' />} onClick={logout}>
+        <MenuItem icon={<IoLogOutOutline size='20px' />} onClick={() => logout('/')}>
           Logout
         </MenuItem>
       </MenuList>

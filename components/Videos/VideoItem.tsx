@@ -134,7 +134,7 @@ export default function VideoItem({ v }: { v: Video }) {
           <EditablePreview pl='2' />
           <EditableInput pl='2' />
         </Editable>
-        <Flex justify='space-between' align='center'>
+        <Flex pt='1' justify='space-between' align='center'>
           <Link href={shareUrl} fontSize='.9rem' pl='2' isTruncated>
             {shareUrl}
           </Link>
