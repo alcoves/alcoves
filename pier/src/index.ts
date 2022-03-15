@@ -1,12 +1,21 @@
-import http from 'http'
 import app from './app'
 import db from './config/db'
 import jwt from 'jsonwebtoken'
 import { Server } from 'socket.io'
+import { createServer } from 'http'
+import { createClient } from 'redis'
+import { createAdapter } from '@socket.io/redis-adapter'
+
+function redisConnectionStringFactory() {
+  const host = process.env.REDIS_HOST
+  const port = process.env.REDIS_PORT
+  const password = process.env.REDIS_PASSWORD
+
+  return `redis://default:${password}@${host}:${port}`
+}
 
 const port = 4000
-const server = http.createServer(app)
-
+const server = createServer(app)
 export const io = new Server(server, {
   cors: {
     origin: '*',
@@ -16,6 +25,11 @@ export const io = new Server(server, {
 app.set('io', io)
 
 async function main() {
+  const pubClient = createClient({ url: redisConnectionStringFactory() })
+  const subClient = pubClient.duplicate()
+  await Promise.all([pubClient.connect(), subClient.connect()])
+  io.adapter(createAdapter(pubClient, subClient))
+
   io.on('connection', socket => {
     console.log('connection established')
 
@@ -24,6 +38,7 @@ async function main() {
       if (user?.id) {
         console.log(`${user.id} is joining`)
         socket.join(user.id)
+        socket.emit('user has joined')
       } else {
         console.log(`user ${user} tried to join`)
       }
