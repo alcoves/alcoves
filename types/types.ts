@@ -11,7 +11,7 @@ export interface UserState {
   user: User | null
   loading: boolean
   authenticated: boolean
-  logout: () => void
+  logout: (url?: string) => void
   login: (token?: string) => void
 }
 

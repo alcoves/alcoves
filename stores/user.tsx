@@ -23,14 +23,17 @@ export const userStore = create<UserState>((set: any, get: any) => {
 
       set({ user: tokenUser, authenticated: true, loading: false })
     },
-    logout: () => {
+    logout: (url?: string) => {
       cookies.remove('token')
       set({
         user: null,
         loading: false,
         authenticated: false,
       })
-      Router.push('/login')
+
+      if (url) {
+        Router.push(`/${url}`)
+      }
     },
   }
 })
