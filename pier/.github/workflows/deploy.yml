@@ -8,41 +8,34 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
     env:
+      CLUSTER: bken
+      DEPLOYMENT: pier
+      CONTAINER_NAME: pier
+      GITHUB_SHA: ${{ github.sha }}
       DO_API_KEY: ${{ secrets.DO_API_KEY }}
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      REGISTRY: registry.digitalocean.com/bken/pier
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '16'
+
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
           token: ${{ secrets.DO_API_KEY }}
-      - name: Generate Prisma Schema
-        run: |
-          npx prisma generate
-          mv node_modules/.prisma ./.prisma
+
       - name: Build container image
-        env:
-          GITHUB_SHA: ${{ github.sha }}
         run: docker build
-          -t registry.digitalocean.com/bken/pier:latest
-          -t registry.digitalocean.com/bken/pier:$GITHUB_SHA .
+          --build-arg NEXT_PUBLIC_GIT_SHA=$GITHUB_SHA
+          -t $REGISTRY:latest
+          -t $REGISTRY:$GITHUB_SHA .
+
       - name: Login to DigitalOcean Docker Registry
         run: doctl registry login --expiry-seconds 600
+
       - name: Push image to DigitalOcean Container Registry
-        run: docker push registry.digitalocean.com/bken/pier --all-tags
-      - name: Deploy to server
-        uses: appleboy/ssh-action@master
-        with:
-          key: ${{ secrets.SSH_KEY }}
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          script: |
-            doctl registry login --expiry-seconds 600
-            docker pull registry.digitalocean.com/bken/pier:latest
-            docker stop pier
-            docker rm pier
-            docker run -d --name pier -p 80:4000 --env-file ./pier.env registry.digitalocean.com/bken/pier:latest
-            docker image prune -f
+        run: docker push $REGISTRY --all-tags
+
+      - name: Save DigitalOcean kubeconfig with short-lived credentials
+        run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 $CLUSTER
+
+      - name: Update cluster image
+        run: kubectl set image deployment/$DEPLOYMENT $CONTAINER_NAME=$REGISTRY:$GITHUB_SHA
