@@ -82,7 +82,9 @@ export async function recieveTidalWebhook(req, res) {
           })
           .then(video => {
             io.to(video.userId).emit('videos.update', video)
-            if (video.status === 'READY') {
+            // Tidal fires two events with progress equals 100, we want the last one
+            const videoDoneEventFired = video.status === 'READY' && returnValue
+            if (videoDoneEventFired) {
               discordWebHook(`https://bken.io/v/${video.id}`).catch(error => {
                 console.error(error)
               })
