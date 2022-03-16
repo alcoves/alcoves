@@ -34,7 +34,7 @@ export default function VideoPage({ v }: { v: Video }) {
         <meta name='twitter:image' content={thumbnailURL} />
       </Head>
       <Flex w='100vw' h='100vh' justify='start' align='center' direction='column'>
-        <Flex px='16' pt='4' h='auto' maxH='calc(100% - 100px)'>
+        <Flex px='4' pt='4' h='auto' maxH='calc(100% - 100px)'>
           <Player v={v} />
         </Flex>
         <Flex
