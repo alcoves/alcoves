@@ -42,18 +42,17 @@ export default function VideoPage({ v }: { v: Video }) {
           px='4'
           pb='1'
           w='100%'
-          h='100px'
-          maxW='600px'
-          align='start'
-          textAlign='start'
+          h='100%'
+          align='center'
+          textAlign='center'
           direction='column'
           justify='space-between'
         >
-          <Heading size='sm' fontWeight='800'>
+          <Heading size='md' fontWeight='800'>
             {v.title}
           </Heading>
-          <Flex justify='center' w='100%'>
-            <Heading size='xs' fontWeight='600'>
+          <Flex>
+            <Heading p='0' m='0' size='xs' fontWeight='600'>
               <Link href='https://bken.io'>bken.io</Link>
             </Heading>
           </Flex>
