@@ -6,9 +6,14 @@ import { dispatchJob } from '../service/tidal'
 import { parseFramerate } from '../service/videos'
 import { discordWebHook } from '../service/discord'
 
+const TIDAL_API_KEY = process.env.TIDAL_API_KEY
+
 export async function recieveTidalWebhook(req, res) {
   const { id, name, data, returnValue, queueName, progress, isFailed }: TidalWebhookBody = req.body
   console.log(`Processing Webhook :: ${queueName}:${name}:${id}`)
+
+  const requestApiKey = req.headers['x-api-key']
+  if (requestApiKey !== TIDAL_API_KEY) return res.sendStatus(401)
 
   switch (name) {
     case 'metadata':
