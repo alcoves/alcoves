@@ -13,7 +13,7 @@ export const userStore = create<UserState>((set: any, get: any) => {
     login: (t?: string) => {
       const logout = get().logout
 
-      if (t) cookies.set('token', t)
+      if (t) cookies.set('token', t, { expires: 60 })
       const token = t ? t : (cookies.get('token') as string)
       if (!token) return logout()
 
