@@ -41,7 +41,7 @@
     "@types/luxon": "^2.3.1",
     "@types/react": "^18.0.0",
     "@types/video.js": "^7.3.33",
-    "@typescript-eslint/eslint-plugin": "5.18.0",
+    "@typescript-eslint/eslint-plugin": "5.19.0",
     "babel-eslint": "^10.1.0",
     "eslint": "8.13.0",
     "eslint-config-next": "^12.1.4",
