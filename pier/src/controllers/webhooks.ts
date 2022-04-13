@@ -60,7 +60,7 @@ export async function recieveTidalWebhook(req, res) {
     case 'thumbnail':
       // The thumbnail was successfully processed
       return res.sendStatus(200)
-    case 'package-hls':
+    case 'packageHLS':
       if (isFailed) {
         await db.video
           .update({
