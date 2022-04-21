@@ -1,11 +1,11 @@
 # https://nextjs.org/docs/deployment
-FROM node:16-alpine AS deps
+FROM node:18-alpine AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
 
-FROM node:16-alpine AS builder
+FROM node:18-alpine AS builder
 WORKDIR /app
 COPY . .
 COPY --from=deps /app/node_modules ./node_modules
@@ -15,7 +15,7 @@ ENV NEXT_PUBLIC_GOOGLE_CLIENT_ID="432277291238-ne4inevmqif8a3sp4su8tle443ovbfp3.
 
 RUN yarn build && yarn install --production --ignore-scripts --prefer-offline && rm -rf .next/.cache
 
-FROM node:16-alpine AS runner
+FROM node:18-alpine AS runner
 WORKDIR /app
 
 ENV PORT 3000
