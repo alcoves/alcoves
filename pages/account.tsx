@@ -7,6 +7,7 @@ import {
   Input,
   InputGroup,
   InputRightAddon,
+  Text,
   useColorMode,
   VStack,
 } from '@chakra-ui/react'
@@ -32,7 +33,9 @@ export default function Account() {
                 placeholder='Username'
                 defaultValue={user?.username}
               />
-              <InputRightAddon children='Username' />
+              <InputRightAddon>
+                <Text>Username</Text>
+              </InputRightAddon>
             </InputGroup>
           </VStack>
           <HStack w='100%' spacing='2'>
