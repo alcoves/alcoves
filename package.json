@@ -15,7 +15,7 @@
     "build": "next build --no-lint"
   },
   "dependencies": {
-    "@chakra-ui/react": "^1.8.8",
+    "@chakra-ui/react": "^2.0.2",
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
     "axios": "^0.27.2",
@@ -23,7 +23,7 @@
     "hls.js": "^1.1.5",
     "js-cookie": "^3.0.1",
     "jwt-decode": "^3.1.2",
-    "luxon": "^2.3.2",
+    "luxon": "^2.4.0",
     "nanoid": "^3.3.4",
     "next": "^12.1.6",
     "react": "^18.1.0",
@@ -32,7 +32,7 @@
     "react-google-login": "^5.2.2",
     "react-icons": "^4.3.1",
     "sharp": "^0.30.4",
-    "socket.io-client": "^4.5.0",
+    "socket.io-client": "^4.5.1",
     "swr": "^1.3.0",
     "zustand": "^4.0.0-rc.1"
   },
@@ -41,8 +41,8 @@
     "@types/js-cookie": "^3.0.2",
     "@types/luxon": "^2.3.2",
     "@types/react": "^18.0.9",
-    "@types/video.js": "^7.3.39",
-    "@typescript-eslint/eslint-plugin": "5.22.0",
+    "@types/video.js": "^7.3.40",
+    "@typescript-eslint/eslint-plugin": "5.25.0",
     "eslint": "8.15.0",
     "eslint-config-next": "^12.1.6",
     "eslint-config-prettier": "^8.5.0",
