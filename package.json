@@ -15,7 +15,7 @@
     "build": "next build --no-lint"
   },
   "dependencies": {
-    "@chakra-ui/react": "^2.0.2",
+    "@chakra-ui/react": "^2.1.0",
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
     "axios": "^0.27.2",
