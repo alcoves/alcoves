@@ -37,7 +37,7 @@
     "zustand": "^4.0.0-rc.1"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.17.0",
+    "@babel/eslint-parser": "^7.18.2",
     "@types/js-cookie": "^3.0.2",
     "@types/luxon": "^2.3.2",
     "@types/react": "^18.0.9",
