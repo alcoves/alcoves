@@ -49,4 +49,5 @@ export async function deleteFolder({ Bucket, Prefix }: { Bucket: string; Prefix:
 }
 
 export default s3
-export const defaultBucket = process.env.DEFAULT_BUCKET as string
+export const cdnBucket = process.env.CDN_BUCKET as string
+export const archiveBucket = process.env.ARCHIVE_BUCKET as string

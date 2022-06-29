@@ -1,6 +1,6 @@
 import db from '../config/db'
 import mime from 'mime-types'
-import s3, { defaultBucket } from '../config/s3'
+import s3, { cdnBucket } from '../config/s3'
 import { optimizeUserAvatar, parseDataURIScheme, getAvatarUploadKey } from '../service/images'
 
 export async function patchUser(req, res) {
@@ -16,7 +16,7 @@ export async function patchUser(req, res) {
       const res = await s3
         .upload({
           Body: imageBuffer,
-          Bucket: defaultBucket,
+          Bucket: cdnBucket,
           ContentType: mime.contentType(parsedDataURIScheme.contentType),
           Key: getAvatarUploadKey(req.user.id, parsedDataURIScheme.contentType),
         })

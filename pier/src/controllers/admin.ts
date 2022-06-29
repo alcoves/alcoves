@@ -1,5 +1,5 @@
 import db from '../config/db'
-import { defaultBucket } from '../config/s3'
+import { cdnBucket } from '../config/s3'
 import { dispatchJob } from '../service/tidal'
 
 // This endpoint does not use cursors and could get very slow
@@ -23,7 +23,7 @@ export async function reprocessVideo(req, res) {
   const key = `v/${video.id}/original`
   await dispatchJob('metadata', {
     entityId: video.id,
-    input: { key, bucket: defaultBucket },
+    input: { key, bucket: cdnBucket },
   })
 
   return res.sendStatus(200)
@@ -38,7 +38,7 @@ export async function reprocessVideos(req, res) {
       entityId: video.id,
       input: {
         key,
-        bucket: defaultBucket,
+        bucket: cdnBucket,
       },
     })
   }

@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-export function dispatchJob(name: string, data: any) {
-  const dispatchURL = `${process.env.TIDAL_URL}/jobs/${name}`
+export function dispatchJob(route: string, data: any) {
+  const dispatchURL = new URL(route, process.env.TIDAL_URL).toString()
   console.log('dispatchURL', dispatchURL)
 
   const apiKey = process.env.TIDAL_API_KEY

@@ -1,10 +1,9 @@
 import db from '../config/db'
 import { io } from '../index'
 import { TidalWebhookBody } from '../types'
-import { defaultBucket } from '../config/s3'
-import { dispatchJob } from '../service/tidal'
 import { parseFramerate } from '../service/videos'
 import { discordWebHook } from '../service/discord'
+import { purgeURL } from '../service/bunny'
 
 const TIDAL_API_KEY = process.env.TIDAL_API_KEY
 
@@ -21,10 +20,15 @@ export async function recieveTidalWebhook(req, res) {
   switch (queueName) {
     case 'publish':
       if (state === 'completed') {
+        const [, ...outputPath] = data.output.split('/')
+        const cdnUrl = `https://${process.env.CDN_HOSTNAME}/${outputPath.join('/')}`
+        await purgeURL(cdnUrl)
+
         await db.video
           .update({
             where: { id: assetId },
             data: {
+              cdnUrl,
               progress,
               status: 'READY',
             },
@@ -59,7 +63,7 @@ export async function recieveTidalWebhook(req, res) {
         await db.video
           .update({
             where: { id: assetId },
-            data: { width, height, length, framerate },
+            data: { status: 'PROCESSING', width, height, length, framerate },
           })
           .then(video => {
             io.to(video.userId).emit('videos.update', video)
@@ -77,23 +81,27 @@ export async function recieveTidalWebhook(req, res) {
       break
     case 'thumbnail':
       if (state === 'completed') {
-        // await db.video
-        //   .update({
-        //     where: { id: assetId },
-        //     data: { thumbnail: '' },
-        //   })
-        //   .then(video => {
-        //     io.to(video.userId).emit('videos.update', video)
-        //   })
+        const [, ...outputPath] = data.output.split('/')
+        const thumbnailUrl = `https://${process.env.CDN_HOSTNAME}/${outputPath.join('/')}`
+        await purgeURL(thumbnailUrl)
+
+        await db.video
+          .update({
+            where: { id: assetId },
+            data: { thumbnailUrl },
+          })
+          .then(video => {
+            io.to(video.userId).emit('videos.update', video)
+          })
       } else if (state === 'failed') {
-        // await db.video
-        // .update({
-        //   where: { id: assetId },
-        //   data: { thumbnail: '' },
-        // })
-        // .then(video => {
-        //   io.to(video.userId).emit('videos.update', video)
-        // })
+        await db.video
+          .update({
+            where: { id: assetId },
+            data: { thumbnailUrl: '' }, // set back to default thumb
+          })
+          .then(video => {
+            io.to(video.userId).emit('videos.update', video)
+          })
       }
       break
     default:

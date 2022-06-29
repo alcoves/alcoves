@@ -1,9 +1,9 @@
 import path from 'path'
 import db from '../config/db'
+import { io } from '..'
 import { dispatchJob } from '../service/tidal'
 import { CompletedPart } from 'aws-sdk/clients/s3'
-import s3, { defaultBucket, deleteFolder } from '../config/s3'
-import { io } from '..'
+import s3, { cdnBucket, archiveBucket, deleteFolder } from '../config/s3'
 
 export async function listVideos(req, res) {
   const { take, after } = req.query
@@ -76,7 +76,8 @@ export async function deleteVideo(req, res) {
   })
   if (!video) return res.sendStatus(400)
 
-  await deleteFolder({ Bucket: defaultBucket, Prefix: `v/${video.id}` })
+  await deleteFolder({ Bucket: cdnBucket, Prefix: `v/${video.id}` })
+  await deleteFolder({ Bucket: archiveBucket, Prefix: `v/${video.id}` })
   await db.video.delete({ where: { id: video.id } })
   io.to(video.userId).emit('videos.remove', video.id)
   return res.sendStatus(200)
@@ -96,7 +97,7 @@ export async function createVideoUpload(req, res) {
   const { UploadId, Key } = await s3
     .createMultipartUpload({
       ContentType: type,
-      Bucket: defaultBucket,
+      Bucket: archiveBucket,
       Key: `v/${video.id}/original`,
     })
     .promise()
@@ -108,7 +109,7 @@ export async function createVideoUpload(req, res) {
         UploadId,
         Expires: 43200,
         PartNumber: i + 1,
-        Bucket: defaultBucket,
+        Bucket: archiveBucket,
       })
     )
   }
@@ -150,7 +151,7 @@ export async function completeVideoUpload(req, res) {
       .listParts({
         Key: key,
         UploadId: uploadId,
-        Bucket: defaultBucket,
+        Bucket: archiveBucket,
       })
       .promise()
 
@@ -163,7 +164,7 @@ export async function completeVideoUpload(req, res) {
       .completeMultipartUpload({
         Key: key,
         UploadId: uploadId,
-        Bucket: defaultBucket,
+        Bucket: archiveBucket,
         MultipartUpload: { Parts: mappedParts },
       })
       .promise()
@@ -171,7 +172,7 @@ export async function completeVideoUpload(req, res) {
     const { ContentLength = 0 } = await s3
       .headObject({
         Key: key,
-        Bucket: defaultBucket,
+        Bucket: archiveBucket,
       })
       .promise()
 
@@ -189,12 +190,19 @@ export async function completeVideoUpload(req, res) {
       },
     })
 
-    // Ask Tidal to generate metadata. This is an asyncronous process
-    // After this. Tidal will respond via webhook as a POST /hooks/tidal/videos/:videoId
-    // This webhook will contain the metadata. When the job is seen, other jobs (thumbnailing and transcoding) will be dispatched
-    await dispatchJob('metadata', {
-      entityId: video.id,
-      input: { key, bucket: defaultBucket },
+    await dispatchJob('/videos/thumbnails', {
+      width: 854,
+      height: 480,
+      fit: 'cover',
+      assetId: video.id,
+      input: `doco:${archiveBucket}/v/${video.id}/original`,
+      output: `doco:${cdnBucket}/v/${video.id}/thumbnail.webp`,
+    })
+
+    await dispatchJob('/videos', {
+      assetId: video.id,
+      output: `doco:${cdnBucket}/v/${video.id}`,
+      input: `doco:${archiveBucket}/v/${video.id}/original`,
     })
     return res.json({
       status: 'success',
