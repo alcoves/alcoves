@@ -87,7 +87,7 @@ export default function UploadVideo({ id, file }: { id: string; file: File }) {
   return (
     <Flex direction='column' w='100%'>
       <Flex mb='1' justify='space-between'>
-        <Text isTruncated>{file.name}</Text>
+        <Text>{file.name}</Text>
       </Flex>
       <Progress
         size='xs'
