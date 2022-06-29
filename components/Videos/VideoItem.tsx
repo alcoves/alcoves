@@ -17,7 +17,7 @@ import { IoLinkSharp } from 'react-icons/io5'
 import useLazyRequest from '../../hooks/useLazyRequest'
 import { Video } from '../../types/types'
 import duration from '../../utils/duration'
-import { getAPIUrl, getPublicUrl, getThumanailUrl } from '../../utils/urls'
+import { getAPIUrl, getPublicUrl } from '../../utils/urls'
 
 import DeleteVideo from './DeleteVideo'
 import VideoModal from './VideoModal'
@@ -120,7 +120,7 @@ export default function VideoItem({ v }: { v: Video }) {
           backgroundColor='black'
           backgroundPosition='center'
           backgroundRepeat='no-repeat'
-          backgroundImage={v.progress > 25 ? getThumanailUrl(v.cdnUrl) : undefined}
+          backgroundImage={v.thumbnailUrl ? v.thumbnailUrl : ''}
         />
       </Box>
       <Box pt='1' pb='4'>
