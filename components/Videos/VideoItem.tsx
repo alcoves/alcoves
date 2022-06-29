@@ -127,7 +127,7 @@ export default function VideoItem({ v }: { v: Video }) {
         <Editable
           fontWeight={600}
           defaultValue={title}
-          onChange={value => {
+          onChange={(value: any) => {
             setTitle(value)
           }}
         >
@@ -135,7 +135,7 @@ export default function VideoItem({ v }: { v: Video }) {
           <EditableInput pl='2' />
         </Editable>
         <Flex pt='1' justify='space-between' align='center'>
-          <Link href={shareUrl} fontSize='.9rem' pl='2' isTruncated>
+          <Link href={shareUrl} fontSize='.9rem' pl='2'>
             {shareUrl}
           </Link>
           <Button
