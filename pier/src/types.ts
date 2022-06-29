@@ -1,12 +1,18 @@
-interface TidalWebhookBodyData {
-  entityId: string
+enum JobState {
+  failed = 'failed',
+  active = 'active',
+  waiting = 'waiting',
+  delayed = 'delayed',
+  unknown = 'unknown',
+  completed = 'completed',
+  waiting_children = 'waiting-children',
 }
 export interface TidalWebhookBody {
+  data: any
   returnValue: any
   progress: number
-  isFailed: boolean
+  state: JobState
   id: string | undefined
   name: string | undefined
-  data: TidalWebhookBodyData
   queueName: string | undefined
 }

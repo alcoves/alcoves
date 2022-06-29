@@ -9,66 +9,37 @@ import { discordWebHook } from '../service/discord'
 const TIDAL_API_KEY = process.env.TIDAL_API_KEY
 
 export async function recieveTidalWebhook(req, res) {
-  const { id, name, data, returnValue, queueName, progress, isFailed }: TidalWebhookBody = req.body
-  console.log(`Processing Webhook :: ${queueName}:${name}:${id}`)
+  const { id, name, data, returnValue, queueName, progress, state }: TidalWebhookBody = req.body
+  const assetId = data?.assetId
+  console.log(
+    `Processing Webhook :: ${queueName} :: ${name} :: ${id} :: ${progress} :: assetId:${assetId}`
+  )
 
   const requestApiKey = req.headers['x-api-key']
   if (requestApiKey !== TIDAL_API_KEY) return res.sendStatus(401)
 
-  switch (name) {
-    case 'metadata':
-      await db.video
-        .update({
-          where: { id: data.entityId },
-          data: {
-            status: 'PROCESSING',
-            width: returnValue.video.width,
-            height: returnValue.video.height,
-            framerate: parseFramerate(returnValue.video.r_frame_rate),
-            length: returnValue.format.duration || returnValue.video.duration || 0,
-          },
-        })
-        .then(video => {
-          io.to(video.userId).emit('videos.update', video)
-        })
-
-      await dispatchJob('thumbnail', {
-        entityId: data.entityId,
-        input: {
-          bucket: defaultBucket,
-          key: `v/${data.entityId}/original`,
-        },
-        output: {
-          bucket: defaultBucket,
-          key: `v/${data.entityId}/thumbnail.jpg`,
-        },
-      })
-
-      await dispatchJob('transcode/hls', {
-        entityId: data.entityId,
-        input: {
-          bucket: defaultBucket,
-          key: `v/${data.entityId}/original`,
-        },
-        output: {
-          bucket: defaultBucket,
-          path: `v/${data.entityId}/hls`,
-        },
-      })
-
-      return res.sendStatus(200)
-    case 'thumbnail':
-      // The thumbnail was successfully processed
-      return res.sendStatus(200)
-    case 'packageHLS':
-      if (isFailed) {
+  switch (queueName) {
+    case 'publish':
+      if (state === 'completed') {
         await db.video
           .update({
-            where: { id: data.entityId },
+            where: { id: assetId },
             data: {
               progress,
-              status: 'ERROR',
+              status: 'READY',
             },
+          })
+          .then(video => {
+            io.to(video.userId).emit('videos.update', video)
+            discordWebHook(`https://bken.io/v/${video.id}`).catch(error => {
+              console.error(error)
+            })
+          })
+      } else if (state === 'failed') {
+        await db.video
+          .update({
+            where: { id: assetId },
+            data: { progress, status: 'ERROR' },
           })
           .then(video => {
             io.to(video.userId).emit('videos.update', video)
@@ -76,30 +47,58 @@ export async function recieveTidalWebhook(req, res) {
               console.error(error)
             })
           })
-      } else {
+      }
+      break
+    case 'import':
+      if (state === 'completed') {
+        const width = returnValue?.metadata?.video[0]?.width
+        const height = returnValue?.metadata?.video[0]?.height
+        const length = parseFloat(returnValue?.metadata?.format?.duration || 0)
+        const framerate = parseFramerate(returnValue?.metadata?.video[0]?.r_frame_rate || 0)
+
         await db.video
           .update({
-            where: { id: data.entityId },
-            data: {
-              progress,
-              status: progress === 100 ? 'READY' : 'PROCESSING',
-            },
+            where: { id: assetId },
+            data: { width, height, length, framerate },
           })
           .then(video => {
             io.to(video.userId).emit('videos.update', video)
-            // Tidal fires two events with progress equals 100, we want the last one
-            const videoDoneEventFired = video.status === 'READY' && returnValue
-            if (videoDoneEventFired) {
-              discordWebHook(`https://bken.io/v/${video.id}`).catch(error => {
-                console.error(error)
-              })
-            }
+          })
+      } else if (state === 'failed') {
+        await db.video
+          .update({
+            where: { id: assetId },
+            data: { status: 'ERROR' },
+          })
+          .then(video => {
+            io.to(video.userId).emit('videos.update', video)
           })
       }
-
-      return res.sendStatus(200)
+      break
+    case 'thumbnail':
+      if (state === 'completed') {
+        // await db.video
+        //   .update({
+        //     where: { id: assetId },
+        //     data: { thumbnail: '' },
+        //   })
+        //   .then(video => {
+        //     io.to(video.userId).emit('videos.update', video)
+        //   })
+      } else if (state === 'failed') {
+        // await db.video
+        // .update({
+        //   where: { id: assetId },
+        //   data: { thumbnail: '' },
+        // })
+        // .then(video => {
+        //   io.to(video.userId).emit('videos.update', video)
+        // })
+      }
+      break
     default:
-      console.error('Unknown webhook event')
-      return res.sendStatus(200)
+      break
   }
+
+  return res.sendStatus(200)
 }
