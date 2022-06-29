@@ -38,6 +38,7 @@ export interface Video {
   progress: number
   createdAt: string
   updatedAt: string
+  thumbnailUrl: string
 }
 
 export interface User {

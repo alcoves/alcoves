@@ -3,11 +3,10 @@ import Hls from 'hls.js'
 import { useEffect, useRef } from 'react'
 
 import { Video } from '../../types/types'
-import { getHlsUrl, getThumanailUrl } from '../../utils/urls'
+import { getHlsUrl } from '../../utils/urls'
 
 export default function Player({ v }: { v: Video }) {
   const vRef = useRef(null)
-  const thumbnailUrl = `${getThumanailUrl(v?.cdnUrl)}`
 
   useEffect(() => {
     const video: HTMLMediaElement | any = vRef?.current
@@ -40,7 +39,7 @@ export default function Player({ v }: { v: Video }) {
         ref={vRef}
         controls={true}
         autoPlay={true}
-        poster={thumbnailUrl}
+        poster={v.thumbnailUrl}
       />
     </Box>
   )

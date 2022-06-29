@@ -5,12 +5,11 @@ import Head from 'next/head'
 
 import Player from '../../components/Videos/Player'
 import { Video } from '../../types/types'
-import { getAPIUrl, getPublicUrl, getThumanailUrl } from '../../utils/urls'
+import { getAPIUrl, getPublicUrl } from '../../utils/urls'
 
 export default function VideoPage({ v }: { v: Video }) {
   const publicURL = getPublicUrl(v?.id)
   const ogDescription = 'Watch this video on bken.io'
-  const thumbnailURL = getThumanailUrl(v?.cdnUrl)
 
   return (
     <>
@@ -19,7 +18,7 @@ export default function VideoPage({ v }: { v: Video }) {
         <meta property='og:title' content={v?.title || 'bken.io'} />
         <meta property='og:type' content='website' />
         <meta property='og:url' content={publicURL} />
-        <meta property='og:image' content={thumbnailURL} />
+        <meta property='og:image' content={v.thumbnailUrl} />
         <meta property='og:image:type' content='image/jpeg' />
         <meta property='og:image:width' content='854' />
         <meta property='og:image:height' content='480' />
@@ -31,7 +30,7 @@ export default function VideoPage({ v }: { v: Video }) {
         <meta property='twitter:url' content={publicURL} />
         <meta name='twitter:title' content={v?.title || 'bken.io'} />
         <meta name='twitter:description' content={ogDescription} />
-        <meta name='twitter:image' content={thumbnailURL} />
+        <meta name='twitter:image' content={v.thumbnailUrl} />
       </Head>
       <Flex w='100vw' h='100vh' justify='start' align='center' direction='column'>
         <Flex px='4' pt='4' h='auto' maxH='calc(100% - 100px)'>
