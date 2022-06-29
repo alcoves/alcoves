@@ -47,7 +47,13 @@ export default function Account() {
             >
               Toggle Theme
             </Button>
-            <Button w='100%' size='sm' onClick={logout}>
+            <Button
+              w='100%'
+              size='sm'
+              onClick={() => {
+                logout()
+              }}
+            >
               Logout
             </Button>
           </HStack>
