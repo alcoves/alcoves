@@ -20,7 +20,7 @@ export default function UploadButton() {
     onDrop,
     maxFiles: 50,
     maxSize: TEN_GB,
-    accept: 'video/*',
+    accept: { 'video/*': ['.mp4', '.mov', '.mkv', '.webm', '.ts', '.avi', '.mpg'] },
   })
 
   return (
