@@ -1,5 +1,6 @@
 import path from 'path'
 import db from '../config/db'
+import mime from 'mime-types'
 import { io } from '..'
 import { dispatchJob } from '../service/tidal'
 import { CompletedPart } from 'aws-sdk/clients/s3'
@@ -94,11 +95,13 @@ export async function createVideoUpload(req, res) {
   })
   if (!video) return res.sendStatus(400)
 
+  const archivePath = `v/${video.id}/original.${mime.extension(type)}`
+
   const { UploadId, Key } = await s3
     .createMultipartUpload({
+      Key: archivePath,
       ContentType: type,
       Bucket: archiveBucket,
-      Key: `v/${video.id}/original`,
     })
     .promise()
   const urls: string[] = []
@@ -118,6 +121,7 @@ export async function createVideoUpload(req, res) {
     where: { id: videoId },
     data: {
       type,
+      archivePath,
       status: 'UPLOADING',
       cdnUrl: `https://${process.env.CDN_HOSTNAME}/v/${video.id}`,
     },
@@ -195,14 +199,14 @@ export async function completeVideoUpload(req, res) {
       height: 480,
       fit: 'cover',
       assetId: video.id,
-      input: `doco:${archiveBucket}/v/${video.id}/original`,
+      input: `doco:${archiveBucket}/${video.archivePath}`,
       output: `doco:${cdnBucket}/v/${video.id}/thumbnail.webp`,
     })
 
     await dispatchJob('/videos', {
       assetId: video.id,
       output: `doco:${cdnBucket}/v/${video.id}`,
-      input: `doco:${archiveBucket}/v/${video.id}/original`,
+      input: `doco:${archiveBucket}/${video.archivePath}`,
     })
     return res.json({
       status: 'success',

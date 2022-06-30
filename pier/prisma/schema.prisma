@@ -29,6 +29,7 @@ model Video {
   framerate    Int         @default(0)
   type         String      @default("")
   cdnUrl       String      @default("")
+  archivePath  String      @default("")
   thumbnailUrl String      @default("")
   title        String      @default("New upload")
   status       MediaStatus @default(CREATED)
