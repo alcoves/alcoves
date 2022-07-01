@@ -29,6 +29,7 @@ export interface Upload {
 export interface Video {
   id: string
   user: User
+  size: string
   cdnUrl: string
   width: number
   height: number

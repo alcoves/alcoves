@@ -14,8 +14,8 @@ export default function ReprocessButton({ videoId }: { videoId: string }) {
   }
 
   return (
-    <Button onClick={handleReprocess} isLoading={loading}>
-      Reprocess
+    <Button size='xs' onClick={handleReprocess} isLoading={loading}>
+      Reprocess Video
     </Button>
   )
 }
