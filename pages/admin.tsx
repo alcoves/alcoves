@@ -11,6 +11,7 @@ import {
   AccordionIcon,
   Heading,
   HStack,
+  Image,
 } from '@chakra-ui/react'
 import { DateTime } from 'luxon'
 import useSWR from 'swr'
@@ -37,7 +38,7 @@ export default function AdminPage() {
                 <Card key={v.id}>
                   <Flex p='2'>
                     <Box w='150px'>
-                      <img width='100%' h='auto' src={v.thumbnailUrl} />
+                      <Image alt='thumbnail' width='100%' height='auto' src={v.thumbnailUrl} />
                     </Box>
 
                     <Flex direction='column' p='2' w='100%'>
