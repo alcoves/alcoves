@@ -12,6 +12,7 @@ import {
   Heading,
   HStack,
   Image,
+  Link,
 } from '@chakra-ui/react'
 import { DateTime } from 'luxon'
 import useSWR from 'swr'
@@ -43,7 +44,13 @@ export default function AdminPage() {
 
                     <Flex direction='column' p='2' w='100%'>
                       <Flex justify='space-between'>
-                        <Heading size='sm'>{v.title}</Heading>
+                        <VStack align='start'>
+                          <Heading size='sm'>{v.title}</Heading>
+                          <Text>
+                            <Link href={`/v/${v.id}`}>{v.id}</Link>
+                          </Text>
+                        </VStack>
+
                         <HStack>
                           <ReprocessButton videoId={v.id} />
                         </HStack>
