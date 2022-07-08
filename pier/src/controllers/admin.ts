@@ -40,6 +40,7 @@ export async function reprocessVideo(req, res) {
   await db.video.update({
     where: { id: video.id },
     data: {
+      progress: 0,
       status: 'PROCESSING',
       width,
       height,
