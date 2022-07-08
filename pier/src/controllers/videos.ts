@@ -3,6 +3,7 @@ import db from '../config/db'
 import mime from 'mime-types'
 import { io } from '..'
 import { dispatchJob } from '../service/tidal'
+import { parseFramerate } from '../service/videos'
 import { CompletedPart } from 'aws-sdk/clients/s3'
 import s3, { cdnBucket, archiveBucket, deleteFolder } from '../config/s3'
 
@@ -199,19 +200,40 @@ export async function completeVideoUpload(req, res) {
       height: 480,
       fit: 'cover',
       assetId: video.id,
-      input: `doco:${archiveBucket}/${video.archivePath}`,
-      output: `doco:${cdnBucket}/v/${video.id}/thumbnail.webp`,
+      input: `s3://${archiveBucket}/${video.archivePath}`,
+      output: `s3://${cdnBucket}/v/${video.id}/thumbnail.webp`,
     })
 
-    await dispatchJob('/videos', {
+    const transcodeRes = await dispatchJob('/videos/transcodes/adaptive', {
       assetId: video.id,
-      output: `doco:${cdnBucket}/v/${video.id}`,
-      input: `doco:${archiveBucket}/${video.archivePath}`,
+      output: `s3://${cdnBucket}/v/${video.id}`,
+      input: `s3://${archiveBucket}/${video.archivePath}`,
     })
-    return res.json({
-      status: 'success',
-      payload: video,
-    })
+
+    const width = transcodeRes?.data?.metadata?.video[0]?.width || 0
+    const height = transcodeRes?.data?.metadata?.video[0]?.height || 0
+    const length = parseFloat(transcodeRes?.data?.metadata?.format?.duration || 0)
+    const framerate = parseFramerate(transcodeRes?.data?.metadata?.video[0]?.r_frame_rate || 0)
+
+    await db.video
+      .update({
+        where: { id: video.id },
+        data: {
+          status: 'PROCESSING',
+          width,
+          height,
+          length,
+          framerate,
+          metadata: transcodeRes?.data?.metadata || {},
+        },
+      })
+      .then(video => {
+        io.to(video.userId).emit('videos.update', video)
+        return res.json({
+          status: 'success',
+          payload: video,
+        })
+      })
   } catch (error) {
     await db.video.update({
       where: { id: videoId },

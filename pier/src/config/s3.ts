@@ -24,6 +24,17 @@ export async function getSignedURL(urlParams: { Bucket: string; Key: string }) {
   })
 }
 
+export function s3URI(uri: string) {
+  const s3UrlRe = /^[sS]3:\/\/(.*?)\/(.*)/
+  const match = uri.match(s3UrlRe)
+  if (!match) throw new Error(`Not a valid S3 URI: ${uri}`)
+
+  return {
+    Bucket: match[1],
+    Key: match[2],
+  }
+}
+
 export async function deleteFolder({ Bucket, Prefix }: { Bucket: string; Prefix: string }) {
   // TODO :: Make this work for more than 1000 keys
 

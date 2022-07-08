@@ -36,6 +36,7 @@ model Video {
   userId       String
   user         User        @relation(fields: [userId], references: [id])
   updatedAt    DateTime    @updatedAt
+  metadata     Json?
   createdAt    DateTime    @default(now())
 
   @@unique([id, createdAt])

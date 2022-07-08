@@ -1,14 +1,14 @@
 import db from '../config/db'
 import { io } from '../index'
+import { s3URI } from '../config/s3'
 import { TidalWebhookBody } from '../types'
-import { parseFramerate } from '../service/videos'
-import { discordWebHook } from '../service/discord'
 import { purgeURL } from '../service/bunny'
+import { discordWebHook } from '../service/discord'
 
 const TIDAL_API_KEY = process.env.TIDAL_API_KEY
 
 export async function recieveTidalWebhook(req, res) {
-  const { id, name, data, returnValue, queueName, progress, state }: TidalWebhookBody = req.body
+  const { id, name, data, queueName, progress, state }: TidalWebhookBody = req.body
   const assetId = data?.assetId
   console.log(
     `Processing Webhook :: ${queueName} :: ${name} :: ${id} :: ${progress} :: assetId:${assetId}`
@@ -18,10 +18,9 @@ export async function recieveTidalWebhook(req, res) {
   if (requestApiKey !== TIDAL_API_KEY) return res.sendStatus(401)
 
   switch (queueName) {
-    case 'publish':
+    case 'adaptiveTranscode':
       if (state === 'completed') {
-        const [, ...outputPath] = data.output.split('/')
-        const cdnUrl = `https://${process.env.CDN_HOSTNAME}/${outputPath.join('/')}`
+        const cdnUrl = `https://${process.env.CDN_HOSTNAME}/${s3URI(data.output).Key}`
         await purgeURL(cdnUrl)
 
         await db.video
@@ -51,38 +50,23 @@ export async function recieveTidalWebhook(req, res) {
               console.error(error)
             })
           })
-      }
-      break
-    case 'import':
-      if (state === 'completed') {
-        const width = returnValue?.metadata?.video[0]?.width
-        const height = returnValue?.metadata?.video[0]?.height
-        const length = parseFloat(returnValue?.metadata?.format?.duration || 0)
-        const framerate = parseFramerate(returnValue?.metadata?.video[0]?.r_frame_rate || 0)
-
-        await db.video
-          .update({
-            where: { id: assetId },
-            data: { status: 'PROCESSING', width, height, length, framerate },
-          })
-          .then(video => {
-            io.to(video.userId).emit('videos.update', video)
-          })
-      } else if (state === 'failed') {
-        await db.video
-          .update({
-            where: { id: assetId },
-            data: { status: 'ERROR' },
-          })
-          .then(video => {
-            io.to(video.userId).emit('videos.update', video)
-          })
+      } else {
+        const video = await db.video.findFirst({ where: { id: assetId } })
+        if (video?.status !== 'READY') {
+          await db.video
+            .update({
+              where: { id: assetId },
+              data: { progress },
+            })
+            .then(video => {
+              io.to(video.userId).emit('videos.update', video)
+            })
+        }
       }
       break
     case 'thumbnail':
       if (state === 'completed') {
-        const [, ...outputPath] = data.output.split('/')
-        const thumbnailUrl = `https://${process.env.CDN_HOSTNAME}/${outputPath.join('/')}`
+        const thumbnailUrl = `https://${process.env.CDN_HOSTNAME}/${s3URI(data.output).Key}`
         await purgeURL(thumbnailUrl)
 
         await db.video
