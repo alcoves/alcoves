@@ -52,7 +52,7 @@ export async function recieveTidalWebhook(req, res) {
           })
       } else {
         const video = await db.video.findFirst({ where: { id: assetId } })
-        if (video?.status !== 'READY') {
+        if (video?.status !== 'READY' || progress < video.progress) {
           await db.video
             .update({
               where: { id: assetId },
