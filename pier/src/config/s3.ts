@@ -1,7 +1,7 @@
 import AWS from 'aws-sdk'
 
 AWS.config.update({
-  region: 'us-east-2',
+  region: 'us-east-1',
   accessKeyId: process.env.SPACES_ACCESS_KEY_ID,
   secretAccessKey: process.env.SPACES_SECRET_ACCESS_KEY,
   maxRetries: 8,
