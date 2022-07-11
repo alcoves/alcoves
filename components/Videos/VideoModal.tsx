@@ -13,20 +13,20 @@ export default function MediaItemModal({
   isOpen: boolean
   onClose: () => void
 }) {
-  let size
+  let maxW
   const aspectRatio = v.height / v.width
 
   if (aspectRatio >= 1) {
-    size = 'xs'
+    maxW = '480px'
   } else {
-    size = '2xl'
+    maxW = '1280px'
   }
 
   return (
     <>
-      <Modal size={size} isCentered isOpen={isOpen} onClose={onClose}>
+      <Modal isCentered isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent bg='transparent' boxShadow='none' p='4'>
+        <ModalContent w='100%' maxW={maxW} bg='transparent' boxShadow='none' p='4'>
           <Heading pb='2' size='md'>
             {v?.title}
           </Heading>
