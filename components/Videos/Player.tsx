@@ -11,10 +11,27 @@ export default function Player({ v }: { v: Video }) {
   useEffect(() => {
     const video: HTMLMediaElement | any = vRef?.current
     if (video) {
-      const hls = new Hls()
+      const hls = new Hls({ autoStartLoad: false })
       hls.loadSource(`${getHlsUrl(v?.cdnUrl)}`)
       hls.attachMedia(video)
       hls.on(Hls.Events.MANIFEST_PARSED, function () {
+        const _720pResolution = 1280 * 720
+        let level720pIndex = 0
+
+        for (let i = 0; i < hls.levels.length; i++) {
+          const { width, height } = hls.levels[i]
+          if (width * height >= _720pResolution) {
+            level720pIndex = i
+            break
+          }
+        }
+
+        if (level720pIndex) {
+          console.log('auto loading 720p resolution', level720pIndex)
+          hls.loadLevel = level720pIndex
+        }
+
+        hls.startLoad()
         video.play()
       })
     }
