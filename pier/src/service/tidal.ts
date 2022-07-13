@@ -19,7 +19,7 @@ export function dispatchMetadataJob(video: Video) {
 }
 
 export function dispatchThumbnailJob(video: Video) {
-  return dispatchJob('/videos/metadata', {
+  return dispatchJob('/videos/thumbnails', {
     width: 854,
     height: 480,
     fit: 'cover',
@@ -30,7 +30,7 @@ export function dispatchThumbnailJob(video: Video) {
 }
 
 export function dispatchTranscodeJob(video: Video) {
-  return dispatchJob('/videos/metadata', {
+  return dispatchJob('/videos/transcodes/adaptive', {
     assetId: video.id,
     output: `s3://${cdnBucket}/v/${video.id}`,
     input: `s3://${archiveBucket}/${video.archivePath}`,
@@ -52,9 +52,13 @@ export function parseDimensions(metadata): { width: number; height: number } {
   let width: number = metadata?.video[0]?.width || 0
   let height: number = metadata?.video[0]?.height || 0
 
-  if (metadata?.video[0]?.tags?.rotate) {
-    const rotateInt = parseInt(metadata?.video[0]?.tags?.rotate)
-    switch (rotateInt) {
+  const rotationTag = metadata?.data?.reduce((acc, cv) => {
+    if (cv?.tags?.rotate) acc = cv?.tags?.rotate
+    return acc
+  }, '')
+
+  if (rotationTag) {
+    switch (parseInt(rotationTag)) {
       case 90:
         width = metadata?.video[0]?.height
         height = metadata?.video[0]?.width
