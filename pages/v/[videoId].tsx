@@ -1,9 +1,9 @@
-import { Flex, Heading, Link } from '@chakra-ui/react'
+import { Box, Flex, Heading, Link } from '@chakra-ui/react'
 import axios from 'axios'
 import { GetServerSidePropsContext } from 'next'
 import Head from 'next/head'
 
-import Player from '../../components/Videos/Player'
+import Player from '../../components/Player/Player'
 import { Video } from '../../types/types'
 import { getAPIUrl, getPublicUrl } from '../../utils/urls'
 
@@ -32,31 +32,21 @@ export default function VideoPage({ v }: { v: Video }) {
         <meta name='twitter:description' content={ogDescription} />
         <meta name='twitter:image' content={v.thumbnailUrl} />
       </Head>
-      <Flex w='100vw' h='100vh' justify='start' align='center' direction='column'>
-        <Flex px='4' pt='4' h='auto' maxH='calc(100% - 100px)'>
+      <Box>
+        <Box p='4' pt='4'>
           <Player v={v} />
-        </Flex>
-        <Flex
-          pt='4'
-          px='4'
-          pb='1'
-          w='100%'
-          h='100%'
-          align='center'
-          textAlign='center'
-          direction='column'
-          justify='space-between'
-        >
+        </Box>
+        <Flex h='100px' direction='column' align='center'>
           <Heading size='md' fontWeight='800'>
             {v.title}
           </Heading>
-          <Flex>
+          <Flex pt='2'>
             <Heading p='0' m='0' size='xs' fontWeight='600'>
               <Link href='https://bken.io'>bken.io</Link>
             </Heading>
           </Flex>
         </Flex>
-      </Flex>
+      </Box>
     </>
   )
 }
