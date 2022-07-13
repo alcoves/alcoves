@@ -11,6 +11,43 @@ export function dispatchJob(route: string, data: any) {
   return axios.post(dispatchURL, data, { headers: { 'x-api-key': apiKey } })
 }
 
+export function dispatchMetadataJob(video: Video) {
+  return dispatchJob('/videos/metadata', {
+    assetId: video.id,
+    input: `s3://${archiveBucket}/${video.archivePath}`,
+  })
+}
+
+export function dispatchThumbnailJob(video: Video) {
+  return dispatchJob('/videos/metadata', {
+    width: 854,
+    height: 480,
+    fit: 'cover',
+    assetId: video.id,
+    input: `s3://${archiveBucket}/${video.archivePath}`,
+    output: `s3://${cdnBucket}/v/${video.id}/thumbnail.webp`,
+  })
+}
+
+export function dispatchTranscodeJob(video: Video) {
+  return dispatchJob('/videos/metadata', {
+    assetId: video.id,
+    output: `s3://${cdnBucket}/v/${video.id}`,
+    input: `s3://${archiveBucket}/${video.archivePath}`,
+  })
+}
+
+export async function tidalVideoCreate(video: Video) {
+  try {
+    await dispatchMetadataJob(video)
+    await dispatchThumbnailJob(video)
+    await dispatchTranscodeJob(video)
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
+}
+
 export function parseDimensions(metadata): { width: number; height: number } {
   let width: number = metadata?.video[0]?.width || 0
   let height: number = metadata?.video[0]?.height || 0
@@ -29,33 +66,4 @@ export function parseDimensions(metadata): { width: number; height: number } {
   }
 
   return { width, height }
-}
-
-export async function tidalVideoCreate(video: Video) {
-  try {
-    const sourceInput = `s3://${archiveBucket}/${video.archivePath}`
-
-    await dispatchJob('/videos/metadata', {
-      assetId: video.id,
-      input: sourceInput,
-    })
-
-    await dispatchJob('/videos/thumbnails', {
-      width: 854,
-      height: 480,
-      fit: 'cover',
-      assetId: video.id,
-      input: sourceInput,
-      output: `s3://${cdnBucket}/v/${video.id}/thumbnail.webp`,
-    })
-
-    await dispatchJob('/videos/transcodes/adaptive', {
-      assetId: video.id,
-      input: sourceInput,
-      output: `s3://${cdnBucket}/v/${video.id}`,
-    })
-  } catch (error) {
-    console.error(error)
-    throw error
-  }
 }

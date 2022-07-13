@@ -1,5 +1,5 @@
 import db from '../config/db'
-import { tidalVideoCreate } from '../service/tidal'
+import { dispatchJob, dispatchMetadataJob, tidalVideoCreate } from '../service/tidal'
 
 // This endpoint does not use cursors and could get very slow
 // Currently used for the admin UI
@@ -11,32 +11,14 @@ export async function listVideos(req, res) {
 }
 
 export async function reprocessVideos(req, res) {
+  const { metadata } = req.body
   const videos = await db.video.findMany()
 
-  // for (const v of videos) {
-  //   if (v.status === 'ERROR') {
-  //     await dispatchJob('/videos/transcodes/adaptive', {
-  //       assetId: v.id,
-  //       output: `s3://${cdnBucket}/v/${v.id}`,
-  //       input: `s3://${archiveBucket}/${v.archivePath}`,
-  //     }).catch(error => {
-  //       console.error(error)
-  //     })
-  //   }
-  // }
-
-  // for (const v of videos) {
-  //   if (!v.thumbnailUrl) {
-  //     await dispatchJob('/videos/thumbnails', {
-  //       width: 854,
-  //       height: 480,
-  //       fit: 'cover',
-  //       assetId: v.id,
-  //       input: `s3://${archiveBucket}/${v.archivePath}`,
-  //       output: `s3://${cdnBucket}/v/${v.id}/thumbnail.webp`,
-  //     })
-  //   }
-  // }
+  if (metadata === true) {
+    for (const v of videos) {
+      await dispatchMetadataJob(v)
+    }
+  }
 
   return res.status(200).json({
     videos: videos.length,
