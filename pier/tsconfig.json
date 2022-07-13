@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "es2021",
     "esModuleInterop": true,
     "module": "commonjs",
     "moduleResolution": "node",
@@ -9,6 +9,7 @@
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
+    "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": "dist",
     "noImplicitAny": false,
@@ -17,10 +18,11 @@
       "node_modules/@types"
     ],
   },
+  "include": [
+    "src/**/*"
+  ],
   "exclude": [
     "dist",
-    "__tests__",
-    "__mocks__",
     "node_modules",
   ],
 }

@@ -49,23 +49,46 @@ export async function tidalVideoCreate(video: Video) {
 }
 
 export function parseDimensions(metadata): { width: number; height: number } {
-  let width: number = metadata?.video[0]?.width || 0
-  let height: number = metadata?.video[0]?.height || 0
+  const [vStream] = metadata.streams.filter(({ codec_type }) => {
+    return codec_type === 'video'
+  })
 
-  const rotationTag = metadata?.data?.reduce((acc, cv) => {
-    if (cv?.tags?.rotate) acc = cv?.tags?.rotate
+  let width: number = vStream.width || 0
+  let height: number = vStream.height || 0
+
+  const rotationFromVideoStream = metadata?.streams?.reduce((acc, cv) => {
+    if (cv.codec_type === 'video') {
+      if (cv?.side_data_list?.length) {
+        cv?.side_data_list.map(v => {
+          if (v.rotation) {
+            acc = v.rotation.toString()
+          }
+        })
+      } else if (cv?.tags?.rotate) {
+        acc = cv?.tags?.rotate
+      }
+    }
     return acc
   }, '')
 
-  if (rotationTag) {
-    switch (parseInt(rotationTag)) {
+  const rotationFromDataStream = metadata?.streams?.reduce((acc, cv) => {
+    if (cv.codec_type === 'data') {
+      if (cv?.tags?.rotate) {
+        acc = cv?.tags?.rotate
+      }
+    }
+    return acc
+  }, '')
+
+  if (rotationFromVideoStream || rotationFromDataStream) {
+    switch (parseInt(rotationFromVideoStream || rotationFromDataStream)) {
       case 90:
-        width = metadata?.video[0]?.height
-        height = metadata?.video[0]?.width
+        width = vStream.height
+        height = vStream.width
         break
       case -90:
-        width = metadata?.video[0]?.height
-        height = metadata?.video[0]?.width
+        width = vStream.height
+        height = vStream.width
     }
   }
 

@@ -1,7 +1,7 @@
 import db from '../config/db'
 import { io } from '../index'
 import { s3URI } from '../config/s3'
-import { TidalWebhookBody } from '../types'
+import { Metadata, TidalWebhookBody } from '../types'
 import { purgeURL } from '../service/bunny'
 import { discordWebHook } from '../service/discord'
 import { parseDimensions } from '../service/tidal'
@@ -22,9 +22,14 @@ export async function recieveTidalWebhook(req, res) {
   switch (queueName) {
     case 'metadata':
       if (state === 'completed') {
-        const { width, height } = parseDimensions(returnValue.metadata)
-        const length = parseFloat(returnValue.metadata?.format?.duration || 0)
-        const framerate = parseFramerate(returnValue.metadata?.video[0]?.r_frame_rate || 0)
+        const metadata: Metadata = returnValue.metadata
+        const [vStream] = metadata.streams.filter(({ codec_type }) => {
+          return codec_type === 'video'
+        })
+
+        const { width, height } = parseDimensions(metadata)
+        const length = parseFloat(metadata?.format?.duration)
+        const framerate = parseFramerate(vStream?.r_frame_rate)
 
         await db.video
           .update({
@@ -34,7 +39,7 @@ export async function recieveTidalWebhook(req, res) {
               height,
               length,
               framerate,
-              metadata: returnValue.metadata || {},
+              metadata: returnValue.metadata,
             },
           })
           .then(video => {
