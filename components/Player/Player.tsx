@@ -1,4 +1,4 @@
-import { Box } from '@chakra-ui/react'
+import { Box, ResponsiveValue } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 
 import { Video } from '../../types/types'
@@ -7,7 +7,7 @@ import VideoFrame from './VideoFrame'
 
 export default function Player({ v }: { v: Video }) {
   const [width, setWidth] = useState(1280)
-  const [visible, setVisible] = useState('hidden')
+  const [visible, setVisible] = useState('hidden' as ResponsiveValue<DocumentVisibilityState>)
 
   useEffect(() => {
     function handleResize() {
@@ -45,7 +45,7 @@ export default function Player({ v }: { v: Video }) {
   return (
     <Box
       rounded='md'
-      style={{ visibility: visible }}
+      visibility={visible}
       margin='0px auto'
       position='relative'
       maxW={`${width}px`}
