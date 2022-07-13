@@ -12,7 +12,7 @@ export async function loginGoogleSso(req, res) {
   })
 
   const { name, email, picture } = ticket.getPayload() as TokenPayload
-  if (!name || !email || !picture) return res.sendStatus(400)
+  if (!name || !email || !picture) return res.status(400).end()
 
   const user = await db.user.upsert({
     where: { email: email },

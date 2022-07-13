@@ -17,7 +17,7 @@ export async function recieveTidalWebhook(req, res) {
   )
 
   const requestApiKey = req.headers['x-api-key']
-  if (requestApiKey !== TIDAL_API_KEY) return res.sendStatus(401)
+  if (requestApiKey !== TIDAL_API_KEY) return res.status(401).end
 
   switch (queueName) {
     case 'metadata':
@@ -30,7 +30,6 @@ export async function recieveTidalWebhook(req, res) {
           .update({
             where: { id: assetId },
             data: {
-              status: 'PROCESSING',
               width,
               height,
               length,
@@ -77,7 +76,7 @@ export async function recieveTidalWebhook(req, res) {
           })
       } else {
         const video = await db.video.findFirst({ where: { id: assetId } })
-        if (video?.status !== 'READY' || progress < video.progress) {
+        if (video && video?.status !== 'READY' && progress > video.progress) {
           await db.video
             .update({
               where: { id: assetId },
@@ -117,5 +116,5 @@ export async function recieveTidalWebhook(req, res) {
       break
   }
 
-  return res.sendStatus(200)
+  return res.status(200).end
 }

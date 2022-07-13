@@ -59,7 +59,7 @@ export async function updateVideo(req, res) {
   const video = await db.video.findFirst({
     where: { id: videoId, userId },
   })
-  if (!video) return res.sendStatus(400)
+  if (!video) return res.status(400).end()
 
   const updatedVideo = await db.video.update({
     data: { title },
@@ -75,13 +75,13 @@ export async function deleteVideo(req, res) {
   const video = await db.video.findFirst({
     where: { id: videoId, userId },
   })
-  if (!video) return res.sendStatus(400)
+  if (!video) return res.status(400).end()
 
   await deleteFolder({ Bucket: cdnBucket, Prefix: `v/${video.id}` })
   await deleteFolder({ Bucket: archiveBucket, Prefix: `v/${video.id}` })
   await db.video.delete({ where: { id: video.id } })
   io.to(video.userId).emit('videos.remove', video.id)
-  return res.sendStatus(200)
+  return res.status(200).end()
 }
 
 export async function createVideoUpload(req, res) {
@@ -93,7 +93,7 @@ export async function createVideoUpload(req, res) {
     include: { user: true },
     where: { id: videoId, userId },
   })
-  if (!video) return res.sendStatus(400)
+  if (!video) return res.status(400).end()
 
   const archivePath = `v/${video.id}/original.${mime.extension(type)}`
 
@@ -148,7 +148,7 @@ export async function completeVideoUpload(req, res) {
     const userOwnsVideo = await db.video.findFirst({
       where: { id: videoId, userId },
     })
-    if (!userOwnsVideo) return res.sendStatus(403)
+    if (!userOwnsVideo) return res.status(403).end()
 
     // TODO :: Make this work for greater than 1000 part uploads
     const { Parts } = await s3

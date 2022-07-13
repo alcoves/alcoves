@@ -3,10 +3,10 @@ import db from '../config/db'
 
 export const auth = (req, res, next) => {
   const authHeader = req.headers.authorization
-  if (!authHeader) return res.sendStatus(403)
+  if (!authHeader) return res.status(403).end()
 
   const token = authHeader.split('Bearer ')[1]
-  if (!token) return res.sendStatus(403)
+  if (!token) return res.status(403).end()
 
   const user = jwt.decode(token)
   req.user = user
@@ -16,10 +16,10 @@ export const auth = (req, res, next) => {
 
 export const adminAuth = async (req, res, next) => {
   const authHeader = req.headers.authorization
-  if (!authHeader) return res.sendStatus(403)
+  if (!authHeader) return res.status(403).end()
 
   const token = authHeader.split('Bearer ')[1]
-  if (!token) return res.sendStatus(403)
+  if (!token) return res.status(403).end()
 
   const jwtUser: any = jwt.decode(token)
 
@@ -32,5 +32,5 @@ export const adminAuth = async (req, res, next) => {
     return next()
   }
 
-  return res.sendStatus(403)
+  return res.status(403).end()
 }

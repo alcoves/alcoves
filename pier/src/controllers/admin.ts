@@ -32,7 +32,7 @@ export async function reprocessVideos(req, res) {
 export async function reprocessVideo(req, res) {
   const { videoId } = req.params
   const video = await db.video.findUnique({ where: { id: videoId } })
-  if (!video) return res.sendStatus(400)
+  if (!video) return res.status(400).end()
 
   await tidalVideoCreate(video)
 
@@ -44,5 +44,5 @@ export async function reprocessVideo(req, res) {
     },
   })
 
-  return res.sendStatus(202)
+  return res.status(202).end()
 }

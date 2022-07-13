@@ -6,7 +6,7 @@ import { optimizeUserAvatar, parseDataURIScheme, getAvatarUploadKey } from '../s
 export async function patchUser(req, res) {
   let userIdToModify = req.params.userId
   if (userIdToModify === '@me') userIdToModify = req.user.id
-  if (userIdToModify !== req.user.id) return res.sendStatus(403)
+  if (userIdToModify !== req.user.id) return res.status(403).end
 
   const userUpdate: any = {}
   if (req.body.image) {
@@ -37,7 +37,7 @@ export async function patchUser(req, res) {
 }
 
 export async function getUserAccount(req, res) {
-  if (req.user.id !== req.params.userId) return res.sendStatus(403)
+  if (req.user.id !== req.params.userId) return res.status(403).end
 
   const agg = await db.video.aggregate({
     _sum: {
