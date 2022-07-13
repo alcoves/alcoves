@@ -1,8 +1,7 @@
 import { Box, Heading, Modal, ModalContent, ModalOverlay } from '@chakra-ui/react'
 
 import { Video } from '../../types/types'
-
-import Player from './Player'
+import Player from '../Player/Player'
 
 export default function MediaItemModal({
   v,
@@ -13,24 +12,15 @@ export default function MediaItemModal({
   isOpen: boolean
   onClose: () => void
 }) {
-  let maxW
-  const aspectRatio = v.height / v.width
-
-  if (aspectRatio >= 1) {
-    maxW = '480px'
-  } else {
-    maxW = '1280px'
-  }
-
   return (
     <>
-      <Modal isCentered isOpen={isOpen} onClose={onClose}>
+      <Modal size='3xl' isCentered isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent w='100%' maxW={maxW} bg='transparent' boxShadow='none' p='4'>
-          <Heading pb='2' size='md'>
-            {v?.title}
-          </Heading>
+        <ModalContent bg='transparent' boxShadow='none' p='4'>
           <Box>
+            <Heading pb='2' size='md'>
+              {v?.title}
+            </Heading>
             <Player v={v} />
           </Box>
         </ModalContent>

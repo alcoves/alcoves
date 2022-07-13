@@ -1,11 +1,10 @@
-import { Box } from '@chakra-ui/react'
 import Hls from 'hls.js'
 import { useEffect, useRef } from 'react'
 
 import { Video } from '../../types/types'
 import { getHlsUrl } from '../../utils/urls'
 
-export default function Player({ v }: { v: Video }) {
+export default function VideoFrame({ v }: { v: Video }) {
   const vRef = useRef(null)
 
   useEffect(() => {
@@ -32,32 +31,28 @@ export default function Player({ v }: { v: Video }) {
         }
 
         hls.startLoad()
-        video.play()
+
+        video.play().catch(() => {
+          console.error('failed to autoplay. user must interact')
+        })
       })
     }
   }, [])
 
   return (
-    <Box
-      h='auto'
-      w='auto'
-      maxW='100%'
-      maxH='100%'
-      rounded='md'
-      overflow='hidden'
-      boxShadow='#0000008a 0 0 40px'
-    >
-      <video
-        style={{
-          width: '100%',
-          maxHeight: '100%',
-          objectFit: 'cover',
-        }}
-        ref={vRef}
-        controls={true}
-        autoPlay={true}
-        poster={v.thumbnailUrl}
-      />
-    </Box>
+    <video
+      style={{
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        objectFit: 'cover',
+        position: 'absolute',
+      }}
+      ref={vRef}
+      controls={true}
+      autoPlay={true}
+      poster={v.thumbnailUrl}
+    />
   )
 }
