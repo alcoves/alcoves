@@ -1,4 +1,6 @@
 import axios from 'axios'
+import { Video } from '@prisma/client'
+import { archiveBucket, cdnBucket } from '../config/s3'
 
 export function dispatchJob(route: string, data: any) {
   const dispatchURL = new URL(route, process.env.TIDAL_URL).toString()
@@ -27,4 +29,33 @@ export function parseDimensions(metadata): { width: number; height: number } {
   }
 
   return { width, height }
+}
+
+export async function tidalVideoCreate(video: Video) {
+  try {
+    const sourceInput = `s3://${archiveBucket}/${video.archivePath}`
+
+    await dispatchJob('/videos/metadata', {
+      assetId: video.id,
+      input: sourceInput,
+    })
+
+    await dispatchJob('/videos/thumbnails', {
+      width: 854,
+      height: 480,
+      fit: 'cover',
+      assetId: video.id,
+      input: sourceInput,
+      output: `s3://${cdnBucket}/v/${video.id}/thumbnail.webp`,
+    })
+
+    await dispatchJob('/videos/transcodes/adaptive', {
+      assetId: video.id,
+      input: sourceInput,
+      output: `s3://${cdnBucket}/v/${video.id}`,
+    })
+  } catch (error) {
+    console.error(error)
+    throw error
+  }
 }

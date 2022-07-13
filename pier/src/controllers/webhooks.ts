@@ -4,11 +4,13 @@ import { s3URI } from '../config/s3'
 import { TidalWebhookBody } from '../types'
 import { purgeURL } from '../service/bunny'
 import { discordWebHook } from '../service/discord'
+import { parseDimensions } from '../service/tidal'
+import { parseFramerate } from '../service/videos'
 
 const TIDAL_API_KEY = process.env.TIDAL_API_KEY
 
 export async function recieveTidalWebhook(req, res) {
-  const { id, name, data, queueName, progress, state }: TidalWebhookBody = req.body
+  const { id, name, returnValue, data, queueName, progress, state }: TidalWebhookBody = req.body
   const assetId = data?.assetId
   console.log(
     `Processing Webhook :: ${queueName} :: ${name} :: ${id} :: ${progress} :: assetId:${assetId}`
@@ -18,6 +20,29 @@ export async function recieveTidalWebhook(req, res) {
   if (requestApiKey !== TIDAL_API_KEY) return res.sendStatus(401)
 
   switch (queueName) {
+    case 'metadata':
+      if (state === 'completed') {
+        const { width, height } = parseDimensions(returnValue.metadata)
+        const length = parseFloat(returnValue.metadata?.format?.duration || 0)
+        const framerate = parseFramerate(returnValue.metadata?.video[0]?.r_frame_rate || 0)
+
+        await db.video
+          .update({
+            where: { id: assetId },
+            data: {
+              status: 'PROCESSING',
+              width,
+              height,
+              length,
+              framerate,
+              metadata: returnValue.metadata || {},
+            },
+          })
+          .then(video => {
+            io.to(video.userId).emit('videos.update', video)
+          })
+      }
+      break
     case 'adaptiveTranscode':
       if (state === 'completed') {
         const cdnUrl = `https://${process.env.CDN_HOSTNAME}/${s3URI(data.output).Key}`

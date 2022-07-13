@@ -2,8 +2,7 @@ import path from 'path'
 import db from '../config/db'
 import mime from 'mime-types'
 import { io } from '..'
-import { dispatchJob, parseDimensions } from '../service/tidal'
-import { parseFramerate } from '../service/videos'
+import { tidalVideoCreate } from '../service/tidal'
 import { CompletedPart } from 'aws-sdk/clients/s3'
 import s3, { cdnBucket, archiveBucket, deleteFolder } from '../config/s3'
 
@@ -184,55 +183,18 @@ export async function completeVideoUpload(req, res) {
     const video = await db.video.update({
       where: { id: videoId },
       data: {
+        status: 'UPLOADED',
         size: Math.round(ContentLength / 1048576), // Bytes to MB
       },
     })
 
-    await db.video.update({
-      where: { id: videoId },
-      data: {
-        status: 'UPLOADED',
-      },
+    // Dispatches jobs to tidal for processing
+    await tidalVideoCreate(video)
+
+    return res.json({
+      status: 'success',
+      payload: video,
     })
-
-    await dispatchJob('/videos/thumbnails', {
-      width: 854,
-      height: 480,
-      fit: 'cover',
-      assetId: video.id,
-      input: `s3://${archiveBucket}/${video.archivePath}`,
-      output: `s3://${cdnBucket}/v/${video.id}/thumbnail.webp`,
-    })
-
-    const transcodeRes = await dispatchJob('/videos/transcodes/adaptive', {
-      assetId: video.id,
-      output: `s3://${cdnBucket}/v/${video.id}`,
-      input: `s3://${archiveBucket}/${video.archivePath}`,
-    })
-
-    const { width, height } = parseDimensions(transcodeRes?.data?.metadata)
-    const length = parseFloat(transcodeRes?.data?.metadata?.format?.duration || 0)
-    const framerate = parseFramerate(transcodeRes?.data?.metadata?.video[0]?.r_frame_rate || 0)
-
-    await db.video
-      .update({
-        where: { id: video.id },
-        data: {
-          status: 'PROCESSING',
-          width,
-          height,
-          length,
-          framerate,
-          metadata: transcodeRes?.data?.metadata || {},
-        },
-      })
-      .then(video => {
-        io.to(video.userId).emit('videos.update', video)
-        return res.json({
-          status: 'success',
-          payload: video,
-        })
-      })
   } catch (error) {
     await db.video.update({
       where: { id: videoId },
