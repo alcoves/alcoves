@@ -10,7 +10,8 @@ export default function VideoFrame({ v }: { v: Video }) {
   useEffect(() => {
     const video: HTMLMediaElement | any = vRef?.current
     if (video) {
-      const hls = new Hls({ autoStartLoad: false })
+      const hlsOpts = { autoStartLoad: false }
+      const hls = new Hls(hlsOpts)
       hls.loadSource(`${getHlsUrl(v?.cdnUrl)}`)
       hls.attachMedia(video)
       hls.on(Hls.Events.MANIFEST_PARSED, function () {
@@ -44,12 +45,13 @@ export default function VideoFrame({ v }: { v: Video }) {
       style={{
         top: 0,
         left: 0,
-        width: '100%',
+        width: 'auto',
         height: '100%',
         objectFit: 'cover',
         position: 'absolute',
       }}
       ref={vRef}
+      muted
       controls={true}
       autoPlay={true}
       poster={v.thumbnailUrl}
