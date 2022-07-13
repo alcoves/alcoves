@@ -20,10 +20,7 @@ jobs:
           token: ${{ secrets.DO_API_KEY }}
 
       - name: Build container image
-        run: docker build
-          --build-arg NEXT_PUBLIC_GIT_SHA=$GITHUB_SHA
-          -t $REGISTRY:latest
-          -t $REGISTRY:$GITHUB_SHA .
+        run: docker build -t $REGISTRY:latest -t $REGISTRY:$GITHUB_SHA .
 
       - name: Login to DigitalOcean Docker Registry
         run: doctl registry login --expiry-seconds 600
