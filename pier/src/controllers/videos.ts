@@ -2,7 +2,7 @@ import path from 'path'
 import db from '../config/db'
 import mime from 'mime-types'
 import { io } from '..'
-import { dispatchJob } from '../service/tidal'
+import { dispatchJob, parseDimensions } from '../service/tidal'
 import { parseFramerate } from '../service/videos'
 import { CompletedPart } from 'aws-sdk/clients/s3'
 import s3, { cdnBucket, archiveBucket, deleteFolder } from '../config/s3'
@@ -210,8 +210,7 @@ export async function completeVideoUpload(req, res) {
       input: `s3://${archiveBucket}/${video.archivePath}`,
     })
 
-    const width = transcodeRes?.data?.metadata?.video[0]?.width || 0
-    const height = transcodeRes?.data?.metadata?.video[0]?.height || 0
+    const { width, height } = parseDimensions(transcodeRes?.data?.metadata)
     const length = parseFloat(transcodeRes?.data?.metadata?.format?.duration || 0)
     const framerate = parseFramerate(transcodeRes?.data?.metadata?.video[0]?.r_frame_rate || 0)
 
