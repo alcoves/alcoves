@@ -10,7 +10,7 @@ export default function VideoFrame({ v }: { v: Video }) {
   useEffect(() => {
     const video: HTMLMediaElement | any = vRef?.current
     if (video) {
-      const hlsOpts = { autoStartLoad: false }
+      const hlsOpts = { autoStartLoad: false, debug: false }
       const hls = new Hls(hlsOpts)
       hls.loadSource(`${getHlsUrl(v?.cdnUrl)}`)
       hls.attachMedia(video)
