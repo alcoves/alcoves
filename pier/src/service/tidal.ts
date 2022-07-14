@@ -1,4 +1,5 @@
 import axios from 'axios'
+import db from '../config/db'
 import { Video } from '@prisma/client'
 import { archiveBucket, cdnBucket } from '../config/s3'
 
@@ -29,7 +30,11 @@ export function dispatchThumbnailJob(video: Video) {
   })
 }
 
-export function dispatchTranscodeJob(video: Video) {
+export async function dispatchTranscodeJob(video: Video) {
+  await db.video.update({
+    where: { id: video.id },
+    data: { progress: 0, status: 'PROCESSING' },
+  })
   return dispatchJob('/videos/transcodes/adaptive', {
     assetId: video.id,
     output: `s3://${cdnBucket}/v/${video.id}`,

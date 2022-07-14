@@ -191,14 +191,6 @@ export async function completeVideoUpload(req, res) {
     // Dispatches jobs to tidal for processing
     await tidalVideoCreate(video)
 
-    await db.video.update({
-      where: { id: videoId },
-      data: {
-        progress: 0,
-        status: 'PROCESSING',
-      },
-    })
-
     return res.json({
       status: 'success',
       payload: video,
