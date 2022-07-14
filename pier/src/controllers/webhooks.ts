@@ -50,7 +50,7 @@ export async function recieveTidalWebhook(req, res) {
     case 'adaptiveTranscode':
       if (state === 'completed') {
         const cdnUrl = `https://${process.env.CDN_HOSTNAME}/${s3URI(data.output).Key}`
-        await purgeURL(cdnUrl)
+        await purgeURL(`${cdnUrl}/*`)
 
         await db.video
           .update({
@@ -121,5 +121,5 @@ export async function recieveTidalWebhook(req, res) {
       break
   }
 
-  return res.status(200).end
+  return res.status(200).end()
 }
