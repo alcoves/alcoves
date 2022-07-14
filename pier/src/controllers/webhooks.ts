@@ -17,7 +17,7 @@ export async function recieveTidalWebhook(req, res) {
   )
 
   const requestApiKey = req.headers['x-api-key']
-  if (requestApiKey !== TIDAL_API_KEY) return res.status(401).end
+  if (requestApiKey !== TIDAL_API_KEY) return res.status(401).end()
 
   switch (queueName) {
     case 'metadata':
