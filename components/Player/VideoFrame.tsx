@@ -45,7 +45,7 @@ export default function VideoFrame({ v }: { v: Video }) {
       style={{
         top: 0,
         left: 0,
-        width: 'auto',
+        width: '100%',
         height: '100%',
         objectFit: 'cover',
         position: 'absolute',
