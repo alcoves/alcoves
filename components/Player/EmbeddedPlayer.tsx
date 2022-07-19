@@ -20,7 +20,6 @@ export default function EmbeddedPlayer({ v }: { v: Video }) {
       left='0'
       bottom='0'
       right='0'
-      left='0'
       overflow='hidden'
       lineHeight='0'
     >
