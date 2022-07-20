@@ -34,7 +34,7 @@ export default function VideoPage({ v }: { v: Video }) {
         <meta name='twitter:description' content={ogDescription} />
         <meta name='twitter:image' content={v.thumbnailUrl} />
       </Head>
-      <Box background='white' w='100vw' h='100vh'>
+      <Box background='black' w='100vw' h='100vh'>
         <EmbeddedPlayer v={v} />
       </Box>
     </>
