@@ -24,7 +24,7 @@ export default function EmbeddedPlayer({ v }: { v: Video }) {
       lineHeight='0'
     >
       <Box position='absolute' top='0px' left='0px' right='0px' bottom='0px'>
-        <VideoFrame v={v} />
+        <VideoFrame v={v} muted={false} autoplay={false} />
       </Box>
     </Box>
   )

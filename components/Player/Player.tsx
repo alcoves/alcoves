@@ -28,10 +28,6 @@ export default function Player({ v }: { v: Video }) {
       }
 
       setWidth((w / h) * height)
-      // if (width > 800 && window.innerWidth < 1200) {
-      //   setWidth(800)
-      // }
-
       setVisible('visible')
     }
 
@@ -54,7 +50,7 @@ export default function Player({ v }: { v: Video }) {
     >
       <Box w='100%' paddingBottom={paddingBottom} maxW={`${width}px`}>
         <Box position='absolute' top='0px' left='0px' right='0px' bottom='0px'>
-          <VideoFrame v={v} />
+          <VideoFrame v={v} muted={false} autoplay={true} />
         </Box>
       </Box>
     </Box>
