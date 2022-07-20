@@ -4,7 +4,15 @@ import { useEffect, useRef } from 'react'
 import { Video } from '../../types/types'
 import { getHlsUrl } from '../../utils/urls'
 
-export default function VideoFrame({ v }: { v: Video }) {
+export default function VideoFrame({
+  v,
+  muted = true,
+  autoplay = true,
+}: {
+  v: Video
+  muted: boolean
+  autoplay: boolean
+}) {
   const vRef = useRef(null)
 
   useEffect(() => {
@@ -51,9 +59,9 @@ export default function VideoFrame({ v }: { v: Video }) {
         position: 'absolute',
       }}
       ref={vRef}
-      muted
+      muted={muted}
       controls={true}
-      autoPlay={true}
+      autoPlay={autoplay}
       poster={v.thumbnailUrl}
     />
   )
