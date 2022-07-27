@@ -20,7 +20,7 @@
     "@emotion/styled": "^11.9.3",
     "axios": "^0.27.2",
     "framer-motion": "6.5.0",
-    "hls.js": "^1.1.4",
+    "hls.js": "^1.2.0",
     "js-cookie": "^3.0.1",
     "jwt-decode": "^3.1.2",
     "luxon": "^3.0.1",
