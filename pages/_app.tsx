@@ -14,7 +14,7 @@ export default function App(props: AppProps) {
 
   useEffect(() => {
     user.login()
-  }, [])
+  }, [user])
 
   return (
     <>
