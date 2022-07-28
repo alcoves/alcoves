@@ -3,7 +3,8 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 
 import AvatarMenu from './AvatarMenu'
-import NavMenu from './NavMenu'
+import SidebarDrawer from './SidebarDrawer'
+import SidebarMenu from './SidebarMenu'
 import UploadToast from './Upload/UploadToast'
 
 export default function Layout(props: { children: React.ReactNode }) {
@@ -30,20 +31,25 @@ export default function Layout(props: { children: React.ReactNode }) {
               router.push('/')
             }}
           >
+            <Box display={['inline', 'inline', 'none']}>
+              <SidebarDrawer />
+            </Box>
             <Image src='/logo.png' width='40px' height='40px' alt='logo' />
             <Text fontSize='1rem' pl='2'>
               bken.io
             </Text>
           </Flex>
-          <Box ml='4'>
-            <NavMenu />
-          </Box>
         </Flex>
-        <HStack pr='1'>
+        <HStack pr='2'>
           <AvatarMenu />
         </HStack>
       </Flex>
-      <Box h='calc(100vh - 50px)'>{props.children}</Box>
+      <Flex h='calc(100vh - 50px)'>
+        <Box w='200px' display={['none', 'none', 'inline']}>
+          <SidebarMenu />
+        </Box>
+        <Box w='100%'>{props.children}</Box>
+      </Flex>
     </Box>
   )
 }

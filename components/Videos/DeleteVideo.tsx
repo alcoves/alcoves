@@ -10,7 +10,6 @@ import {
   ModalOverlay,
   useDisclosure,
 } from '@chakra-ui/react'
-import { useEffect } from 'react'
 import { IoTrashSharp } from 'react-icons/io5'
 
 import useLazyRequest from '../../hooks/useLazyRequest'
