@@ -48,7 +48,9 @@ export default function Layout(props: { children: React.ReactNode }) {
         <Box w='200px' display={['none', 'none', 'inline']}>
           <SidebarMenu />
         </Box>
-        <Box w='100%'>{props.children}</Box>
+        <Box w='100%' overflowY='auto'>
+          {props.children}
+        </Box>
       </Flex>
     </Box>
   )
