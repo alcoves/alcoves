@@ -1,4 +1,13 @@
-import { Box, Heading, Modal, ModalContent, ModalOverlay } from '@chakra-ui/react'
+import {
+  Box,
+  Flex,
+  Heading,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalOverlay,
+} from '@chakra-ui/react'
 
 import { Video } from '../../types/types'
 import Player from '../Player/Player'
@@ -14,15 +23,18 @@ export default function MediaItemModal({
 }) {
   return (
     <>
-      <Modal size='3xl' isCentered isOpen={isOpen} onClose={onClose}>
+      <Modal isCentered isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent bg='transparent' boxShadow='none' p='4'>
-          <Box>
-            <Heading pb='2' size='md'>
-              {v?.title}
-            </Heading>
+        <ModalContent boxShadow='none'>
+          <ModalCloseButton />
+          <ModalBody>
+            <Flex justify='center' p='2'>
+              <Heading pb='2' size='md'>
+                {v?.title}
+              </Heading>
+            </Flex>
             <Player v={v} />
-          </Box>
+          </ModalBody>
         </ModalContent>
       </Modal>
     </>
