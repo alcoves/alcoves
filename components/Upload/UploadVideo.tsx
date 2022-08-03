@@ -19,9 +19,10 @@ axiosRetry(bypassInterceptorAxios, {
 })
 
 function chunk(size: number, array: any[]): any[] {
+  const arrCopy = Array.from(array)
   const chunks = []
-  for (let i = 0; i < array.length; i += size) {
-    const c = array.slice(i, i + size)
+  for (let i = 0; i < arrCopy.length; i += size) {
+    const c = arrCopy.slice(i, i + size)
     chunks.push(c)
   }
   return chunks
