@@ -1,5 +1,6 @@
 import { Flex, Progress, Text } from '@chakra-ui/react'
 import axios from 'axios'
+import axiosRetry from 'axios-retry'
 import { useCallback, useEffect, useState } from 'react'
 import { useSWRConfig } from 'swr'
 
@@ -8,6 +9,23 @@ import chunkFile from '../../utils/chunkFile'
 import { getAPIUrl } from '../../utils/urls'
 
 const bypassInterceptorAxios = axios.create()
+
+axiosRetry(bypassInterceptorAxios, {
+  retries: 3,
+  retryDelay: retryCount => {
+    console.log(`retry attempt: ${retryCount}`)
+    return retryCount * 2000
+  },
+})
+
+function chunk(size: number, array: any[]): any[] {
+  const chunks = []
+  for (let i = 0; i < array.length; i += size) {
+    const c = array.slice(i, i + size)
+    chunks.push(c)
+  }
+  return chunks
+}
 
 export default function UploadVideo({ id, file }: { id: string; file: File }) {
   const { mutate } = useSWRConfig()
@@ -42,20 +60,30 @@ export default function UploadVideo({ id, file }: { id: string; file: File }) {
 
         const createUploadRes = createVudeoUploadRes.data?.payload?.upload
         setStatus('Uploading parts')
-        await Promise.all(
-          chunks.map((chunk, i) => {
-            // console.log(`uploading part ${i} to ${createUploadRes.urls[i]}`)
-            let lastBytesLoaded = 0
-            return bypassInterceptorAxios.put(createUploadRes.urls[i], chunk, {
-              onUploadProgress: e => {
-                const deltaUploaded = e.loaded - lastBytesLoaded
-                // console.log(e.loaded, deltaUploaded, lastBytesLoaded)
-                setBytesUploaded(prev => (prev += deltaUploaded))
-                lastBytesLoaded = e.loaded
-              },
+
+        // Upload 5 chunks at a time to avoid rate limiting
+        const uploadBatches = chunk(5, chunks)
+
+        for (const uploadBatch of uploadBatches) {
+          await Promise.all(
+            uploadBatch.map((chunk, i) => {
+              // console.log(`uploading part ${i} to ${createUploadRes.urls[i]}`)
+              let lastBytesLoaded = 0
+              return bypassInterceptorAxios
+                .put(createUploadRes.urls[i], chunk, {
+                  onUploadProgress: e => {
+                    const deltaUploaded = e.loaded - lastBytesLoaded
+                    // console.log(e.loaded, deltaUploaded, lastBytesLoaded)
+                    setBytesUploaded(prev => (prev += deltaUploaded))
+                    lastBytesLoaded = e.loaded
+                  },
+                })
+                .catch(() => {
+                  console.error(`error while uploading part ${i}`)
+                })
             })
-          })
-        )
+          )
+        }
 
         setStatus('Completing upload')
         await axios({
