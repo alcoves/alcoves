@@ -53,25 +53,32 @@ export default function UploadVideo({ id, file }: { id: string; file: File }) {
 
         const videoId = createRes.data?.payload?.id
         setStatus('Creating upload')
-        const createVudeoUploadRes = await axios({
+        const createVideoUploadRes = await axios({
           method: 'POST',
           data: { type: file.type, chunks: chunks.length },
           url: `${getAPIUrl()}/videos/${videoId}/upload`,
         })
 
-        const createUploadRes = createVudeoUploadRes.data?.payload?.upload
+        const createUploadRes = createVideoUploadRes.data?.payload?.upload
         setStatus('Uploading parts')
 
-        // Upload 5 chunks at a time to avoid rate limiting
-        const uploadBatches = chunk(5, chunks)
+        const uploadBatches = chunk(
+          10,
+          chunks.map((chunk, i) => {
+            return {
+              chunk,
+              index: i,
+            }
+          })
+        )
 
         for (const uploadBatch of uploadBatches) {
           await Promise.all(
-            uploadBatch.map((chunk, i) => {
+            uploadBatch.map(({ chunk, index }) => {
               // console.log(`uploading part ${i} to ${createUploadRes.urls[i]}`)
               let lastBytesLoaded = 0
               return bypassInterceptorAxios
-                .put(createUploadRes.urls[i], chunk, {
+                .put(createUploadRes.urls[index], chunk, {
                   onUploadProgress: e => {
                     const deltaUploaded = e.loaded - lastBytesLoaded
                     // console.log(e.loaded, deltaUploaded, lastBytesLoaded)
@@ -80,7 +87,7 @@ export default function UploadVideo({ id, file }: { id: string; file: File }) {
                   },
                 })
                 .catch(() => {
-                  console.error(`error while uploading part ${i}`)
+                  console.error(`error while uploading part ${index}`)
                 })
             })
           )
