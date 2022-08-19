@@ -1,12 +1,3 @@
-export interface User {
-  id: string
-  iat: number
-  exp: number
-  email: string
-  image: string
-  username: string
-}
-
 export interface UserState {
   user: User | null
   loading: boolean
@@ -27,6 +18,7 @@ export interface Upload {
 }
 
 export interface Video {
+  // API Fields
   id: string
   user: User
   size: string
@@ -40,6 +32,9 @@ export interface Video {
   createdAt: string
   updatedAt: string
   thumbnailUrl: string
+
+  // Frontend Fields
+  selected: boolean
 }
 
 export interface User {
@@ -53,4 +48,10 @@ export interface Pod {
   image: string
   updatedAt: string
   createdAt: string
+}
+
+// API Types
+
+export interface ListPods {
+  pods: Pod[]
 }

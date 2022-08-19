@@ -32,6 +32,7 @@ export default function SidebarMenu() {
     <Flex h='100%' w='100%' direction='column' justify='space-between'>
       <List spacing={2} p='4'>
         <CustomListItem url='/'>Library</CustomListItem>
+        <CustomListItem url='/pods'>Pods</CustomListItem>
       </List>
       <Flex justify='center' pb='4'>
         <Text fontSize='.7rem'>Terms</Text>
