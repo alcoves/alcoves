@@ -18,12 +18,12 @@ import { getAPIUrl } from '../../utils/urls'
 
 export default function DeletePod({ id }: { id: string }) {
   const router = useRouter()
-  const [create] = useLazyRequest()
+  const [request] = useLazyRequest()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   async function handleClick() {
     try {
-      await create({
+      await request({
         method: 'DELETE',
         url: `${getAPIUrl()}/pods/${id}`,
       })

@@ -7,10 +7,10 @@ import { getAPIUrl } from '../../utils/urls'
 
 export default function CreatePod() {
   const router = useRouter()
-  const [create, { data, loading }] = useLazyRequest()
+  const [request, { data, loading }] = useLazyRequest()
 
   function handleClick() {
-    create({
+    request({
       method: 'POST',
       url: `${getAPIUrl()}/pods`,
     })

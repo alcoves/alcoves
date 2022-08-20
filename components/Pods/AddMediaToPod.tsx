@@ -10,11 +10,17 @@ import {
   ModalCloseButton,
 } from '@chakra-ui/react'
 import { useEffect } from 'react'
+import { useSWRConfig } from 'swr'
 
+import useLazyRequest from '../../hooks/useLazyRequest'
 import { useVideos } from '../../stores/videos'
+import { Pod } from '../../types/types'
+import { getAPIUrl } from '../../utils/urls'
 import VideoGridSelect from '../Videos/VideoGridSelect'
 
-export default function AddMediaToPod() {
+export default function AddMediaToPod({ pod, refetchUri }: { pod: Pod; refetchUri: string }) {
+  const { mutate } = useSWRConfig()
+  const [request] = useLazyRequest()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { videos, start, loadMore, toggleSelected, getSelectedIds } = useVideos()
 
@@ -22,9 +28,20 @@ export default function AddMediaToPod() {
     start()
   }, [])
 
-  function handleAdd() {
-    // const selectedIds = getSelectedIds()
-    // Go add them via the API
+  async function handleAdd() {
+    const selectedIds = getSelectedIds()
+
+    try {
+      await request({
+        method: 'POST',
+        data: { ids: selectedIds },
+        url: `${getAPIUrl()}/pods/${pod.id}/videos`,
+      })
+      mutate(refetchUri)
+      onClose()
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (
