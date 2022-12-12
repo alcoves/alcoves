@@ -1,32 +1,12 @@
-import '../styles/index.css'
-
+import theme from '../config/theme'
 import { ChakraProvider } from '@chakra-ui/react'
-import { AppProps } from 'next/app'
-import Head from 'next/head'
-import React, { useEffect } from 'react'
 
-import { userStore } from '../stores/user'
-import theme from '../styles/theme'
-
-export default function App(props: AppProps) {
-  const user = userStore()
-  const { Component, pageProps } = props
-
-  useEffect(() => {
-    user.login()
-  }, [])
-
+function MyApp({ Component, pageProps }) {
   return (
-    <>
-      <Head>
-        <meta
-          name='viewport'
-          content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'
-        />
-      </Head>
-      <ChakraProvider theme={theme}>
-        <Component {...pageProps} />
-      </ChakraProvider>
-    </>
+    <ChakraProvider theme={theme}>
+      <Component {...pageProps} />
+    </ChakraProvider>
   )
 }
+
+export default MyApp
