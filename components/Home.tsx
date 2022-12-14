@@ -1,6 +1,5 @@
 import axios from 'axios'
 import Layout from './Layout'
-import * as UpChunk from '@mux/upchunk'
 import { useDropzone } from 'react-dropzone'
 import React, { useCallback, useState } from 'react'
 import { Flex, Heading, Progress, Text } from '@chakra-ui/react'
@@ -46,32 +45,8 @@ export default function Home() {
       await axios.put(url, file, {
         onUploadProgress: onUploadProgress,
       })
-
-      // const upload = UpChunk.createUpload({
-      //   file, // File object with your video file’s properties
-      //   endpoint: url, // Authenticated url
-      //   chunkSize: 512000, // Uploads the file in chunks , max file size 1gb
-      // })
-
-      // // Subscribe to events
-      // upload.on('error', error => {
-      //   console.log(error)
-      //   setStatusMessage(error.detail)
-      // })
-
-      // upload.on('progress', progress => {
-      //   console.log('progress', progress, progress.detail)
-      //   setProgress(progress.detail)
-      // })
-
-      // upload.on('success', () => {
-      //   setUploading(false)
-      //   console.log('success')
-      //   setStatusMessage("Wrap it up, we're done here. 👋")
-      // })
     } catch (error) {
       console.error('Error', error)
-      // setStatusMessage(error)
     }
   }
 
