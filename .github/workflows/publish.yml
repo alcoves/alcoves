@@ -2,6 +2,7 @@ name: Publish
 on:
   push:
     branches:
+      - dev
       - main
 jobs:
   publish:
