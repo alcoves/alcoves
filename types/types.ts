@@ -1,14 +1,39 @@
 export interface Video {
   id: string
-  size: string
-  cdnUrl: string
-  width: number
-  height: number
-  title: string
-  status: string
-  length: number
+  name: string
+  delay: number
   progress: number
-  createdAt: string
-  updatedAt: string
+  stacktrace: any[]
+  attemptsMade: number
+  data: VideoData
+  opts: VideoOpts
+  timestamp: number
+  finishedOn: number
+  processedOn: number
+  urls: VideoReturn
+  returnvalue?: any
+}
+
+interface VideoData {
+  url: string
+  metadata?: any
+}
+
+interface VideoOpts {
+  attempts: number
+  delay: number
+  jobId: string
+  backoff: any
+}
+
+interface VideoReturn {
+  m3u8Url: string
   thumbnailUrl: string
 }
+
+export interface UploadResponse {
+  id: string
+  url: string
+}
+
+export interface CreateVideoResponse extends Video {}

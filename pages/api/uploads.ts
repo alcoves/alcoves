@@ -1,21 +1,11 @@
-import { s3 } from '../../config/s3'
+import axios from 'axios'
+import { UploadResponse } from '../../types/types'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-type UploadRequest = {
-  url: string
-}
-
-export default async function handler(req: NextApiRequest, res: NextApiResponse<UploadRequest>) {
-  console.log('request')
+export default async function handler(req: NextApiRequest, res: NextApiResponse<UploadResponse>) {
   if (req.method === 'POST') {
-    const url = await s3.getSignedUrlPromise('putObject', {
-      Key: 'test.mp4',
-      Bucket: process.env.DEFAULT_BUCKET,
-    })
-
-    return res.json({ url })
-  } else {
-    // Handle any other HTTP method
+    const result = await axios.post(`${process.env.TIDAL_API_ENDPOINT}/uploads`)
+    return res.json(result.data)
   }
 
   res.status(400)

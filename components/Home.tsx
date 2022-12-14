@@ -1,12 +1,15 @@
 import axios from 'axios'
 import Layout from './Layout'
+import { useRouter } from 'next/router'
 import { useDropzone } from 'react-dropzone'
 import React, { useCallback, useState } from 'react'
 import { Flex, Heading, Progress, Text } from '@chakra-ui/react'
+import { CreateVideoResponse, UploadResponse } from '../types/types'
 
 const MAX_FILE_SIZE = 1024 * 1024 * 1024
 
 export default function Home() {
+  const router = useRouter()
   const [uploading, setUploading] = useState(false)
   const [progress, setProgress] = useState(0)
   const [statusMessage, setStatusMessage] = useState('')
@@ -19,8 +22,9 @@ export default function Home() {
     }
   }, [])
 
-  const { getRootProps, getInputProps } = useDropzone({
+  const { isDragActive, getRootProps, getInputProps } = useDropzone({
     onDrop,
+    noClick: true,
     maxSize: MAX_FILE_SIZE,
     accept: {
       'video/*': [],
@@ -31,6 +35,7 @@ export default function Home() {
     const { loaded, total } = progressEvent
     let percent = Math.floor((loaded * 100) / total)
     if (percent < 100) {
+      setProgress(percent)
       console.log(`${loaded} bytes of ${total} bytes. ${percent}%`)
     }
   }
@@ -39,12 +44,17 @@ export default function Home() {
     try {
       setUploading(true)
       setStatusMessage('')
-      const response = await fetch('/api/uploads', { method: 'POST' })
-      const { url } = await response.json()
+
+      const uploadResponse = await axios.post('/api/uploads')
+      const { url, id: uploadId } = uploadResponse.data as UploadResponse
 
       await axios.put(url, file, {
         onUploadProgress: onUploadProgress,
       })
+
+      const createVideoResponse = await axios.post('/api/videos', { uploadId })
+      const { id: videoId } = createVideoResponse.data as CreateVideoResponse
+      router.push(`/v/${videoId}`)
     } catch (error) {
       console.error('Error', error)
     }
@@ -53,9 +63,14 @@ export default function Home() {
   if (uploading) {
     return (
       <Layout>
-        <Flex w='400px' direction='column'>
-          <Progress value={progress} w='100%' />
-          <Text>{statusMessage}</Text>
+        <Flex w='100%' h='100%' justify='center'>
+          <Flex w='300px' justify='center' direction='column' pt='4'>
+            <Heading pb='2' size='md'>
+              Uploading
+            </Heading>
+            <Progress rounded='sm' value={progress} w='100%' hasStripe isAnimated />
+            <Text>{statusMessage}</Text>
+          </Flex>
         </Flex>
       </Layout>
     )
@@ -63,11 +78,14 @@ export default function Home() {
 
   return (
     <Layout>
-      <Flex {...getRootProps()} border='solid red 1px'>
+      <Flex {...getRootProps()} w='100%' h='100%' justify='center'>
         <input {...getInputProps()} />
-        <Flex direction='column' pt='10'>
-          <Heading>Drag file here or</Heading>
-          <Heading>click anywhere to upload</Heading>
+        <Flex justify='center' direction='column' pt='4'>
+          {isDragActive ? (
+            <Heading size='md'>{`Let's get started!`}</Heading>
+          ) : (
+            <Heading size='md'>Drag a video file anywhere</Heading>
+          )}
         </Flex>
       </Flex>
     </Layout>
