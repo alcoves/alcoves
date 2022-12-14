@@ -12,8 +12,6 @@ export default function VideoFrame({
   autoplay: boolean
 }) {
   const vRef = useRef(null)
-  const manifestUrl = `https://s3.rustyguts.net/tidal/v/${v.id}/main.m3u8`
-  const thumbnailUrl = `https://s3.rustyguts.net/tidal/v/${v.id}/thumbnail.avif`
 
   useEffect(() => {
     const video: HTMLMediaElement | any = vRef?.current
@@ -21,7 +19,7 @@ export default function VideoFrame({
     if (video) {
       const hlsOpts = { autoStartLoad: false, debug: false }
       const hls = new Hls(hlsOpts)
-      hls.loadSource(manifestUrl)
+      hls.loadSource(v.urls?.m3u8Url)
       hls.attachMedia(video)
       hls.on(Hls.Events.MANIFEST_PARSED, function () {
         const _720pResolution = 1280 * 720
@@ -60,7 +58,7 @@ export default function VideoFrame({
       muted={muted}
       controls={true}
       autoPlay={autoplay}
-      poster={thumbnailUrl}
+      poster={v.urls?.thumbnailUrl}
     />
   )
 }

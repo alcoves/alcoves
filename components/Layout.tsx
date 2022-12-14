@@ -1,10 +1,10 @@
 import React from 'react'
-import { Flex } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 
 export default function Layout(props) {
   return (
-    <Flex p='4' align='start' justify='center' border='solid blue 2px'>
+    <Box h='100vh' w='100vw'>
       {props.children}
-    </Flex>
+    </Box>
   )
 }

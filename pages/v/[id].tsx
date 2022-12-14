@@ -1,24 +1,66 @@
-import axios from 'axios'
+import useSWR from 'swr'
 import Head from 'next/head'
+import axios from '../../config/axios'
+import Layout from '../../components/Layout'
 import VideoFrame from '../../components/VideoFrame'
 
 import { Video } from '../../types/types'
+import { useEffect, useState } from 'react'
 import { GetServerSidePropsContext } from 'next'
-import { Box, Flex, Heading, Link } from '@chakra-ui/react'
+import { Box, Flex, Heading, Link, Spinner, Text } from '@chakra-ui/react'
+
+// @ts-ignore
+const fetcher = (...args) => fetch(...args).then(res => res.json())
 
 export default function VideoPage({ v }: { v: Video }) {
-  const publicURL = `https://bken.io/v/${v.id}`
+  const [refreshInterval, setRefreshInterval] = useState(3000)
+
+  const { data, error }: { data: Video; error: undefined } = useSWR(
+    `/api/videos/${v.id}`,
+    fetcher,
+    {
+      refreshInterval,
+      fallbackData: v,
+    }
+  )
+
+  useEffect(() => {
+    if (data.progress === 100) setRefreshInterval(0)
+  }, [data])
+
+  const publicURL = `https://bken.io/v/${data.id}`
   const ogDescription = 'Watch this video on bken.io'
+
+  if (data.progress !== 100) {
+    return (
+      <>
+        <Head>
+          <title>{'bken.io'}</title>
+        </Head>
+        <Layout>
+          <Flex w='100%' justify='center'>
+            <Flex direction='column' align='center' w='400px'>
+              <Flex align='end'>
+                <Heading pr='4'>Processing</Heading>
+                <Spinner mb='1' size='md' />
+              </Flex>
+              <Text>This page will automatically reload</Text>
+            </Flex>
+          </Flex>
+        </Layout>
+      </>
+    )
+  }
 
   return (
     <>
       <Head>
-        <title>{v?.title || 'bken.io'}</title>
-        <meta property='og:title' content={v?.title || 'bken.io'} />
+        <title>{'bken.io'}</title>
+        <meta property='og:title' content={data.id} />
         <meta property='og:type' content='website' />
         <meta property='og:url' content={publicURL} />
-        <meta property='og:image' content={v.thumbnailUrl} />
-        <meta property='og:image:type' content='image/jpeg' />
+        <meta property='og:image' content={data.urls?.thumbnailUrl} />
+        <meta property='og:image:type' content='image/avif' />
         <meta property='og:image:width' content='854' />
         <meta property='og:image:height' content='480' />
         <meta property='og:image:alt' content='bken.io' />
@@ -27,39 +69,32 @@ export default function VideoPage({ v }: { v: Video }) {
         {/* Twitter tags */}
         <meta name='twitter:card' content='summary_large_image' />
         <meta property='twitter:url' content={publicURL} />
-        <meta name='twitter:title' content={v?.title || 'bken.io'} />
+        <meta name='twitter:title' content={'bken.io'} />
         <meta name='twitter:description' content={ogDescription} />
-        <meta name='twitter:image' content={v.thumbnailUrl} />
+        <meta name='twitter:image' content={data.urls?.thumbnailUrl} />
       </Head>
-      <Box>
-        <Flex p='4' pt='4' justify='center'>
-          <Box rounded='md'>
-            <VideoFrame v={v} muted={false} autoplay={true} />
-          </Box>
-        </Flex>
-        <Flex h='100px' direction='column' align='center'>
-          <Heading size='md' fontWeight='800'>
-            {v.title}
-          </Heading>
-          <Flex pt='2'>
-            <Heading p='0' m='0' size='xs' fontWeight='600'>
-              <Link href='https://bken.io'>bken.io</Link>
-            </Heading>
+      <Layout>
+        <Box>
+          <Flex p='4' pt='4' justify='center'>
+            <Box rounded='md'>
+              <VideoFrame v={v} muted={false} autoplay={true} />
+            </Box>
           </Flex>
-        </Flex>
-      </Box>
+          <Flex h='100px' direction='column' align='center'>
+            <Flex pt='2'>
+              <Heading p='0' m='0' size='xs' fontWeight='600'>
+                <Link href='/'>bken.io</Link>
+              </Heading>
+            </Flex>
+          </Flex>
+        </Box>
+      </Layout>
     </>
   )
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { id } = context.query
-  const fetchUrl = `${process.env.TIDAL_API_ENDPOINT}/videos/${id}`
-  const result = await axios.get(fetchUrl, {
-    headers: {
-      'x-api-key': process.env.TIDAL_API_KEY,
-    },
-  })
-
+  const result = await axios.get(`${process.env.TIDAL_API_ENDPOINT}/videos/${id}`)
   return { props: { v: result.data } }
 }
