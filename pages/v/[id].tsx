@@ -34,8 +34,6 @@ export default function VideoPage({ v }: { v: Video }) {
     controls: true,
     fluid: true,
     responsive: true,
-    width: 3840,
-    height: 2160,
     poster: data?.urls?.thumbnailUrl,
     sources: [
       {
@@ -108,8 +106,10 @@ export default function VideoPage({ v }: { v: Video }) {
       </Head>
       <Layout>
         <Box>
-          <Flex p='4' pt='4' justify='center' maxH='80vh'>
-            <VideoPlayerNoSSR key={data?.id} options={videoJsOptions} />
+          <Flex justify='center' p='4' pt='4' h='100%' w='100%'>
+            <Box w='1280px' maxW='1280px' h='720px' maxH='720px'>
+              <VideoPlayerNoSSR key={data?.id} options={videoJsOptions} />
+            </Box>
           </Flex>
           <Flex h='100px' direction='column' align='center'>
             <Flex pt='2'>
