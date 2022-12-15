@@ -1,39 +1,42 @@
 {
   "name": "reef",
-  "main": "index.js",
-  "license": "UNLICENSED",
   "private": false,
   "version": "0.0.15",
+  "license": "UNLICENSED",
   "author": "Brendan Kennedy <brendan@bken.io>",
   "repository": "git@github.com:bkenio/reef.git",
   "description": "frontend for bken.io",
   "scripts": {
     "dev": "next dev",
     "lint": "next lint",
-    "lintp": "prettier ./**/*.ts* ./**/*.js* --write",
     "start": "next start",
-    "build": "next build --no-lint"
+    "build": "next build --no-lint",
+    "lintp": "prettier ./**/*.ts* ./**/*.js* --write"
   },
   "dependencies": {
-    "@chakra-ui/react": "^2.4.3",
-    "@emotion/react": "^11.10.5",
-    "@emotion/styled": "^11.10.5",
-    "@types/node": "18.11.15",
-    "@types/react": "18.0.26",
-    "@types/react-dom": "18.0.9",
+    "@next/font": "^13.0.6",
     "axios": "^1.2.1",
-    "eslint": "8.29.0",
-    "eslint-config-next": "^13.0.6",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "framer-motion": "^7.9.1",
+    "dashjs": "^4.5.2",
     "next": "13.0.6",
-    "prettier": "^2.8.1",
     "react": "18.2.0",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
+    "shaka-player-react": "^1.1.5",
     "swr": "^2.0.0",
-    "typescript": "4.9.4",
-    "video.js": "7.18.1"
+    "video.js": "7.20.3"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.15",
+    "@types/react": "^18.0.26",
+    "@types/react-dom": "^18.0.9",
+    "autoprefixer": "^10.4.13",
+    "eslint": "^8.29.0",
+    "eslint-config-next": "^13.0.6",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "postcss": "^8.4.20",
+    "prettier": "^2.8.1",
+    "tailwindcss": "^3.2.4",
+    "typescript": "^4.9.4"
   }
 }

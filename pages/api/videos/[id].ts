@@ -1,13 +1,12 @@
-import axios from '../../../config/axios'
 import { Video } from '../../../types/types'
+import { getVideo } from '../../../lib/tidal'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Video>) {
   if (req.method === 'GET') {
-    const url = `${process.env.TIDAL_API_ENDPOINT}/videos/${req.query.videoId}`
-    const result = await axios.get(url)
-    return res.json(result.data)
+    const getVideoResponse = await getVideo(req.query.id as string)
+    return res.json(getVideoResponse)
   }
 
-  res.status(400)
+  return res.status(404)
 }
