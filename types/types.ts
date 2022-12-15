@@ -28,6 +28,7 @@ interface VideoOpts {
 
 interface VideoReturn {
   m3u8Url: string
+  dashUrl: string
   thumbnailUrl: string
 }
 

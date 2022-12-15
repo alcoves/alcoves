@@ -1,13 +1,17 @@
 import useSWR from 'swr'
 import Head from 'next/head'
+import dynamic from 'next/dynamic'
 import axios from '../../config/axios'
 import Layout from '../../components/Layout'
-import VideoFrame from '../../components/VideoFrame'
 
 import { Video } from '../../types/types'
 import { useEffect, useState } from 'react'
 import { GetServerSidePropsContext } from 'next'
 import { Box, Flex, Heading, Link, Spinner, Text } from '@chakra-ui/react'
+
+const VideoPlayerNoSSR = dynamic(() => import('../../components/VideoPlayer'), {
+  ssr: false,
+})
 
 // @ts-ignore
 const fetcher = (...args) => fetch(...args).then(res => res.json())
@@ -24,14 +28,43 @@ export default function VideoPage({ v }: { v: Video }) {
     }
   )
 
+  const videoJsOptions = {
+    muted: true,
+    autoplay: true,
+    controls: true,
+    fluid: true,
+    responsive: true,
+    width: 3840,
+    height: 2160,
+    poster: data?.urls?.thumbnailUrl,
+    sources: [
+      {
+        src: data.urls.dashUrl,
+        type: 'application/dash+xml',
+      },
+      {
+        src: data.urls.m3u8Url,
+        type: 'application/x-mpegURL',
+      },
+    ],
+  }
+
   useEffect(() => {
-    if (data.progress === 100) setRefreshInterval(0)
+    if (data?.progress === 100) setRefreshInterval(0)
   }, [data])
 
-  const publicURL = `https://bken.io/v/${data.id}`
+  const publicURL = `https://bken.io/v/${data?.id}`
   const ogDescription = 'Watch this video on bken.io'
 
-  if (data.progress !== 100) {
+  if (error) {
+    return (
+      <Layout>
+        <Heading>There was an error</Heading>
+      </Layout>
+    )
+  }
+
+  if (data?.progress !== 100) {
     return (
       <>
         <Head>
@@ -56,13 +89,13 @@ export default function VideoPage({ v }: { v: Video }) {
     <>
       <Head>
         <title>{'bken.io'}</title>
-        <meta property='og:title' content={data.id} />
+        <meta property='og:title' content={data?.id} />
         <meta property='og:type' content='website' />
         <meta property='og:url' content={publicURL} />
-        <meta property='og:image' content={data.urls?.thumbnailUrl} />
+        <meta property='og:image' content={data?.urls?.thumbnailUrl} />
         <meta property='og:image:type' content='image/avif' />
-        <meta property='og:image:width' content='854' />
-        <meta property='og:image:height' content='480' />
+        <meta property='og:image:width' content='1280' />
+        <meta property='og:image:height' content='720' />
         <meta property='og:image:alt' content='bken.io' />
         <meta name='description' content={ogDescription} />
         <meta property='og:description' content={ogDescription} />
@@ -71,14 +104,12 @@ export default function VideoPage({ v }: { v: Video }) {
         <meta property='twitter:url' content={publicURL} />
         <meta name='twitter:title' content={'bken.io'} />
         <meta name='twitter:description' content={ogDescription} />
-        <meta name='twitter:image' content={data.urls?.thumbnailUrl} />
+        <meta name='twitter:image' content={data?.urls?.thumbnailUrl} />
       </Head>
       <Layout>
         <Box>
-          <Flex p='4' pt='4' justify='center'>
-            <Box rounded='md'>
-              <VideoFrame v={v} muted={false} autoplay={true} />
-            </Box>
+          <Flex p='4' pt='4' justify='center' maxH='80vh'>
+            <VideoPlayerNoSSR key={data?.id} options={videoJsOptions} />
           </Flex>
           <Flex h='100px' direction='column' align='center'>
             <Flex pt='2'>
@@ -95,6 +126,12 @@ export default function VideoPage({ v }: { v: Video }) {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { id } = context.query
-  const result = await axios.get(`${process.env.TIDAL_API_ENDPOINT}/videos/${id}`)
-  return { props: { v: result.data } }
+  return axios
+    .get(`${process.env.TIDAL_API_ENDPOINT}/videos/${id}`)
+    .then(({ data }) => {
+      return { props: { v: data } }
+    })
+    .catch(err => {
+      return { props: {} }
+    })
 }
