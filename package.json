@@ -21,7 +21,6 @@
     "react": "18.2.0",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
-    "shaka-player-react": "^1.1.5",
     "swr": "^2.0.0",
     "video.js": "7.20.3"
   },

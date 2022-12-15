@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react'
 // @ts-ignore
 const fetcher = (...args) => fetch(...args).then(res => res.json())
 
-export default function Player({ video }) {
+export default function Player({ video }: { video: Video }) {
   const [refreshInterval, setRefreshInterval] = useState(3000)
 
   const { data }: { data: Video; error: undefined } = useSWR(`/api/videos/${video.id}`, fetcher, {

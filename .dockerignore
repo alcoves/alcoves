@@ -1,0 +1,10 @@
+Dockerfile
+.env
+*.env
+.gitignore
+README.md
+yarn-error.log
+node_modules
+.next
+.github
+.vscode
