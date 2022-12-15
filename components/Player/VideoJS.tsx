@@ -1,9 +1,13 @@
 // @ts-nocheck
-import videojs from 'video.js'
+'use client'
+
 import 'video.js/dist/video-js.css'
+import './video-js-custom.css'
+
+import videojs from 'video.js'
 import { useEffect, useRef } from 'react'
 
-export default function VideoPlayer({ options }) {
+export default function VideoJS({ options }) {
   const container = useRef()
   const player = useRef()
 

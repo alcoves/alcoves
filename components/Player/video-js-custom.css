@@ -1,0 +1,19 @@
+.vjs-icon-placeholder {
+  color: #ffcc00;
+}
+
+.vjs-play-progress {
+  background-color: #ffcc00;
+}
+
+.vjs-control-bar {
+  display: none;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3em;
+  background-color: #212c34;
+  background-color: rgba(43, 51, 63, 0.7);
+}

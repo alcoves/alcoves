@@ -1,14 +1,12 @@
-import axios from '../../../config/axios'
 import { Video } from '../../../types/types'
+import { startProcessing } from '../../../lib/tidal'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Video>) {
   if (req.method === 'POST') {
-    const result = await axios.post(`${process.env.TIDAL_API_ENDPOINT}/videos`, {
-      uploadId: req.body.uploadId,
-    })
-    return res.json(result.data)
+    const createVideoResult = await startProcessing(req.body.uploadId)
+    return res.json(createVideoResult)
   }
 
-  res.status(400)
+  return res.status(404)
 }
