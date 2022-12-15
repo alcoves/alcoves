@@ -3,10 +3,41 @@ import Layout from './Layout'
 import { useRouter } from 'next/router'
 import { useDropzone } from 'react-dropzone'
 import React, { useCallback, useState } from 'react'
-import { Flex, Heading, Progress, Text } from '@chakra-ui/react'
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
+  Box,
+  Flex,
+  Heading,
+  Progress,
+  Text,
+} from '@chakra-ui/react'
 import { CreateVideoResponse, UploadResponse } from '../types/types'
 
 const MAX_FILE_SIZE = 1024 * 1024 * 1024
+
+function FileRejections({ fileRejections }: { fileRejections: any[] }) {
+  if (fileRejections.length) {
+    return (
+      <Box py='2'>
+        {fileRejections.map(f => {
+          console.error(f)
+          return (
+            <Alert rounded='md' status='error' key={f.file.path}>
+              <AlertIcon />
+              <AlertTitle>{f?.errors[0]?.code}</AlertTitle>
+              <AlertDescription>{f.file.path}</AlertDescription>
+            </Alert>
+          )
+        })}
+      </Box>
+    )
+  }
+
+  return null
+}
 
 export default function Home() {
   const router = useRouter()
@@ -22,7 +53,7 @@ export default function Home() {
     }
   }, [])
 
-  const { isDragActive, getRootProps, getInputProps } = useDropzone({
+  const { fileRejections, isDragActive, getRootProps, getInputProps } = useDropzone({
     onDrop,
     noClick: true,
     maxSize: MAX_FILE_SIZE,
@@ -84,7 +115,10 @@ export default function Home() {
           {isDragActive ? (
             <Heading size='md'>{`Let's get started!`}</Heading>
           ) : (
-            <Heading size='md'>Drag a video file anywhere</Heading>
+            <Box>
+              <Heading size='md'>Drag a video file anywhere</Heading>
+              <FileRejections fileRejections={fileRejections} />
+            </Box>
           )}
         </Flex>
       </Flex>
