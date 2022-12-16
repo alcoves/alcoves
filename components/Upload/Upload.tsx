@@ -23,7 +23,7 @@ export default function Upload() {
     }
   }, [])
 
-  const { fileRejections, isDragActive, getRootProps, getInputProps } = useDropzone({
+  const { open, fileRejections, isDragActive, getRootProps, getInputProps } = useDropzone({
     onDrop,
     noClick: true,
     maxSize: MAX_FILE_SIZE,
@@ -79,6 +79,15 @@ export default function Upload() {
         ) : (
           <div>
             <p className='text-5xl font-semibold'>Drag a video file anywhere</p>
+            <div className='mt-2 flex w-full justify-center'>
+              <button
+                onClick={open}
+                className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
+              >
+                Select File
+              </button>
+            </div>
+
             <FileRejections fileRejections={fileRejections} />
           </div>
         )}
