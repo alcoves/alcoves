@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Build container image
-        run: docker build -t $REGISTRY:latest -t $REGISTRY:$GITHUB_SHA 
+        run: docker build -t $REGISTRY:latest -t $REGISTRY:$GITHUB_SHA . 
 
       - name: Login to Docker Registry
         run: echo $BKEN_REGISTRY_PASSWORD | docker login -u $BKEN_REGISTRY_USER --password-stdin registry.bken.io
