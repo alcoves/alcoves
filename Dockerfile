@@ -1,21 +1,31 @@
-FROM node:18-alpine AS build
-WORKDIR /usr/src
+FROM node:18-alpine AS deps
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
 
-COPY . .
+COPY yarn.lock package.json ./
 RUN yarn --frozen-lockfile
 
-ENV NODE_ENV=production
+FROM node:18-alpine AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+ENV NEXT_TELEMETRY_DISABLED 1
 RUN yarn build
 
-RUN npm prune --production
+FROM node:18-alpine AS runner
+WORKDIR /app
 
-FROM node:18-alpine AS distribution
-WORKDIR /opt/my-app
-ENV NODE_ENV=production
-COPY --from=build /usr/src/.next .next
-COPY --from=build /usr/src/node_modules node_modules
-COPY --from=build /usr/src/package.json package.json
+ENV NODE_ENV production
+ENV NEXT_TELEMETRY_DISABLED 1
 
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
 EXPOSE 3000
-ENV PORT 3000
-CMD ["yarn", "start"]
+CMD ["node", "server.js"]
