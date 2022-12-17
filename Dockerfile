@@ -12,6 +12,7 @@ COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED 1
 RUN yarn build
+RUN npm prune --production
 
 FROM node:18-alpine AS runner
 WORKDIR /app
