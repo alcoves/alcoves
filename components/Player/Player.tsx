@@ -1,7 +1,7 @@
 'use client'
 
 import useSWR from 'swr'
-import VideoJS from './VideoJS'
+import Plyr from './Plyr/Plyr'
 import { Video } from '../../types/types'
 import { useEffect, useState } from 'react'
 
@@ -20,25 +20,6 @@ export default function Player({ video }: { video: Video }) {
     if (data?.progress === 100) setRefreshInterval(0)
   }, [data])
 
-  const videoJsOptions = {
-    muted: true,
-    fluid: true,
-    autoplay: true,
-    controls: true,
-    responsive: true,
-    poster: data.urls?.thumbnailUrl,
-    sources: [
-      {
-        src: data.urls?.dashUrl,
-        type: 'application/dash+xml',
-      },
-      {
-        src: data.urls?.m3u8Url,
-        type: 'application/x-mpegURL',
-      },
-    ],
-  }
-
   if (data.progress !== 100) {
     return (
       <div className='flex flex-col w-full aspect-video justify-start items-center'>
@@ -49,9 +30,14 @@ export default function Player({ video }: { video: Video }) {
     )
   }
 
+  const options = {
+    source: data.urls?.m3u8Url,
+    poster: data.urls?.thumbnailUrl,
+  }
+
   return (
-    <div className='w-full aspect-video bg-black'>
-      <VideoJS key={data.id} options={videoJsOptions} />
+    <div className='w-full bg-black'>
+      <Plyr key={data.id} options={options} />
     </div>
   )
 }
