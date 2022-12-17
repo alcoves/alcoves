@@ -9,5 +9,5 @@ README.md
 .vscode
 .gitignore
 .env
-*.env
+.env*
 yarn-error.log
