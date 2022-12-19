@@ -1,7 +1,7 @@
 'use client'
 
 import useSWR from 'swr'
-import Plyr from './Plyr/Plyr'
+import Vidstack from './Vidstack/Player'
 import { Video } from '../../types/types'
 import { useEffect, useState } from 'react'
 
@@ -32,12 +32,13 @@ export default function Player({ video }: { video: Video }) {
 
   const options = {
     source: data.urls?.m3u8Url,
+    metadata: data?.data?.metadata,
     poster: data.urls?.thumbnailUrl,
   }
 
   return (
-    <div className='w-full bg-black'>
-      <Plyr key={data.id} options={options} />
+    <div className='p-4'>
+      <Vidstack key={data.id} options={options} />
     </div>
   )
 }

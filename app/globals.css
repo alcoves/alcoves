@@ -28,3 +28,12 @@ a {
     background: dark;
   }
 }
+
+vds-media {
+  display: inline-block;
+  width: 100%;
+}
+
+vds-media:not(:defined) {
+  visibility: hidden;
+}
