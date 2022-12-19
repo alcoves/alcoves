@@ -2,10 +2,8 @@ import Link from 'next/link'
 
 export default function Footer() {
   return (
-    <div className='flex justify-center'>
-      <Link className='mt-4' href='/'>
-        bken.io
-      </Link>
+    <div className=' w-full flex justify-center h-12 items-center p-4'>
+      <Link href='/'>bken.io</Link>
     </div>
   )
 }

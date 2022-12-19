@@ -7,7 +7,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang='en'>
       <head />
       <body className={inter.className}>
-        <div className='bg-gray-200 dark:bg-gray-900 h-screen w-screen'>{children}</div>
+        <div className='bg-gray-200 dark:bg-gray-900'>{children}</div>
       </body>
     </html>
   )
