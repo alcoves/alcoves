@@ -6,6 +6,9 @@
       "dom.iterable",
       "esnext"
     ],
+    "types": [
+      "vidstack/globals"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,

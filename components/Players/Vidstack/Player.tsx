@@ -1,8 +1,13 @@
 'use client'
 
+import 'vidstack/styles/base.css'
+// the following styles are optional - remove to go headless.
+import 'vidstack/styles/ui/buttons.css'
+import 'vidstack/styles/ui/sliders.css'
+
 import { useEffect, useState } from 'react'
-import { Hls, Media } from '@vidstack/player-react'
 import { getDimensions } from '../../../lib/metadata'
+import { MediaPlayer, MediaOutlet } from '@vidstack/react'
 
 export default function VidstackPlayer({
   options,
@@ -42,17 +47,9 @@ export default function VidstackPlayer({
 
   return (
     <div style={{ maxWidth, visibility }}>
-      <Media>
-        <Hls
-          autoplay
-          controls
-          loading='eager'
-          poster={options.poster}
-          hlsLibrary={() => import('hls.js')}
-        >
-          <video controls preload='none' src={options.source}></video>
-        </Hls>
-      </Media>
+      <MediaPlayer controls src={options.source} poster={options.poster}>
+        <MediaOutlet />
+      </MediaPlayer>
     </div>
   )
 }
