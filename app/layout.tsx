@@ -16,7 +16,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <TopBar />
           <div className='flex h-full'>
             <SideBar />
-            <div>{children}</div>
+            <div className='flex'>{children}</div>
           </div>
           <Footer />
         </div>

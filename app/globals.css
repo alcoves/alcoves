@@ -37,3 +37,11 @@ vds-media {
 vds-media:not(:defined) {
   visibility: hidden;
 }
+
+* {
+  outline: 1px solid red;
+}
+
+*:hover { 
+  outline: 1px solid blue;
+} 
