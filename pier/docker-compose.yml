@@ -1,0 +1,9 @@
+services:
+  reef:
+    restart: always
+    build:
+      context: .
+    ports:
+      - 3000:3000
+    volumes:
+      - ./.env.production:/app/.env.production
