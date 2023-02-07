@@ -1,11 +1,8 @@
-'use client'
-
 import { useRouter } from 'next/navigation'
+import { Button, Flex, VStack } from '@chakra-ui/react'
 
 export default function SideBar() {
   const router = useRouter()
-
-  const button = 'bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded'
 
   function handleClick(e, href) {
     e.preventDefault()
@@ -13,16 +10,17 @@ export default function SideBar() {
   }
 
   return (
-    <div className='w-40 max-w-40 flex flex-col gap-2'>
-      <button className={button} onClick={e => handleClick(e, '/')}>
-        Home
-      </button>
-      <button className={button} onClick={e => handleClick(e, '/archives')}>
-        Archives
-      </button>
-      <button className={button} onClick={e => handleClick(e, '/upload')}>
-        Upload
-      </button>
-    </div>
+    <Flex h='calc(100vh - 80px)' w='52' overflowY='scroll'>
+      <VStack spacing={3} w='100%' align='start' p='2'>
+        <Button onClick={e => handleClick(e, '/')}>Media</Button>
+        <Button onClick={e => handleClick(e, '/')}>Media</Button>
+        <Button onClick={e => handleClick(e, '/')}>Media</Button>
+        <Button onClick={e => handleClick(e, '/')}>Media</Button>
+        <Button onClick={e => handleClick(e, '/')}>Media</Button>
+        <Button onClick={e => handleClick(e, '/')}>Media</Button>
+        <Button onClick={e => handleClick(e, '/')}>Media</Button>
+        <Button onClick={e => handleClick(e, '/')}>Media</Button>
+      </VStack>
+    </Flex>
   )
 }
