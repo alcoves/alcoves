@@ -8,6 +8,16 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export class UsersService {
   constructor(private readonly prismaService: PrismaService) {}
 
+  async findMany(): Promise<any[]> {
+    const users = await this.prismaService.user.findMany()
+
+    for (let user of users) {
+      delete user['password']
+    }
+
+    return users
+  }
+
   async findByEmail(email: string): Promise<User | undefined> {
     const user = this.prismaService.user.findUnique({
       where: { email },
