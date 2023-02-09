@@ -1,40 +1,13 @@
-export interface Video {
-  id: string
-  name: string
-  delay: number
-  progress: number
-  stacktrace: any[]
-  attemptsMade: number
-  data: VideoData
-  opts: VideoOpts
-  timestamp: number
-  finishedOn: number
-  processedOn: number
-  urls: VideoReturn
-  returnvalue?: any
+export interface User {
+  id: number
+  email: string
+  username: string
+  isAuthenticated: boolean
 }
 
-interface VideoData {
-  url: string
-  metadata?: any
+export interface UserContextProps {
+  user: User
+  loading: boolean
+  logout: () => Promise<void>
+  login: ({ email, password }: { email: string; password: string }) => Promise<void>
 }
-
-interface VideoOpts {
-  attempts: number
-  delay: number
-  jobId: string
-  backoff: any
-}
-
-interface VideoReturn {
-  m3u8Url: string
-  dashUrl: string
-  thumbnailUrl: string
-}
-
-export interface UploadResponse {
-  id: string
-  url: string
-}
-
-export interface CreateVideoResponse extends Video {}

@@ -1,24 +1,18 @@
 import '../config/global.css'
 import theme from '../config/theme'
+import DevelopmentCSS from '../components/DevelopmentCSS'
+
 import { ChakraProvider } from '@chakra-ui/react'
+import { UserProvider } from '../Contexts/UserContext'
 
 function App({ Component, pageProps }) {
-  const isDev = process.env.NODE_ENV === 'development'
   return (
-    <ChakraProvider theme={theme}>
-      {isDev && (
-        <style global jsx>{`
-          * {
-            outline: 1px solid red;
-          }
-
-          *:hover {
-            outline: 2px solid blue;
-          }
-        `}</style>
-      )}
-      <Component {...pageProps} />
-    </ChakraProvider>
+    <UserProvider>
+      <ChakraProvider theme={theme}>
+        <DevelopmentCSS />
+        <Component {...pageProps} />
+      </ChakraProvider>
+    </UserProvider>
   )
 }
 

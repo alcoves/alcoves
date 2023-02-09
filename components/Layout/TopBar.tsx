@@ -1,10 +1,11 @@
 import { Avatar, Flex } from '@chakra-ui/react'
+import { useUser } from '../../Contexts/UserContext'
 
 function Profile() {
-  const loggedIn = false
+  const { user } = useUser()
 
-  if (!loggedIn) {
-    return <Avatar size='sm' />
+  if (user.isAuthenticated) {
+    return <Avatar name={user.username} size='sm' />
   }
 
   return <Avatar size='sm' name='Test User' src='' />
