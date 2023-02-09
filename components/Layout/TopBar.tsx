@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { Avatar, Flex } from '@chakra-ui/react'
 import { useUser } from '../../Contexts/UserContext'
 
@@ -5,10 +6,18 @@ function Profile() {
   const { user } = useUser()
 
   if (user.isAuthenticated) {
-    return <Avatar name={user.username} size='sm' />
+    return (
+      <Link href='/profile'>
+        <Avatar mr='2px' mt='2px' name={user.username} size='sm' />
+      </Link>
+    )
   }
 
-  return <Avatar size='sm' name='Test User' src='' />
+  return (
+    <Link href='/login'>
+      <Avatar size='sm' name='Test User' />
+    </Link>
+  )
 }
 
 export default function TopBar() {
