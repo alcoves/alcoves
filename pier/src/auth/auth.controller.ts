@@ -3,6 +3,7 @@ import { AuthService } from './auth.service';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { LocalAuthGuard } from './guards/local-auth-guard';
 import { Controller, Post, Req, Res, Body, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from './guards/jwt-auth-guard';
 
 @Controller('auth')
 export class AuthController {
@@ -24,6 +25,14 @@ export class AuthController {
       secure: process.env.NODE_ENV === "production"
     });
     return login
+  }
+
+  @Post('logout')
+  async logout(@Res({ passthrough: true }) res: Response) {
+    res.cookie('jwt', "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production"
+    });
   }
 
   @Post('register')
