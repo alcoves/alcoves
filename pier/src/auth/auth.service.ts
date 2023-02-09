@@ -23,10 +23,11 @@ export class AuthService {
   }
 
   async register({ email, username, password}: {email: string, username: string, password: string}): Promise<{ access_token: string }> {
+    const hashedPassword = await this.hashPassword(password)
     const user = await this.usersService.createOne({
       email,
       username,
-      password: await this.hashPassword(password),
+      password: hashedPassword,
     })
 
     return this.login(user)
@@ -41,11 +42,11 @@ export class AuthService {
     return null;
   }
 
-  async hashPassword(password: string) {
-    return bcrypt.hash(password, process.env.SALT_ROUNDS)
+  hashPassword(password: string) {
+    return bcrypt.hash(password, Number(process.env.SALT_ROUNDS))
   }
 
-  async comparePasswords(password: string, hashedPassword: string) {
+  comparePasswords(password: string, hashedPassword: string) {
     return bcrypt.compare(password, hashedPassword)
   }
 }
