@@ -1,7 +1,8 @@
+import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { LocalAuthGuard } from './guards/local-auth-guard';
-import { Controller, Post, Req, Body, UseGuards } from '@nestjs/common';
+import { Controller, Post, Req, Res, Body, UseGuards } from '@nestjs/common';
 
 @Controller('auth')
 export class AuthController {
@@ -9,8 +10,20 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Req() req): Promise<{ access_token: string }> {
-    return this.authService.login(req.user)
+  async login(@Req() req, @Res({ passthrough: true }) res: Response): Promise<{ access_token: string }> {
+    const login = await this.authService.login(req.user)
+    
+    const date = new Date()
+    date.setDate(date.getDate() + 30) // Cookie expires in 30 days
+    // TODO :: Refresh tokens
+    // https://jakeowen-ex.medium.com/secure-api-authentication-with-nextjs-access-tokens-refresh-tokens-dff873a7ed94
+
+    res.cookie('jwt', login.access_token, {
+      expires: date,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production"
+    });
+    return login
   }
 
   @Post('register')
