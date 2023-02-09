@@ -10,7 +10,7 @@ export default function SideBar() {
   }
 
   return (
-    <Flex h='calc(100vh - 80px)' w='52' overflowY='scroll'>
+    <Flex h='calc(100vh - 80px)' w='52'>
       <VStack spacing={3} w='100%' align='start' p='2'>
         <Button onClick={e => handleClick(e, '/')}>Media</Button>
         <Button onClick={e => handleClick(e, '/')}>Media</Button>
