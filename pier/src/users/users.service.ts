@@ -10,35 +10,35 @@ export class UsersService {
 
   async findMany(): Promise<any[]> {
     const users = await this.prismaService.user.findMany()
-
-    for (let user of users) {
-      delete user['password']
-    }
-
+    for (let user of users) delete user['password']
     return users
   }
 
   async findByEmail(email: string): Promise<User | undefined> {
-    const user = this.prismaService.user.findUnique({
+    const user = await this.prismaService.user.findUnique({
       where: { email },
     });
 
+    if (user) delete user['password']
     return user || undefined;
   }
 
   async findByUsername(username: string): Promise<User | undefined> {
-    const user = this.prismaService.user.findUnique({
+    const user = await this.prismaService.user.findUnique({
       where: { username },
     });
 
+    if (user) delete user['password']
     return user || undefined;
   }
 
-  async findById(id: string): Promise<User> {
-    const user = this.prismaService.user.findUnique({
+  async findById(id: string | number): Promise<User> {
+    const user = await this.prismaService.user.findUnique({
       where: { id: Number(id) },
     });
 
+    if (user) delete user['password']
+    console.log(user)
     return user || undefined;
   }
 
@@ -47,10 +47,11 @@ export class UsersService {
       data: {
         email,
         username,
-        password  // Hash this
+        password
       }
     });
 
+    if (user) { delete user['password'] }
     return user
   }
 

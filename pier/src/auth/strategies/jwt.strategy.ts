@@ -32,11 +32,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     email: string;
     sub: string;
   }): Promise<any> {
-    // TODO ::
-    // We don't need to fetch the user on every request, defeats the purpose of JWT
-    // For conveinice, we should probably have a decorator that pulls the user in
-    // const user = await this.userService.findByEmail(validationPayload.email);
-    // return user;
-    return true
+    const user = await this.userService.findById(validationPayload.sub);
+    return user;
   }
 }
