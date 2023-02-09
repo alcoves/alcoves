@@ -1,3 +1,4 @@
+import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 import { NestFactory } from '@nestjs/core';
 import { PrismaService } from './prisma.service';
@@ -7,6 +8,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const prismaService = app.get(PrismaService);
   await prismaService.enableShutdownHooks(app);
+  app.use(cookieParser())
   useRequestLogging(app);
   app.enableCors({
     origin: "http://localhost:3000",

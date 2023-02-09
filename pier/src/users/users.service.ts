@@ -10,7 +10,6 @@ export class UsersService {
 
   async findMany(): Promise<any[]> {
     const users = await this.prismaService.user.findMany()
-    for (let user of users) delete user['password']
     return users
   }
 
@@ -19,7 +18,6 @@ export class UsersService {
       where: { email },
     });
 
-    if (user) delete user['password']
     return user || undefined;
   }
 
@@ -28,7 +26,6 @@ export class UsersService {
       where: { username },
     });
 
-    if (user) delete user['password']
     return user || undefined;
   }
 
@@ -37,7 +34,6 @@ export class UsersService {
       where: { id: Number(id) },
     });
 
-    if (user) delete user['password']
     return user || undefined;
   }
 
