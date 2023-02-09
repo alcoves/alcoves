@@ -38,7 +38,6 @@ export class UsersService {
     });
 
     if (user) delete user['password']
-    console.log(user)
     return user || undefined;
   }
 
