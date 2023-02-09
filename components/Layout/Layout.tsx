@@ -17,18 +17,20 @@ export default function Layout({ children }) {
     }
   }, [user, loading, router])
 
-  if (loading) return null
+  if (!loading && user.isAuthenticated) {
+    return (
+      <Box>
+        <TopBar />
+        <Flex h='100%'>
+          <SideBar />
+          <Box w='100%' p='2' overflowY='auto'>
+            {children}
+          </Box>
+        </Flex>
+        <Footer />
+      </Box>
+    )
+  }
 
-  return (
-    <Box>
-      <TopBar />
-      <Flex h='100%'>
-        <SideBar />
-        <Box w='100%' p='2' overflowY='auto'>
-          {children}
-        </Box>
-      </Flex>
-      <Footer />
-    </Box>
-  )
+  return null
 }

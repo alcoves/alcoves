@@ -11,7 +11,9 @@ export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  async function handleLogin() {
+  async function handleLogin(e) {
+    e.preventDefault()
+
     try {
       await login({ email, password })
       router.push('/')

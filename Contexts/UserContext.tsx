@@ -4,14 +4,16 @@ import { createContext, useState, useContext, useEffect } from 'react'
 
 const UserContext = createContext({})
 
+const initialUser = {
+  id: 0,
+  email: '',
+  username: '',
+  isAuthenticated: false,
+}
+
 function UserProvider({ children }) {
   const [loading, setLoading] = useState(true)
-  const [user, setUser] = useState({
-    id: 0,
-    email: '',
-    username: '',
-    isAuthenticated: false,
-  })
+  const [user, setUser] = useState(initialUser)
 
   useEffect(() => {
     getMe()
@@ -19,46 +21,32 @@ function UserProvider({ children }) {
 
   // Sends a request to the server to fetch the current user
   async function getMe() {
-    try {
-      setLoading(true)
-      const user = await api.getMe()
+    setLoading(true)
+    const user = await api.getMe()
 
-      if (user) {
-        setUser({
-          id: user.id,
-          email: user.email,
-          isAuthenticated: true,
-          username: user.username,
-        })
-      }
-    } catch (error) {
-      // console.error(error)
-    } finally {
-      setLoading(false)
+    if (user) {
+      setUser({
+        id: user.id,
+        email: user.email,
+        isAuthenticated: true,
+        username: user.username,
+      })
     }
+
+    setLoading(false)
   }
 
   async function login({ email, password }: { email: string; password: string }) {
-    try {
-      setLoading(true)
-      await api.login({ email, password })
-    } catch (error) {
-      console.error(error)
-    } finally {
-      setLoading(false)
-    }
+    setLoading(true)
+    await api.login({ email, password })
+    setLoading(false)
   }
 
   async function logout() {
-    try {
-      setLoading(true)
-      // api.logout()
-      // setUser null
-    } catch (error) {
-      console.error(error)
-    } finally {
-      setLoading(false)
-    }
+    setLoading(true)
+    await api.logout()
+    setUser(initialUser)
+    setLoading(false)
   }
 
   return (
