@@ -15,8 +15,8 @@ export default function Profile() {
       router.push('/login')
     } catch (error) {
       toast({
-        title: 'Login Error',
-        description: 'Encountered an error while loggin in.',
+        title: 'Logout Error',
+        description: 'Encountered an error while logging out.',
         status: 'error',
         duration: 4000,
         isClosable: false,

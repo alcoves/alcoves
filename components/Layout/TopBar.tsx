@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Avatar, Flex } from '@chakra-ui/react'
 import { useUser } from '../../Contexts/UserContext'
+import UploadButton from '../UploadButton'
 
 function Profile() {
   const { user } = useUser()
@@ -23,7 +24,10 @@ function Profile() {
 export default function TopBar() {
   return (
     <Flex w='100%' h='40px' justify='end' align='center' p='1'>
-      <Profile />
+      <Flex align='center'>
+        <UploadButton />
+        <Profile />
+      </Flex>
     </Flex>
   )
 }
