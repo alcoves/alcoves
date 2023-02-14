@@ -4,7 +4,7 @@ WORKDIR /app
 COPY . .
 
 RUN yarn
-ADD .prisma node_modules/.prisma/
+RUN npx prisma generate
 RUN yarn build
 
 EXPOSE 4000
