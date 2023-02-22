@@ -1,5 +1,5 @@
 import { useRouter } from 'next/navigation'
-import { useUser } from '../Contexts/UserContext'
+import { useUser } from '../contexts/UserContext'
 import { Box, Button, Heading, Text, useToast } from '@chakra-ui/react'
 
 export default function Profile() {

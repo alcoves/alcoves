@@ -3,7 +3,7 @@ import theme from '../config/theme'
 import DevelopmentCSS from '../components/DevelopmentCSS'
 
 import { ChakraProvider } from '@chakra-ui/react'
-import { UserProvider } from '../Contexts/UserContext'
+import { UserProvider } from '../contexts/UserContext'
 
 function App({ Component, pageProps }) {
   return (

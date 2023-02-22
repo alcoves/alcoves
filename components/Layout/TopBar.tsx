@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { Avatar, Flex } from '@chakra-ui/react'
-import { useUser } from '../../Contexts/UserContext'
+import { useUser } from '../../contexts/UserContext'
 import UploadButton from '../UploadButton'
 
 function Profile() {

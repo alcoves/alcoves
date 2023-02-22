@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useUser } from '../Contexts/UserContext'
+import { useUser } from '../contexts/UserContext'
 import { Button, Flex, Heading, Input, VStack, useToast } from '@chakra-ui/react'
 
 export default function LoginPage() {
