@@ -5,7 +5,7 @@ import SideBar from './SideBar'
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Box, Flex } from '@chakra-ui/react'
-import { useUser } from '../../Contexts/UserContext'
+import { useUser } from '../../contexts/UserContext'
 
 export default function Layout({ children }) {
   const router = useRouter()
