@@ -20,7 +20,7 @@ export default function LoginPage() {
     } catch (error) {
       toast({
         title: 'Login Error',
-        description: 'Encountered an error while loggin in.',
+        description: 'Encountered an error while logging in.',
         status: 'error',
         duration: 4000,
         isClosable: false,
