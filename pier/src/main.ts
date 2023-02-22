@@ -1,4 +1,4 @@
-import * as cookieParser from 'cookie-parser';
+import fastifyCookie from '@fastify/cookie';
 import { AppModule } from './app.module';
 import { NestFactory } from '@nestjs/core';
 import { PrismaService } from './prisma.service';
@@ -18,7 +18,10 @@ async function bootstrap() {
   const prismaService = app.get(PrismaService);
   await prismaService.enableShutdownHooks(app);
 
-  app.use(cookieParser());
+  await app.register(fastifyCookie, {
+    secret: process.env.COOKIE_SECRET,
+  });
+
   useRequestLogging(app);
 
   app.enableCors({

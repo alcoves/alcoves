@@ -1,4 +1,4 @@
-import { Request } from 'express';
+import { FastifyRequest } from 'fastify';
 import { Injectable } from '@nestjs/common';
 import { Strategy, ExtractJwt } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
@@ -17,8 +17,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  private static extractSecureJWT(req: Request): string | null {
-    if (req?.cookies?.jwt.length > 0) return req.cookies.jwt;
+  private static extractSecureJWT(req: FastifyRequest): string | null {
+    if (req?.cookies?.jwt?.length > 0) return req.cookies.jwt;
     return null;
   }
 
