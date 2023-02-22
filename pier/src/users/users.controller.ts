@@ -16,7 +16,6 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth-guard';
 import { CurrentUser } from '../auth/current-user-decorator';
 
-
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -29,23 +28,23 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Get('me')
   findMe(@CurrentUser() user: User) {
-    return user
+    return user;
   }
 
   @UseGuards(JwtAuthGuard)
   @Get()
   async findMany() {
     const users = await this.usersService.findMany();
-    for (let user of users) delete user['password']
-    return users
+    for (const user of users) delete user['password'];
+    return users;
   }
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     const user = this.usersService.findById(id);
-    delete user['password']
-    return user
+    delete user['password'];
+    return user;
   }
 
   // @Patch(':id')

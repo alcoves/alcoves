@@ -9,8 +9,8 @@ export class UsersService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async findMany(): Promise<any[]> {
-    const users = await this.prismaService.user.findMany()
-    return users
+    const users = await this.prismaService.user.findMany();
+    return users;
   }
 
   async findByEmail(email: string): Promise<User | undefined> {
@@ -37,17 +37,27 @@ export class UsersService {
     return user || undefined;
   }
 
-  async createOne({ email, username, password }: { email: string, username: string, password: string }): Promise<User> {
+  async createOne({
+    email,
+    username,
+    password,
+  }: {
+    email: string;
+    username: string;
+    password: string;
+  }): Promise<User> {
     const user = this.prismaService.user.create({
       data: {
         email,
         username,
-        password
-      }
+        password,
+      },
     });
 
-    if (user) { delete user['password'] }
-    return user
+    if (user) {
+      delete user['password'];
+    }
+    return user;
   }
 
   // create(createUserDto: CreateUserDto) {
