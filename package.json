@@ -14,7 +14,7 @@
     "lintp": "prettier ./**/*.ts* ./**/*.js* --write"
   },
   "dependencies": {
-    "@next/font": "^13.0.6",
+    "@next/font": "^13.2.0",
     "@vidstack/player": "^1.6.5",
     "@vidstack/player-react": "^1.6.5",
     "axios": "^1.2.1",
