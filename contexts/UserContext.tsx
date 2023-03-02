@@ -21,32 +21,46 @@ function UserProvider({ children }) {
 
   // Sends a request to the server to fetch the current user
   async function getMe() {
-    setLoading(true)
-    const user = await api.getMe()
+    try {
+      setLoading(true)
+      const user = await api.getMe()
 
-    if (user) {
-      setUser({
-        id: user.id,
-        email: user.email,
-        isAuthenticated: true,
-        username: user.username,
-      })
+      if (user) {
+        setUser({
+          id: user.id,
+          email: user.email,
+          isAuthenticated: true,
+          username: user.username,
+        })
+      }
+    } catch (error) {
+      console.error('Error', error)
+    } finally {
+      setLoading(false)
     }
-
-    setLoading(false)
   }
 
   async function login({ email, password }: { email: string; password: string }) {
-    setLoading(true)
-    await api.login({ email, password })
-    setLoading(false)
+    try {
+      setLoading(true)
+      await api.login({ email, password })
+    } catch (error) {
+      console.error('Error', error)
+    } finally {
+      setLoading(false)
+    }
   }
 
   async function logout() {
-    setLoading(true)
-    await api.logout()
-    setUser(initialUser)
-    setLoading(false)
+    try {
+      setLoading(true)
+      await api.logout()
+      setUser(initialUser)
+    } catch (error) {
+      console.error('Error', error)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
