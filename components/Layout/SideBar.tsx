@@ -1,4 +1,4 @@
-import { IoFilm } from 'react-icons/io5'
+import { IoFilm, IoPeople } from 'react-icons/io5'
 import { useRouter } from 'next/navigation'
 import { Button, Flex, VStack } from '@chakra-ui/react'
 
@@ -21,6 +21,15 @@ export default function SideBar() {
           onClick={e => handleClick(e, '/')}
         >
           Media
+        </Button>
+        <Button
+          w='100%'
+          size='md'
+          justifyContent='start'
+          leftIcon={<IoPeople />}
+          onClick={e => handleClick(e, '/users')}
+        >
+          Users
         </Button>
       </VStack>
     </Flex>
