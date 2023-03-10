@@ -1,20 +1,19 @@
 export default function DevelopmentCSS() {
-  const devJsx =
-    process.env.NODE_ENV === 'development'
-      ? `
-* {
-  outline: 1px solid red;
-}
+  if (process.env.NEXT_PUBLIC_DEV_CSS === 'true') {
+    return (
+      <style global jsx>
+        {`
+          * {
+            outline: 1px solid red;
+          }
 
-*:hover {
-  outline: 2px solid blue;
-}
-`
-      : ''
+          *:hover {
+            outline: 2px solid blue;
+          }
+        `}
+      </style>
+    )
+  }
 
-  return (
-    <style global jsx>
-      {devJsx}
-    </style>
-  )
+  return null
 }
