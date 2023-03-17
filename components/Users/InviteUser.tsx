@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 import {
   Button,
   Modal,
@@ -9,23 +11,29 @@ import {
   ModalCloseButton,
   useDisclosure,
   Text,
-  Input,
   VStack,
 } from '@chakra-ui/react'
-import { useState } from 'react'
+import { useMutation } from '@tanstack/react-query'
 import { IoPersonSharp } from 'react-icons/io5'
 
 export default function InviteUser() {
-  const [error, setError] = useState()
-
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const mutation = useMutation({
+    mutationFn: () => {
+      return axios.get(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/invites`)
+    },
+  })
 
   async function handleCopy() {
     try {
       // Fetch invite link from server /invites
+      const inviteLink = await mutation.mutate()
+      console.log('inviteLink', inviteLink)
+
       // Copy the link to clipboard
-      onClose()
+
       // Close the modal and create a toast notification
+      onClose()
     } catch (error) {
       // Handle the error
     }
