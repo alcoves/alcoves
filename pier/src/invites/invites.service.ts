@@ -1,16 +1,11 @@
-import { Injectable, UseGuards } from '@nestjs/common';
-import { CreateInviteDto } from './dto/create-invite.dto';
-import { UpdateInviteDto } from './dto/update-invite.dto';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth-guard';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class InvitesService {
-  @UseGuards(JwtAuthGuard)
-  create(createInviteDto: CreateInviteDto) {
+  create() {
     return 'This action adds a new invite';
   }
 
-  @UseGuards(JwtAuthGuard)
   findAll() {
     return `This action returns all invites`;
     // return the invite code
