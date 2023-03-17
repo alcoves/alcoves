@@ -1,26 +1,31 @@
+import { Invite } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../prisma.service';
 
 @Injectable()
 export class InvitesService {
-  create() {
-    return 'This action adds a new invite';
+  constructor(private readonly prismaService: PrismaService) {}
+
+  async create(): Promise<Invite> {
+    const invite = this.prismaService.invite.create({ data: {} });
+    return invite;
   }
 
-  findAll() {
-    return `This action returns all invites`;
-    // return the invite code
-    return '123';
+  async findAll(): Promise<Invite[]> {
+    const invites = await this.prismaService.invite.findMany();
+    return invites;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} invite`;
+  async findOne(id: string): Promise<Invite> {
+    const invite = await this.prismaService.invite.findUnique({
+      where: { id },
+    });
+    return invite;
   }
 
-  // update(id: number, updateInviteDto: UpdateInviteDto) {
-  //   return `This action updates a #${id} invite`;
-  // }
-
-  // remove(id: number) {
-  //   return `This action removes a #${id} invite`;
-  // }
+  async removeOne(id: string) {
+    await this.prismaService.invite.delete({
+      where: { id },
+    });
+  }
 }
