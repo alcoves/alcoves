@@ -14,7 +14,7 @@ export default function LoginPage() {
   async function handleLogin() {
     try {
       await login({ email, password })
-      router.push('/')
+      router.replace('/')
     } catch (error) {
       toast({
         title: 'Login Error',
