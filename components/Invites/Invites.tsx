@@ -15,12 +15,14 @@ import {
 } from '@chakra-ui/react'
 import { useMutation } from '@tanstack/react-query'
 import { IoPersonSharp } from 'react-icons/io5'
+import GenerateInvite from './GenerateInvite'
+import ListInvites from './ListInvites'
 
-export default function InviteUser() {
+export default function Invites() {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const mutation = useMutation({
+  const createInvite = useMutation({
     mutationFn: () => {
-      return axios.get(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/invites`)
+      return axios.post(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/invites`)
     },
   })
 
@@ -51,10 +53,8 @@ export default function InviteUser() {
           <ModalCloseButton />
           <ModalBody>
             <VStack spacing='2'>
-              <Text>{`This is your invite link. Only share it with people you trust. They can use this link to create an account. Once they register you must verify them.`}</Text>
-              <Button w='100%' onClick={handleCopy}>
-                Copy Invite Link
-              </Button>
+              <ListInvites />
+              <GenerateInvite />
             </VStack>
           </ModalBody>
           <ModalFooter>
