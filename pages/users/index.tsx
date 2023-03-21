@@ -1,13 +1,13 @@
-import { Box, Flex } from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/react'
 import Layout from '../../components/Layout/Layout'
-import InviteUser from '../../components/Users/InviteUser'
+import Invites from '../../components/Invites/Invites'
 import ListUsers from '../../components/Users/ListUsers'
 
 export default function UsersPage() {
   return (
     <Layout>
       <Flex p='2'>
-        <InviteUser />
+        <Invites />
       </Flex>
       <ListUsers />
     </Layout>

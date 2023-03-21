@@ -26,3 +26,10 @@ export async function getMe(): Promise<User | undefined> {
     return undefined
   }
 }
+
+// Above is old, remove
+
+export async function listInvites() {
+  const response = await axios.get(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/invites`)
+  return response.data
+}
