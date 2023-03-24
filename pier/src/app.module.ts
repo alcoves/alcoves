@@ -8,6 +8,8 @@ import { InvitesModule } from './invites/invites.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth-guard';
 import { RolesGuard } from './roles/roles.guard';
 import { APP_GUARD, Reflector } from '@nestjs/core';
+import { TracingService } from './tracing.service';
+import { LoggingService } from './logging.service';
 
 @Module({
   providers: [
@@ -20,9 +22,12 @@ import { APP_GUARD, Reflector } from '@nestjs/core';
       provide: APP_GUARD,
       useClass: RolesGuard,
     },
+    LoggingService,
+    TracingService,
     PrismaService,
   ],
   controllers: [AppController],
+  exports: [LoggingService],
   imports: [
     AuthModule,
     UsersModule,

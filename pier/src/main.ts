@@ -8,13 +8,22 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
+import { TracingService } from './tracing.service';
+import { LoggingService } from './logging.service';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
-    new FastifyAdapter(),
+    new FastifyAdapter({ logger: false }),
   );
 
+  // initialize logger
+  app.useLogger(app.get(LoggingService));
+
+  // initialize tracing service
+  app.get(TracingService);
+
+  // initialize prisma service
   const prismaService = app.get(PrismaService);
   await prismaService.enableShutdownHooks(app);
 
