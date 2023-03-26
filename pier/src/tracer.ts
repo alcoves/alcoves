@@ -13,7 +13,6 @@ const TRACING_ENDPOINT = process.env.TRACING_ENDPOINT;
 let sdk: opentelemetry.NodeSDK | null = null;
 
 if (TRACING_ENDPOINT) {
-  console.log("creating tracing client")
   sdk = new opentelemetry.NodeSDK({
     traceExporter: new OTLPTraceExporter({
       url: TRACING_ENDPOINT,
