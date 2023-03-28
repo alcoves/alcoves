@@ -3,11 +3,13 @@ import { AuthService } from './auth.service';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { LocalAuthGuard } from './guards/local-auth-guard';
 import { Controller, Post, Req, Res, Body, UseGuards } from '@nestjs/common';
+import { AllowUnauthorizedRequest } from './allow-unauthorized-request-decorator';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @AllowUnauthorizedRequest()
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(
@@ -32,6 +34,7 @@ export class AuthController {
     res.clearCookie('jwt');
   }
 
+  @AllowUnauthorizedRequest()
   @Post('register')
   async register(
     @Body() registerUserDto: RegisterUserDto,
