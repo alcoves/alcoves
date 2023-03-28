@@ -2,7 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["tracing"]
 }
 
 datasource db {
@@ -10,25 +11,75 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role {
+enum UserRole {
   USER
   ADMIN
 }
 
-model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  username  String   @unique
-  password  String
-  verified  Boolean  @default(false)
-  roles     Role[]
+enum AlcoveRole {
+  USER
+  ADMIN
+}
+
+model Alcove {
+  id          String       @id @default(uuid())
+  tags        Tag[]
+  medias      Media[]
+  memberships Membership[]
+  invitations Invitation[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Media {
+  id            String   @id @default(uuid())
+  sourceId      String?
+  source        Media?   @relation("MediaOptimizations", fields: [sourceId], references: [id])
+  optimizations Media[]  @relation("MediaOptimizations")
+  Alcove        Alcove   @relation(fields: [alcoveId], references: [id])
+  alcoveId      String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Tag {
+  id        String   @id @default(uuid())
+  author    User     @relation(fields: [userId], references: [id])
+  userId    String
+  Alcove    Alcove   @relation(fields: [alcoveId], references: [id])
+  alcoveId  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model Invite {
+model Membership {
+  id        String       @id @default(uuid())
+  user      User         @relation(fields: [userId], references: [id])
+  Alcove    Alcove       @relation(fields: [alcoveId], references: [id])
+  alcoveId  String
+  roles     AlcoveRole[]
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  userId    String
+}
+
+model Invitation {
   id        String   @id @default(uuid())
   enabled   Boolean  @default(true)
+  Alcove    Alcove   @relation(fields: [alcoveId], references: [id])
+  alcoveId  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model User {
+  id          String       @id @default(uuid())
+  email       String       @unique
+  username    String       @unique
+  password    String
+  tags        Tag[]
+  memberships Membership[]
+  roles       UserRole[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 }
