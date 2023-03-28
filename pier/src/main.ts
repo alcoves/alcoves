@@ -38,10 +38,10 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Pier API')
     .setDescription('The API for Reef')
-    .setVersion('1.0')
-    .addTag('bken')
+    .setVersion('0.1')
+    .addTag('alcoves')
     .addBearerAuth()
-    .setExternalDoc('Postman Collection', '/docs-json')
+    .setExternalDoc('Postman Collection', '/api-json')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
