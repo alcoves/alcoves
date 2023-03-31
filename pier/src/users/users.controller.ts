@@ -26,15 +26,7 @@ export class UsersController {
 
   @Get()
   @CheckAbilities({ action: 'manage', subject: 'user' })
-  async findMany(@CurrentUser() user: User) {
-    const ability = this.abilityFactory.defineAbilityForPlatformUser(user);
-
-    const isAllowed = ability.can('manage', 'User');
-
-    if (!isAllowed) {
-      throw new ForbiddenException('only admin');
-    }
-
+  async findMany() {
     const users = await this.usersService.findMany();
     for (const user of users) delete user['password'];
     return users;
