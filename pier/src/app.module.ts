@@ -33,8 +33,8 @@ import { PlatformAbilityGuard } from './ability/abilities.guard';
     UsersModule,
     InvitesModule,
     AlcovesModule,
-    ConfigModule.forRoot({ isGlobal: true }),
     AbilityModule,
+    ConfigModule.forRoot({ isGlobal: true }),
   ],
 })
 export class AppModule {}

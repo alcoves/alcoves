@@ -27,8 +27,6 @@ export class PlatformAbilityGuard implements CanActivate {
       this.reflector.get<RequiredRule[]>(CHECK_ABILITY, context.getHandler()) ||
       [];
 
-    // console.log({ user, rules, ability });
-
     try {
       rules.forEach((rule) => {
         ForbiddenError.from(ability).throwUnlessCan(rule.action, rule.subject);

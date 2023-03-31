@@ -45,21 +45,6 @@ export class AbilityFactory {
       throw new Error('User has no roles');
     }
 
-    // We need to go get the users membership if the requested resource is to an alcove
-    // This may warrant a separate factory
-
-    // if (user) can(Action.Manage, 'all');
-    // can(Action.Manage, 'all', { createdBy: user.id });
-    // can('create', Post);
-    // can('update', Post, { createdBy: user.id });
-    // can('delete', Post, { createdBy: user.id });
-    // can('update', User, { id: user.id });
-    // can('delete', User, { id: user.id });
-
-    // return build({
-    //   detectSubjectType: (item) => item.constructor as ExtractSubjectType<Subjects>,
-    // });
-
     return build();
   }
 }
