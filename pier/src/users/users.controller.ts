@@ -1,32 +1,57 @@
-import { UserRole, User } from '@prisma/client';
+import { User } from '@prisma/client';
 import { UsersService } from './users.service';
-import { UserRoles } from '../roles/roles.decorator';
-import { Controller, Get, Param } from '@nestjs/common';
+import {
+  Get,
+  Param,
+  Delete,
+  Controller,
+  ForbiddenException,
+} from '@nestjs/common';
 import { CurrentUser } from '../auth/current-user-decorator';
+import { CheckAbilities } from '../ability/abilities.decorator';
+import { AbilityFactory } from '../ability/ability.factory';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private abilityFactory: AbilityFactory,
+    private readonly usersService: UsersService,
+  ) {}
 
   @Get('me')
-  @UserRoles(UserRole.USER)
+  @CheckAbilities({ action: 'read', subject: 'user' })
   findMe(@CurrentUser() user: User) {
     return user;
   }
 
   @Get()
-  @UserRoles(UserRole.ADMIN)
-  async findMany() {
+  @CheckAbilities({ action: 'manage', subject: 'user' })
+  async findMany(@CurrentUser() user: User) {
+    const ability = this.abilityFactory.defineAbilityForPlatformUser(user);
+
+    const isAllowed = ability.can('manage', 'User');
+
+    if (!isAllowed) {
+      throw new ForbiddenException('only admin');
+    }
+
     const users = await this.usersService.findMany();
     for (const user of users) delete user['password'];
     return users;
   }
 
   @Get(':id')
-  @UserRoles(UserRole.USER)
+  @CheckAbilities({ action: 'read', subject: 'user' })
   findOne(@Param('id') id: string) {
     const user = this.usersService.findById(id);
     delete user['password'];
     return user;
+  }
+
+  @Delete(':id')
+  @CheckAbilities({ action: 'delete', subject: 'user' })
+  remove(@Param('id') id: string) {
+    console.log('deleting user');
+    // return this.usersService.remove(id);
   }
 }

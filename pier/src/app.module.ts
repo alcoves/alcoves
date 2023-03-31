@@ -6,11 +6,11 @@ import { AppController } from './app.controller';
 import { UsersModule } from './users/users.module';
 import { InvitesModule } from './invites/invites.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth-guard';
-import { UserRolesGuard } from './roles/userRoles.guard';
-import { AlcoveRolesGuard } from './roles/alcoveRoles.guard';
 import { APP_GUARD, Reflector } from '@nestjs/core';
 import { LoggingService } from './logging.service';
 import { AlcovesModule } from './alcoves/alcoves.module';
+import { AbilityModule } from './ability/ability.module';
+import { PlatformAbilityGuard } from './ability/abilities.guard';
 
 @Module({
   providers: [
@@ -21,11 +21,7 @@ import { AlcovesModule } from './alcoves/alcoves.module';
     },
     {
       provide: APP_GUARD,
-      useClass: UserRolesGuard,
-    },
-    {
-      provide: APP_GUARD,
-      useClass: AlcoveRolesGuard,
+      useClass: PlatformAbilityGuard,
     },
     LoggingService,
     PrismaService,
@@ -38,6 +34,7 @@ import { AlcovesModule } from './alcoves/alcoves.module';
     InvitesModule,
     AlcovesModule,
     ConfigModule.forRoot({ isGlobal: true }),
+    AbilityModule,
   ],
 })
 export class AppModule {}

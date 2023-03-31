@@ -10,39 +10,38 @@ import {
 import { AlcovesService } from './alcoves.service';
 import { CreateAlcoveDto } from './dto/create-alcove.dto';
 import { UpdateAlcoveDto } from './dto/update-alcove.dto';
-import { AlcoveRoles, UserRoles } from '../roles/roles.decorator';
-import { AlcoveRole, UserRole } from '@prisma/client';
+import { CheckAbilities } from '../ability/abilities.decorator';
 
 @Controller('alcoves')
 export class AlcovesController {
   constructor(private readonly alcovesService: AlcovesService) {}
 
   @Post()
-  @UserRoles(UserRole.USER)
+  @CheckAbilities({ action: 'create', subject: 'alcoves' })
   create(@Body() createAlcoveDto: CreateAlcoveDto) {
     return this.alcovesService.create(createAlcoveDto);
   }
 
   @Get()
-  @UserRoles(UserRole.USER)
+  @CheckAbilities({ action: 'read', subject: 'alcoves' })
   findAll() {
     return this.alcovesService.findAll();
   }
 
   @Get(':id')
-  @AlcoveRoles(AlcoveRole.USER)
+  @CheckAbilities({ action: 'read', subject: 'alcoves' })
   findOne(@Param('id') id: string) {
     return this.alcovesService.findOne(+id);
   }
 
   @Patch(':id')
-  @AlcoveRoles(AlcoveRole.ADMIN)
+  @CheckAbilities({ action: 'update', subject: 'alcoves' })
   update(@Param('id') id: string, @Body() updateAlcoveDto: UpdateAlcoveDto) {
     return this.alcovesService.update(+id, updateAlcoveDto);
   }
 
   @Delete(':id')
-  @AlcoveRoles(AlcoveRole.ADMIN)
+  @CheckAbilities({ action: 'delete', subject: 'alcoves' })
   remove(@Param('id') id: string) {
     return this.alcovesService.remove(+id);
   }
