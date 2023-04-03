@@ -17,11 +17,24 @@ export class PlatformAbilityGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
+    const allowUnauthorizedRequest = this.reflector.get<boolean>(
+      'allowUnauthorizedRequest',
+      context.getHandler(),
+    );
+
+    if (allowUnauthorizedRequest) {
+      return true;
+    }
+
     // The purpose of this guard is to check if the user has the required platform access
     // We assume that the controller has used the @CheckAbilities decorator to specify the required access
     // If the user has the required access, we return true
 
     const { user } = context.switchToHttp().getRequest();
+    if (!user) {
+      throw new ForbiddenException('user not found');
+    }
+
     const ability = this.abilityFactory.defineAbilityForPlatformUser(user);
     const rules =
       this.reflector.get<RequiredRule[]>(CHECK_ABILITY, context.getHandler()) ||
