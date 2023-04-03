@@ -1,29 +1,35 @@
+import { Alcove } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { CreateAlcoveDto } from './dto/create-alcove.dto';
-import { UpdateAlcoveDto } from './dto/update-alcove.dto';
 
 @Injectable()
 export class AlcovesService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  create(createAlcoveDto: CreateAlcoveDto) {
-    return 'This action adds a new alcove';
+  async create(createAlcoveInput: Alcove) {
+    const alcove = await this.prismaService.alcove.create({
+      data: createAlcoveInput,
+    });
+    return alcove;
   }
 
-  findAll() {
-    return `This action returns all alcoves`;
+  async findAll() {
+    const alcoves = await this.prismaService.alcove.findMany();
+    return alcoves;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} alcove`;
+  async findOne(id: string) {
+    const alcove = await this.prismaService.alcove.findUnique({
+      where: { id },
+    });
+    return alcove;
   }
 
-  update(id: number, updateAlcoveDto: UpdateAlcoveDto) {
+  async update(id: string, updateAlcoveInput: Alcove) {
     return `This action updates a #${id} alcove`;
   }
 
-  remove(id: number) {
+  async remove(id: string) {
     return `This action removes a #${id} alcove`;
   }
 }
