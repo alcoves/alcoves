@@ -23,6 +23,7 @@ enum AlcoveRole {
 
 model Alcove {
   id          String       @id @default(uuid())
+  name        String
   tags        Tag[]
   medias      Media[]
   memberships Membership[]
