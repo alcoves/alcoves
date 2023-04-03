@@ -2,7 +2,7 @@ import { InvitesService } from './invites.service';
 import { CheckAbilities } from '../ability/abilities.decorator';
 import { Controller, Get, Post, Param, Delete } from '@nestjs/common';
 
-@Controller('invites')
+@Controller('alcoves/:alcoveId/invites')
 export class InvitesController {
   constructor(private readonly invitesService: InvitesService) {}
 
