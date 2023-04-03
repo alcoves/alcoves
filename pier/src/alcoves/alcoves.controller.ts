@@ -6,6 +6,7 @@ import {
   Param,
   Delete,
   Controller,
+  NotFoundException,
 } from '@nestjs/common';
 import { AlcovesService } from './alcoves.service';
 import { CheckAbilities } from '../ability/abilities.decorator';
@@ -17,8 +18,9 @@ export class AlcovesController {
 
   @Post()
   @CheckAbilities({ action: 'create', subject: 'alcoves' })
-  create(@Body() createAlcoveInput: Alcove) {
-    return this.alcovesService.create(createAlcoveInput);
+  async create(@Body() createAlcoveInput: Alcove) {
+    const alcove = await this.alcovesService.create(createAlcoveInput);
+    return { alcove };
   }
 
   @Get()
@@ -32,18 +34,33 @@ export class AlcovesController {
   @CheckAbilities({ action: 'read', subject: 'alcoves' })
   async findOne(@Param('id') id: string) {
     const alcove = await this.alcovesService.findOne(id);
-    return { alcove };
+    if (alcove) {
+      return { alcove };
+    }
+    return new NotFoundException();
   }
 
   @Patch(':id')
   @CheckAbilities({ action: 'update', subject: 'alcoves' })
-  update(@Param('id') id: string, @Body() updateAlcoveInput: Alcove) {
-    return this.alcovesService.update(id, updateAlcoveInput);
+  async update(@Param('id') id: string, @Body() updateAlcoveInput: Alcove) {
+    const originalAlcove = await this.alcovesService.findOne(id);
+    if (!originalAlcove) return new NotFoundException();
+
+    const updatedAlcove = await this.alcovesService.update(
+      id,
+      updateAlcoveInput,
+    );
+    if (updatedAlcove) {
+      return { updatedAlcove };
+    }
   }
 
   @Delete(':id')
   @CheckAbilities({ action: 'delete', subject: 'alcoves' })
-  remove(@Param('id') id: string) {
-    return this.alcovesService.remove(id);
+  async remove(@Param('id') id: string) {
+    const originalAlcove = await this.alcovesService.findOne(id);
+    if (!originalAlcove) return new NotFoundException();
+    await this.alcovesService.remove(id);
+    return 'OK';
   }
 }

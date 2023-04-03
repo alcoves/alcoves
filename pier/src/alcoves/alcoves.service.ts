@@ -6,30 +6,37 @@ import { PrismaService } from '../prisma.service';
 export class AlcovesService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async create(createAlcoveInput: Alcove) {
+  async create(createAlcoveInput: Alcove): Promise<Alcove> {
     const alcove = await this.prismaService.alcove.create({
       data: createAlcoveInput,
     });
     return alcove;
   }
 
-  async findAll() {
+  async findAll(): Promise<Alcove[]> {
     const alcoves = await this.prismaService.alcove.findMany();
     return alcoves;
   }
 
-  async findOne(id: string) {
+  async findOne(id: string): Promise<Alcove> {
     const alcove = await this.prismaService.alcove.findUnique({
       where: { id },
     });
     return alcove;
   }
 
-  async update(id: string, updateAlcoveInput: Alcove) {
-    return `This action updates a #${id} alcove`;
+  async update(id: string, updateAlcoveInput: Alcove): Promise<Alcove> {
+    const alcove = await this.prismaService.alcove.update({
+      where: { id },
+      data: updateAlcoveInput,
+    });
+    return alcove;
   }
 
-  async remove(id: string) {
-    return `This action removes a #${id} alcove`;
+  async remove(id: string): Promise<'OK'> {
+    await this.prismaService.alcove.delete({
+      where: { id },
+    });
+    return 'OK';
   }
 }
