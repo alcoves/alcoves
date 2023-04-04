@@ -1,8 +1,8 @@
 export default function DevelopmentCSS() {
-  if (process.env.NEXT_PUBLIC_DEV_CSS === 'true') {
-    return (
-      <style global jsx>
-        {`
+	if (process.env.NEXT_PUBLIC_DEV_CSS === "true") {
+		return (
+			<style global jsx>
+				{`
           * {
             outline: 1px solid red;
           }
@@ -11,9 +11,9 @@ export default function DevelopmentCSS() {
             outline: 2px solid blue;
           }
         `}
-      </style>
-    )
-  }
+			</style>
+		);
+	}
 
-  return null
+	return null;
 }

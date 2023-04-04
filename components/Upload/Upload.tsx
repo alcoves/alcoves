@@ -1,5 +1,5 @@
 export default function Upload() {
-  return <div>upload</div>
+	return <div>upload</div>;
 }
 
 // 'use client'
