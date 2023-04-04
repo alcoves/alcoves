@@ -8,6 +8,7 @@ import {
   Controller,
   ForbiddenException,
   Body,
+  HttpCode,
 } from '@nestjs/common';
 import { CurrentUser } from '../auth/current-user-decorator';
 import { CheckAbilities } from '../ability/abilities.decorator';
@@ -44,16 +45,19 @@ export class UsersController {
 
   @Patch(':id')
   @CheckAbilities({ action: 'update', subject: 'user' })
-  updateOne(@Param('id') id: string, @Body() data: Prisma.UserUpdateInput) {
-    const user = this.usersService.updateOne(id, data);
+  async updateOne(
+    @Param('id') id: string,
+    @Body() data: Prisma.UserUpdateInput,
+  ) {
+    const user = await this.usersService.updateOne(id, data);
     delete user['password'];
     return user;
   }
 
   @Delete(':id')
+  @HttpCode(204)
   @CheckAbilities({ action: 'delete', subject: 'user' })
-  remove(@Param('id') id: string) {
-    console.log('deleting user');
-    // return this.usersService.remove(id);
+  async remove(@Param('id') id: string) {
+    await this.usersService.remove(id);
   }
 }
