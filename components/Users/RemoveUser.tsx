@@ -1,9 +1,9 @@
-import { useEffect } from "react";
-import { User } from "../../types/types";
 import { removeUser } from "../../lib/api";
-import { IoTrashBinSharp } from "react-icons/io5";
+import { User } from "../../types/types";
 import { Button, useToast } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { IoTrashBinSharp } from "react-icons/io5";
 
 export default function RemoveUser({ user }: { user: User }) {
 	const toast = useToast();
