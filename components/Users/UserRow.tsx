@@ -1,6 +1,7 @@
-import { User } from '../../types/types'
-import { Avatar, Box, Button, Flex, Text } from '@chakra-ui/react'
 import AssignRole from './AssignRole'
+import RemoveUser from './RemoveUser'
+import { User } from '../../types/types'
+import { Avatar, Box, Flex, Text } from '@chakra-ui/react'
 
 export default function UserRow({ user }: { user: User }) {
   return (
@@ -14,7 +15,7 @@ export default function UserRow({ user }: { user: User }) {
       </Flex>
       <Flex>
         <AssignRole user={user} />
-        <Button size='xs'>Remove</Button>
+        <RemoveUser user={user} />
       </Flex>
     </Flex>
   )
