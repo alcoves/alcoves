@@ -11,8 +11,6 @@ export default function Layout({ children }) {
   const router = useRouter()
   const { user, loading } = useUser()
 
-  console.log('layout', user)
-
   useEffect(() => {
     if (!loading && !user) {
       console.log('wants to push')
