@@ -1,8 +1,8 @@
+import { listUsers } from "../../lib/api";
+import { User } from "../../types/types";
+import UserRow from "./UserRow";
 import { Box, Skeleton } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { listUsers } from "../../lib/api";
-import UserRow from "./UserRow";
-import { User } from "../../types/types";
 
 export default function ListUsers() {
 	const { isLoading, isError, data, error } = useQuery({

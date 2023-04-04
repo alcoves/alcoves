@@ -1,6 +1,6 @@
+import { User } from "../../types/types";
 import AssignRole from "./AssignRole";
 import RemoveUser from "./RemoveUser";
-import { User } from "../../types/types";
 import { Avatar, Box, Flex, Text } from "@chakra-ui/react";
 
 export default function UserRow({ user }: { user: User }) {
