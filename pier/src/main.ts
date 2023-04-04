@@ -1,15 +1,15 @@
-import tracing from './tracer';
+import tracing from './svc/tracer';
 import fastifyCookie from '@fastify/cookie';
 import { AppModule } from './app.module';
 import { NestFactory } from '@nestjs/core';
-import { PrismaService } from './prisma.service';
+import { PrismaService } from './svc/prisma.service';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { useRequestLogging } from './middleware/request-logging';
 import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
-import { LoggingService } from './logging.service';
+import { LoggingService } from './svc/logging.service';
 
 async function bootstrap() {
   tracing?.start();

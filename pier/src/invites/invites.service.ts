@@ -1,6 +1,6 @@
 import { Invitation } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
+import { PrismaService } from '../svc/prisma.service';
 
 @Injectable()
 export class InvitesService {
