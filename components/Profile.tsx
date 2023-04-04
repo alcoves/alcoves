@@ -24,7 +24,7 @@ export default function Profile() {
     }
   }
 
-  if (user.isAuthenticated) {
+  if (user) {
     return (
       <Box>
         <Heading size='md'>{`Welcome, ${user.username}!`}</Heading>

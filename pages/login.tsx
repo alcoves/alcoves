@@ -14,7 +14,8 @@ export default function LoginPage() {
   async function handleLogin() {
     try {
       await login({ email, password })
-      router.replace('/')
+      console.log('logged in')
+      router.push('/')
     } catch (error) {
       toast({
         title: 'Login Error',

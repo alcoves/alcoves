@@ -1,8 +1,13 @@
+export enum Role {
+  USER = 'USER',
+  ADMIN = 'ADMIN',
+}
+
 export interface User {
   id: number
+  role: Role
   email: string
   username: string
-  isAuthenticated: boolean
 }
 
 export interface UserContextProps {
