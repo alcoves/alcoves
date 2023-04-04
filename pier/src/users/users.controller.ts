@@ -1,11 +1,13 @@
-import { User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import { UsersService } from './users.service';
 import {
   Get,
   Param,
+  Patch,
   Delete,
   Controller,
   ForbiddenException,
+  Body,
 } from '@nestjs/common';
 import { CurrentUser } from '../auth/current-user-decorator';
 import { CheckAbilities } from '../ability/abilities.decorator';
@@ -29,13 +31,21 @@ export class UsersController {
   async findMany() {
     const users = await this.usersService.findMany();
     for (const user of users) delete user['password'];
-    return users;
+    return { users };
   }
 
   @Get(':id')
   @CheckAbilities({ action: 'read', subject: 'user' })
   findOne(@Param('id') id: string) {
     const user = this.usersService.findById(id);
+    delete user['password'];
+    return user;
+  }
+
+  @Patch(':id')
+  @CheckAbilities({ action: 'update', subject: 'user' })
+  updateOne(@Param('id') id: string, @Body() data: Prisma.UserUpdateInput) {
+    const user = this.usersService.updateOne(id, data);
     delete user['password'];
     return user;
   }

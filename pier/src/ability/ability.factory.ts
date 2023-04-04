@@ -26,12 +26,9 @@ export class AbilityFactory {
     // Dynamic roles would need to be fetched and evaluated here
     // Casl supports JSON structures which can be stored in the database
 
-    const isUser = user.roles.find((r) => r === Role.USER);
-    const isAdmin = user.roles.find((r) => r === Role.ADMIN);
-
-    if (isAdmin) {
+    if (user.role === Role.ADMIN) {
       can('manage', 'all');
-    } else if (isUser) {
+    } else if (user.role === Role.USER) {
       can('create', 'alcove');
       can('read', 'alcove');
       can('update', 'alcove');

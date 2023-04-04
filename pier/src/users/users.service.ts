@@ -1,4 +1,4 @@
-import { User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../svc/prisma.service';
 
@@ -30,6 +30,15 @@ export class UsersService {
   async findById(id: string): Promise<User> {
     const user = await this.prismaService.user.findUnique({
       where: { id },
+    });
+
+    return user || undefined;
+  }
+
+  async updateOne(id: string, data: Prisma.UserUpdateInput): Promise<User> {
+    const user = await this.prismaService.user.update({
+      where: { id },
+      data,
     });
 
     return user || undefined;
