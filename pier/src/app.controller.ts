@@ -1,11 +1,11 @@
-import { Get, Controller } from '@nestjs/common';
-import { AllowUnauthorizedRequest } from './auth/allow-unauthorized-request-decorator';
+import { Get, Controller } from "@nestjs/common";
+import { AllowUnauthorizedRequest } from "./auth/allow-unauthorized-request-decorator";
 
 @Controller()
 export class AppController {
-  @Get()
+	@Get()
   @AllowUnauthorizedRequest()
-  root(): string {
-    return 'OK';
-  }
+	root(): string {
+		return "OK";
+	}
 }

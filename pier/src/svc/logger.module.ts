@@ -1,5 +1,5 @@
-import { Module } from '@nestjs/common';
-import { LoggingService } from './logging.service';
+import { Module } from "@nestjs/common";
+import { LoggingService } from "./logging.service";
 
 @Module({
   providers: [LoggingService],
