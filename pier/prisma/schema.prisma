@@ -11,25 +11,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum UserRole {
-  USER
-  ADMIN
-}
-
-enum AlcoveRole {
+enum Role {
   USER
   ADMIN
 }
 
 model Alcove {
-  id          String       @id @default(uuid())
-  name        String
-  tags        Tag[]
-  medias      Media[]
-  memberships Membership[]
-  invitations Invitation[]
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Media {
@@ -37,50 +28,16 @@ model Media {
   sourceId      String?
   source        Media?   @relation("MediaOptimizations", fields: [sourceId], references: [id])
   optimizations Media[]  @relation("MediaOptimizations")
-  Alcove        Alcove   @relation(fields: [alcoveId], references: [id])
-  alcoveId      String
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }
 
-model Tag {
-  id        String   @id @default(uuid())
-  author    User     @relation(fields: [userId], references: [id])
-  userId    String
-  Alcove    Alcove   @relation(fields: [alcoveId], references: [id])
-  alcoveId  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Membership {
-  id        String       @id @default(uuid())
-  user      User         @relation(fields: [userId], references: [id])
-  Alcove    Alcove       @relation(fields: [alcoveId], references: [id])
-  alcoveId  String
-  roles     AlcoveRole[]
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
-  userId    String
-}
-
-model Invitation {
-  id        String   @id @default(uuid())
-  enabled   Boolean  @default(true)
-  Alcove    Alcove   @relation(fields: [alcoveId], references: [id])
-  alcoveId  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
 model User {
-  id          String       @id @default(uuid())
-  email       String       @unique
-  username    String       @unique
-  password    String
-  tags        Tag[]
-  memberships Membership[]
-  roles       UserRole[]
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  id        String   @id @default(uuid())
+  email     String   @unique
+  username  String   @unique
+  password  String
+  roles     Role[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

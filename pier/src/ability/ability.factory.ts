@@ -1,4 +1,4 @@
-import { User, UserRole } from '@prisma/client';
+import { User, Role } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
 import {
   AbilityBuilder,
@@ -26,8 +26,8 @@ export class AbilityFactory {
     // Dynamic roles would need to be fetched and evaluated here
     // Casl supports JSON structures which can be stored in the database
 
-    const isUser = user.roles.find((r) => r === UserRole.USER);
-    const isAdmin = user.roles.find((r) => r === UserRole.ADMIN);
+    const isUser = user.roles.find((r) => r === Role.USER);
+    const isAdmin = user.roles.find((r) => r === Role.ADMIN);
 
     if (isAdmin) {
       can('manage', 'all');
