@@ -1,8 +1,8 @@
-import { Reflector } from "@nestjs/core";
-import { ForbiddenError } from "@casl/ability";
-import { AbilityFactory } from "./ability.factory";
 import { CHECK_ABILITY, RequiredRule } from "./abilities.decorator";
-import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from "@nestjs/common";
+import { AbilityFactory } from "./ability.factory";
+import { ForbiddenError } from "@casl/ability";
+import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from "@nestjs/common";
+import { Reflector } from "@nestjs/core";
 
 @Injectable()
 export class PlatformAbilityGuard implements CanActivate {

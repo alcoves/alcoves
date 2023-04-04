@@ -14,10 +14,18 @@
 			"suspicious": {
 				"noExplicitAny": "off"
 			},
+			"performance": {
+				"noDelete": "warn"
+			},
 			"recommended": true
 		}
 	},
 	"files": {
-		"ignore": ["node_modules", "build", "dist", "coverage"]
+		"ignore": [
+			"node_modules",
+			"build",
+			"dist",
+			"coverage"
+		]
 	}
 }
