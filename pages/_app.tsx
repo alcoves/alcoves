@@ -12,17 +12,17 @@ function App({ Component, pageProps }) {
   const [queryClient] = useState(() => new QueryClient())
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={false} />
-      <Hydrate state={pageProps.dehydratedState}>
-        <UserProvider>
+    <UserProvider>
+      <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools initialIsOpen={false} />
+        <Hydrate state={pageProps.dehydratedState}>
           <ChakraProvider theme={theme}>
             <DevelopmentCSS />
             <Component {...pageProps} />
           </ChakraProvider>
-        </UserProvider>
-      </Hydrate>
-    </QueryClientProvider>
+        </Hydrate>
+      </QueryClientProvider>
+    </UserProvider>
   )
 }
 

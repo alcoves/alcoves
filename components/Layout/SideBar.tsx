@@ -1,9 +1,12 @@
 import { IoFilm, IoPeople } from 'react-icons/io5'
 import { useRouter } from 'next/navigation'
 import { Button, Flex, VStack } from '@chakra-ui/react'
+import { useUser } from '../../contexts/UserContext'
+import { Role } from '../../types/types'
 
 export default function SideBar() {
   const router = useRouter()
+  const { user } = useUser()
 
   function handleClick(e, href) {
     e.preventDefault()
@@ -22,15 +25,17 @@ export default function SideBar() {
         >
           Media
         </Button>
-        <Button
-          w='100%'
-          size='md'
-          justifyContent='start'
-          leftIcon={<IoPeople />}
-          onClick={e => handleClick(e, '/users')}
-        >
-          Users
-        </Button>
+        {user?.role === Role.ADMIN ? (
+          <Button
+            w='100%'
+            size='md'
+            justifyContent='start'
+            leftIcon={<IoPeople />}
+            onClick={e => handleClick(e, '/users')}
+          >
+            Users
+          </Button>
+        ) : null}
       </VStack>
     </Flex>
   )

@@ -6,7 +6,7 @@ import UploadButton from '../UploadButton'
 function Profile() {
   const { user } = useUser()
 
-  if (user.isAuthenticated) {
+  if (user) {
     return (
       <Link href='/profile'>
         <Avatar mr='2px' mt='2px' name={user.username} size='sm' />

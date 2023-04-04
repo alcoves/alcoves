@@ -11,13 +11,16 @@ export default function Layout({ children }) {
   const router = useRouter()
   const { user, loading } = useUser()
 
+  console.log('layout', user)
+
   useEffect(() => {
-    if (!loading && !user?.isAuthenticated) {
+    if (!loading && !user) {
+      console.log('wants to push')
       router.push('/login')
     }
   }, [user, loading, router])
 
-  if (!loading && user.isAuthenticated) {
+  if (!loading && user) {
     return (
       <Box>
         <TopBar />

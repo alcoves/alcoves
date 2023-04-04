@@ -1,19 +1,12 @@
 import * as api from '../lib/api'
-import { UserContextProps } from '../types/types'
+import { User, UserContextProps } from '../types/types'
 import { createContext, useState, useContext, useEffect } from 'react'
 
 const UserContext = createContext({})
 
-const initialUser = {
-  id: 0,
-  email: '',
-  username: '',
-  isAuthenticated: false,
-}
-
 function UserProvider({ children }) {
   const [loading, setLoading] = useState(true)
-  const [user, setUser] = useState(initialUser)
+  const [user, setUser] = useState<User | null>()
 
   useEffect(() => {
     getMe()
@@ -24,15 +17,7 @@ function UserProvider({ children }) {
     try {
       setLoading(true)
       const user = await api.getMe()
-
-      if (user) {
-        setUser({
-          id: user.id,
-          email: user.email,
-          isAuthenticated: true,
-          username: user.username,
-        })
-      }
+      if (user) setUser({ ...user })
     } catch (error) {
       console.error('Error', error)
     } finally {
@@ -55,7 +40,7 @@ function UserProvider({ children }) {
     try {
       setLoading(true)
       await api.logout()
-      setUser(initialUser)
+      setUser(null)
     } catch (error) {
       console.error('Error', error)
     } finally {
