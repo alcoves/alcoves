@@ -10,6 +10,7 @@ import { LoggingService } from './svc/logging.service';
 import { AlcovesModule } from './alcoves/alcoves.module';
 import { AbilityModule } from './ability/ability.module';
 import { PlatformAbilityGuard } from './ability/abilities.guard';
+import { MediaModule } from './media/media.module';
 
 @Module({
   providers: [
@@ -33,6 +34,7 @@ import { PlatformAbilityGuard } from './ability/abilities.guard';
     AlcovesModule,
     AbilityModule,
     ConfigModule.forRoot({ isGlobal: true }),
+    MediaModule,
   ],
 })
 export class AppModule {}
