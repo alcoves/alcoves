@@ -29,7 +29,19 @@ export async function getMe(): Promise<User | undefined> {
 
 // Above is old, remove
 
+const api = process.env.NEXT_PUBLIC_API_ENDPOINT
+
 export async function listInvites() {
-  const response = await axios.get(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/invites`)
+  const response = await axios.get(`${api}/invites`)
+  return response.data
+}
+
+export async function listUsers() {
+  const response = await axios.get(`${api}/users`)
+  return response.data
+}
+
+export async function patchUser({ userId, data }: { userId: string; data: any }) {
+  const response = await axios.patch(`${api}/users/${userId}`, data)
   return response.data
 }

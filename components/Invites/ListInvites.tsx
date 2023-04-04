@@ -27,8 +27,6 @@ export default function ListInvites() {
     )
   }
 
-  console.log(data)
-
   return (
     <Box>
       <InviteItem />
