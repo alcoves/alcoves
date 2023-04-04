@@ -4,7 +4,6 @@ import { AuthModule } from './auth/auth.module';
 import { PrismaService } from './svc/prisma.service';
 import { AppController } from './app.controller';
 import { UsersModule } from './users/users.module';
-import { InvitesModule } from './invites/invites.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth-guard';
 import { APP_GUARD, Reflector } from '@nestjs/core';
 import { LoggingService } from './svc/logging.service';
@@ -31,7 +30,6 @@ import { PlatformAbilityGuard } from './ability/abilities.guard';
   imports: [
     AuthModule,
     UsersModule,
-    InvitesModule,
     AlcovesModule,
     AbilityModule,
     ConfigModule.forRoot({ isGlobal: true }),
