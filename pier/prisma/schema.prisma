@@ -25,6 +25,8 @@ model Alcove {
 
 model Media {
   id            String   @id @default(uuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
   sourceId      String?
   source        Media?   @relation("MediaOptimizations", fields: [sourceId], references: [id])
   optimizations Media[]  @relation("MediaOptimizations")
@@ -38,6 +40,7 @@ model User {
   username  String   @unique
   password  String
   roles     Role[]
+  media     Media[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
