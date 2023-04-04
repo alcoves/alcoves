@@ -1,9 +1,9 @@
-import { Box } from '@chakra-ui/react'
+import { Box } from "@chakra-ui/react";
 
 export default function DeleteInvite() {
-  return (
-    <Box>
-      <Box>Delete Invite</Box>
-    </Box>
-  )
+	return (
+		<Box>
+			<Box>Delete Invite</Box>
+		</Box>
+	);
 }

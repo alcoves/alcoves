@@ -1,10 +1,10 @@
-import { Card, CardBody, CardHeader } from '@chakra-ui/react'
+import { Card, CardBody, CardHeader } from "@chakra-ui/react";
 
 export default function InviteCard() {
-  return (
-    <Card>
-      <CardHeader>Active</CardHeader>
-      <CardBody>Body</CardBody>
-    </Card>
-  )
+	return (
+		<Card>
+			<CardHeader>Active</CardHeader>
+			<CardBody>Body</CardBody>
+		</Card>
+	);
 }

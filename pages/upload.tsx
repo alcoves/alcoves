@@ -1,9 +1,9 @@
-import { Box } from '@chakra-ui/react'
+import { Box } from "@chakra-ui/react";
 
 export default function UploadPage() {
-  return (
-    <Box>
-      <Box>Upload</Box>
-    </Box>
-  )
+	return (
+		<Box>
+			<Box>Upload</Box>
+		</Box>
+	);
 }

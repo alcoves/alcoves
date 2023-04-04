@@ -1,11 +1,11 @@
-import Layout from '../components/Layout/Layout'
+import Layout from "../components/Layout/Layout";
 
-import { Box } from '@chakra-ui/react'
+import { Box } from "@chakra-ui/react";
 
 export default function HomePage() {
-  return (
-    <Layout>
-      <Box>HomePage</Box>
-    </Layout>
-  )
+	return (
+		<Layout>
+			<Box>HomePage</Box>
+		</Layout>
+	);
 }
