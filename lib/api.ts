@@ -45,3 +45,8 @@ export async function patchUser({ userId, data }: { userId: string; data: any })
   const response = await axios.patch(`${api}/users/${userId}`, data)
   return response.data
 }
+
+export async function removeUser({ userId }: { userId: string }) {
+  const response = await axios.delete(`${api}/users/${userId}`)
+  return response.data
+}
