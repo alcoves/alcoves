@@ -6,22 +6,20 @@ import { Controller, Get, Param, Req } from '@nestjs/common'
 export class AssetsController {
   constructor(private readonly assetsService: AssetsService) {}
 
-  async listAssets(path: string, serverUrl: string) {
-    const assets = await this.assetsService.findAll(path, serverUrl)
+  async listAssets(path: string) {
+    const assets = await this.assetsService.findAll(path)
     return { assets }
   }
 
   @Get('/*')
   async findAll(@Req() req: Request, @Param() params: any) {
     const path = params[0]
-    const serverUrl = `${req.protocol}://${req.get('Host')}`
-    return this.listAssets(path, serverUrl)
+    return this.listAssets(path)
   }
 
   @Get('/')
   async findAllRoot(@Req() req: Request, @Param() params: any) {
     const path = params[0]
-    const serverUrl = `${req.protocol}://${req.get('Host')}`
-    return this.listAssets(path, serverUrl)
+    return this.listAssets(path)
   }
 }

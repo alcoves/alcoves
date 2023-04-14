@@ -7,7 +7,7 @@ import { ConfigService } from '@nestjs/config'
 export class AssetsService {
   constructor(private configService: ConfigService) {}
 
-  async findAll(subpath: string, serverUrl: string) {
+  async findAll(subpath: string) {
     const dataDir = this.configService.get('DATA_DIR')
     const fullAssetPath = subpath ? `${dataDir}/${subpath}` : dataDir
     const requestedAsset = await fs.statSync(fullAssetPath)
@@ -24,9 +24,7 @@ export class AssetsService {
           name: file,
           stats: stats,
           type: stats.isFile() ? 'file' : 'folder',
-          streamUri: stats.isFile()
-            ? `${serverUrl}/streams/${subpath}/${file}`
-            : null,
+          streamPath: stats.isFile() ? `streams/${subpath}/${file}` : null,
         }
       })
 
@@ -38,9 +36,7 @@ export class AssetsService {
           name: path.basename(fullAssetPath),
           stats: requestedAsset,
           type: requestedAsset.isFile() ? 'file' : 'folder',
-          streamUri: requestedAsset.isFile()
-            ? `${serverUrl}/streams/${subpath}`
-            : null,
+          streamPath: requestedAsset.isFile() ? `streams/${subpath}` : null,
         },
       ]
     }
