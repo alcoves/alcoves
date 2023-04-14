@@ -1,32 +1,16 @@
-import tracing from "./svc/tracer";
-import fastifyCookie from "@fastify/cookie";
 import { AppModule } from "./app.module";
 import { NestFactory } from "@nestjs/core";
-import { PrismaService } from "./svc/prisma.service";
+import { ConfigService } from "@nestjs/config";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
-import { useRequestLogging } from "./middleware/request-logging";
-import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
-import { LoggingService } from "./svc/logging.service";
 
 async function bootstrap() {
-	tracing?.start();
-
-	const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter());
-
-	app.useLogger(app.get(LoggingService));
-
-	const prismaService = app.get(PrismaService);
-	await prismaService.enableShutdownHooks(app);
-
-	await app.register(fastifyCookie, {
-		secret: process.env.COOKIE_SECRET,
-	});
-
-	useRequestLogging(app);
+	const app = await NestFactory.create(AppModule);
+	const configService = app.get(ConfigService);
+	const port = configService.get("PORT") || 4000;
 
 	app.enableCors({
-		origin: "http://localhost:3000", // TODO :: Interpolate this value.
-		credentials: true,
+		origin: "*",
+		credentials: false,
 	});
 
 	const config = new DocumentBuilder()
@@ -40,6 +24,6 @@ async function bootstrap() {
 	const document = SwaggerModule.createDocument(app, config);
 	SwaggerModule.setup("api", app, document);
 
-	await app.listen(4000);
+	await app.listen(port);
 }
 bootstrap();
