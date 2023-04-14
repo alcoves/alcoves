@@ -21,6 +21,7 @@ RUN yarn install --production --frozen-lockfile
 # Production
 FROM node:18-alpine As production
 
+WORKDIR /app
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/dist ./dist
 

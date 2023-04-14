@@ -1,6 +1,5 @@
-import { Request } from 'express'
 import { AssetsService } from './assets.service'
-import { Controller, Get, Param, Req } from '@nestjs/common'
+import { Controller, Get, Param } from '@nestjs/common'
 
 @Controller('assets')
 export class AssetsController {
@@ -12,13 +11,13 @@ export class AssetsController {
   }
 
   @Get('/*')
-  async findAll(@Req() req: Request, @Param() params: any) {
+  async findAll(@Param() params: string[]) {
     const path = params[0]
     return this.listAssets(path)
   }
 
   @Get('/')
-  async findAllRoot(@Req() req: Request, @Param() params: any) {
+  async findAllRoot(@Param() params: string[]) {
     const path = params[0]
     return this.listAssets(path)
   }
