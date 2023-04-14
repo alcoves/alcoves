@@ -1158,7 +1158,7 @@
   resolved "https://registry.yarnpkg.com/@types/scheduler/-/scheduler-0.16.3.tgz#cef09e3ec9af1d63d2a6cc5b383a737e24e6dcf5"
   integrity sha512-5cJ8CB4yAx7BH1oMvdU0Jh9lrEXyPkar6F9G/ERswkCuvP4KQZfZkSjcMbAICCpQTN4OuZn8tz0HiKv9TGZgrQ==
 
-"@vidstack/react@^0.4.2":
+"@vidstack/react@0.4.2":
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/@vidstack/react/-/react-0.4.2.tgz#67168a26204768da0e436886a2788054edb85c1b"
   integrity sha512-ThSkJnUr5D08e7ehYL35HLjLAgHnCrTTlVuukzm0uTjfgzZH55oap1LgE3R8ZK/l0L4UymRaZ0U24ATsrdfwzQ==

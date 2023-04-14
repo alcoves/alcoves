@@ -8,15 +8,15 @@ function UserProvider({ children }) {
 	const [loading, setLoading] = useState(true);
 	const [user, setUser] = useState<User | null>();
 
-	useEffect(() => {
-		getMe();
-	}, []);
+	// useEffect(() => {
+	// 	getMe();
+	// }, []);
 
 	// Sends a request to the server to fetch the current user
 	async function getMe() {
 		try {
 			setLoading(true);
-			const user = await api.getMe();
+			// const user = await api.getMe();
 			if (user) setUser({ ...user });
 		} catch (error) {
 			console.error("Error", error);

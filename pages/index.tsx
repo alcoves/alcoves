@@ -1,10 +1,10 @@
-import ListFiles from "../components/Files/ListFiles";
+import ListFiles from "../components/Assets/ListAssets";
 import Layout from "../components/Layout/Layout";
 
-export default function HomePage() {
+export default function Assets() {
 	return (
 		<Layout>
-			<ListFiles />
+			Home
 		</Layout>
 	);
 }

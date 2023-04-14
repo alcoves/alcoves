@@ -52,8 +52,9 @@ const api = process.env.NEXT_PUBLIC_API_ENDPOINT;
 // 	return response.data;
 // }
 
-export async function getAssets({ path }: { path: string }) {
-	const url = path ? `${api}/assets?subpath=${path}` : `${api}/assets`;
+export async function getAssets(asPath?: string) {
+	const url = `${api}${asPath}`;
+	console.log(url);
 	const response = await axios.get(url);
 	return response.data;
 }

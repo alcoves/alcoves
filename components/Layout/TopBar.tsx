@@ -1,5 +1,7 @@
 import Link from "next/link";
-import { Avatar, Flex } from "@chakra-ui/react";
+import logo from '../../public/logo.png'
+import { Avatar, Box, Flex, Heading } from "@chakra-ui/react";
+import Image from "next/image";
 
 function Profile() {
 	return (
@@ -11,9 +13,15 @@ function Profile() {
 
 export default function TopBar() {
 	return (
-		<Flex bg='gray.900' w='100%' h='50px' justify='end' align='center' p='1'>
+		<Flex bg='gray.900' w='100%' h='50px' justify='space-between' align='center' p='1'>
+			<Flex as={Link} href='/assets' direction='row' align='center'>
+				<Image height={30} width={30}  src={logo} alt='logo'/>
+				<Heading h='30px' pl='4' pt='1' size='md'>
+					Alcoves
+				</Heading>
+			</Flex>
 			<Flex align='center'>
-				<Profile />
+				{/* <Profile /> */}
 			</Flex>
 		</Flex>
 	);
