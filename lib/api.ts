@@ -1,8 +1,7 @@
 import axios from 'axios'
 
-import getConfig from 'next/config'
-const { publicRuntimeConfig: config } = getConfig()
-console.info(`Using ${config.NEXT_PUBLIC_API_ENDPOINT} as API endpoint`)
+const apiUrl = process.env.NEXT_PUBLIC_API_ENDPOINT
+
 // Other solutions https://raphaelpralat.medium.com/system-environment-variables-in-next-js-with-docker-1f0754e04cde
 
 // import { User } from "../types/types";
@@ -56,7 +55,7 @@ console.info(`Using ${config.NEXT_PUBLIC_API_ENDPOINT} as API endpoint`)
 // }
 
 export async function getAssets(asPath?: string) {
-  const url = `${config.NEXT_PUBLIC_API_ENDPOINT}${asPath}`
+  const url = `${apiUrl}${asPath}`
   const response = await axios.get(url)
   return response.data
 }
