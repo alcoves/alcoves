@@ -1,9 +1,9 @@
-import { Module } from '@nestjs/common';
-import { StreamsService } from './streams.service';
-import { StreamsController } from './streams.controller';
+import { Module } from '@nestjs/common'
+import { StreamsService } from './streams.service'
+import { StreamsController } from './streams.controller'
 
 @Module({
   controllers: [StreamsController],
-  providers: [StreamsService]
+  providers: [StreamsService],
 })
 export class StreamsModule {}
