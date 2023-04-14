@@ -56,7 +56,7 @@ console.info(`Using ${config.NEXT_PUBLIC_API_ENDPOINT} as API endpoint`)
 // }
 
 export async function getAssets(asPath?: string) {
-  const url = `${api}${asPath}`
+  const url = `${config.NEXT_PUBLIC_API_ENDPOINT}${asPath}`
   const response = await axios.get(url)
   return response.data
 }
