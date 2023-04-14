@@ -46,7 +46,6 @@ const ResizableVideo: React.FC<VideoProps> = ({ src, width, height }) => {
       <video
         ref={videoRef}
         src={src}
-        style={videoStyle}
         width={width}
         height={height}
         autoPlay

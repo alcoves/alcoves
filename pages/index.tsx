@@ -1,6 +1,23 @@
-import ListFiles from '../components/Assets/ListAssets'
+import { Flex, Heading } from '@chakra-ui/react'
 import Layout from '../components/Layout/Layout'
+import { useRouter } from 'next/router'
 
 export default function Assets() {
-  return <Layout>Home</Layout>
+  const router = useRouter()
+
+  return (
+    <Layout>
+      <Flex w="100%" justify="center">
+        <Heading
+          pt="12"
+          cursor="pointer"
+          onClick={() => {
+            router.push('/assets')
+          }}
+        >
+          Enter the Alcove
+        </Heading>
+      </Flex>
+    </Layout>
+  )
 }
