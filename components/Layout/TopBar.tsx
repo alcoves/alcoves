@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import logo from '../../public/logo.png'
-import { Avatar, Box, Flex, Heading } from '@chakra-ui/react'
+import { Avatar, Flex, Heading } from '@chakra-ui/react'
 import Image from 'next/image'
 
 function Profile() {
