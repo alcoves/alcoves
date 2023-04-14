@@ -1,5 +1,5 @@
 export default function tidal() {
-	return true;
+  return true
 }
 
 // import { UploadResponse, Video } from '../types/types'

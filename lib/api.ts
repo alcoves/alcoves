@@ -1,6 +1,6 @@
-import axios from "axios";
+import axios from 'axios'
 
-const api = process.env.NEXT_PUBLIC_API_ENDPOINT;
+const api = process.env.NEXT_PUBLIC_API_ENDPOINT
 
 // import { User } from "../types/types";
 
@@ -53,8 +53,8 @@ const api = process.env.NEXT_PUBLIC_API_ENDPOINT;
 // }
 
 export async function getAssets(asPath?: string) {
-	const url = `${api}${asPath}`;
-	console.log(url);
-	const response = await axios.get(url);
-	return response.data;
+  const url = `${api}${asPath}`
+  console.log(url)
+  const response = await axios.get(url)
+  return response.data
 }
