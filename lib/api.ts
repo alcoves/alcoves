@@ -1,7 +1,9 @@
 import axios from 'axios'
 
-const api = process.env.NEXT_PUBLIC_API_ENDPOINT
-console.info(`Using ${api} as API endpoint`)
+import getConfig from 'next/config'
+const { publicRuntimeConfig: config } = getConfig()
+console.info(`Using ${config.NEXT_PUBLIC_API_ENDPOINT} as API endpoint`)
+// Other solutions https://raphaelpralat.medium.com/system-environment-variables-in-next-js-with-docker-1f0754e04cde
 
 // import { User } from "../types/types";
 
