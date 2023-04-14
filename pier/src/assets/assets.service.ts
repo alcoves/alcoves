@@ -10,38 +10,39 @@ export class AssetsService {
   async findAll(subpath: string, serverUrl: string) {
     const dataDir = this.configService.get('DATA_DIR')
     const fullAssetPath = subpath ? `${dataDir}/${subpath}` : dataDir
+    const requestedAsset = await fs.statSync(fullAssetPath)
 
-    const requestedAssetDirectory = await fs.lstat(fullAssetPath)
+    if (requestedAsset.isDirectory()) {
+      const files = await fs.readdir(fullAssetPath)
 
-    if (!requestedAssetDirectory.isDirectory()) {
-      const fullPath = fullAssetPath
+      const assets = files.map((file) => {
+        const fullPath = `${fullAssetPath}/${file}`
+        const stats = fs.statSync(fullPath)
+
+        return {
+          fullPath,
+          name: file,
+          stats: stats,
+          type: stats.isFile() ? 'file' : 'folder',
+          streamUri: stats.isFile()
+            ? `${serverUrl}/streams/${subpath}/${file}`
+            : null,
+        }
+      })
+
+      return assets.sort((a, b) => a.name.localeCompare(b.name))
+    } else {
       return [
         {
-          name: path.basename(fullPath),
-          stats: fs.statSync(fullPath),
-          fullPath: fullPath,
-          type: 'file',
-          streamUri: `${serverUrl}/streams/${subpath}`,
+          fullPath: fullAssetPath,
+          name: path.basename(fullAssetPath),
+          stats: requestedAsset,
+          type: requestedAsset.isFile() ? 'file' : 'folder',
+          streamUri: requestedAsset.isFile()
+            ? `${serverUrl}/streams/${subpath}`
+            : null,
         },
       ]
     }
-
-    const files = await fs.readdir(fullAssetPath)
-
-    const assets = files.map((file) => {
-      const fullPath = `${fullAssetPath}/${file}`
-      const stats = fs.statSync(fullPath)
-      const stat = fs.lstatSync(fullPath)
-
-      return {
-        name: file,
-        stats: stats,
-        fullPath: fullPath,
-        type: stat.isFile() ? 'file' : 'folder',
-        streamUri: null,
-      }
-    })
-
-    return assets
   }
 }
