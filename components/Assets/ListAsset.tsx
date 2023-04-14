@@ -1,17 +1,18 @@
 import 'vidstack/styles/defaults.css'
 
-import { MediaOutlet, MediaPlayer } from '@vidstack/react'
 import { Box } from '@chakra-ui/react'
+import { MediaOutlet, MediaPlayer } from '@vidstack/react'
+import { Asset } from '../../types/types'
 
-export default function ListAsset({ asset }: { asset: any }) {
+const apiUrl =
+  process.env.NEXT_PUBLIC_API_ENDPOINT || 'https://pier.rustyguts.net'
+
+export default function ListAsset({ asset }: { asset: Asset }) {
+  const streamUrl = `${apiUrl}/${asset.streamPath}`
+
   return (
     <Box w="100%" h="1000px">
-      <MediaPlayer
-        autoplay
-        controls={true}
-        src={asset.streamUri}
-        aspectRatio={16 / 9}
-      >
+      <MediaPlayer autoplay controls src={streamUrl} aspectRatio={16 / 9}>
         <MediaOutlet />
       </MediaPlayer>
     </Box>

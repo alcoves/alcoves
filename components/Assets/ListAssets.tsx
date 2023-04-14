@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import ListAsset from './ListAsset'
 import FileList from './FileList'
 import FolderList from './FolderList'
+import { Asset } from '../../types/types'
 
 export default function ListAssets() {
   const router = useRouter()
@@ -12,7 +13,7 @@ export default function ListAssets() {
   const { isLoading, isError, data, error } = useQuery({
     enabled: router.isReady,
     queryKey: ['assets', router.asPath],
-    queryFn: async () => {
+    queryFn: async (): Promise<{ assets: Asset[] }> => {
       const data = await getAssets(router.asPath)
       return data
     },

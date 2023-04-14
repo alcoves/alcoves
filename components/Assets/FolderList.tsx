@@ -1,7 +1,8 @@
 import { Box, SimpleGrid, Text } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
+import { Asset } from '../../types/types'
 
-export default function FolderList({ assets }: { assets: any[] }) {
+export default function FolderList({ assets }: { assets: Asset[] }) {
   const router = useRouter()
   const justFolders = assets.filter((asset) => asset.type === 'folder')
 

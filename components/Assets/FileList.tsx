@@ -9,6 +9,7 @@ import {
   TableContainer,
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
+import { Asset } from '../../types/types'
 
 function bytesToSize(bytes: number): string {
   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB']
@@ -17,7 +18,7 @@ function bytesToSize(bytes: number): string {
   return `${parseFloat((bytes / Math.pow(1024, i)).toFixed(2))} ${sizes[i]}`
 }
 
-export default function FileList({ assets }: { assets: any[] }) {
+export default function FileList({ assets }: { assets: Asset[] }) {
   const router = useRouter()
   const justFiles = assets.filter((asset) => asset.type === 'file')
 
@@ -46,7 +47,7 @@ export default function FileList({ assets }: { assets: any[] }) {
                     }}
                   >
                     <Td>{file.name}</Td>
-                    <Td>{file.stats.ctime}</Td>
+                    <Td>{new Date(file.stats.ctime).toISOString()}</Td>
                     <Td>{bytesToSize(file.stats.size)}</Td>
                   </Tr>
                 )
