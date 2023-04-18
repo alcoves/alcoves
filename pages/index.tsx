@@ -9,6 +9,7 @@ export default function Assets() {
     <Layout>
       <Flex w="100%" justify="center">
         <Heading
+          h="100px"
           pt="12"
           cursor="pointer"
           onClick={() => {
