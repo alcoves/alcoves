@@ -1,5 +1,5 @@
-import Layout from '../../components/Layout/Layout'
 import ListVideos from '../../components/Videos/ListVideos'
+import Layout from '../../components/Layout/Layout'
 
 export default function ListVideosPage() {
   return (

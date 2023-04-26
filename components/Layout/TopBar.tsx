@@ -21,7 +21,7 @@ export default function TopBar() {
       align="center"
       p="1"
     >
-      <Flex as={Link} href="/videos" direction="row" align="center">
+      <Flex as={Link} href="/" direction="row" align="center">
         <Image height={30} width={30} src={logo} alt="logo" />
         <Heading h="30px" pl="4" pt="1" size="md">
           Alcoves

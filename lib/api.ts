@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const apiUrl =
+export const apiUrl =
   process.env.NEXT_PUBLIC_API_ENDPOINT || 'https://pier.rustyguts.net'
 
 export async function getVideos() {

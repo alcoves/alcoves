@@ -11,15 +11,18 @@ interface VideoProps {
 
 const VidstackPlayer: React.FC<VideoProps> = ({ options }) => {
   return (
-    <MediaPlayer
-      controls
-      autoplay
-      aspectRatio={16 / 9}
-      src={options.source}
-      // poster={options.poster}
-    >
-      <MediaOutlet />
-    </MediaPlayer>
+    <>
+      <video controls src={options.source} />
+      {/* <MediaPlayer
+        controls
+        autoplay
+        aspectRatio={16 / 9}
+        src={options.source}
+        // poster={options.poster}
+      >
+        <MediaOutlet />
+      </MediaPlayer> */}
+    </>
   )
 }
 
