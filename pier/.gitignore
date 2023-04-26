@@ -42,3 +42,6 @@ lerna-debug.log*
 # prisma
 dev.db
 dev.db-journal
+
+# test data
+data

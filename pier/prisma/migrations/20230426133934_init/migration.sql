@@ -1,0 +1,13 @@
+-- CreateTable
+CREATE TABLE "Video" (
+    "id" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "location" TEXT NOT NULL,
+    "duration" INTEGER NOT NULL DEFAULT 0,
+    "size" INTEGER NOT NULL DEFAULT 0,
+    "authoredAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Video_pkey" PRIMARY KEY ("id")
+);

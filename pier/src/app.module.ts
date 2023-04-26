@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config'
 import { AppController } from './app.controller'
 import { AssetsModule } from './assets/assets.module'
 import { StreamsModule } from './streams/streams.module'
+import { VideosModule } from './videos/videos.module'
 
 @Module({
   providers: [],
@@ -11,6 +12,7 @@ import { StreamsModule } from './streams/streams.module'
     AssetsModule,
     ConfigModule.forRoot({ isGlobal: true }),
     StreamsModule,
+    VideosModule,
   ],
 })
 export class AppModule {}
