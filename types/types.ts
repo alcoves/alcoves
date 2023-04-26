@@ -1,14 +1,9 @@
-import * as fs from 'fs'
-
-enum AssetType {
-  file = 'file',
-  folder = 'folder',
-}
-
-export interface Asset {
-  fullPath: string
-  name: string
-  stats: fs.Stats
-  type: AssetType
-  streamPath: string | null
+export interface Video {
+  id: string
+  size: number
+  title: string
+  location: string
+  createdAt: string
+  updatedAt: string
+  authoredAt: string
 }

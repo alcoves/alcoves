@@ -2,7 +2,7 @@ import { Flex, Heading } from '@chakra-ui/react'
 import Layout from '../components/Layout/Layout'
 import { useRouter } from 'next/router'
 
-export default function Assets() {
+export default function Videos() {
   const router = useRouter()
 
   return (
@@ -13,7 +13,7 @@ export default function Assets() {
           pt="12"
           cursor="pointer"
           onClick={() => {
-            router.push('/assets')
+            router.push('/videos')
           }}
         >
           Enter the Alcove
