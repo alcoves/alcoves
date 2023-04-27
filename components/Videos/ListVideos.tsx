@@ -11,7 +11,8 @@ import {
   Tr,
 } from '@chakra-ui/react'
 
-function bytesToSize(bytes: number): string {
+function megabytesToSize(bytes: number): string {
+  bytes = bytes * 1024 * 1024 // We convert to bytes because the db stores in mb
   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB']
   if (bytes === 0) return '0 Byte'
   const i = Math.floor(Math.log(bytes) / Math.log(1024))
@@ -50,7 +51,7 @@ export default function ListVideos({
                   >
                     <Td>{video.title}</Td>
                     <Td>{new Date(video.authoredAt).toISOString()}</Td>
-                    <Td>{bytesToSize(video.size)}</Td>
+                    <Td>{megabytesToSize(video.size)}</Td>
                   </Tr>
                 )
               })}
