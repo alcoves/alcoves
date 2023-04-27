@@ -17,6 +17,15 @@ model Video {
   duration   Int      @default(0)
   size       Int      @default(0)
   authoredAt DateTime @default(now())
+  tags       Tag[]
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+}
+
+model Tag {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  videos    Video[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

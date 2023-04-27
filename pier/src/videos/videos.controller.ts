@@ -8,6 +8,7 @@ import {
   Delete,
   Req,
   Res,
+  Query,
 } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
 import { Request, Response } from 'express'
@@ -29,8 +30,15 @@ export class VideosController {
   }
 
   @Get()
-  async findAll() {
-    const videos = await this.videosService.findAll()
+  async findAll(@Query('tag') tag: string) {
+    const query: any = {
+      include: {
+        tags: true,
+      },
+    }
+    if (tag) query.where = { tags: { some: { id: tag } } }
+
+    const videos = await this.videosService.findAll(query)
     return { videos }
   }
 

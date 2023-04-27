@@ -16,14 +16,17 @@ export class VideosService {
     return video
   }
 
-  async findAll(): Promise<Video[]> {
-    const videos = await this.prisma.video.findMany()
+  async findAll(query): Promise<Video[]> {
+    const videos = await this.prisma.video.findMany(query)
     return videos
   }
 
   async findOne(id: string): Promise<Video> {
     const video = await this.prisma.video.findFirst({
       where: { id },
+      include: {
+        tags: true,
+      },
     })
     return video
   }
