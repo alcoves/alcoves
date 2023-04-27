@@ -19,7 +19,8 @@ export default function TopBar() {
       h="50px"
       justify="space-between"
       align="center"
-      p="1"
+      px="3"
+      py="1"
     >
       <Flex as={Link} href="/" direction="row" align="center">
         <Image height={30} width={30} src={logo} alt="logo" />

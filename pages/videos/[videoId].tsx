@@ -7,7 +7,7 @@ export default function ListVideoPage() {
   const { videoId } = router.query
 
   return (
-    <Layout>
+    <Layout sidebar={false}>
       <ListVideo id={videoId} />
     </Layout>
   )
