@@ -35,6 +35,9 @@ export class VideosController {
       include: {
         tags: true,
       },
+      orderBy: {
+        authoredAt: 'desc',
+      },
     }
     if (tag) query.where = { tags: { some: { id: tag } } }
 
