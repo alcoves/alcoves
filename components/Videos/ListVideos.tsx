@@ -45,7 +45,7 @@ export default function ListVideos({
                     cursor="pointer"
                     _hover={{ bg: 'blue.600' }}
                     onClick={() => {
-                      router.push(`videos/${video.id}`)
+                      router.push(`/videos/${video.id}`)
                     }}
                   >
                     <Td>{video.title}</Td>
