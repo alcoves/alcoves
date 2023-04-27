@@ -14,8 +14,8 @@ model Video {
   id         String   @id @default(uuid())
   title      String
   location   String
-  duration   Int      @default(0)
-  size       String   @default("")
+  duration   Float    @default(0)
+  size       Float    @default(0)
   authoredAt DateTime @default(now())
   tags       Tag[]
   createdAt  DateTime @default(now())
