@@ -9,6 +9,7 @@
   "repository": "git@github.com:bkenio/pier.git",
   "scripts": {
     "build": "nest build",
+    "prestart": "prisma migrate deploy",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
