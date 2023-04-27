@@ -11,7 +11,7 @@ export class VideosService {
   async create(data: Prisma.VideoCreateInput): Promise<Video> {
     const stat = await fs.stat(data.location)
     const video = await this.prisma.video.create({
-      data: { ...data, size: stat.size },
+      data: { ...data, size: stat.size.toString() },
     })
     return video
   }
@@ -37,7 +37,7 @@ export class VideosService {
       const stat = await fs.stat(video.location)
       await this.prisma.video.update({
         where: { id: video.id },
-        data: { size: stat.size },
+        data: { size: stat.size.toString() },
       })
     }
     return `${videos.length} video rescanned`
