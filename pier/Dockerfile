@@ -4,6 +4,7 @@ FROM node:18-alpine As development
 WORKDIR /app
 COPY package.json yarn.lock ./
 RUN yarn --frozen-lockfile
+RUN npx prisma generate
 COPY . .
 
 # Build
@@ -17,7 +18,6 @@ COPY . .
 RUN yarn build
 ENV NODE_ENV production
 RUN yarn install --production --frozen-lockfile
-RUN npx prisma generate
 
 # Production
 FROM node:18-alpine As production
