@@ -16,7 +16,7 @@ model Video {
   location   String
   duration   Float    @default(0)
   size       Float    @default(0)
-  hash       String   @unique
+  hash       String   @unique @default("")
   authoredAt DateTime @default(now())
   tags       Tag[]
   createdAt  DateTime @default(now())
