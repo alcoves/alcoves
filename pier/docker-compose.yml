@@ -19,9 +19,8 @@ services:
     build:
       context: .
       dockerfile: ./docker/Dockerfile.dev
-    environment:
-      PORT: 4000
-      DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
+    env_file:
+      - .env
     volumes:
       - .:/app
       - ./data:/media
