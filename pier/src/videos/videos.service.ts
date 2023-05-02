@@ -1,3 +1,4 @@
+import * as path from 'path'
 import * as fs from 'fs-extra'
 import { Injectable } from '@nestjs/common'
 import { Request, Response } from 'express'
@@ -11,8 +12,11 @@ export class VideosService {
   async create(data: Prisma.VideoCreateInput): Promise<Video> {
     const stat = await fs.stat(data.location)
     const size = stat.size / (1024 * 1024)
+    if (await !fs.exists(data.location)) {
+      throw new Error(`file doesn't exist: ${data.location}`)
+    }
     const video = await this.prisma.video.create({
-      data: { ...data, size },
+      data: { ...data, size, location: path.normalize(data.location) },
     })
     return video
   }
