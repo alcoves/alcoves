@@ -1,25 +1,29 @@
 services:
-  # reef:
-  #   restart: always
-  #   build:
-  #     context: ../reef
-  #     dockerfile: ../reef/docker/Dockerfile.dev
-  #   environment:
-  #     NEXT_PUBLIC_DEV_CSS: true
-  #     NEXT_PUBLIC_API_ENDPOINT: "http://atoll:4000"
-  #   ports:
-  #     - 3000:3000
+  reef:
+    restart: always
+    ports:
+      - 3000:3000
+    build:
+      context: ../reef/
+      dockerfile: ../reef/docker/Dockerfile.dev
+    environment:
+      NEXT_PUBLIC_DEV_CSS: true
+      NEXT_PUBLIC_API_ENDPOINT: "http://atoll:4000"
+    volumes:
+      - ../reef/.:/app
+      - /app/node_modules
   atoll:
     restart: always
+    ports:
+      - 4000:4000
     build:
       context: .
       dockerfile: ./docker/Dockerfile.dev
     environment:
       DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
-    ports:
-      - 4000:4000
     volumes:
       - .:/app
+      - /app/node_modules
   postgres:
     image: postgres
     restart: always
@@ -36,9 +40,8 @@ services:
     ports:
       - 6379:6379
     command: redis-server --requirepass redis
-    volumes: 
+    volumes:
       - redis:/data
-
 volumes:
   redis:
   postgres:
