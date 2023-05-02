@@ -10,6 +10,7 @@
   "scripts": {
     "build": "nest build",
     "start": "nest start",
+    "prestart:dev": "prisma migrate deploy",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "prestart:prod": "prisma migrate deploy",
