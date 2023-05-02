@@ -1,5 +1,6 @@
 import * as path from 'path'
 import * as fs from 'fs-extra'
+import * as crypto from 'crypto'
 import { Injectable } from '@nestjs/common'
 import { Request, Response } from 'express'
 import { Prisma, Video } from '@prisma/client'
@@ -9,14 +10,40 @@ import { PrismaService } from '../services/prisma.service'
 export class VideosService {
   constructor(private prisma: PrismaService) {}
 
+  hashFile(filePath: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const md5sum = crypto.createHash('md5')
+      const stream = fs.createReadStream(filePath)
+
+      stream.on('error', (error) => {
+        reject(error)
+      })
+
+      md5sum.once('readable', () => {
+        const hash = md5sum.read().toString('hex')
+        resolve(hash)
+      })
+
+      stream.pipe(md5sum)
+    })
+  }
+
   async create(data: Prisma.VideoCreateInput): Promise<Video> {
-    const stat = await fs.stat(data.location)
+    const normalizedLocation = path.normalize(data.location)
+    const stat = await fs.stat(normalizedLocation)
     const size = stat.size / (1024 * 1024)
-    if (await !fs.exists(data.location)) {
-      throw new Error(`file doesn't exist: ${data.location}`)
+
+    if (await !fs.exists(normalizedLocation)) {
+      throw new Error(`file doesn't exist: ${normalizedLocation}`)
     }
+
     const video = await this.prisma.video.create({
-      data: { ...data, size, location: path.normalize(data.location) },
+      data: {
+        ...data,
+        size,
+        location: normalizedLocation,
+        hash: await this.hashFile(normalizedLocation),
+      },
     })
     return video
   }
