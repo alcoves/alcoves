@@ -4,11 +4,12 @@ import * as crypto from 'crypto'
 import { Injectable } from '@nestjs/common'
 import { Request, Response } from 'express'
 import { Prisma, Video } from '@prisma/client'
+import { ConfigService } from '@nestjs/config'
 import { PrismaService } from '../services/prisma.service'
 
 @Injectable()
 export class VideosService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, private config: ConfigService) {}
 
   hashFile(filePath: string): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -29,7 +30,10 @@ export class VideosService {
   }
 
   async create(data: Prisma.VideoCreateInput): Promise<Video> {
-    const normalizedLocation = path.normalize(data.location)
+    const videoRootPath = this.config.get<string>('paths.videos')
+    const normalizedLocation = path.normalize(
+      `${videoRootPath}/${data.location}`
+    )
     const stat = await fs.stat(normalizedLocation)
     const size = stat.size / (1024 * 1024)
 
@@ -39,10 +43,16 @@ export class VideosService {
 
     const video = await this.prisma.video.create({
       data: {
-        ...data,
-        size,
-        location: normalizedLocation,
-        hash: await this.hashFile(normalizedLocation),
+        title: data.title,
+        playbacks: {
+          create: [
+            {
+              size,
+              location: normalizedLocation,
+              hash: await this.hashFile(normalizedLocation),
+            },
+          ],
+        },
       },
     })
     return video
@@ -58,6 +68,8 @@ export class VideosService {
       where: { id },
       include: {
         tags: true,
+        playbacks: true,
+        thumbnails: true,
       },
     })
     return video
@@ -76,12 +88,21 @@ export class VideosService {
     return `${videos.length} video rescanned`
   }
 
-  async streamOne(id: string, req: Request, res: Response): Promise<unknown> {
+  async playbackOne(
+    id: string,
+    playbackId: string,
+    req: Request,
+    res: Response
+  ): Promise<unknown> {
     const video = await this.prisma.video.findFirst({
-      where: { id },
+      where: { id, playbacks: { some: { id: playbackId } } },
+      include: {
+        playbacks: true,
+      },
     })
 
-    const stat = fs.statSync(video.location)
+    const playback = video.playbacks.find((p) => p.id === playbackId)
+    const stat = fs.statSync(playback.location)
     const fileSize = stat.size
     const range = req.headers.range
 
@@ -90,7 +111,7 @@ export class VideosService {
       const start = parseInt(parts[0], 10)
       const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1
       const chunksize = end - start + 1
-      const file = fs.createReadStream(video.location, {
+      const file = fs.createReadStream(playback.location, {
         start,
         end,
       })
@@ -108,7 +129,7 @@ export class VideosService {
         'Content-Type': 'video/mp4',
       }
       res.writeHead(200, head)
-      return fs.createReadStream(video.location).pipe(res)
+      return fs.createReadStream(playback.location).pipe(res)
     }
   }
 

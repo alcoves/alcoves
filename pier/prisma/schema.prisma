@@ -11,16 +11,40 @@ datasource db {
 }
 
 model Video {
-  id         String   @id @default(uuid())
+  id         String      @id @default(uuid())
   title      String
-  location   String   @unique
-  duration   Float    @default(0)
-  size       Float    @default(0)
-  hash       String   @default("")
-  authoredAt DateTime @default(now())
+  location   String? // Deprecate
+  duration   Float       @default(0)
+  size       Float       @default(0) // Deprecate
+  hash       String      @default("") // Deprecate
   tags       Tag[]
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  thumbnails ImageFile[]
+  playbacks  VideoFile[]
+  authoredAt DateTime    @default(now())
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+}
+
+model VideoFile {
+  id        String   @id @default(uuid())
+  location  String   @unique
+  size      Float    @default(0)
+  hash      String   @default("")
+  video     Video    @relation(fields: [videoId], references: [id])
+  videoId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ImageFile {
+  id        String   @id @default(uuid())
+  location  String   @unique
+  size      Float    @default(0)
+  hash      String   @default("")
+  video     Video    @relation(fields: [videoId], references: [id])
+  videoId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Tag {

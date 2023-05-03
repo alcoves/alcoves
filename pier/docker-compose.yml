@@ -21,9 +21,11 @@ services:
       dockerfile: ./docker/Dockerfile.dev
     env_file:
       - .env
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/postgres
     volumes:
       - .:/app
-      - ./data:/media
+      - ./data:/data
       - /app/node_modules
   postgres:
     image: postgres:alpine

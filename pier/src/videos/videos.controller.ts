@@ -34,6 +34,8 @@ export class VideosController {
     const query: any = {
       include: {
         tags: true,
+        playbacks: true,
+        thumbnails: true,
       },
       orderBy: {
         authoredAt: 'desc',
@@ -51,13 +53,14 @@ export class VideosController {
     return { video }
   }
 
-  @Get(':id/stream')
-  findOneStream(
+  @Get(':id/playbacks/:playbackId')
+  playbackOneStream(
     @Param('id') id: string,
+    @Param('playbackId') playbackId: string,
     @Res() res: Response,
     @Req() req: Request
   ) {
-    return this.videosService.streamOne(id, req, res)
+    return this.videosService.playbackOne(id, playbackId, req, res)
   }
 
   @Patch(':id')
