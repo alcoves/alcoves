@@ -22,7 +22,7 @@ services:
     env_file:
       - .env
     environment:
-      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/postgres
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
     volumes:
       - .:/app
       - ./data:/data
@@ -47,14 +47,9 @@ services:
     restart: always
     ports:
       - 6379:6379
-    command: redis-server --requirepass redis
+    # command: redis-server --requirepass redis
     volumes:
       - redis:/data
-  # prisma-studio:
-  #   image: timothyjmiller/prisma-studio:latest
-  #   restart: unless-stopped
-  #   ports:
-  #     - 5555:5555
 volumes:
   redis:
   postgres:
