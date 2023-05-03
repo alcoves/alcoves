@@ -1,6 +1,5 @@
 import VidstackPlayer from '../Players/Vidstack/Player'
 
-import { useRouter } from 'next/router'
 import { Video } from '../../types/types'
 import { useQuery } from '@tanstack/react-query'
 import { apiUrl, getVideo } from '../../lib/api'
@@ -11,9 +10,7 @@ export default function ListVideo({
 }: {
   id: string | string[] | undefined
 }) {
-  const router = useRouter()
-
-  const { isLoading, isError, data, error } = useQuery({
+  const { data } = useQuery({
     enabled: Boolean(id),
     queryKey: ['videos', id],
     queryFn: async (): Promise<{ video: Video }> => {
@@ -22,10 +19,8 @@ export default function ListVideo({
     },
   })
 
-  const streamUrl = `${apiUrl}/videos/${id}/stream`
-  // const shareUrl = `${window.location.origin}${router.asPath}`
-
   if (!data?.video) return null
+  const streamUrl = `${apiUrl}/videos/${id}/playbacks/${data?.video?.playbacks[0]['id']}`
 
   return (
     <Flex w="100%" h="100%" direction="column">
