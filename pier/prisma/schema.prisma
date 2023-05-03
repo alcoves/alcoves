@@ -13,10 +13,10 @@ datasource db {
 model Video {
   id         String   @id @default(uuid())
   title      String
-  location   String
+  location   String   @unique
   duration   Float    @default(0)
   size       Float    @default(0)
-  hash       String   @unique @default("")
+  hash       String   @default("")
   authoredAt DateTime @default(now())
   tags       Tag[]
   createdAt  DateTime @default(now())
