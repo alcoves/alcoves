@@ -22,10 +22,13 @@ services:
     env_file:
       - .env
     environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
       DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
     volumes:
       - .:/app
-      - ./data:/data
+      - /mnt/shack/media/gaming/archive_test:/videos
+      - ./config:/config
       - /app/node_modules
   postgres:
     image: postgres:alpine

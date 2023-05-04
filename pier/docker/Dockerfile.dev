@@ -1,9 +1,22 @@
-FROM node:18-alpine
+FROM ubuntu:22.04
+
+RUN apt update
+RUN apt install -y curl wget xz-utils unzip
+
+RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
+RUN apt install -y nodejs
+RUN npm install --global yarn
+
+ENV FFMPEG_VERSION="ffmpeg-n6.0-latest-linux64-gpl-6.0"
+RUN wget -q https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/${FFMPEG_VERSION}.tar.xz
+RUN tar -xvf ${FFMPEG_VERSION}.tar.xz
+RUN mv ${FFMPEG_VERSION}/bin/* /usr/bin/
+RUN rm -rf ${FFMPEG_VERSION}*
 
 WORKDIR /app
 
 COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
+RUN yarn install --frozen-lockfile --platform=linux --arch=x64
 
 COPY . .
 RUN npx prisma generate

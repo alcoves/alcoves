@@ -23,6 +23,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@nestjs/bullmq": "^1.1.0",
     "@nestjs/common": "^9.4.0",
     "@nestjs/config": "^2.3.1",
     "@nestjs/core": "^9.4.0",
@@ -31,10 +32,13 @@
     "@nestjs/platform-express": "^9.4.0",
     "@nestjs/swagger": "^6.3.0",
     "@prisma/client": "4.13.0",
+    "bullmq": "^3.12.0",
     "dotenv": "^16.0.3",
     "fs-extra": "^11.1.1",
+    "readdirp": "^3.6.0",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.2.0"
+    "rxjs": "^7.2.0",
+    "sharp": "^0.32.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.4.2",

@@ -63,6 +63,16 @@ export class VideosController {
     return this.videosService.playbackOne(id, playbackId, req, res)
   }
 
+  @Get(':id/thumbnails/:thumbnailId')
+  getOneThumbnail(
+    @Param('id') id: string,
+    @Param('thumbnailId') thumbnailId: string,
+    @Res() res: Response,
+    @Req() req: Request
+  ) {
+    return this.videosService.getThumbnail(id, thumbnailId, req, res)
+  }
+
   @Patch(':id')
   async update(@Param('id') id: string, @Body() data: Prisma.VideoUpdateInput) {
     const video = await this.videosService.update(id, data)

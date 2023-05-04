@@ -12,7 +12,16 @@ export class TagsService {
   }
 
   async findAll() {
-    const tags = await this.prisma.tag.findMany()
+    const tags = await this.prisma.tag.findMany({
+      include: {
+        videos: {
+          take: 1,
+          include: {
+            thumbnails: true,
+          },
+        },
+      },
+    })
     return tags
   }
 

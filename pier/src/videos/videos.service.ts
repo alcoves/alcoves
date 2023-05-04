@@ -1,33 +1,23 @@
 import * as path from 'path'
 import * as fs from 'fs-extra'
-import * as crypto from 'crypto'
+import readdirp from 'readdirp'
+
+import { Queue } from 'bullmq'
+import { JOB_QUEUES } from '../types'
 import { Injectable } from '@nestjs/common'
 import { Request, Response } from 'express'
+import { InjectQueue } from '@nestjs/bullmq'
 import { Prisma, Video } from '@prisma/client'
 import { ConfigService } from '@nestjs/config'
 import { PrismaService } from '../services/prisma.service'
 
 @Injectable()
 export class VideosService {
-  constructor(private prisma: PrismaService, private config: ConfigService) {}
-
-  hashFile(filePath: string): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const md5sum = crypto.createHash('md5')
-      const stream = fs.createReadStream(filePath)
-
-      stream.on('error', (error) => {
-        reject(error)
-      })
-
-      md5sum.once('readable', () => {
-        const hash = md5sum.read().toString('hex')
-        resolve(hash)
-      })
-
-      stream.pipe(md5sum)
-    })
-  }
+  constructor(
+    private prisma: PrismaService,
+    private config: ConfigService,
+    @InjectQueue(JOB_QUEUES.SCANNER) private scannerQueue: Queue
+  ) {}
 
   async create(data: Prisma.VideoCreateInput): Promise<Video> {
     const videoRootPath = this.config.get<string>('paths.videos')
@@ -49,7 +39,6 @@ export class VideosService {
             {
               size,
               location: normalizedLocation,
-              hash: await this.hashFile(normalizedLocation),
             },
           ],
         },
@@ -76,16 +65,36 @@ export class VideosService {
   }
 
   async rescan(): Promise<string> {
-    const videos = await this.prisma.video.findMany()
-    for (const video of videos) {
-      const stat = await fs.stat(video.location)
-      const size = stat.size / (1024 * 1024)
-      await this.prisma.video.update({
-        where: { id: video.id },
-        data: { size },
-      })
+    const videoRootPath = this.config.get<string>('paths.videos')
+    for await (const entry of readdirp(videoRootPath)) {
+      this.scannerQueue.add('scanner', { path: entry.fullPath })
     }
-    return `${videos.length} video rescanned`
+    return `rescanning ${videoRootPath}`
+  }
+
+  async getThumbnail(
+    id: string,
+    thumbnailId: string,
+    req: Request,
+    res: Response
+  ): Promise<unknown> {
+    const video = await this.prisma.video.findFirst({
+      where: { id },
+      include: {
+        thumbnails: true,
+      },
+    })
+
+    const thumbnail = video.thumbnails.find((p) => p.id === thumbnailId)
+    const stat = fs.statSync(thumbnail.location)
+    const fileSize = stat.size
+
+    const head = {
+      'Content-Length': fileSize,
+      'Content-Type': 'image/jpeg',
+    }
+    res.writeHead(200, head)
+    return fs.createReadStream(thumbnail.location).pipe(res)
   }
 
   async playbackOne(
