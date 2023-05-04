@@ -1,8 +1,9 @@
-import { getTags } from '../../lib/api'
+import { apiUrl, getTags } from '../../lib/api'
 import { Tag } from '../../types/types'
 import { useRouter } from 'next/router'
-import { Box, Heading, SimpleGrid, Text } from '@chakra-ui/react'
+import { Box, Flex, Heading, Image, SimpleGrid, Text } from '@chakra-ui/react'
 import { useQuery } from '@tanstack/react-query'
+import Link from 'next/link'
 
 export default function TagExplorer() {
   const router = useRouter()
@@ -15,31 +16,93 @@ export default function TagExplorer() {
     },
   })
 
-  function handleClick(e, tagName) {
-    e.preventDefault()
-    router.push(`search/${tagName}`)
+  function getRgbaFromString(str: string): string {
+    // Generate a hash code from the string
+    let hash = 0
+    for (let i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash)
+    }
+
+    // Extract 3 values from the hash code
+    const r = (hash >> 8) & 0xff
+    const g = (hash >> 4) & 0xff
+    const b = hash & 0xff
+    const a = 0.6
+
+    // Construct the RGB value
+    return `rgb(${r}, ${g}, ${b}, ${a})`
+  }
+
+  function getGradientFromString(str: string): string {
+    // Generate a hash code from the string
+    let hash = 0
+    for (let i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash)
+    }
+
+    // Extract 4 values from the hash code
+    const r = (hash >> 16) & 0xff
+    const g = (hash >> 8) & 0xff
+    const b = hash & 0xff
+    const a = 0.4
+
+    // Construct the RGBA value
+    // return `rgba(${r}, ${g}, ${b}, ${a})`
+
+    // Adjust the RGB values to create a smaller range of color variation
+    const r2 = (r + 16) % 256
+    const g2 = (g + 32) % 256
+    const b2 = (b + 48) % 256
+
+    // Construct gradient colors
+    const color1 = `rgb(${r}, ${g}, ${b}, ${a})`
+    const color2 = `rgb(${r2}, ${g2}, ${b2}, ${a})`
+    // Construct gradient string
+    return `linear-gradient(to bottom right, ${color1}, ${color2})`
   }
 
   if (data?.tags?.length) {
+    console.log({ data })
+    const thumbnailId = data?.tags?.[0]?.videos?.[0]?.thumbnails?.[0]?.id
+    const cardImageUrl = `${apiUrl}/videos/${data?.tags?.[0]?.videos?.[0]?.id}/thumbnails/${thumbnailId}`
+
     return (
       <Box w="100%" p="4">
         <Heading pb="4">Tags</Heading>
-        <SimpleGrid minChildWidth="200px" spacing={2}>
+        <SimpleGrid minChildWidth="360px" spacing={2}>
           {data?.tags?.map((tag) => {
             return (
-              <Box
-                p="2"
+              <Flex
+                as={Link}
                 key={tag.id}
-                bg="gray.900"
-                cursor="pointer"
-                borderRadius="4"
-                _hover={{ bg: 'blue.600' }}
-                onClick={(e) => handleClick(e, tag.id)}
+                w="360px"
+                h="200px"
+                borderRadius="md"
+                href={`/search/${tag.id}`}
+                backgroundPosition="center"
+                backgroundRepeat="no-repeat"
+                backgroundSize={'cover'}
+                backgroundImage={`url("${cardImageUrl}")`}
               >
-                <Text fontSize=".9rem" isTruncated>
-                  {tag.name}
-                </Text>
-              </Box>
+                <Flex
+                  w="100%"
+                  h="100%"
+                  align="center"
+                  justify="center"
+                  borderRadius="md"
+                  backdropFilter={'blur(1px)'}
+                  background={getRgbaFromString(tag.id)}
+                >
+                  <Text
+                    isTruncated
+                    fontSize="1.3rem"
+                    fontWeight="black"
+                    textShadow="0 2px 4px rgba(0,0,0,.35)"
+                  >
+                    {tag.name}
+                  </Text>
+                </Flex>
+              </Flex>
             )
           })}
         </SimpleGrid>
