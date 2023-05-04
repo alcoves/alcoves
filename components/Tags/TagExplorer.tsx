@@ -71,6 +71,8 @@ export default function TagExplorer() {
         <Heading pb="4">Tags</Heading>
         <SimpleGrid minChildWidth="360px" spacing={2}>
           {data?.tags?.map((tag) => {
+            const thumbnailId = tag?.videos?.[0].thumbnails?.[0]?.id
+            const cardImageUrl = `${apiUrl}/videos/${tag.videos?.[0]?.id}/thumbnails/${thumbnailId}`
             return (
               <Flex
                 as={Link}
