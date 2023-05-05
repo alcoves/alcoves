@@ -13,7 +13,7 @@ import {
 import { Prisma } from '@prisma/client'
 import { Request, Response } from 'express'
 import { VideosService } from './videos.service'
-import { CreateVideoInput } from './dto/dto'
+import { CreateVideoInput, RescanVideoInput } from './dto/dto'
 
 @Controller('videos')
 export class VideosController {
@@ -26,8 +26,8 @@ export class VideosController {
   }
 
   @Post('rescan')
-  rescan() {
-    return this.videosService.rescan()
+  rescan(@Body() data: RescanVideoInput) {
+    return this.videosService.rescan(data)
   }
 
   @Get()

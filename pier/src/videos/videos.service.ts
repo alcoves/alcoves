@@ -3,21 +3,22 @@ import * as fs from 'fs-extra'
 import readdirp from 'readdirp'
 
 import { Queue } from 'bullmq'
-import { JOB_QUEUES } from '../types'
 import { Injectable } from '@nestjs/common'
 import { Request, Response } from 'express'
 import { InjectQueue } from '@nestjs/bullmq'
 import { Prisma, Video } from '@prisma/client'
 import { ConfigService } from '@nestjs/config'
 import { PrismaService } from '../services/prisma.service'
-import { CreateVideoInput } from './dto/dto'
+import { CreateVideoInput, RescanVideoInput } from './dto/dto'
+import { JOB_QUEUES, ThumbnailProcessorInputs } from '../types'
 
 @Injectable()
 export class VideosService {
   constructor(
     private prisma: PrismaService,
     private config: ConfigService,
-    @InjectQueue(JOB_QUEUES.SCANNER) private scannerQueue: Queue
+    @InjectQueue(JOB_QUEUES.SCANNER) private scannerQueue: Queue,
+    @InjectQueue(JOB_QUEUES.THUMBNAILS) private thumbnailQueue: Queue
   ) {}
 
   async create(data: CreateVideoInput): Promise<Video> {
@@ -65,11 +66,22 @@ export class VideosService {
     return video
   }
 
-  async rescan(): Promise<string> {
+  async rescan(data: RescanVideoInput): Promise<string> {
     const videoRootPath = this.config.get<string>('paths.videos')
     for await (const entry of readdirp(videoRootPath)) {
       this.scannerQueue.add('scanner', { path: entry.fullPath })
     }
+
+    if (data?.thumbnails) {
+      const videos = await this.prisma.video.findMany({})
+
+      for (const video of videos) {
+        this.thumbnailQueue.add('thumbnail', {
+          videoId: video.id,
+        } as ThumbnailProcessorInputs)
+      }
+    }
+
     return `rescanning ${videoRootPath}`
   }
 

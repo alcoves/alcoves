@@ -69,7 +69,7 @@ export class ScannerProcessor extends WorkerHost {
   async process(job: Job<unknown>): Promise<any> {
     const jobData = job.data as ScannerProcessorInputs
 
-    const videoFileInDb = await this.prisma.videoFile.findFirst({
+    let videoFileInDb = await this.prisma.videoFile.findFirst({
       where: { location: jobData.path },
       include: { video: true },
     })
@@ -86,6 +86,7 @@ export class ScannerProcessor extends WorkerHost {
 
       // Warning: this is a bit of a hack
       // /videos/gameDir/video.mp4
+      // TODO :: Remove when tagging videos works
       const tagName = jobData.path.split('/')[2]
 
       await this.prisma.video.create({
@@ -105,37 +106,26 @@ export class ScannerProcessor extends WorkerHost {
               {
                 size,
                 location: jobData.path,
-                // hash: await this.hashFile(jobData.path),
               },
             ],
           },
         },
       })
 
-      console.info(`successfully scanned ${jobData.path}`)
-    } else {
-      console.log('file already exists, refreshing...')
-      const metadata = await getMetadata(jobData.path)
-
-      await this.prisma.videoFile.update({
-        where: { id: videoFileInDb.id },
-        data: {
-          duration: parseFloat(metadata.format.duration),
-          // bitrate: metadata.format.bit_rate,
-          // width: metadata.streams[0].width,
-          // height: metadata.streams[0].height,
-          // framerate: metadata.streams[0].r_frame_rate,
-          // codec: metadata.streams[0].codec_name,
-          // codecLong: metadata.streams[0].codec_long_name,
-          // container: metadata.format.format_name,
-        },
+      videoFileInDb = await this.prisma.videoFile.findFirst({
+        where: { location: jobData.path },
+        include: { video: true },
       })
-
-      // queue up some thumbnails
-      this.thumbnailQueue.add('thumbnail', {
-        videoId: videoFileInDb.video.id,
-      } as ThumbnailProcessorInputs)
-      console.info(`skipping ${jobData.path}`)
     }
+
+    const metadata = await getMetadata(jobData.path)
+    await this.prisma.videoFile.update({
+      where: { id: videoFileInDb.id },
+      data: {
+        duration: parseFloat(metadata.format.duration),
+      },
+    })
+
+    console.info(`successfully scanned ${jobData.path}`)
   }
 }
