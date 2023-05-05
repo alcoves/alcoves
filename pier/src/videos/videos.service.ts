@@ -60,7 +60,11 @@ export class VideosService {
       include: {
         tags: true,
         playbacks: true,
-        thumbnails: true,
+        thumbnails: {
+          orderBy: {
+            size: 'asc',
+          },
+        },
       },
     })
     return video

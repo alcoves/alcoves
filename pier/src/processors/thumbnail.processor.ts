@@ -34,13 +34,7 @@ export class ThumbnailProcessor extends WorkerHost {
 
     try {
       console.log('processing thumbnail', jobData.videoId)
-      const thumbnailId = uuid()
-
       const tmpOutputPath = tmpDir + '/thumbnail.png'
-      const thumbnailOutputPath = `${this.configService.get(
-        'paths.thumbnails'
-      )}/${thumbnailId}.jpg`
-
       const commands = [
         '-i',
         video.playbacks[0].location,
@@ -64,26 +58,67 @@ export class ThumbnailProcessor extends WorkerHost {
         })
       })
 
-      await sharp(tmpOutputPath)
-        .resize(1280, 720)
-        .toFormat('jpeg')
-        .jpeg({
-          quality: 80,
-          progressive: true,
-        })
-        .toFile(thumbnailOutputPath)
-
-      // await sharp(tmpOutputPath)
-      //   .resize(1280, 720)
-      //   .avif({ quality: 70 })
-      //   .toFile(thumbnailOutputPath)
-
       const thumbnails = await this.prisma.imageFile.findMany({
         where: {
           videoId: jobData.videoId,
         },
       })
 
+      const thumbnailQualities = [
+        {
+          id: uuid(),
+          size: {
+            w: 640,
+            h: 360,
+          },
+          avif: {
+            quality: 50,
+            effort: 6,
+          },
+        },
+        {
+          id: uuid(),
+          size: {
+            w: 1280,
+            h: 720,
+          },
+          avif: {
+            quality: 70,
+            effort: 6,
+          },
+        },
+      ]
+
+      for (const thumbnail of thumbnailQualities) {
+        const thumbnailOutputPath = `${this.configService.get(
+          'paths.thumbnails'
+        )}/${thumbnail.id}.avif`
+
+        await sharp(tmpOutputPath)
+          .resize(thumbnail.size.w, thumbnail.size.h)
+          .avif(thumbnail.avif)
+          .toFile(thumbnailOutputPath)
+
+        const stat = await fs.stat(thumbnailOutputPath)
+        const size = stat.size / (1024 * 1024)
+
+        await this.prisma.imageFile.create({
+          data: {
+            size,
+            id: thumbnail.id,
+            width: thumbnail.size.w,
+            height: thumbnail.size.h,
+            location: thumbnailOutputPath,
+            video: {
+              connect: {
+                id: jobData.videoId,
+              },
+            },
+          },
+        })
+      }
+
+      // Delete the old thumbnails
       for (const thumbnail of thumbnails) {
         await fs.remove(thumbnail.location)
         await this.prisma.imageFile.delete({
@@ -92,18 +127,6 @@ export class ThumbnailProcessor extends WorkerHost {
           },
         })
       }
-
-      await this.prisma.imageFile.create({
-        data: {
-          id: thumbnailId,
-          location: thumbnailOutputPath,
-          video: {
-            connect: {
-              id: jobData.videoId,
-            },
-          },
-        },
-      })
     } catch (error) {
       console.error(error)
     } finally {

@@ -36,7 +36,11 @@ export class VideosController {
       include: {
         tags: true,
         playbacks: true,
-        thumbnails: true,
+        thumbnails: {
+          orderBy: {
+            size: 'asc',
+          },
+        },
       },
       orderBy: {
         authoredAt: 'desc',

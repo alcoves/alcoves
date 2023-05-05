@@ -36,6 +36,8 @@ model ImageFile {
   id        String   @id @default(uuid())
   location  String   @unique
   size      Float    @default(0)
+  width     Int      @default(0)
+  height    Int      @default(0)
   video     Video    @relation(fields: [videoId], references: [id])
   videoId   String
   createdAt DateTime @default(now())
