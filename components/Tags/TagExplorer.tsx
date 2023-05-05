@@ -16,7 +16,7 @@ export default function TagExplorer() {
     },
   })
 
-  function getRgbaFromString(str: string): string {
+  function getRgbaFromString(str: string, alpha: number): string {
     // Generate a hash code from the string
     let hash = 0
     for (let i = 0; i < str.length; i++) {
@@ -27,10 +27,9 @@ export default function TagExplorer() {
     const r = (hash >> 8) & 0xff
     const g = (hash >> 4) & 0xff
     const b = hash & 0xff
-    const a = 0.6
 
     // Construct the RGB value
-    return `rgb(${r}, ${g}, ${b}, ${a})`
+    return `rgb(${r}, ${g}, ${b}, ${alpha})`
   }
 
   function getGradientFromString(str: string): string {
@@ -77,8 +76,9 @@ export default function TagExplorer() {
               <Flex
                 as={Link}
                 key={tag.id}
-                w="360px"
+                minW="360px"
                 h="200px"
+                _hover={{ border: '4px solid red' }}
                 borderRadius="md"
                 href={`/search/${tag.id}`}
                 backgroundPosition="center"
@@ -93,7 +93,8 @@ export default function TagExplorer() {
                   justify="center"
                   borderRadius="md"
                   backdropFilter={'blur(1px)'}
-                  background={getRgbaFromString(tag.id)}
+                  background={getRgbaFromString(tag.id, 0.6)}
+                  _hover={{ background: getRgbaFromString(tag.id, 0.7) }}
                 >
                   <Text
                     isTruncated
