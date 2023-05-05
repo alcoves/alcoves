@@ -10,6 +10,7 @@ import { InjectQueue } from '@nestjs/bullmq'
 import { Prisma, Video } from '@prisma/client'
 import { ConfigService } from '@nestjs/config'
 import { PrismaService } from '../services/prisma.service'
+import { CreateVideoInput } from './dto/dto'
 
 @Injectable()
 export class VideosService {
@@ -19,7 +20,7 @@ export class VideosService {
     @InjectQueue(JOB_QUEUES.SCANNER) private scannerQueue: Queue
   ) {}
 
-  async create(data: Prisma.VideoCreateInput): Promise<Video> {
+  async create(data: CreateVideoInput): Promise<Video> {
     const videoRootPath = this.config.get<string>('paths.videos')
     const normalizedLocation = path.normalize(
       `${videoRootPath}/${data.location}`

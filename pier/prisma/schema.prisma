@@ -13,10 +13,6 @@ datasource db {
 model Video {
   id         String      @id @default(uuid())
   title      String
-  location   String? // Deprecate
-  duration   Float       @default(0)
-  size       Float       @default(0) // Deprecate
-  hash       String      @default("") // Deprecate
   tags       Tag[]
   thumbnails ImageFile[]
   playbacks  VideoFile[]
@@ -29,7 +25,7 @@ model VideoFile {
   id        String   @id @default(uuid())
   location  String   @unique
   size      Float    @default(0)
-  hash      String   @default("")
+  duration  Float    @default(0)
   video     Video    @relation(fields: [videoId], references: [id])
   videoId   String
   createdAt DateTime @default(now())
@@ -40,7 +36,6 @@ model ImageFile {
   id        String   @id @default(uuid())
   location  String   @unique
   size      Float    @default(0)
-  hash      String   @default("")
   video     Video    @relation(fields: [videoId], references: [id])
   videoId   String
   createdAt DateTime @default(now())

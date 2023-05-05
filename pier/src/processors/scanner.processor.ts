@@ -11,6 +11,7 @@ import {
   ThumbnailProcessorInputs,
 } from '../types'
 import { InjectQueue, Processor, WorkerHost } from '@nestjs/bullmq'
+import { getMetadata } from '../utils/ffprobe'
 
 @Processor(JOB_QUEUES.SCANNER)
 export class ScannerProcessor extends WorkerHost {
@@ -113,6 +114,23 @@ export class ScannerProcessor extends WorkerHost {
 
       console.info(`successfully scanned ${jobData.path}`)
     } else {
+      console.log('file already exists, refreshing...')
+      const metadata = await getMetadata(jobData.path)
+
+      await this.prisma.videoFile.update({
+        where: { id: videoFileInDb.id },
+        data: {
+          duration: parseFloat(metadata.format.duration),
+          // bitrate: metadata.format.bit_rate,
+          // width: metadata.streams[0].width,
+          // height: metadata.streams[0].height,
+          // framerate: metadata.streams[0].r_frame_rate,
+          // codec: metadata.streams[0].codec_name,
+          // codecLong: metadata.streams[0].codec_long_name,
+          // container: metadata.format.format_name,
+        },
+      })
+
       // queue up some thumbnails
       this.thumbnailQueue.add('thumbnail', {
         videoId: videoFileInDb.video.id,

@@ -13,13 +13,14 @@ import {
 import { Prisma } from '@prisma/client'
 import { Request, Response } from 'express'
 import { VideosService } from './videos.service'
+import { CreateVideoInput } from './dto/dto'
 
 @Controller('videos')
 export class VideosController {
   constructor(private readonly videosService: VideosService) {}
 
   @Post()
-  async create(@Body() data: Prisma.VideoCreateInput) {
+  async create(@Body() data: CreateVideoInput) {
     const video = await this.videosService.create(data)
     return { video }
   }
