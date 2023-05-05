@@ -27,8 +27,8 @@ services:
       DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
     volumes:
       - .:/app
-      - /mnt/shack/media/gaming/archive_test:/videos
-      - ./config:/config
+      - ./data/videos:/videos
+      - ./data/config:/config
       - /app/node_modules
   postgres:
     image: postgres:alpine

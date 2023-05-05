@@ -44,7 +44,7 @@ export class ThumbnailProcessor extends WorkerHost {
       const commands = [
         '-i',
         video.playbacks[0].location,
-        '-vframes',
+        '-frames:v',
         '1',
         tmpOutputPath,
       ]
@@ -72,6 +72,26 @@ export class ThumbnailProcessor extends WorkerHost {
           progressive: true,
         })
         .toFile(thumbnailOutputPath)
+
+      // await sharp(tmpOutputPath)
+      //   .resize(1280, 720)
+      //   .avif({ quality: 70 })
+      //   .toFile(thumbnailOutputPath)
+
+      const thumbnails = await this.prisma.imageFile.findMany({
+        where: {
+          videoId: jobData.videoId,
+        },
+      })
+
+      for (const thumbnail of thumbnails) {
+        await fs.remove(thumbnail.location)
+        await this.prisma.imageFile.delete({
+          where: {
+            id: thumbnail.id,
+          },
+        })
+      }
 
       await this.prisma.imageFile.create({
         data: {
