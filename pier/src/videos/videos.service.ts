@@ -1,4 +1,5 @@
 import * as path from 'path'
+import * as mime from 'mime'
 import * as fs from 'fs-extra'
 import readdirp from 'readdirp'
 
@@ -108,7 +109,7 @@ export class VideosService {
 
     const head = {
       'Content-Length': fileSize,
-      'Content-Type': 'image/jpeg',
+      'Content-Type': mime.getType(thumbnail.location),
     }
     res.writeHead(200, head)
     return fs.createReadStream(thumbnail.location).pipe(res)
