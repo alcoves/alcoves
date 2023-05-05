@@ -116,6 +116,11 @@ export class ScannerProcessor extends WorkerHost {
         where: { location: jobData.path },
         include: { video: true },
       })
+
+      // When a video is created for the first time, we need to create a thumbnail for it
+      this.thumbnailQueue.add('thumbnail', {
+        videoId: videoFileInDb.id,
+      } as ThumbnailProcessorInputs)
     }
 
     const metadata = await getMetadata(jobData.path)
