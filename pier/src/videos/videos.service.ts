@@ -90,6 +90,12 @@ export class VideosService {
     return `rescanning ${videoRootPath}`
   }
 
+  async reprocessVideoThumbnails(videoId: string) {
+    this.thumbnailQueue.add('thumbnail', {
+      videoId: videoId,
+    } as ThumbnailProcessorInputs)
+  }
+
   async getThumbnail(
     id: string,
     thumbnailId: string,
