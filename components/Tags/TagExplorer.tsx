@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import { Box, Flex, Heading, Image, SimpleGrid, Text } from '@chakra-ui/react'
 import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
+import { getRgbaFromString } from '../../lib/util'
 
 export default function TagExplorer() {
   const router = useRouter()
@@ -15,50 +16,6 @@ export default function TagExplorer() {
       return data
     },
   })
-
-  function getRgbaFromString(str: string, alpha: number): string {
-    // Generate a hash code from the string
-    let hash = 0
-    for (let i = 0; i < str.length; i++) {
-      hash = str.charCodeAt(i) + ((hash << 5) - hash)
-    }
-
-    // Extract 3 values from the hash code
-    const r = (hash >> 8) & 0xff
-    const g = (hash >> 4) & 0xff
-    const b = hash & 0xff
-
-    // Construct the RGB value
-    return `rgb(${r}, ${g}, ${b}, ${alpha})`
-  }
-
-  function getGradientFromString(str: string): string {
-    // Generate a hash code from the string
-    let hash = 0
-    for (let i = 0; i < str.length; i++) {
-      hash = str.charCodeAt(i) + ((hash << 5) - hash)
-    }
-
-    // Extract 4 values from the hash code
-    const r = (hash >> 16) & 0xff
-    const g = (hash >> 8) & 0xff
-    const b = hash & 0xff
-    const a = 0.4
-
-    // Construct the RGBA value
-    // return `rgba(${r}, ${g}, ${b}, ${a})`
-
-    // Adjust the RGB values to create a smaller range of color variation
-    const r2 = (r + 16) % 256
-    const g2 = (g + 32) % 256
-    const b2 = (b + 48) % 256
-
-    // Construct gradient colors
-    const color1 = `rgb(${r}, ${g}, ${b}, ${a})`
-    const color2 = `rgb(${r2}, ${g2}, ${b2}, ${a})`
-    // Construct gradient string
-    return `linear-gradient(to bottom right, ${color1}, ${color2})`
-  }
 
   if (data?.tags?.length) {
     console.log({ data })
@@ -78,7 +35,6 @@ export default function TagExplorer() {
                 key={tag.id}
                 minW="360px"
                 h="200px"
-                _hover={{ border: '4px solid red' }}
                 borderRadius="md"
                 href={`/search/${tag.id}`}
                 backgroundPosition="center"

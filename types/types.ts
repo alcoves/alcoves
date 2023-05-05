@@ -1,8 +1,6 @@
 export interface Video {
   id: string
-  size: number
   title: string
-  location: string
   authoredAt: string
   tags: Tag[]
   playbacks: Playback[]
@@ -15,7 +13,7 @@ export interface Playback {
   id: string
   size: number
   location: string
-  hash: string
+  duration: number
   videoId: string
   updatedAt: string
   createdAt: string
