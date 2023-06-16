@@ -34,3 +34,39 @@ export interface Tag {
   updatedAt: string
   createdAt: string
 }
+
+export interface Job {
+  name: string
+  data: {
+    type: string
+    command: string
+    input: string
+    output: string
+    segmentation_options: {
+      segment_time: string
+    }
+  }
+  opts: {
+    attempts: number
+    delay: number
+    backoff: {
+      delay: number
+      type: string
+    }
+  }
+  id: string
+  progress: number
+  returnvalue: null
+  stacktrace: []
+  attemptsMade: number
+  delay: number
+  timestamp: number
+  finishedOn?: number
+  processedOn?: number
+  failedReason?: string
+  parentKey?: string
+  parent?: {
+    id: string
+    queueKey: string
+  }
+}

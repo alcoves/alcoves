@@ -1,6 +1,6 @@
-import { Box, Button, VStack } from '@chakra-ui/react'
+import { Box, Button, Heading, VStack } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
-import { IoFilm, IoSearch } from 'react-icons/io5'
+import { IoFilm, IoSearch, IoSettings } from 'react-icons/io5'
 
 export default function SideBar() {
   const router = useRouter()
@@ -8,6 +8,15 @@ export default function SideBar() {
   return (
     <Box h="100%" w="200px" minW="200px" maxW="200px">
       <VStack spacing="2" pt="4" align="start">
+        <Heading
+          fontSize=".6rem"
+          pl="2"
+          color="gray.500"
+          textTransform="uppercase"
+        >
+          Assets
+        </Heading>
+
         <Button
           w="90%"
           variant="ghost"
@@ -31,6 +40,28 @@ export default function SideBar() {
           }}
         >
           Explore
+        </Button>
+
+        <Heading
+          fontSize=".6rem"
+          pl="2"
+          color="gray.500"
+          textTransform="uppercase"
+        >
+          Processing
+        </Heading>
+
+        <Button
+          w="90%"
+          variant="ghost"
+          borderLeftRadius={0}
+          leftIcon={<IoSettings />}
+          justifyContent="flex-start"
+          onClick={() => {
+            router.push('/tidal')
+          }}
+        >
+          Jobs
         </Button>
       </VStack>
     </Box>

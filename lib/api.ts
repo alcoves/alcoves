@@ -3,6 +3,9 @@ import axios from 'axios'
 export const apiUrl =
   process.env.NEXT_PUBLIC_API_ENDPOINT || 'https://pier.rustyguts.net'
 
+export const tidalApiUrl =
+  process.env.NEXT_PUBLIC_TIDAL_API_ENDPOINT || 'https://tidal.rustyguts.net'
+
 export async function getVideos() {
   const url = `${apiUrl}/videos`
   const response = await axios.get(url)
@@ -42,5 +45,13 @@ export async function createTag(data: any) {
 export async function updateTag(id: string, data: any) {
   const url = `${apiUrl}/tags/${id}`
   const response = await axios.patch(url, data)
+  return response.data
+}
+
+// Tidal API
+
+export async function tidalGetJobs() {
+  const url = `${tidalApiUrl}/jobs`
+  const response = await axios.get(url)
   return response.data
 }
