@@ -1,16 +1,32 @@
 version: 2
 updates:
   - package-ecosystem: 'npm'
-    directory: '/'
+    directory: '/reef'
     schedule:
       interval: 'daily'
     labels:
       - dependencies
     ignore:
       - dependency-name: '*'
-        update-types: ['version-update:semver-minor']
+        update-types: ['version-update:semver-patch']
   - package-ecosystem: 'docker'
-    directory: '/'
+    directory: '/reef/docker'
+    schedule:
+      interval: 'daily'
+    labels:
+      - dependencies
+updates:
+  - package-ecosystem: 'npm'
+    directory: '/pier'
+    schedule:
+      interval: 'daily'
+    labels:
+      - dependencies
+    ignore:
+      - dependency-name: '*'
+        update-types: ['version-update:semver-patch']
+  - package-ecosystem: 'docker'
+    directory: '/pier/docker'
     schedule:
       interval: 'daily'
     labels:
