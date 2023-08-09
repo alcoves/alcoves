@@ -31,7 +31,7 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^9.4.0",
     "@nestjs/swagger": "^6.3.0",
-    "@prisma/client": "4.13.0",
+    "@prisma/client": "5.1.1",
     "bullmq": "^3.13.1",
     "dotenv": "^16.0.3",
     "fs-extra": "^11.1.1",
