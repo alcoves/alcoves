@@ -21,5 +21,5 @@ RUN yarn install --frozen-lockfile --platform=linux --arch=x64
 COPY . .
 RUN npx prisma generate
 
-EXPOSE 4000
+EXPOSE 4005
 CMD [ "yarn", "start:dev" ]

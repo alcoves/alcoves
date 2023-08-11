@@ -1,0 +1,77 @@
+version: '3'
+
+services:
+  reef:
+    build:
+      context: ./reef
+      dockerfile: docker/Dockerfile.dev
+    environment:
+      - NEXT_PUBLIC_API_ENDPOINT=http://localhost:4005
+    volumes:
+      - ./reef:/app
+    working_dir: /app
+    ports:
+      - 3005:3005
+
+  pier:
+    build:
+      context: ./pier
+      dockerfile: docker/Dockerfile.dev
+    environment:
+      - PORT=4005
+      - REDIS_HOST=redis
+      # When connecting over the container network use the container port not the bound port
+      - REDIS_PORT=6379
+      # When connecting over the container network use the container port not the bound port
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/alcoves?schema=public
+    volumes:
+      - ./pier:/app
+    working_dir: /app
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - 4005:4005
+
+  db:
+    image: postgres:15-alpine
+    restart: always
+    ports:
+      - 6005:5432
+    volumes:
+      - alcoves_postgres_data:/var/lib/postgresql/data/
+    healthcheck:
+      test:
+        ['CMD-SHELL', 'pg_isready', '-U', 'postgres', '-d', 'alcoves']
+      retries: 30
+      timeout: 5s
+      interval: 1s
+    user: postgres
+    environment:
+      POSTGRES_DB: alcoves
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+  redis:
+    image: redis:7-alpine
+    restart: always
+    ports:
+      - 6010:6379
+    volumes:
+      - alcoves_redis_data:/data
+    healthcheck:
+      test:
+        ['CMD-SHELL', 'redis-cli ping']
+      retries: 30
+      timeout: 5s
+      interval: 1s
+
+volumes:
+  alcoves_redis_data:
+  alcoves_postgres_data:
+
+networks:
+  default:
+    name: alcoves

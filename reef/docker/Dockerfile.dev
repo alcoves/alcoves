@@ -6,5 +6,5 @@ ENV NEXT_TELEMETRY_DISABLED 1
 COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
 
-EXPOSE 3000
+EXPOSE 3005
 CMD ["yarn", "dev"]

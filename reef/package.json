@@ -3,13 +3,13 @@
   "private": false,
   "version": "0.0.15",
   "license": "UNLICENSED",
-  "author": "Brendan Kennedy <brendan@bken.io>",
-  "repository": "git@github.com:bkenio/reef.git",
-  "description": "frontend for bken.io",
+  "author": "Brendan Kennedy <me@rustyguts.dev>",
+  "repository": "git@github.com:alcoves/alcoves.git",
+  "description": "Frontend for Alcoves",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3005",
     "lint": "next lint",
-    "start": "next start",
+    "start": "next start -p 3005",
     "build": "next build --no-lint"
   },
   "dependencies": {
