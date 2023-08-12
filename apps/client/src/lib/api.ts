@@ -1,49 +1,38 @@
-import axios from 'axios'
+import { Video } from '../types'
+import axios, { AxiosRequestConfig } from 'axios'
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
 
-export const apiUrl = process.env.NEXT_PUBLIC_API_ENDPOINT
-
-if (!apiUrl) {
-  throw new Error('Missing NEXT_PUBLIC_API_ENDPOINT')
+function makeRequest(options: AxiosRequestConfig) {
+  return axios(options)
 }
 
-export async function getVideos() {
-  const url = `${apiUrl}/videos`
-  const response = await axios.get(url)
+export async function fetcher(url: string): Promise<any> {
+  const res = await axios.get(url, { baseURL: API_URL })
+  return res.data
+}
+
+export async function createVideo(
+  url: string,
+  { arg }: { arg: any }
+): Promise<Video> {
+  const response = await makeRequest({
+    url,
+    data: arg,
+    method: 'POST',
+    baseURL: API_URL,
+  })
   return response.data
 }
 
-export async function getVideosByTagId(tagId: string) {
-  const url = `${apiUrl}/videos?tag=${tagId}`
-  const response = await axios.get(url)
-  return response.data
-}
-
-export async function getVideo(id: string) {
-  const url = `${apiUrl}/videos/${id}`
-  const response = await axios.get(url)
-  return response.data
-}
-
-export async function getTags() {
-  const url = `${apiUrl}/tags`
-  const response = await axios.get(url)
-  return response.data
-}
-
-export async function getTag(id: string) {
-  const url = `${apiUrl}/tags/${id}`
-  const response = await axios.get(url)
-  return response.data
-}
-
-export async function createTag(data: any) {
-  const url = `${apiUrl}/tags`
-  const response = await axios.post(url, data)
-  return response.data
-}
-
-export async function updateTag(id: string, data: any) {
-  const url = `${apiUrl}/tags/${id}`
-  const response = await axios.patch(url, data)
-  return response.data
+export async function deleteVideo(
+  url: string,
+  { arg }: { arg: { id: string } }
+) {
+  const res = makeRequest({
+    url,
+    data: arg,
+    method: 'DELETE',
+    baseURL: API_URL,
+  })
+  return res
 }

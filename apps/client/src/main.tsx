@@ -4,7 +4,7 @@ import Home from './components/Pages/Home.tsx'
 import DevelopmentCSS from './components/DevelopmentCSS.tsx'
 
 import { SWRConfig } from 'swr'
-import { fetcher } from './lib/fetcher.ts'
+import { fetcher } from './lib/api.ts'
 import { ChakraProvider, ColorModeScript, theme } from '@chakra-ui/react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
