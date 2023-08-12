@@ -1,9 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { CreateVideoDto } from './dto/create-video.dto';
 import { UpdateVideoDto } from './dto/update-video.dto';
+import { PrismaService } from '../services/prisma.service';
 
 @Injectable()
 export class VideosService {
+  constructor(private prisma: PrismaService) {}
+
   create(createVideoDto: CreateVideoDto) {
     return 'This action adds a new video';
   }
