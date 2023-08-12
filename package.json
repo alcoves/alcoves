@@ -1,0 +1,24 @@
+{
+  "name": "alcoves",
+  "private": true,
+  "version": "0.0.0",
+  "license": "UNLICENSED",
+  "author": "Brendan Kennedy <hello@alcoves.io>",
+  "repository": "git@github.com:alcoves/alcoves.git",
+  "description": "Alcove Media Server",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "start": "node apps/api/dist/main"
+  },
+  "devDependencies": {
+    "turbo": "^1.10.12"
+  },
+  "dependencies": {
+    "@nestjs/serve-static": "^4.0.0",
+    "api": "^6.1.0"
+  }
+}
