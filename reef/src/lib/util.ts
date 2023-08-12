@@ -1,4 +1,4 @@
-import { Video } from '../types/types'
+import { Video } from '../../vite-project/types/types'
 
 export function megabytesToSize(bytes: number): string {
   bytes = bytes * 1024 * 1024 // We convert to bytes because the db stores in mb

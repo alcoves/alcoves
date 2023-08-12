@@ -1,26 +1,26 @@
-import VidstackPlayer from '../Players/Vidstack/Player'
+import VidstackPlayer from '../Players/Vidstack/Player';
 
-import { Video } from '../../types/types'
-import { useQuery } from '@tanstack/react-query'
-import { apiUrl, getVideo } from '../../lib/api'
-import { Box, Code, Flex, Heading } from '@chakra-ui/react'
+import { Video } from '../../../types/types';
+import { useQuery } from '@tanstack/react-query';
+import { apiUrl, getVideo } from '../../lib/api';
+import { Box, Code, Flex, Heading } from '@chakra-ui/react';
 
 export default function ListVideo({
   id,
 }: {
-  id: string | string[] | undefined
+  id: string | string[] | undefined;
 }) {
   const { data } = useQuery({
     enabled: Boolean(id),
     queryKey: ['videos', id],
     queryFn: async (): Promise<{ video: Video }> => {
-      const data = await getVideo(id as string)
-      return data
+      const data = await getVideo(id as string);
+      return data;
     },
-  })
+  });
 
-  if (!data?.video) return null
-  const streamUrl = `${apiUrl}/videos/${id}/playbacks/${data?.video?.playbacks[0]['id']}`
+  if (!data?.video) return null;
+  const streamUrl = `${apiUrl}/videos/${id}/playbacks/${data?.video?.playbacks[0]['id']}`;
 
   return (
     <Flex w="100%" h="100%" direction="column">
@@ -34,5 +34,5 @@ export default function ListVideo({
         </Box>
       </Box>
     </Flex>
-  )
+  );
 }

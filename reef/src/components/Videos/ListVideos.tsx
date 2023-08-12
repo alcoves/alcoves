@@ -1,5 +1,5 @@
-import { useRouter } from 'next/router'
-import { Video } from '../../types/types'
+import { useRouter } from 'next/router';
+import { Video } from '../../../types/types';
 import {
   Box,
   Flex,
@@ -14,20 +14,20 @@ import {
   Th,
   Thead,
   Tr,
-} from '@chakra-ui/react'
-import { apiUrl } from '../../lib/api'
-import Link from 'next/link'
-import { formatDuration, groupItemsByDay } from '../../lib/util'
+} from '@chakra-ui/react';
+import { apiUrl } from '../../lib/api';
+import Link from 'next/link';
+import { formatDuration, groupItemsByDay } from '../../lib/util';
 
 export default function ListVideos({
   videos = [],
 }: {
-  videos: Video[] | undefined
+  videos: Video[] | undefined;
 }) {
-  const router = useRouter()
+  const router = useRouter();
 
-  const groupedVideos = groupItemsByDay(videos)
-  console.log(groupedVideos)
+  const groupedVideos = groupItemsByDay(videos);
+  console.log(groupedVideos);
 
   if (videos?.length) {
     return (
@@ -72,8 +72,8 @@ export default function ListVideos({
               </Heading>
               <SimpleGrid minChildWidth="360px" spacing={2}>
                 {videos.map((video) => {
-                  const thumbnailId = video.thumbnails?.[0]?.id
-                  const cardImageUrl = `${apiUrl}/videos/${video.id}/thumbnails/${thumbnailId}`
+                  const thumbnailId = video.thumbnails?.[0]?.id;
+                  const cardImageUrl = `${apiUrl}/videos/${video.id}/thumbnails/${thumbnailId}`;
                   return (
                     <Flex
                       as={Link}
@@ -94,7 +94,11 @@ export default function ListVideos({
                         <Flex>
                           <Heading size="sm">{video.title}</Heading>
                         </Flex>
-                        <Flex pt="1" justify="space-between" align="end">
+                        <Flex
+                          pt="1"
+                          justify="space-between"
+                          align="end"
+                        >
                           <HStack spacing={1}>
                             {video.tags.map((tag) => (
                               <Tag
@@ -117,20 +121,22 @@ export default function ListVideos({
                             fontWeight="bold"
                             colorScheme="black"
                           >
-                            {formatDuration(video?.playbacks?.[0]?.duration)}
+                            {formatDuration(
+                              video?.playbacks?.[0]?.duration
+                            )}
                           </Tag>
                         </Flex>
                       </Flex>
                     </Flex>
-                  )
+                  );
                 })}
               </SimpleGrid>
             </Box>
-          )
+          );
         })}
       </Box>
-    )
+    );
   }
 
-  return null
+  return null;
 }
