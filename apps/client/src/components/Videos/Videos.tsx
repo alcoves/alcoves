@@ -2,20 +2,19 @@ import useSWR from 'swr'
 import VideoItem from './VideoItem'
 
 import { Video } from '../../types'
-import { Heading } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 
 export default function Videos() {
   const { data, error, isLoading } = useSWR('/videos')
 
-  if (error) return <div>failed to load</div>
-  if (isLoading) return <div>loading...</div>
+  if (error) return <Box>failed to load</Box>
+  if (isLoading) return <Box>loading...</Box>
 
   return (
-    <div>
-      <Heading size="md"> Videos </Heading>
+    <Box>
       {data?.map((v: Video) => {
         return <VideoItem key={v.id} video={v} />
       })}
-    </div>
+    </Box>
   )
 }

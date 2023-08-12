@@ -1,3 +1,5 @@
+import fs from 'fs/promises'
+import * as mime from 'mime'
 import { Prisma } from '@prisma/client'
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from '../services/prisma.service'
@@ -6,10 +8,14 @@ import { PrismaService } from '../services/prisma.service'
 export class VideosService {
   constructor(private prisma: PrismaService) {}
 
-  async create(data: Prisma.VideosCreateInput) {
+  async create(file: Express.Multer.File) {
+    console.log(file)
+    const ext = mime.getExtension(file.mimetype)
     const video = await this.prisma.videos.create({
-      data,
+      data: {},
     })
+    const filepath = `/data/${video.id}.${ext}`
+    await fs.rename(file.path, filepath)
     return video
   }
 

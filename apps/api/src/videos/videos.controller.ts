@@ -6,17 +6,21 @@ import {
   Patch,
   Param,
   Delete,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
 import { VideosService } from './videos.service'
+import { FileInterceptor } from '@nestjs/platform-express'
 
 @Controller('videos')
 export class VideosController {
   constructor(private readonly videosService: VideosService) {}
 
   @Post()
-  create(@Body() data: Prisma.VideosCreateInput) {
-    return this.videosService.create(data)
+  @UseInterceptors(FileInterceptor('file'))
+  async create(@UploadedFile() file: Express.Multer.File) {
+    return this.videosService.create(file)
   }
 
   @Get()

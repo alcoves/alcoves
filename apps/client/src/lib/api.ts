@@ -13,13 +13,18 @@ export async function fetcher(url: string): Promise<any> {
 
 export async function createVideo(
   url: string,
-  { arg }: { arg: any }
+  { arg }: { arg: File }
 ): Promise<Video> {
+  const formData = new FormData()
+  formData.append('file', arg)
   const response = await makeRequest({
     url,
-    data: arg,
+    data: formData,
     method: 'POST',
     baseURL: API_URL,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
   })
   return response.data
 }

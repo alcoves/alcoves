@@ -11,5 +11,6 @@ datasource db {
 }
 
 model Videos {
-  id String @id @default(uuid())
+  id       String @id @default(uuid())
+  filepath String @default("")
 }

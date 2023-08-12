@@ -15,8 +15,8 @@ services:
       # When connecting over the container network use the container port not the bound port
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/alcoves?schema=public
     volumes:
-      - .:/app
-    working_dir: /app
+      - ./:/app
+      - ./volumes/application:/data
     depends_on:
       db:
         condition: service_healthy
