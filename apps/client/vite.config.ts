@@ -8,7 +8,4 @@ export default defineConfig({
     port: 3000,
     host: true,
   },
-  resolve: {
-    preserveSymlinks: true,
-  },
 })

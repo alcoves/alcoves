@@ -1,6 +1,4 @@
-import Upload from './Upload'
 import logo from '../../assets/logo.png'
-
 import { Flex, Heading } from '@chakra-ui/react'
 
 export default function TopBar() {
@@ -19,9 +17,6 @@ export default function TopBar() {
         <Heading h="30px" pl="4" pt="1" size="md">
           Alcoves
         </Heading>
-      </Flex>
-      <Flex align="center">
-        <Upload />
       </Flex>
     </Flex>
   )
