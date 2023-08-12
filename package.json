@@ -16,9 +16,5 @@
   },
   "devDependencies": {
     "turbo": "^1.10.12"
-  },
-  "dependencies": {
-    "@nestjs/serve-static": "^4.0.0",
-    "api": "^6.1.0"
   }
 }
