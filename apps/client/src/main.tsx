@@ -3,7 +3,9 @@ import ReactDOM from 'react-dom/client'
 import Home from './components/Pages/Home.tsx'
 import DevelopmentCSS from './components/DevelopmentCSS.tsx'
 
-import { ChakraProvider, theme } from '@chakra-ui/react'
+import { SWRConfig } from 'swr'
+import { fetcher } from './lib/fetcher.ts'
+import { ChakraProvider, ColorModeScript, theme } from '@chakra-ui/react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
 const router = createBrowserRouter([
@@ -17,8 +19,11 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ChakraProvider theme={theme}>
-      <DevelopmentCSS />
-      <RouterProvider router={router} />
+      <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+      <SWRConfig value={{ fetcher: fetcher }}>
+        <DevelopmentCSS />
+        <RouterProvider router={router} />
+      </SWRConfig>
     </ChakraProvider>
   </React.StrictMode>
 )

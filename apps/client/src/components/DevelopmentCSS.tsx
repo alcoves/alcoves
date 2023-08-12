@@ -1,7 +1,7 @@
 export default function DevelopmentCSS() {
   if (import.meta.env.VITE_DEV_CSS) {
     return (
-      <style global jsx>
+      <style>
         {`
           * {
             outline: 1px solid red;
