@@ -2,6 +2,7 @@ import Link from 'next/link'
 import logo from '../../public/logo.png'
 import { Avatar, Flex, Heading } from '@chakra-ui/react'
 import Image from 'next/image'
+import Upload from './Upload'
 
 function Profile() {
   return (
@@ -28,7 +29,9 @@ export default function TopBar() {
           Alcoves
         </Heading>
       </Flex>
-      <Flex align="center">{/* <Profile /> */}</Flex>
+      <Flex align="center">
+        <Upload />
+      </Flex>
     </Flex>
   )
 }

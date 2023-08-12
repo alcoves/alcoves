@@ -41,28 +41,6 @@ export default function SideBar() {
         >
           Explore
         </Button>
-
-        <Heading
-          fontSize=".6rem"
-          pl="2"
-          color="gray.500"
-          textTransform="uppercase"
-        >
-          Processing
-        </Heading>
-
-        <Button
-          w="90%"
-          variant="ghost"
-          borderLeftRadius={0}
-          leftIcon={<IoSettings />}
-          justifyContent="flex-start"
-          onClick={() => {
-            router.push('/tidal')
-          }}
-        >
-          Jobs
-        </Button>
       </VStack>
     </Box>
   )
