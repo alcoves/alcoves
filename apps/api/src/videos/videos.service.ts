@@ -14,8 +14,17 @@ export class VideosService {
     const video = await this.prisma.videos.create({
       data: {},
     })
-    const filepath = `/data/${video.id}.${ext}`
+    const newFilename = `${video.id}.${ext}`
+    const filepath = file.path.replace(file.filename, newFilename)
     await fs.rename(file.path, filepath)
+
+    await this.prisma.videos.update({
+      where: { id: video.id },
+      data: {
+        filepath,
+      },
+    })
+
     return video
   }
 
@@ -40,6 +49,14 @@ export class VideosService {
   }
 
   async remove(id: string) {
+    const video = await this.prisma.videos.findUnique({
+      where: { id },
+    })
+
+    await fs.unlink(video.filepath).catch((e) => {
+      console.error('failed to delete video file')
+    })
+
     await this.prisma.videos.delete({
       where: { id },
     })
