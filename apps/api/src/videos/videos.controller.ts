@@ -8,7 +8,10 @@ import {
   Delete,
   UseInterceptors,
   UploadedFile,
+  Res,
+  StreamableFile,
 } from '@nestjs/common'
+import { Response } from 'express'
 import { Prisma } from '@prisma/client'
 import { VideosService } from './videos.service'
 import { FileInterceptor } from '@nestjs/platform-express'
@@ -41,5 +44,13 @@ export class VideosController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.videosService.remove(id)
+  }
+
+  @Get(':id/stream')
+  async streamVideo(
+    @Param('id') id: string,
+    @Res({ passthrough: true }) res: Response
+  ): Promise<StreamableFile> {
+    return this.videosService.streamOne(id, res)
   }
 }

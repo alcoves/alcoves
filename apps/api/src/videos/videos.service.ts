@@ -1,7 +1,10 @@
 import fs from 'fs/promises'
-import * as mime from 'mime'
+
+import { Response } from 'express'
+import { getExtension } from 'mime'
+import { createReadStream } from 'fs'
 import { Prisma } from '@prisma/client'
-import { Injectable } from '@nestjs/common'
+import { Injectable, StreamableFile } from '@nestjs/common'
 import { PrismaService } from '../services/prisma.service'
 
 @Injectable()
@@ -10,7 +13,7 @@ export class VideosService {
 
   async create(file: Express.Multer.File) {
     console.log(file)
-    const ext = mime.getExtension(file.mimetype)
+    const ext = getExtension(file.mimetype)
     const video = await this.prisma.videos.create({
       data: {},
     })
@@ -60,5 +63,18 @@ export class VideosService {
     await this.prisma.videos.delete({
       where: { id },
     })
+  }
+
+  async streamOne(id: string, res: Response) {
+    const video = await this.prisma.videos.findUnique({
+      where: { id },
+    })
+
+    const file = createReadStream(video.filepath)
+    res.set({
+      'Content-Type': 'video/mp4',
+      'Content-Disposition': 'inline',
+    })
+    return new StreamableFile(file)
   }
 }

@@ -1,5 +1,8 @@
 export default function DevelopmentCSS() {
-  if (import.meta.env.VITE_DEV_CSS) {
+  if (
+    import.meta.env.VITE_DEV_CSS === 'true' ||
+    import.meta.env.VITE_DEV_CSS === true
+  ) {
     return (
       <style>
         {`

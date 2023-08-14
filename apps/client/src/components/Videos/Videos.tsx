@@ -2,7 +2,7 @@ import useSWR from 'swr'
 import VideoItem from './VideoItem'
 
 import { Video } from '../../types'
-import { Box } from '@chakra-ui/react'
+import { Box, VStack } from '@chakra-ui/react'
 
 export default function Videos() {
   const { data, error, isLoading } = useSWR('/videos')
@@ -11,10 +11,10 @@ export default function Videos() {
   if (isLoading) return <Box>loading...</Box>
 
   return (
-    <Box>
+    <VStack py="2">
       {data?.map((v: Video) => {
         return <VideoItem key={v.id} video={v} />
       })}
-    </Box>
+    </VStack>
   )
 }
