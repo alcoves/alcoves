@@ -31,6 +31,7 @@
     "@nestjs/swagger": "^7.1.8",
     "@prisma/client": "^5.1.1",
     "bullmq": "^4.7.2",
+    "hbs": "^4.2.0",
     "mime": "^3.0.0",
     "prisma": "^5.1.1",
     "reflect-metadata": "^0.1.13",

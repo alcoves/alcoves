@@ -10,6 +10,7 @@ import {
   UploadedFile,
   Res,
   StreamableFile,
+  Render,
 } from '@nestjs/common'
 import { Response } from 'express'
 import { Prisma } from '@prisma/client'
@@ -52,5 +53,11 @@ export class VideosController {
     @Res({ passthrough: true }) res: Response
   ): Promise<StreamableFile> {
     return this.videosService.streamOne(id, res)
+  }
+
+  @Get(':id/watch')
+  @Render('watch')
+  watch(@Param('id') id: string) {
+    return this.videosService.watchOne(id)
   }
 }

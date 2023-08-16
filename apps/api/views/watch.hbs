@@ -1,0 +1,64 @@
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <title>{{title}}</title>
+    <link
+      rel='stylesheet'
+      href='https://cdn.jsdelivr.net/npm/vidstack/styles/defaults.min.css'
+    />
+    <link
+      rel='stylesheet'
+      href='https://cdn.jsdelivr.net/npm/vidstack/styles/community-skin/video.min.css'
+    />
+    <script
+      type='module'
+      src='https://cdn.jsdelivr.net/npm/vidstack/dist/cdn/prod.js'
+    ></script>
+  </head>
+  <body>
+    <style>
+      html { background-color: #222; }
+
+      html, body {
+        margin: 0px; padding: 0px;
+        overflow: hidden;
+      } 
+      
+      body {
+        min-height: 100vh;
+        display: flex; 
+        align-items: center;
+        justify-content: center;
+      }
+
+    </style>
+    <media-player
+      title={{ title }}
+      src={{videoUrl}}
+      {{! poster='https://image.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/thumbnail.webp?time=268&width=980' }}
+      {{! thumbnails='https://media-files.vidstack.io/sprite-fight/thumbnails.vtt' }}
+      aspect-ratio='16/9'
+      crossorigin
+    >
+      <media-outlet>
+        <media-poster
+          alt={{ posterAlt }}
+        ></media-poster>
+        {{! <track
+          src='https://media-files.vidstack.io/sprite-fight/subs/english.vtt'
+          label='English'
+          srclang='en-US'
+          kind='subtitles'
+          default
+        />
+        <track
+          src='https://media-files.vidstack.io/sprite-fight/chapters.vtt'
+          srclang='en-US'
+          kind='chapters'
+          default
+        /> }}
+      </media-outlet>
+      <media-community-skin></media-community-skin>
+    </media-player>
+  </body>
+</html>

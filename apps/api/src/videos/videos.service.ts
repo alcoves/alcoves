@@ -37,10 +37,9 @@ export class VideosService {
   }
 
   async findOne(id: string) {
-    const video = await this.prisma.videos.findUnique({
+    const video = await this.prisma.videos.findUniqueOrThrow({
       where: { id },
     })
-    if (!video) throw new NotFoundException()
     return video
   }
 
@@ -53,7 +52,7 @@ export class VideosService {
   }
 
   async remove(id: string) {
-    const video = await this.prisma.videos.findUnique({
+    const video = await this.prisma.videos.findUniqueOrThrow({
       where: { id },
     })
 
@@ -67,7 +66,7 @@ export class VideosService {
   }
 
   async streamOne(id: string, res: Response) {
-    const video = await this.prisma.videos.findUnique({
+    const video = await this.prisma.videos.findUniqueOrThrow({
       where: { id },
     })
 
@@ -77,5 +76,19 @@ export class VideosService {
       'Content-Disposition': 'inline',
     })
     return new StreamableFile(file)
+  }
+
+  async watchOne(id: string) {
+    const video = await this.prisma.videos.findUniqueOrThrow({
+      where: { id },
+    })
+
+    const streamUrl = `http://localhost:4000/videos/${video.id}/stream`
+
+    return {
+      title: 'Test',
+      posterAlt: 'test',
+      videoUrl: streamUrl,
+    }
   }
 }
