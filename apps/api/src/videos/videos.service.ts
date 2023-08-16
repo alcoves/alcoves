@@ -4,7 +4,7 @@ import { Response } from 'express'
 import { getExtension } from 'mime'
 import { createReadStream } from 'fs'
 import { Prisma } from '@prisma/client'
-import { Injectable, StreamableFile } from '@nestjs/common'
+import { Injectable, NotFoundException, StreamableFile } from '@nestjs/common'
 import { PrismaService } from '../services/prisma.service'
 
 @Injectable()
@@ -40,6 +40,7 @@ export class VideosService {
     const video = await this.prisma.videos.findUnique({
       where: { id },
     })
+    if (!video) throw new NotFoundException()
     return video
   }
 

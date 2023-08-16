@@ -1,25 +1,14 @@
-import React, { Suspense } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom/client'
-import Home from './components/Pages/Home.tsx'
-import VideoById from './components/Videos/Video.tsx'
+import Home from './components/Home.tsx'
+import Layout from './components/Layout/Layout.tsx'
+import VideoById from './components/Videos/VideoById.tsx'
 import DevelopmentCSS from './components/DevelopmentCSS.tsx'
 
 import { SWRConfig } from 'swr'
 import { fetcher } from './lib/api.ts'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { ChakraProvider, ColorModeScript, theme } from '@chakra-ui/react'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <Home />,
-    errorElement: <div>Not found</div>,
-  },
-  {
-    path: '/videos/:id',
-    element: <VideoById />,
-  },
-])
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -27,10 +16,15 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <ColorModeScript initialColorMode={theme.config.initialColorMode} />
       <SWRConfig value={{ fetcher: fetcher }}>
         <DevelopmentCSS />
-        <RouterProvider
-          router={router}
-          fallbackElement={<div>Global Error</div>}
-        />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route path="/" element={<Home />} />
+              <Route path="/videos/:id" element={<VideoById />} />
+              <Route path="*" element={<Navigate to="/" />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
       </SWRConfig>
     </ChakraProvider>
   </React.StrictMode>

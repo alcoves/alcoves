@@ -1,5 +1,5 @@
 import useSWR from 'swr'
-import VideoItem from './VideoItem'
+import VideoListItem from './VideoListItem'
 
 import { Video } from '../../types'
 import { Box, VStack } from '@chakra-ui/react'
@@ -13,7 +13,7 @@ export default function Videos() {
   return (
     <VStack py="2">
       {data?.map((v: Video) => {
-        return <VideoItem key={v.id} video={v} />
+        return <VideoListItem key={v.id} video={v} />
       })}
     </VStack>
   )
