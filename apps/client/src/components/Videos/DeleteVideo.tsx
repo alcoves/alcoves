@@ -1,5 +1,6 @@
 import useSWRMutation from 'swr/mutation'
 
+import { mutate } from 'swr'
 import { Button } from '@chakra-ui/react'
 import { deleteVideo } from '../../lib/api'
 import { useNavigate } from 'react-router-dom'
@@ -10,6 +11,7 @@ export default function DeleteVideo({ id }: { id: string }) {
 
   async function handleDelete(id: string) {
     await trigger({ id })
+    await mutate('/videos')
     await navigate('/') // Go to home page
   }
 
