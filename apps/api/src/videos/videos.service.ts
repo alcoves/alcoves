@@ -1,83 +1,48 @@
-import fs from 'fs/promises'
-
 import { Queue } from 'bull'
-import { Response } from 'express'
-import { getExtension } from 'mime'
-import { createReadStream } from 'fs'
+import { Queues } from '../types/types'
 import { Prisma } from '@prisma/client'
 import { InjectQueue } from '@nestjs/bull'
+import { ConfigService } from '@nestjs/config'
 import { PrismaService } from '../services/prisma.service'
-import { Injectable, StreamableFile } from '@nestjs/common'
-import { Queues } from '../types/types'
+import { IngestJob } from '../processors/ingest.processor'
+import { Injectable, NotFoundException } from '@nestjs/common'
 
 @Injectable()
 export class VideosService {
   constructor(
     private prisma: PrismaService,
-    @InjectQueue('ingest') private ingestQueue: Queue
+    private configService: ConfigService,
+    @InjectQueue(Queues.ingest.name) private ingestQueue: Queue
   ) {}
 
-  async create(url: string) {
-    // console.log(file)
-    // const ext = getExtension(file.mimetype)
+  async create(input: string) {
     const video = await this.prisma.videos.create({
       data: {
         title: 'Test',
       },
     })
 
-    // Start ingest job
-    const ingestJob = await this.ingestQueue.add('transcode', {
-      video: video.id,
-      url,
-    })
+    const ingestJob = await this.ingestQueue.add('ingestFromURL', {
+      input,
+      videoId: video.id,
+    } as IngestJob['data'])
 
     console.log('Created video', ingestJob.queue.name, ingestJob.id)
     const jobs = await this.ingestQueue.getJobCounts()
-
-    // Get the failed job reasons
-    const failedJobs = await this.ingestQueue.getFailed()
-
-    failedJobs.map(async (job) => {
-      console.log(job.failedReason)
-      console.log(job.queue.name, job.id)
-      // await job.remove()
-    })
-
-    // await this.ingestQueue.empty()
-    // await this.ingestQueue.clean(0)
-
-    // console.log(ingestJob)
-
-    // const newFilename = `${video.id}.${ext}`
-    // const filepath = file.path.replace(file.filename, newFilename)
-    // await fs.rename(file.path, filepath)
-
-    // Get the input url
-    // Create the video
-    // Enqueue a job to ingest the video (which gets metadata)
-    // Enqueue a job to create video thumbnail
-    // Enqueue a job to process the video
-
-    // await this.prisma.videos.update({
-    //   where: { id: video.id },
-    //   data: {
-    //     filepath,
-    //   },
-    // })
 
     return { video, jobs }
   }
 
   async findAll() {
-    const videos = await this.prisma.videos.findMany({})
+    const videos = await this.prisma.videos.findMany()
     return videos
   }
 
   async findOne(id: string) {
-    const video = await this.prisma.videos.findUniqueOrThrow({
+    const video = await this.prisma.videos.findUnique({
       where: { id },
     })
+    if (!video) throw new NotFoundException()
     return video
   }
 
@@ -90,31 +55,18 @@ export class VideosService {
   }
 
   async remove(id: string) {
-    const video = await this.prisma.videos.findUniqueOrThrow({
+    const video = await this.prisma.videos.findUnique({
       where: { id },
     })
+    if (!video) throw new NotFoundException()
 
-    await fs.unlink(video.filepath).catch((e) => {
-      console.error('failed to delete video file')
-    })
+    // await fs.unlink(video.filepath).catch((e) => {
+    //   console.error('failed to delete video file')
+    // })
 
     await this.prisma.videos.delete({
       where: { id },
     })
-  }
-
-  async streamOne(id: string, res: Response) {
-    const video = await this.prisma.videos.findUniqueOrThrow({
-      where: { id },
-    })
-
-    const file = createReadStream(video.filepath)
-    res.set({
-      'Accept-Ranges': 'bytes',
-      'Content-Type': 'video/mp4',
-      'Content-Disposition': 'inline',
-    })
-    return new StreamableFile(file)
   }
 
   async watchOne(id: string) {
@@ -122,12 +74,21 @@ export class VideosService {
       where: { id },
     })
 
-    const streamUrl = `http://localhost:4000/videos/${video.id}/stream`
+    const vsp = this.storagePrefix(video.id)
 
     return {
       title: 'Test',
       posterAlt: 'test',
-      videoUrl: streamUrl,
+      videoUrl: `${vsp}/original.mp4`,
     }
+  }
+
+  storagePrefix(id: string) {
+    const storageBucket = this.configService.get<string>('STORAGE_BUCKET')
+    const storageBucketVideoPrefix = this.configService.get<string>(
+      'STORAGE_BUCKET_VIDEO_PREFIX'
+    )
+
+    return `${storageBucket}/${storageBucketVideoPrefix}/${id}`
   }
 }

@@ -20,7 +20,7 @@ export class VideosController {
 
   @Post()
   async create(@Body() data: any) {
-    return this.videosService.create(data.url)
+    return this.videosService.create(data.input)
   }
 
   @Get()
@@ -41,14 +41,6 @@ export class VideosController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.videosService.remove(id)
-  }
-
-  @Get(':id/stream')
-  async streamVideo(
-    @Param('id') id: string,
-    @Res({ passthrough: true }) res: Response
-  ): Promise<StreamableFile> {
-    return this.videosService.streamOne(id, res)
   }
 
   @Get(':id/watch')

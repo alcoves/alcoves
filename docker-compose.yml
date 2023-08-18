@@ -19,7 +19,7 @@ services:
       STORAGE_ACCESS_KEY_ID: "minioadmin"
       STORAGE_SECRET_ACCESS_KEY: "minioadmin"
       STORAGE_DOMAIN: "http://minio:9000"
-      STROAGE_BUCKET: "alcoves"
+      STORAGE_BUCKET: "alcoves"
       STORAGE_BUCKET_VIDEO_PREFIX: "videos"
     volumes:
       - ./:/app
@@ -51,6 +51,7 @@ services:
       POSTGRES_DB: alcoves
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+
   redis:
     image: redis:7-alpine
     restart: always
@@ -67,15 +68,27 @@ services:
 
   minio:
     image: minio/minio
-    container_name: minio
     ports:
       - "9000:9000"
+      - "9001:9001"
+      - "45875:45875"
     environment:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin
     volumes:
       - alcoves_minio_data:/data
-    command: server /data
+    command: server /data --address "0.0.0.0:9000" --console-address "0.0.0.0:9001"
+
+  createbuckets:
+    image: minio/mc
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc config host add localmin http://minio:9000 minioadmin minioadmin;
+      /usr/bin/mc mb localmin/alcoves;
+      exit 0;
+      "
 
 volumes:
   alcoves_redis_data:
