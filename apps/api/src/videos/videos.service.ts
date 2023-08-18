@@ -72,6 +72,7 @@ export class VideosService {
 
     const file = createReadStream(video.filepath)
     res.set({
+      'Accept-Ranges': 'bytes',
       'Content-Type': 'video/mp4',
       'Content-Disposition': 'inline',
     })

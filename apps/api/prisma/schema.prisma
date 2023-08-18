@@ -11,6 +11,28 @@ datasource db {
 }
 
 model Videos {
-  id       String @id @default(uuid())
+  id String @id @default(uuid())
+
+  // Strings
   filepath String @default("")
+  title    String @default("")
+
+  // Integers
+  size     Int @default(0)
+  duration Int @default(0)
+  width    Int @default(0)
+  height   Int @default(0)
+
+  // State
+  state    String @default("")
+  error    String @default("")
+  progress String @default("")
+
+  // Links
+  thumbnail    String @default("")
+  hlsManifest  String @default("")
+  dashManifest String @default("")
+
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
 }
