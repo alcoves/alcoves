@@ -31,6 +31,7 @@
     "@nestjs/swagger": "^7.1.8",
     "@prisma/client": "^5.1.1",
     "aws-sdk": "^2.1439.0",
+    "axios": "^1.4.0",
     "bull": "^4.11.3",
     "hbs": "^4.2.0",
     "mime": "^3.0.0",

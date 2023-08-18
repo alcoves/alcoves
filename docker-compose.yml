@@ -5,15 +5,22 @@ services:
     build:
       dockerfile: docker/Dockerfile.dev
     environment:
-      # Client
-      - VITE_DEV_CSS=false
-      - VITE_API_URL=http://localhost:4000
-      # API
-      - REDIS_HOST=redis
+      #### Client ####
+      VITE_DEV_CSS: false
+      VITE_API_URL: http://localhost:4000
+      #### API ####
+      REDIS_HOST: redis
       # When connecting over the container network use the container port not the bound port
-      - REDIS_PORT=6379
+      REDIS_PORT: 6379
       # When connecting over the container network use the container port not the bound port
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/alcoves?schema=public
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/alcoves?schema=public
+      # Other options
+      STORAGE_ENDPOINT: "http://minio:9000"
+      STORAGE_ACCESS_KEY_ID: "minioadmin"
+      STORAGE_SECRET_ACCESS_KEY: "minioadmin"
+      STORAGE_DOMAIN: "http://minio:9000"
+      STROAGE_BUCKET: "alcoves"
+      STORAGE_BUCKET_VIDEO_PREFIX: "videos"
     volumes:
       - ./:/app
       - ./volumes/application:/data
@@ -44,14 +51,6 @@ services:
       POSTGRES_DB: alcoves
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-
-      STORAGE_ENDPOINT: "http://minio:9000"
-      STORAGE_ACCESS_KEY: "minioadmin"
-      STORAGE_SECRET_ACCESS_KEY: "minioadmin"
-      STORAGE_DOMAIN: "http://minio:9000"
-      STROAGE_BUCKET: "alcoves"
-      STORAGE_BUCKET_VIDEO_PREFIX: "videos"
-
   redis:
     image: redis:7-alpine
     restart: always
