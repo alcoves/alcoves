@@ -74,21 +74,25 @@ export class VideosService {
       where: { id },
     })
 
-    const vsp = this.storagePrefix(video.id)
-
     return {
+      ready: true,
       title: 'Test',
       posterAlt: 'test',
-      videoUrl: `${vsp}/original.mp4`,
+      videoUrl: this.originalVideoURL(video.id),
     }
   }
 
-  storagePrefix(id: string) {
+  originalVideoURL(id: string) {
+    return `${this.storagePrefixDomain(id)}/original.mp4`
+  }
+
+  storagePrefixDomain(id: string) {
+    const storageDomain = this.configService.get<string>('STORAGE_DOMAIN')
     const storageBucket = this.configService.get<string>('STORAGE_BUCKET')
     const storageBucketVideoPrefix = this.configService.get<string>(
       'STORAGE_BUCKET_VIDEO_PREFIX'
     )
 
-    return `${storageBucket}/${storageBucketVideoPrefix}/${id}`
+    return `${storageDomain}/${storageBucket}/${storageBucketVideoPrefix}/${id}`
   }
 }

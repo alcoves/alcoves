@@ -20,8 +20,8 @@
       html { background-color: #222; } html, body { margin: 0px; padding: 0px;
       overflow: hidden; } body { min-height: 100vh; display: flex; align-items:
       center; justify-content: center; }
-
     </style>
+    {{#if ready}}
     <media-player
       title={{title}}
       src={{videoUrl}}
@@ -48,5 +48,10 @@
       </media-outlet>
       <media-community-skin></media-community-skin>
     </media-player>
+    {{else}}
+    <div style='color: #fff; font-size: 2rem; text-align: center; font-family: monospace;'>
+      Loading...
+    </div>
+    {{/if}}
   </body>
 </html>
