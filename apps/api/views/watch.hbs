@@ -17,23 +17,13 @@
   </head>
   <body>
     <style>
-      html { background-color: #222; }
-
-      html, body {
-        margin: 0px; padding: 0px;
-        overflow: hidden;
-      } 
-      
-      body {
-        min-height: 100vh;
-        display: flex; 
-        align-items: center;
-        justify-content: center;
-      }
+      html { background-color: #222; } html, body { margin: 0px; padding: 0px;
+      overflow: hidden; } body { min-height: 100vh; display: flex; align-items:
+      center; justify-content: center; }
 
     </style>
     <media-player
-      title={{ title }}
+      title={{title}}
       src={{videoUrl}}
       {{! poster='https://image.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/thumbnail.webp?time=268&width=980' }}
       {{! thumbnails='https://media-files.vidstack.io/sprite-fight/thumbnails.vtt' }}
@@ -41,9 +31,7 @@
       crossorigin
     >
       <media-outlet>
-        <media-poster
-          alt={{ posterAlt }}
-        ></media-poster>
+        <media-poster alt={{posterAlt}}></media-poster>
         {{! <track
           src='https://media-files.vidstack.io/sprite-fight/subs/english.vtt'
           label='English'

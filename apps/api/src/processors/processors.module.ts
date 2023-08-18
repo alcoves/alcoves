@@ -1,23 +1,13 @@
-// import { JOB_QUEUES } from '../types';
-// import { Module } from '@nestjs/common';
-// import { BullModule } from '@nestjs/bullmq';
-// import { ScannerProcessor } from './scanner.processor';
-// import { PrismaService } from '../../src/services/prisma.service';
-// import { ThumbnailProcessor } from './thumbnail.processor';
+import { Module } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
+import { IngestProcessor } from './ingest.processor'
+import { PrismaService } from '../../src/services/prisma.service'
 
-// @Module({
-//   providers: [ThumbnailProcessor, ScannerProcessor, PrismaService],
-//   imports: [
-//     BullModule.registerQueue({
-//       name: JOB_QUEUES.THUMBNAILS,
-//       defaultJobOptions: {
-//         attempts: 10,
-//         backoff: {
-//           type: 'exponential',
-//           delay: 1000 * 10,
-//         },
-//       },
-//     }),
-//   ],
-// })
-// export class ProcessorsModule {}
+@Module({
+  providers: [
+    ConfigService,
+    PrismaService,
+    // IngestProcessor
+  ],
+})
+export class ProcessorsModule {}

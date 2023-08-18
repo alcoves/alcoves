@@ -20,8 +20,8 @@ async function bootstrap() {
   await prismaService.enableShutdownHooks(app)
 
   const config = new DocumentBuilder()
-    .setTitle('Pier API')
-    .setDescription('The API for Reef')
+    .setTitle('Alcoves API')
+    .setDescription('The API for Alcoves')
     .setVersion('0.1')
     .addTag('alcoves')
     .addBearerAuth()

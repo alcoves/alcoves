@@ -1,25 +1,57 @@
 import fs from 'fs/promises'
 
+import { Queue } from 'bull'
 import { Response } from 'express'
 import { getExtension } from 'mime'
 import { createReadStream } from 'fs'
 import { Prisma } from '@prisma/client'
-import { Injectable, NotFoundException, StreamableFile } from '@nestjs/common'
+import { InjectQueue } from '@nestjs/bull'
 import { PrismaService } from '../services/prisma.service'
+import { Injectable, StreamableFile } from '@nestjs/common'
+import { Queues } from '../types/types'
 
 @Injectable()
 export class VideosService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    @InjectQueue('ingest') private ingestQueue: Queue
+  ) {}
 
-  async create(file: Express.Multer.File) {
-    console.log(file)
-    const ext = getExtension(file.mimetype)
+  async create(url: string) {
+    // console.log(file)
+    // const ext = getExtension(file.mimetype)
     const video = await this.prisma.videos.create({
-      data: {},
+      data: {
+        title: 'Test',
+      },
     })
-    const newFilename = `${video.id}.${ext}`
-    const filepath = file.path.replace(file.filename, newFilename)
-    await fs.rename(file.path, filepath)
+
+    // Start ingest job
+    const ingestJob = await this.ingestQueue.add('transcode', {
+      video: video.id,
+      url,
+    })
+
+    console.log('Created video', ingestJob.queue.name, ingestJob.id)
+    const jobs = await this.ingestQueue.getJobCounts()
+
+    // Get the failed job reasons
+    const failedJobs = await this.ingestQueue.getFailed()
+
+    failedJobs.map(async (job) => {
+      console.log(job.failedReason)
+      console.log(job.queue.name, job.id)
+      // await job.remove()
+    })
+
+    // await this.ingestQueue.empty()
+    // await this.ingestQueue.clean(0)
+
+    // console.log(ingestJob)
+
+    // const newFilename = `${video.id}.${ext}`
+    // const filepath = file.path.replace(file.filename, newFilename)
+    // await fs.rename(file.path, filepath)
 
     // Get the input url
     // Create the video
@@ -27,14 +59,14 @@ export class VideosService {
     // Enqueue a job to create video thumbnail
     // Enqueue a job to process the video
 
-    await this.prisma.videos.update({
-      where: { id: video.id },
-      data: {
-        filepath,
-      },
-    })
+    // await this.prisma.videos.update({
+    //   where: { id: video.id },
+    //   data: {
+    //     filepath,
+    //   },
+    // })
 
-    return video
+    return { video, jobs }
   }
 
   async findAll() {

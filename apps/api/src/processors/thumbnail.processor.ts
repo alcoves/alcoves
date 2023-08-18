@@ -5,7 +5,7 @@
 // import { v4 as uuid } from 'uuid';
 // import { ConfigService } from '@nestjs/config';
 // import { createFFMpeg } from '../utils/ffmpeg';
-// import { Processor, WorkerHost } from '@nestjs/bullmq';
+// import { Processor, WorkerHost } from '@nestjs/bull';
 // import { PrismaService } from '../services/prisma.service';
 // import { JOB_QUEUES, ThumbnailProcessorInputs } from '../types';
 
