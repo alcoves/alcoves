@@ -10,6 +10,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum STATUS {
+  QUEUING
+  DOWNLOADING
+  PROCESSING
+  FAILED
+  COMPLETED
+}
+
 model Videos {
   id String @id @default(uuid())
 
@@ -24,7 +32,7 @@ model Videos {
   height   Int @default(0)
 
   // State
-  state    String @default("")
+  status   STATUS @default(QUEUING)
   error    String @default("")
   progress String @default("")
 

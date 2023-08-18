@@ -21,6 +21,12 @@ export class VideosService {
     const filepath = file.path.replace(file.filename, newFilename)
     await fs.rename(file.path, filepath)
 
+    // Get the input url
+    // Create the video
+    // Enqueue a job to ingest the video (which gets metadata)
+    // Enqueue a job to create video thumbnail
+    // Enqueue a job to process the video
+
     await this.prisma.videos.update({
       where: { id: video.id },
       data: {
