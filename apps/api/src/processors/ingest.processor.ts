@@ -1,10 +1,10 @@
 import axios from 'axios'
 
-import { Job } from 'bull'
+import { Job, Queue } from 'bull'
 import { S3 } from 'aws-sdk'
 import { Queues } from '../types/types'
 import { ConfigService } from '@nestjs/config'
-import { Process, Processor } from '@nestjs/bull'
+import { InjectQueue, Process, Processor } from '@nestjs/bull'
 import { PrismaService } from '../services/prisma.service'
 import { VideosService } from '../videos/videos.service'
 
@@ -20,15 +20,20 @@ export class IngestProcessor {
   constructor(
     private prisma: PrismaService,
     private videoService: VideosService,
-    private configService: ConfigService
+    private configService: ConfigService,
+    @InjectQueue(Queues.thumbnail.name) private thumbnailQueue: Queue,
+    @InjectQueue(Queues.transcode.name) private transcodeQueue: Queue
   ) {}
 
   s3c() {
+    const endpoint = this.configService.get('STORAGE_ENDPOINT')
+    const internalEndpoint = this.configService.get('STORAGE_ENDPOINT_INTERNAL')
+
     return new S3({
       region: 'localhost',
       s3ForcePathStyle: true,
       signatureVersion: 'v4',
-      endpoint: this.configService.get('STORAGE_ENDPOINT'),
+      endpoint: internalEndpoint || endpoint,
       accessKeyId: this.configService.get('STORAGE_ACCESS_KEY_ID'),
       secretAccessKey: this.configService.get('STORAGE_SECRET_ACCESS_KEY'),
     })
@@ -36,7 +41,7 @@ export class IngestProcessor {
 
   @Process({
     name: 'ingestFromURL',
-    concurrency: 10,
+    concurrency: 2,
   })
   async ingestFromURL(job: IngestJob): Promise<any> {
     try {
@@ -47,14 +52,22 @@ export class IngestProcessor {
 
       const uploadParams = {
         Bucket: this.configService.get('STORAGE_BUCKET'),
-        Key: `${this.videoService.storagePrefix(
-          job.data.videoId
-        )}/original.mp4`,
+        Key: `${this.configService.get<string>(
+          'STORAGE_BUCKET_VIDEO_PREFIX'
+        )}/${job.data.videoId}/original.mp4`,
         Body: response.data,
       }
 
-      console.log('UPLOAD', uploadParams)
       await this.s3c().upload(uploadParams).promise()
+
+      await this.thumbnailQueue.add('thumbnailVideo', {
+        videoId: job.data.videoId,
+      })
+
+      await this.transcodeQueue.add('transcodeToHLS', {
+        videoId: job.data.videoId,
+      })
+
       await job.progress(100)
       console.log('Job done!')
       return {}

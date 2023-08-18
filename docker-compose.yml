@@ -15,12 +15,15 @@ services:
       # When connecting over the container network use the container port not the bound port
       DATABASE_URL: postgresql://postgres:postgres@db:5432/alcoves?schema=public
       # Other options
-      STORAGE_ENDPOINT: "http://minio:9000"
+      STORAGE_ENDPOINT: "http://localhost:9000"
       STORAGE_ACCESS_KEY_ID: "minioadmin"
       STORAGE_SECRET_ACCESS_KEY: "minioadmin"
-      STORAGE_DOMAIN: "http://minio:9000"
+      STORAGE_DOMAIN: "http://localhost:9000"
       STORAGE_BUCKET: "alcoves"
       STORAGE_BUCKET_VIDEO_PREFIX: "videos"
+      # Only for localdev
+      STORAGE_DOMAIN_INTERNAL: "http://minio:9000"
+      STORAGE_ENDPOINT_INTERNAL: "http://minio:9000"
     volumes:
       - ./:/app
       - ./volumes/application:/data

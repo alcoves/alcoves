@@ -1,3 +1,33 @@
+import { Queues } from '../types/types'
+import { Process, Processor } from '@nestjs/bull'
+
+@Processor(Queues.thumbnail.name)
+export class ThumbnailProcessor {
+  @Process({
+    name: 'thumbnailVideo',
+    concurrency: 5,
+  })
+  async thumbnailVideo(job: any): Promise<any> {
+    try {
+      console.log('Thumbnailing video', job.data.videoId)
+
+      // const commands = [
+      //   '-i',
+      //   video.playbacks[0].location,
+      //   '-frames:v',
+      //   '1',
+      //   tmpOutputPath,
+      // ];
+
+      await job.progress(100)
+      console.log('Job done!')
+      return {}
+    } catch (error) {
+      console.error('Error', error)
+    }
+  }
+}
+
 // import * as sharp from 'sharp';
 // import * as fs from 'fs-extra';
 
@@ -114,16 +144,6 @@
 //                 id: jobData.videoId,
 //               },
 //             },
-//           },
-//         });
-//       }
-
-//       // Delete the old thumbnails
-//       for (const thumbnail of thumbnails) {
-//         await fs.remove(thumbnail.location);
-//         await this.prisma.imageFile.delete({
-//           where: {
-//             id: thumbnail.id,
 //           },
 //         });
 //       }
