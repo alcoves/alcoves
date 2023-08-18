@@ -21,15 +21,6 @@ export default function InputCopy({
 }) {
   const [icon, setIcon] = useState(<FaCopy />)
 
-  function handleCopy() {
-    navigator.clipboard.writeText(text)
-    setIcon(
-      <Box color="green.500">
-        <IoCheckmark color="inherit" />
-      </Box>
-    )
-  }
-
   useEffect(() => {
     const timer = setTimeout(() => setIcon(<FaCopy />), 2000)
     return () => clearTimeout(timer)
@@ -48,7 +39,6 @@ export default function InputCopy({
           fontFamily="mono"
           fontSize=".75rem"
           isReadOnly={true}
-          onClick={handleCopy}
         />
         <InputRightElement h="100%">
           <Tooltip label="Copy to clipboard">
@@ -57,7 +47,6 @@ export default function InputCopy({
               icon={icon}
               variant="ghost"
               aria-label="copy"
-              onClick={handleCopy}
             />
           </Tooltip>
         </InputRightElement>

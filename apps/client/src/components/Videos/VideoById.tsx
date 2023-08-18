@@ -1,10 +1,12 @@
 import useSWR from 'swr'
+import InputCopy from './InputCopy'
+import InputUpdate from './InputUpdate'
 import DeleteVideo from './DeleteVideo'
 
+import { DateTime } from 'luxon'
 import { Video } from '../../types'
-import { Box, Input, VStack } from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
-import InputCopy from '../InputCopy'
+import { Box, Heading, Text, VStack } from '@chakra-ui/react'
 
 export default function VideoById({ video }: { video?: Video }) {
   const { id } = useParams()
@@ -21,8 +23,15 @@ export default function VideoById({ video }: { video?: Video }) {
 
   return data?.id ? (
     <>
-      <h1>Video by id</h1>
-      {data?.id}
+      <Box pb="4">
+        <Heading size="md">{data.id}</Heading>
+        <Text py="4">
+          Created {DateTime.fromISO(data.createdAt).toRelative()}
+        </Text>
+      </Box>
+      <VStack pb="4" maxW="400px">
+        <InputUpdate label="Video Name" text={data.id} />
+      </VStack>
       <Box>
         <Box position="relative" pt="56.25%">
           <iframe
@@ -39,14 +48,12 @@ export default function VideoById({ video }: { video?: Video }) {
             allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
           ></iframe>
         </Box>
-
-        <VStack py="4" maxW="400px">
+        <VStack pt="4" pb="8" maxW="400px">
           <InputCopy label="Video ID" text={data.id} />
           <InputCopy label="Direct URL" text={directLink} />
           <InputCopy label="Playback URL" text={watchLink} />
         </VStack>
-
-        <Box py="4">
+        <Box pb="4">
           <DeleteVideo id={data.id} />
         </Box>
       </Box>
