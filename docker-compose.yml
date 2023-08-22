@@ -15,15 +15,15 @@ services:
       # When connecting over the container network use the container port not the bound port
       DATABASE_URL: postgresql://postgres:postgres@db:5432/alcoves?schema=public
       # Other options
-      STORAGE_ENDPOINT: "http://localhost:9000"
-      STORAGE_ACCESS_KEY_ID: "minioadmin"
-      STORAGE_SECRET_ACCESS_KEY: "minioadmin"
-      STORAGE_DOMAIN: "http://localhost:9000"
-      STORAGE_BUCKET: "alcoves"
-      STORAGE_BUCKET_VIDEO_PREFIX: "videos"
+      STORAGE_ENDPOINT: http://localhost:9000
+      STORAGE_ACCESS_KEY_ID: minioadmin
+      STORAGE_SECRET_ACCESS_KEY: minioadmin
+      STORAGE_DOMAIN: http://localhost:9000
+      STORAGE_BUCKET: alcoves
+      STORAGE_BUCKET_VIDEO_PREFIX: videos
       # Only for localdev
-      STORAGE_DOMAIN_INTERNAL: "http://minio:9000"
-      STORAGE_ENDPOINT_INTERNAL: "http://minio:9000"
+      STORAGE_DOMAIN_INTERNAL: http://minio:9000
+      STORAGE_ENDPOINT_INTERNAL: http://minio:9000
     volumes:
       - ./:/app
       - ./volumes/application:/data
@@ -42,7 +42,7 @@ services:
     ports:
       - 6005:5432
     volumes:
-      - alcoves_postgres_data:/var/lib/postgresql/data/
+      - postgresql:/var/lib/postgresql/data/
     healthcheck:
       test:
         ['CMD-SHELL', 'pg_isready', '-U', 'postgres', '-d', 'alcoves']
@@ -61,7 +61,7 @@ services:
     ports:
       - 6010:6379
     volumes:
-      - alcoves_redis_data:/data
+      - redis:/data
     healthcheck:
       test:
         ['CMD-SHELL', 'redis-cli ping']
@@ -70,17 +70,16 @@ services:
       interval: 1s
 
   minio:
-    image: minio/minio
+    image: minio/minio:latest
     ports:
       - "9000:9000"
       - "9001:9001"
-      - "45875:45875"
     environment:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin
     volumes:
-      - alcoves_minio_data:/data
-    command: server /data --address "0.0.0.0:9000" --console-address "0.0.0.0:9001"
+      - minio:/data
+    command: server --console-address ":9001" /data
 
   createbuckets:
     image: minio/mc
@@ -89,14 +88,15 @@ services:
     entrypoint: >
       /bin/sh -c "
       /usr/bin/mc config host add localmin http://minio:9000 minioadmin minioadmin;
-      /usr/bin/mc mb localmin/alcoves;
+      /usr/bin/mc mb localmin/alcoves || true;
+      /usr/bin/mc anonymous set public localmin/alcoves || true;
       exit 0;
       "
 
 volumes:
-  alcoves_redis_data:
-  alcoves_minio_data:
-  alcoves_postgres_data:
+  redis:
+  minio:
+  postgresql:
 
 networks:
   default:

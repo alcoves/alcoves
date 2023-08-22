@@ -2,7 +2,7 @@ import useSWRMutation from 'swr/mutation'
 
 import { useSWRConfig } from 'swr'
 import { ChangeEvent } from 'react'
-import { createVideo } from '../lib/api'
+import { createVideo } from '../../lib/api'
 import { Button } from '@chakra-ui/react'
 import { IoCloudUploadSharp } from 'react-icons/io5'
 

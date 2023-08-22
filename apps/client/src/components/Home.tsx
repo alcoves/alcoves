@@ -1,10 +1,10 @@
-import Upload from './Upload'
 import Videos from './Videos/Videos'
+import UploadPanel from './Upload/UploadPanel'
 
 export default function Home() {
   return (
     <>
-      <Upload />
+      <UploadPanel />
       <Videos />
     </>
   )

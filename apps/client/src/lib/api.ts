@@ -3,6 +3,7 @@ import axios, { AxiosRequestConfig } from 'axios'
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
 
 function makeRequest(options: AxiosRequestConfig) {
+  console.log(`Making request: ${JSON.stringify(options)}`)
   return axios(options)
 }
 
@@ -13,18 +14,13 @@ export async function fetcher(url: string): Promise<any> {
 
 export async function createVideo(
   url: string,
-  { arg }: { arg: File }
+  { arg }: { arg: string }
 ): Promise<Video> {
-  const formData = new FormData()
-  formData.append('file', arg)
   const response = await makeRequest({
     url,
-    data: formData,
+    data: { input: arg },
     method: 'POST',
     baseURL: API_URL,
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
   })
   return response.data
 }

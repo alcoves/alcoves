@@ -72,7 +72,7 @@ export class IngestProcessor {
       console.log('Job done!')
       return {}
     } catch (error) {
-      console.error('Error', error)
+      console.error('Error', error.message)
     }
   }
 }

@@ -91,3 +91,12 @@ export function getGradientFromString(str: string): string {
   // Construct gradient string
   return `linear-gradient(to bottom right, ${color1}, ${color2})`
 }
+
+export function isValidURL(url: string) {
+  try {
+    new URL(url)
+    return true
+  } catch (_) {
+    return false
+  }
+}

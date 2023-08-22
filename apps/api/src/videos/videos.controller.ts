@@ -6,11 +6,8 @@ import {
   Patch,
   Param,
   Delete,
-  Res,
-  StreamableFile,
   Render,
 } from '@nestjs/common'
-import { Response } from 'express'
 import { Prisma } from '@prisma/client'
 import { VideosService } from './videos.service'
 

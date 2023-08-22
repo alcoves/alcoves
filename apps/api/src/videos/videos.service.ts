@@ -5,7 +5,11 @@ import { InjectQueue } from '@nestjs/bull'
 import { ConfigService } from '@nestjs/config'
 import { PrismaService } from '../services/prisma.service'
 import { IngestJob } from '../processors/ingest.processor'
-import { Injectable, NotFoundException } from '@nestjs/common'
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common'
 
 @Injectable()
 export class VideosService {
@@ -16,6 +20,8 @@ export class VideosService {
   ) {}
 
   async create(input: string) {
+    if (!input) throw new BadRequestException()
+
     const video = await this.prisma.videos.create({
       data: {
         title: 'Test',
