@@ -11,6 +11,10 @@ RUN rm -rf ${FFMPEG_VERSION}*
 
 WORKDIR /app
 
+# These will be important for the production build
+ENV ALCOVES_DATA_DIR="/data"
+ENV ALCOVES_DB_PATH="file:/data/aloves.db"
+
 COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
 
