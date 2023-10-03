@@ -7,6 +7,12 @@ datasource db {
   url      = env("ALCOVES_DB_PATH")
 }
 
+model Config {
+  id        Int      @id @unique @default(1)
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+}
+
 model Library {
   id        Int      @id @default(autoincrement())
   name      String

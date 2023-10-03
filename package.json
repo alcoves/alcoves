@@ -7,8 +7,7 @@
   "repository": "git@github.com:alcoves/alcoves.git",
   "description": "Alcove Media Server",
   "workspaces": [
-    "apps/api",
-    "apps/client"
+    "apps/*"
   ],
   "scripts": {
     "dev": "turbo dev",
@@ -16,6 +15,6 @@
     "start": "node apps/api/dist/main"
   },
   "devDependencies": {
-    "turbo": "^1.10.13"
+    "turbo": "^1.10.14"
   }
 }

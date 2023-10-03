@@ -8,9 +8,10 @@ import { VideosModule } from './videos/videos.module'
 import { ServeStaticModule } from '@nestjs/serve-static'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { ProcessorsModule } from './processors/processors.module'
+import { PrismaService } from './services/prisma.service'
 
 @Module({
-  providers: [AppService],
+  providers: [AppService, PrismaService],
   controllers: [AppController],
   imports: [
     ServeStaticModule.forRoot({
@@ -27,8 +28,8 @@ import { ProcessorsModule } from './processors/processors.module'
       }),
       inject: [ConfigService],
     }),
-    VideosModule,
-    ProcessorsModule,
+    // VideosModule,
+    // ProcessorsModule,
   ],
 })
 export class AppModule {}

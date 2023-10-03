@@ -1,6 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing'
-import { AppController } from './app.controller'
 import { AppService } from './app.service'
+import { PrismaClient } from '@prisma/client'
+import { AppController } from './app.controller'
+import { Test, TestingModule } from '@nestjs/testing'
+import { PrismaService } from './services/prisma.service'
 
 describe('AppController', () => {
   let appController: AppController
@@ -8,15 +10,30 @@ describe('AppController', () => {
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [AppController],
-      providers: [AppService],
+      providers: [AppService, PrismaService],
     }).compile()
 
     appController = app.get<AppController>(AppController)
+    const prisma = new PrismaClient()
+
+    await prisma.$connect()
+    const config = await prisma.config.findFirst()
+    console.log('config', config)
   })
 
-  describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!')
+  describe('GET /info', () => {
+    it('should return server status', () => {
+      expect(appController.getStatus()).toMatchObject({
+        status: 'ok',
+        is_initialized: false,
+      })
+    })
+
+    it('should return server status', () => {
+      expect(appController.getStatus()).toMatchObject({
+        status: 'ok',
+        is_initialized: false,
+      })
     })
   })
 })

@@ -11,8 +11,8 @@ export class AppController {
     return 'redirect'
   }
 
-  @Get('health')
-  getHealth(): string {
-    return this.appService.getHealth()
+  @Get('/info')
+  getInfo(): any {
+    return this.appService.getInfo()
   }
 }
