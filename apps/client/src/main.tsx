@@ -7,13 +7,14 @@ import DevelopmentCSS from './components/DevelopmentCSS.tsx'
 
 import { SWRConfig } from 'swr'
 import { fetcher } from './lib/api.ts'
+import { theme } from './config/theme.tsx'
+import { ChakraProvider, ColorModeScript } from '@chakra-ui/react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
-import { ChakraProvider, ColorModeScript, theme } from '@chakra-ui/react'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
+    <ColorModeScript initialColorMode={theme.config.initialColorMode} />
     <ChakraProvider theme={theme}>
-      <ColorModeScript initialColorMode={theme.config.initialColorMode} />
       <SWRConfig value={{ fetcher: fetcher }}>
         <DevelopmentCSS />
         <BrowserRouter>
