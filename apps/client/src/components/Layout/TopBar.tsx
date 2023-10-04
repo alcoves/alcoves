@@ -1,5 +1,6 @@
 import logo from '../../assets/logo.png'
 import { Flex, Heading } from '@chakra-ui/react'
+import Profile from './Profile'
 
 export default function TopBar() {
   return (
@@ -17,6 +18,9 @@ export default function TopBar() {
         <Heading h="30px" pl="4" pt="1" size="md">
           Alcoves
         </Heading>
+      </Flex>
+      <Flex>
+        <Profile />
       </Flex>
     </Flex>
   )

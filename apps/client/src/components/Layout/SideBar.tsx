@@ -18,12 +18,77 @@ export default function SideBar() {
           as={Link}
           to="/"
           w="90%"
+          size="sm"
           variant="ghost"
           borderLeftRadius={0}
           leftIcon={<IoFilm />}
           justifyContent="flex-start"
         >
           Home
+        </Button>
+        <Heading
+          fontSize=".6rem"
+          pl="2"
+          color="gray.500"
+          textTransform="uppercase"
+        >
+          Libraries
+        </Heading>
+        <Button
+          as={Link}
+          to="/"
+          w="90%"
+          size="sm"
+          variant="ghost"
+          borderLeftRadius={0}
+          leftIcon={<IoFilm />}
+          justifyContent="flex-start"
+        >
+          Gaming
+        </Button>
+        <Heading
+          fontSize=".6rem"
+          pl="2"
+          color="gray.500"
+          textTransform="uppercase"
+        >
+          Admin
+        </Heading>
+        <Button
+          as={Link}
+          to="/"
+          w="90%"
+          size="sm"
+          variant="ghost"
+          borderLeftRadius={0}
+          leftIcon={<IoFilm />}
+          justifyContent="flex-start"
+        >
+          Users
+        </Button>
+        <Button
+          as={Link}
+          to="/"
+          w="90%"
+          size="sm"
+          variant="ghost"
+          borderLeftRadius={0}
+          leftIcon={<IoFilm />}
+          justifyContent="flex-start"
+        >
+          Libraries
+        </Button>
+        <Button
+          as={Link}
+          to="/"
+          w="90%"
+          size="sm"
+          variant="ghost"
+          borderLeftRadius={0}
+          leftIcon={<IoFilm />}
+          justifyContent="flex-start"
+        >
+          Settings
         </Button>
       </VStack>
     </Box>

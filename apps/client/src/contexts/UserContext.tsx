@@ -1,75 +1,71 @@
-// import * as api from "../lib/api";
-// import { User, UserContextProps } from "../types/types";
-// import { createContext, useState, useContext, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from 'react'
 
-// const UserContext = createContext({});
+interface User {
+  // Add fields that are relevant for your user object
+  id: string
+  username: string
+}
 
-// function UserProvider({ children }) {
-// 	const [loading, setLoading] = useState(true);
-// 	const [user, setUser] = useState<User | null>();
+interface UserContextProps {
+  user: User | null
+  login: (userData: User, token: string) => void
+  logout: () => void
+}
 
-// 	// useEffect(() => {
-// 	// 	getMe();
-// 	// }, []);
+interface UserProviderProps {
+  children: ReactNode
+}
 
-// 	// Sends a request to the server to fetch the current user
-// 	async function getMe() {
-// 		try {
-// 			setLoading(true);
-// 			// const user = await api.getMe();
-// 			if (user) setUser({ ...user });
-// 		} catch (error) {
-// 			console.error("Error", error);
-// 		} finally {
-// 			setLoading(false);
-// 		}
-// 	}
+const UserContext = createContext<UserContextProps | null>(null)
 
-// 	async function login({ email, password }: { email: string; password: string }) {
-// 		try {
-// 			setLoading(true);
-// 			await api.login({ email, password });
-// 		} catch (error) {
-// 			console.error("Error", error);
-// 		} finally {
-// 			setLoading(false);
-// 		}
-// 	}
+const LOCALSTORAGE_TOKEN_KEY = 'alcoves_user'
 
-// 	async function logout() {
-// 		try {
-// 			setLoading(true);
-// 			await api.logout();
-// 			setUser(null);
-// 		} catch (error) {
-// 			console.error("Error", error);
-// 		} finally {
-// 			setLoading(false);
-// 		}
-// 	}
+export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
+  const [user, setUser] = useState<User | null>(null)
 
-// 	return (
-// 		<UserContext.Provider
-// 			value={
-// 				{
-// 					user,
-// 					login,
-// 					logout,
-// 					loading,
-// 				} as UserContextProps
-// 			}
-// 		>
-// 			{children}
-// 		</UserContext.Provider>
-// 	);
-// }
+  useEffect(() => {
+    const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY)
 
-// function useUser(): UserContextProps {
-// 	const context = useContext(UserContext);
-// 	if (context === undefined) {
-// 		throw new Error("useUser must be used within a UserProvider");
-// 	}
-// 	return context as UserContextProps;
-// }
+    if (token) {
+      // TODO: Fetch user data using the token
+      setUser({
+        id: '1',
+        username: 'test',
+      })
+    }
+  }, [])
 
-// export { UserProvider, useUser };
+  const login = (userData: User, token: string) => {
+    localStorage.setItem(LOCALSTORAGE_TOKEN_KEY, token)
+    setUser(userData)
+  }
+
+  const logout = () => {
+    localStorage.removeItem(LOCALSTORAGE_TOKEN_KEY)
+    setUser(null)
+  }
+
+  return (
+    <UserContext.Provider value={{ user, login, logout }}>
+      {children}
+    </UserContext.Provider>
+  )
+}
+
+export const useUser = (): UserContextProps & { isAuthenticated: boolean } => {
+  const context = useContext(UserContext)
+
+  if (!context) {
+    throw new Error('useUser must be used within a UserProvider')
+  }
+
+  const isAuthenticated = Boolean(context.user)
+
+  return { ...context, isAuthenticated }
+}

@@ -9,7 +9,7 @@ export class AppService {
     const config = await this.prisma.config.findFirst()
     return {
       ...config,
-      isSetup: !!config,
+      isSetup: false,
       status: 'nominal',
     }
   }
