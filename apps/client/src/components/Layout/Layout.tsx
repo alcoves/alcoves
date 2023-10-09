@@ -1,17 +1,19 @@
 import Footer from './Footer'
 import TopBar from './TopBar'
 import SideBar from './SideBar'
+import Login from '../Login/Login'
 
 import { Outlet } from 'react-router-dom'
 import { Box, Flex } from '@chakra-ui/react'
 import { useUser } from '../../contexts/UserContext'
-import Login from '../Login/Login'
 
 // The outermost layout component
 export default function Layout({ sidebar = true }: { sidebar?: boolean }) {
-  const { user, isAuthenticated } = useUser()
+  const { user, isLoading } = useUser()
 
-  if (isAuthenticated) {
+  console.log('Layout', isLoading, user)
+
+  if (user) {
     return (
       <Box overflow="hidden">
         <TopBar />
@@ -24,7 +26,8 @@ export default function Layout({ sidebar = true }: { sidebar?: boolean }) {
         <Footer />
       </Box>
     )
-  } else if (!user && !isAuthenticated) {
+  } else if (!user && !isLoading) {
+    // return 'Not Authenticated'
     return <Login />
   }
 

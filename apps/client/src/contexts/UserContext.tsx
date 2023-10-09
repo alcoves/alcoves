@@ -14,8 +14,9 @@ interface User {
 
 interface UserContextProps {
   user: User | null
-  login: (userData: User, token: string) => void
+  isLoading: boolean
   logout: () => void
+  login: (userData: User, token: string) => void
 }
 
 interface UserProviderProps {
@@ -27,6 +28,7 @@ const UserContext = createContext<UserContextProps | null>(null)
 const LOCALSTORAGE_TOKEN_KEY = 'alcoves_user'
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
+  const [isLoading, setIsLoading] = useState<boolean>(true)
   const [user, setUser] = useState<User | null>(null)
 
   useEffect(() => {
@@ -38,34 +40,38 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         id: '1',
         username: 'test',
       })
+
+      setIsLoading(false)
     }
   }, [])
 
   const login = (userData: User, token: string) => {
+    setIsLoading(true)
     localStorage.setItem(LOCALSTORAGE_TOKEN_KEY, token)
     setUser(userData)
+    setIsLoading(false)
   }
 
   const logout = () => {
+    setIsLoading(true)
     localStorage.removeItem(LOCALSTORAGE_TOKEN_KEY)
     setUser(null)
+    setIsLoading(false)
   }
 
   return (
-    <UserContext.Provider value={{ user, login, logout }}>
+    <UserContext.Provider value={{ user, isLoading, login, logout }}>
       {children}
     </UserContext.Provider>
   )
 }
 
-export const useUser = (): UserContextProps & { isAuthenticated: boolean } => {
+export const useUser = (): UserContextProps => {
   const context = useContext(UserContext)
 
   if (!context) {
     throw new Error('useUser must be used within a UserProvider')
   }
 
-  const isAuthenticated = Boolean(context.user)
-
-  return { ...context, isAuthenticated }
+  return context
 }
