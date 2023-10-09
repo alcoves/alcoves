@@ -37,9 +37,29 @@ services:
       timeout: 5s
       interval: 1s
 
+  # db:
+  #   image: postgres:16-alpine
+  #   restart: always
+  #   ports:
+  #     - 6005:5432
+  #   volumes:
+  #     - postgres:/var/lib/postgresql/data/
+  #   healthcheck:
+  #     test:
+  #       ['CMD-SHELL', 'pg_isready', '-U', 'postgres', '-d', 'alcoves']
+  #     retries: 30
+  #     timeout: 5s
+  #     interval: 1s
+  #   user: postgres
+  #   environment:
+  #     POSTGRES_DB: alcoves
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: postgres
+
 volumes:
   redis:
   alcoves:
+  # postgres:
 
 networks:
   default:
