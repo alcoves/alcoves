@@ -8,7 +8,7 @@ import { configuration } from './config/configuration'
 import { ServeStaticModule } from '@nestjs/serve-static'
 import { PrismaService } from './services/prisma.service'
 import { ConfigModule, ConfigService } from '@nestjs/config'
-import { ProcessorsModule } from './processors/processors.module'
+// import { ProcessorsModule } from './processors/processors.module'
 
 @Module({
   providers: [AppService, PrismaService],

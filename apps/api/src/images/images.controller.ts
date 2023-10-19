@@ -1,4 +1,3 @@
-import { Response } from 'express'
 import {
   Controller,
   Get,
@@ -10,6 +9,7 @@ import {
   Res,
   Query,
 } from '@nestjs/common'
+import { FastifyReply } from 'fastify'
 import { ImagesService } from './images.service'
 import { CreateImageDto } from './dto/create-image.dto'
 import { UpdateImageDto } from './dto/update-image.dto'
@@ -33,7 +33,7 @@ export class ImagesController {
   findOne(
     @Param() params: GetImageParamsDto,
     @Query() query: GetImageQueryDto,
-    @Res() res: Response
+    @Res() res: FastifyReply
   ) {
     return this.imagesService.findOne(params, query, res)
   }

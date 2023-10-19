@@ -10,9 +10,9 @@ import axios, { ResponseType } from 'axios'
 import { PassThrough, Readable } from 'stream'
 import { GetObjectCommand, S3 } from '@aws-sdk/client-s3'
 import { Upload } from '@aws-sdk/lib-storage'
-import { Response } from 'express'
 import sharp, { ResizeOptions } from 'sharp'
 import { GetImageParamsDto, GetImageQueryDto } from './dto/get-image-dto'
+import { FastifyReply } from 'fastify'
 
 const s3 = new S3({
   region: 'us-east-1',
@@ -58,7 +58,7 @@ export class ImagesService {
   async findOne(
     params: GetImageParamsDto,
     query: GetImageQueryDto,
-    res: Response
+    res: FastifyReply
   ) {
     const image = await this.prisma.image.findUnique({
       where: {
@@ -88,11 +88,9 @@ export class ImagesService {
         }, {} as ResizeOptions)
       )
 
-    res.setHeader(
-      'Content-Type',
-      mime.getType(params.format) || image.contentType
-    )
-    streamingS3Body.pipe(streamingImageTransformer).pipe(res)
+    res
+      .header('Content-Type', mime.getType(params.format) || image.contentType)
+      .send(streamingS3Body.pipe(streamingImageTransformer))
   }
 
   update(id: number, updateImageDto: UpdateImageDto) {

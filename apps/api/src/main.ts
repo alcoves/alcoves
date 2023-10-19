@@ -5,10 +5,16 @@ import { ConfigService } from '@nestjs/config'
 import { ValidationPipe } from '@nestjs/common'
 import { PrismaService } from './services/prisma.service'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
-import { NestExpressApplication } from '@nestjs/platform-express'
+import {
+  FastifyAdapter,
+  NestFastifyApplication,
+} from '@nestjs/platform-fastify'
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule)
+  const app = await NestFactory.create<NestFastifyApplication>(
+    AppModule,
+    new FastifyAdapter({ logger: false })
+  )
   const configService = app.get(ConfigService)
   const port = configService.get('PORT') || 4000
 
@@ -40,10 +46,10 @@ async function bootstrap() {
       },
     })
   )
-  app.useStaticAssets(join(__dirname, '..', 'public'))
-  app.setBaseViewsDir(join(__dirname, '..', 'views'))
-  app.setViewEngine('hbs')
+  // app.useStaticAssets({ root: 'public' })
+  // app.setBaseViewsDir(join(__dirname, '..', 'views'))
+  // app.setViewEngine({ engine: 'hbs' })
 
-  await app.listen(port)
+  await app.listen(port, '0.0.0.0')
 }
 bootstrap()
