@@ -9,6 +9,7 @@ datasource db {
 
 model Asset {
   id             String   @id @default(uuid())
+  input          String
   name           String
   storage_bucket String
   storage_key    String

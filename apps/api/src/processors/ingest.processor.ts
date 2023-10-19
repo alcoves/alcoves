@@ -1,8 +1,8 @@
 import axios from 'axios'
 
 import { Job, Queue } from 'bull'
-import { S3 } from 'aws-sdk'
-import { Queues } from '../types'
+// import { S3 } from 'aws-sdk'
+import { Queues } from '../types/types'
 import { ConfigService } from '@nestjs/config'
 import { InjectQueue, Process, Processor } from '@nestjs/bull'
 import { PrismaService } from '../services/prisma.service'
@@ -29,14 +29,14 @@ export class IngestProcessor {
     const endpoint = this.configService.get('STORAGE_ENDPOINT')
     const internalEndpoint = this.configService.get('STORAGE_ENDPOINT_INTERNAL')
 
-    return new S3({
-      region: 'localhost',
-      s3ForcePathStyle: true,
-      signatureVersion: 'v4',
-      endpoint: internalEndpoint || endpoint,
-      accessKeyId: this.configService.get('STORAGE_ACCESS_KEY_ID'),
-      secretAccessKey: this.configService.get('STORAGE_SECRET_ACCESS_KEY'),
-    })
+    // return new S3({
+    //   region: 'localhost',
+    //   s3ForcePathStyle: true,
+    //   signatureVersion: 'v4',
+    //   endpoint: internalEndpoint || endpoint,
+    //   accessKeyId: this.configService.get('STORAGE_ACCESS_KEY_ID'),
+    //   secretAccessKey: this.configService.get('STORAGE_SECRET_ACCESS_KEY'),
+    // })
   }
 
   @Process({

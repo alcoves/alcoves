@@ -2,6 +2,7 @@ import { join } from 'path'
 import { AppModule } from './app.module'
 import { NestFactory } from '@nestjs/core'
 import { ConfigService } from '@nestjs/config'
+import { ValidationPipe } from '@nestjs/common'
 import { PrismaService } from './services/prisma.service'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 import { NestExpressApplication } from '@nestjs/platform-express'
@@ -30,6 +31,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config)
   SwaggerModule.setup('api', app, document)
 
+  app.useGlobalPipes(new ValidationPipe())
   app.useStaticAssets(join(__dirname, '..', 'public'))
   app.setBaseViewsDir(join(__dirname, '..', 'views'))
   app.setViewEngine('hbs')
