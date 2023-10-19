@@ -13,6 +13,7 @@ import Header from './Header'
 
 export default function SideBar() {
   const bg = useColorModeValue('gray.100', 'gray.900')
+  const border = useColorModeValue('gray.300', 'gray.900')
   const activeLinkStyles = {
     bgColor: useColorModeValue('gray.300', 'gray.700'),
   }
@@ -24,8 +25,10 @@ export default function SideBar() {
       w="210px"
       minW="210px"
       maxW="210px"
-      justify="space-between"
       direction="column"
+      borderColor={border}
+      borderRightWidth={2}
+      justify="space-between"
     >
       <Box>
         <Header />

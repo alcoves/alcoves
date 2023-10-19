@@ -5,6 +5,7 @@ import {
   Switch,
   IconButton,
   useColorMode,
+  useColorModeValue,
 } from '@chakra-ui/react'
 import { useUser } from '../../contexts/UserContext'
 import { IoLogOutSharp } from 'react-icons/io5'
@@ -13,7 +14,8 @@ export default function Footer() {
   const { logout } = useUser()
   const currentYear = new Date().getFullYear()
   const { colorMode, toggleColorMode } = useColorMode()
-  const bg = useColorMode().colorMode === 'dark' ? 'gray.800' : 'gray.200'
+  const bg = useColorModeValue('gray.200', 'gray.800')
+  const border = useColorModeValue('gray.300', 'gray.900')
 
   return (
     <Flex bg={bg} direction="column" justify="center" align="center">
@@ -26,10 +28,25 @@ export default function Footer() {
             variant="ghost"
             as={IconButton}
             onClick={logout}
+            borderTopWidth={0}
+            borderLeftWidth={2}
+            borderRightWidth={1}
+            borderBottomWidth={2}
+            borderColor={border}
             icon={<IoLogOutSharp size="1.2em" />}
           />
         </Flex>
-        <Flex w="100%" justify="center">
+        <Flex
+          h="100%"
+          w="100%"
+          align="center"
+          justify="center"
+          borderTopWidth={0}
+          borderLeftWidth={1}
+          borderRightWidth={0}
+          borderBottomWidth={2}
+          borderColor={border}
+        >
           <Switch
             size="sm"
             id="color-mode"
@@ -38,7 +55,17 @@ export default function Footer() {
           />
         </Flex>
       </Flex>
-      <Flex h="35px" align="center">
+      <Flex
+        h="35px"
+        w="100%"
+        align="center"
+        justify="center"
+        borderColor={border}
+        borderTopWidth={0}
+        borderLeftWidth={2}
+        borderRightWidth={0}
+        borderBottomWidth={2}
+      >
         <Text fontSize=".8rem">{`© ${currentYear}`}</Text>
       </Flex>
     </Flex>

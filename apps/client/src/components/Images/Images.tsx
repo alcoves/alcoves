@@ -1,20 +1,43 @@
 import useSWR from 'swr'
-import { Box, Heading } from '@chakra-ui/react'
+import {
+  Box,
+  Card,
+  Flex,
+  Heading,
+  Image,
+  VStack,
+  useColorModeValue,
+} from '@chakra-ui/react'
 
 export default function ImagesPage() {
   const { data, isLoading } = useSWR('/images')
 
+  const bg = useColorModeValue('gray.100', 'gray.700')
   return (
-    <Box pt="10">
-      <Heading size="md">Images</Heading>
+    <Box>
+      <Heading size="lg">Images</Heading>
       {!isLoading && data && (
-        <Box>
-          {data.map((image: any) => (
-            <Box key={image.id} h="30px" border="solid gray 1px">
-              {image.id}
-            </Box>
-          ))}
-        </Box>
+        <VStack>
+          {data.map((image: any) => {
+            const imageUrl = `http://localhost:4000/images/${image.id}.avif?q=75&w=100`
+            return (
+              <Card key={image.id} rounded="md" w="100%" bg={bg}>
+                <Flex>
+                  <Box rounded="lg">
+                    <Image
+                      rounded="md"
+                      height="75px"
+                      objectFit="cover"
+                      src={imageUrl}
+                      alt={image.id}
+                    />
+                  </Box>
+                  <Box p="2">{image.id}</Box>
+                </Flex>
+              </Card>
+            )
+          })}
+        </VStack>
       )}
     </Box>
   )
