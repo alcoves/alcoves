@@ -6,10 +6,7 @@ export class AppService {
   constructor(private readonly prisma: PrismaService) {}
 
   async getInfo(): Promise<any> {
-    const config = await this.prisma.config.findFirst()
     return {
-      ...config,
-      isSetup: false,
       status: 'nominal',
     }
   }

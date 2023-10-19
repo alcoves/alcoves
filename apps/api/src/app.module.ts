@@ -1,14 +1,14 @@
 import { join } from 'path'
-import { Queues } from './types/types'
 import { Module } from '@nestjs/common'
 import { AppService } from './app.service'
 import { BullModule } from '@nestjs/bull'
 import { AppController } from './app.controller'
-import { VideosModule } from './videos/videos.module'
+import { AssetsModule } from './assets/assets.module'
+import { configuration } from './config/configuration'
 import { ServeStaticModule } from '@nestjs/serve-static'
+import { PrismaService } from './services/prisma.service'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { ProcessorsModule } from './processors/processors.module'
-import { PrismaService } from './services/prisma.service'
 
 @Module({
   providers: [AppService, PrismaService],
@@ -22,14 +22,16 @@ import { PrismaService } from './services/prisma.service'
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         redis: {
-          port: configService.get('REDIS_PORT'),
-          host: configService.get('REDIS_HOST'),
+          port: configService.get('ALCOVES_REDIS_HOST'),
+          host: configService.get('ALCOVES_REDIS_PORT'),
         },
       }),
       inject: [ConfigService],
     }),
-    // VideosModule,
-    // ProcessorsModule,
+    ConfigModule.forRoot({
+      load: [configuration],
+    }),
+    AssetsModule,
   ],
 })
 export class AppModule {}

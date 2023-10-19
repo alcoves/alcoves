@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { IoFilm } from 'react-icons/io5'
+import { IoFilm, IoPeople, IoSettings } from 'react-icons/io5'
 import { Box, Button, Heading, VStack } from '@chakra-ui/react'
 
 export default function SideBar() {
@@ -61,31 +61,19 @@ export default function SideBar() {
           size="sm"
           variant="ghost"
           borderLeftRadius={0}
-          leftIcon={<IoFilm />}
+          leftIcon={<IoPeople />}
           justifyContent="flex-start"
         >
           Users
         </Button>
         <Button
           as={Link}
-          to="/"
+          to="/settings"
           w="90%"
           size="sm"
           variant="ghost"
           borderLeftRadius={0}
-          leftIcon={<IoFilm />}
-          justifyContent="flex-start"
-        >
-          Libraries
-        </Button>
-        <Button
-          as={Link}
-          to="/"
-          w="90%"
-          size="sm"
-          variant="ghost"
-          borderLeftRadius={0}
-          leftIcon={<IoFilm />}
+          leftIcon={<IoSettings />}
           justifyContent="flex-start"
         >
           Settings

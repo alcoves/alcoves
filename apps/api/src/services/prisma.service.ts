@@ -5,16 +5,6 @@ import { INestApplication, Injectable, OnModuleInit } from '@nestjs/common'
 export class PrismaService extends PrismaClient implements OnModuleInit {
   async onModuleInit() {
     await this.$connect()
-
-    const config = await this.config.findFirst()
-
-    if (!config) {
-      await this.config.create({
-        data: {
-          id: 1,
-        },
-      })
-    }
   }
 
   async enableShutdownHooks(app: INestApplication) {

@@ -1,4 +1,4 @@
-import { Queues } from '../types/types'
+import { Queues } from '../types'
 import { Process, Processor } from '@nestjs/bull'
 
 @Processor(Queues.thumbnail.name)

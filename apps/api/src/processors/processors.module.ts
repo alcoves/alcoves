@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common'
-import { Queues } from '../types/types'
+import { Queues } from '../types'
 import { BullModule } from '@nestjs/bull'
 import { ConfigService } from '@nestjs/config'
 import { IngestProcessor } from './ingest.processor'
-import { VideosService } from '../videos/videos.service'
+// import { VideosService } from '../videos/videos.service'
 import { ThumbnailProcessor } from './thumbnail.processor'
 import { TranscodeProcessor } from './transcode.processor'
 import { PrismaService } from '../../src/services/prisma.service'
@@ -53,7 +53,7 @@ const BullQueues = BullModule.registerQueue(
   providers: [
     ConfigService,
     PrismaService,
-    VideosService,
+    // VideosService,
     IngestProcessor,
     ThumbnailProcessor,
     TranscodeProcessor,

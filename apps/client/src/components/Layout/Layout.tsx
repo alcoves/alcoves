@@ -11,8 +11,6 @@ import { useUser } from '../../contexts/UserContext'
 export default function Layout({ sidebar = true }: { sidebar?: boolean }) {
   const { user, isLoading } = useUser()
 
-  console.log('Layout', isLoading, user)
-
   if (user) {
     return (
       <Box overflow="hidden">
@@ -27,7 +25,6 @@ export default function Layout({ sidebar = true }: { sidebar?: boolean }) {
       </Box>
     )
   } else if (!user && !isLoading) {
-    // return 'Not Authenticated'
     return <Login />
   }
 

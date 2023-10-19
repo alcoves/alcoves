@@ -2,11 +2,11 @@ import axios from 'axios'
 
 import { Job, Queue } from 'bull'
 import { S3 } from 'aws-sdk'
-import { Queues } from '../types/types'
+import { Queues } from '../types'
 import { ConfigService } from '@nestjs/config'
 import { InjectQueue, Process, Processor } from '@nestjs/bull'
 import { PrismaService } from '../services/prisma.service'
-import { VideosService } from '../videos/videos.service'
+// import { VideosService } from '../videos/videos.service'
 
 export interface IngestJob extends Job {
   data: {
@@ -19,7 +19,7 @@ export interface IngestJob extends Job {
 export class IngestProcessor {
   constructor(
     private prisma: PrismaService,
-    private videoService: VideosService,
+    // private videoService: VideosService,
     private configService: ConfigService,
     @InjectQueue(Queues.thumbnail.name) private thumbnailQueue: Queue,
     @InjectQueue(Queues.transcode.name) private transcodeQueue: Queue

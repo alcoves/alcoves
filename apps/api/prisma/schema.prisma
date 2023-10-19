@@ -3,27 +3,15 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("ALCOVES_DB_PATH")
+  provider = "postgresql"
+  url      = env("ALCOVES_DATABASE_URL")
 }
 
-model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  role      String   @default("USER")
-  updatedAt DateTime @updatedAt
-  createdAt DateTime @default(now())
-}
-
-model Config {
-  id        Int      @id @unique @default(1)
-  updatedAt DateTime @updatedAt
-  createdAt DateTime @default(now())
-}
-
-model Library {
-  id        Int      @id @default(autoincrement())
-  name      String
-  updatedAt DateTime @updatedAt
-  createdAt DateTime @default(now())
+model Asset {
+  id             String   @id @default(uuid())
+  name           String
+  storage_bucket String
+  storage_key    String
+  updatedAt      DateTime @updatedAt
+  createdAt      DateTime @default(now())
 }
