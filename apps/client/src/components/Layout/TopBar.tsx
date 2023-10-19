@@ -1,6 +1,6 @@
+import Profile from './Profile'
 import logo from '../../assets/logo.png'
 import { Flex, Heading } from '@chakra-ui/react'
-import Profile from './Profile'
 
 export default function TopBar() {
   return (

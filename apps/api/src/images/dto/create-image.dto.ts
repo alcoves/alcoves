@@ -1,6 +1,6 @@
 import { IsNotEmpty } from 'class-validator'
 
-export class CreateAssetDto {
+export class CreateImageDto {
   @IsNotEmpty()
   input: string
 }

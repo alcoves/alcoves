@@ -3,7 +3,7 @@ import { Module } from '@nestjs/common'
 import { AppService } from './app.service'
 import { BullModule } from '@nestjs/bull'
 import { AppController } from './app.controller'
-import { AssetsModule } from './assets/assets.module'
+import { ImagesModule } from './images/images.module'
 import { configuration } from './config/configuration'
 import { ServeStaticModule } from '@nestjs/serve-static'
 import { PrismaService } from './services/prisma.service'
@@ -31,7 +31,7 @@ import { ProcessorsModule } from './processors/processors.module'
     ConfigModule.forRoot({
       load: [configuration],
     }),
-    AssetsModule,
+    ImagesModule,
   ],
 })
 export class AppModule {}
