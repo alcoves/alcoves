@@ -8,12 +8,12 @@ datasource db {
 }
 
 model Image {
-  id             String   @id @default(uuid())
-  name           String   @default("")
-  input          String
-  content_type   String
-  storage_bucket String
-  storage_key    String
-  updatedAt      DateTime @updatedAt
-  createdAt      DateTime @default(now())
+  id            String   @id @default(uuid())
+  name          String   @default("")
+  input         String
+  contentType   String
+  storageBucket String
+  storageKey    String
+  updatedAt     DateTime @updatedAt
+  createdAt     DateTime @default(now())
 }

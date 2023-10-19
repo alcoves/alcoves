@@ -31,22 +31,25 @@ export class ImagesService {
 
     const storageBucket = 'alcoves'
     const storageKey = `images/${imageId}/${imageId}`
-
     const contentType = await this.ingest(input, storageBucket, storageKey)
 
     return this.prisma.image.create({
       data: {
         id: imageId,
         input,
-        storage_key: storageKey,
-        content_type: contentType,
-        storage_bucket: storageBucket,
+        storageKey,
+        contentType,
+        storageBucket,
       },
     })
   }
 
   findAll() {
-    return `This action returns all images`
+    return this.prisma.image.findMany({
+      orderBy: {
+        createdAt: 'desc',
+      },
+    })
   }
 
   findOne(id: number) {
