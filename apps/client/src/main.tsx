@@ -1,10 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import Home from './components/Home.tsx'
-import Setup from './components/Setup/Setup.tsx'
 import Login from './components/Login/Login.tsx'
 import Layout from './components/Layout/Layout.tsx'
-import Settings from './components/Settings/Settings.tsx'
+import ImagesPage from './components/Images/Images.tsx'
 import VideoById from './components/Videos/VideoById.tsx'
 import DevelopmentCSS from './components/DevelopmentCSS.tsx'
 
@@ -26,11 +25,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
             <Routes>
               <Route path="/" element={<Layout />}>
                 <Route path="/" element={<Home />} />
-                <Route path="/settings" element={<Settings />} />
+                <Route path="/images" element={<ImagesPage />} />
+                <Route path="/videos" element={<ImagesPage />} />
                 <Route path="/videos/:id" element={<VideoById />} />
                 <Route path="*" element={<Navigate to="/" />} />
               </Route>
-              <Route path="/setup" element={<Setup />} />
               <Route path="/login" element={<Login />} />
             </Routes>
           </BrowserRouter>

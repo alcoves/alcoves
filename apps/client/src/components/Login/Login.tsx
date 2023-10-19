@@ -1,29 +1,38 @@
-import useSWR from 'swr'
-
-import { useEffect } from 'react'
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Input,
+  Text,
+  VStack,
+} from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
-import { Box, Button } from '@chakra-ui/react'
 import { useUser } from '../../contexts/UserContext'
 
 export default function Login() {
-  const navigate = useNavigate()
+  const navigation = useNavigate()
   const { login } = useUser()
-  const { data } = useSWR('/info')
 
-  function handleLogin() {
-    login({ id: '1', username: 'test' }, 'token')
+  async function handleLogin() {
+    await login('changeme')
+    navigation('/')
   }
 
-  useEffect(() => {
-    if (!data?.isSetup) {
-      navigate('/setup')
-    }
-  }, [data])
-
   return (
-    <Box>
-      <div>Login</div>
-      <Button onClick={handleLogin}>Login</Button>
-    </Box>
+    <Flex w="100vw" h="100vh" justify="center" align="start">
+      <Box p="2" pt="8" w="400px">
+        <VStack spacing={2}>
+          <Heading size="md">Login</Heading>
+          <Text align="center">
+            Welcome! Enter your alcoves token to get started.
+          </Text>
+          <Input variant="filled" placeholder="Token" />
+          <Button mt="2" w="100%" colorScheme="teal" onClick={handleLogin}>
+            Submit
+          </Button>
+        </VStack>
+      </Box>
+    </Flex>
   )
 }

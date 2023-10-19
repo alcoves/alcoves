@@ -7,16 +7,14 @@ import React, {
 } from 'react'
 
 interface User {
-  // Add fields that are relevant for your user object
-  id: string
-  username: string
+  token: string
 }
 
 interface UserContextProps {
   user: User | null
   isLoading: boolean
   logout: () => void
-  login: (userData: User, token: string) => void
+  login: (token: string) => void
 }
 
 interface UserProviderProps {
@@ -25,7 +23,7 @@ interface UserProviderProps {
 
 const UserContext = createContext<UserContextProps | null>(null)
 
-const LOCALSTORAGE_TOKEN_KEY = 'alcoves_user'
+const LOCALSTORAGE_TOKEN_KEY = 'alcoves_token'
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -33,22 +31,14 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
   useEffect(() => {
     const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY)
-
-    if (token) {
-      // TODO: Fetch user data using the token
-      setUser({
-        id: '1',
-        username: 'test',
-      })
-
-      setIsLoading(false)
-    }
+    if (token) setUser({ token })
+    setIsLoading(false)
   }, [])
 
-  const login = (userData: User, token: string) => {
+  const login = (token: string) => {
     setIsLoading(true)
     localStorage.setItem(LOCALSTORAGE_TOKEN_KEY, token)
-    setUser(userData)
+    setUser({ token })
     setIsLoading(false)
   }
 
