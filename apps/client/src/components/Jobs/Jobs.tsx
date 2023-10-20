@@ -1,9 +1,9 @@
 import { Box } from '@chakra-ui/react'
 
-export default function Videos() {
+export default function Jobs() {
   return (
     <Box>
-      <Box>Videos</Box>
+      <Box>Jobs</Box>
     </Box>
   )
 }

@@ -1,11 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import Home from './components/Home.tsx'
+import Jobs from './components/Jobs/Jobs.tsx'
+import Settings from './components/Settings.tsx'
 import Login from './components/Login/Login.tsx'
 import Layout from './components/Layout/Layout.tsx'
-import ImagesPage from './components/Images/Images.tsx'
+import Images from './components/Images/Images.tsx'
+import Videos from './components/Videos/Videos.tsx'
 import VideoById from './components/Videos/VideoById.tsx'
-import DevelopmentCSS from './components/DevelopmentCSS.tsx'
 
 import { SWRConfig } from 'swr'
 import { fetcher } from './lib/api.ts'
@@ -20,13 +22,14 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <ChakraProvider theme={theme}>
       <UserProvider>
         <SWRConfig value={{ fetcher: fetcher }}>
-          <DevelopmentCSS />
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Layout />}>
                 <Route path="/" element={<Home />} />
-                <Route path="/images" element={<ImagesPage />} />
-                <Route path="/videos" element={<ImagesPage />} />
+                <Route path="/jobs" element={<Jobs />} />
+                <Route path="/images" element={<Images />} />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="/videos" element={<Videos />} />
                 <Route path="/videos/:id" element={<VideoById />} />
                 <Route path="*" element={<Navigate to="/" />} />
               </Route>

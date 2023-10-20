@@ -1,11 +1,29 @@
+import { Box, Button } from '@chakra-ui/react'
+
 export default function DevelopmentCSS() {
-  if (
-    import.meta.env.VITE_DEV_CSS === 'true' ||
-    import.meta.env.VITE_DEV_CSS === true
-  ) {
-    return (
-      <style>
-        {`
+  const handleClick = () => {
+    const currentState = window.localStorage.getItem('dev-css')
+
+    if (currentState === 'true') {
+      window.localStorage.setItem('dev-css', 'false')
+    } else {
+      window.localStorage.setItem('dev-css', 'true')
+    }
+
+    window.location.reload()
+  }
+
+  return (
+    <>
+      <Box>
+        <Button p="4" onClick={handleClick}>
+          Toggle Dev CSS
+        </Button>
+      </Box>
+
+      {window.localStorage.getItem('dev-css') === 'true' && (
+        <style>
+          {`
           * {
             outline: 1px solid red;
           }
@@ -14,9 +32,8 @@ export default function DevelopmentCSS() {
             outline: 2px solid blue;
           }
         `}
-      </style>
-    )
-  }
-
-  return null
+        </style>
+      )}
+    </>
+  )
 }

@@ -6,7 +6,6 @@ services:
       dockerfile: docker/Dockerfile.dev
     environment:
       #### Client ####
-      VITE_DEV_CSS: false
       VITE_API_URL: http://localhost:4000
       VITE_CDN_URL: http://localhost:5000 # Must be localhost because the browser makes these requests (not in docker network)
       #### API ####

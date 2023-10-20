@@ -8,7 +8,7 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react'
 import { useUser } from '../../contexts/UserContext'
-import { IoLogOutSharp } from 'react-icons/io5'
+import { IoLogOutOutline, IoLogOutSharp } from 'react-icons/io5'
 
 export default function Footer() {
   const { logout } = useUser()
@@ -33,7 +33,7 @@ export default function Footer() {
             borderRightWidth={1}
             borderBottomWidth={2}
             borderColor={border}
-            icon={<IoLogOutSharp size="1.2em" />}
+            icon={<IoLogOutOutline size="1.3em" />}
           />
         </Flex>
         <Flex

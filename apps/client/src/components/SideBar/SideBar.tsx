@@ -1,5 +1,14 @@
 import { NavLink } from 'react-router-dom'
-import { IoFilm, IoHomeSharp, IoCameraSharp } from 'react-icons/io5'
+import {
+  IoFilm,
+  IoHomeSharp,
+  IoCameraSharp,
+  IoCogOutline,
+  IoConstructOutline,
+  IoFilmOutline,
+  IoCameraOutline,
+  IoHomeOutline,
+} from 'react-icons/io5'
 import {
   Box,
   Button,
@@ -40,7 +49,7 @@ export default function SideBar() {
             size="sm"
             variant="ghost"
             borderLeftRadius={0}
-            leftIcon={<IoHomeSharp />}
+            leftIcon={<IoHomeOutline size="1.5em" />}
             justifyContent="flex-start"
             _activeLink={activeLinkStyles}
           >
@@ -62,7 +71,7 @@ export default function SideBar() {
             size="sm"
             variant="ghost"
             borderLeftRadius={0}
-            leftIcon={<IoCameraSharp />}
+            leftIcon={<IoCameraOutline size="1.5em" />}
             justifyContent="flex-start"
             _activeLink={activeLinkStyles}
           >
@@ -75,11 +84,46 @@ export default function SideBar() {
             size="sm"
             variant="ghost"
             borderLeftRadius={0}
-            leftIcon={<IoFilm />}
+            leftIcon={<IoFilmOutline size="1.5em" />}
             justifyContent="flex-start"
             _activeLink={activeLinkStyles}
           >
             Videos
+          </Button>
+          <Heading
+            mt="2"
+            pl="2"
+            fontSize=".6rem"
+            color="gray.500"
+            textTransform="uppercase"
+          >
+            Configuration
+          </Heading>
+          <Button
+            as={NavLink}
+            to="/jobs"
+            w="90%"
+            size="sm"
+            variant="ghost"
+            borderLeftRadius={0}
+            leftIcon={<IoCogOutline size="1.5em" />}
+            justifyContent="flex-start"
+            _activeLink={activeLinkStyles}
+          >
+            Jobs
+          </Button>
+          <Button
+            as={NavLink}
+            to="/settings"
+            w="90%"
+            size="sm"
+            variant="ghost"
+            borderLeftRadius={0}
+            leftIcon={<IoConstructOutline size="1.5em" />}
+            justifyContent="flex-start"
+            _activeLink={activeLinkStyles}
+          >
+            Settings
           </Button>
         </VStack>
       </Box>

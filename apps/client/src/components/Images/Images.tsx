@@ -17,7 +17,7 @@ import {
 import { DateTime } from 'luxon'
 import { cdnURL } from '../../lib/cdn'
 
-export default function ImagesPage() {
+export default function Images() {
   const { data, isLoading } = useSWR('/images')
 
   const bg = useColorModeValue('gray.100', 'gray.700')
@@ -37,7 +37,7 @@ export default function ImagesPage() {
             <Tbody>
               {data.map((image: any) => {
                 const imageUrl = cdnURL(
-                  `images/${image.id}?fmt=avif&q=50&w=100&h=100`
+                  `images/${image.id}?fmt=jpeg&q=30&w=100&h=100`
                 )
                 return (
                   <Tr key={image.id} _hover={{ bg }} cursor="pointer">
