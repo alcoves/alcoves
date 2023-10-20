@@ -1,13 +1,20 @@
 import useSWR from 'swr'
 import {
   Box,
-  Card,
-  Flex,
   Heading,
   Image,
-  VStack,
   useColorModeValue,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  TableContainer,
+  Text,
+  Flex,
 } from '@chakra-ui/react'
+import { DateTime } from 'luxon'
 
 export default function ImagesPage() {
   const { data, isLoading } = useSWR('/images')
@@ -17,28 +24,48 @@ export default function ImagesPage() {
     <Box>
       <Heading size="lg">Images</Heading>
       {!isLoading && data && (
-        <VStack>
-          {data.map((image: any) => {
-            const imageUrl = `http://localhost:4000/images/${image.id}.avif?q=75&w=100`
-            return (
-              <Card key={image.id} rounded="md" w="100%" bg={bg}>
-                <Flex>
-                  <Box rounded="lg">
-                    <Image
-                      rounded="md"
-                      height="75px"
-                      objectFit="cover"
-                      src={imageUrl}
-                      alt={image.id}
-                    />
-                  </Box>
-                  <Box p="2">{image.id}</Box>
-                </Flex>
-              </Card>
-            )
-          })}
-        </VStack>
+        <TableContainer>
+          <Table variant="simple" size="sm">
+            <Thead>
+              <Tr>
+                <Th></Th>
+                <Th>ID</Th>
+                <Th isNumeric>Created</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {data.map((image: any) => {
+                const imageUrl = `http://localhost:4000/images/${image.id}.avif?q=50&w=100&h=100`
+                return (
+                  <Tr key={image.id} _hover={{ bg }} cursor="pointer">
+                    <Td>
+                      <Image
+                        boxSize="50px"
+                        rounded="sm"
+                        src={imageUrl}
+                        alt={image.id}
+                      />
+                    </Td>
+                    <Td>
+                      <Text fontSize=".8em">{image.id}</Text>
+                    </Td>
+                    <Td isNumeric>
+                      <Box>
+                        {DateTime.fromISO(image?.createdAt).toFormat(
+                          'MM/dd/yy hh:mm a'
+                        )}
+                      </Box>
+                    </Td>
+                  </Tr>
+                )
+              })}
+            </Tbody>
+          </Table>
+        </TableContainer>
       )}
+      <Flex p="2" justify="center">
+        <Text>{`${data?.length} Images`}</Text>
+      </Flex>
     </Box>
   )
 }

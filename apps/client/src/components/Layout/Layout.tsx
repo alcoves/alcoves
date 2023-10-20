@@ -12,9 +12,9 @@ export default function Layout() {
   if (user) {
     return (
       <Box overflow="hidden">
-        <Flex h="100vh" w="100%" overflowY="auto">
+        <Flex h="100vh" w="100%">
           <SideBar />
-          <Box w="100%" p="2">
+          <Box w="100%" p="2" overflowY="auto">
             <Outlet />
           </Box>
         </Flex>
