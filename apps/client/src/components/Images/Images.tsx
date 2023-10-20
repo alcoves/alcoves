@@ -38,7 +38,7 @@ export default function ImagesPage() {
                 const imageUrl = `http://localhost:4000/images/${image.id}.avif?q=50&w=100&h=100`
                 return (
                   <Tr key={image.id} _hover={{ bg }} cursor="pointer">
-                    <Td>
+                    <Td w="100px" minW="100px">
                       <Image
                         boxSize="50px"
                         rounded="sm"
