@@ -6,14 +6,9 @@ import { ImagesConsumer } from './consumers/images.consumer'
 
 @Module({
   imports: [
-    BullModule.registerQueue(
-      {
-        name: 'images',
-      },
-      {
-        name: 'audio',
-      }
-    ),
+    BullModule.registerQueue({
+      name: 'images',
+    }),
   ],
   controllers: [JobsController],
   providers: [JobsService, ImagesConsumer],

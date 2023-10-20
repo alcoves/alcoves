@@ -95,8 +95,6 @@ export class ImagesService {
         }, {} as ResizeOptions)
       )
 
-    // Would it be possible to enqueue this as a bullmq job but then get an event when it's done here?
-
     return res
       .header('Content-Type', mime.getType(query.fmt) || image.contentType)
       .send(streamingS3Body.pipe(streamingImageTransformer))
