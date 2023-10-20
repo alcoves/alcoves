@@ -74,8 +74,15 @@ export class ImagesService {
     )
     const streamingS3Body = response.Body as Readable
 
+    // Send the original image if no format is specified
+    if (!query.fmt) {
+      res.header('Content-Type', image.contentType).send(streamingS3Body)
+      return
+    }
+
     const streamingImageTransformer = sharp()
-      .toFormat(params.format, {
+      .toFormat(query.fmt, {
+        progressive: true,
         effort: query.effort || 4,
         quality: query.q || 80,
       })
@@ -88,8 +95,8 @@ export class ImagesService {
         }, {} as ResizeOptions)
       )
 
-    res
-      .header('Content-Type', mime.getType(params.format) || image.contentType)
+    return res
+      .header('Content-Type', mime.getType(query.fmt) || image.contentType)
       .send(streamingS3Body.pipe(streamingImageTransformer))
   }
 

@@ -29,12 +29,13 @@ export class ImagesController {
     return this.imagesService.findAll()
   }
 
-  @Get(':id.:format')
+  @Get(':id')
   findOne(
     @Param() params: GetImageParamsDto,
     @Query() query: GetImageQueryDto,
     @Res() res: FastifyReply
   ) {
+    console.log({ params, query })
     return this.imagesService.findOne(params, query, res)
   }
 

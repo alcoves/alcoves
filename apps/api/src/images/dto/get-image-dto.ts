@@ -26,9 +26,6 @@ enum Fit {
 export class GetImageParamsDto {
   @IsUUID()
   id: string
-
-  @IsEnum(Formats)
-  format: Formats
 }
 
 export class GetImageQueryDto {
@@ -59,4 +56,8 @@ export class GetImageQueryDto {
   @IsOptional()
   @IsEnum(Fit)
   fit: string
+
+  @IsOptional()
+  @IsEnum(Formats)
+  fmt: Formats
 }

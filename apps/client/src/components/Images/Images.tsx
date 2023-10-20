@@ -37,7 +37,7 @@ export default function ImagesPage() {
             <Tbody>
               {data.map((image: any) => {
                 const imageUrl = cdnURL(
-                  `images/${image.id}.avif?q=50&w=100&h=100`
+                  `images/${image.id}?fmt=avif&q=50&w=100&h=100`
                 )
                 return (
                   <Tr key={image.id} _hover={{ bg }} cursor="pointer">
