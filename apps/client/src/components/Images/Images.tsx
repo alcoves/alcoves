@@ -15,6 +15,7 @@ import {
   Flex,
 } from '@chakra-ui/react'
 import { DateTime } from 'luxon'
+import { cdnURL } from '../../lib/cdn'
 
 export default function ImagesPage() {
   const { data, isLoading } = useSWR('/images')
@@ -35,7 +36,9 @@ export default function ImagesPage() {
             </Thead>
             <Tbody>
               {data.map((image: any) => {
-                const imageUrl = `http://localhost:4000/images/${image.id}.avif?q=50&w=100&h=100`
+                const imageUrl = cdnURL(
+                  `images/${image.id}.avif?q=50&w=100&h=100`
+                )
                 return (
                   <Tr key={image.id} _hover={{ bg }} cursor="pointer">
                     <Td w="100px" minW="100px">
