@@ -13,8 +13,10 @@ WORKDIR /app
 
 COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
+RUN npx prisma generate
+RUN yarn build
 
 EXPOSE 3000
 EXPOSE 4000
 
-CMD [ "yarn", "dev" ]
+CMD [ "yarn", "start:prod" ]
