@@ -15,6 +15,7 @@ import { theme } from './config/theme.tsx'
 import { UserProvider } from './contexts/UserContext.tsx'
 import { ChakraProvider, ColorModeScript } from '@chakra-ui/react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import Image from './components/Images/Image.tsx'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -28,6 +29,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                 <Route path="/" element={<Home />} />
                 <Route path="/jobs" element={<Jobs />} />
                 <Route path="/images" element={<Images />} />
+                <Route path="/images/:imageId" element={<Image />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/videos" element={<Videos />} />
                 <Route path="/videos/:id" element={<VideoById />} />

@@ -30,13 +30,22 @@ export class ImagesController {
   }
 
   @Get(':id')
-  findOne(
+  findOne(@Param() params: GetImageParamsDto) {
+    return this.imagesService.findOne(params.id)
+  }
+
+  // What about seperating the transformations api from the data api?
+  // assets/images/:imageId
+  // assets/videos/:videoId
+  // playback/videos/:videoId
+  // playback/images/:imageId
+  @Get(':id/transform')
+  transformOne(
     @Param() params: GetImageParamsDto,
     @Query() query: GetImageQueryDto,
     @Res() res: FastifyReply
   ) {
-    console.log({ params, query })
-    return this.imagesService.findOne(params, query, res)
+    return this.imagesService.transformOne(params, query, res)
   }
 
   @Patch(':id')

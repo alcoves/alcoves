@@ -55,7 +55,11 @@ export class ImagesService {
     })
   }
 
-  async findOne(
+  findOne(id: string) {
+    return this.prisma.image.findUnique({ where: { id } })
+  }
+
+  async transformOne(
     params: GetImageParamsDto,
     query: GetImageQueryDto,
     res: FastifyReply

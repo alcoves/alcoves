@@ -1,7 +1,6 @@
 import useSWR from 'swr'
 import {
   Box,
-  Heading,
   Image,
   useColorModeValue,
   Table,
@@ -13,17 +12,32 @@ import {
   TableContainer,
   Text,
   Flex,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
 } from '@chakra-ui/react'
 import { DateTime } from 'luxon'
 import { cdnURL } from '../../lib/cdn'
+import { Link, useNavigate } from 'react-router-dom'
 
 export default function Images() {
+  const navigate = useNavigate()
   const { data, isLoading } = useSWR('/images')
+
+  function handleNavigate(id: string) {
+    navigate(`/images/${id}`)
+  }
 
   const bg = useColorModeValue('gray.100', 'gray.700')
   return (
     <Box>
-      <Heading size="lg">Images</Heading>
+      <Breadcrumb fontWeight="medium" fontSize="lg">
+        <BreadcrumbItem>
+          <BreadcrumbLink as={Link} to="/images">
+            Images
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+      </Breadcrumb>
       {!isLoading && data && (
         <TableContainer>
           <Table variant="simple" size="sm">
@@ -40,7 +54,15 @@ export default function Images() {
                   `images/${image.id}?fmt=jpeg&q=30&w=100&h=100`
                 )
                 return (
-                  <Tr key={image.id} _hover={{ bg }} cursor="pointer">
+                  <Tr
+                    id={image.id}
+                    key={image.id}
+                    _hover={{ bg }}
+                    cursor="pointer"
+                    onClick={() => {
+                      handleNavigate(image.id)
+                    }}
+                  >
                     <Td w="100px" minW="100px">
                       <Image
                         boxSize="50px"
