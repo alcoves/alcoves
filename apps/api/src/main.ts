@@ -1,8 +1,7 @@
-import { join } from 'path'
 import { AppModule } from './app.module'
 import { NestFactory } from '@nestjs/core'
 import { ConfigService } from '@nestjs/config'
-import { ValidationPipe } from '@nestjs/common'
+import { RequestMethod, ValidationPipe } from '@nestjs/common'
 import { PrismaService } from './services/prisma.service'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 import {
@@ -23,8 +22,12 @@ async function bootstrap() {
     credentials: false,
   })
 
-  const prismaService = app.get(PrismaService)
-  await prismaService.enableShutdownHooks(app)
+  app.setGlobalPrefix('api', {
+    exclude: [
+      { path: '', method: RequestMethod.GET },
+      { path: 'health', method: RequestMethod.GET },
+    ],
+  })
 
   const config = new DocumentBuilder()
     .setTitle('Alcoves API')
@@ -32,10 +35,10 @@ async function bootstrap() {
     .setVersion('0.1')
     .addTag('alcoves')
     .addBearerAuth()
-    .setExternalDoc('Postman Collection', '/api-json')
+    .setExternalDoc('Postman Collection', '/spec-json')
     .build()
   const document = SwaggerModule.createDocument(app, config)
-  SwaggerModule.setup('api', app, document)
+  SwaggerModule.setup('spec', app, document)
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -46,10 +49,9 @@ async function bootstrap() {
       },
     })
   )
-  // app.useStaticAssets({ root: 'public' })
-  // app.setBaseViewsDir(join(__dirname, '..', 'views'))
-  // app.setViewEngine({ engine: 'hbs' })
 
+  const prismaService = app.get(PrismaService)
+  await prismaService.enableShutdownHooks(app)
   await app.listen(port, '0.0.0.0')
 }
 bootstrap()
