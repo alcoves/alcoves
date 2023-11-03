@@ -8,6 +8,7 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify'
+import { AssetsModule } from './assets/assets.module'
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -22,23 +23,16 @@ async function bootstrap() {
     credentials: false,
   })
 
-  app.setGlobalPrefix('api', {
-    exclude: [
-      { path: '', method: RequestMethod.GET },
-      { path: 'health', method: RequestMethod.GET },
-    ],
-  })
-
   const config = new DocumentBuilder()
     .setTitle('Alcoves API')
     .setDescription('The API for Alcoves')
     .setVersion('0.1')
-    .addTag('alcoves')
     .addBearerAuth()
-    .setExternalDoc('Postman Collection', '/spec-json')
+    .setExternalDoc('Redoc Docs', '/api/redoc')
+    .setExternalDoc('Postman Collection', '/api/spec-json')
     .build()
   const document = SwaggerModule.createDocument(app, config)
-  SwaggerModule.setup('spec', app, document)
+  SwaggerModule.setup('api/spec', app, document)
 
   app.useGlobalPipes(
     new ValidationPipe({

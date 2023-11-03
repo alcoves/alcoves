@@ -1,13 +1,15 @@
 import { join } from 'path'
 import { Module } from '@nestjs/common'
-import { AppService } from './app.service'
 import { BullModule } from '@nestjs/bull'
+import { AppService } from './app.service'
 import { JobsModule } from './jobs/jobs.module'
 import { AppController } from './app.controller'
 import { ImagesModule } from './images/images.module'
+import { AssetsModule } from './assets/assets.module'
 import { configuration } from './config/configuration'
 import { ServeStaticModule } from '@nestjs/serve-static'
 import { PrismaService } from './services/prisma.service'
+import { DeliveryModule } from './delivery/delivery.module'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 
 @Module({
@@ -33,8 +35,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
     ConfigModule.forRoot({
       load: [configuration],
     }),
-    ImagesModule,
+    AssetsModule,
+    DeliveryModule,
     JobsModule,
+    ImagesModule,
   ],
 })
 export class AppModule {}
