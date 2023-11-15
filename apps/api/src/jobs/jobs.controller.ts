@@ -13,14 +13,9 @@ export class JobsController {
     return this.jobsService.create(createJobDto)
   }
 
-  @Post('/test')
-  createTestJob() {
-    return this.jobsService.createTestJob()
-  }
-
   @Post('/clean')
   clean() {
-    return this.jobsService.cleanQueue()
+    return this.jobsService.cleanQueues()
   }
 
   @Get()
