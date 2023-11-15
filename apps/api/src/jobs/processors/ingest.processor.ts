@@ -18,8 +18,9 @@ export class IngestProcessor {
   ) {}
 
   @OnQueueProgress()
-  onProgress(job: Job) {
-    this.eventEmitter.emit('job-update', { data: { progress: job.progress } })
+  async onProgress(job: Job) {
+    const progress = await job.progress()
+    this.eventEmitter.emit('job-update', { id: job.id, progress })
   }
 
   @OnQueueCompleted()
@@ -39,7 +40,7 @@ export class IngestProcessor {
     console.log('asset', asset)
 
     for (let i = 0; i < 100; i++) {
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      await new Promise((resolve) => setTimeout(resolve, 100))
       console.log(i)
       await job.progress(i)
     }
