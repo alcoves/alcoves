@@ -5,9 +5,7 @@ import Jobs from './components/Jobs/Jobs.tsx'
 import Settings from './components/Settings.tsx'
 import Login from './components/Login/Login.tsx'
 import Layout from './components/Layout/Layout.tsx'
-import Images from './components/Images/Images.tsx'
-import Videos from './components/Videos/Videos.tsx'
-import VideoById from './components/Videos/VideoById.tsx'
+import Assets from './components/Assets/Assets.tsx'
 
 import { SWRConfig } from 'swr'
 import { fetcher } from './lib/api.ts'
@@ -15,7 +13,6 @@ import { theme } from './config/theme.tsx'
 import { UserProvider } from './contexts/UserContext.tsx'
 import { ChakraProvider, ColorModeScript } from '@chakra-ui/react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
-import Image from './components/Images/Image.tsx'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -28,11 +25,12 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
               <Route path="/" element={<Layout />}>
                 <Route path="/" element={<Home />} />
                 <Route path="/jobs" element={<Jobs />} />
-                <Route path="/images" element={<Images />} />
-                <Route path="/images/:imageId" element={<Image />} />
+                <Route path="/assets" element={<Assets />} />
+                {/* <Route path="/images" element={<Images />} />
+                <Route path="/images/:imageId" element={<Image />} /> */}
                 <Route path="/settings" element={<Settings />} />
-                <Route path="/videos" element={<Videos />} />
-                <Route path="/videos/:id" element={<VideoById />} />
+                {/* <Route path="/videos" element={<Videos />} />
+                <Route path="/videos/:id" element={<VideoById />} /> */}
                 <Route path="*" element={<Navigate to="/" />} />
               </Route>
               <Route path="/login" element={<Login />} />

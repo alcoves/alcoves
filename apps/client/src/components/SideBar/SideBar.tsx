@@ -1,13 +1,9 @@
 import { NavLink } from 'react-router-dom'
 import {
-  IoFilm,
-  IoHomeSharp,
-  IoCameraSharp,
   IoCogOutline,
-  IoConstructOutline,
-  IoFilmOutline,
-  IoCameraOutline,
   IoHomeOutline,
+  IoFileTrayFull,
+  IoConstructOutline,
 } from 'react-icons/io5'
 import {
   Box,
@@ -62,33 +58,20 @@ export default function SideBar() {
             color="gray.500"
             textTransform="uppercase"
           >
-            Assets
+            Media
           </Heading>
           <Button
             as={NavLink}
-            to="/images"
+            to="/assets"
             w="90%"
             size="sm"
             variant="ghost"
             borderLeftRadius={0}
-            leftIcon={<IoCameraOutline size="1.5em" />}
+            leftIcon={<IoFileTrayFull size="1.5em" />}
             justifyContent="flex-start"
             _activeLink={activeLinkStyles}
           >
-            Images
-          </Button>
-          <Button
-            as={NavLink}
-            to="/videos"
-            w="90%"
-            size="sm"
-            variant="ghost"
-            borderLeftRadius={0}
-            leftIcon={<IoFilmOutline size="1.5em" />}
-            justifyContent="flex-start"
-            _activeLink={activeLinkStyles}
-          >
-            Videos
+            Assets
           </Button>
           <Heading
             mt="2"

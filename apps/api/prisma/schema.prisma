@@ -7,6 +7,15 @@ datasource db {
   url      = env("ALCOVES_DATABASE_URL")
 }
 
+model Asset {
+  id            String   @id @default(uuid())
+  input         String
+  storageBucket String
+  storageKey    String
+  updatedAt     DateTime @updatedAt
+  createdAt     DateTime @default(now())
+}
+
 model Image {
   id            String   @id @default(uuid())
   name          String   @default("")

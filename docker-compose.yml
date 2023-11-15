@@ -2,6 +2,7 @@ version: '3'
 
 services:
   alcoves:
+    container_name: alcoves
     build:
       dockerfile: docker/Dockerfile.dev
     environment:
