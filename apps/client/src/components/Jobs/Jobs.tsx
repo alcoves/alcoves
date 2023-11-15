@@ -18,12 +18,17 @@ import {
   IoWarningOutline,
   IoInformationCircleOutline,
 } from 'react-icons/io5'
+import { useSSE } from '../../contexts/SSE'
+import { useEffect } from 'react'
 
 export default function Jobs() {
-  const { data } = useSWR('/jobs', {
-    refreshInterval: 1000,
-  })
+  const { data: sseData } = useSSE()
+  const { data, mutate } = useSWR('/api/jobs')
   const bg = useColorModeValue('gray.100', 'gray.900')
+
+  useEffect(() => {
+    mutate()
+  }, [sseData])
 
   return (
     <Box>
@@ -69,13 +74,7 @@ export default function Jobs() {
                 {job?.returnvalue}
               </Text>
             )}
-            <Progress
-              w="100%"
-              size="xs"
-              rounded="md"
-              value={job.progress}
-              max={5}
-            />
+            <Progress w="100%" size="xs" rounded="md" value={job.progress} />
             {job.failedReason && (
               <Text color="red.500">
                 <Icon as={IoWarningOutline} /> {job.failedReason}

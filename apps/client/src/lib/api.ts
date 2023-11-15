@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios'
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
+export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
 
 export async function fetcher(url: string): Promise<any> {
   const res = await axios.get(url, { baseURL: API_URL })

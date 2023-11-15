@@ -9,6 +9,7 @@ import { AssetsModule } from './assets/assets.module'
 import { configuration } from './config/configuration'
 import { ServeStaticModule } from '@nestjs/serve-static'
 import { PrismaService } from './services/prisma.service'
+import { EventEmitterModule } from '@nestjs/event-emitter'
 import { DeliveryModule } from './delivery/delivery.module'
 
 @Module({
@@ -23,6 +24,7 @@ import { DeliveryModule } from './delivery/delivery.module'
       isGlobal: true,
       load: [configuration],
     }),
+    EventEmitterModule.forRoot(),
     JobsModule,
     AssetsModule,
     ImagesModule,

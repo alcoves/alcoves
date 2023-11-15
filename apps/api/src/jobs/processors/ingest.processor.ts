@@ -1,14 +1,31 @@
 import { Job } from 'bull'
 import { ConfigService } from '@nestjs/config'
-import { Process, Processor } from '@nestjs/bull'
+import { EventEmitter2 } from '@nestjs/event-emitter'
 import { PrismaService } from '../../services/prisma.service'
+import {
+  OnQueueCompleted,
+  OnQueueProgress,
+  Process,
+  Processor,
+} from '@nestjs/bull'
 
 @Processor('ingest')
 export class IngestProcessor {
   constructor(
+    private eventEmitter: EventEmitter2,
     private readonly prismaService: PrismaService,
     private readonly configService: ConfigService
   ) {}
+
+  @OnQueueProgress()
+  onProgress(job: Job) {
+    this.eventEmitter.emit('job-update', { data: { progress: job.progress } })
+  }
+
+  @OnQueueCompleted()
+  onCompleted() {
+    this.eventEmitter.emit('job-update', { data: 'completed' })
+  }
 
   @Process({
     concurrency: 1,
@@ -23,6 +40,7 @@ export class IngestProcessor {
 
     for (let i = 0; i < 100; i++) {
       await new Promise((resolve) => setTimeout(resolve, 1000))
+      console.log(i)
       await job.progress(i)
     }
 
