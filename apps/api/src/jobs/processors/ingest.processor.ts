@@ -3,7 +3,7 @@ import { Process, Processor } from '@nestjs/bull'
 import { PrismaService } from '../../services/prisma.service'
 
 @Processor('ingest')
-export class IngestConsumer {
+export class IngestProcessor {
   constructor(private readonly prismaService: PrismaService) {}
 
   @Process({

@@ -3,19 +3,39 @@ import { BullModule } from '@nestjs/bull'
 import { JobsService } from './jobs.service'
 import { JobsController } from './jobs.controller'
 import { PrismaService } from '../services/prisma.service'
-import { ImagesConsumer } from './consumers/images.consumer'
-import { IngestConsumer } from './consumers/ingest.consumer'
+import { ImagesProcessor } from './processors/images.processor'
+import { IngestProcessor } from './processors/ingest.processor'
+import { ConfigModule, ConfigService } from '@nestjs/config'
 
 @Module({
   imports: [
-    BullModule.registerQueue({
-      name: 'images',
-    }),
-    BullModule.registerQueue({
-      name: 'ingest',
-    }),
+    BullModule.registerQueueAsync(
+      {
+        name: 'images',
+        imports: [ConfigModule],
+        inject: [ConfigService],
+        useFactory: (configService: ConfigService) => ({
+          redis: {
+            host: configService.get('ALCOVES_REDIS_HOST'),
+            port: configService.get('ALCOVES_REDIS_PORT'),
+          },
+        }),
+      },
+      {
+        name: 'ingest',
+        imports: [ConfigModule],
+        inject: [ConfigService],
+        useFactory: (configService: ConfigService) => ({
+          redis: {
+            host: configService.get('ALCOVES_REDIS_HOST'),
+            port: configService.get('ALCOVES_REDIS_PORT'),
+          },
+        }),
+      }
+    ),
   ],
+  exports: [BullModule],
   controllers: [JobsController],
-  providers: [JobsService, PrismaService, ImagesConsumer, IngestConsumer],
+  providers: [JobsService, PrismaService, ImagesProcessor, IngestProcessor],
 })
 export class JobsModule {}

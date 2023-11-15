@@ -2,7 +2,7 @@ import { Job } from 'bull'
 import { Process, Processor } from '@nestjs/bull'
 
 @Processor('images')
-export class ImagesConsumer {
+export class ImagesProcessor {
   @Process({
     concurrency: 4,
     name: 'images_transform',

@@ -1,7 +1,7 @@
 import { Asset } from '@prisma/client'
 import { v4 as uuidv4 } from 'uuid'
 import { ConfigService } from '@nestjs/config'
-// import { JobsService } from '../jobs/jobs.service'
+import { JobsService } from '../jobs/jobs.service'
 import { CreateAssetDto } from './dto/create-asset.dto'
 import { PrismaService } from '../services/prisma.service'
 import { Injectable, NotFoundException } from '@nestjs/common'
@@ -9,7 +9,7 @@ import { Injectable, NotFoundException } from '@nestjs/common'
 @Injectable()
 export class AssetsService {
   constructor(
-    // private readonly jobsService: JobsService,
+    private readonly jobsService: JobsService,
     private readonly prismaService: PrismaService,
     private readonly configService: ConfigService
   ) {}
@@ -46,8 +46,7 @@ export class AssetsService {
       },
     })
 
-    // await this.jobsService.ingestAsset(assetId)
-
+    await this.jobsService.ingestAsset(assetId)
     return asset
   }
 
