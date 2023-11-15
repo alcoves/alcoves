@@ -2,11 +2,13 @@ import { Queue } from 'bull'
 import { InjectQueue } from '@nestjs/bull'
 import { Injectable } from '@nestjs/common'
 import { CreateJobDto } from './dto/create-job.dto'
-import { UpdateJobDto } from './dto/update-job.dto'
 
 @Injectable()
 export class JobsService {
-  constructor(@InjectQueue('images') private imageQueue: Queue) {}
+  constructor(
+    @InjectQueue('images') private imageQueue: Queue,
+    @InjectQueue('ingest') private ingestQueue: Queue
+  ) {}
 
   create(createJobDto: CreateJobDto) {
     return 'This action adds a new job'
@@ -41,5 +43,14 @@ export class JobsService {
       'failed',
     ])
     return jobs
+  }
+
+  // Job Queue Methods
+
+  async ingestAsset(assetId: string) {
+    const job = await this.ingestQueue.add('ingest_asset', {
+      assetId,
+    })
+    return job
   }
 }

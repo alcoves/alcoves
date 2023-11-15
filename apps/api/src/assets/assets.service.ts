@@ -1,11 +1,22 @@
 import { Asset } from '@prisma/client'
+import { v4 as uuidv4 } from 'uuid'
+import { ConfigService } from '@nestjs/config'
+// import { JobsService } from '../jobs/jobs.service'
 import { CreateAssetDto } from './dto/create-asset.dto'
 import { PrismaService } from '../services/prisma.service'
 import { Injectable, NotFoundException } from '@nestjs/common'
 
 @Injectable()
 export class AssetsService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    // private readonly jobsService: JobsService,
+    private readonly prismaService: PrismaService,
+    private readonly configService: ConfigService
+  ) {}
+
+  createAssetStorageKey(id: string): string {
+    return `assets/${id}`
+  }
 
   async findAll(): Promise<Asset[]> {
     const assets = await this.prismaService.asset.findMany({
@@ -25,13 +36,17 @@ export class AssetsService {
   }
 
   async create(createAssetDto: CreateAssetDto): Promise<Asset> {
+    const assetId = uuidv4()
     const asset = await this.prismaService.asset.create({
       data: {
-        storageKey: 'test',
-        storageBucket: 'test',
-        ...createAssetDto,
+        id: assetId,
+        input: createAssetDto.input,
+        storageKey: this.createAssetStorageKey(assetId),
+        storageBucket: this.configService.get('ALCOVES_STORAGE_BUCKET'),
       },
     })
+
+    // await this.jobsService.ingestAsset(assetId)
 
     return asset
   }
