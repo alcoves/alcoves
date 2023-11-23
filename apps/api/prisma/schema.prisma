@@ -12,6 +12,7 @@ model Asset {
   input         String
   storageBucket String
   storageKey    String
+  contentType   String      @default("")
   updatedAt     DateTime    @updatedAt
   createdAt     DateTime    @default(now())
   status        AssetStatus @default(CREATED)

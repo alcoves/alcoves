@@ -6,6 +6,10 @@ import { CreateAssetDto } from './dto/create-asset.dto'
 import { PrismaService } from '../services/prisma.service'
 import { Injectable, NotFoundException } from '@nestjs/common'
 
+interface ExtendedAsset extends Asset {
+  url: string
+}
+
 @Injectable()
 export class AssetsService {
   constructor(
@@ -18,21 +22,29 @@ export class AssetsService {
     return `assets/${id}`
   }
 
-  async findAll(): Promise<Asset[]> {
+  async findAll(): Promise<ExtendedAsset[]> {
     const assets = await this.prismaService.asset.findMany({
       orderBy: {
         createdAt: 'desc',
       },
     })
-    return assets
+    return assets.map((asset) => {
+      return {
+        ...asset,
+        url: `http://localhost:9000/${asset.storageBucket}/${asset.storageKey}/original.mp4`,
+      }
+    })
   }
 
-  async findOne(id: string): Promise<Asset> {
+  async findOne(id: string): Promise<ExtendedAsset> {
     const asset = await this.prismaService.asset.findFirst({
       where: { id },
     })
 
-    return asset
+    return {
+      ...asset,
+      url: `http://localhost:9000/${asset.storageBucket}/${asset.storageKey}/original.mp4`,
+    }
   }
 
   async create(createAssetDto: CreateAssetDto): Promise<Asset> {

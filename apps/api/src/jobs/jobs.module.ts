@@ -6,6 +6,7 @@ import { PrismaService } from '../services/prisma.service'
 import { ImagesProcessor } from './processors/images.processor'
 import { IngestProcessor } from './processors/ingest.processor'
 import { ConfigModule, ConfigService } from '@nestjs/config'
+import { UtilitiesService } from '../utilities/utilities.service'
 
 @Module({
   imports: [
@@ -36,6 +37,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
   ],
   exports: [BullModule],
   controllers: [JobsController],
-  providers: [JobsService, PrismaService, ImagesProcessor, IngestProcessor],
+  providers: [
+    JobsService,
+    UtilitiesService,
+    PrismaService,
+    ImagesProcessor,
+    IngestProcessor,
+  ],
 })
 export class JobsModule {}

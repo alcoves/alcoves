@@ -11,9 +11,10 @@ import { ServeStaticModule } from '@nestjs/serve-static'
 import { PrismaService } from './services/prisma.service'
 import { EventEmitterModule } from '@nestjs/event-emitter'
 import { DeliveryModule } from './delivery/delivery.module'
+import { UtilitiesService } from './utilities/utilities.service';
 
 @Module({
-  providers: [AppService, PrismaService],
+  providers: [AppService, PrismaService, UtilitiesService],
   controllers: [AppController],
   imports: [
     ServeStaticModule.forRoot({

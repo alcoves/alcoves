@@ -2,19 +2,21 @@ import { Job } from 'bull'
 import { ConfigService } from '@nestjs/config'
 import { EventEmitter2 } from '@nestjs/event-emitter'
 import { PrismaService } from '../../services/prisma.service'
+import { UtilitiesService } from '../../utilities/utilities.service'
 import {
-  OnQueueCompleted,
-  OnQueueProgress,
   Process,
   Processor,
+  OnQueueProgress,
+  OnQueueCompleted,
 } from '@nestjs/bull'
 
 @Processor('ingest')
 export class IngestProcessor {
   constructor(
     private eventEmitter: EventEmitter2,
+    private readonly configService: ConfigService,
     private readonly prismaService: PrismaService,
-    private readonly configService: ConfigService
+    private readonly utilitiesService: UtilitiesService
   ) {}
 
   @OnQueueProgress()
@@ -37,12 +39,35 @@ export class IngestProcessor {
     const asset = await this.prismaService.asset.findFirst({
       where: { id: job.data.assetId },
     })
-    console.log('asset', asset)
 
-    for (let i = 0; i < 100; i++) {
-      await new Promise((resolve) => setTimeout(resolve, 100))
-      console.log(i)
-      await job.progress(i)
+    try {
+      await this.prismaService.asset.update({
+        where: { id: job.data.assetId },
+        data: {
+          status: 'INGESTING',
+        },
+      })
+
+      const { contentType } = await this.utilitiesService.ingestURLToStorage(
+        asset.input,
+        asset.storageBucket,
+        `${asset.storageKey}/original.mp4`
+      )
+
+      await this.prismaService.asset.update({
+        where: { id: job.data.assetId },
+        data: { status: 'READY', contentType },
+      })
+
+      console.log('asset injested successfully', job.data)
+    } catch (error) {
+      console.error('there was an error ingesting the asset', error)
+      await this.prismaService.asset.update({
+        where: { id: job.data.assetId },
+        data: { status: 'ERROR' },
+      })
+
+      throw new Error(error)
     }
 
     await job.progress(100)
