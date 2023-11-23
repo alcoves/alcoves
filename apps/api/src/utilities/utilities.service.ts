@@ -1,5 +1,4 @@
 import axios from 'axios'
-import mime from 'mime-types'
 
 import { PassThrough } from 'stream'
 import { S3 } from '@aws-sdk/client-s3'
@@ -25,6 +24,7 @@ export class UtilitiesService {
 
   async ingestURLToStorage(
     input: string,
+    contentType: string,
     storageBucket: string,
     storageKey: string
   ): Promise<any> {
@@ -32,9 +32,6 @@ export class UtilitiesService {
       const pass = new PassThrough()
       const response = await axios.get(input, { responseType: 'stream' })
       response.data.pipe(pass)
-
-      const contentType: string =
-        mime.lookup(input) || response.headers['content-type']
 
       const upload = new Upload({
         client: this.s3,

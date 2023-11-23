@@ -1,5 +1,6 @@
+import mime from 'mime-types'
+
 import { Job } from 'bull'
-import { ConfigService } from '@nestjs/config'
 import { EventEmitter2 } from '@nestjs/event-emitter'
 import { PrismaService } from '../../services/prisma.service'
 import { UtilitiesService } from '../../utilities/utilities.service'
@@ -14,7 +15,6 @@ import {
 export class IngestProcessor {
   constructor(
     private eventEmitter: EventEmitter2,
-    private readonly configService: ConfigService,
     private readonly prismaService: PrismaService,
     private readonly utilitiesService: UtilitiesService
   ) {}
@@ -48,15 +48,17 @@ export class IngestProcessor {
         },
       })
 
-      const { contentType } = await this.utilitiesService.ingestURLToStorage(
+      await this.utilitiesService.ingestURLToStorage(
         asset.input,
+        asset.contentType,
         asset.storageBucket,
-        `${asset.storageKey}/original.mp4`
+        // This should probably be stored in the database or at least have a singleton
+        `${asset.storageKey}/original.${mime.extension(asset.contentType)}`
       )
 
       await this.prismaService.asset.update({
         where: { id: job.data.assetId },
-        data: { status: 'READY', contentType },
+        data: { status: 'READY' },
       })
 
       console.log('asset injested successfully', job.data)

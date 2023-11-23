@@ -1,3 +1,5 @@
+import mime from 'mime-types'
+
 import { Asset } from '@prisma/client'
 import { v4 as uuidv4 } from 'uuid'
 import { ConfigService } from '@nestjs/config'
@@ -47,11 +49,18 @@ export class AssetsService {
     }
   }
 
-  async create(createAssetDto: CreateAssetDto): Promise<Asset> {
+  async create(createAssetDto: CreateAssetDto): Promise<ExtendedAsset> {
     const assetId = uuidv4()
-    const asset = await this.prismaService.asset.create({
+    const contentType = mime.lookup(createAssetDto.input)
+
+    // Could also do an options request to get the contentType
+    if (!contentType)
+      throw new Error('Invalid content type, please set a valid content type')
+
+    await this.prismaService.asset.create({
       data: {
         id: assetId,
+        contentType,
         input: createAssetDto.input,
         storageKey: this.createAssetStorageKey(assetId),
         storageBucket: this.configService.get('ALCOVES_STORAGE_BUCKET'),
@@ -59,7 +68,7 @@ export class AssetsService {
     })
 
     await this.jobsService.ingestAsset(assetId)
-    return asset
+    return this.findOne(assetId)
   }
 
   async remove(id: string): Promise<string | NotFoundException> {
