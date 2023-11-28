@@ -18,7 +18,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@vidstack/react": "^1.6.2",
-    "axios": "^1.5.1",
+    "axios": "^1.6.0",
     "framer-motion": "^10.16.4",
     "hls.js": "^1.4.12",
     "luxon": "^3.4.3",
