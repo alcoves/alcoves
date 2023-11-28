@@ -42,6 +42,7 @@ export default function Assets() {
       <Table variant="simple">
         <Thead>
           <Tr>
+            <Th></Th>
             <Th>ID</Th>
             <Th>Type</Th>
             <Th>Status</Th>
@@ -60,6 +61,7 @@ export default function Assets() {
                   navigate(`/assets/${asset.id}`)
                 }}
               >
+                <Td>thumbnail</Td>
                 <Td>{asset.id}</Td>
                 <Td>{asset.contentType}</Td>
                 <Td>{asset.status}</Td>

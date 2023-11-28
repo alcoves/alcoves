@@ -1,7 +1,6 @@
-import mime from 'mime-types'
-
 import { Job } from 'bull'
 import { EventEmitter2 } from '@nestjs/event-emitter'
+import { AssetsService } from '../../assets/assets.service'
 import { PrismaService } from '../../services/prisma.service'
 import { UtilitiesService } from '../../utilities/utilities.service'
 import {
@@ -16,6 +15,7 @@ export class IngestProcessor {
   constructor(
     private eventEmitter: EventEmitter2,
     private readonly prismaService: PrismaService,
+    private readonly assetsService: AssetsService,
     private readonly utilitiesService: UtilitiesService
   ) {}
 
@@ -53,7 +53,9 @@ export class IngestProcessor {
         asset.contentType,
         asset.storageBucket,
         // This should probably be stored in the database or at least have a singleton
-        `${asset.storageKey}/original.${mime.extension(asset.contentType)}`
+        `${asset.storageKey}/${this.assetsService.getSourceAssetFilename(
+          asset
+        )}`
       )
 
       await this.prismaService.asset.update({

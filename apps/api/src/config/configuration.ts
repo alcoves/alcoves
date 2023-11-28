@@ -2,6 +2,7 @@ export function configuration() {
   const requiredEnvironmentVariables = [
     'ALCOVES_TOKEN',
     'ALCOVES_STORAGE_BUCKET',
+    'ALCOVES_STORAGE_PUBLIC_ENDPOINT',
     'ALCOVES_STORAGE_ENDPOINT',
     'ALCOVES_STORAGE_ACCESS_KEY_ID',
     'ALCOVES_STORAGE_SECRET_ACCESS_KEY',

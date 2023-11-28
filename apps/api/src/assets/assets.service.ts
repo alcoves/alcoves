@@ -24,10 +24,14 @@ export class AssetsService {
     return `assets/${id}`
   }
 
+  getSourceAssetFilename(asset: Asset): string {
+    return `${asset.id}.${mime.extension(asset.contentType)}`
+  }
+
   getOriginalAssetUrl(asset: Asset): string {
-    return `${this.configService.get('ALCOVES_STORAGE_ENDPOINT')}/${
+    return `${this.configService.get('ALCOVES_STORAGE_PUBLIC_ENDPOINT')}/${
       asset.storageBucket
-    }/${asset.storageKey}/original.mp4`
+    }/${asset.storageKey}/${this.getSourceAssetFilename(asset)}`
   }
 
   async findAll(): Promise<ExtendedAsset[]> {

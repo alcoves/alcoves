@@ -2,10 +2,11 @@ import { Module } from '@nestjs/common'
 import { BullModule } from '@nestjs/bull'
 import { JobsService } from './jobs.service'
 import { JobsController } from './jobs.controller'
+import { AssetsService } from '../assets/assets.service'
 import { PrismaService } from '../services/prisma.service'
+import { ConfigModule, ConfigService } from '@nestjs/config'
 import { ImagesProcessor } from './processors/images.processor'
 import { IngestProcessor } from './processors/ingest.processor'
-import { ConfigModule, ConfigService } from '@nestjs/config'
 import { UtilitiesService } from '../utilities/utilities.service'
 
 @Module({
@@ -39,10 +40,11 @@ import { UtilitiesService } from '../utilities/utilities.service'
   controllers: [JobsController],
   providers: [
     JobsService,
-    UtilitiesService,
     PrismaService,
+    AssetsService,
     ImagesProcessor,
     IngestProcessor,
+    UtilitiesService,
   ],
 })
 export class JobsModule {}
