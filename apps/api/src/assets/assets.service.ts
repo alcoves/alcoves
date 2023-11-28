@@ -24,6 +24,12 @@ export class AssetsService {
     return `assets/${id}`
   }
 
+  getOriginalAssetUrl(asset: Asset): string {
+    return `${this.configService.get('ALCOVES_STORAGE_ENDPOINT')}/${
+      asset.storageBucket
+    }/${asset.storageKey}/original.mp4`
+  }
+
   async findAll(): Promise<ExtendedAsset[]> {
     const assets = await this.prismaService.asset.findMany({
       orderBy: {
@@ -33,7 +39,7 @@ export class AssetsService {
     return assets.map((asset) => {
       return {
         ...asset,
-        url: `http://localhost:9000/${asset.storageBucket}/${asset.storageKey}/original.mp4`,
+        url: this.getOriginalAssetUrl(asset),
       }
     })
   }
@@ -47,7 +53,7 @@ export class AssetsService {
 
     return {
       ...asset,
-      url: `http://localhost:9000/${asset.storageBucket}/${asset.storageKey}/original.mp4`,
+      url: this.getOriginalAssetUrl(asset),
     }
   }
 

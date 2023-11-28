@@ -13,7 +13,7 @@ services:
       ALCOVES_TOKEN: changeme
       ALCOVES_DATABASE_URL: postgres://postgres:postgres@postgres:5432/alcoves
       ALCOVES_STORAGE_BUCKET: alcoves
-      ALCOVES_STORAGE_ENDPOINT: http://minio:9000
+      ALCOVES_STORAGE_ENDPOINT: http://localhost:9000 # Must be localhost because the browser makes these requests (not in docker network)
       ALCOVES_STORAGE_ACCESS_KEY_ID: minioadmin
       ALCOVES_STORAGE_SECRET_ACCESS_KEY: minioadmin
       ALCOVES_REDIS_HOST: redis
