@@ -6,15 +6,12 @@
   "author": "Brendan Kennedy <hello@alcoves.io>",
   "repository": "git@github.com:alcoves/alcoves.git",
   "description": "Alcove Media Server",
-  "workspaces": [
-    "apps/*"
-  ],
   "scripts": {
     "dev": "turbo dev",
     "build": "turbo build",
     "start": "node apps/api/dist/main"
   },
   "devDependencies": {
-    "turbo": "^1.10.14"
+    "turbo": "^1.10.16"
   }
 }

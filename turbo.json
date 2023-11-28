@@ -6,10 +6,16 @@
     },
     "build": {
       "dependsOn": [
-        "^build"
+        "^build",
+        "schema"
       ],
       "outputs": [
         "dist/**"
+      ]
+    },
+    "schema": {
+      "dependsOn": [
+        "^build"
       ]
     }
   }

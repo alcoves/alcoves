@@ -15,11 +15,11 @@ https://www.prisma.io/docs/reference/api-reference/command-reference
 
 # Create migrations from your Prisma schema, apply them to the database, generate artifacts (e.g. Prisma Client)
 docker exec -it alcoves bash
-cd apps/api && yarn prisma migrate dev
+cd apps/api && npx prisma migrate dev
 
 # Pull the schema from an existing database, updating the Prisma schema
-docker exec alcoves cd apps/api && yarn prisma db pull
+docker exec alcoves cd apps/api && npx prisma db pull
 
 # Push the Prisma schema state to the database
-docker exec alcoves cd apps/api && yarn prisma db pull
+docker exec alcoves cd apps/api && npx prisma db pull
 ```

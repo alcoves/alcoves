@@ -1,4 +1,4 @@
-import mime from 'mime'
+import mime from 'mime-types'
 
 import { v4 as uuidv4 } from 'uuid'
 import { Injectable } from '@nestjs/common'
@@ -100,7 +100,7 @@ export class ImagesService {
       )
 
     return res
-      .header('Content-Type', mime.getType(query.fmt) || image.contentType)
+      .header('Content-Type', mime.contentType(query.fmt) || image.contentType)
       .send(streamingS3Body.pipe(streamingImageTransformer))
   }
 
@@ -114,7 +114,8 @@ export class ImagesService {
     const passThrough = new PassThrough()
     response.data.pipe(passThrough)
 
-    const contentType = response.headers['content-type'] || mime.getType(input)
+    const contentType =
+      response.headers['content-type'] || mime.contentType(input)
 
     if (!contentType) {
       throw new Error('Could not determine content type')

@@ -9,14 +9,16 @@ RUN tar -xvf ${FFMPEG_VERSION}.tar.xz
 RUN mv ${FFMPEG_VERSION}/bin/* /usr/bin/
 RUN rm -rf ${FFMPEG_VERSION}*
 
+RUN npm i -g pnpm
+
 WORKDIR /app
 
-COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml  ./
+RUN pnpm install
 RUN npx prisma generate
-RUN yarn build
+RUN pnpm build
 
 EXPOSE 3000
 EXPOSE 4000
 
-CMD [ "yarn", "start:prod" ]
+CMD [ "pnpm", "start:prod" ]
