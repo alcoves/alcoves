@@ -15,13 +15,10 @@ function DetailRow({ label, data }: { label: string; data: string }) {
 }
 
 export default function VideoAsetDetails({ asset }: { asset: Asset }) {
+  const borderColor = useColorModeValue('gray.300', 'gray.900')
+
   return (
-    <Flex
-      w="100%"
-      rounded="md"
-      borderWidth={2}
-      borderColor={useColorModeValue('gray.300', 'gray.900')}
-    >
+    <Flex rounded="md" borderWidth={2} borderColor={borderColor}>
       <VideoPlayer asset={asset} />
       <VStack p="2" align="start" w="100%">
         <DetailRow label="Asset ID" data={asset.id} />

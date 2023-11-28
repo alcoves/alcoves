@@ -39,41 +39,40 @@ export default function Asset() {
     )
   }
 
+  const bg = useColorModeValue('gray.100', 'gray.900')
+
   return (
-    <Box>
-      <Flex py="2" w="100%" justify="space-between">
-        <Box>
-          <Breadcrumb>
-            <BreadcrumbItem>
-              <BreadcrumbLink as={Link} to="/assets">
-                Assets
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem>
-              <BreadcrumbLink as={Link} to={`/assets/${asset.id}`}>
-                Asset
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-          </Breadcrumb>
-          <Heading my="2" size="lg">{`Asset`}</Heading>
+    <Flex w="100%" align="center" justify="center" direction="column">
+      <Box maxW="1400px">
+        <Flex py="2" w="100%" justify="space-between">
+          <Box>
+            <Breadcrumb>
+              <BreadcrumbItem>
+                <BreadcrumbLink as={Link} to="/assets">
+                  Assets
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbItem>
+                <BreadcrumbLink as={Link} to={`/assets/${asset.id}`}>
+                  Asset
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+            </Breadcrumb>
+            <Heading my="2" size="lg">{`Asset`}</Heading>
+          </Box>
+          <ButtonGroup variant="outline" spacing="6">
+            <DeleteAsset assetId={asset.id} to="/assets" />
+          </ButtonGroup>
+        </Flex>
+        <Box p="2" mb="6" rounded="sm" bg={bg}>
+          <Text>{`${asset.id}`}</Text>
         </Box>
-        <ButtonGroup variant="outline" spacing="6">
-          <DeleteAsset assetId={asset.id} to="/assets" />
-        </ButtonGroup>
-      </Flex>
-      <Box
-        p="2"
-        mb="6"
-        rounded="sm"
-        bg={useColorModeValue('gray.100', 'gray.900')}
-      >
-        <Text>{`${asset.id}`}</Text>
+        {asset.contentType.includes('video') ? (
+          <VideoAsetDetails asset={asset} />
+        ) : (
+          'Unable to display asset.'
+        )}
       </Box>
-      {asset.contentType.includes('video') ? (
-        <VideoAsetDetails asset={asset} />
-      ) : (
-        'Unable to display asset.'
-      )}
-    </Box>
+    </Flex>
   )
 }

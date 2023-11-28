@@ -23,12 +23,12 @@ import { Link, useNavigate } from 'react-router-dom'
 export default function Images() {
   const navigate = useNavigate()
   const { data, isLoading } = useSWR('/images')
+  const bg = useColorModeValue('gray.100', 'gray.700')
 
   function handleNavigate(id: string) {
     navigate(`/images/${id}`)
   }
 
-  const bg = useColorModeValue('gray.100', 'gray.700')
   return (
     <Box>
       <Breadcrumb fontWeight="medium" fontSize="lg">

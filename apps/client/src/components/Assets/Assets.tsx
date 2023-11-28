@@ -23,6 +23,7 @@ import { Link, useNavigate } from 'react-router-dom'
 export default function Assets() {
   const navigate = useNavigate()
   const { data } = useSWR('/api/assets')
+  const bg = useColorModeValue('gray.100', 'gray.700')
 
   return (
     <Box>
@@ -56,7 +57,7 @@ export default function Assets() {
                 fontSize=".9em"
                 key={asset.id}
                 cursor="pointer"
-                _hover={{ bg: useColorModeValue('gray.100', 'gray.700') }}
+                _hover={{ bg }}
                 onClick={() => {
                   navigate(`/assets/${asset.id}`)
                 }}

@@ -13,7 +13,7 @@ export default function VideoPlayer({ asset }: { asset: Asset }) {
   const url = getAssetUrl(asset)
 
   return (
-    <MediaPlayer playsinline src={url}>
+    <MediaPlayer playsinline src={url} aspectRatio="16/9">
       <MediaProvider />
       <DefaultVideoLayout
         // thumbnails="https://image.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/storyboard.vtt"
