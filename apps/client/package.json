@@ -14,18 +14,18 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@chakra-ui/react": "^2.8.1",
+    "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@vidstack/react": "^1.6.2",
-    "axios": "^1.5.1",
-    "framer-motion": "^10.16.4",
+    "axios": "^1.6.2",
+    "framer-motion": "^10.16.5",
     "hls.js": "^1.4.12",
-    "luxon": "^3.4.3",
+    "luxon": "^3.4.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.11.0",
-    "react-router-dom": "^6.16.0",
+    "react-router-dom": "^6.20.0",
     "swr": "^2.2.4"
   },
   "devDependencies": {
@@ -39,6 +39,6 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
     "typescript": "^5.2.2",
-    "vite": "^4.4.9"
+    "vite": "^5.0.3"
   }
 }

@@ -2,10 +2,19 @@ import { Queue } from 'bull'
 import { InjectQueue } from '@nestjs/bull'
 import { Injectable } from '@nestjs/common'
 import { CreateJobDto } from './dto/create-job.dto'
+import {
+  AssetJobs,
+  DeleteStorageFolderJobData,
+  IngestUrlJobData,
+  MaintenanceJobs,
+} from './jobs.constants'
 
 @Injectable()
 export class JobsService {
-  constructor(@InjectQueue('ingest') private ingestQueue: Queue) {}
+  constructor(
+    @InjectQueue('ingest') private ingestQueue: Queue,
+    @InjectQueue('maintenance') private maintenanceQueue: Queue
+  ) {}
 
   getQueues(): string[] {
     return Object.keys(this).filter((key) => key.includes('Queue'))
@@ -45,9 +54,20 @@ export class JobsService {
 
   // Job Queue Methods
   async ingestAsset(assetId: string) {
-    const job = await this.ingestQueue.add('ingest_asset', {
+    const job = await this.ingestQueue.add(AssetJobs.INGEST_URL, {
       assetId,
-    })
+    } as IngestUrlJobData)
+    return job
+  }
+
+  async deleteStorageFolder(storageBucket: string, storageKey: string) {
+    const job = await this.maintenanceQueue.add(
+      MaintenanceJobs.DELETE_STORAGE_FOLDER,
+      {
+        storageBucket,
+        storageKey,
+      } as DeleteStorageFolderJobData
+    )
     return job
   }
 }

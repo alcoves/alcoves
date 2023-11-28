@@ -138,7 +138,6 @@ export class UtilitiesService {
 
       if (listedObjects.Contents.length === 0) return
 
-      console.log('1')
       await this.s3.send(
         new DeleteObjectsCommand({
           Bucket: storageBucket,
@@ -150,7 +149,6 @@ export class UtilitiesService {
           },
         })
       )
-      console.log('2')
 
       if (listedObjects.IsTruncated)
         await this.deleteStorageFolder(storageBucket, storageKey)

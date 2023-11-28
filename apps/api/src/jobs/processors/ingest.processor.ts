@@ -8,8 +8,10 @@ import {
   OnQueueProgress,
   OnQueueCompleted,
 } from '@nestjs/bull'
+import { AssetJobs, IngestUrlJobData, Queues } from '../jobs.constants'
+import { JsonObject } from '@prisma/client/runtime/library'
 
-@Processor('ingest')
+@Processor(Queues.INGEST)
 export class IngestProcessor {
   constructor(
     private eventEmitter: EventEmitter2,
@@ -30,9 +32,9 @@ export class IngestProcessor {
 
   @Process({
     concurrency: 1,
-    name: 'ingest_asset',
+    name: AssetJobs.INGEST_URL,
   })
-  async process(job: Job<any>) {
+  async process(job: Job<IngestUrlJobData>) {
     console.log('ingesting asset', job.data)
     const asset = await this.prismaService.asset.findFirst({
       where: { id: job.data.assetId },
@@ -64,7 +66,7 @@ export class IngestProcessor {
         where: { id: job.data.assetId },
         data: {
           status: 'READY',
-          metadata: metadata,
+          metadata: metadata as any,
           duration: parseFloat(metadata.format.duration),
         },
       })

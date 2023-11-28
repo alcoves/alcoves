@@ -68,7 +68,7 @@ export class AssetsService {
     if (!asset) return new NotFoundException('Asset not found')
 
     if (asset.status === 'READY' || asset.status === 'ERROR') {
-      await this.utilitiesService.deleteStorageFolder(
+      await this.jobsService.deleteStorageFolder(
         asset.storageBucket,
         asset.storageKey
       )
