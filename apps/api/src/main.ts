@@ -1,14 +1,13 @@
 import { AppModule } from './app.module'
 import { NestFactory } from '@nestjs/core'
 import { ConfigService } from '@nestjs/config'
-import { RequestMethod, ValidationPipe } from '@nestjs/common'
+import { ValidationPipe } from '@nestjs/common'
 import { PrismaService } from './services/prisma.service'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify'
-import { AssetsModule } from './assets/assets.module'
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(

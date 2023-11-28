@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Asset" ADD COLUMN     "duration" DOUBLE PRECISION NOT NULL DEFAULT 0;

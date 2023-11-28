@@ -2,11 +2,32 @@ import axios from 'axios'
 import mime from 'mime-types'
 
 import { PassThrough } from 'stream'
+import { spawn } from 'child_process'
 import { Asset } from '@prisma/client'
-import { S3 } from '@aws-sdk/client-s3'
 import { Injectable } from '@nestjs/common'
 import { Upload } from '@aws-sdk/lib-storage'
 import { ConfigService } from '@nestjs/config'
+import {
+  S3,
+  ListObjectsV2Command,
+  DeleteObjectsCommand,
+} from '@aws-sdk/client-s3'
+
+interface FFprobeData {
+  format: {
+    filename: string
+    duration: string
+  }
+  streams: {
+    codec_type: string
+    width?: number
+    height?: number
+    bit_rate?: number
+    sample_rate?: number
+    channels?: number
+    duration?: string
+  }[]
+}
 
 @Injectable()
 export class UtilitiesService {
@@ -30,6 +51,51 @@ export class UtilitiesService {
 
   getSourceAssetFilename(asset: Asset): string {
     return `${asset.id}.${mime.extension(asset.contentType)}`
+  }
+
+  async getMetadata(filePath: string): Promise<FFprobeData> {
+    const args = [
+      '-v',
+      'quiet',
+      '-print_format',
+      'json',
+      '-show_format',
+      '-show_streams',
+      filePath,
+    ]
+
+    return new Promise((resolve, reject) => {
+      const ffprobe = spawn('ffprobe', args)
+      let data = ''
+
+      ffprobe.stdout.on('data', (chunk) => {
+        data += chunk
+      })
+
+      ffprobe.on('error', (error) => {
+        console.error(error)
+        reject(error)
+      })
+
+      ffprobe.stderr.on('error', (err: Error) => {
+        console.error(err)
+      })
+
+      ffprobe.on('close', (code) => {
+        if (code !== 0) {
+          reject(new Error(`FFprobe exited with code ${code}`))
+          return
+        }
+
+        try {
+          const result: FFprobeData = JSON.parse(data)
+          resolve(result)
+        } catch (error) {
+          console.error(error)
+          reject(error)
+        }
+      })
+    })
   }
 
   async ingestURLToStorage(
@@ -57,6 +123,40 @@ export class UtilitiesService {
       return { status: 'Success', contentType }
     } catch (error) {
       console.error('Error in ingestURLToStorage: ', error)
+      throw error
+    }
+  }
+
+  async deleteStorageFolder(storageBucket: string, storageKey: string) {
+    try {
+      const listedObjects = await this.s3.send(
+        new ListObjectsV2Command({
+          Bucket: storageBucket,
+          Prefix: storageKey.endsWith('/') ? storageKey : storageKey + '/',
+        })
+      )
+
+      if (listedObjects.Contents.length === 0) return
+
+      console.log('1')
+      await this.s3.send(
+        new DeleteObjectsCommand({
+          Bucket: storageBucket,
+          Delete: {
+            Objects: listedObjects.Contents.map((obj) => {
+              console.log(obj.Key)
+              return { Key: obj.Key }
+            }),
+          },
+        })
+      )
+      console.log('2')
+
+      if (listedObjects.IsTruncated)
+        await this.deleteStorageFolder(storageBucket, storageKey)
+    } catch (error) {
+      console.error(`Failed to delete storage resources`)
+      console.error(error)
       throw error
     }
   }

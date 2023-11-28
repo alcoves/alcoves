@@ -9,18 +9,6 @@ import {
   DefaultVideoLayout,
 } from '@vidstack/react/player/layouts/default'
 
-// ;<Box w="100%" h="100%">
-//   <AspectRatio ratio={16 / 9}>
-//     <video
-//       muted
-//       autoPlay
-//       controls
-//       src={asset.url}
-//       style={{ maxWidth: '100%' }}
-//     />
-//   </AspectRatio>
-// </Box>
-
 export default function VideoPlayer({ asset }: { asset: Asset }) {
   const url = getAssetUrl(asset)
 

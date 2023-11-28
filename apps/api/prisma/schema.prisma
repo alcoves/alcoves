@@ -12,6 +12,8 @@ model Asset {
   input         String
   storageBucket String
   storageKey    String
+  metadata      Json?
+  duration      Float       @default(0)
   contentType   String      @default("")
   updatedAt     DateTime    @updatedAt
   createdAt     DateTime    @default(now())

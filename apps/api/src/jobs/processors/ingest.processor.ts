@@ -1,6 +1,5 @@
 import { Job } from 'bull'
 import { EventEmitter2 } from '@nestjs/event-emitter'
-import { AssetsService } from '../../assets/assets.service'
 import { PrismaService } from '../../services/prisma.service'
 import { UtilitiesService } from '../../utilities/utilities.service'
 import {
@@ -57,9 +56,17 @@ export class IngestProcessor {
         )}`
       )
 
+      // TODO :: Will need a switch in here for different types of assets
+
+      const metadata = await this.utilitiesService.getMetadata(asset.input)
+
       await this.prismaService.asset.update({
         where: { id: job.data.assetId },
-        data: { status: 'READY' },
+        data: {
+          status: 'READY',
+          metadata: metadata,
+          duration: parseFloat(metadata.format.duration),
+        },
       })
 
       console.log('asset injested successfully', job.data)

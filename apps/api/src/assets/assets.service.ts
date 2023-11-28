@@ -6,7 +6,11 @@ import { ConfigService } from '@nestjs/config'
 import { JobsService } from '../jobs/jobs.service'
 import { CreateAssetDto } from './dto/create-asset.dto'
 import { PrismaService } from '../services/prisma.service'
-import { Injectable, NotFoundException } from '@nestjs/common'
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common'
 import { UtilitiesService } from '../utilities/utilities.service'
 
 @Injectable()
@@ -61,12 +65,18 @@ export class AssetsService {
 
   async remove(id: string): Promise<string | NotFoundException> {
     const asset = await this.findOne(id)
-
     if (!asset) return new NotFoundException('Asset not found')
-    await this.prismaService.asset.delete({
-      where: { id },
-    })
 
-    return 'message deleted'
+    if (asset.status === 'READY' || asset.status === 'ERROR') {
+      await this.utilitiesService.deleteStorageFolder(
+        asset.storageBucket,
+        asset.storageKey
+      )
+      await this.prismaService.asset.delete({
+        where: { id },
+      })
+    } else {
+      throw new BadRequestException('Asset is not ready to be deleted')
+    }
   }
 }

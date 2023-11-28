@@ -18,10 +18,17 @@ import {
 
 export default function Asset() {
   const { assetId } = useParams()
-  const { data, isLoading, error } = useSWR(`/api/assets/${assetId}`)
+  const { data, isLoading, error } = useSWR(
+    `/api/assets/${assetId ? assetId : ''}`
+  )
   const asset = data as Asset
 
-  if (!assetId || isLoading) return null
+  if (isLoading)
+    return (
+      <Box>
+        <Text>Loading...</Text>
+      </Box>
+    )
 
   if (!isLoading && error) {
     return (

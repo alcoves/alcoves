@@ -1,11 +1,11 @@
 import { Asset } from '@prisma/client'
 import { ConfigService } from '@nestjs/config'
 import { AssetsService } from '../assets/assets.service'
-import { PrismaService } from '../services/prisma.service'
+import { UtilitiesService } from '../utilities/utilities.service'
 import {
-  BadRequestException,
   Injectable,
   NotFoundException,
+  BadRequestException,
 } from '@nestjs/common'
 
 @Injectable()
@@ -13,14 +13,15 @@ export class StreamService {
   constructor(
     private readonly assetService: AssetsService,
     private readonly configService: ConfigService,
-    private readonly prismaService: PrismaService
+    private readonly utilitiesService: UtilitiesService
   ) {}
 
   getDirectAssetUrl(asset: Asset): string {
-    return 'test'
-    // return `${this.configService.get('ALCOVES_STORAGE_PUBLIC_ENDPOINT')}/${
-    //   asset.storageBucket
-    // }/${asset.storageKey}/${this.assetService.getSourceAssetFilename(asset)}`
+    return `${this.configService.get('ALCOVES_STORAGE_PUBLIC_ENDPOINT')}/${
+      asset.storageBucket
+    }/${asset.storageKey}/${this.utilitiesService.getSourceAssetFilename(
+      asset
+    )}`
   }
 
   buildSingleFileManifest(url: string, duration: number) {
@@ -33,15 +34,19 @@ ${url}
 #EXT-X-ENDLIST`
   }
 
+  async getAssetUrl(id: string) {
+    const asset = await this.assetService.findOne(id)
+    if (!asset) throw new NotFoundException('Asset not found')
+    return this.getDirectAssetUrl(asset)
+  }
+
   async getManifest(id: string) {
-    const asset = await this.prismaService.asset.findFirst({
-      where: { id },
-    })
+    const asset = await this.assetService.findOne(id)
     if (!asset) throw new NotFoundException('Asset not found')
     if (!asset.contentType.includes('video'))
       throw new BadRequestException('asset is not a video')
 
     const url = this.getDirectAssetUrl(asset)
-    return this.buildSingleFileManifest(url, 30)
+    return this.buildSingleFileManifest(url, 30.01)
   }
 }
