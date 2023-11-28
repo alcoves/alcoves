@@ -5,6 +5,7 @@ import Jobs from './components/Jobs/Jobs.tsx'
 import Settings from './components/Settings.tsx'
 import Login from './components/Login/Login.tsx'
 import Layout from './components/Layout/Layout.tsx'
+import Asset from './components/Assets/Asset.tsx'
 import Assets from './components/Assets/Assets.tsx'
 
 import { SWRConfig } from 'swr'
@@ -28,11 +29,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                   <Route path="/" element={<Home />} />
                   <Route path="/jobs" element={<Jobs />} />
                   <Route path="/assets" element={<Assets />} />
-                  {/* <Route path="/images" element={<Images />} />
-                <Route path="/images/:imageId" element={<Image />} /> */}
+                  <Route path="/assets/:assetId" element={<Asset />} />
                   <Route path="/settings" element={<Settings />} />
-                  {/* <Route path="/videos" element={<Videos />} />
-                <Route path="/videos/:id" element={<VideoById />} /> */}
                   <Route path="*" element={<Navigate to="/" />} />
                 </Route>
                 <Route path="/login" element={<Login />} />

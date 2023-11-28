@@ -5,7 +5,6 @@ import { Outlet } from 'react-router-dom'
 import { Box, Flex } from '@chakra-ui/react'
 import { useUser } from '../../contexts/UserContext'
 
-// The outermost layout component
 export default function Layout() {
   const { user, isLoading } = useUser()
 

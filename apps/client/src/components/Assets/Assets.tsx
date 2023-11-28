@@ -33,6 +33,7 @@ export default function Assets() {
           <Tr>
             <Th>ID</Th>
             <Th>Type</Th>
+            <Th>Status</Th>
             <Th>Created</Th>
             <Th></Th>
           </Tr>
@@ -40,9 +41,16 @@ export default function Assets() {
         <Tbody>
           {data?.map((asset: Asset) => {
             return (
-              <Tr key={asset.id}>
+              <Tr
+                key={asset.id}
+                cursor="pointer"
+                onClick={() => {
+                  navigate(`/assets/${asset.id}`)
+                }}
+              >
                 <Td>{asset.id}</Td>
-                <Td>{asset.type}</Td>
+                <Td>{asset.contentType}</Td>
+                <Td>{asset.status}</Td>
                 <Td>
                   {DateTime.fromISO(asset.createdAt).toLocaleString(
                     DateTime.DATETIME_MED
