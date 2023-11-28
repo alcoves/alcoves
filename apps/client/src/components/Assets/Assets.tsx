@@ -1,4 +1,6 @@
 import useSWR from 'swr'
+import CreateAsset from './CreateAsset'
+
 import {
   Box,
   Heading,
@@ -8,23 +10,32 @@ import {
   Tr,
   Th,
   Td,
-  ButtonGroup,
   Flex,
+  useColorModeValue,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
 } from '@chakra-ui/react'
 import { DateTime } from 'luxon'
 import { Asset } from '../../types'
-import { useNavigate } from 'react-router-dom'
-
-import DeleteAsset from './DeleteAsset'
-import CreateAsset from './CreateAsset'
+import { Link, useNavigate } from 'react-router-dom'
 
 export default function Assets() {
   const navigate = useNavigate()
-  const { data, isLoading } = useSWR('/api/assets')
+  const { data } = useSWR('/api/assets')
 
   return (
     <Box>
-      <Heading size="lg">Assets</Heading>
+      <Box py="2">
+        <Breadcrumb>
+          <BreadcrumbItem>
+            <BreadcrumbLink as={Link} to="/assets">
+              Assets
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+        </Breadcrumb>
+        <Heading my="2" size="lg">{`Assets`}</Heading>
+      </Box>
       <Flex py="2" w="100%" justify="flex-end">
         <CreateAsset />
       </Flex>
@@ -35,15 +46,16 @@ export default function Assets() {
             <Th>Type</Th>
             <Th>Status</Th>
             <Th>Created</Th>
-            <Th></Th>
           </Tr>
         </Thead>
         <Tbody>
           {data?.map((asset: Asset) => {
             return (
               <Tr
+                fontSize=".9em"
                 key={asset.id}
                 cursor="pointer"
+                _hover={{ bg: useColorModeValue('gray.100', 'gray.700') }}
                 onClick={() => {
                   navigate(`/assets/${asset.id}`)
                 }}
@@ -55,13 +67,6 @@ export default function Assets() {
                   {DateTime.fromISO(asset.createdAt).toLocaleString(
                     DateTime.DATETIME_MED
                   )}
-                </Td>
-                <Td>
-                  <Box _hover={{ display: 'block' }}>
-                    <ButtonGroup variant="outline" spacing="6">
-                      <DeleteAsset assetId={asset.id} />
-                    </ButtonGroup>
-                  </Box>
                 </Td>
               </Tr>
             )

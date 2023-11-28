@@ -1,10 +1,10 @@
 import useSWR from 'swr'
 import DeleteAsset from './DeleteAsset'
+import VideoAsetDetails from './VideoAssetDetails'
 
 import { Asset } from '../../types'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import {
-  AspectRatio,
   Box,
   Breadcrumb,
   BreadcrumbItem,
@@ -15,7 +15,6 @@ import {
   Text,
   useColorModeValue,
 } from '@chakra-ui/react'
-import VideoAsetDetails from './VideoAssetDetails'
 
 export default function Asset() {
   const { assetId } = useParams()
@@ -39,10 +38,14 @@ export default function Asset() {
         <Box>
           <Breadcrumb>
             <BreadcrumbItem>
-              <BreadcrumbLink href="/assets">Assets</BreadcrumbLink>
+              <BreadcrumbLink as={Link} to="/assets">
+                Assets
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbItem>
-              <BreadcrumbLink href={asset.id}>Asset</BreadcrumbLink>
+              <BreadcrumbLink as={Link} to={`/assets/${asset.id}`}>
+                Asset
+              </BreadcrumbLink>
             </BreadcrumbItem>
           </Breadcrumb>
           <Heading my="2" size="lg">{`Asset`}</Heading>
