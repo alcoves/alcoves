@@ -7,61 +7,37 @@ import { JobsService } from '../jobs/jobs.service'
 import { CreateAssetDto } from './dto/create-asset.dto'
 import { PrismaService } from '../services/prisma.service'
 import { Injectable, NotFoundException } from '@nestjs/common'
-
-interface ExtendedAsset extends Asset {
-  url: string
-}
+import { UtilitiesService } from '../utilities/utilities.service'
 
 @Injectable()
 export class AssetsService {
   constructor(
     private readonly jobsService: JobsService,
     private readonly prismaService: PrismaService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
+    private readonly utilitiesService: UtilitiesService
   ) {}
 
-  createAssetStorageKey(id: string): string {
-    return `assets/${id}`
-  }
-
-  getSourceAssetFilename(asset: Asset): string {
-    return `${asset.id}.${mime.extension(asset.contentType)}`
-  }
-
-  getOriginalAssetUrl(asset: Asset): string {
-    return `${this.configService.get('ALCOVES_STORAGE_PUBLIC_ENDPOINT')}/${
-      asset.storageBucket
-    }/${asset.storageKey}/${this.getSourceAssetFilename(asset)}`
-  }
-
-  async findAll(): Promise<ExtendedAsset[]> {
+  async findAll(): Promise<Asset[]> {
     const assets = await this.prismaService.asset.findMany({
       orderBy: {
         createdAt: 'desc',
       },
     })
-    return assets.map((asset) => {
-      return {
-        ...asset,
-        url: this.getOriginalAssetUrl(asset),
-      }
-    })
+    return assets
   }
 
-  async findOne(id: string): Promise<ExtendedAsset> {
+  async findOne(id: string): Promise<Asset> {
     const asset = await this.prismaService.asset.findFirst({
       where: { id },
     })
 
     if (!asset) throw new NotFoundException('Asset not found')
 
-    return {
-      ...asset,
-      url: this.getOriginalAssetUrl(asset),
-    }
+    return asset
   }
 
-  async create(createAssetDto: CreateAssetDto): Promise<ExtendedAsset> {
+  async create(createAssetDto: CreateAssetDto): Promise<Asset> {
     const assetId = uuidv4()
     const contentType = mime.lookup(createAssetDto.input)
 
@@ -74,7 +50,7 @@ export class AssetsService {
         id: assetId,
         contentType,
         input: createAssetDto.input,
-        storageKey: this.createAssetStorageKey(assetId),
+        storageKey: this.utilitiesService.createAssetStorageKey(assetId),
         storageBucket: this.configService.get('ALCOVES_STORAGE_BUCKET'),
       },
     })

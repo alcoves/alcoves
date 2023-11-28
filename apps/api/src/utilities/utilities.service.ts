@@ -1,6 +1,8 @@
 import axios from 'axios'
+import mime from 'mime-types'
 
 import { PassThrough } from 'stream'
+import { Asset } from '@prisma/client'
 import { S3 } from '@aws-sdk/client-s3'
 import { Injectable } from '@nestjs/common'
 import { Upload } from '@aws-sdk/lib-storage'
@@ -20,6 +22,14 @@ export class UtilitiesService {
         secretAccessKey: this.config.get('ALCOVES_STORAGE_SECRET_ACCESS_KEY'),
       },
     })
+  }
+
+  createAssetStorageKey(id: string): string {
+    return `assets/${id}`
+  }
+
+  getSourceAssetFilename(asset: Asset): string {
+    return `${asset.id}.${mime.extension(asset.contentType)}`
   }
 
   async ingestURLToStorage(

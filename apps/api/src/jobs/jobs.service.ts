@@ -5,10 +5,7 @@ import { CreateJobDto } from './dto/create-job.dto'
 
 @Injectable()
 export class JobsService {
-  constructor(
-    @InjectQueue('images') private imageQueue: Queue,
-    @InjectQueue('ingest') private ingestQueue: Queue
-  ) {}
+  constructor(@InjectQueue('ingest') private ingestQueue: Queue) {}
 
   getQueues(): string[] {
     return Object.keys(this).filter((key) => key.includes('Queue'))

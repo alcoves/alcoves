@@ -8,7 +8,6 @@ enum AssetStatus {
 
 export interface Asset {
   id: string
-  url: string
   updatedAt: string
   createdAt: string
   contentType: string

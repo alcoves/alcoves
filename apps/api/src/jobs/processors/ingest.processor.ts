@@ -15,7 +15,6 @@ export class IngestProcessor {
   constructor(
     private eventEmitter: EventEmitter2,
     private readonly prismaService: PrismaService,
-    private readonly assetsService: AssetsService,
     private readonly utilitiesService: UtilitiesService
   ) {}
 
@@ -53,7 +52,7 @@ export class IngestProcessor {
         asset.contentType,
         asset.storageBucket,
         // This should probably be stored in the database or at least have a singleton
-        `${asset.storageKey}/${this.assetsService.getSourceAssetFilename(
+        `${asset.storageKey}/${this.utilitiesService.getSourceAssetFilename(
           asset
         )}`
       )

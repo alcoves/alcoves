@@ -1,28 +1,7 @@
-import { Asset } from '../../types'
-import {
-  AspectRatio,
-  Box,
-  Flex,
-  Text,
-  VStack,
-  useColorModeValue,
-} from '@chakra-ui/react'
+import VideoPlayer from './VideoPlayer'
 
-function VideoPlayer({ asset }: { asset: Asset }) {
-  return (
-    <Box w="100%" h="100%">
-      <AspectRatio ratio={16 / 9}>
-        <video
-          muted
-          autoPlay
-          controls
-          src={asset.url}
-          style={{ maxWidth: '100%' }}
-        />
-      </AspectRatio>
-    </Box>
-  )
-}
+import { Asset } from '../../types'
+import { Flex, Text, VStack, useColorModeValue } from '@chakra-ui/react'
 
 function DetailRow({ label, data }: { label: string; data: string }) {
   return (
@@ -39,7 +18,7 @@ export default function VideoAsetDetails({ asset }: { asset: Asset }) {
   return (
     <Flex
       w="100%"
-      rounded="sm"
+      rounded="md"
       borderWidth={2}
       borderColor={useColorModeValue('gray.300', 'gray.900')}
     >
