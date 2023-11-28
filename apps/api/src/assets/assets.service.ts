@@ -43,6 +43,8 @@ export class AssetsService {
       where: { id },
     })
 
+    if (!asset) throw new NotFoundException('Asset not found')
+
     return {
       ...asset,
       url: `http://localhost:9000/${asset.storageBucket}/${asset.storageKey}/original.mp4`,
