@@ -1,9 +1,19 @@
 import { ApiTags } from '@nestjs/swagger'
+import { AuthGuard } from '../auth/auth.guard'
 import { AssetsService } from './assets.service'
 import { CreateAssetDto } from './dto/create-asset.dto'
-import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common'
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common'
 
 @ApiTags('Assets')
+@UseGuards(AuthGuard)
 @Controller('api/assets')
 export class AssetsController {
   constructor(private readonly assetsService: AssetsService) {}

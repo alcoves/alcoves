@@ -1,5 +1,3 @@
-import { Video } from '../../vite-project/types/types'
-
 export function megabytesToSize(bytes: number): string {
   bytes = bytes * 1024 * 1024 // We convert to bytes because the db stores in mb
   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB']
@@ -30,23 +28,23 @@ export function formatDuration(seconds: number): string {
   return timeString
 }
 
-export function groupItemsByDay(items: Video[]): {
-  [timestamp: string]: Video[]
-} {
-  const groups: { [timestamp: string]: Video[] } = {}
+// export function groupItemsByDay(items: Video[]): {
+//   [timestamp: string]: Video[]
+// } {
+//   const groups: { [timestamp: string]: Video[] } = {}
 
-  for (const item of items) {
-    const date = new Date(item.authoredAt).toISOString().slice(0, 10) // Extract YYYY-MM-DD string
+//   for (const item of items) {
+//     const date = new Date(item.authoredAt).toISOString().slice(0, 10) // Extract YYYY-MM-DD string
 
-    if (!groups[date]) {
-      groups[date] = []
-    }
+//     if (!groups[date]) {
+//       groups[date] = []
+//     }
 
-    groups[date].push(item)
-  }
+//     groups[date].push(item)
+//   }
 
-  return groups
-}
+//   return groups
+// }
 
 export function getRgbaFromString(str: string, alpha: number): string {
   // Generate a hash code from the string
@@ -100,3 +98,5 @@ export function isValidURL(url: string) {
     return false
   }
 }
+
+export const LOCALSTORAGE_TOKEN_KEY = 'alcoves_token'

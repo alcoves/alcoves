@@ -2,7 +2,7 @@ import '@vidstack/react/player/styles/default/theme.css'
 import '@vidstack/react/player/styles/default/layouts/video.css'
 
 import { Asset } from '../../types'
-import { getAssetUrl } from '../../lib/url'
+import { getAssetUrl } from '../../lib/api'
 import { MediaPlayer, MediaProvider } from '@vidstack/react'
 import {
   defaultLayoutIcons,

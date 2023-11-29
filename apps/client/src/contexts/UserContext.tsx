@@ -1,3 +1,4 @@
+import { LOCALSTORAGE_TOKEN_KEY } from '../lib/util'
 import React, {
   createContext,
   useContext,
@@ -22,8 +23,6 @@ interface UserProviderProps {
 }
 
 const UserContext = createContext<UserContextProps | null>(null)
-
-const LOCALSTORAGE_TOKEN_KEY = 'alcoves_token'
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true)

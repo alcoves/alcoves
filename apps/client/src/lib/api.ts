@@ -1,14 +1,32 @@
+import { Asset } from '../types'
+import { LOCALSTORAGE_TOKEN_KEY } from './util'
 import axios, { AxiosRequestConfig } from 'axios'
+
 export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
 
 export async function fetcher(url: string): Promise<any> {
-  const res = await axios.get(url, { baseURL: API_URL })
-  return res.data
+  const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY)
+
+  const config: AxiosRequestConfig = {
+    url,
+    method: 'GET',
+    baseURL: API_URL,
+  }
+
+  if (token) {
+    config.headers = {
+      Authorization: `${token}`,
+    }
+  }
+
+  console.log(config)
+  const response = await axios(config)
+  return response.data
 }
 
 export function createRequest(method: AxiosRequestConfig['method']) {
   return async (url: string, { arg: data }: { arg: any }) => {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY)
 
     const config: AxiosRequestConfig = {
       data,
@@ -18,7 +36,7 @@ export function createRequest(method: AxiosRequestConfig['method']) {
 
     if (token) {
       config.headers = {
-        Authorization: `Bearer ${token}`,
+        Authorization: `${token}`,
       }
     }
 
@@ -30,4 +48,15 @@ export function createRequest(method: AxiosRequestConfig['method']) {
       throw error
     }
   }
+}
+
+export function getAssetUrl(asset: Asset) {
+  return `${API_URL}/stream/${asset.id}`
+  // return `${API_URL}/stream/${asset.id}.m3u8`
+
+  // if (asset.contentType.includes('video')) {
+  //   return `${API_URL}/stream/${asset.id}.m3u8`
+  // } else {
+  //   return `${API_URL}/stream/${asset.id}`
+  // }
 }
