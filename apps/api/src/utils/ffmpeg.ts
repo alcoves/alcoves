@@ -32,8 +32,6 @@
 //     /size=\s*(\d+)\wB\s+time=(\d{2}:\d{2}:\d{2}\.\d{2})\s+bitrate=\s*(\d+(?:\.\d+)?)\wbits\/s\s+speed=\s*(\d+(?:\.\d+)?)x/
 //   const audioMatch = stderr.match(audioRegex)
 
-//   console.log(stderr)
-
 //   if (videoMatch) {
 //     return {
 //       frame: parseInt(videoMatch[1], 10),

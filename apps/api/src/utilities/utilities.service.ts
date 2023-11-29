@@ -143,7 +143,6 @@ export class UtilitiesService {
           Bucket: storageBucket,
           Delete: {
             Objects: listedObjects.Contents.map((obj) => {
-              console.log(obj.Key)
               return { Key: obj.Key }
             }),
           },

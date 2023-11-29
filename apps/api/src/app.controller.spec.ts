@@ -18,7 +18,6 @@ describe('AppController', () => {
 
     await prisma.$connect()
     const config = await prisma.config.findFirst()
-    console.log('config', config)
   })
 
   describe('GET /info', () => {

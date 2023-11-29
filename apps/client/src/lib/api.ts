@@ -19,7 +19,6 @@ export async function fetcher(url: string): Promise<any> {
     }
   }
 
-  console.log(config)
   const response = await axios(config)
   return response.data
 }

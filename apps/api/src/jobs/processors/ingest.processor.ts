@@ -35,7 +35,6 @@ export class IngestProcessor {
     name: AssetJobs.INGEST_URL,
   })
   async process(job: Job<IngestUrlJobData>) {
-    console.log('ingesting asset', job.data)
     const asset = await this.prismaService.asset.findFirst({
       where: { id: job.data.assetId },
     })
@@ -71,7 +70,6 @@ export class IngestProcessor {
         },
       })
 
-      console.log('asset injested successfully', job.data)
     } catch (error) {
       console.error('there was an error ingesting the asset', error)
       await this.prismaService.asset.update({

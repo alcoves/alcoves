@@ -15,8 +15,6 @@ export class AuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest()
     const token = this.extractAPIKeyFromHeader(request)
 
-    console.log(token, this.configService.get('ALCOVES_TOKEN'))
-
     if (!token) throw new UnauthorizedException()
 
     try {
@@ -29,7 +27,6 @@ export class AuthGuard implements CanActivate {
   }
 
   private extractAPIKeyFromHeader(request: FastifyRequest): string | undefined {
-    console.log(request.headers)
     const token = request.headers.authorization
     return token
   }
