@@ -2,14 +2,13 @@ import { Job } from 'bull'
 import { EventEmitter2 } from '@nestjs/event-emitter'
 import { PrismaService } from '../../services/prisma.service'
 import { UtilitiesService } from '../../utilities/utilities.service'
+import { IngestJobs, IngestUrlJobData, Queues } from '../jobs.constants'
 import {
   Process,
   Processor,
   OnQueueProgress,
   OnQueueCompleted,
 } from '@nestjs/bull'
-import { AssetJobs, IngestUrlJobData, Queues } from '../jobs.constants'
-import { JsonObject } from '@prisma/client/runtime/library'
 
 @Processor(Queues.INGEST)
 export class IngestProcessor {
@@ -32,7 +31,7 @@ export class IngestProcessor {
 
   @Process({
     concurrency: 1,
-    name: AssetJobs.INGEST_URL,
+    name: IngestJobs.INGEST_URL,
   })
   async process(job: Job<IngestUrlJobData>) {
     const asset = await this.prismaService.asset.findFirst({
@@ -69,7 +68,6 @@ export class IngestProcessor {
           duration: parseFloat(metadata.format.duration),
         },
       })
-
     } catch (error) {
       console.error('there was an error ingesting the asset', error)
       await this.prismaService.asset.update({

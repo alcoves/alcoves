@@ -1,6 +1,3 @@
-import mime from 'mime-types'
-import sharp, { ResizeOptions } from 'sharp'
-
 import { Readable } from 'stream'
 import { Asset } from '@prisma/client'
 import { ConfigService } from '@nestjs/config'
@@ -16,10 +13,12 @@ import {
   GetThumbnailParamsDto,
   GetThumbnailQueryDto,
 } from './dto/getThumbailDto'
+import { JobsService } from '../jobs/jobs.service'
 
 @Injectable()
 export class StreamService {
   constructor(
+    private readonly jobsService: JobsService,
     private readonly assetService: AssetsService,
     private readonly configService: ConfigService,
     private readonly utilitiesService: UtilitiesService
@@ -65,42 +64,18 @@ ${url}
     query: GetThumbnailQueryDto
   ) {
     const asset = await this.assetService.findOne(params.assetId)
-    console.log(asset)
 
+    if (!asset.contentType.includes('video')) {
+      return res.status(400).send('asset is not a video')
+    }
+
+    console.log('enqueueing thumbnail job')
+    const job = await this.jobsService.thumbnailAsset(asset.id, query, params)
+
+    console.log('waiting for job to complete...', job)
+    const result = await job.finished()
+
+    console.log('job is done', result)
     return res.send('done')
-
-    // TODO :: Keeping this code around for now because it shows a good example of streaming from s3
-    // const response = await s3.send(
-    //   new GetObjectCommand({
-    //     Key: image.storageKey,
-    //     Bucket: image.storageBucket,
-    //   })
-    // )
-    // const streamingS3Body = response.Body as Readable
-
-    // // Send the original image if no format is specified
-    // if (!query.fmt) {
-    //   res.header('Content-Type', image.contentType).send(streamingS3Body)
-    //   return
-    // }
-
-    // const streamingImageTransformer = sharp()
-    //   .toFormat(query.fmt, {
-    //     progressive: true,
-    //     effort: query.effort || 4,
-    //     quality: query.q || 80,
-    //   })
-    //   .resize(
-    //     Object.entries(query).reduce((acc, [k, v]) => {
-    //       if (k === 'fit') acc.fit = v
-    //       if (k === 'w') acc.width = Number(v)
-    //       if (k === 'h') acc.width = Number(v)
-    //       return acc
-    //     }, {} as ResizeOptions)
-    //   )
-
-    // return res
-    //   .header('Content-Type', mime.contentType(query.fmt) || image.contentType)
-    //   .send(streamingS3Body.pipe(streamingImageTransformer))
   }
 }

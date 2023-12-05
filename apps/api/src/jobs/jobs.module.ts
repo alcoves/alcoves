@@ -4,12 +4,16 @@ import { Queues } from './jobs.constants'
 import { JobsService } from './jobs.service'
 import { JobsController } from './jobs.controller'
 import { PrismaService } from '../services/prisma.service'
+import { AssetProcessor } from './processors/asset.processor'
 import { IngestProcessor } from './processors/ingest.processor'
 import { UtilitiesService } from '../utilities/utilities.service'
 import { MaintenanceProcessor } from './processors/maintenance.processor'
 
 @Module({
   imports: [
+    BullModule.registerQueue({
+      name: Queues.ASSET,
+    }),
     BullModule.registerQueue({
       name: Queues.INGEST,
     }),
@@ -22,6 +26,7 @@ import { MaintenanceProcessor } from './processors/maintenance.processor'
   providers: [
     JobsService,
     PrismaService,
+    AssetProcessor,
     IngestProcessor,
     UtilitiesService,
     MaintenanceProcessor,

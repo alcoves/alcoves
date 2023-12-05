@@ -11,10 +11,10 @@ import { UtilitiesService } from '../utilities/utilities.service'
   imports: [JobsModule],
   controllers: [StreamController],
   providers: [
+    JobsService,
     StreamService,
     PrismaService,
     AssetsService,
-    JobsService,
     UtilitiesService,
   ],
 })

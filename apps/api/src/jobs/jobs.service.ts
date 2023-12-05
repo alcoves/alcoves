@@ -5,15 +5,23 @@ import { CreateJobDto } from './dto/create-job.dto'
 import {
   AssetJobs,
   DeleteStorageFolderJobData,
+  ThumbnailJobData,
   IngestUrlJobData,
   MaintenanceJobs,
+  IngestJobs,
+  Queues,
 } from './jobs.constants'
+import {
+  GetThumbnailParamsDto,
+  GetThumbnailQueryDto,
+} from '../stream/dto/getThumbailDto'
 
 @Injectable()
 export class JobsService {
   constructor(
-    @InjectQueue('ingest') private ingestQueue: Queue,
-    @InjectQueue('maintenance') private maintenanceQueue: Queue
+    @InjectQueue(Queues.ASSET) private assetQueue: Queue,
+    @InjectQueue(Queues.INGEST) private ingestQueue: Queue,
+    @InjectQueue(Queues.MAINTENANCE) private maintenanceQueue: Queue
   ) {}
 
   getQueues(): string[] {
@@ -54,9 +62,22 @@ export class JobsService {
 
   // Job Queue Methods
   async ingestAsset(assetId: string) {
-    const job = await this.ingestQueue.add(AssetJobs.INGEST_URL, {
+    const job = await this.ingestQueue.add(IngestJobs.INGEST_URL, {
       assetId,
     } as IngestUrlJobData)
+    return job
+  }
+
+  async thumbnailAsset(
+    assetId: string,
+    query: GetThumbnailQueryDto,
+    params: GetThumbnailParamsDto
+  ) {
+    const job = await this.assetQueue.add(AssetJobs.THUMBNAIL, {
+      assetId,
+      query,
+      params,
+    } as ThumbnailJobData)
     return job
   }
 
