@@ -20,17 +20,6 @@ model Asset {
   status        AssetStatus @default(CREATED)
 }
 
-model Image {
-  id            String   @id @default(uuid())
-  input         String
-  name          String   @default("")
-  updatedAt     DateTime @updatedAt
-  createdAt     DateTime @default(now())
-  contentType   String
-  storageBucket String
-  storageKey    String
-}
-
 enum AssetStatus {
   CREATED
   INGESTING

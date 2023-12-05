@@ -23,12 +23,12 @@ enum Fit {
   outside = 'outside',
 }
 
-export class GetImageParamsDto {
+export class GetThumbnailParamsDto {
   @IsUUID()
-  id: string
+  assetId: string
 }
 
-export class GetImageQueryDto {
+export class GetThumbnailQueryDto {
   @IsOptional()
   @IsInt()
   @Min(1)

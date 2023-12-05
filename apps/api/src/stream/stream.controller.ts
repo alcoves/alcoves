@@ -1,5 +1,18 @@
+import { FastifyReply } from 'fastify'
 import { StreamService } from './stream.service'
-import { Get, Param, Controller, Header, Redirect } from '@nestjs/common'
+import {
+  Get,
+  Param,
+  Controller,
+  Header,
+  Redirect,
+  Res,
+  Query,
+} from '@nestjs/common'
+import {
+  GetThumbnailParamsDto,
+  GetThumbnailQueryDto,
+} from './dto/getThumbailDto'
 
 @Controller('stream')
 export class StreamController {
@@ -11,6 +24,15 @@ export class StreamController {
     return {
       url: await this.streamService.getAssetUrl(assetId),
     }
+  }
+
+  @Get(':assetId/thumbnail')
+  async getAssetThumbnail(
+    @Res() res: FastifyReply,
+    @Param() params: GetThumbnailParamsDto,
+    @Query() query: GetThumbnailQueryDto
+  ) {
+    return this.streamService.getAssetThumbnail(res, params, query)
   }
 
   @Get(':assetId.m3u8')

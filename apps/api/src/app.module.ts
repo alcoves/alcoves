@@ -4,7 +4,6 @@ import { AppService } from './app.service'
 import { BullModule } from '@nestjs/bull'
 import { JobsModule } from './jobs/jobs.module'
 import { AppController } from './app.controller'
-import { ImagesModule } from './images/images.module'
 import { StreamModule } from './stream/stream.module'
 import { AssetsModule } from './assets/assets.module'
 import { configuration } from './config/configuration'
@@ -39,7 +38,6 @@ import { UtilitiesService } from './utilities/utilities.service'
     EventEmitterModule.forRoot(),
     JobsModule,
     AssetsModule,
-    ImagesModule,
     StreamModule,
   ],
 })
