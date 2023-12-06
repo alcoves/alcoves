@@ -4,7 +4,7 @@ import mime from 'mime-types'
 import sharp, { ResizeOptions } from 'sharp'
 
 import { Job } from 'bull'
-import { mkdtemp, rmdir } from 'fs/promises'
+import { mkdtemp, rm } from 'fs/promises'
 import { Process, Processor } from '@nestjs/bull'
 import { EventEmitter2 } from '@nestjs/event-emitter'
 import { PrismaService } from '../../services/prisma.service'
@@ -93,7 +93,7 @@ export class AssetProcessor {
       console.error(error)
       throw error
     } finally {
-      await rmdir(tmpDir, { recursive: true })
+      await rm(tmpDir, { recursive: true })
     }
 
     // TODO :: Keeping this code around for now because it shows a good example of streaming from s3
