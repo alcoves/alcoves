@@ -12,7 +12,11 @@ import {
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
-    new FastifyAdapter({ logger: false })
+    new FastifyAdapter({ logger: false }),
+    {
+      bufferLogs: true,
+      logger: ['log', 'fatal', 'error', 'warn', 'debug'], // 'verbose (trace)'
+    }
   )
   const configService = app.get(ConfigService)
   const port = configService.get('PORT') || 4000
