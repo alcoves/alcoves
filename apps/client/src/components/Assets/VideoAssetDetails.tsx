@@ -14,7 +14,7 @@ function DetailRow({ label, data }: { label: string; data: string }) {
   )
 }
 
-export default function VideoAsetDetails({ asset }: { asset: Asset }) {
+export default function VideoAssetDetails({ asset }: { asset: Asset }) {
   const borderColor = useColorModeValue('gray.300', 'gray.900')
 
   return (

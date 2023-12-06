@@ -1,6 +1,6 @@
 import useSWR from 'swr'
 import DeleteAsset from './DeleteAsset'
-import VideoAsetDetails from './VideoAssetDetails'
+import VideoAssetDetails from './VideoAssetDetails'
 
 import { Asset } from '../../types'
 import { Link, useParams } from 'react-router-dom'
@@ -71,7 +71,7 @@ export default function Asset() {
           <Text>{`${asset.id}`}</Text>
         </Box>
         {asset.contentType.includes('video') ? (
-          <VideoAsetDetails asset={asset} />
+          <VideoAssetDetails asset={asset} />
         ) : (
           'Unable to display asset.'
         )}
