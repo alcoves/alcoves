@@ -1,8 +1,18 @@
-import { Asset } from '../types'
 import { LOCALSTORAGE_TOKEN_KEY } from './util'
 import axios, { AxiosRequestConfig } from 'axios'
 
-export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000'
+export const API_URL = import.meta.env.VITE_API_URL
+export const CDN_URL = import.meta.env.VITE_CDN_URL
+
+export function getThumbnailUrlBase(assetId: string, useCdn: boolean = true) {
+  if (!useCdn) return `${API_URL}/stream/${assetId}/thumbnail`
+  return `${CDN_URL}/stream/${assetId}/thumbnail`
+}
+
+export function getDirectAssetUrlBase(assetId: string, useCdn: boolean = true) {
+  if (!useCdn) return `${API_URL}/stream/${assetId}`
+  return `${CDN_URL}/stream/${assetId}`
+}
 
 export async function fetcher(url: string): Promise<any> {
   const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY)
@@ -47,15 +57,4 @@ export function createRequest(method: AxiosRequestConfig['method']) {
       throw error
     }
   }
-}
-
-export function getAssetUrl(asset: Asset) {
-  return `${API_URL}/stream/${asset.id}`
-  // return `${API_URL}/stream/${asset.id}.m3u8`
-
-  // if (asset.contentType.includes('video')) {
-  //   return `${API_URL}/stream/${asset.id}.m3u8`
-  // } else {
-  //   return `${API_URL}/stream/${asset.id}`
-  // }
 }
