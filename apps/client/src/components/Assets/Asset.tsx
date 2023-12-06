@@ -17,7 +17,7 @@ import {
   Text,
   useColorModeValue,
 } from '@chakra-ui/react'
-import { API_URL } from '../../lib/api'
+import { getThumbnailUrlBase } from '../../lib/api'
 
 export default function Asset() {
   const { assetId } = useParams()
@@ -83,14 +83,14 @@ export default function Asset() {
             maxW="500px"
             rounded="sm"
             colorScheme="gray"
-            children={`${API_URL}/stream/${asset.id}/thumbnail.jpg?w=500`}
+            children={`${getThumbnailUrlBase(asset.id)}.jpg?w=100&q=50`}
           />
           <Image
             w="100%"
             maxW="500px"
             rounded="sm"
             alt="thumbnail"
-            src={`${API_URL}/stream/${asset.id}/thumbnail.jpg?w=500`}
+            src={`${getThumbnailUrlBase(asset.id)}.jpg?w=500`}
           />
         </Box>
       </Box>

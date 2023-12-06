@@ -2,7 +2,7 @@ import '@vidstack/react/player/styles/default/theme.css'
 import '@vidstack/react/player/styles/default/layouts/video.css'
 
 import { Asset } from '../../types'
-import { getAssetUrl } from '../../lib/api'
+import { getDirectAssetUrlBase, getThumbnailUrlBase } from '../../lib/api'
 import { MediaPlayer, MediaProvider } from '@vidstack/react'
 import {
   defaultLayoutIcons,
@@ -10,13 +10,14 @@ import {
 } from '@vidstack/react/player/layouts/default'
 
 export default function VideoPlayer({ asset }: { asset: Asset }) {
-  const url = getAssetUrl(asset)
+  const videoUrl = getDirectAssetUrlBase(asset.id)
+  const thumbnailUrl = `${getThumbnailUrlBase(asset.id)}.jpg?q=80&w=1280`
 
   return (
-    <MediaPlayer playsinline src={url} aspectRatio="16/9">
+    <MediaPlayer playsinline src={videoUrl} aspectRatio="16/9">
       <MediaProvider />
       <DefaultVideoLayout
-        // thumbnails="https://image.mux.com/VZtzUzGRv02OhRnZCxcNg49OilvolTqdnFLEqBsTwaxU/storyboard.vtt"
+        thumbnails={thumbnailUrl}
         icons={defaultLayoutIcons}
       />
     </MediaPlayer>
