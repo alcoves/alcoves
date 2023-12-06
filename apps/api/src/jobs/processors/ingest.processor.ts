@@ -9,9 +9,12 @@ import {
   OnQueueProgress,
   OnQueueCompleted,
 } from '@nestjs/bull'
+import { Logger } from '@nestjs/common'
 
 @Processor(Queues.INGEST)
 export class IngestProcessor {
+  private readonly logger = new Logger(IngestProcessor.name)
+
   constructor(
     private eventEmitter: EventEmitter2,
     private readonly prismaService: PrismaService,
@@ -69,7 +72,7 @@ export class IngestProcessor {
         },
       })
     } catch (error) {
-      console.error('there was an error ingesting the asset', error)
+      this.logger.error('there was an error ingesting the asset', error)
       await this.prismaService.asset.update({
         where: { id: job.data.assetId },
         data: { status: 'ERROR' },

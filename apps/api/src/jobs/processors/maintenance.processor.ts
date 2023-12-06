@@ -1,4 +1,5 @@
 import { Job } from 'bull'
+import { Logger } from '@nestjs/common'
 import { Process, Processor } from '@nestjs/bull'
 import { EventEmitter2 } from '@nestjs/event-emitter'
 import { PrismaService } from '../../services/prisma.service'
@@ -11,6 +12,8 @@ import {
 
 @Processor(Queues.MAINTENANCE)
 export class MaintenanceProcessor {
+  private readonly logger = new Logger(MaintenanceProcessor.name)
+
   constructor(
     private eventEmitter: EventEmitter2,
     private readonly prismaService: PrismaService,
@@ -23,6 +26,7 @@ export class MaintenanceProcessor {
   })
   async process(job: Job<DeleteStorageFolderJobData>) {
     const { storageBucket, storageKey } = job.data
+    this.logger.log({ storageBucket, storageKey })
     await this.utilitiesService.deleteStorageFolder(storageBucket, storageKey)
     await job.progress(100)
     return 'done'

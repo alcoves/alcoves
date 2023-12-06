@@ -4,6 +4,7 @@ import mime from 'mime-types'
 import sharp, { ResizeOptions } from 'sharp'
 
 import { Job } from 'bull'
+import { Logger } from '@nestjs/common'
 import { mkdtemp, rm } from 'fs/promises'
 import { Process, Processor } from '@nestjs/bull'
 import { EventEmitter2 } from '@nestjs/event-emitter'
@@ -13,6 +14,8 @@ import { Queues, AssetJobs, ThumbnailJobData } from '../jobs.constants'
 
 @Processor(Queues.ASSET)
 export class AssetProcessor {
+  private readonly logger = new Logger(AssetProcessor.name)
+
   constructor(
     private eventEmitter: EventEmitter2,
     private readonly prismaService: PrismaService,
@@ -28,6 +31,7 @@ export class AssetProcessor {
     const tmpDir = await mkdtemp(path.join(os.tmpdir(), 'aloves-thumbnail-'))
     const sourceThumbnailPath = `${tmpDir}/source-thumbnail.png`
     const outputThumbnailPath = `${tmpDir}/output-thumbnail.${params.fmt}`
+    this.logger.debug({ tmpDir, sourceThumbnailPath, outputThumbnailPath })
 
     try {
       const asset = await this.prismaService.asset.findUnique({
@@ -36,14 +40,16 @@ export class AssetProcessor {
         },
       })
 
-      console.log('grabbing a thumbnail from the video', asset.id)
+      this.logger.log('grabbing a thumbnail from the video', asset.id)
       const thumbnail = await this.utilitiesService.getThumbnail(
         asset,
         sourceThumbnailPath
       )
       await job.progress(25)
 
-      console.log('compressing the thumbnail based on user input and defaults')
+      this.logger.log(
+        'compressing the thumbnail based on user input and defaults'
+      )
       const sharpObject = await sharp(sourceThumbnailPath)
         .toFormat(params.fmt as any, {
           progressive: true,
@@ -60,12 +66,12 @@ export class AssetProcessor {
         )
         .toFile(outputThumbnailPath)
         .catch((error) => {
-          console.error(error)
+          this.logger.error(error)
           throw error
         })
       await job.progress(50)
 
-      console.log('uploading the thumbnail to s3')
+      this.logger.log('uploading the thumbnail to s3')
       const thumbnailStorageKey = `${asset.storageKey}/thumbnails.${
         params.fmt
       }?${Object.entries(query)
@@ -79,18 +85,14 @@ export class AssetProcessor {
       )
       await job.progress(75)
 
-      console.log('creating a signed url for the thumbnail')
-      const signedThumbnailUrl =
-        await this.utilitiesService.getSignedUrlExternal({
-          bucket: asset.storageBucket,
-          key: thumbnailStorageKey,
-        })
-
-      console.log('cleaning up directories and returning')
+      this.logger.log('cleaning up directories and returning')
       await job.progress(100)
-      return { url: signedThumbnailUrl }
+      return {
+        bucket: asset.storageBucket,
+        key: thumbnailStorageKey,
+      }
     } catch (error) {
-      console.error(error)
+      this.logger.error(error)
       throw error
     } finally {
       await rm(tmpDir, { recursive: true })
