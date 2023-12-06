@@ -27,13 +27,11 @@ import { useSSE } from '../../contexts/SSE'
 import { useEffect } from 'react'
 
 function JobReturnVale({ job }: { job: any }) {
+  const bg = useColorModeValue('gray.200', 'gray.700')
+
   if (job.returnvalue) {
     return (
-      <Accordion
-        rounded="md"
-        allowMultiple
-        bg={useColorModeValue('gray.200', 'gray.700')}
-      >
+      <Accordion rounded="md" allowMultiple bg={bg}>
         <AccordionItem key={job.id} rounded="md">
           <AccordionButton>
             <Box as="span" flex="1" textAlign="left">
@@ -42,13 +40,7 @@ function JobReturnVale({ job }: { job: any }) {
             <AccordionIcon />
           </AccordionButton>
           <AccordionPanel pb={2}>
-            <Box
-              overflow="auto"
-              p="2"
-              as="pre"
-              borderRadius="md"
-              bg={useColorModeValue('gray.200', 'gray.700')}
-            >
+            <Box overflow="auto" p="2" as="pre" borderRadius="md" bg={bg}>
               {JSON.stringify(job.returnvalue, null, 2)}
             </Box>
           </AccordionPanel>
