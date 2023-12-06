@@ -4,7 +4,7 @@ import mime from 'mime-types'
 import { PassThrough } from 'stream'
 import { spawn } from 'child_process'
 import { Asset } from '@prisma/client'
-import { Injectable } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
 import { Upload } from '@aws-sdk/lib-storage'
 import { ConfigService } from '@nestjs/config'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
@@ -13,6 +13,8 @@ import {
   ListObjectsV2Command,
   DeleteObjectsCommand,
   GetObjectCommand,
+  GetObjectCommandOutput,
+  HeadObjectCommand,
 } from '@aws-sdk/client-s3'
 import { createReadStream } from 'fs'
 import { stat } from 'fs/promises'
@@ -37,6 +39,7 @@ interface FFprobeData {
 export class UtilitiesService {
   private s3: S3
   private s3External: S3
+  private readonly logger = new Logger(UtilitiesService.name)
 
   constructor(private readonly config: ConfigService) {
     this.s3 = new S3({
@@ -58,6 +61,12 @@ export class UtilitiesService {
         secretAccessKey: this.config.get('ALCOVES_STORAGE_SECRET_ACCESS_KEY'),
       },
     })
+
+    this.logger.verbose(
+      'initialized s3 clients',
+      JSON.stringify(this.s3),
+      JSON.stringify(this.s3)
+    )
   }
 
   createAssetStorageKey(id: string): string {
@@ -66,6 +75,21 @@ export class UtilitiesService {
 
   getSourceAssetFilename(asset: Asset): string {
     return `${asset.id}.${mime.extension(asset.contentType)}`
+  }
+
+  getFileStream(
+    bucket: string,
+    key: string,
+    range?: string
+  ): Promise<GetObjectCommandOutput> {
+    this.logger.debug({ bucket, key, range })
+    const getObjectParams = { Bucket: bucket, Key: key }
+    if (range) getObjectParams['Range'] = range
+    return this.s3.send(new GetObjectCommand(getObjectParams))
+  }
+
+  getObjectMetadata(bucket: string, key: string) {
+    return this.s3.send(new HeadObjectCommand({ Bucket: bucket, Key: key }))
   }
 
   async uploadFileToStorage(
@@ -88,7 +112,7 @@ export class UtilitiesService {
       await upload.done()
       return { status: 'Success', contentType }
     } catch (error) {
-      console.error('Error in uploadFileToStorage: ', error)
+      this.logger.error('Error in uploadFileToStorage: ', error)
       throw error
     }
   }
@@ -143,7 +167,7 @@ export class UtilitiesService {
 
     return new Promise((resolve, reject) => {
       const process = spawn(binary, args)
-      console.log('spawned process', binary, args)
+      this.logger.debug('spawned process', binary, args)
       let data = ''
 
       process.stdout.on('data', (chunk) => {
@@ -151,12 +175,12 @@ export class UtilitiesService {
       })
 
       process.on('error', (error) => {
-        console.error(error)
+        this.logger.error(error)
         reject(error)
       })
 
       process.stderr.on('error', (err: Error) => {
-        console.error(err)
+        this.logger.error(err)
       })
 
       process.on('close', (code) => {
@@ -168,7 +192,7 @@ export class UtilitiesService {
         try {
           resolve(data)
         } catch (error) {
-          console.error(error)
+          this.logger.error(error)
           reject(error)
         }
       })
@@ -190,7 +214,7 @@ export class UtilitiesService {
     try {
       await stat(path)
     } catch (error) {
-      console.error(error)
+      this.logger.error(error)
       throw new Error('Failed to get thumbnail')
     }
   }
@@ -235,7 +259,7 @@ export class UtilitiesService {
       await upload.done()
       return { status: 'Success', contentType }
     } catch (error) {
-      console.error('Error in ingestURLToStorage: ', error)
+      this.logger.error('Error in ingestURLToStorage: ', error)
       throw error
     }
   }
@@ -265,8 +289,8 @@ export class UtilitiesService {
       if (listedObjects.IsTruncated)
         await this.deleteStorageFolder(storageBucket, storageKey)
     } catch (error) {
-      console.error(`Failed to delete storage resources`)
-      console.error(error)
+      this.logger.error(`Failed to delete storage resources`)
+      this.logger.error(error)
       throw error
     }
   }

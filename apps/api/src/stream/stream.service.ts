@@ -1,3 +1,6 @@
+import mime from 'mime-types'
+
+import { Readable } from 'stream'
 import { Asset } from '@prisma/client'
 import { ConfigService } from '@nestjs/config'
 import { JobsService } from '../jobs/jobs.service'
@@ -7,6 +10,7 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  Logger,
 } from '@nestjs/common'
 import {
   GetThumbnailParamsDto,
@@ -15,6 +19,8 @@ import {
 
 @Injectable()
 export class StreamService {
+  private readonly logger = new Logger(StreamService.name)
+
   constructor(
     private readonly jobsService: JobsService,
     private readonly assetService: AssetsService,
@@ -22,12 +28,16 @@ export class StreamService {
     private readonly utilitiesService: UtilitiesService
   ) {}
 
+  getDirectAssetKey(asset: Asset): string {
+    return `${asset.storageKey}/${this.utilitiesService.getSourceAssetFilename(
+      asset
+    )}`
+  }
+
   getDirectAssetUrl(asset: Asset): string {
     return `${this.configService.get('ALCOVES_STORAGE_PUBLIC_ENDPOINT')}/${
       asset.storageBucket
-    }/${asset.storageKey}/${this.utilitiesService.getSourceAssetFilename(
-      asset
-    )}`
+    }/${this.getDirectAssetKey(asset)}`
   }
 
   buildSingleFileManifest(url: string, duration: number) {
@@ -40,10 +50,38 @@ ${url}
 #EXT-X-ENDLIST`
   }
 
-  async getAssetUrl(id: string) {
-    const asset = await this.assetService.findOne(id)
+  async getDirectAssetMetadata(assetId: string) {
+    const asset = await this.assetService.findOne(assetId)
     if (!asset) throw new NotFoundException('Asset not found')
-    return this.getDirectAssetUrl(asset)
+
+    const { ContentLength } = await this.utilitiesService.getObjectMetadata(
+      asset.storageBucket,
+      this.getDirectAssetKey(asset)
+    )
+
+    return {
+      fileSize: ContentLength,
+    }
+  }
+
+  async getDirectAssetStream(
+    assetId: string,
+    range?: string
+  ): Promise<{ stream: Readable; contentType: string; fileSize: number }> {
+    const asset = await this.assetService.findOne(assetId)
+    if (!asset) throw new NotFoundException('Asset not found')
+
+    const { Body, ContentLength } = await this.utilitiesService.getFileStream(
+      asset.storageBucket,
+      this.getDirectAssetKey(asset),
+      range
+    )
+
+    return {
+      fileSize: ContentLength,
+      contentType: asset.contentType,
+      stream: Readable.from(Body as Readable),
+    }
   }
 
   async getManifest(id: string) {
@@ -59,22 +97,29 @@ ${url}
   async getAssetThumbnail(
     params: GetThumbnailParamsDto,
     query: GetThumbnailQueryDto
-  ) {
+  ): Promise<{ stream: Readable; contentType: string; fileSize: number }> {
     const asset = await this.assetService.findOne(params.assetId)
 
     if (!asset.contentType.includes('video')) {
-      return new BadRequestException('asset is not a video')
+      throw new BadRequestException('asset is not a video')
     }
 
-    console.log('enqueueing thumbnail job')
+    this.logger.log('enqueueing thumbnail job')
     const job = await this.jobsService.thumbnailAsset(asset.id, query, params)
 
-    console.log('waiting for job to complete...', job.id)
+    this.logger.log('waiting for job to complete...', job.id)
     const result = await job.finished()
 
-    console.log('job is done', result)
+    this.logger.log('job is done', result)
+    const { Body, ContentLength } = await this.utilitiesService.getFileStream(
+      result.bucket,
+      result.key
+    )
+
     return {
-      url: result.url,
+      fileSize: ContentLength,
+      stream: Readable.from(Body as Readable),
+      contentType: mime.lookup(params.fmt) || 'application/octet-stream',
     }
   }
 }
