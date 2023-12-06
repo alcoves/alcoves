@@ -52,7 +52,7 @@ ${url}
     if (!asset.contentType.includes('video'))
       throw new BadRequestException('asset is not a video')
 
-    const url = this.getDirectAssetUrl(asset)
+    const url = await this.getDirectAssetUrl(asset)
     return this.buildSingleFileManifest(url, 30.01)
   }
 
