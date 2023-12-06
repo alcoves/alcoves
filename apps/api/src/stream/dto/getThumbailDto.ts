@@ -26,6 +26,9 @@ enum Fit {
 export class GetThumbnailParamsDto {
   @IsUUID()
   assetId: string
+
+  @IsEnum(Formats)
+  fmt: string
 }
 
 export class GetThumbnailQueryDto {
@@ -56,8 +59,4 @@ export class GetThumbnailQueryDto {
   @IsOptional()
   @IsEnum(Fit)
   fit: string
-
-  @IsOptional()
-  @IsEnum(Formats)
-  fmt: Formats
 }

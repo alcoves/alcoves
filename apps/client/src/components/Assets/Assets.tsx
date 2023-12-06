@@ -15,10 +15,12 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
+  Image,
 } from '@chakra-ui/react'
 import { DateTime } from 'luxon'
 import { Asset } from '../../types'
 import { Link, useNavigate } from 'react-router-dom'
+import { API_URL } from '../../lib/api'
 
 export default function Assets() {
   const navigate = useNavigate()
@@ -62,7 +64,13 @@ export default function Assets() {
                   navigate(`/assets/${asset.id}`)
                 }}
               >
-                <Td>thumbnail</Td>
+                <Td>
+                  <Image
+                    w="100px"
+                    alt="thmb"
+                    src={`${API_URL}/stream/${asset.id}/thumbnail.jpg?w=100&q=50`}
+                  />
+                </Td>
                 <Td>{asset.id}</Td>
                 <Td>{asset.contentType}</Td>
                 <Td>{asset.status}</Td>

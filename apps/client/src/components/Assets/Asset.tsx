@@ -10,11 +10,14 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   ButtonGroup,
+  Code,
   Flex,
   Heading,
+  Image,
   Text,
   useColorModeValue,
 } from '@chakra-ui/react'
+import { API_URL } from '../../lib/api'
 
 export default function Asset() {
   const { assetId } = useParams()
@@ -43,7 +46,7 @@ export default function Asset() {
 
   return (
     <Flex w="100%" align="center" justify="center" direction="column">
-      <Box maxW="1400px">
+      <Box w="100%" maxW="1400px">
         <Flex py="2" w="100%" justify="space-between">
           <Box>
             <Breadcrumb>
@@ -72,6 +75,24 @@ export default function Asset() {
         ) : (
           'Unable to display asset.'
         )}
+        <Box py="2" w="100%">
+          <Heading size="lg">Thumbnail</Heading>
+          <Code
+            my="2"
+            w="100%"
+            maxW="500px"
+            rounded="sm"
+            colorScheme="gray"
+            children={`${API_URL}/stream/${asset.id}/thumbnail.jpg?w=500`}
+          />
+          <Image
+            w="100%"
+            maxW="500px"
+            rounded="sm"
+            alt="thumbnail"
+            src={`${API_URL}/stream/${asset.id}/thumbnail.jpg?w=500`}
+          />
+        </Box>
       </Box>
     </Flex>
   )

@@ -10,6 +10,11 @@ import {
   useColorModeValue,
   Flex,
   Button,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionIcon,
+  AccordionPanel,
 } from '@chakra-ui/react'
 import { DateTime } from 'luxon'
 import {
@@ -20,6 +25,39 @@ import {
 } from 'react-icons/io5'
 import { useSSE } from '../../contexts/SSE'
 import { useEffect } from 'react'
+
+function JobReturnVale({ job }: { job: any }) {
+  if (job.returnvalue) {
+    return (
+      <Accordion
+        rounded="md"
+        allowMultiple
+        bg={useColorModeValue('gray.200', 'gray.700')}
+      >
+        <AccordionItem key={job.id} rounded="md">
+          <AccordionButton>
+            <Box as="span" flex="1" textAlign="left">
+              Return Value
+            </Box>
+            <AccordionIcon />
+          </AccordionButton>
+          <AccordionPanel pb={2}>
+            <Box
+              overflow="auto"
+              p="2"
+              as="pre"
+              borderRadius="md"
+              bg={useColorModeValue('gray.200', 'gray.700')}
+            >
+              {JSON.stringify(job.returnvalue, null, 2)}
+            </Box>
+          </AccordionPanel>
+        </AccordionItem>
+      </Accordion>
+    )
+  }
+  return null
+}
 
 export default function Jobs() {
   const { data: sseData } = useSSE()
@@ -68,13 +106,15 @@ export default function Jobs() {
                 )}
               </Text>
             )}
-            {job?.returnvalue && (
-              <Text>
-                <Icon as={IoCheckmarkDoneCircle} /> Return Value:{' '}
-                {job?.returnvalue}
-              </Text>
-            )}
-            <Progress w="100%" size="xs" rounded="md" value={job.progress} />
+            <JobReturnVale job={job} />
+            <Progress
+              mt="2"
+              w="100%"
+              size="xs"
+              rounded="md"
+              value={job.progress}
+              borderBottomEndRadius="md"
+            />
             {job.failedReason && (
               <Text color="red.500">
                 <Icon as={IoWarningOutline} /> {job.failedReason}

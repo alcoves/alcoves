@@ -1,6 +1,6 @@
-import { Readable } from 'stream'
 import { Asset } from '@prisma/client'
 import { ConfigService } from '@nestjs/config'
+import { JobsService } from '../jobs/jobs.service'
 import { AssetsService } from '../assets/assets.service'
 import { UtilitiesService } from '../utilities/utilities.service'
 import {
@@ -8,12 +8,10 @@ import {
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common'
-import { FastifyReply } from 'fastify'
 import {
   GetThumbnailParamsDto,
   GetThumbnailQueryDto,
 } from './dto/getThumbailDto'
-import { JobsService } from '../jobs/jobs.service'
 
 @Injectable()
 export class StreamService {
@@ -59,23 +57,24 @@ ${url}
   }
 
   async getAssetThumbnail(
-    res: FastifyReply,
     params: GetThumbnailParamsDto,
     query: GetThumbnailQueryDto
   ) {
     const asset = await this.assetService.findOne(params.assetId)
 
     if (!asset.contentType.includes('video')) {
-      return res.status(400).send('asset is not a video')
+      return new BadRequestException('asset is not a video')
     }
 
     console.log('enqueueing thumbnail job')
     const job = await this.jobsService.thumbnailAsset(asset.id, query, params)
 
-    console.log('waiting for job to complete...', job)
+    console.log('waiting for job to complete...', job.id)
     const result = await job.finished()
 
     console.log('job is done', result)
-    return res.send('done')
+    return {
+      url: result.url,
+    }
   }
 }
