@@ -13,7 +13,7 @@ RUN npm i -g pnpm
 
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml  ./
+COPY turbo.json package.json pnpm-lock.yaml pnpm-workspace.yaml  ./
 RUN pnpm install
 RUN npx prisma generate
 RUN pnpm build
