@@ -1,7 +1,7 @@
 import mime from 'mime-types'
 
 import { Readable } from 'stream'
-import { Asset } from '@prisma/client'
+import { Asset, AssetStatus } from '@prisma/client'
 import { ConfigService } from '@nestjs/config'
 import { JobsService } from '../jobs/jobs.service'
 import { AssetsService } from '../assets/assets.service'
@@ -102,6 +102,10 @@ ${url}
 
     if (!asset.contentType.includes('video')) {
       throw new BadRequestException('asset is not a video')
+    }
+
+    if (asset.status !== AssetStatus.READY) {
+      throw new BadRequestException('asset is not ready')
     }
 
     this.logger.log('enqueueing thumbnail job')
