@@ -15,7 +15,6 @@ WORKDIR /app
 
 COPY turbo.json package.json pnpm-lock.yaml pnpm-workspace.yaml  ./
 RUN pnpm install
-RUN npx prisma generate
 RUN pnpm build
 
 EXPOSE 3000
