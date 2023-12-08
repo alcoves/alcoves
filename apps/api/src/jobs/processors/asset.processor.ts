@@ -23,16 +23,13 @@ export class AssetProcessor {
     private readonly utilitiesService: UtilitiesService
   ) {}
 
-  getThumbnailStorageKey(
-    asset: Asset,
-    params: { fmt: string },
-    query: any
-  ): string {
+  getThumbnailStorageKey(asset, params, query) {
     let key = `${asset.storageKey}/thumbnails.${params.fmt}`
     if (Object.keys(query).length) {
-      key += `?${Object.entries(query)
-        .map(([k, v]) => `${k}=${v}`)
-        .join('&')}`
+      const sortedQuery = Object.entries(query).sort((a, b) =>
+        a[0].localeCompare(b[0])
+      )
+      key += `?${sortedQuery.map(([k, v]) => `${k}=${v}`).join('&')}`
     }
 
     return key
