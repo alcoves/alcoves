@@ -9,9 +9,9 @@
   "scripts": {
     "dev": "turbo dev",
     "build": "turbo build",
-    "start": "node apps/api/dist/main"
+    "start": "turbo start"
   },
   "devDependencies": {
-    "turbo": "^1.10.16"
+    "turbo": "^1.11.1"
   }
 }
