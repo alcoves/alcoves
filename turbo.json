@@ -7,9 +7,11 @@
     "lint": {},
     "start": {
       "dependsOn": [
-        "build"
+        "build",
+        "wait_for_client_build"
       ]
     },
+    "wait_for_client_build": {},
     "build": {
       "dependsOn": [
         "^build"
