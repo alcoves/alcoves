@@ -8,7 +8,7 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react'
 import { useUser } from '../../contexts/UserContext'
-import { IoLogOutOutline, IoLogOutSharp } from 'react-icons/io5'
+import { IoLogOutOutline } from 'react-icons/io5'
 
 export default function Footer() {
   const { logout } = useUser()
