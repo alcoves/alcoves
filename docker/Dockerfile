@@ -18,7 +18,6 @@ RUN pnpm install
 RUN pnpm build
 
 COPY . .
-RUN pnpm install --prod
 
 EXPOSE 3000
 EXPOSE 4000
