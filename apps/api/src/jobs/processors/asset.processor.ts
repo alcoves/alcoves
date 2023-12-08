@@ -4,6 +4,7 @@ import mime from 'mime-types'
 import sharp, { ResizeOptions } from 'sharp'
 
 import { Job } from 'bull'
+import { Asset } from '@prisma/client'
 import { Logger } from '@nestjs/common'
 import { mkdtemp, rm } from 'fs/promises'
 import { Process, Processor } from '@nestjs/bull'
@@ -21,6 +22,21 @@ export class AssetProcessor {
     private readonly prismaService: PrismaService,
     private readonly utilitiesService: UtilitiesService
   ) {}
+
+  getThumbnailStorageKey(
+    asset: Asset,
+    params: { fmt: string },
+    query: any
+  ): string {
+    let key = `${asset.storageKey}/thumbnails.${params.fmt}`
+    if (Object.keys(query).length) {
+      key += `?${Object.entries(query)
+        .map(([k, v]) => `${k}=${v}`)
+        .join('&')}`
+    }
+
+    return key
+  }
 
   @Process({
     concurrency: 2,
@@ -72,11 +88,12 @@ export class AssetProcessor {
       await job.progress(50)
 
       this.logger.log('uploading the thumbnail to s3')
-      const thumbnailStorageKey = `${asset.storageKey}/thumbnails.${
-        params.fmt
-      }?${Object.entries(query)
-        .map(([k, v]) => `${k}=${v}`)
-        .join('&')}`
+      const thumbnailStorageKey = this.getThumbnailStorageKey(
+        asset,
+        params,
+        query
+      )
+
       const fileUploaded = await this.utilitiesService.uploadFileToStorage(
         outputThumbnailPath,
         mime.lookup(outputThumbnailPath) || 'application/octet-stream',
