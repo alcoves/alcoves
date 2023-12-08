@@ -5,7 +5,11 @@
       "cache": false
     },
     "lint": {},
-    "start": {},
+    "start": {
+      "dependsOn": [
+        "^build"
+      ]
+    },
     "build": {
       "dependsOn": [
         "^build"

@@ -1,4 +1,4 @@
-FROM node:18
+FROM node:18-slim
 
 RUN apt update
 RUN apt install -y wget xz-utils
@@ -14,10 +14,14 @@ RUN npm i -g pnpm
 WORKDIR /app
 
 COPY turbo.json package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-RUN pnpm install
-RUN pnpm build
+COPY apps/api/package.json ./apps/api/
+COPY apps/client/package.json ./apps/client/
+
+RUN pnpm install --frozen-lockfile
 
 COPY . .
+
+RUN pnpm build
 
 EXPOSE 3000
 EXPOSE 4000
