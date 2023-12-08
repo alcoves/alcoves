@@ -1,18 +1,6 @@
 import { LOCALSTORAGE_TOKEN_KEY } from './util'
 import axios, { AxiosRequestConfig } from 'axios'
 
-export const CDN_URL = import.meta.env.VITE_CDN_URL
-
-export function getThumbnailUrlBase(assetId: string, useCdn: boolean = true) {
-  if (!useCdn || !CDN_URL) return `/stream/${assetId}/thumbnail`
-  return `${CDN_URL}/stream/${assetId}/thumbnail`
-}
-
-export function getDirectAssetUrlBase(assetId: string, useCdn: boolean = true) {
-  if (!useCdn || !CDN_URL) return `/stream/${assetId}`
-  return `${CDN_URL}/stream/${assetId}`
-}
-
 export async function fetcher(url: string): Promise<any> {
   const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY)
 

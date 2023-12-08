@@ -17,10 +17,11 @@ import {
   Text,
   useColorModeValue,
 } from '@chakra-ui/react'
-import { getThumbnailUrlBase } from '../../lib/api'
+import { useConfig } from '../../contexts/ConfigContext'
 
 export default function Asset() {
   const { assetId } = useParams()
+  const { getThumbnailUrlBase } = useConfig()
   const { data, isLoading, error } = useSWR(
     `/api/assets/${assetId ? assetId : ''}`
   )

@@ -20,10 +20,11 @@ import {
 import { DateTime } from 'luxon'
 import { Asset } from '../../types'
 import { Link, useNavigate } from 'react-router-dom'
-import { getThumbnailUrlBase } from '../../lib/api'
+import { useConfig } from '../../contexts/ConfigContext'
 
 export default function Assets() {
   const navigate = useNavigate()
+  const { getThumbnailUrlBase } = useConfig()
   const { data } = useSWR('/api/assets')
   const bg = useColorModeValue('gray.100', 'gray.700')
 

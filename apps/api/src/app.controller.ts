@@ -1,7 +1,8 @@
 import { FastifyReply } from 'fastify'
 import { ApiTags } from '@nestjs/swagger'
 import { AppService } from './app.service'
-import { Controller, Get, Res } from '@nestjs/common'
+import { AuthGuard } from './auth/auth.guard'
+import { Controller, Get, Res, UseGuards } from '@nestjs/common'
 
 @ApiTags('Root')
 @Controller()
@@ -11,6 +12,12 @@ export class AppController {
   @Get('/health')
   getHealthcheck(): any {
     return this.appService.getInfo()
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('/api/config')
+  getConfig(): any {
+    return this.appService.getConfig()
   }
 
   @Get('/api/redoc')

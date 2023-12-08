@@ -6,10 +6,8 @@ services:
     build:
       dockerfile: docker/Dockerfile.dev
     environment:
-      #### Client ####
-      VITE_CDN_URL: http://localhost:4100
-      #### API ####
       ALCOVES_TOKEN: changeme
+      ALCOVES_CDN_URL: http://localhost:4100
       ALCOVES_DATABASE_URL: postgres://postgres:postgres@postgres:5432/alcoves
       ALCOVES_STORAGE_BUCKET: alcoves
       ALCOVES_STORAGE_PUBLIC_ENDPOINT: http://localhost:9000 # The public facing URL of the storage gateway

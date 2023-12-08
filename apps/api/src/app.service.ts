@@ -1,13 +1,19 @@
 import { Injectable } from '@nestjs/common'
-import { PrismaService } from './services/prisma.service'
+import { ConfigService } from '@nestjs/config'
 
 @Injectable()
 export class AppService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly config: ConfigService) {}
 
-  async getInfo(): Promise<any> {
+  getInfo() {
     return {
       status: 'nominal',
+    }
+  }
+
+  getConfig() {
+    return {
+      cdnUrl: this.config.get('ALCOVES_CDN_URL'),
     }
   }
 }
