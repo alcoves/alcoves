@@ -20,6 +20,9 @@ RUN yes | pnpm prune --prod
 # Final stage
 FROM base as final
 
+# Required to run prisma migrations
+RUN apt update && apt install -y openssl
+
 COPY --from=builder /app /app/
 COPY --from=builder /usr/bin/ffmpeg /usr/bin/ffmpeg
 COPY --from=builder /usr/bin/ffprobe /usr/bin/ffprobe
