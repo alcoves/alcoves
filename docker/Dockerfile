@@ -13,14 +13,9 @@ RUN npm i -g pnpm
 
 WORKDIR /app
 
-COPY turbo.json package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY apps/api/package.json ./apps/api/
-COPY apps/client/package.json ./apps/client/
-
-RUN pnpm install --frozen-lockfile
-
 COPY . .
 
+RUN pnpm install
 RUN pnpm build
 
 EXPOSE 3000

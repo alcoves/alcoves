@@ -9,7 +9,7 @@ import Asset from './components/Assets/Asset.tsx'
 import Assets from './components/Assets/Assets.tsx'
 
 import { SWRConfig } from 'swr'
-import { API_URL, fetcher } from './lib/api.ts'
+import { fetcher } from './lib/api.ts'
 import { theme } from './config/theme.tsx'
 import { SSEProvider } from './contexts/SSE.tsx'
 import { UserProvider } from './contexts/UserContext.tsx'
@@ -20,7 +20,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ColorModeScript initialColorMode={theme.config.initialColorMode} />
     <ChakraProvider theme={theme}>
-      <SSEProvider url={`${API_URL}/api/jobs/sse`}>
+      <SSEProvider url={`/api/jobs/sse`}>
         <UserProvider>
           <SWRConfig value={{ fetcher: fetcher }}>
             <BrowserRouter>

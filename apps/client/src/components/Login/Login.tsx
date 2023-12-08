@@ -1,3 +1,6 @@
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useUser } from '../../contexts/UserContext'
 import {
   Box,
   Button,
@@ -7,15 +10,14 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
-import { useNavigate } from 'react-router-dom'
-import { useUser } from '../../contexts/UserContext'
 
 export default function Login() {
+  const [token, setToken] = useState<string>('')
   const navigation = useNavigate()
   const { login } = useUser()
 
   async function handleLogin() {
-    await login('changeme')
+    await login(token)
     navigation('/')
   }
 
@@ -27,7 +29,12 @@ export default function Login() {
           <Text align="center">
             Welcome! Enter your alcoves token to get started.
           </Text>
-          <Input variant="filled" placeholder="Token" />
+          <Input
+            value={token}
+            variant="filled"
+            placeholder="Token"
+            onChange={(e) => setToken(e.target.value)}
+          />
           <Button mt="2" w="100%" colorScheme="teal" onClick={handleLogin}>
             Submit
           </Button>

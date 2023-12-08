@@ -1,5 +1,5 @@
 {
-  "$schema": "https://typedoc.org/schema.json",
+  "$schema": "https://turborepo.org/schema.json",
   "pipeline": {
     "dev": {
       "cache": false
@@ -7,7 +7,7 @@
     "lint": {},
     "start": {
       "dependsOn": [
-        "^build"
+        "build"
       ]
     },
     "build": {

@@ -1,16 +1,15 @@
 import { LOCALSTORAGE_TOKEN_KEY } from './util'
 import axios, { AxiosRequestConfig } from 'axios'
 
-export const API_URL = import.meta.env.VITE_API_URL
 export const CDN_URL = import.meta.env.VITE_CDN_URL
 
 export function getThumbnailUrlBase(assetId: string, useCdn: boolean = true) {
-  if (!useCdn) return `${API_URL}/stream/${assetId}/thumbnail`
+  if (!useCdn || !CDN_URL) return `/stream/${assetId}/thumbnail`
   return `${CDN_URL}/stream/${assetId}/thumbnail`
 }
 
 export function getDirectAssetUrlBase(assetId: string, useCdn: boolean = true) {
-  if (!useCdn) return `${API_URL}/stream/${assetId}`
+  if (!useCdn || !CDN_URL) return `/stream/${assetId}`
   return `${CDN_URL}/stream/${assetId}`
 }
 
@@ -20,7 +19,6 @@ export async function fetcher(url: string): Promise<any> {
   const config: AxiosRequestConfig = {
     url,
     method: 'GET',
-    baseURL: API_URL,
   }
 
   if (token) {
@@ -40,7 +38,7 @@ export function createRequest(method: AxiosRequestConfig['method']) {
     const config: AxiosRequestConfig = {
       data,
       method,
-      url: new URL(url, API_URL).toString(),
+      url: new URL(url).toString(),
     }
 
     if (token) {

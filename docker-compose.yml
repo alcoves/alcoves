@@ -7,7 +7,6 @@ services:
       dockerfile: docker/Dockerfile.dev
     environment:
       #### Client ####
-      VITE_API_URL: http://localhost:4000
       VITE_CDN_URL: http://localhost:4100
       #### API ####
       ALCOVES_TOKEN: changeme
