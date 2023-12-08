@@ -25,4 +25,4 @@ COPY --from=builder /usr/bin/ffmpeg /usr/bin/ffmpeg
 COPY --from=builder /usr/bin/ffprobe /usr/bin/ffprobe
 
 EXPOSE 4000
-CMD [ "node", "app/apps/api/dist/main" ]
+CMD [ "node", "apps/api/dist/main" ]
