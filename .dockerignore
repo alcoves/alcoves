@@ -1,3 +1,11 @@
 dist
+.github
+.turbo
+.vscode
+docker
+docker-compose.yml
+.prettierrc
+.gitignore
+.dockerignore
 volumes
 node_modules

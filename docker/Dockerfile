@@ -1,23 +1,28 @@
-FROM node:18-slim
+FROM node:18-slim as base
+RUN corepack enable
+WORKDIR /app
 
-RUN apt update
-RUN apt install -y wget xz-utils
+# Build stage
+FROM base as builder
 
+RUN apt update && apt install -y wget xz-utils
 ENV FFMPEG_VERSION="ffmpeg-n6.0-latest-linux64-gpl-6.0"
 RUN wget -q https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/${FFMPEG_VERSION}.tar.xz
 RUN tar -xvf ${FFMPEG_VERSION}.tar.xz
 RUN mv ${FFMPEG_VERSION}/bin/* /usr/bin/
 RUN rm -rf ${FFMPEG_VERSION}*
 
-RUN npm i -g pnpm
-
-WORKDIR /app
-
 COPY . .
-
-RUN pnpm install
+RUN pnpm install --frozen-lockfile
 RUN pnpm build
+RUN yes | pnpm prune --prod
+
+# Final stage
+FROM base as final
+
+COPY --from=builder /app /app/
+COPY --from=builder /usr/bin/ffmpeg /usr/bin/ffmpeg
+COPY --from=builder /usr/bin/ffprobe /usr/bin/ffprobe
 
 EXPOSE 4000
-
-CMD [ "pnpm", "start" ]
+CMD [ "node", "app/apps/api/dist/main" ]

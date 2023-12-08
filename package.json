@@ -12,7 +12,7 @@
     "build": "turbo build",
     "start": "turbo start"
   },
-  "dependencies": {
+  "devDependencies": {
     "turbo": "^1.11.1"
   }
 }

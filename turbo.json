@@ -5,13 +5,6 @@
       "cache": false
     },
     "lint": {},
-    "start": {
-      "dependsOn": [
-        "build",
-        "client#build"
-      ]
-    },
-    "wait_for_client_build": {},
     "build": {
       "dependsOn": [
         "^build"
