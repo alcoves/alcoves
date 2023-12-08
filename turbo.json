@@ -8,7 +8,7 @@
     "start": {
       "dependsOn": [
         "build",
-        "wait_for_client_build"
+        "client#build"
       ]
     },
     "wait_for_client_build": {},
