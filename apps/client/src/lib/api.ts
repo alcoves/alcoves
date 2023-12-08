@@ -36,9 +36,9 @@ export function createRequest(method: AxiosRequestConfig['method']) {
     const token = localStorage.getItem(LOCALSTORAGE_TOKEN_KEY)
 
     const config: AxiosRequestConfig = {
+      url,
       data,
       method,
-      url: new URL(url).toString(),
     }
 
     if (token) {
