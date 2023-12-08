@@ -8,6 +8,7 @@
   "description": "Alcove Media Server",
   "scripts": {
     "dev": "turbo dev",
+    "lint": "turbo lint",
     "build": "turbo build",
     "start": "turbo start"
   },
