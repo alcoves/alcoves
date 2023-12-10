@@ -208,6 +208,8 @@ export class UtilitiesService {
       '00:00:00',
       '-vframes',
       '1',
+      "-q:v",
+      "1",
       path,
     ])
 
