@@ -42,7 +42,7 @@ export class AssetProcessor {
   async process(job: Job<ThumbnailJobData>) {
     const { assetId, query, params } = job.data
     const tmpDir = await mkdtemp(path.join(os.tmpdir(), 'aloves-thumbnail-'))
-    const sourceThumbnailPath = `${tmpDir}/source-thumbnail.bmp`
+    const sourceThumbnailPath = `${tmpDir}/source-thumbnail.png`
     const outputThumbnailPath = `${tmpDir}/output-thumbnail.${params.fmt}`
     this.logger.debug({ tmpDir, sourceThumbnailPath, outputThumbnailPath })
 
