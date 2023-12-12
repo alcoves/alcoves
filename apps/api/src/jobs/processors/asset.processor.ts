@@ -4,7 +4,7 @@ import mime from 'mime-types'
 import sharp, { ResizeOptions } from 'sharp'
 
 import { Job } from 'bull'
-import { Asset } from '@prisma/client'
+import { Duration } from 'luxon'
 import { Logger } from '@nestjs/common'
 import { mkdtemp, rm } from 'fs/promises'
 import { Process, Processor } from '@nestjs/bull'
@@ -12,6 +12,11 @@ import { EventEmitter2 } from '@nestjs/event-emitter'
 import { PrismaService } from '../../services/prisma.service'
 import { UtilitiesService } from '../../utilities/utilities.service'
 import { Queues, AssetJobs, ThumbnailJobData } from '../jobs.constants'
+
+function formatTimestring(d: number) {
+  const duration = Duration.fromObject({ seconds: d })
+  return duration.toFormat('hh:mm:ss')
+}
 
 @Processor(Queues.ASSET)
 export class AssetProcessor {
@@ -54,9 +59,11 @@ export class AssetProcessor {
       })
 
       this.logger.log('grabbing a thumbnail from the video', asset.id)
+      const ss = query.t ? `${formatTimestring(query.t)}` : '00:00:00'
       const thumbnail = await this.utilitiesService.getThumbnail(
         asset,
-        sourceThumbnailPath
+        sourceThumbnailPath,
+        ss
       )
       await job.progress(25)
 

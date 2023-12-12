@@ -199,17 +199,21 @@ export class UtilitiesService {
     })
   }
 
-  async getThumbnail(asset: Asset, path: string): Promise<void> {
+  async getThumbnail(
+    asset: Asset,
+    path: string,
+    ss: string = '00:00:00'
+  ): Promise<void> {
     const input = await this.getSignedSourceAssetUrl(asset)
     await this.spawnProcess('ffmpeg', [
       '-i',
       input,
       '-ss',
-      '00:00:00',
+      ss,
       '-vframes',
       '1',
-      "-q:v",
-      "1",
+      '-q:v',
+      '1',
       path,
     ])
 

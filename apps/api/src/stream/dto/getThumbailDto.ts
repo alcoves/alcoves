@@ -34,6 +34,11 @@ export class GetThumbnailParamsDto {
 export class GetThumbnailQueryDto {
   @IsOptional()
   @IsInt()
+  @Min(0)
+  t: number
+
+  @IsOptional()
+  @IsInt()
   @Min(1)
   @Max(100)
   q: number
