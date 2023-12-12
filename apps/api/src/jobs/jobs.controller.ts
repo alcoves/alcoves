@@ -7,7 +7,6 @@ import { EventEmitter2 } from '@nestjs/event-emitter'
 import { Controller, Get, Post, Body, Sse, UseGuards } from '@nestjs/common'
 
 @ApiTags('Jobs')
-@UseGuards(AuthGuard)
 @Controller('api/jobs')
 export class JobsController {
   constructor(
@@ -22,16 +21,19 @@ export class JobsController {
     )
   }
 
+  @UseGuards(AuthGuard)
   @Post()
   create(@Body() createJobDto: CreateJobDto) {
     return this.jobsService.create(createJobDto)
   }
 
+  @UseGuards(AuthGuard)
   @Post('/clean')
   clean() {
     return this.jobsService.cleanQueues()
   }
 
+  @UseGuards(AuthGuard)
   @Get()
   findAll() {
     return this.jobsService.findAll()
