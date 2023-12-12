@@ -41,6 +41,14 @@ export class AssetsService {
     return asset
   }
 
+  async retryIngest(id: string): Promise<Asset | NotFoundException> {
+    const asset = await this.findOne(id)
+    if (!asset) return new NotFoundException('Asset not found')
+
+    await this.jobsService.ingestAsset(id)
+    return this.findOne(id)
+  }
+
   async create(createAssetDto: CreateAssetDto): Promise<Asset> {
     const assetId = uuidv4()
     const contentType = mime.lookup(createAssetDto.input)

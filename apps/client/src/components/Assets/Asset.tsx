@@ -12,12 +12,14 @@ import {
   ButtonGroup,
   Code,
   Flex,
+  HStack,
   Heading,
   Image,
   Text,
   useColorModeValue,
 } from '@chakra-ui/react'
 import { useConfig } from '../../contexts/ConfigContext'
+import RetryIngest from './RetryIngest'
 
 export default function Asset() {
   const { assetId } = useParams()
@@ -68,9 +70,12 @@ export default function Asset() {
             <DeleteAsset assetId={asset.id} to="/assets" />
           </ButtonGroup>
         </Flex>
-        <Box p="2" mb="6" rounded="sm" bg={bg}>
+        <Box p="2" mb="4" rounded="sm" bg={bg}>
           <Text>{`${asset.id}`}</Text>
         </Box>
+        <HStack mb="4" justify="end" w="100%">
+          <RetryIngest assetId={asset.id} />
+        </HStack>
         {asset.contentType.includes('video') ? (
           <VideoAssetDetails asset={asset} />
         ) : (

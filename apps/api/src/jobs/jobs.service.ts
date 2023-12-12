@@ -28,10 +28,6 @@ export class JobsService {
     return Object.keys(this).filter((key) => key.includes('Queue'))
   }
 
-  create(createJobDto: CreateJobDto) {
-    return 'This action adds a new job'
-  }
-
   async cleanQueues() {
     await Promise.all(
       this.getQueues().map(async (queue) => {

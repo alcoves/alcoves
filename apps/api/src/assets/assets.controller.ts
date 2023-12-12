@@ -28,6 +28,11 @@ export class AssetsController {
     return this.assetsService.findOne(id)
   }
 
+  @Post(':id/retry-ingest')
+  retryIngest(@Param('id') id: string) {
+    return this.assetsService.retryIngest(id)
+  }
+
   @Post()
   create(@Body() createAssetDto: CreateAssetDto) {
     return this.assetsService.create(createAssetDto)

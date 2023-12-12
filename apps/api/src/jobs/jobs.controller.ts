@@ -22,12 +22,6 @@ export class JobsController {
   }
 
   @UseGuards(AuthGuard)
-  @Post()
-  create(@Body() createJobDto: CreateJobDto) {
-    return this.jobsService.create(createJobDto)
-  }
-
-  @UseGuards(AuthGuard)
   @Post('/clean')
   clean() {
     return this.jobsService.cleanQueues()
