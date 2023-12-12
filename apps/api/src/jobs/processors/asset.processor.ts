@@ -41,7 +41,7 @@ export class AssetProcessor {
   }
 
   @Process({
-    concurrency: 2,
+    concurrency: 8,
     name: AssetJobs.THUMBNAIL,
   })
   async process(job: Job<ThumbnailJobData>) {
