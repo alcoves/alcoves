@@ -1,3 +1,5 @@
+import CleanQueues from './CleanQueues'
+
 import useSWR from 'swr'
 import {
   Box,
@@ -9,7 +11,6 @@ import {
   Icon,
   useColorModeValue,
   Flex,
-  Button,
   Accordion,
   AccordionItem,
   AccordionButton,
@@ -64,7 +65,7 @@ export default function Jobs() {
     <Box>
       <Heading size="lg">Jobs</Heading>
       <Flex py="4">
-        <Button size="sm">Cleanup</Button>
+        <CleanQueues />
       </Flex>
       <VStack spacing="4">
         {data?.map((job: any) => (
