@@ -21,6 +21,7 @@ export class StreamController {
   constructor(private readonly streamService: StreamService) {}
 
   @Get(':assetId')
+  @Header('Cache-Control', 'public, max-age=31536000, immutable')
   async getDirectAssetStream(
     @Res() res: FastifyReply,
     @Headers('range') range: string,
@@ -64,6 +65,7 @@ export class StreamController {
   }
 
   @Get(':assetId/thumbnail.:fmt')
+  @Header('Cache-Control', 'public, max-age=31536000, immutable')
   async getAssetThumbnail(
     @Res() res: FastifyReply,
     @Param() params: GetThumbnailParamsDto,
