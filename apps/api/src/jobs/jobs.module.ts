@@ -13,12 +13,30 @@ import { MaintenanceProcessor } from './processors/maintenance.processor'
   imports: [
     BullModule.registerQueue({
       name: Queues.ASSET,
+      defaultJobOptions: {
+        priority: 1,
+        attempts: 1,
+        removeOnFail: 500,
+        removeOnComplete: 500,
+      },
     }),
     BullModule.registerQueue({
       name: Queues.INGEST,
+      defaultJobOptions: {
+        priority: 2,
+        attempts: 4,
+        removeOnFail: 500,
+        removeOnComplete: 500,
+      },
     }),
     BullModule.registerQueue({
       name: Queues.MAINTENANCE,
+      defaultJobOptions: {
+        priority: 1000,
+        attempts: 1,
+        removeOnFail: 500,
+        removeOnComplete: 500,
+      },
     }),
   ],
   exports: [BullModule],
