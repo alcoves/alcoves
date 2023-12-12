@@ -1,6 +1,6 @@
 import mime from 'mime-types'
 
-import { Asset } from '@prisma/client'
+import { Asset, AssetStatus } from '@prisma/client'
 import { v4 as uuidv4 } from 'uuid'
 import { ConfigService } from '@nestjs/config'
 import { JobsService } from '../jobs/jobs.service'
@@ -12,6 +12,7 @@ import {
   NotFoundException,
 } from '@nestjs/common'
 import { UtilitiesService } from '../utilities/utilities.service'
+import { GetAssetsQueryDto } from './dto/getAssetsDto'
 
 @Injectable()
 export class AssetsService {
@@ -22,12 +23,21 @@ export class AssetsService {
     private readonly utilitiesService: UtilitiesService
   ) {}
 
-  async findAll(): Promise<Asset[]> {
-    const assets = await this.prismaService.asset.findMany({
+  async findAll(query: GetAssetsQueryDto): Promise<Asset[]> {
+    const prismaQuery = {
+      where: {},
       orderBy: {
         createdAt: 'desc',
       },
-    })
+    }
+
+    if (query.status) {
+      prismaQuery.where = {
+        status: AssetStatus[query.status],
+      }
+    }
+
+    const assets = await this.prismaService.asset.findMany(prismaQuery as any)
     return assets
   }
 

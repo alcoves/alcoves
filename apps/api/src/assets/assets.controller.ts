@@ -10,7 +10,9 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common'
+import { GetAssetsQueryDto } from './dto/getAssetsDto'
 
 @ApiTags('Assets')
 @UseGuards(AuthGuard)
@@ -19,8 +21,8 @@ export class AssetsController {
   constructor(private readonly assetsService: AssetsService) {}
 
   @Get()
-  findAll() {
-    return this.assetsService.findAll()
+  findAll(@Query() query: GetAssetsQueryDto) {
+    return this.assetsService.findAll(query)
   }
 
   @Get(':id')
