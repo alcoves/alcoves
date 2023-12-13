@@ -54,7 +54,7 @@ function JobReturnVale({ job }: { job: any }) {
 
 export default function Jobs() {
   const { data: sseData } = useSSE()
-  const { data, mutate } = useSWR('/api/jobs')
+  const { data, mutate } = useSWR('/api/jobs', { refreshInterval: 5000 })
   const bg = useColorModeValue('gray.100', 'gray.900')
 
   useEffect(() => {

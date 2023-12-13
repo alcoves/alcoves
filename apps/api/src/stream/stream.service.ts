@@ -16,6 +16,7 @@ import {
   GetThumbnailParamsDto,
   GetThumbnailQueryDto,
 } from './dto/getThumbailDto'
+import { GetObjectCommandOutput } from '@aws-sdk/client-s3'
 
 @Injectable()
 export class StreamService {
@@ -67,20 +68,24 @@ ${url}
   async getDirectAssetStream(
     assetId: string,
     range?: string
-  ): Promise<{ stream: Readable; contentType: string; fileSize: number }> {
+  ): Promise<{
+    stream: Readable
+    contentType: string
+    s3Res: GetObjectCommandOutput
+  }> {
     const asset = await this.assetService.findOne(assetId)
     if (!asset) throw new NotFoundException('Asset not found')
 
-    const { Body, ContentLength } = await this.utilitiesService.getFileStream(
+    const s3Res = await this.utilitiesService.getFileStream(
       asset.storageBucket,
       this.getDirectAssetKey(asset),
       range
     )
 
     return {
-      fileSize: ContentLength,
+      s3Res,
       contentType: asset.contentType,
-      stream: Readable.from(Body as Readable),
+      stream: Readable.from(s3Res.Body as Readable),
     }
   }
 

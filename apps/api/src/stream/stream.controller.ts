@@ -36,7 +36,7 @@ export class StreamController {
       const chunksize = end - start + 1
       const rangeQuery = `bytes=${start}-${end}`
 
-      const { stream, contentType } =
+      const { stream, contentType, s3Res } =
         await this.streamService.getDirectAssetStream(assetId, rangeQuery)
 
       return res
@@ -45,21 +45,25 @@ export class StreamController {
           'Accept-Ranges': 'bytes',
           'Content-Length': chunksize,
           'Content-Type': contentType,
-          'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+          ETag: s3Res.ETag,
+          Expires: s3Res.Expires,
+          'Last-Modified': s3Res.LastModified,
+          'Content-Range': s3Res.ContentRange,
         })
         .send(stream)
     }
 
-    const { stream, contentType, fileSize } =
+    const { stream, contentType, s3Res } =
       await this.streamService.getDirectAssetStream(assetId)
 
-    Logger.verbose('123')
     return res
       .status(200)
       .headers({
+        ETag: s3Res.ETag,
+        'Last-Modified': s3Res.LastModified,
         'Accept-Ranges': 'bytes',
-        'Content-Length': fileSize,
         'Content-Type': contentType,
+        'Content-Length': s3Res.ContentLength,
       })
       .send(stream)
   }
