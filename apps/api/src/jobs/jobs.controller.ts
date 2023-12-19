@@ -28,6 +28,12 @@ export class JobsController {
   }
 
   @UseGuards(AuthGuard)
+  @Post('/stop')
+  stop() {
+    return this.jobsService.stopQueues()
+  }
+
+  @UseGuards(AuthGuard)
   @Get()
   findAll() {
     return this.jobsService.findAll()

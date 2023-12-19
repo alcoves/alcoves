@@ -38,6 +38,15 @@ export class JobsService {
     return 'done'
   }
 
+  async stopQueues() {
+    await Promise.all(
+      this.getQueues().map(async (queue) => {
+        await this[queue].obliterate({ force: true })
+      })
+    )
+    return 'done'
+  }
+
   async findAll() {
     const jobs = await Promise.all(
       this.getQueues().map(async (queue) => {
