@@ -5,18 +5,8 @@ services:
     container_name: alcoves
     build:
       dockerfile: docker/Dockerfile.dev
-    environment:
-      ALCOVES_TOKEN: changeme
-      ALCOVES_CDN_URL: http://localhost:4100
-      ALCOVES_DATABASE_URL: postgres://postgres:postgres@postgres:5432/alcoves
-      ALCOVES_STORAGE_BUCKET: alcoves
-      ALCOVES_STORAGE_PUBLIC_ENDPOINT: http://localhost:9000 # The public facing URL of the storage gateway
-      ALCOVES_STORAGE_ENDPOINT: http://minio:9000 # The internal URL of the storage gateway
-      ALCOVES_STORAGE_ACCESS_KEY_ID: minioadmin
-      ALCOVES_STORAGE_SECRET_ACCESS_KEY: minioadmin
-      ALCOVES_REDIS_HOST: redis
-      ALCOVES_REDIS_PORT: 6379 # When connecting over the container network use the container port not the bound port
-
+    env_file:
+      - .env.local
     volumes:
       - ./:/app
     depends_on:
