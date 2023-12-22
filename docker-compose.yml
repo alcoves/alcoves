@@ -16,15 +16,25 @@ services:
       - 3000:3000
       - 4000:4000
 
-  cdn:
+  alcoves_cdn:
     image: nginx:latest
     depends_on:
       - alcoves
     volumes:
-      - ./docker/nginx.conf:/etc/nginx/nginx.conf
-      - cdn:/var/cache/nginx
+      - ./docker/alcoves_cdn.conf:/etc/nginx/nginx.conf
+      - alcoves_cdn:/var/cache/nginx
     ports:
       - "4100:80"
+
+  storage_cdn:
+    image: nginx:latest
+    depends_on:
+      - alcoves
+    volumes:
+      - ./docker/storage_cdn.conf:/etc/nginx/nginx.conf
+      - storage_cdn:/var/cache/nginx
+    ports:
+      - "4200:80"
 
   minio:
     image: minio/minio
@@ -72,11 +82,12 @@ services:
       POSTGRES_PASSWORD: postgres
 
 volumes:
-  cdn:
   minio:
   redis:
   alcoves:
   postgres:
+  alcoves_cdn:
+  storage_cdn:
 
 networks:
   default:
