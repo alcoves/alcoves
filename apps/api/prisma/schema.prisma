@@ -15,12 +15,33 @@ model Asset {
   metadata      Json?
   duration      Float       @default(0)
   contentType   String      @default("")
+  status        AssetStatus @default(CREATED)
+  renditions    Rendition[]
   updatedAt     DateTime    @updatedAt
   createdAt     DateTime    @default(now())
-  status        AssetStatus @default(CREATED)
+}
+
+model Rendition {
+  id            String          @id @default(uuid())
+  storageBucket String
+  storageKey    String
+  metadata      Json?
+  status        RenditionStatus @default(CREATED)
+  asset         Asset           @relation(fields: [assetId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  assetId       String
+  updatedAt     DateTime        @updatedAt
+  createdAt     DateTime        @default(now())
 }
 
 enum AssetStatus {
+  CREATED
+  INGESTING
+  PROCESSING
+  ERROR
+  READY
+}
+
+enum RenditionStatus {
   CREATED
   INGESTING
   PROCESSING
