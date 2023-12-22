@@ -10,18 +10,13 @@ import {
 } from '@vidstack/react/player/layouts/default'
 
 export default function VideoPlayer({ asset }: { asset: Asset }) {
-  const { getThumbnailUrlBase, getDirectAssetUrlBase } = useConfig()
-
-  const videoUrl = getDirectAssetUrlBase(asset.id)
-  const thumbnailUrl = `${getThumbnailUrlBase(asset.id)}.jpg?q=80&w=1280`
+  const { getHLSManifestUrl } = useConfig()
+  const manifestUrl = getHLSManifestUrl(asset.id)
 
   return (
-    <MediaPlayer playsinline src={videoUrl} aspectRatio="16/9">
+    <MediaPlayer playsinline src={manifestUrl} aspectRatio="16/9">
       <MediaProvider />
-      <DefaultVideoLayout
-        thumbnails={thumbnailUrl}
-        icons={defaultLayoutIcons}
-      />
+      <DefaultVideoLayout icons={defaultLayoutIcons} />
     </MediaPlayer>
   )
 }

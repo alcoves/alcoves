@@ -9,7 +9,7 @@ interface ServerConfigProps {
   data: APIConfigResponse
   isLoading: boolean
   getThumbnailUrlBase: (assetId: string) => string
-  getDirectAssetUrlBase: (assetId: string) => string
+  getHLSManifestUrl: (assetId: string) => string
 }
 
 interface ServerConfigProviderProps {
@@ -30,16 +30,16 @@ export const ConfigProvider: React.FC<ServerConfigProviderProps> = ({
     return `/stream/${assetId}/thumbnail`
   }
 
-  function getDirectAssetUrlBase(assetId: string) {
+  function getHLSManifestUrl(assetId: string) {
     if (data?.cdnUrl) {
-      return `${data.cdnUrl}/stream/${assetId}`
+      return `${data.cdnUrl}/stream/${assetId}.m3u8`
     }
-    return `/stream/${assetId}`
+    return `/stream/${assetId}.m3u8`
   }
 
   return (
     <ConfigContext.Provider
-      value={{ data, isLoading, getThumbnailUrlBase, getDirectAssetUrlBase }}
+      value={{ data, isLoading, getThumbnailUrlBase, getHLSManifestUrl }}
     >
       {children}
     </ConfigContext.Provider>
