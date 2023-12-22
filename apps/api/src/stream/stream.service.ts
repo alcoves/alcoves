@@ -173,20 +173,6 @@ export class StreamService {
     return manifest.join('\n')
   }
 
-  async getDirectAssetMetadata(assetId: string) {
-    const asset = await this.assetService.findOne(assetId)
-    if (!asset) throw new NotFoundException('Asset not found')
-
-    const { ContentLength } = await this.utilitiesService.getObjectMetadata(
-      asset.storageBucket,
-      this.getDirectAssetKey(asset)
-    )
-
-    return {
-      fileSize: ContentLength,
-    }
-  }
-
   async getManifest(assetId: string) {
     const asset = await this.assetService.findOne(assetId)
     if (!asset) throw new NotFoundException('Asset not found')

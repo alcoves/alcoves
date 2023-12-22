@@ -96,10 +96,6 @@ export class UtilitiesService {
     return this.s3.send(new GetObjectCommand(getObjectParams))
   }
 
-  getObjectMetadata(bucket: string, key: string) {
-    return this.s3.send(new HeadObjectCommand({ Bucket: bucket, Key: key }))
-  }
-
   async uploadFileToStorage2(params: PutObjectCommandInput): Promise<any> {
     try {
       const upload = new Upload({
