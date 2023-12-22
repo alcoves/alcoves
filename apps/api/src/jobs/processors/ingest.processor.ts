@@ -1,14 +1,9 @@
 import { Job } from 'bull'
-import { EventEmitter2 } from '@nestjs/event-emitter'
+import { v4 as uuid } from 'uuid'
+import { Process, Processor } from '@nestjs/bull'
 import { PrismaService } from '../../services/prisma.service'
 import { UtilitiesService } from '../../utilities/utilities.service'
 import { IngestJobs, IngestUrlJobData, Queues } from '../jobs.constants'
-import {
-  Process,
-  Processor,
-  OnQueueProgress,
-  OnQueueCompleted,
-} from '@nestjs/bull'
 import { Logger } from '@nestjs/common'
 
 @Processor(Queues.INGEST)
@@ -16,24 +11,12 @@ export class IngestProcessor {
   private readonly logger = new Logger(IngestProcessor.name)
 
   constructor(
-    private eventEmitter: EventEmitter2,
     private readonly prismaService: PrismaService,
     private readonly utilitiesService: UtilitiesService
   ) {}
 
-  @OnQueueProgress()
-  async onProgress(job: Job) {
-    const progress = await job.progress()
-    this.eventEmitter.emit('job-update', { id: job.id, progress })
-  }
-
-  @OnQueueCompleted()
-  onCompleted() {
-    this.eventEmitter.emit('job-update', { data: 'completed' })
-  }
-
   @Process({
-    concurrency: 1,
+    concurrency: 3,
     name: IngestJobs.INGEST_URL,
   })
   async process(job: Job<IngestUrlJobData>) {
@@ -49,20 +32,88 @@ export class IngestProcessor {
         },
       })
 
-      await this.utilitiesService.ingestURLToStorage(
-        asset.input,
-        asset.contentType,
+      this.logger.debug('Removing existing renditions')
+      const existingRenditions = await this.prismaService.rendition.findMany({
+        where: {
+          assetId: job.data.assetId,
+        },
+      })
+
+      for (const rendition of existingRenditions) {
+        await this.prismaService.rendition.delete({
+          where: { id: rendition.id },
+        })
+      }
+      this.logger.debug('Removing asset folder')
+      await this.utilitiesService.deleteStorageFolder(
         asset.storageBucket,
-        // This should probably be stored in the database or at least have a singleton
-        `${asset.storageKey}/${this.utilitiesService.getSourceAssetFilename(
-          asset
-        )}`
+        asset.storageKey
       )
 
-      // TODO :: Will need a switch in here for different types of assets
-
+      this.logger.debug('Collecting asset metadata')
       const metadata = await this.utilitiesService.getMetadata(asset.input)
+      const hasAudio = metadata?.streams.some(
+        (stream) => stream.codec_type === 'audio'
+      )
 
+      if (hasAudio) {
+        this.logger.debug('Creating rendition for source audio')
+        const sourceAudioRenditionId = uuid()
+        const sourceAudioRendition = await this.prismaService.rendition.create({
+          data: {
+            asset: { connect: { id: job.data.assetId } },
+            id: sourceAudioRenditionId,
+            storageBucket: asset.storageBucket,
+            storageKey: this.utilitiesService.getRenditionStorageKey(
+              asset.storageKey,
+              sourceAudioRenditionId
+            ),
+          },
+        })
+
+        await this.utilitiesService.hlsIngestSourceAudio(
+          asset,
+          sourceAudioRendition
+        )
+
+        await this.prismaService.rendition.update({
+          where: { id: sourceAudioRenditionId },
+          data: {
+            status: 'PROCESSING',
+          },
+        })
+      }
+
+      this.logger.debug('Creating rendition for source video')
+      const sourceVideoRenditionId = uuid()
+      const sourceVideoRendition = await this.prismaService.rendition.create({
+        data: {
+          asset: { connect: { id: job.data.assetId } },
+          id: sourceVideoRenditionId,
+          storageBucket: asset.storageBucket,
+          storageKey: this.utilitiesService.getRenditionStorageKey(
+            asset.storageKey,
+            sourceVideoRenditionId
+          ),
+        },
+      })
+
+      await this.utilitiesService.hlsIngestSourceVideo(
+        asset,
+        sourceVideoRendition
+      )
+
+      await this.prismaService.rendition.update({
+        where: { id: sourceVideoRenditionId },
+        data: {
+          status: 'PROCESSING',
+        },
+      })
+
+      this.logger.debug('Creating asset thumbnails')
+      await this.utilitiesService.createStoryboards(asset)
+
+      this.logger.debug('Finalizing asset')
       await this.prismaService.asset.update({
         where: { id: job.data.assetId },
         data: {

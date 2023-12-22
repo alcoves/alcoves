@@ -29,7 +29,7 @@ export class AssetProcessor {
   ) {}
 
   getThumbnailStorageKey(asset, params, query) {
-    let key = `${asset.storageKey}/thumbnails.${params.fmt}`
+    let key = `${asset.storageKey}/thumbnails/thumbnails.${params.fmt}`
     if (Object.keys(query).length) {
       const sortedQuery = Object.entries(query).sort((a, b) =>
         a[0].localeCompare(b[0])
@@ -47,9 +47,8 @@ export class AssetProcessor {
   async process(job: Job<ThumbnailJobData>) {
     const { assetId, query, params } = job.data
     const tmpDir = await mkdtemp(path.join(os.tmpdir(), 'aloves-thumbnail-'))
-    const sourceThumbnailPath = `${tmpDir}/source-thumbnail.png`
     const outputThumbnailPath = `${tmpDir}/output-thumbnail.${params.fmt}`
-    this.logger.debug({ tmpDir, sourceThumbnailPath, outputThumbnailPath })
+    this.logger.debug({ tmpDir, outputThumbnailPath })
 
     try {
       const asset = await this.prismaService.asset.findUnique({
@@ -60,17 +59,16 @@ export class AssetProcessor {
 
       this.logger.log('grabbing a thumbnail from the video', asset.id)
       const ss = query.t ? `${formatTimestring(query.t)}` : '00:00:00'
-      const thumbnail = await this.utilitiesService.getThumbnail(
-        asset,
-        sourceThumbnailPath,
-        ss
-      )
+      const { thumbnailPath, sharpExtraction } =
+        await this.utilitiesService.extractThumbnail(asset, tmpDir, ss)
       await job.progress(25)
 
       this.logger.log(
         'compressing the thumbnail based on user input and defaults'
       )
-      const sharpObject = await sharp(sourceThumbnailPath)
+
+      const sharpObject = await sharp(thumbnailPath)
+        .extract(sharpExtraction)
         .toFormat(params.fmt as any, {
           progressive: true,
           effort: query.effort || 4,
