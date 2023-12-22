@@ -1,10 +1,9 @@
 import {
+  Injectable,
   CanActivate,
   ExecutionContext,
-  Injectable,
   UnauthorizedException,
 } from '@nestjs/common'
-import { FastifyRequest } from 'fastify'
 import { ConfigService } from '@nestjs/config'
 
 @Injectable()
@@ -26,8 +25,8 @@ export class AuthGuard implements CanActivate {
     return true
   }
 
-  private extractAPIKeyFromHeader(request: FastifyRequest): string | undefined {
-    const token = request.headers.authorization
+  private extractAPIKeyFromHeader(req): string | undefined {
+    const token = req.headers.authorization
     return token
   }
 }
