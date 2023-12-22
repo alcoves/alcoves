@@ -26,6 +26,7 @@ export class AssetsService {
   async findAll(query: GetAssetsQueryDto): Promise<Asset[]> {
     const prismaQuery = {
       where: {},
+      // take: 50,
       orderBy: {
         createdAt: 'desc',
       },
