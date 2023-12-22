@@ -72,11 +72,12 @@ export default function Assets() {
         <HStack></HStack>
         <CreateAsset />
       </Flex>
-      <Table variant="simple">
+      <Table variant="simple" size="sm">
         <Thead>
           <Tr>
             {/* <Th></Th> */}
             <Th>ID</Th>
+            <Th>Asset Version</Th>
             <Th>Duration</Th>
             <Th>Status</Th>
             <Th>Created</Th>
@@ -102,6 +103,7 @@ export default function Assets() {
                   />
                 </Td> */}
                 <Td>{asset.id}</Td>
+                <Td>{asset.version}</Td>
                 <Td>{formatDuration(asset.duration)}</Td>
                 <Td>{asset.status}</Td>
                 <Td>
