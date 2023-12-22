@@ -15,15 +15,18 @@ import {
   HStack,
   Heading,
   Image,
+  Input,
   Text,
   useColorModeValue,
 } from '@chakra-ui/react'
 import { useConfig } from '../../contexts/ConfigContext'
 import RetryIngest from './RetryIngest'
+import { useState } from 'react'
 
 export default function Asset() {
   const { assetId } = useParams()
   const { getThumbnailUrlBase } = useConfig()
+  const [thumbnail, setThumbnail] = useState(`.jpg?w=1280`)
   const { data, isLoading, error } = useSWR(
     `/api/assets/${assetId ? assetId : ''}`
   )
@@ -89,14 +92,27 @@ export default function Asset() {
             maxW="500px"
             rounded="sm"
             colorScheme="gray"
-            children={`${getThumbnailUrlBase(asset.id)}.jpg?w=100&q=50`}
+            children={getThumbnailUrlBase(assetId)}
+          ></Code>
+          <Input
+            my="2"
+            size="sm"
+            w="100%"
+            maxW="500px"
+            rounded="sm"
+            variant="filled"
+            colorScheme="gray"
+            value={thumbnail}
+            onChange={(e) => {
+              setThumbnail(e.target.value)
+            }}
           />
           <Image
             w="100%"
             maxW="500px"
             rounded="sm"
             alt="thumbnail"
-            src={`${getThumbnailUrlBase(asset.id)}.jpg?w=500`}
+            src={`${getThumbnailUrlBase(assetId)}${thumbnail}`}
           />
         </Box>
       </Box>

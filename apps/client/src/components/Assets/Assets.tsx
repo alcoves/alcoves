@@ -5,6 +5,7 @@ import {
   Box,
   Heading,
   Table,
+  HStack,
   Thead,
   Tbody,
   Tr,
@@ -17,19 +18,43 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   Image,
+  Input,
+  Text,
 } from '@chakra-ui/react'
 import { DateTime } from 'luxon'
 import { Asset } from '../../types'
 import { Link, useNavigate } from 'react-router-dom'
 import { useConfig } from '../../contexts/ConfigContext'
 import { useState } from 'react'
+import { formatDuration } from '../../lib/util'
+
+const operators = [{ label: 'Equals', value: 'eq' }]
+
+const filters = [
+  {
+    label: 'Status',
+    value: 'status',
+    options: [
+      { value: 'READY', label: 'Ready' },
+      { value: 'INGESTING', label: 'Ingesting' },
+      { value: 'ERROR', label: 'Error' },
+      { value: 'PROCESSING', label: 'Processing' },
+      { value: 'CREATED', label: 'Created' },
+    ],
+  },
+]
 
 export default function Assets() {
   const navigate = useNavigate()
-  const { getThumbnailUrlBase } = useConfig()
-  const [statusFilter, setStatusFilter] = useState('')
-  const { data } = useSWR(`/api/assets${statusFilter}`)
   const bg = useColorModeValue('gray.100', 'gray.700')
+
+  const [filter, setFilter] = useState({
+    key: '',
+    operator: '',
+    value: '',
+  })
+
+  const { data } = useSWR(`/api/assets?limit=100${filter ? `&${filter}` : ''}`)
 
   return (
     <Box>
@@ -44,35 +69,15 @@ export default function Assets() {
         <Heading my="2" size="lg">{`Assets`}</Heading>
       </Box>
       <Flex py="2" w="100%" justify="space-between">
-        <Flex>
-          <Select
-            placeholder="ALL"
-            variant="filled"
-            onClick={(e: any) => {
-              if (e.target.value) {
-                const filter = `?status=${e.target.value}`
-                if (statusFilter === filter) return
-                setStatusFilter(filter)
-              } else {
-                setStatusFilter('')
-              }
-            }}
-          >
-            <option value="CREATED">CREATED</option>
-            <option value="INGESTING">INGESTING</option>
-            <option value="PROCESSING">PROCESSING</option>
-            <option value="ERROR">ERROR</option>
-            <option value="READY">READY</option>
-          </Select>
-        </Flex>
+        <HStack></HStack>
         <CreateAsset />
       </Flex>
       <Table variant="simple">
         <Thead>
           <Tr>
-            <Th></Th>
+            {/* <Th></Th> */}
             <Th>ID</Th>
-            <Th>Type</Th>
+            <Th>Duration</Th>
             <Th>Status</Th>
             <Th>Created</Th>
           </Tr>
@@ -89,15 +94,15 @@ export default function Assets() {
                   navigate(`/assets/${asset.id}`)
                 }}
               >
-                <Td>
+                {/* <Td>
                   <Image
                     w="100px"
                     alt="thmb"
                     src={`${getThumbnailUrlBase(asset.id)}.jpg?w=100&q=50`}
                   />
-                </Td>
+                </Td> */}
                 <Td>{asset.id}</Td>
-                <Td>{asset.contentType}</Td>
+                <Td>{formatDuration(asset.duration)}</Td>
                 <Td>{asset.status}</Td>
                 <Td>
                   {DateTime.fromISO(asset.createdAt).toLocaleString(

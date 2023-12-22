@@ -15,6 +15,7 @@ model Asset {
   metadata      Json?
   duration      Float       @default(0)
   contentType   String      @default("")
+  version       Int         @default(0)
   status        AssetStatus @default(CREATED)
   renditions    Rendition[]
   updatedAt     DateTime    @updatedAt

@@ -5,4 +5,7 @@ export class GetAssetsQueryDto {
   @IsOptional()
   @IsEnum(AssetStatus)
   status: string
+
+  @IsOptional()
+  limit: number
 }

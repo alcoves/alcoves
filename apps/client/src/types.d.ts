@@ -11,5 +11,7 @@ export interface Asset {
   updatedAt: string
   createdAt: string
   contentType: string
+  duration: number
+  version: string
   status: AssetStatus
 }

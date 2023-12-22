@@ -21,7 +21,6 @@ import {
   DeleteObjectsCommand,
   GetObjectCommand,
   GetObjectCommandOutput,
-  HeadObjectCommand,
   PutObjectCommandInput,
 } from '@aws-sdk/client-s3'
 
@@ -501,6 +500,7 @@ export class UtilitiesService {
           Bucket: storageBucket,
           Delete: {
             Objects: listedObjects.Contents.map((obj) => {
+              this.logger.debug(`Deleting ${storageBucket}/${obj.Key}`)
               return { Key: obj.Key }
             }),
           },

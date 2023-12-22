@@ -28,6 +28,7 @@ export class IngestProcessor {
       await this.prismaService.asset.update({
         where: { id: job.data.assetId },
         data: {
+          version: 1,
           status: 'INGESTING',
         },
       })
@@ -44,6 +45,7 @@ export class IngestProcessor {
           where: { id: rendition.id },
         })
       }
+
       this.logger.debug('Removing asset folder')
       await this.utilitiesService.deleteStorageFolder(
         asset.storageBucket,

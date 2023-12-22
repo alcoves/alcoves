@@ -1,6 +1,7 @@
 import VideoPlayer from './VideoPlayer'
 
 import { Asset } from '../../types'
+import { formatDuration } from '../../lib/util'
 import { Flex, Text, VStack, useColorModeValue } from '@chakra-ui/react'
 
 function DetailRow({ label, data }: { label: string; data: string }) {
@@ -24,6 +25,8 @@ export default function VideoAssetDetails({ asset }: { asset: Asset }) {
         <DetailRow label="Asset ID" data={asset.id} />
         <DetailRow label="Type" data={asset.contentType} />
         <DetailRow label="Status" data={asset.status} />
+        <DetailRow label="Duration" data={formatDuration(asset.duration)} />
+        <DetailRow label="Version" data={asset.version} />
         <DetailRow
           label="Created"
           data={new Date(asset.createdAt).toLocaleString()}
