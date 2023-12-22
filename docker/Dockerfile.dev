@@ -1,8 +1,8 @@
-FROM node:18-slim
+FROM node:18
 
 RUN corepack enable
 RUN apt update
-RUN apt install -y wget xz-utils
+RUN apt install -y wget xz-utils procps
 
 ENV FFMPEG_VERSION="ffmpeg-n6.0-latest-linux64-gpl-6.0"
 RUN wget -q https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/${FFMPEG_VERSION}.tar.xz
