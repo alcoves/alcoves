@@ -27,5 +27,7 @@ COPY --from=builder /app /app/
 COPY --from=builder /usr/bin/ffmpeg /usr/bin/ffmpeg
 COPY --from=builder /usr/bin/ffprobe /usr/bin/ffprobe
 
+ENV NODE_ENV=production
+
 EXPOSE 4000
 CMD ["pnpm", "start"]
