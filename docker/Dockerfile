@@ -6,7 +6,7 @@ WORKDIR /app
 FROM base as builder
 
 RUN apt update && apt install -y wget xz-utils
-ENV FFMPEG_VERSION="ffmpeg-n6.0-latest-linux64-gpl-6.0"
+ENV FFMPEG_VERSION="ffmpeg-n6.1-latest-linux64-gpl-6.1"
 RUN wget -q https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/${FFMPEG_VERSION}.tar.xz
 RUN tar -xvf ${FFMPEG_VERSION}.tar.xz
 RUN mv ${FFMPEG_VERSION}/bin/* /usr/bin/
