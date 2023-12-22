@@ -18,6 +18,8 @@ import {
   GetThumbnailParamsDto,
   GetThumbnailQueryDto,
 } from './dto/getThumbailDto'
+import { createReadStream } from 'fs'
+import { stat } from 'fs/promises'
 
 @Injectable()
 export class StreamService {
@@ -185,7 +187,12 @@ export class StreamService {
   async getAssetThumbnail(
     params: GetThumbnailParamsDto,
     query: GetThumbnailQueryDto
-  ): Promise<{ stream: Readable; contentType: string; fileSize: number }> {
+  ): Promise<{
+    stream: Readable
+    contentType: string
+    fileSize: number
+    error: boolean
+  }> {
     try {
       const asset = await this.assetService.findOne(params.assetId)
 
@@ -210,13 +217,20 @@ export class StreamService {
       )
 
       return {
+        error: false,
         fileSize: ContentLength,
         stream: Readable.from(Body as Readable),
         contentType: mime.lookup(params.fmt) || 'application/octet-stream',
       }
     } catch (error) {
+      this.logger.error(`Thumbnail error, returning default thumbnail`)
       this.logger.error(error)
-      // Return a default thumbnail
+      return {
+        error: true,
+        fileSize: (await stat('./data/default_thumbnail.png')).size,
+        stream: createReadStream('./data/default_thumbnail.png'),
+        contentType: 'image/png',
+      }
     }
   }
 }

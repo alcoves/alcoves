@@ -1,3 +1,5 @@
+import mime from 'mime-types'
+
 import { Request, Response } from 'express'
 import { StreamService } from './stream.service'
 import {
@@ -27,18 +29,20 @@ export class StreamController {
   }
 
   @Get(':assetId/thumbnail.:fmt')
-  @Header('Cache-Control', 'max-age=2678400')
   async getAssetThumbnail(
     @Res() res: Response,
     @Param() params: GetThumbnailParamsDto,
     @Query() query: GetThumbnailQueryDto
   ) {
-    const { stream, contentType, fileSize } =
+    const { stream, contentType, fileSize, error } =
       await this.streamService.getAssetThumbnail(params, query)
     res.set({
       'Content-Length': fileSize,
       'Content-Type': contentType,
-      'Content-Disposition': `inline; filename="thumbnail.${params.fmt}"`,
+      'Cache-Control': error ? '0' : 'max-age=2678400',
+      'Content-Disposition': `inline; filename="thumbnail.${mime.extension(
+        contentType
+      )}"`,
     })
 
     stream.pipe(res)
