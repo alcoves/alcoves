@@ -35,6 +35,11 @@ export class AssetsController {
     return this.assetsService.retryIngest(id)
   }
 
+  @Post('/reprocess')
+  reprocess() {
+    return this.assetsService.reprocess()
+  }
+
   @Post()
   create(@Body() createAssetDto: CreateAssetDto) {
     return this.assetsService.create(createAssetDto)

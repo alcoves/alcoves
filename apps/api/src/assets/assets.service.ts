@@ -9,6 +9,7 @@ import { PrismaService } from '../services/prisma.service'
 import {
   BadRequestException,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common'
 import { UtilitiesService } from '../utilities/utilities.service'
@@ -16,6 +17,8 @@ import { GetAssetsQueryDto } from './dto/getAssetsDto'
 
 @Injectable()
 export class AssetsService {
+  private readonly logger = new Logger(AssetsService.name)
+
   constructor(
     private readonly jobsService: JobsService,
     private readonly prismaService: PrismaService,
@@ -62,6 +65,29 @@ export class AssetsService {
 
     await this.jobsService.ingestAsset(id)
     return this.findOne(id)
+  }
+
+  async reprocess() {
+    const assets = await this.prismaService.asset.findMany({
+      where: {
+        version: {
+          lt: 1,
+        },
+        duration: {
+          lte: 30,
+        },
+      },
+    })
+
+    this.logger.log(`Reprocessing ${assets.length} assets`)
+
+    for (const asset of assets) {
+      await this.jobsService.ingestAsset(asset.id)
+    }
+
+    return {
+      assets: assets.length,
+    }
   }
 
   async create(createAssetDto: CreateAssetDto): Promise<Asset> {

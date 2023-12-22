@@ -1,10 +1,10 @@
 import { Job } from 'bull'
 import { v4 as uuid } from 'uuid'
+import { Logger } from '@nestjs/common'
 import { Process, Processor } from '@nestjs/bull'
 import { PrismaService } from '../../services/prisma.service'
 import { UtilitiesService } from '../../utilities/utilities.service'
 import { IngestJobs, IngestUrlJobData, Queues } from '../jobs.constants'
-import { Logger } from '@nestjs/common'
 
 @Processor(Queues.INGEST)
 export class IngestProcessor {
