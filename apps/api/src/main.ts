@@ -1,23 +1,16 @@
 import { AppModule } from './app.module'
-import { NestFactory } from '@nestjs/core'
 import { ConfigService } from '@nestjs/config'
 import { ValidationPipe } from '@nestjs/common'
 import { PrismaService } from './services/prisma.service'
+import { NestApplication, NestFactory } from '@nestjs/core'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
-import {
-  FastifyAdapter,
-  NestFastifyApplication,
-} from '@nestjs/platform-fastify'
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestFastifyApplication>(
-    AppModule,
-    new FastifyAdapter({ logger: false }),
-    {
-      bufferLogs: true,
-      logger: ['log', 'fatal', 'error', 'warn', 'debug'], // 'verbose (trace)'
-    }
-  )
+  const app = await NestFactory.create<NestApplication>(AppModule, {
+    bufferLogs: true,
+    logger: ['log', 'fatal', 'error', 'warn', 'debug'], // 'verbose (trace)'
+  })
+
   const configService = app.get(ConfigService)
   const port = configService.get('PORT') || 4000
 

@@ -1,8 +1,8 @@
-import { FastifyReply } from 'fastify'
+import { Response } from 'express'
 import { ApiTags } from '@nestjs/swagger'
 import { AppService } from './app.service'
 import { AuthGuard } from './auth/auth.guard'
-import { Controller, Get, Res, UseGuards } from '@nestjs/common'
+import { Controller, Get, UseGuards } from '@nestjs/common'
 
 @ApiTags('Root')
 @Controller()
@@ -21,8 +21,8 @@ export class AppController {
   }
 
   @Get('/api/redoc')
-  getDocs(@Res() reply: FastifyReply) {
-    reply.type('text/html').send(`
+  getDocs(req: Request, res: Response) {
+    res.type('text/html').send(`
       <!DOCTYPE html>
       <html>
         <head>
