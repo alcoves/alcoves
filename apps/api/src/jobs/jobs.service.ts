@@ -1,7 +1,6 @@
 import { Queue } from 'bull'
 import { InjectQueue } from '@nestjs/bull'
 import { Injectable } from '@nestjs/common'
-import { CreateJobDto } from './dto/create-job.dto'
 import {
   AssetJobs,
   DeleteStorageFolderJobData,
@@ -10,6 +9,7 @@ import {
   MaintenanceJobs,
   IngestJobs,
   Queues,
+  StoryboardJobData,
 } from './jobs.constants'
 import {
   GetThumbnailParamsDto,
@@ -70,6 +70,13 @@ export class JobsService {
     const job = await this.ingestQueue.add(IngestJobs.INGEST_URL, {
       assetId,
     } as IngestUrlJobData)
+    return job
+  }
+
+  async createStoryboards(assetId: string) {
+    const job = await this.assetQueue.add(AssetJobs.STORYBOARD, {
+      assetId,
+    } as StoryboardJobData)
     return job
   }
 

@@ -24,7 +24,7 @@ services:
       - ./docker/alcoves_cdn.conf:/etc/nginx/nginx.conf
       - alcoves_cdn:/var/cache/nginx
     ports:
-      - "4100:80"
+      - '4100:80'
 
   storage_cdn:
     image: nginx:latest
@@ -34,7 +34,7 @@ services:
       - ./docker/storage_cdn.conf:/etc/nginx/nginx.conf
       - storage_cdn:/var/cache/nginx
     ports:
-      - "4200:80"
+      - '4200:80'
 
   minio:
     image: minio/minio
@@ -44,8 +44,8 @@ services:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin
     ports:
-      - "9000:9000"
-      - "9001:9001"
+      - '9000:9000'
+      - '9001:9001'
     command: server /data --console-address ":9001"
 
   redis:
@@ -56,8 +56,7 @@ services:
     volumes:
       - redis:/data
     healthcheck:
-      test:
-        ['CMD-SHELL', 'redis-cli ping']
+      test: ['CMD-SHELL', 'redis-cli ping']
       retries: 30
       timeout: 5s
       interval: 1s
@@ -70,8 +69,7 @@ services:
     volumes:
       - postgres:/var/lib/postgresql/data/
     healthcheck:
-      test:
-        ['CMD-SHELL', 'pg_isready', '-U', 'postgres', '-d', 'alcoves']
+      test: ['CMD-SHELL', 'pg_isready', '-U', 'postgres', '-d', 'alcoves']
       retries: 30
       timeout: 5s
       interval: 1s

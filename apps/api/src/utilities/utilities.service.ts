@@ -13,7 +13,6 @@ import { ConfigService } from '@nestjs/config'
 import { Asset, Rendition } from '@prisma/client'
 import { Injectable, Logger } from '@nestjs/common'
 import { createReadStream, createWriteStream } from 'fs'
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import {
   S3,
   PutObjectCommand,
@@ -23,6 +22,7 @@ import {
   GetObjectCommandOutput,
   PutObjectCommandInput,
 } from '@aws-sdk/client-s3'
+import { PrismaService } from '../services/prisma.service'
 
 interface FFprobeData {
   format: {
@@ -46,7 +46,10 @@ export class UtilitiesService {
   private s3External: S3
   private readonly logger = new Logger(UtilitiesService.name)
 
-  constructor(private readonly config: ConfigService) {
+  constructor(
+    private readonly config: ConfigService,
+    private readonly prismaService: PrismaService
+  ) {
     this.s3 = new S3({
       region: 'us-east-1',
       forcePathStyle: true,
@@ -134,43 +137,6 @@ export class UtilitiesService {
     }
   }
 
-  async getSignedUrl({
-    key,
-    bucket,
-    external = false,
-  }: {
-    key: string
-    bucket: string
-    external?: boolean
-  }): Promise<string> {
-    const signedUrl = await getSignedUrl(
-      external ? this.s3External : this.s3,
-      new GetObjectCommand({
-        Bucket: bucket,
-        Key: key,
-      }),
-      {
-        expiresIn: 60 * 60 * 24 * 7, // 7 days,
-      }
-    )
-    return signedUrl
-  }
-
-  async getSignedUrlExternal({
-    bucket,
-    key,
-  }: {
-    bucket: string
-    key: string
-  }): Promise<string> {
-    const url = await this.getSignedUrl({
-      bucket,
-      key,
-      external: true,
-    })
-    return url
-  }
-
   getAssetManifestUrl(asset: Asset): string {
     return `http://localhost:4000/stream/${asset.id}.m3u8`
   }
@@ -230,7 +196,7 @@ export class UtilitiesService {
 
     try {
       await this.s3.send(new PutObjectCommand(params))
-      this.logger.log(`File uploaded successfully. ${filePath}`)
+      this.logger.debug(`uploading ${filePath}`)
     } catch (err) {
       this.logger.error('Error', err)
     }
@@ -314,7 +280,8 @@ export class UtilitiesService {
       const storyboardURI = `${asset.storageKey}/storyboards/${storyboardName}`
 
       const extractionDimensions = this.getExtractionDimensions(thumbnailSecond)
-      this.logger.debug({ storyboardURI, extractionDimensions })
+      this.logger.debug(`Storyboard URI: ${storyboardURI}`)
+      this.logger.debug(JSON.stringify(extractionDimensions, null, 2))
 
       await this.getObject(asset.storageBucket, storyboardURI, tmpThumbnailPath)
 
@@ -377,7 +344,12 @@ export class UtilitiesService {
     }
   }
 
-  async hlsIngestSourceAudio(asset: Asset, rendition: Rendition): Promise<any> {
+  async hlsIngestSourceAudio(
+    asset: Asset,
+    rendition: Rendition
+  ): Promise<FFprobeData> {
+    const tmpDir = await mkdtemp(join(os.tmpdir(), 'aloves-hls-'))
+
     try {
       this.logger.log('Ingesting HLS Asset')
       const streamName = 'stream.m3u8'
@@ -398,27 +370,48 @@ export class UtilitiesService {
         'vod',
         '-hls_segment_type',
         'fmp4',
-        // '-master_pl_name',
-        // 'main.m3u8 ',
+        '-master_pl_name',
+        'main.m3u8 ',
         '-hls_time',
         '10',
         '-hls_list_size',
         '0',
-        '-http_persistent',
-        '1',
-        '-method',
-        'PUT',
-        `http://localhost:4000/stream/${asset.id}/${rendition.id}/${streamName}`,
+        `${tmpDir}/${streamName}`,
+        // '-http_persistent',
+        // '1',
+        // '-method',
+        // 'PUT',
+        // `http://localhost:4000/stream/${asset.id}/${rendition.id}/${streamName}`,
       ])
 
+      this.logger.log(
+        `Uploading to ${rendition.storageBucket}/${rendition.storageKey}`
+      )
+      await this.uploadDirectory(
+        rendition.storageBucket,
+        tmpDir,
+        rendition.storageKey
+      )
+
+      this.logger.log('Collecting stream metadata')
+      const metadata = await this.getMetadata(`${tmpDir}/${streamName}`)
+
       this.logger.log('Successfully ingested HLS with FFMPEG')
+      return metadata
     } catch (error) {
       this.logger.error('Failed to ingest HLS')
       this.logger.error(error)
+    } finally {
+      await rm(tmpDir, { recursive: true })
     }
   }
 
-  async hlsIngestSourceVideo(asset: Asset, rendition: Rendition): Promise<any> {
+  async hlsIngestSourceVideo(
+    asset: Asset,
+    rendition: Rendition
+  ): Promise<FFprobeData> {
+    const tmpDir = await mkdtemp(join(os.tmpdir(), 'aloves-hls-'))
+
     try {
       this.logger.log('Ingesting HLS Asset')
       const streamName = 'stream.m3u8'
@@ -435,23 +428,39 @@ export class UtilitiesService {
         'vod',
         '-hls_segment_type',
         'fmp4',
-        // '-master_pl_name',
-        // 'main.m3u8 ',
+        '-master_pl_name',
+        'main.m3u8 ',
         '-hls_time',
         '10',
         '-hls_list_size',
         '0',
-        '-http_persistent',
-        '1',
-        '-method',
-        'PUT',
-        `http://localhost:4000/stream/${asset.id}/${rendition.id}/${streamName}`,
+        `${tmpDir}/${streamName}`,
+        // '-http_persistent',
+        // '1',
+        // '-method',
+        // 'PUT',
+        // `http://localhost:4000/stream/${asset.id}/${rendition.id}/${streamName}`,
       ])
 
+      this.logger.log(
+        `Uploading to ${rendition.storageBucket}/${rendition.storageKey}`
+      )
+      await this.uploadDirectory(
+        rendition.storageBucket,
+        tmpDir,
+        rendition.storageKey
+      )
+
+      this.logger.log('Collecting stream metadata')
+      const metadata = await this.getMetadata(`${tmpDir}/${streamName}`)
+
       this.logger.log('Successfully ingested HLS with FFMPEG')
+      return metadata
     } catch (error) {
       this.logger.error('Failed to ingest HLS')
       this.logger.error(error)
+    } finally {
+      await rm(tmpDir, { recursive: true })
     }
   }
 

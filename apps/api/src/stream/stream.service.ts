@@ -142,8 +142,9 @@ export class StreamService {
             },
           })
         } catch (error) {
+          this.logger.error(error)
           this.logger.error(
-            `Failed to get metadata for ${r.id}, but it could still be processing...`
+            `Failed to get metadata for ${r.id}. This should not happen.`
           )
         }
       }

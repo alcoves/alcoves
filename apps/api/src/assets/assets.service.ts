@@ -67,14 +67,25 @@ export class AssetsService {
     return this.findOne(id)
   }
 
+  async retryStoryboard(id: string): Promise<Asset | NotFoundException> {
+    const asset = await this.findOne(id)
+    if (!asset) return new NotFoundException('Asset not found')
+
+    await this.jobsService.createStoryboards(id)
+    return this.findOne(id)
+  }
+
   async reprocess() {
     const assets = await this.prismaService.asset.findMany({
       where: {
+        status: {
+          equals: 'READY',
+        },
         version: {
-          lt: 1,
+          lt: 2,
         },
         duration: {
-          lte: 30,
+          lte: 60 * 11000,
         },
       },
     })

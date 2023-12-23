@@ -1,7 +1,7 @@
 import { Job } from 'bull'
 import { Logger } from '@nestjs/common'
 import { Process, Processor } from '@nestjs/bull'
-import { EventEmitter2 } from '@nestjs/event-emitter'
+import { StreamService } from '../../stream/stream.service'
 import { PrismaService } from '../../services/prisma.service'
 import { UtilitiesService } from '../../utilities/utilities.service'
 import {
@@ -15,7 +15,6 @@ export class MaintenanceProcessor {
   private readonly logger = new Logger(MaintenanceProcessor.name)
 
   constructor(
-    private eventEmitter: EventEmitter2,
     private readonly prismaService: PrismaService,
     private readonly utilitiesService: UtilitiesService
   ) {}

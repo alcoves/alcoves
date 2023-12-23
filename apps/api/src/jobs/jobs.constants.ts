@@ -15,6 +15,7 @@ export enum IngestJobs {
 
 export enum AssetJobs {
   THUMBNAIL = 'THUMBNAIL',
+  STORYBOARD = 'STORYBOARD',
 }
 
 export enum MaintenanceJobs {
@@ -22,6 +23,10 @@ export enum MaintenanceJobs {
 }
 
 export interface IngestUrlJobData {
+  assetId: string
+}
+
+export interface StoryboardJobData {
   assetId: string
 }
 

@@ -1,22 +1,23 @@
-import { Job } from 'bull'
+import { Job, Queue } from 'bull'
 import { v4 as uuid } from 'uuid'
 import { Logger } from '@nestjs/common'
-import { Process, Processor } from '@nestjs/bull'
+import { InjectQueue, Process, Processor } from '@nestjs/bull'
 import { PrismaService } from '../../services/prisma.service'
 import { UtilitiesService } from '../../utilities/utilities.service'
-import { IngestJobs, IngestUrlJobData, Queues } from '../jobs.constants'
+import { Queues, IngestJobs, IngestUrlJobData } from '../jobs.constants'
 
 @Processor(Queues.INGEST)
 export class IngestProcessor {
   private readonly logger = new Logger(IngestProcessor.name)
 
   constructor(
+    @InjectQueue(Queues.ASSET) private assetQueue: Queue,
     private readonly prismaService: PrismaService,
     private readonly utilitiesService: UtilitiesService
   ) {}
 
   @Process({
-    concurrency: 3,
+    concurrency: 15,
     name: IngestJobs.INGEST_URL,
   })
   async process(job: Job<IngestUrlJobData>) {
@@ -28,7 +29,7 @@ export class IngestProcessor {
       await this.prismaService.asset.update({
         where: { id: job.data.assetId },
         data: {
-          version: 1,
+          version: 2,
           status: 'INGESTING',
         },
       })
@@ -73,7 +74,7 @@ export class IngestProcessor {
           },
         })
 
-        await this.utilitiesService.hlsIngestSourceAudio(
+        const audioMetadata = await this.utilitiesService.hlsIngestSourceAudio(
           asset,
           sourceAudioRendition
         )
@@ -81,7 +82,8 @@ export class IngestProcessor {
         await this.prismaService.rendition.update({
           where: { id: sourceAudioRenditionId },
           data: {
-            status: 'PROCESSING',
+            status: 'READY',
+            metadata: audioMetadata as any,
           },
         })
       }
@@ -100,7 +102,7 @@ export class IngestProcessor {
         },
       })
 
-      await this.utilitiesService.hlsIngestSourceVideo(
+      const videoMetadata = await this.utilitiesService.hlsIngestSourceVideo(
         asset,
         sourceVideoRendition
       )
@@ -108,12 +110,14 @@ export class IngestProcessor {
       await this.prismaService.rendition.update({
         where: { id: sourceVideoRenditionId },
         data: {
-          status: 'PROCESSING',
+          status: 'READY',
+          metadata: videoMetadata as any,
         },
       })
 
-      this.logger.debug('Creating asset thumbnails')
-      await this.utilitiesService.createStoryboards(asset)
+      // await this.assetQueue.add(AssetJobs.STORYBOARD, {
+      //   assetId: asset.id,
+      // } as StoryboardJobData)
 
       this.logger.debug('Finalizing asset')
       await this.prismaService.asset.update({

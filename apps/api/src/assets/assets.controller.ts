@@ -35,6 +35,11 @@ export class AssetsController {
     return this.assetsService.retryIngest(id)
   }
 
+  @Post(':id/retry-storyboard')
+  retryStoryboard(@Param('id') id: string) {
+    return this.assetsService.retryStoryboard(id)
+  }
+
   @Post('/reprocess')
   reprocess() {
     return this.assetsService.reprocess()

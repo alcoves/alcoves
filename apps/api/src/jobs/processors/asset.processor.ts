@@ -1,17 +1,21 @@
 import os from 'os'
 import path from 'path'
 import mime from 'mime-types'
-import sharp, { ResizeOptions } from 'sharp'
 
 import { Job } from 'bull'
 import { Duration } from 'luxon'
 import { Logger } from '@nestjs/common'
 import { mkdtemp, rm } from 'fs/promises'
+import sharp, { ResizeOptions } from 'sharp'
 import { Process, Processor } from '@nestjs/bull'
-import { EventEmitter2 } from '@nestjs/event-emitter'
 import { PrismaService } from '../../services/prisma.service'
 import { UtilitiesService } from '../../utilities/utilities.service'
-import { Queues, AssetJobs, ThumbnailJobData } from '../jobs.constants'
+import {
+  Queues,
+  AssetJobs,
+  ThumbnailJobData,
+  StoryboardJobData,
+} from '../jobs.constants'
 
 function formatTimestring(d: number) {
   const duration = Duration.fromObject({ seconds: d })
@@ -23,10 +27,22 @@ export class AssetProcessor {
   private readonly logger = new Logger(AssetProcessor.name)
 
   constructor(
-    private eventEmitter: EventEmitter2,
     private readonly prismaService: PrismaService,
     private readonly utilitiesService: UtilitiesService
   ) {}
+
+  @Process({
+    concurrency: 1,
+    name: AssetJobs.STORYBOARD,
+  })
+  async processThumbnails(job: Job<StoryboardJobData>) {
+    const asset = await this.prismaService.asset.findFirst({
+      where: { id: job.data.assetId },
+    })
+
+    this.logger.debug('Creating asset thumbnails')
+    await this.utilitiesService.createStoryboards(asset)
+  }
 
   getThumbnailStorageKey(asset, params, query) {
     let key = `${asset.storageKey}/thumbnails/thumbnails.${params.fmt}`

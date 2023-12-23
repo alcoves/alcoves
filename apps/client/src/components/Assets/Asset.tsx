@@ -22,6 +22,7 @@ import {
 import { useConfig } from '../../contexts/ConfigContext'
 import RetryIngest from './RetryIngest'
 import { useState } from 'react'
+import RetryStoryboard from './RetryStoryboard'
 
 export default function Asset() {
   const { assetId } = useParams()
@@ -77,6 +78,7 @@ export default function Asset() {
           <Text>{`${asset.id}`}</Text>
         </Box>
         <HStack mb="4" justify="end" w="100%">
+          <RetryStoryboard assetId={asset.id} />
           <RetryIngest assetId={asset.id} />
         </HStack>
         {asset.contentType.includes('video') ? (
