@@ -10,7 +10,7 @@ import { readdir, rm } from 'fs/promises'
 import { pipeline } from 'stream/promises'
 import { Upload } from '@aws-sdk/lib-storage'
 import { ConfigService } from '@nestjs/config'
-import { Asset, Rendition } from '@prisma/client'
+import { Asset, Rendition, Storyboard } from '@prisma/client'
 import { Injectable, Logger } from '@nestjs/common'
 import { createReadStream, createWriteStream } from 'fs'
 import {
@@ -21,6 +21,7 @@ import {
   GetObjectCommand,
   GetObjectCommandOutput,
   PutObjectCommandInput,
+  HeadObjectCommand,
 } from '@aws-sdk/client-s3'
 import { PrismaService } from '../services/prisma.service'
 
@@ -85,6 +86,15 @@ export class UtilitiesService {
     const cdnEndpoint = this.config.get('ALCOVES_STORAGE_CDN_URL')
     const publicEndpoint = this.config.get('ALCOVES_STORAGE_PUBLIC_ENDPOINT')
     return cdnEndpoint ? cdnEndpoint : publicEndpoint
+  }
+
+  headObject(Bucket: string, Key: string) {
+    return this.s3.send(
+      new HeadObjectCommand({
+        Bucket,
+        Key,
+      })
+    )
   }
 
   getFileStream(
@@ -156,10 +166,12 @@ export class UtilitiesService {
       let errorData = ''
 
       process.stdout.on('data', (chunk) => {
+        this.logger.debug('process.stdout.on data', chunk.toString())
         data += chunk
       })
 
       process.stderr.on('data', (chunk) => {
+        this.logger.debug('process.stderr.on data', chunk.toString())
         errorData += chunk
       })
 
@@ -316,24 +328,31 @@ export class UtilitiesService {
     return result
   }
 
-  async createStoryboards(asset: Asset): Promise<void> {
+  async createStoryboards(
+    asset: Asset,
+    storyboard: Storyboard,
+    filter: string
+  ): Promise<void> {
     const tmpDir = await mkdtemp(join(os.tmpdir(), 'aloves-storyboards-'))
 
     try {
       this.logger.log('Creating asset storyboards')
-
-      await this.spawnProcess('ffmpeg', [
+      const command = [
         '-i',
         asset.input,
         '-vf',
-        'fps=1,scale=640:360,tile=6x10', // 6x10 = 60 storyboards per image, or 1 minute per image
+        filter,
         '-q:v',
         '5',
         `${tmpDir}/storyboard_%d.jpg`,
-      ])
+      ]
 
-      const uploadPath = `${asset.storageKey}/storyboards`
-      await this.uploadDirectory(asset.storageBucket, tmpDir, uploadPath)
+      await this.spawnProcess('ffmpeg', command)
+      await this.uploadDirectory(
+        asset.storageBucket,
+        tmpDir,
+        storyboard.storageKey
+      )
 
       this.logger.log('Successfully created asset storyboards')
     } catch (error) {

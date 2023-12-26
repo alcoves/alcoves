@@ -35,13 +35,50 @@ export class AssetProcessor {
     concurrency: 1,
     name: AssetJobs.STORYBOARD,
   })
-  async processThumbnails(job: Job<StoryboardJobData>) {
+  async createStoryboard(job: Job<StoryboardJobData>) {
     const asset = await this.prismaService.asset.findFirst({
       where: { id: job.data.assetId },
+      include: {
+        storyboard: true,
+      },
     })
 
-    this.logger.debug('Creating asset thumbnails')
-    await this.utilitiesService.createStoryboards(asset)
+    const filter = 'fps=1,scale=640:360,tile=6x10'
+    const storyboard = await this.prismaService.storyboard.upsert({
+      create: {
+        filter,
+        storageBucket: asset.storageBucket,
+        storageKey: `${asset.storageKey}/storyboards`,
+        asset: { connect: { id: asset.id } },
+      },
+      update: {
+        filter,
+        storageBucket: asset.storageBucket,
+        storageKey: `${asset.storageKey}/storyboards`,
+        asset: { connect: { id: asset.id } },
+      },
+      where: { id: asset.storyboard?.id },
+    })
+
+    try {
+      await this.prismaService.storyboard.update({
+        where: { id: storyboard.id },
+        data: { status: 'PROCESSING' },
+      })
+
+      this.logger.debug('Creating asset storyboard')
+      await this.utilitiesService.createStoryboards(asset, storyboard, filter)
+
+      await this.prismaService.storyboard.update({
+        where: { id: storyboard.id },
+        data: { status: 'READY', filter },
+      })
+    } catch (error) {
+      await this.prismaService.storyboard.update({
+        where: { id: storyboard.id },
+        data: { status: 'ERROR' },
+      })
+    }
   }
 
   getThumbnailStorageKey(asset, params, query) {

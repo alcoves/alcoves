@@ -17,6 +17,7 @@ model Asset {
   contentType   String      @default("")
   version       Int         @default(0)
   status        AssetStatus @default(CREATED)
+  storyboard    Storyboard?
   renditions    Rendition[]
   updatedAt     DateTime    @updatedAt
   createdAt     DateTime    @default(now())
@@ -34,6 +35,18 @@ model Rendition {
   createdAt     DateTime        @default(now())
 }
 
+model Storyboard {
+  id            String           @id @default(uuid())
+  storageBucket String
+  storageKey    String
+  filter        String
+  status        StoryboardStatus @default(CREATED)
+  asset         Asset            @relation(fields: [assetId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  assetId       String           @unique
+  updatedAt     DateTime         @updatedAt
+  createdAt     DateTime         @default(now())
+}
+
 enum AssetStatus {
   CREATED
   INGESTING
@@ -45,6 +58,13 @@ enum AssetStatus {
 enum RenditionStatus {
   CREATED
   INGESTING
+  PROCESSING
+  ERROR
+  READY
+}
+
+enum StoryboardStatus {
+  CREATED
   PROCESSING
   ERROR
   READY

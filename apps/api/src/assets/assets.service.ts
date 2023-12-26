@@ -76,13 +76,11 @@ export class AssetsService {
   }
 
   async reprocess() {
-    const assets = await this.prismaService.asset.findMany()
-
-    // await Promise.all(
-    //   assets.map(({ id }) => {
-    //     return axios.get(`http://localhost:4000/stream/${id}/thumbnail.jpg`)
-    //   })
-    // )
+    const assets = await this.prismaService.asset.findMany({
+      include: {
+        storyboard: true,
+      },
+    })
 
     return {
       assets: assets.length,
