@@ -4,6 +4,7 @@ import useSWR from 'swr'
 import {
   Box,
   Card,
+  Code,
   Heading,
   Progress,
   VStack,
@@ -99,6 +100,7 @@ export default function Jobs() {
                 )}
               </Text>
             )}
+            <Code> {JSON.stringify(job?.data)}</Code>
             <JobReturnVale job={job} />
             <Progress
               mt="2"

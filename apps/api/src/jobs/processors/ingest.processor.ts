@@ -4,7 +4,13 @@ import { Logger } from '@nestjs/common'
 import { InjectQueue, Process, Processor } from '@nestjs/bull'
 import { PrismaService } from '../../services/prisma.service'
 import { UtilitiesService } from '../../utilities/utilities.service'
-import { Queues, IngestJobs, IngestUrlJobData } from '../jobs.constants'
+import {
+  Queues,
+  IngestJobs,
+  IngestUrlJobData,
+  AssetJobs,
+  StoryboardJobData,
+} from '../jobs.constants'
 
 @Processor(Queues.INGEST)
 export class IngestProcessor {
@@ -17,7 +23,7 @@ export class IngestProcessor {
   ) {}
 
   @Process({
-    concurrency: 15,
+    concurrency: 1,
     name: IngestJobs.INGEST_URL,
   })
   async process(job: Job<IngestUrlJobData>) {
@@ -47,10 +53,10 @@ export class IngestProcessor {
         })
       }
 
-      this.logger.debug('Removing asset folder')
+      this.logger.debug('Removing renditions folder')
       await this.utilitiesService.deleteStorageFolder(
         asset.storageBucket,
-        asset.storageKey
+        `${asset.storageKey}/renditions`
       )
 
       this.logger.debug('Collecting asset metadata')
@@ -115,9 +121,9 @@ export class IngestProcessor {
         },
       })
 
-      // await this.assetQueue.add(AssetJobs.STORYBOARD, {
-      //   assetId: asset.id,
-      // } as StoryboardJobData)
+      await this.assetQueue.add(AssetJobs.STORYBOARD, {
+        assetId: asset.id,
+      } as StoryboardJobData)
 
       this.logger.debug('Finalizing asset')
       await this.prismaService.asset.update({

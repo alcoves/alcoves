@@ -76,25 +76,13 @@ export class AssetsService {
   }
 
   async reprocess() {
-    const assets = await this.prismaService.asset.findMany({
-      where: {
-        status: {
-          equals: 'READY',
-        },
-        version: {
-          lt: 2,
-        },
-        duration: {
-          lte: 60 * 11000,
-        },
-      },
-    })
+    const assets = await this.prismaService.asset.findMany()
 
-    this.logger.log(`Reprocessing ${assets.length} assets`)
-
-    for (const asset of assets) {
-      await this.jobsService.ingestAsset(asset.id)
-    }
+    // await Promise.all(
+    //   assets.map(({ id }) => {
+    //     return axios.get(`http://localhost:4000/stream/${id}/thumbnail.jpg`)
+    //   })
+    // )
 
     return {
       assets: assets.length,

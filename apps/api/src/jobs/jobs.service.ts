@@ -74,9 +74,15 @@ export class JobsService {
   }
 
   async createStoryboards(assetId: string) {
-    const job = await this.assetQueue.add(AssetJobs.STORYBOARD, {
-      assetId,
-    } as StoryboardJobData)
+    const job = await this.assetQueue.add(
+      AssetJobs.STORYBOARD,
+      {
+        assetId,
+      } as StoryboardJobData,
+      {
+        priority: 100,
+      }
+    )
     return job
   }
 
