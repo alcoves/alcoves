@@ -1,9 +1,8 @@
 package main
 
 import (
-	"alcoves_api/controllers"
-	"alcoves_api/models"
-
+	"github.com/alcoves/alcoves/apps/api/database"
+	"github.com/alcoves/alcoves/apps/api/routes"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
@@ -11,14 +10,14 @@ import (
 
 func main() {
 	print("Starting Alcoves API Server...\n")
-	models.InitializeDatabase()
+	database.Connect()
 
 	app := fiber.New()
 	app.Use(logger.New())
 	app.Use(requestid.New())
 
 	print("Registering routes...")
-	controllers.SetupRoutes(app)
+	routes.Initialize(app)
 
 	app.Listen(":4000")
 }
