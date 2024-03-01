@@ -1,18 +1,21 @@
 package main
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"alcoves_api/routers"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/fiber/v2/middleware/requestid"
+)
 
 func main() {
+	print("Starting Alcoves API Server...\n")
 	app := fiber.New()
-	print("Starting Alcoves API Server")
+	app.Use(logger.New())
+	app.Use(requestid.New())
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, World")
-	})
-
-	app.Get("/health", func(c *fiber.Ctx) error {
-		return c.SendString("ok")
-	})
+	print("Registering routes...")
+	routers.RootRoutes(app)
 
 	app.Listen(":4000")
 }
