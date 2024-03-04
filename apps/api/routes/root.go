@@ -5,9 +5,15 @@ import (
 )
 
 func root(c *fiber.Ctx) error {
-	return c.SendString("hello")
+	return c.JSON(fiber.Map{
+		"status":  "ok",
+		"message": "hello world!",
+	})
 }
 
 func health(c *fiber.Ctx) error {
-	return c.SendString("ok")
+	return c.JSON(fiber.Map{
+		"status":  "ok",
+		"message": "Server is running",
+	})
 }

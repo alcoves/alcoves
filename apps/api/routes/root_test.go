@@ -19,7 +19,7 @@ func TestGetRoot(t *testing.T) {
 
 	body, _ := io.ReadAll(resp.Body)
 	assert.Equal(t, http.StatusOK, resp.StatusCode)
-	assert.Equal(t, "hello", string(body))
+	assert.Equal(t, `{"message":"hello world!","status":"ok"}`, string(body))
 }
 
 func TestGetHealth(t *testing.T) {
@@ -32,5 +32,5 @@ func TestGetHealth(t *testing.T) {
 	body, err := io.ReadAll(resp.Body)
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusOK, resp.StatusCode)
-	assert.Equal(t, "ok", string(body))
+	assert.Equal(t, `{"message":"Server is running","status":"ok"}`, string(body))
 }
