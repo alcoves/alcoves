@@ -4,7 +4,7 @@ services:
   api:
     container_name: api
     build:
-      context: apps/api
+      context: ./apps/api
       dockerfile: Dockerfile.dev
     env_file:
       - .env.local
@@ -24,12 +24,13 @@ services:
   client:
     container_name: client
     build:
-      context: apps/client
+      context: ./apps/client
       dockerfile: Dockerfile.dev
     env_file:
       - .env.local
     volumes:
       - ./apps/client:/app
+      - /app/node_modules/
     depends_on:
       - api
     ports:
