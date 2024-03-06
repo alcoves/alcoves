@@ -1,1 +1,4 @@
+build
+.cache
+.pnpm-store
 node_modules
