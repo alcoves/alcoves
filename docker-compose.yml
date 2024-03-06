@@ -6,8 +6,8 @@ services:
     build:
       context: ./apps/api
       dockerfile: Dockerfile.dev
-    env_file:
-      - .env.local
+    environment:
+      ALCOVES_API_TEST: test
     volumes:
       - ./apps/api:/app
     depends_on:
@@ -26,8 +26,9 @@ services:
     build:
       context: ./apps/client
       dockerfile: Dockerfile.dev
-    env_file:
-      - .env.local
+    environment:
+      ALCOVES_CLIENT_SESSION_SECRET: changeme
+      ALCOVES_CLIENT_API_ENDPOINT: http://api:4000
     volumes:
       - ./apps/client:/app
       - /app/node_modules/

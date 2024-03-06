@@ -1,6 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* .dark,
+:root[class~="dark"] {
+  --tw-bg-opacity: 1;
+  --tw-bg-opacity: 1;
+  --tw-text-opacity: 1;
+  --tw-text-opacity: 1;
+  --tw-border-opacity: 1;
+  --tw-border-opacity: 1;
+  --tw-ring-opacity: 1;
+  --tw-ring-opacity: 1
+} */
  
 @layer base {
   :root {

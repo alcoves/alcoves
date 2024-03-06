@@ -3,7 +3,7 @@ import { Button } from '~/components/ui/button'
 import { useLoaderData } from '@remix-run/react'
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
 
-import type { MetaFunction } from '@remix-run/node'
+import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
 
 export const meta: MetaFunction = () => {
   return [
@@ -12,9 +12,18 @@ export const meta: MetaFunction = () => {
   ]
 }
 
-export const loader = async () => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const response = await fetch('http://api:4000/health')
   const data = await response.json()
+
+  // const cookieHeader = request.headers.get('Cookie')
+  // const cookie = (await userToken.parse(cookieHeader)) || {}
+
+  // if (cookie.token) {
+  //   console.log('User Authentication Token', cookie.token)
+  // } else {
+  //   console.log('User is not authenticated')
+  // }
 
   return json({
     message: data.message,

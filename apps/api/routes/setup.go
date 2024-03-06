@@ -15,6 +15,6 @@ func Initialize(app *fiber.App) {
 	app.Delete("/users/:id", deleteUser)
 
 	// Auth
-	app.Post("/login", login)
-	app.Post("/register", register)
+	app.Post("/auth/login", login)
+	app.Post("/auth/register", register)
 }
