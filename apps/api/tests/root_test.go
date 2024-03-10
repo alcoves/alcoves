@@ -1,4 +1,4 @@
-package routes
+package tests
 
 import (
 	"io"
@@ -6,13 +6,12 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/gofiber/fiber/v2"
+	"github.com/alcoves/alcoves/apps/api/server"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestGetRoot(t *testing.T) {
-	app := fiber.New()
-	Initialize(app)
+	app := server.ProductionServer()
 
 	req := httptest.NewRequest("GET", "/", nil)
 	resp, _ := app.Test(req)
@@ -23,8 +22,7 @@ func TestGetRoot(t *testing.T) {
 }
 
 func TestGetHealth(t *testing.T) {
-	app := fiber.New()
-	Initialize(app)
+	app := server.ProductionServer()
 
 	req := httptest.NewRequest("GET", "/health", nil)
 	resp, _ := app.Test(req)
