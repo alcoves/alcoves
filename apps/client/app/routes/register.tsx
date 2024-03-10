@@ -1,33 +1,31 @@
-import { apiEndpoints } from '../lib/env'
+import { register } from '../lib/api.server'
 import { Form, Link } from '@remix-run/react'
 import { Label } from '../components/ui/label'
 import { Input } from '../components/ui/input'
 import { Button } from '../components/ui/button'
 import { authenticator } from '../services/auth.server'
 
-import type { ActionFunction } from '@remix-run/node'
+import type { ActionFunction, LoaderFunctionArgs } from '@remix-run/node'
 
 const action: ActionFunction = async ({ request }) => {
   const form = await request.formData()
   const email = form.get('email') as string
   const password = form.get('password') as string
 
-  const userLoginRequest = await fetch(apiEndpoints.register, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ email, password }),
-  })
-
-  // Stubbed out response from API
-  const user = await userLoginRequest.json()
-  console.log('Response from API', user)
+  const response = await register({ email, password })
+  console.log('Register response', response)
 
   return await authenticator.authenticate('form', request, {
     successRedirect: '/',
     failureRedirect: '/failed',
     context: { formData: form },
+  })
+}
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  // If the user is already authenticated redirect to / directly
+  return await authenticator.isAuthenticated(request, {
+    successRedirect: '/',
   })
 }
 

@@ -23,20 +23,7 @@ export const links: LinksFunction = () => [
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { getTheme } = await themeSessionResolver(request)
 
-  const response = await fetch('http://api:4000/health')
-  const data = await response.json()
-
-  // const cookieHeader = request.headers.get('Cookie')
-  // const cookie = (await userToken.parse(cookieHeader)) || {}
-
-  // if (cookie.token) {
-  //   console.log('User Authentication Token', cookie.token)
-  // } else {
-  //   console.log('User is not authenticated')
-  // }
-
   return json({
-    message: data.message,
     theme: getTheme(),
   })
 }
@@ -51,8 +38,6 @@ export default function AppWithProviders() {
 }
 
 export function App() {
-  const user = useLoaderData<typeof loader>()
-
   const data = useLoaderData<typeof loader>()
   const [theme] = useTheme()
 

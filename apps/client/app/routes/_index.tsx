@@ -1,19 +1,16 @@
-import { json } from '@remix-run/node'
 import { Button } from '~/components/ui/button'
-import { useLoaderData } from '@remix-run/react'
-import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
-
-import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
+import { json, useLoaderData } from '@remix-run/react'
 import { Input } from '../components/ui/input'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '../components/ui/dropdown-menu'
 import { Skeleton } from '../components/ui/skeleton'
+import AccountMenu from '../components/AccountMenu'
+import { authenticator } from '../services/auth.server'
+
+import type {
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+  MetaFunction,
+} from '@remix-run/node'
+import SidebarMenu from '../components/SidebarMenu'
 
 export const meta: MetaFunction = () => {
   return [
@@ -22,20 +19,29 @@ export const meta: MetaFunction = () => {
   ]
 }
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const response = await fetch('http://api:4000/health')
-  const data = await response.json()
+export async function action({ request }: ActionFunctionArgs) {
+  const form = await request.formData()
+  const action = form.get('action')
 
-  return json({
-    message: data.message,
-  })
+  if (action === 'logout') {
+    console.log('LOGOUT')
+    return await authenticator.logout(request, {
+      redirectTo: '/login',
+    })
+  }
+}
+
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const user = await authenticator.isAuthenticated(request)
+  return json({ user })
 }
 
 export default function Index() {
-  const rootMeassage = useLoaderData<typeof loader>()
+  const { user } = useLoaderData<typeof loader>()
+
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="flex items-center justify-between px-4 py-2 bg-white shadow h-12">
+      <header className="flex items-center justify-between px-4 py-2 bg-white h-12">
         <Button variant="ghost" className="md:hidden">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -52,31 +58,27 @@ export default function Index() {
             />
           </svg>
         </Button>
-        <Input type="text" placeholder="Search" className="w-1/2 h-8" />
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <Avatar className="w-8 h-8">
-              <AvatarImage src="https://github.com/rustyguts.png" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-            <DropdownMenuItem>Billing</DropdownMenuItem>
-            <DropdownMenuItem>Team</DropdownMenuItem>
-            <DropdownMenuItem>Subscription</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex align-middle justify-center">
+          <img width={24} height={24} src="./favicon.ico" />
+          <div className="pl-2 text-lg font-medium">Alcoves</div>
+          {/* <Input type="text" placeholder="Search" className="w-1/2 h-8" /> */}
+        </div>
+        <AccountMenu user={user} />
       </header>
       <div className="flex flex-1">
-        <aside className="w-64 bg-gray-100 hidden md:block">
-          {/* Sidebar content */}
+        <aside className="w-48 hidden md:block">
+          <SidebarMenu user={user} />
         </aside>
         <main className="flex-1 p-4">
+          <div>Favorite Videos</div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[...Array(6)].map((_, i) => (
+            {[...Array(3)].map((_, i) => (
+              <Skeleton key={i} className="h-64" />
+            ))}
+          </div>
+          <div>Recent Videos</div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[...Array(3)].map((_, i) => (
               <Skeleton key={i} className="h-64" />
             ))}
           </div>

@@ -3,8 +3,3 @@ if (!process.env.ALCOVES_CLIENT_API_ENDPOINT) {
 }
 
 export const alcovesEndpoint = process.env.ALCOVES_CLIENT_API_ENDPOINT
-
-export const apiEndpoints = {
-  login: `${alcovesEndpoint}/auth/login`,
-  register: `${alcovesEndpoint}/auth/register`,
-}
