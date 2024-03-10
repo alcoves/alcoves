@@ -1,33 +1,29 @@
+import { login } from '../lib/api.server'
 import { FormStrategy } from 'remix-auth-form'
 import { sessionStorage } from './session.server'
 import { Authenticator, AuthorizationError } from 'remix-auth'
 
-interface UserRecord {
-  id?: string
-  role?: string
+export interface UserRecord {
   email?: string
   username?: string
+  session_id?: string
 }
 
 const authenticator = new Authenticator<UserRecord>(sessionStorage)
 
 const formStrategy = new FormStrategy<UserRecord>(async ({ form }) => {
-  const email = form.get('email')
-  const password = form.get('password')
+  const email = form.get('email') as string
+  const password = form.get('password') as string
 
-  // if (username === 'rusty@alcoves.io' && password === 'test') {
-  //   return { id: '1' }
-  //   // This is where we call the API to /login and recieve a token
-  // }
+  const loginResponse = await login({ email, password }).catch(() => {
+    throw new AuthorizationError('Invalid username or password')
+  })
 
   return {
-    id: '1',
-    role: 'admin',
     email: email as string,
     username: email as string,
+    session_id: loginResponse.session_id,
   }
-
-  throw new AuthorizationError('Invalid username or password')
 })
 
 authenticator.use(formStrategy)
