@@ -22,7 +22,15 @@ module.exports = {
 
   // Base config
   extends: ["eslint:recommended"],
-
+  rules: {
+    "sort-imports": ["error", {
+      "ignoreCase": false,
+      "ignoreDeclarationSort": false,
+      "ignoreMemberSort": false,
+      "memberSyntaxSortOrder": ["none", "all", "multiple", "single"],
+      "allowSeparatedGroups": false
+    }],
+  },
   overrides: [
     // React
     {
