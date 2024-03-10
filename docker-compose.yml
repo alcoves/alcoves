@@ -7,7 +7,11 @@ services:
       context: ./apps/api
       dockerfile: Dockerfile.dev
     environment:
-      ALCOVES_API_TEST: test
+      ALCOVES_API_DB_HOST: postgres
+      ALCOVES_API_DB_PORT: 5432
+      ALCOVES_API_DB_USER: postgres
+      ALCOVES_API_DB_PASSWORD: postgres
+      ALCOVES_API_DB_NAME: alcoves
     volumes:
       - ./apps/api:/app
     depends_on:
