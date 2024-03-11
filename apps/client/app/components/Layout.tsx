@@ -29,12 +29,12 @@ export default function Layout(props: {
           </svg>
         </Button>
         <div className="flex align-middle justify-center">
-          <img width={24} height={24} src="./favicon.ico" />
+          <img width={24} height={24} src="/favicon.ico" />
           <div className="pl-2 text-lg font-medium">Alcoves</div>
         </div>
         <div className="flex items-center">
           <Button size="sm" asChild className="mr-2">
-            <Link to="/upload">
+            <Link to="/studio/upload">
               <Upload size={18} className="mr-1" /> Upload
             </Link>
           </Button>
