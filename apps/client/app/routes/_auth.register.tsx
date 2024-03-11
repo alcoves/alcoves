@@ -31,13 +31,13 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function RegisterPage() {
   return (
-    <div className="flex flex-col min-h-screen items-center justify-center space-y-4 p-4">
-      <header className="flex flex-col items-center space-y-2">
+    <div>
+      <div className="flex flex-col items-center space-y-2 py-2">
         <h1 className="text-xl font-bold tracking-wide">Create an account</h1>
         <p className="text-sm text-gray-500 dark:text-gray-400">
           Enter your email below to create your account
         </p>
-      </header>
+      </div>
       <Form method="post">
         <div className="rounded-lg border border-gray-200 w-72 p-6 space-y-4">
           <div className="space-y-2 ">
