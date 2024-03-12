@@ -12,10 +12,7 @@ import {
 } from '../components/ui/breadcrumb'
 
 export const meta: MetaFunction = () => {
-  return [
-    { title: 'Studio' },
-    { name: 'description', content: 'Alcoves Studio' },
-  ]
+  return [{ title: 'Admin' }, { name: 'description', content: 'Alcoves' }]
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -25,7 +22,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   })
 }
 
-export default function StudioPage() {
+export default function AdminPage() {
   const user = useLoaderData<typeof loader>()
 
   return (
@@ -33,12 +30,12 @@ export default function StudioPage() {
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/studio">Studio</BreadcrumbLink>
+            <BreadcrumbLink href="/admin">Admin</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/studio/uploads">Uploads</BreadcrumbLink>
-          </BreadcrumbItem>
+          {/* <BreadcrumbItem>
+            <BreadcrumbLink href="/admin/jobs">Jobs</BreadcrumbLink>
+          </BreadcrumbItem> */}
         </BreadcrumbList>
       </Breadcrumb>
       <Outlet />

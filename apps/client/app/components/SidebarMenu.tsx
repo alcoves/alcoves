@@ -1,7 +1,7 @@
-import { Clapperboard, Home } from 'lucide-react'
 import { NavLink } from '@remix-run/react'
 import { buttonVariants } from './ui/button'
 import { UserRecord } from '../services/auth.server'
+import { Clapperboard, Home, Lock } from 'lucide-react'
 
 function SidebarLink(props: { to: string; children: React.ReactNode }) {
   return (
@@ -10,7 +10,7 @@ function SidebarLink(props: { to: string; children: React.ReactNode }) {
       className={({ isActive, isPending }) => {
         return `${buttonVariants({
           variant: isActive ? 'default' : 'ghost',
-        })}`
+        }).replace('justify-center', 'justify-start')}`
       }}
     >
       {props.children}
@@ -29,6 +29,10 @@ export default function SidebarMenu(props: { user: UserRecord | null }) {
         <SidebarLink to="/studio">
           <Clapperboard className="mr-2 h-4 w-4" />
           <div className="text-sm">Studio</div>
+        </SidebarLink>
+        <SidebarLink to="/admin">
+          <Lock className="mr-2 h-4 w-4" />
+          <div className="text-sm">Admin</div>
         </SidebarLink>
       </div>
     )
