@@ -2,6 +2,8 @@ FROM golang:1.22.0-alpine
 
 WORKDIR /app
 
+RUN apk add --no-cache ffmpeg
+
 COPY go.mod go.sum /app/
 
 RUN go mod download
