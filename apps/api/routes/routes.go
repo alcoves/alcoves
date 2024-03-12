@@ -17,4 +17,8 @@ func Initialize(app *fiber.App) {
 	// Auth
 	app.Post("/auth/login", login)
 	app.Post("/auth/register", register)
+
+	// Tasks
+	app.Get("/tasks", getTasks)
+	app.Post("/tasks/test", add_test_job)
 }

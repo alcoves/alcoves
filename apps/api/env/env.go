@@ -1,21 +1,11 @@
 package env
 
-import "github.com/joho/godotenv"
-
-var Env map[string]string
+import "os"
 
 func GetEnv(key, def string) string {
-	if val, ok := Env[key]; ok {
+	val := os.Getenv(key)
+	if val != "" {
 		return val
 	}
 	return def
-}
-
-func SetupEnvFile() {
-	envFile := ".env"
-	var err error
-	Env, err = godotenv.Read(envFile)
-	if err != nil {
-		panic(err)
-	}
 }

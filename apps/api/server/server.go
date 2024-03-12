@@ -10,7 +10,9 @@ import (
 
 func ProductionServer() *fiber.App {
 	print("Starting Alcoves API Server...\n")
-	database.Connect()
+	database.InitializeAsyncClient()
+	database.InitializeAsyncInspector()
+	database.InitializeGormPostgreSQL()
 
 	app := fiber.New()
 	app.Use(logger.New())

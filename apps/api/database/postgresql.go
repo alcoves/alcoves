@@ -11,7 +11,7 @@ import (
 
 var DB *gorm.DB
 
-func Connect() {
+func InitializeGormPostgreSQL() {
 	var err error
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=UTC",
 		env.GetEnv("ALCOVES_API_DB_HOST", "postgres"),
