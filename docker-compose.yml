@@ -4,7 +4,7 @@ services:
   api:
     container_name: api
     build:
-      context: ./apps/api
+      context: ./apps/api_bun
       dockerfile: Dockerfile.dev
     environment:
       ALCOVES_API_DB_HOST: postgres
@@ -26,21 +26,6 @@ services:
       timeout: 2s
       retries: 30
 
-  worker:
-    container_name: worker
-    build:
-      context: ./apps/api
-      dockerfile: Dockerfile.dev
-    environment:
-      ALCOVES_API_WORKER_MODE: 1
-      ALCOVES_API_REDIS_ADDR: redis:6379
-    volumes:
-      - ./apps/api:/app
-    depends_on:
-      - api
-      - redis
-      - postgres
-
   client:
     container_name: client
     build:
@@ -57,17 +42,6 @@ services:
     ports:
       - 3000:3000
       - 3001:3001 # HMR
-
-  asynqmon:
-    container_name: asynqmon
-    image: hibiken/asynqmon
-    environment:
-      PORT: 5050
-      REDIS_ADDR: redis:6379
-    depends_on:
-      - redis
-    ports:
-      - 5050:5050
 
   redis:
     container_name: redis
@@ -102,6 +76,57 @@ services:
       POSTGRES_DB: alcoves
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+
+  # asynqmon:
+  #   container_name: asynqmon
+  #   image: hibiken/asynqmon
+  #   environment:
+  #     PORT: 5050
+  #     REDIS_ADDR: redis:6379
+  #   depends_on:
+  #     - redis
+  #   ports:
+  #     - 5050:5050
+
+  # api:
+  #   container_name: api
+  #   build:
+  #     context: ./apps/api
+  #     dockerfile: Dockerfile.dev
+  #   environment:
+  #     ALCOVES_API_DB_HOST: postgres
+  #     ALCOVES_API_DB_PORT: 5432
+  #     ALCOVES_API_DB_USER: postgres
+  #     ALCOVES_API_DB_PASSWORD: postgres
+  #     ALCOVES_API_DB_NAME: alcoves
+  #     ALCOVES_API_REDIS_ADDR: redis:6379
+  #   volumes:
+  #     - ./apps/api:/app
+  #   depends_on:
+  #     - redis
+  #     - postgres
+  #   ports:
+  #     - 4000:4000
+  #   healthcheck:
+  #     test: ['CMD', 'curl', '-f', 'http://api:4000/health']
+  #     interval: 1s
+  #     timeout: 2s
+  #     retries: 30
+
+  # worker:
+  #   container_name: worker
+  #   build:
+  #     context: ./apps/api
+  #     dockerfile: Dockerfile.dev
+  #   environment:
+  #     ALCOVES_API_WORKER_MODE: 1
+  #     ALCOVES_API_REDIS_ADDR: redis:6379
+  #   volumes:
+  #     - ./apps/api:/app
+  #   depends_on:
+  #     - api
+  #     - redis
+  #     - postgres
 
   #   alcoves:
   #     container_name: alcoves
