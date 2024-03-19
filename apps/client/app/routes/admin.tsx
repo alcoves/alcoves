@@ -33,9 +33,12 @@ export default function AdminPage() {
             <BreadcrumbLink href="/admin">Admin</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
-          {/* <BreadcrumbItem>
-            <BreadcrumbLink href="/admin/jobs">Jobs</BreadcrumbLink>
-          </BreadcrumbItem> */}
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/admin/users">Users</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/admin/tasks">Tasks</BreadcrumbLink>
+          </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
       <Outlet />

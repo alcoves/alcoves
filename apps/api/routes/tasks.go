@@ -26,20 +26,21 @@ func getTasks(c *fiber.Ctx) error {
 	}
 	log.Printf("queues: %v", qnames)
 
-	var completedTasks []*asynq.Task
+	var allTasks []*asynq.Task
 
 	for _, qname := range qnames {
-		completedTasks, err := database.AsynqInspector.ListScheduledTasks(qname)
+		tasks, err := database.AsynqInspector.ListActiveTasks(qname, 0, -1) // Get all tasks
 		if err != nil {
 			log.Fatalf("could not get tasks in queue %s: %v", qname, err)
 		}
 
-		log.Printf("tasks in queue %s: %v", qname, completedTasks)
+		allTasks = append(allTasks, tasks...)
+		log.Printf("tasks in queue %s: %v", qname, tasks)
 	}
 
-	// Convert completedTasks to a serializable format
-	serializableTasks := make([]map[string]interface{}, len(completedTasks))
-	for i, task := range completedTasks {
+	// Convert allTasks to a serializable format
+	serializableTasks := make([]map[string]interface{}, len(allTasks))
+	for i, task := range allTasks {
 		serializableTasks[i] = taskToMap(task)
 	}
 

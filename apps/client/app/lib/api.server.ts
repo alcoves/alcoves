@@ -17,6 +17,10 @@ interface HealthCheckResponse {
   status: string
 }
 
+interface GetTasksResponse {
+  tasks: any[]
+}
+
 async function apiRequest<TRequest, TResponse>(
   url: string,
   options: RequestInit,
@@ -71,4 +75,14 @@ async function getHealthCheck(request: Request): Promise<HealthCheckResponse> {
   )
 }
 
-export { login, register, getHealthCheck }
+async function getTasks(request: Request): Promise<GetTasksResponse> {
+  return await apiRequest<null, GetTasksResponse>(
+    `${alcovesEndpoint}/tasks`,
+    {
+      method: 'GET',
+    },
+    request
+  )
+}
+
+export { login, register, getHealthCheck, getTasks }

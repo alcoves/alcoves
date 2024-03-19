@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"os/exec"
 	"time"
 
 	"github.com/hibiken/asynq"
@@ -34,13 +33,13 @@ func HandleVideoProcessTask(ctx context.Context, t *asynq.Task) error {
 		return fmt.Errorf("json.Unmarshal failed: %v: %w", err, asynq.SkipRetry)
 	}
 	log.Printf("Processing video: %s", p.SourceURL)
-	time.Sleep(250 * time.Millisecond)
+	time.Sleep(300 * time.Second)
 
-	cmd := exec.Command("ffmpeg", "-y", "-i", p.SourceURL, "-c:v", "libx264", "-preset", "fast", "-crf", "22", "-c:a", "aac", "-b:a", "128k", "./output.mp4")
-	err := cmd.Run()
-	if err != nil {
-		return fmt.Errorf("ffmpeg command failed: %v", err)
-	}
+	// cmd := exec.Command("ffmpeg", "-y", "-i", p.SourceURL, "-c:v", "libx264", "-preset", "fast", "-crf", "22", "-c:a", "aac", "-b:a", "128k", "./output.mp4")
+	// err := cmd.Run()
+	// if err != nil {
+	// 	return fmt.Errorf("ffmpeg command failed: %v", err)
+	// }
 
 	log.Printf("Finished processing video: %s", p.SourceURL)
 	return nil
