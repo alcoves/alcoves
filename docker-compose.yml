@@ -1,30 +1,30 @@
 version: '3'
 
 services:
-  api:
-    container_name: api
-    build:
-      context: ./apps/api_bun
-      dockerfile: Dockerfile.dev
-    environment:
-      ALCOVES_API_DB_HOST: postgres
-      ALCOVES_API_DB_PORT: 5432
-      ALCOVES_API_DB_USER: postgres
-      ALCOVES_API_DB_PASSWORD: postgres
-      ALCOVES_API_DB_NAME: alcoves
-      ALCOVES_API_REDIS_ADDR: redis:6379
-    volumes:
-      - ./apps/api:/app
-    depends_on:
-      - redis
-      - postgres
-    ports:
-      - 4000:4000
-    healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://api:4000/health']
-      interval: 1s
-      timeout: 2s
-      retries: 30
+  # api:
+  #   container_name: api
+  #   build:
+  #     context: ./apps/api_bun
+  #     dockerfile: Dockerfile.dev
+  #   environment:
+  #     ALCOVES_API_DB_HOST: postgres
+  #     ALCOVES_API_DB_PORT: 5432
+  #     ALCOVES_API_DB_USER: postgres
+  #     ALCOVES_API_DB_PASSWORD: postgres
+  #     ALCOVES_API_DB_NAME: alcoves
+  #     ALCOVES_API_REDIS_ADDR: redis:6379
+  #   volumes:
+  #     - ./apps/api:/app
+  #   depends_on:
+  #     - redis
+  #     - postgres
+  #   ports:
+  #     - 4000:4000
+  #   healthcheck:
+  #     test: ['CMD', 'curl', '-f', 'http://api:4000/health']
+  #     interval: 1s
+  #     timeout: 2s
+  #     retries: 30
 
   client:
     container_name: client
@@ -37,8 +37,8 @@ services:
     volumes:
       - ./apps/client:/app
       - /app/node_modules/
-    depends_on:
-      - api
+    # depends_on:
+    #   - api
     ports:
       - 3000:3000
       - 3001:3001 # HMR
@@ -76,6 +76,12 @@ services:
       POSTGRES_DB: alcoves
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+
+  dev:
+    container_name: dev
+    build:
+      context: ./.devcontainer
+      dockerfile: Dockerfile
 
   # asynqmon:
   #   container_name: asynqmon
