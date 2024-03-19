@@ -1,13 +1,11 @@
-FROM golang:1.22.0-alpine
+FROM oven/bun
 
 WORKDIR /app
 
-RUN apk add --no-cache ffmpeg
+COPY package.json bun.lockb /app/
 
-COPY go.mod go.sum /app/
+RUN bun install
 
-RUN go mod download
+RUN bunx prisma generate
 
-RUN go install github.com/cosmtrek/air@latest
-
-CMD [ "air" ]
+CMD ["bun", "run", "dev"]
