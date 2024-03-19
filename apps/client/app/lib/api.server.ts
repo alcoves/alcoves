@@ -85,4 +85,10 @@ async function getTasks(request: Request): Promise<GetTasksResponse> {
   )
 }
 
+// import { treaty } from '@elysiajs/eden'
+// import type { App } from './server'
+// const app = treaty<unknown>('http://api:4000')
+// const { data, error } = app.health.get()
+// console.log(data, error)
+
 export { login, register, getHealthCheck, getTasks }

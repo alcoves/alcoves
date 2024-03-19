@@ -30,7 +30,9 @@ services:
       ALCOVES_CLIENT_API_ENDPOINT: http://api:4000
     volumes:
       - ./apps/client:/app
-      - /app/node_modules/
+      - /app/node_modules
+      - /app/.cache
+      - /app/build
     depends_on:
       - api
     ports:
