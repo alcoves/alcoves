@@ -3,18 +3,21 @@
   "version": "1.0.50",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "predev": "prisma migrate deploy && prisma generate ",
     "dev": "bun run --watch src/index.ts"
   },
   "dependencies": {
     "@elysiajs/cors": "^1.0.2",
     "@elysiajs/swagger": "^1.0.2",
-    "@prisma/client": "^5.11.0",
+    "@prisma/client": "5.11.0",
+    "bcrypt": "^5.1.1",
     "bullmq": "^5.4.3",
-    "elysia": "latest"
+    "elysia": "latest",
+    "elysia-ip": "^0.0.7"
   },
   "devDependencies": {
     "bun-types": "latest",
-    "prisma": "^5.11.0"
+    "prisma": "5.11.0"
   },
   "module": "src/index.js"
 }

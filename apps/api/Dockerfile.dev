@@ -6,6 +6,4 @@ COPY package.json bun.lockb /app/
 
 RUN bun install
 
-RUN bunx prisma generate
-
 CMD ["bun", "run", "dev"]

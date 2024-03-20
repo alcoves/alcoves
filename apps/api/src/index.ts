@@ -2,6 +2,7 @@ import authRouter from './routes/auth'
 
 import { sleep } from 'bun'
 import { Elysia } from 'elysia'
+import { db } from './lib/prisma'
 import { cors } from '@elysiajs/cors'
 import { swagger } from '@elysiajs/swagger'
 import { Queue, Worker, QueueEvents } from 'bullmq'
@@ -62,6 +63,14 @@ app
   .use(cors())
   .use(swagger({ autoDarkMode: true, path: '/schema' }))
   .listen(4000)
+  .onStart(() => {
+    console.log(
+      `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
+    )
+  })
+  .onStop(async () => {
+    await db.$disconnect()
+  })
 
 const worker = new Worker(
   'Paint',
@@ -114,10 +123,6 @@ const worker = new Worker(
     }
   },
   redisConnection
-)
-
-console.log(
-  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
 )
 
 export type App = typeof app
