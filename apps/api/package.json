@@ -12,10 +12,10 @@
     "@prisma/client": "5.11.0",
     "bcrypt": "^5.1.1",
     "bullmq": "^5.4.3",
-    "elysia": "latest",
-    "elysia-ip": "^0.0.7"
+    "elysia": "latest"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "bun-types": "latest",
     "prisma": "5.11.0"
   },

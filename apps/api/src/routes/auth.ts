@@ -1,30 +1,27 @@
-import { hash, compare } from 'bcrypt'
 import { Elysia, t } from 'elysia'
 import { db } from '../lib/prisma'
-import { ip } from 'elysia-ip'
+import { hash, compare } from 'bcrypt'
+import { getIP } from '../lib/getIp'
 
-const router = new Elysia({ prefix: '/auth' }).use(ip())
+const router = new Elysia({ prefix: '/auth' })
 
 router.post(
   '/login',
-  async ({ body: { email, password }, error, ip }) => {
+  async ({ body: { email, password }, error, request }) => {
+    const ip = getIP(request.headers) || 'unknown'
     const user = await db.user.findUnique({
       where: {
         email: email,
       },
     })
 
-    if (!user) {
-      return error(400, 'Bad Request')
-    }
-
+    if (!user) return error(400, 'Bad Request')
     const isPasswordValid = await compare(password, user.password)
-    if (!isPasswordValid) {
-      return error(400, 'Bad Request')
-    }
+    if (!isPasswordValid) return error(400, 'Bad Request')
 
     const session = await db.userSession.findFirst({
       where: {
+        ip,
         userId: user.id,
       },
     })
@@ -36,19 +33,18 @@ router.post(
         session_id: session.id,
       }
     } else {
-      await db.userSession.create({
+      const session = await db.userSession.create({
         data: {
+          ip,
           userId: user.id,
-          ip: ip,
-          // userAgent: request.headers['user-agent'],
         },
       })
-    }
 
-    return {
-      status: 'success',
-      message: 'User logged in',
-      session_id: user.id,
+      return {
+        status: 'success',
+        message: 'User logged in',
+        session_id: session.id,
+      }
     }
   },
   {
@@ -61,27 +57,34 @@ router.post(
 
 router.post(
   '/register',
-  async ({ body: { email, password }, error }) => {
+  async ({ body: { email, password }, error, request }) => {
+    const ip = getIP(request.headers) || 'unknown'
     const user = await db.user.findUnique({
       where: {
         email: email,
       },
     })
 
-    if (user) {
-      return error(400, 'Bad Request')
-    }
+    if (user) return error(400, 'Bad Request')
 
-    await db.user.create({
+    const newUser = await db.user.create({
       data: {
         email,
         password: await hash(password, 10),
       },
     })
 
+    const session = await db.userSession.create({
+      data: {
+        ip,
+        userId: newUser.id,
+      },
+    })
+
     return {
       status: 'success',
       message: 'User created',
+      session_id: session.id,
     }
   },
   {
