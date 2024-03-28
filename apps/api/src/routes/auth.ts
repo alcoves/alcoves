@@ -37,6 +37,7 @@ export default new Elysia().group('/auth', (app) =>
             data: {
               ip,
               userId: user.id,
+              userAgent: request.headers.get('User-Agent') || 'unknown',
             },
           })
 
@@ -77,6 +78,7 @@ export default new Elysia().group('/auth', (app) =>
           data: {
             ip,
             userId: newUser.id,
+            userAgent: request.headers.get('User-Agent') || 'unknown',
           },
         })
 
