@@ -1,3 +1,10 @@
+import stylesheet from "./tailwind.css?url";
+import type { LinksFunction } from "@remix-run/node";
+
+export const links: LinksFunction = () => [
+  { rel: "stylesheet", href: stylesheet },
+];
+
 import {
   Links,
   Meta,

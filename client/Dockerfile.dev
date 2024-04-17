@@ -1,8 +1,10 @@
-FROM oven/bun:latest
+FROM node:20-alpine
 WORKDIR /app
 
 COPY . .
-RUN bun install
+RUN npm i -g pnpm
+RUN pnpm install
 
-EXPOSE 3000
-CMD ["bun", "dev"]
+CMD ["pnpm", "run", "dev"]
+HEALTHCHECK --interval=30s --timeout=20s --start-period=5s --retries=3 CMD curl --fail http://localhost:3005/healthcheck || exit 1
+EXPOSE 3005

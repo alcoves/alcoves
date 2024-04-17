@@ -6,3 +6,5 @@ RUN bun install
 
 EXPOSE 3005
 CMD ["bun", "dev"]
+
+HEALTHCHECK --interval=30s --timeout=20s --start-period=5s --retries=3 CMD curl --fail http://localhost:3005/healthcheck || exit 1

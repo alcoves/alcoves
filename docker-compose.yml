@@ -8,14 +8,14 @@ services:
       TEST: test
     volumes:
       - ./client:/app
+      - /app/node_modules
     depends_on:
       - server
     ports:
       - 3000:3000
       - 3001:3001 # HMR
-
   server:
-    container_name: api
+    container_name: server
     build:
       context: ./server
       dockerfile: Dockerfile.dev
@@ -23,16 +23,12 @@ services:
       TEST: test
     volumes:
       - ./server:/app
+      - /app/node_modules
     # depends_on:
     #   - redis
     #   - postgres
     ports:
       - 3005:3005
-    healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://api:3005/health']
-      interval: 1s
-      timeout: 2s
-      retries: 30
 
   # redis:
   #   container_name: redis
