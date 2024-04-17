@@ -1,6 +1,15 @@
 {
 	"peacock.color": "#1c24dc",
 	"peacock.remoteColor": "#bf1e2e",
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescriptreact]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+	"[javascript]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
 	"workbench.colorCustomizations": {
 		"activityBar.activeBackground": "#df3143",
 		"activityBar.activeBorder": "#14530d",
