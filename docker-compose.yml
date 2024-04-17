@@ -1,77 +1,72 @@
 services:
-  api:
-    container_name: api
-    build:
-      context: ./apps/api
-      dockerfile: Dockerfile.dev
-    environment:
-      ALCOVES_API_DATABASE_URL: postgres://postgres:postgres@postgres:5432/alcoves
-      ALCOVES_API_REDIS_ADDR: redis:6379
-    volumes:
-      - ./apps/api:/app
-    depends_on:
-      - redis
-      - postgres
-    ports:
-      - 4000:4000
-    healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://api:4000/health']
-      interval: 1s
-      timeout: 2s
-      retries: 30
-
   client:
     container_name: client
     build:
-      context: ./apps/client
+      context: ./client
       dockerfile: Dockerfile.dev
     environment:
-      ALCOVES_CLIENT_SESSION_SECRET: changeme
-      ALCOVES_CLIENT_API_ENDPOINT: http://api:4000
+      TEST: test
     volumes:
-      - ./apps/client:/app
-      - /app/node_modules
-      - /app/.cache
-      - /app/build
+      - ./client:/app
     depends_on:
-      - api
+      - server
     ports:
       - 3000:3000
       - 3001:3001 # HMR
 
-  redis:
-    container_name: redis
-    image: redis:latest
-    restart: always
-    ports:
-      - 6100:6379
-    volumes:
-      - redis:/data
-    healthcheck:
-      test: ['CMD-SHELL', 'redis-cli ping']
-      retries: 30
-      timeout: 5s
-      interval: 1s
-
-  postgres:
-    container_name: postgres
-    image: postgres:16-alpine
-    restart: always
-    ports:
-      - 6200:5432
-    volumes:
-      - postgres:/var/lib/postgresql/data/
-    healthcheck:
-      test:
-        ['CMD-SHELL', 'pg_isready', '-U', 'postgres', '-d', 'alcoves']
-      retries: 30
-      timeout: 5s
-      interval: 1s
-    user: postgres
+  server:
+    container_name: api
+    build:
+      context: ./server
+      dockerfile: Dockerfile.dev
     environment:
-      POSTGRES_DB: alcoves
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      TEST: test
+    volumes:
+      - ./server:/app
+    # depends_on:
+    #   - redis
+    #   - postgres
+    ports:
+      - 3005:3005
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://api:3005/health']
+      interval: 1s
+      timeout: 2s
+      retries: 30
+
+  # redis:
+  #   container_name: redis
+  #   image: redis:latest
+  #   restart: always
+  #   ports:
+  #     - 6100:6379
+  #   volumes:
+  #     - redis:/data
+  #   healthcheck:
+  #     test: ['CMD-SHELL', 'redis-cli ping']
+  #     retries: 30
+  #     timeout: 5s
+  #     interval: 1s
+
+  # postgres:
+  #   container_name: postgres
+  #   image: postgres:16-alpine
+  #   restart: always
+  #   ports:
+  #     - 6200:5432
+  #   volumes:
+  #     - postgres:/var/lib/postgresql/data/
+  #   healthcheck:
+  #     test:
+  #       ['CMD-SHELL', 'pg_isready', '-U', 'postgres', '-d', 'alcoves']
+  #     retries: 30
+  #     timeout: 5s
+  #     interval: 1s
+  #   user: postgres
+  #   environment:
+  #     POSTGRES_DB: alcoves
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: postgres
 
   # asynqmon:
   #   container_name: asynqmon
@@ -171,9 +166,9 @@ services:
   #       - '9001:9001'
   #     command: server /data --console-address ":9001"
 
-volumes:
-  redis:
-  postgres:
+# volumes:
+  # redis:
+  # postgres:
   # minio:
   # alcoves:
   # alcoves_cdn:

@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "UserSession" ALTER COLUMN "ip" DROP DEFAULT,
-ALTER COLUMN "userAgent" DROP DEFAULT;
