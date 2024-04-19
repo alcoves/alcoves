@@ -7,3 +7,27 @@
 body {
     font-family: 'Work Sans', sans-serif;
 }
+
+/* .uppy-StatusBar.is-waiting .uppy-StatusBar-actions {
+    background-color: transparent !important;
+}
+
+.uppy-StatusBar.is-waiting {
+    border-top: 0 !important;
+}
+
+.uppy-StatusBar {
+    background-color: transparent !important;
+}
+
+.uppy-c-icon {
+    display: none !important;
+}
+
+.uppy-DragDrop-label {
+    padding: 20px !important;
+}
+
+.uppy-StatusBar::before {
+    background-color: transparent !important;
+} */

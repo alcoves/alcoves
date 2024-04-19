@@ -1,5 +1,8 @@
-import clsx from 'clsx'
 import stylesheet from './tailwind.css?url'
+import '@vidstack/react/player/styles/default/theme.css'
+import '@vidstack/react/player/styles/default/layouts/video.css'
+
+import clsx from 'clsx'
 import { themeSessionResolver } from './session.server'
 import type { LinksFunction, LoaderFunctionArgs } from '@remix-run/node'
 import { PreventFlashOnWrongTheme, ThemeProvider, useTheme } from 'remix-themes'
