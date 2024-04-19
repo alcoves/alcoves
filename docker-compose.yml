@@ -34,19 +34,19 @@ services:
     ports:
       - 3005:3005
 
-  # redis:
-  #   container_name: redis
-  #   image: redis:latest
-  #   restart: always
-  #   ports:
-  #     - 6100:6379
-  #   volumes:
-  #     - redis:/data
-  #   healthcheck:
-  #     test: ['CMD-SHELL', 'redis-cli ping']
-  #     retries: 30
-  #     timeout: 5s
-  #     interval: 1s
+  redis:
+    container_name: redis
+    image: redis:latest
+    restart: always
+    ports:
+      - 6100:6379
+    volumes:
+      - redis:/data
+    healthcheck:
+      test: ['CMD-SHELL', 'redis-cli ping']
+      retries: 30
+      timeout: 5s
+      interval: 1s
 
   postgres:
     container_name: postgres
@@ -173,9 +173,9 @@ services:
     entrypoint: sh -c "mc config host add minio http://minio:9000 minioadmin minioadmin && mc mb minio/alcoves"
 
 volumes:
-  # redis:
-  postgres:
   minio:
+  redis:
+  postgres:
   # alcoves:
   # alcoves_cdn:
   # storage_cdn:
