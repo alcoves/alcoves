@@ -67,10 +67,15 @@ export default function UploadDialog() {
         if (file) uploadFile(file)
     }, [file])
 
+    console.log(percentCompleted > 0 && percentCompleted < 100)
+    const uploadDisabled = percentCompleted > 0 && percentCompleted < 100
+
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button size="sm">Upload</Button>
+                <Button size="sm" disabled={uploadDisabled}>
+                    {uploadDisabled ? 'Uploading...' : 'Upload'}
+                </Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
@@ -80,9 +85,10 @@ export default function UploadDialog() {
                     <Button
                         size="sm"
                         className="w-full"
+                        disabled={uploadDisabled}
                         onClick={() => inputRef?.current?.click()}
                     >
-                        Upload
+                        {uploadDisabled ? 'Uploading...' : 'Upload'}
                     </Button>
                     <Input
                         onChange={(e) => {
