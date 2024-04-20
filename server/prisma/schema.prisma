@@ -8,15 +8,26 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  username  String   @unique
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  username  String?   @unique
   password  String
   name      String
   videos    Video[]
   uploads   Upload[]
-  updatedAt DateTime @updatedAt
+  sessions  Session[]
+  updatedAt DateTime  @updatedAt
+  createdAt DateTime  @default(now())
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  ip        String   @default("0.0.0.0")
+  userAgent String   @default("Unknown")
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Upload {

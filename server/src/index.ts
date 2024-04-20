@@ -1,7 +1,9 @@
 import { db } from './db'
 import { Hono } from 'hono'
-import { cors } from 'hono/cors'
 import { v4 as uuidv4 } from 'uuid'
+import { hash, compare } from 'bcrypt'
+import { cors } from 'hono/cors'
+import { HTTPException } from 'hono/exceptions'
 import {
     generatePresignedPutUrl,
     generateSignedUrl,
@@ -88,7 +90,6 @@ app.post('/uploads/:id/complete', async (c) => {
         },
     })
 
-    // LOGIN / REGISTER 1
     // UPLOAD VIDEO (READY) 3
     // PROCESS VIDEO 2
     // SHOW VIDEOS ON HOMEPAGE (SIMPLE YOU FUCK) 4
@@ -96,12 +97,77 @@ app.post('/uploads/:id/complete', async (c) => {
     return c.json({ id: upload.id })
 })
 
-app.post('/auth/register', (c) => {
-    return c.json('awd')
+app.post('/auth/register', async (c) => {
+    const { email, password }: { email: string; password: string } =
+        await c.req.parseBody()
+
+    const user = await db.user.findUnique({
+        where: {
+            email: email,
+        },
+    })
+
+    if (user) {
+        throw new HTTPException(400)
+    }
+
+    await db.user.create({
+        data: {
+            email,
+            password: await hash(password, 10),
+        },
+    })
+
+    return c.json({
+        status: 'success',
+        message: 'User created',
+    })
 })
 
-app.post('/auth/login', (c) => {
-    return c.json('awd')
+app.post('/auth/login', async (c) => {
+    const { email, password }: { email: string; password: string } =
+        await c.req.parseBody()
+
+    const user = await db.user.findUnique({
+        where: {
+            email: email,
+        },
+    })
+
+    if (!user) {
+        throw new HTTPException(400)
+    }
+
+    const isPasswordValid = await compare(password, user.password)
+    if (!isPasswordValid) {
+        throw new HTTPException(400)
+    }
+
+    const session = await db.session.findFirst({
+        where: {
+            userId: user.id,
+        },
+    })
+
+    if (session) {
+        return c.json({
+            status: 'success',
+            message: 'User logged in',
+            session_id: session.id,
+        })
+    } else {
+        await db.session.create({
+            data: {
+                userId: user.id,
+            },
+        })
+    }
+
+    return c.json({
+        status: 'success',
+        message: 'User logged in',
+        session_id: user.id,
+    })
 })
 
 export default {
