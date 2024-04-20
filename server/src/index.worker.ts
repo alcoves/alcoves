@@ -16,10 +16,10 @@ const worker = new Worker(
         }
 
         console.log(job.data)
-        // Get a long lived link to the upload
-        // Get the video metadata
-        // Take the video and turn it into hls assets in 264 720p
-        // Take the output dir and put it in s3
+        // const signedUrl = getSignedUrl
+        // const videoMetadata = getVideoMetadata
+        // const hlsAssets = transcodeVideo
+        // const outputDir = putInS3
     },
     { connection: bullConnection }
 )

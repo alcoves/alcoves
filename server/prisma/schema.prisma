@@ -8,24 +8,24 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  email     String    @unique
-  username  String?   @unique
+  id        Int           @id @default(autoincrement())
+  email     String        @unique
+  username  String?       @unique
   password  String
   name      String
   videos    Video[]
   uploads   Upload[]
-  sessions  Session[]
-  updatedAt DateTime  @updatedAt
-  createdAt DateTime  @default(now())
+  sessions  UserSession[]
+  updatedAt DateTime      @updatedAt
+  createdAt DateTime      @default(now())
 }
 
-model Session {
+model UserSession {
   id        String   @id @default(uuid())
   ip        String   @default("0.0.0.0")
   userAgent String   @default("Unknown")
-  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -37,26 +37,49 @@ model Upload {
   filename      String       @default("New Upload")
   storageBucket String
   status        UploadStatus @default(PENDING)
-  storageKey    String       @unique
-  User          User?        @relation(fields: [userId], references: [id])
+  storageKey    String
   userId        Int?
+  User          User?        @relation(fields: [userId], references: [id])
+  Video         Video[]
   updatedAt     DateTime     @updatedAt
   createdAt     DateTime     @default(now())
 }
 
 model Video {
-  id            Int      @id @default(autoincrement())
-  title         String   @default("New Video")
+  id            Int              @id @default(autoincrement())
+  title         String           @default("New Video")
   storageBucket String
-  storageKey    String   @unique
-  User          User?    @relation(fields: [userId], references: [id])
+  storageKey    String
   userId        Int?
-  updatedAt     DateTime @updatedAt
-  createdAt     DateTime @default(now())
+  User          User?            @relation(fields: [userId], references: [id])
+  uploadId      Int
+  upload        Upload           @relation(fields: [uploadId], references: [id])
+  renditions    VideoRendition[]
+  updatedAt     DateTime         @updatedAt
+  createdAt     DateTime         @default(now())
+}
+
+model VideoRendition {
+  id            Int             @id @default(autoincrement())
+  storageBucket String
+  storageKey    String
+  percentage    Int             @default(0)
+  status        RenditionStatus @default(QUEUED)
+  videoId       Int
+  video         Video           @relation(fields: [videoId], references: [id])
+  updatedAt     DateTime        @updatedAt
+  createdAt     DateTime        @default(now())
 }
 
 enum UploadStatus {
   PENDING
+  FAILED
+  COMPLETED
+}
+
+enum RenditionStatus {
+  QUEUED
+  PROCESSING
   FAILED
   COMPLETED
 }

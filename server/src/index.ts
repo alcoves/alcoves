@@ -92,6 +92,9 @@ app.post('/uploads/:id/complete', async (c) => {
         },
     })
 
+    // TODO :: Create the video record
+    // Then add to the transcode queue
+
     await transcodeQueue.add('transcode', {
         uploadId: upload.id,
     })
