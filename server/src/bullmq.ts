@@ -1,17 +1,13 @@
-import { Queue, Worker } from 'bullmq'
+import { env } from './env'
+import { Queue } from 'bullmq'
 
-export const transcode = new Queue('transcode')
+const transcodeQueueName = 'transcode'
 
-const worker = new Worker('foo', async (job) => {
-    // Will print { foo: 'bar'} for the first job
-    // and { qux: 'baz' } for the second.
-    console.log(job.data)
-})
+export const bullConnection = {
+    host: env.redis_host,
+    port: parseInt(env.redis_port),
+}
 
-worker.on('completed', (job) => {
-    console.log(`${job.id} has completed!`)
-})
-
-worker.on('failed', (job, err) => {
-    console.log(`${job?.id} has failed with ${err.message}`)
+export const transcodeQueue = new Queue(transcodeQueueName, {
+    connection: bullConnection,
 })

@@ -1,3 +1,7 @@
+x-server-environment: &server-environment
+  ALCOVES_REDIS_HOST: redis
+  ALCOVES_REDIS_PORT: 6379
+
 services:
   client:
     container_name: client
@@ -20,17 +24,35 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile.dev
+    command: bun run dev:server
     environment:
-      TEST: test
+      <<: *server-environment
     volumes:
       - ./server:/app
       - /app/node_modules
-    # depends_on:
-    #   - redis
-    #   - postgres
     depends_on:
-      - minio
+      - redis
       - postgres
+      - minio
+      - minio-mb
+    ports:
+      - 3005:3005
+
+  worker:
+    container_name: worker
+    build:
+      context: ./server
+      dockerfile: Dockerfile.dev
+    command: bun run dev:worker
+    environment:
+      <<: *server-environment
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    depends_on:
+      - redis
+      - postgres
+      - minio
       - minio-mb
     ports:
       - 3005:3005
@@ -39,6 +61,8 @@ services:
     container_name: redis
     image: redis:latest
     restart: always
+    # --requirepass redis
+    command: redis-server --maxmemory-policy noeviction
     ports:
       - 6100:6379
     volumes:
@@ -68,17 +92,6 @@ services:
       POSTGRES_DB: alcoves
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-
-  # asynqmon:
-  #   container_name: asynqmon
-  #   image: hibiken/asynqmon
-  #   environment:
-  #     PORT: 5050
-  #     REDIS_ADDR: redis:6379
-  #   depends_on:
-  #     - redis
-  #   ports:
-  #     - 5050:5050
 
   # api:
   #   container_name: api

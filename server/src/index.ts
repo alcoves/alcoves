@@ -1,3 +1,4 @@
+import './bullmq'
 import { db } from './db'
 import { Hono } from 'hono'
 import { v4 as uuidv4 } from 'uuid'
@@ -10,6 +11,7 @@ import {
     getUploadStorageKey,
     getVideoStorageKey,
 } from './s3'
+import { transcodeQueue } from './bullmq'
 
 const app = new Hono()
 
@@ -90,9 +92,13 @@ app.post('/uploads/:id/complete', async (c) => {
         },
     })
 
-    // UPLOAD VIDEO (READY) 3
-    // PROCESS VIDEO 2
-    // SHOW VIDEOS ON HOMEPAGE (SIMPLE YOU FUCK) 4
+    await transcodeQueue.add('transcode', {
+        uploadId: upload.id,
+    })
+
+    await transcodeQueue.add('thumbnail', {
+        uploadId: upload.id,
+    })
 
     return c.json({ id: upload.id })
 })
