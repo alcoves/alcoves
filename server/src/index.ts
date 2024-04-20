@@ -96,6 +96,14 @@ app.post('/uploads/:id/complete', async (c) => {
     return c.json({ id: upload.id })
 })
 
+app.post('/auth/register', (c) => {
+    return c.json('awd')
+})
+
+app.post('/auth/login', (c) => {
+    return c.json('awd')
+})
+
 export default {
     port: 3005,
     fetch: app.fetch,
