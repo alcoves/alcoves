@@ -88,6 +88,11 @@ app.post('/uploads/:id/complete', async (c) => {
         },
     })
 
+    // LOGIN / REGISTER 1
+    // UPLOAD VIDEO (READY) 3
+    // PROCESS VIDEO 2
+    // SHOW VIDEOS ON HOMEPAGE (SIMPLE YOU FUCK) 4
+
     return c.json({ id: upload.id })
 })
 
