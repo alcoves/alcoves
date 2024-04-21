@@ -3,7 +3,6 @@ import { db } from './db'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
-import { v4 as uuidv4 } from 'uuid'
 import { HTTPException } from 'hono/http-exception'
 import {
     generatePresignedPutUrl,
@@ -50,7 +49,7 @@ app.post('/uploads', async (c) => {
     const body: { filename: string; contentType: string; size: number } =
         await c.req.json()
 
-    const uuid = uuidv4()
+    const uuid = crypto.randomUUID()
     const upload = await db.upload.create({
         data: {
             size: body.size,
