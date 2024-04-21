@@ -1,4 +1,4 @@
-import { register } from '../lib/api'
+import { register } from '../lib/api.server.ts'
 import { Form, Link } from '@remix-run/react'
 import { Label } from '../components/ui/label'
 import { Input } from '../components/ui/input'
@@ -10,9 +10,10 @@ import type { ActionFunction, LoaderFunctionArgs } from '@remix-run/node'
 const action: ActionFunction = async ({ request }) => {
     const form = await request.formData()
     const email = form.get('email') as string
+    const username = form.get('username') as string
     const password = form.get('password') as string
 
-    const response = await register({ email, password })
+    const response = await register({ email, username, password })
     console.log('Register response', response)
 
     return await authenticator.authenticate('form', request, {
@@ -42,6 +43,16 @@ export default function RegisterPage() {
             </div>
             <Form method="post">
                 <div className="rounded-lg border border-gray-200 w-72 p-6 space-y-4">
+                    <div className="space-y-2 ">
+                        <Label htmlFor="email">Username</Label>
+                        <Input
+                            required
+                            id="username"
+                            name="username"
+                            type="username"
+                            placeholder="rusty"
+                        />
+                    </div>
                     <div className="space-y-2 ">
                         <Label htmlFor="email">Email</Label>
                         <Input

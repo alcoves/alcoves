@@ -8,7 +8,13 @@ export interface UserLoginResponse {
 }
 
 interface UserLoginRequest {
+    username: string
+    password: string
+}
+
+interface UserRegisterRequest {
     email: string
+    username: string
     password: string
 }
 
@@ -51,7 +57,7 @@ export async function login(
 }
 
 export async function register(
-    input: UserLoginRequest
+    input: UserRegisterRequest
 ): Promise<UserLoginResponse> {
     return await apiRequest(`${alcovesEndpoint}/auth/register`, {
         method: 'POST',
@@ -59,14 +65,14 @@ export async function register(
     })
 }
 
-export async function getHealthCheck(
-    request: Request
-): Promise<HealthCheckResponse> {
-    return await apiRequest(
-        `${alcovesEndpoint}/health`,
-        {
-            method: 'GET',
-        },
-        request
-    )
-}
+// export async function getHealthCheck(
+//     request: Request
+// ): Promise<HealthCheckResponse> {
+//     return await apiRequest(
+//         `${alcovesEndpoint}/health`,
+//         {
+//             method: 'GET',
+//         },
+//         request
+//     )
+// }

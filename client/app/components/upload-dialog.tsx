@@ -67,7 +67,6 @@ export default function UploadDialog() {
         if (file) uploadFile(file)
     }, [file])
 
-    console.log(percentCompleted > 0 && percentCompleted < 100)
     const uploadDisabled = percentCompleted > 0 && percentCompleted < 100
 
     return (
