@@ -4,8 +4,8 @@ import { Queue } from 'bullmq'
 const transcodeQueueName = 'transcode'
 
 export const bullConnection = {
-    host: env.redis_host,
-    port: parseInt(env.redis_port),
+    host: env.ALCOVES_REDIS_HOST,
+    port: parseInt(env.ALCOVES_REDIS_PORT),
 }
 
 export const transcodeQueue = new Queue(transcodeQueueName, {

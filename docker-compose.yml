@@ -10,7 +10,7 @@ services:
       dockerfile: Dockerfile.dev
     environment:
       ALCOVES_CLIENT_SESSION_SECRET: changeme
-      ALCOVES_CLIENT_API_ENDPOINT: http://api:3005
+      ALCOVES_CLIENT_API_ENDPOINT: http://server:3005
     volumes:
       - ./client:/app
       - /app/node_modules
@@ -50,12 +50,11 @@ services:
       - ./server:/app
       - /app/node_modules
     depends_on:
+      - server
       - redis
       - postgres
       - minio
       - minio-mb
-    ports:
-      - 3005:3005
 
   redis:
     container_name: redis

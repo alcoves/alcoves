@@ -4,7 +4,7 @@ import { Hono } from 'hono'
 import { v4 as uuidv4 } from 'uuid'
 import { hash, compare } from 'bcrypt'
 import { cors } from 'hono/cors'
-import { HTTPException } from 'hono/exceptions'
+import { HTTPException } from 'hono/http-exception'
 import {
     generatePresignedPutUrl,
     generateSignedUrl,
@@ -123,6 +123,7 @@ app.post('/auth/register', async (c) => {
     await db.user.create({
         data: {
             email,
+            name: email,
             password: await hash(password, 10),
         },
     })
@@ -152,7 +153,7 @@ app.post('/auth/login', async (c) => {
         throw new HTTPException(400)
     }
 
-    const session = await db.session.findFirst({
+    const session = await db.userSession.findFirst({
         where: {
             userId: user.id,
         },
@@ -165,7 +166,7 @@ app.post('/auth/login', async (c) => {
             session_id: session.id,
         })
     } else {
-        await db.session.create({
+        await db.userSession.create({
             data: {
                 userId: user.id,
             },

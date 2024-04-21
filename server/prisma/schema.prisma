@@ -10,7 +10,7 @@ datasource db {
 model User {
   id        Int           @id @default(autoincrement())
   email     String        @unique
-  username  String?       @unique
+  username  String        @unique
   password  String
   name      String
   videos    Video[]
@@ -52,8 +52,8 @@ model Video {
   storageKey    String
   userId        Int?
   User          User?            @relation(fields: [userId], references: [id])
-  uploadId      Int
-  upload        Upload           @relation(fields: [uploadId], references: [id])
+  uploadId      Int?
+  upload        Upload?          @relation(fields: [uploadId], references: [id])
   renditions    VideoRendition[]
   updatedAt     DateTime         @updatedAt
   createdAt     DateTime         @default(now())
