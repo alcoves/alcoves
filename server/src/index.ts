@@ -4,7 +4,6 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
 import { v4 as uuidv4 } from 'uuid'
-import { hash, compare } from 'bcrypt'
 import { HTTPException } from 'hono/http-exception'
 import {
     generatePresignedPutUrl,
@@ -109,30 +108,30 @@ app.post('/uploads/:id/complete', async (c) => {
 })
 
 app.post('/auth/register', async (c) => {
-    // const {
-    //     email,
-    //     username,
-    //     password,
-    // }: { email: string; username: string; password: string } =
-    //     await c.req.parseBody()
+    const {
+        email,
+        username,
+        password,
+    }: { email: string; username: string; password: string } =
+        await c.req.parseBody()
 
-    // const user = await db.user.findUnique({
-    //     where: {
-    //         email: email,
-    //     },
-    // })
+    const user = await db.user.findUnique({
+        where: {
+            email: email,
+        },
+    })
 
-    // if (user) {
-    //     throw new HTTPException(400)
-    // }
+    if (user) {
+        throw new HTTPException(400)
+    }
 
-    // await db.user.create({
-    //     data: {
-    //         email,
-    //         username,
-    //         password: await hash(password, 10),
-    //     },
-    // })
+    await db.user.create({
+        data: {
+            email,
+            username,
+            password: await Bun.password.hash(password),
+        },
+    })
 
     return c.json({
         status: 'success',
@@ -154,7 +153,7 @@ app.post('/auth/login', async (c) => {
         throw new HTTPException(400)
     }
 
-    const isPasswordValid = await compare(password, user.password)
+    const isPasswordValid = await Bun.password.verify(password, user.password)
     if (!isPasswordValid) {
         throw new HTTPException(400)
     }
