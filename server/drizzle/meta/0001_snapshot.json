@@ -1,6 +1,6 @@
 {
-  "id": "8bc1f4e6-4895-47b2-b73f-fcd3e9bef4d1",
-  "prevId": "0ecf57d6-cace-4fab-8384-9c4fee270654",
+  "id": "a65bc2a6-789b-4d91-8b1b-1df9939cea07",
+  "prevId": "46d4da5c-54f4-4bb8-8294-1e12075fa82e",
   "version": "5",
   "dialect": "pg",
   "tables": {
@@ -33,14 +33,21 @@
           "primaryKey": false,
           "notNull": true
         },
-        "status": {
-          "name": "status",
-          "type": "status",
+        "upload_status_enum": {
+          "name": "upload_status_enum",
+          "type": "upload_status_enum",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": "'PENDING'"
         },
         "storage_bucket": {
           "name": "storage_bucket",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "storage_key": {
+          "name": "storage_key",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -49,7 +56,7 @@
           "name": "user_id",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "created_at": {
           "name": "created_at",
@@ -114,7 +121,7 @@
           "name": "user_id",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "created_at": {
           "name": "created_at",
@@ -184,6 +191,13 @@
           "primaryKey": false,
           "notNull": false
         },
+        "user_roles": {
+          "name": "user_roles",
+          "type": "user_roles",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'USER'"
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -235,6 +249,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "storage_key": {
+          "name": "storage_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
         "percentage": {
           "name": "percentage",
           "type": "integer",
@@ -242,17 +262,18 @@
           "notNull": true,
           "default": 0
         },
-        "status": {
-          "name": "status",
-          "type": "status",
+        "rendition_status_enum": {
+          "name": "rendition_status_enum",
+          "type": "rendition_status_enum",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": "'QUEUED'"
         },
         "video_id": {
           "name": "video_id",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "created_at": {
           "name": "created_at",
@@ -310,17 +331,23 @@
           "primaryKey": false,
           "notNull": true
         },
+        "storage_key": {
+          "name": "storage_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
         "upload_id": {
           "name": "upload_id",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "user_id": {
           "name": "user_id",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "created_at": {
           "name": "created_at",
@@ -371,12 +398,28 @@
     }
   },
   "enums": {
-    "status": {
-      "name": "status",
+    "rendition_status_enum": {
+      "name": "rendition_status_enum",
+      "values": {
+        "QUEUED": "QUEUED",
+        "PROCESSING": "PROCESSING",
+        "FAILED": "FAILED",
+        "COMPLETED": "COMPLETED"
+      }
+    },
+    "upload_status_enum": {
+      "name": "upload_status_enum",
       "values": {
         "PENDING": "PENDING",
         "FAILED": "FAILED",
         "COMPLETED": "COMPLETED"
+      }
+    },
+    "user_roles": {
+      "name": "user_roles",
+      "values": {
+        "USER": "USER",
+        "ADMIN": "ADMIN"
       }
     }
   },

@@ -5,6 +5,7 @@ import { eq } from 'drizzle-orm'
 import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
 import { transcodeQueue } from './bullmq'
+import { createMiddleware } from 'hono/factory'
 import { zValidator } from '@hono/zod-validator'
 import { HTTPException } from 'hono/http-exception'
 import {
@@ -23,6 +24,23 @@ import {
 } from './s3'
 
 const app = new Hono()
+
+const authMiddleware = createMiddleware<{
+    Variables: {
+        userId: number
+    }
+}>(async (c, next) => {
+    const sessionsId = c.req.header('Authorization')?.split('Bearer ')[1]
+    if (!sessionsId) throw new HTTPException(401)
+
+    const userSession = await db.query.userSessions.findFirst({
+        where: eq(userSessions.id, sessionsId),
+    })
+    if (!userSession) throw new HTTPException(401)
+
+    c.set('userId', parseInt(userSession.id))
+    await next()
+})
 
 app.use(logger())
 app.use(cors())
@@ -69,74 +87,6 @@ app.get('/videos', async (c) => {
     return c.json({
         videos: videosWithSignedUrls,
     })
-})
-
-app.post('/uploads', async (c) => {
-    const body: { filename: string; contentType: string; size: number } =
-        await c.req.json()
-
-    const storageKey = crypto.randomUUID()
-    const upload: NewUpload = {
-        size: body.size,
-        storageKey: storageKey,
-        storageBucket: 'alcoves',
-        contentType: body.contentType,
-        filename: body.filename,
-    }
-
-    const newUpload = await db.insert(uploads).values(upload).returning()
-    console.log('newUpload', newUpload)
-
-    const signedUrl = await generatePresignedPutUrl(
-        getUploadStorageKey(newUpload[0].storageKey, body.contentType),
-        body.contentType
-    )
-
-    return c.json({
-        id: newUpload[0].id,
-        url: signedUrl,
-    })
-})
-
-app.post('/uploads/:id/complete', async (c) => {
-    const { id } = c.req.param()
-    const upload = await db.query.uploads.findFirst({
-        where: eq(uploads.id, parseInt(id)),
-    })
-
-    if (!upload) {
-        throw new HTTPException(404)
-    }
-
-    if (upload.status === 'COMPLETED') {
-        throw new HTTPException(400, { message: 'Upload already completed' })
-    }
-
-    await db
-        .update(uploads)
-        .set({ status: 'COMPLETED' })
-        .where(eq(uploads.id, upload.id))
-
-    // TODO :: Create the video record
-    // Then add to the transcode queue
-
-    await db.insert(videos).values({
-        title: upload.filename,
-        storageKey: upload.storageKey,
-        storageBucket: upload.storageBucket,
-        uploadId: upload.id,
-        userId: 1,
-    } as NewVideo)
-
-    await transcodeQueue.add('transcode', {
-        uploadId: upload.id,
-    })
-
-    await transcodeQueue.add('thumbnail', {
-        uploadId: upload.id,
-    })
-
-    return c.json({ id: upload.id })
 })
 
 app.post('/auth/register', async (c) => {
@@ -208,6 +158,75 @@ app.post('/auth/login', zValidator('json', loginSchema), async (c) => {
             session_id: newSession[0].id,
         })
     }
+})
+
+app.post('/uploads', authMiddleware, async (c) => {
+    const body: { filename: string; contentType: string; size: number } =
+        await c.req.json()
+
+    const storageKey = crypto.randomUUID()
+    const upload: NewUpload = {
+        userId: c.get('userId'),
+        size: body.size,
+        storageKey: storageKey,
+        storageBucket: 'alcoves',
+        contentType: body.contentType,
+        filename: body.filename,
+    }
+
+    const newUpload = await db.insert(uploads).values(upload).returning()
+    console.log('newUpload', newUpload)
+
+    const signedUrl = await generatePresignedPutUrl(
+        getUploadStorageKey(newUpload[0].storageKey, body.contentType),
+        body.contentType
+    )
+
+    return c.json({
+        id: newUpload[0].id,
+        url: signedUrl,
+    })
+})
+
+app.post('/uploads/:id/complete', authMiddleware, async (c) => {
+    const { id } = c.req.param()
+    const upload = await db.query.uploads.findFirst({
+        where: eq(uploads.id, parseInt(id)),
+    })
+
+    if (!upload) {
+        throw new HTTPException(404)
+    }
+
+    if (upload.status === 'COMPLETED') {
+        throw new HTTPException(400, { message: 'Upload already completed' })
+    }
+
+    await db
+        .update(uploads)
+        .set({ status: 'COMPLETED' })
+        .where(eq(uploads.id, upload.id))
+
+    // TODO :: Create the video record
+    // Then add to the transcode queue
+
+    await db.insert(videos).values({
+        userId: c.get('userId'),
+        title: upload.filename,
+        storageKey: upload.storageKey,
+        storageBucket: upload.storageBucket,
+        uploadId: upload.id,
+    } as NewVideo)
+
+    await transcodeQueue.add('transcode', {
+        uploadId: upload.id,
+    })
+
+    await transcodeQueue.add('thumbnail', {
+        uploadId: upload.id,
+    })
+
+    return c.json({ id: upload.id })
 })
 
 export default {

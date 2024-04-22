@@ -37,7 +37,6 @@ export async function action({ request }: ActionFunctionArgs) {
     const action = form.get('action')
 
     if (action === 'logout') {
-        console.log('LOGOUT')
         return await authenticator.logout(request, {
             redirectTo: privateServer ? '/login' : '/',
         })

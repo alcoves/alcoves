@@ -1,5 +1,17 @@
 DO $$ BEGIN
- CREATE TYPE "status" AS ENUM('PENDING', 'FAILED', 'COMPLETED');
+ CREATE TYPE "rendition_status_enum" AS ENUM('QUEUED', 'PROCESSING', 'FAILED', 'COMPLETED');
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ CREATE TYPE "upload_status_enum" AS ENUM('PENDING', 'FAILED', 'COMPLETED');
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ CREATE TYPE "user_roles" AS ENUM('USER', 'ADMIN');
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -9,10 +21,10 @@ CREATE TABLE IF NOT EXISTS "uploads" (
 	"content_type" text NOT NULL,
 	"size" integer DEFAULT 0 NOT NULL,
 	"filename" text NOT NULL,
-	"status" "status",
+	"upload_status_enum" "upload_status_enum" DEFAULT 'PENDING' NOT NULL,
 	"storage_bucket" text NOT NULL,
+	"storage_key" text NOT NULL,
 	"user_id" integer,
-	"url" text NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
@@ -32,6 +44,7 @@ CREATE TABLE IF NOT EXISTS "users" (
 	"username" text NOT NULL,
 	"password" text NOT NULL,
 	"name" text,
+	"user_roles" "user_roles" DEFAULT 'USER' NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,
 	CONSTRAINT "users_email_unique" UNIQUE("email"),
@@ -41,8 +54,9 @@ CREATE TABLE IF NOT EXISTS "users" (
 CREATE TABLE IF NOT EXISTS "video_renditions" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"storage_bucket" text NOT NULL,
+	"storage_key" text NOT NULL,
 	"percentage" integer DEFAULT 0 NOT NULL,
-	"status" "status",
+	"rendition_status_enum" "rendition_status_enum" DEFAULT 'QUEUED' NOT NULL,
 	"video_id" integer,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
@@ -52,9 +66,9 @@ CREATE TABLE IF NOT EXISTS "videos" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"title" text NOT NULL,
 	"storage_bucket" text NOT NULL,
+	"storage_key" text NOT NULL,
 	"upload_id" integer,
 	"user_id" integer,
-	"url" text NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );

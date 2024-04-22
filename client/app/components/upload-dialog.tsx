@@ -13,6 +13,9 @@ import {
 import { Progress } from '../components/ui/progress'
 import { useEffect, useRef, useState } from 'react'
 import { Upload } from 'lucide-react'
+import { json, LoaderFunctionArgs } from '@remix-run/node'
+// import { authenticator } from '../lib/auth.server'
+import { useLoaderData } from '@remix-run/react'
 
 // const MiB = 0x10_00_00
 
@@ -21,7 +24,13 @@ interface AlcovesAPIUploadRes {
     url: string
 }
 
+// export async function loader({ request }: LoaderFunctionArgs) {
+//     const user = await authenticator.isAuthenticated(request)
+//     return json({ user })
+// }
+
 export default function UploadDialog() {
+    // const { user } = useLoaderData()
     const inputRef = useRef<HTMLInputElement>(null)
     const [file, setFile] = useState<File | null>(null)
     const [percentCompleted, setPercentCompleted] = useState<number>(0)
@@ -69,6 +78,8 @@ export default function UploadDialog() {
     }, [file])
 
     const uploadDisabled = percentCompleted > 0 && percentCompleted < 100
+
+    // if (!user) return null
 
     return (
         <Dialog>

@@ -1,6 +1,6 @@
 {
-  "id": "e43b5096-2b5c-4369-a977-f65ae46d3f34",
-  "prevId": "a65bc2a6-789b-4d91-8b1b-1df9939cea07",
+  "id": "4f2ba7dd-3053-4a19-b452-cc67c2a85146",
+  "prevId": "7ea3471c-d97e-4efd-b460-abfc7a61dbbe",
   "version": "5",
   "dialect": "pg",
   "tables": {
@@ -20,8 +20,14 @@
           "primaryKey": false,
           "notNull": true
         },
-        "user_roles": {
-          "name": "user_roles",
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "role": {
+          "name": "role",
           "type": "alcove_roles",
           "primaryKey": false,
           "notNull": true,
@@ -50,6 +56,19 @@
           "tableTo": "alcoves",
           "columnsFrom": [
             "alcove_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "alcove_memberships_user_id_users_id_fk": {
+          "name": "alcove_memberships_user_id_users_id_fk",
+          "tableFrom": "alcove_memberships",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
           ],
           "columnsTo": [
             "id"
@@ -126,8 +145,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "upload_status_enum": {
-          "name": "upload_status_enum",
+        "status": {
+          "name": "status",
           "type": "upload_status_enum",
           "primaryKey": false,
           "notNull": true,
@@ -284,8 +303,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "user_roles": {
-          "name": "user_roles",
+        "role": {
+          "name": "role",
           "type": "user_roles",
           "primaryKey": false,
           "notNull": true,
@@ -355,8 +374,8 @@
           "notNull": true,
           "default": 0
         },
-        "rendition_status_enum": {
-          "name": "rendition_status_enum",
+        "status": {
+          "name": "status",
           "type": "rendition_status_enum",
           "primaryKey": false,
           "notNull": true,
