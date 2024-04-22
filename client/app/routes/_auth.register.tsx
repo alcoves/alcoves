@@ -5,26 +5,24 @@ import { Input } from '../components/ui/input'
 import { Button } from '../components/ui/button'
 import { authenticator } from '../lib/auth.server'
 
-import type { ActionFunction, LoaderFunctionArgs } from '@remix-run/node'
+import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 
-const action: ActionFunction = async ({ request }) => {
+export async function action({ request }: ActionFunctionArgs) {
     const form = await request.formData()
     const email = form.get('email') as string
     const username = form.get('username') as string
     const password = form.get('password') as string
 
-    const response = await register({ email, username, password })
-    console.log('Register response', response)
+    // Registers the user on the server
+    await register({ email, username, password })
 
     return await authenticator.authenticate('form', request, {
         successRedirect: '/',
         failureRedirect: '/failed',
-        context: { formData: form },
     })
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
-    // If the user is already authenticated redirect to / directly
     return await authenticator.isAuthenticated(request, {
         successRedirect: '/',
     })
@@ -87,5 +85,3 @@ export default function RegisterPage() {
         </div>
     )
 }
-
-export { action }

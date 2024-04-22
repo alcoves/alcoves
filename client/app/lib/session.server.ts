@@ -6,9 +6,9 @@ if (!process.env.ALCOVES_CLIENT_SESSION_SECRET) {
     )
 }
 
-const sessionStorage = createCookieSessionStorage({
+export const sessionStorage = createCookieSessionStorage({
     cookie: {
-        name: '__session',
+        name: '_session',
         sameSite: 'lax',
         path: '/',
         httpOnly: true,
@@ -17,5 +17,3 @@ const sessionStorage = createCookieSessionStorage({
         // TODO :: Add domain?
     },
 })
-
-export { sessionStorage }

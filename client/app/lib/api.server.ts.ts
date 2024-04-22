@@ -18,11 +18,6 @@ interface UserRegisterRequest {
     password: string
 }
 
-interface HealthCheckResponse {
-    message: string
-    status: string
-}
-
 async function apiRequest<T>(
     url: string,
     options: RequestInit,
@@ -64,15 +59,3 @@ export async function register(
         body: JSON.stringify(input),
     })
 }
-
-// export async function getHealthCheck(
-//     request: Request
-// ): Promise<HealthCheckResponse> {
-//     return await apiRequest(
-//         `${alcovesEndpoint}/health`,
-//         {
-//             method: 'GET',
-//         },
-//         request
-//     )
-// }

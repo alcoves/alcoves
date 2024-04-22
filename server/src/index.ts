@@ -30,7 +30,7 @@ app.get('/healthcheck', (c) => {
 })
 
 app.get('/videos', async (c) => {
-    const videos = await db.query.video.findMany()
+    const videos = await db.query.videos.findMany()
 
     const videosWithSignedUrls = await Promise.all(
         videos.map(async (video) => {

@@ -44,7 +44,9 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
-    const response = await fetch('http://server:3005/videos')
+    const response = await fetch(
+        `${process.env.ALCOVES_CLIENT_API_ENDPOINT || ''}/videos`
+    )
     const data = await response.json()
     const videos: Video[] = data.videos
 

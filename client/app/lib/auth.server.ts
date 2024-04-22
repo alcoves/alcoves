@@ -9,22 +9,21 @@ export interface UserRecord {
     session_id?: string
 }
 
-const authenticator = new Authenticator<UserRecord>(sessionStorage)
+export const authenticator = new Authenticator<UserRecord>(sessionStorage)
 
-const formStrategy = new FormStrategy<UserRecord>(async ({ form }) => {
-    const username = form.get('username') as string
-    const password = form.get('password') as string
+authenticator.use(
+    new FormStrategy<UserRecord>(async ({ form }) => {
+        const username = form.get('username') as string
+        const password = form.get('password') as string
 
-    const loginResponse = await login({ username, password }).catch(() => {
-        throw new AuthorizationError('Invalid username or password')
-    })
+        const loginResponse = await login({ username, password }).catch(() => {
+            throw new AuthorizationError('Invalid username or password')
+        })
 
-    return {
-        username: username as string,
-        session_id: loginResponse.session_id,
-    }
-})
-
-authenticator.use(formStrategy)
-
-export { authenticator }
+        return {
+            username: username as string,
+            session_id: loginResponse.session_id,
+        }
+    }),
+    'form'
+)

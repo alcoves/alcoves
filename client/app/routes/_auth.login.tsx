@@ -4,13 +4,12 @@ import { Input } from '../components/ui/input'
 import { Button } from '../components/ui/button'
 import { authenticator } from '../lib/auth.server'
 
-import type { ActionFunction, LoaderFunctionArgs } from '@remix-run/node'
+import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 
-const action: ActionFunction = async ({ request }) => {
+export async function action({ request }: ActionFunctionArgs) {
     return await authenticator.authenticate('form', request, {
         successRedirect: '/',
         failureRedirect: '/failed',
-        context: { formData: await request.formData() },
     })
 }
 
@@ -65,5 +64,3 @@ export default function LoginPage() {
         </div>
     )
 }
-
-export { action }
