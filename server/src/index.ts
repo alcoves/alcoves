@@ -1,16 +1,20 @@
-import './bullmq'
-import { db } from './db'
+import { z } from 'zod'
 import { Hono } from 'hono'
+import { db } from './db/index'
+import { eq } from 'drizzle-orm'
 import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
-import { HTTPException } from 'hono/http-exception'
-import {
-    generatePresignedPutUrl,
-    generateSignedUrl,
-    getUploadStorageKey,
-    getVideoStorageKey,
-} from './s3'
 import { transcodeQueue } from './bullmq'
+import { zValidator } from '@hono/zod-validator'
+import { HTTPException } from 'hono/http-exception'
+import { uploads, users, userSessions } from './db/schema'
+
+import {
+    generateSignedUrl,
+    getVideoStorageKey,
+    getUploadStorageKey,
+    generatePresignedPutUrl,
+} from './s3'
 
 const app = new Hono()
 
@@ -26,7 +30,7 @@ app.get('/healthcheck', (c) => {
 })
 
 app.get('/videos', async (c) => {
-    const videos = await db.video.findMany()
+    const videos = await db.query.video.findMany()
 
     const videosWithSignedUrls = await Promise.all(
         videos.map(async (video) => {
@@ -50,18 +54,19 @@ app.post('/uploads', async (c) => {
         await c.req.json()
 
     const uuid = crypto.randomUUID()
-    const upload = await db.upload.create({
-        data: {
+    const insertUpload = await db
+        .insert(upload)
+        .values({
             size: body.size,
             storageKey: uuid,
             filename: body.filename,
             storageBucket: 'alcoves',
             contentType: body.contentType,
-        },
-    })
+        } as typeof upload.$inferInsert)
+        .returning({ storageKey: upload.storageKey })
 
     const signedUrl = await generatePresignedPutUrl(
-        getUploadStorageKey(upload.storageKey, body.filename),
+        getUploadStorageKey(insertUpload.storageKey, body.filename),
         body.contentType
     )
 
@@ -112,24 +117,20 @@ app.post('/auth/register', async (c) => {
         username,
         password,
     }: { email: string; username: string; password: string } =
-        await c.req.parseBody()
+        await c.req.json()
 
-    const user = await db.user.findUnique({
-        where: {
-            email: email,
-        },
+    const user = await db.query.users.findFirst({
+        where: eq(users.username, username),
     })
 
     if (user) {
         throw new HTTPException(400)
     }
 
-    await db.user.create({
-        data: {
-            email,
-            username,
-            password: await Bun.password.hash(password),
-        },
+    await db.insert(users).values({
+        email,
+        username,
+        password: await Bun.password.hash(password),
     })
 
     return c.json({
@@ -138,29 +139,24 @@ app.post('/auth/register', async (c) => {
     })
 })
 
-app.post('/auth/login', async (c) => {
-    const { username, password }: { username: string; password: string } =
-        await c.req.parseBody()
+const loginSchema = z.object({
+    username: z.string(),
+    password: z.string(),
+})
 
-    const user = await db.user.findUnique({
-        where: {
-            username: username,
-        },
+app.post('/auth/login', zValidator('json', loginSchema), async (c) => {
+    const { username, password } = c.req.valid('json')
+
+    const user = await db.query.users.findFirst({
+        where: eq(users.username, username),
     })
 
-    if (!user) {
-        throw new HTTPException(400)
-    }
-
+    if (!user) throw new HTTPException(400)
     const isPasswordValid = await Bun.password.verify(password, user.password)
-    if (!isPasswordValid) {
-        throw new HTTPException(400)
-    }
+    if (!isPasswordValid) throw new HTTPException(400)
 
-    const session = await db.userSession.findFirst({
-        where: {
-            userId: user.id,
-        },
+    const session = await db.query.userSessions.findFirst({
+        where: eq(userSessions.userId, user.id),
     })
 
     if (session) {
@@ -170,18 +166,20 @@ app.post('/auth/login', async (c) => {
             session_id: session.id,
         })
     } else {
-        await db.userSession.create({
-            data: {
+        const newSession = await db
+            .insert(userSessions)
+            .values({
                 userId: user.id,
-            },
+                userAgent: c.req.header('User-Agent'),
+            })
+            .returning({ id: userSessions.id })
+
+        return c.json({
+            status: 'success',
+            message: 'User logged in',
+            session_id: newSession[0].id,
         })
     }
-
-    return c.json({
-        status: 'success',
-        message: 'User logged in',
-        session_id: user.id,
-    })
 })
 
 export default {
