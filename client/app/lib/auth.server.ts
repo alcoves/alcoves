@@ -16,9 +16,12 @@ authenticator.use(
         const username = form.get('username') as string
         const password = form.get('password') as string
 
-        const loginResponse = await login({ username, password }).catch(() => {
-            throw new AuthorizationError('Invalid username or password')
-        })
+        const loginResponse = await login({ username, password }).catch(
+            (error) => {
+                console.error('Login error:', error)
+                throw new AuthorizationError('Invalid username or password')
+            }
+        )
 
         return {
             username: username as string,

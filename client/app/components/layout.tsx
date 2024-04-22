@@ -23,7 +23,7 @@ export default function Layout(props: {
             <div className="flex flex-col w-screen h-screen">
                 <div className="flex items-center justify-between p-2 h-12">
                     <div className="flex h-full items-center">
-                        <SheetTrigger>
+                        <SheetTrigger asChild>
                             <Button
                                 size="sm"
                                 variant="ghost"

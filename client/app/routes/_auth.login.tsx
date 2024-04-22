@@ -31,13 +31,12 @@ export default function LoginPage() {
             <Form method="post">
                 <div className="rounded-lg border border-gray-200 w-72 p-6 space-y-4">
                     <div className="space-y-2 ">
-                        <Label htmlFor="email">Email</Label>
+                        <Label htmlFor="username">Username</Label>
                         <Input
                             required
-                            id="email"
-                            name="email"
-                            type="email"
-                            placeholder="rusty@alcoves.io"
+                            id="username"
+                            name="username"
+                            type="username"
                         />
                     </div>
                     <div className="space-y-2">
