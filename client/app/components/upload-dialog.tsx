@@ -73,7 +73,7 @@ export default function UploadDialog() {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button size="sm" disabled={uploadDisabled}>
+                <Button className="h-7 p-2" disabled={uploadDisabled}>
                     <Upload size={18} className="mx-1" />
                     <div className="hidden md:block">
                         {uploadDisabled ? 'Uploading...' : 'Upload'}
@@ -91,7 +91,9 @@ export default function UploadDialog() {
                         disabled={uploadDisabled}
                         onClick={() => inputRef?.current?.click()}
                     >
-                        {uploadDisabled ? 'Uploading...' : 'Upload'}
+                        {uploadDisabled
+                            ? 'Uploading...'
+                            : 'Select files to upload'}
                     </Button>
                     <Input
                         onChange={(e) => {

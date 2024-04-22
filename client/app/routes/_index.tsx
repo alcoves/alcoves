@@ -27,6 +27,7 @@ interface Video {
     id: number
     title: string
     url: string
+    streams: { url: string }[]
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -61,20 +62,24 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export default function Index() {
     const { user, videos } = useLoaderData<typeof loader>()
 
+    console.log({ videos })
+
     return (
         <Layout user={user}>
-            <div className="flex flex-col space-y-2">
+            <div className="flex flex-col space-y-2 max-w-3xl">
                 {videos?.map((video) => (
                     <div key={video.id}>
                         <MediaPlayer
                             playsInline
-                            src={video.url}
                             title={video.title}
+                            src={video.streams[0].url}
                         >
                             <MediaProvider />
                             <DefaultVideoLayout icons={defaultLayoutIcons} />
                         </MediaPlayer>
-                        <div className="text-lg font-bold">{video.title}</div>
+                        <div className="text-lg font-bold truncate">
+                            {video.title}
+                        </div>
                     </div>
                 ))}
             </div>

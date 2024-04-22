@@ -7,11 +7,17 @@ import { logger } from 'hono/logger'
 import { transcodeQueue } from './bullmq'
 import { zValidator } from '@hono/zod-validator'
 import { HTTPException } from 'hono/http-exception'
-import { uploads, users, userSessions } from './db/schema'
+import {
+    NewUpload,
+    NewVideo,
+    uploads,
+    users,
+    userSessions,
+    videos,
+} from './db/schema'
 
 import {
     generateSignedUrl,
-    getVideoStorageKey,
     getUploadStorageKey,
     generatePresignedPutUrl,
 } from './s3'
@@ -30,16 +36,32 @@ app.get('/healthcheck', (c) => {
 })
 
 app.get('/videos', async (c) => {
-    const videos = await db.query.videos.findMany()
+    const videos = await db.query.videos.findMany({
+        with: {
+            upload: true,
+        },
+        orderBy: (videos, { desc }) => [desc(videos.createdAt)],
+    })
 
     const videosWithSignedUrls = await Promise.all(
         videos.map(async (video) => {
+            const streams: { url: string | undefined }[] = []
+
+            // TODO :: Check that the video is playable
+            if (video.upload) {
+                streams.push({
+                    url: await generateSignedUrl(
+                        getUploadStorageKey(
+                            video.upload.storageKey,
+                            video.upload.contentType
+                        )
+                    ),
+                })
+            }
+
             return {
-                id: video.id,
-                title: video.title,
-                url: await generateSignedUrl(
-                    getVideoStorageKey(video.storageKey)
-                ),
+                ...video,
+                streams,
             }
         })
     )
@@ -53,52 +75,58 @@ app.post('/uploads', async (c) => {
     const body: { filename: string; contentType: string; size: number } =
         await c.req.json()
 
-    const uuid = crypto.randomUUID()
-    const insertUpload = await db
-        .insert(upload)
-        .values({
-            size: body.size,
-            storageKey: uuid,
-            filename: body.filename,
-            storageBucket: 'alcoves',
-            contentType: body.contentType,
-        } as typeof upload.$inferInsert)
-        .returning({ storageKey: upload.storageKey })
+    const storageKey = crypto.randomUUID()
+    const upload: NewUpload = {
+        size: body.size,
+        storageKey: storageKey,
+        storageBucket: 'alcoves',
+        contentType: body.contentType,
+        filename: body.filename,
+    }
+
+    const newUpload = await db.insert(uploads).values(upload).returning()
+    console.log('newUpload', newUpload)
 
     const signedUrl = await generatePresignedPutUrl(
-        getUploadStorageKey(insertUpload.storageKey, body.filename),
+        getUploadStorageKey(newUpload[0].storageKey, body.contentType),
         body.contentType
     )
 
     return c.json({
-        id: upload.id,
+        id: newUpload[0].id,
         url: signedUrl,
     })
 })
 
 app.post('/uploads/:id/complete', async (c) => {
     const { id } = c.req.param()
-    const upload = await db.upload.findUnique({
-        where: {
-            id: parseInt(id),
-        },
+    const upload = await db.query.uploads.findFirst({
+        where: eq(uploads.id, parseInt(id)),
     })
 
     if (!upload) {
-        return c.json({ error: 'Upload not found' }, 404)
+        throw new HTTPException(404)
     }
 
-    await db.upload.update({
-        where: {
-            id: parseInt(id),
-        },
-        data: {
-            status: 'COMPLETED',
-        },
-    })
+    if (upload.status === 'COMPLETED') {
+        throw new HTTPException(400, { message: 'Upload already completed' })
+    }
+
+    await db
+        .update(uploads)
+        .set({ status: 'COMPLETED' })
+        .where(eq(uploads.id, upload.id))
 
     // TODO :: Create the video record
     // Then add to the transcode queue
+
+    await db.insert(videos).values({
+        title: upload.filename,
+        storageKey: upload.storageKey,
+        storageBucket: upload.storageBucket,
+        uploadId: upload.id,
+        userId: 1,
+    } as NewVideo)
 
     await transcodeQueue.add('transcode', {
         uploadId: upload.id,

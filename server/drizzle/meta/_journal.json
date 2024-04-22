@@ -8,6 +8,20 @@
       "when": 1713768101632,
       "tag": "0000_cultured_sir_ram",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1713815775824,
+      "tag": "0001_tricky_mantis",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1713815908298,
+      "tag": "0002_faithful_turbo",
+      "breakpoints": true
     }
   ]
 }

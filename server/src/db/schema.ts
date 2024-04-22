@@ -61,9 +61,8 @@ export const uploads = pgTable('uploads', {
     filename: text('filename').notNull(),
     status: uploadStatusEnum('status'),
     storageBucket: text('storage_bucket').notNull(),
-    storageKey: text('storage_bucket').notNull(),
+    storageKey: text('storage_key').notNull(),
     userId: integer('user_id').references(() => users.id),
-    url: text('url').notNull(),
     createdAt: timestamp('created_at').notNull().defaultNow(),
     updatedAt: timestamp('updated_at').notNull().defaultNow(),
 })
@@ -79,10 +78,9 @@ export const videos = pgTable('videos', {
     id: serial('id').primaryKey(),
     title: text('title').notNull(),
     storageBucket: text('storage_bucket').notNull(),
-    storageKey: text('storage_bucket').notNull(),
+    storageKey: text('storage_key').notNull(),
     uploadId: integer('upload_id').references(() => uploads.id),
     userId: integer('user_id').references(() => users.id),
-    url: text('url').notNull(),
     createdAt: timestamp('created_at').notNull().defaultNow(),
     updatedAt: timestamp('updated_at').notNull().defaultNow(),
 })
@@ -102,7 +100,7 @@ export const videosRelations = relations(videos, ({ one, many }) => ({
 export const videoRendition = pgTable('video_renditions', {
     id: serial('id').primaryKey(),
     storageBucket: text('storage_bucket').notNull(),
-    storageKey: text('storage_bucket').notNull(),
+    storageKey: text('storage_key').notNull(),
     percentage: integer('percentage').notNull().default(0),
     status: renditionStatusEnum('status'),
     videoId: integer('video_id').references(() => videos.id),
@@ -116,3 +114,6 @@ export const videoRenditionRelations = relations(videoRendition, ({ one }) => ({
         fields: [videoRendition.videoId],
     }),
 }))
+
+export type NewVideo = typeof videos.$inferInsert
+export type NewUpload = typeof uploads.$inferInsert

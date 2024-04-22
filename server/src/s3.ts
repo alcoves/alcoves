@@ -1,6 +1,7 @@
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
+import mime from 'mime'
 import { GetObjectCommand } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
+import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
 
 const s3Client = new S3Client({
     region: 'us-east-1',
@@ -52,8 +53,8 @@ export async function generatePresignedPutUrl(
     }
 }
 
-export function getUploadStorageKey(storageKey: string, filename: string) {
-    return `uploads/${storageKey}/${filename}`
+export function getUploadStorageKey(storageKey: string, contentType: string) {
+    return `uploads/${storageKey}/${storageKey}.${mime.getExtension(contentType)}`
 }
 
 export function getVideoStorageKey(storageKey: string) {
