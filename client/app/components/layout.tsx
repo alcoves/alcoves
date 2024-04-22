@@ -1,9 +1,10 @@
-// import AccountMenu from './AccountMenu'
-// import SidebarMenu from './SidebarMenu'
 import { Button } from './ui/button'
-import { Menu, Upload } from 'lucide-react'
+import { Menu } from 'lucide-react'
 import { UserRecord } from '../lib/auth.server'
-import { Link } from '@remix-run/react'
+import AccountMenu from './account-menu'
+import SidebarMenu from './sidebar-menu'
+import UploadDialog from './upload-dialog'
+
 import {
     Sheet,
     SheetContent,
@@ -19,7 +20,7 @@ export default function Layout(props: {
 }) {
     return (
         <Sheet>
-            <div className="flex flex-col min-h-screen">
+            <div className="flex flex-col w-screen h-screen">
                 <div className="flex items-center justify-between p-2 h-12">
                     <div className="flex h-full items-center">
                         <SheetTrigger>
@@ -36,21 +37,14 @@ export default function Layout(props: {
                             Alcoves
                         </div>
                     </div>
-                    <div className="flex items-center">
-                        <Button size="sm" asChild className="mr-2">
-                            <Link to="/studio/uploads">
-                                <Upload size={18} />
-                                <div className="ml-1 hidden md:block">
-                                    Upload
-                                </div>
-                            </Link>
-                        </Button>
-                        {/* <AccountMenu user={props.user} /> */}
+                    <div className="flex items-center gap-4">
+                        <UploadDialog />
+                        <AccountMenu user={props.user} />
                     </div>
                 </div>
                 <div className="flex flex-1">
                     <aside className="w-48 hidden md:block">
-                        {/* <SidebarMenu user={props.user} /> */}
+                        <SidebarMenu user={props.user} />
                     </aside>
                     <main className="flex-1 p-4">{props.children}</main>
                 </div>
@@ -69,7 +63,7 @@ export default function Layout(props: {
                             </div>
                         </SheetTitle>
                         <SheetDescription>
-                            {/* <SidebarMenu user={props.user} /> */}
+                            <SidebarMenu user={props.user} />
                         </SheetDescription>
                     </SheetHeader>
                 </SheetContent>

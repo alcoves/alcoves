@@ -12,6 +12,7 @@ import {
 } from '../components/ui/dialog'
 import { Progress } from '../components/ui/progress'
 import { useEffect, useRef, useState } from 'react'
+import { Upload } from 'lucide-react'
 
 // const MiB = 0x10_00_00
 
@@ -73,7 +74,10 @@ export default function UploadDialog() {
         <Dialog>
             <DialogTrigger asChild>
                 <Button size="sm" disabled={uploadDisabled}>
-                    {uploadDisabled ? 'Uploading...' : 'Upload'}
+                    <Upload size={18} className="mx-1" />
+                    <div className="hidden md:block">
+                        {uploadDisabled ? 'Uploading...' : 'Upload'}
+                    </div>
                 </Button>
             </DialogTrigger>
             <DialogContent>

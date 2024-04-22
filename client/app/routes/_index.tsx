@@ -63,33 +63,20 @@ export default function Index() {
 
     return (
         <Layout user={user}>
-            <div className="w-screen h-screen">
-                <div className="container max-w-2xl p-4">
-                    <div className="flex flex-col items-center justify-center space-y-2">
-                        <img height={128} width={128} src={logo} alt="logo" />
-                        <h2 className="text-3xl font-bold">Alcoves</h2>
-                        <UploadDialog />
-                        <div className="flex flex-col space-y-2">
-                            {videos?.map((video) => (
-                                <div key={video.id}>
-                                    <MediaPlayer
-                                        playsInline
-                                        src={video.url}
-                                        title={video.title}
-                                    >
-                                        <MediaProvider />
-                                        <DefaultVideoLayout
-                                            icons={defaultLayoutIcons}
-                                        />
-                                    </MediaPlayer>
-                                    <div className="text-lg font-bold">
-                                        {video.title}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
+            <div className="flex flex-col space-y-2">
+                {videos?.map((video) => (
+                    <div key={video.id}>
+                        <MediaPlayer
+                            playsInline
+                            src={video.url}
+                            title={video.title}
+                        >
+                            <MediaProvider />
+                            <DefaultVideoLayout icons={defaultLayoutIcons} />
+                        </MediaPlayer>
+                        <div className="text-lg font-bold">{video.title}</div>
                     </div>
-                </div>
+                ))}
             </div>
         </Layout>
     )
