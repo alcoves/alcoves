@@ -10,9 +10,10 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '../components/ui/dialog'
-import { Upload } from 'lucide-react'
 import { Progress } from '../components/ui/progress'
 import { useEffect, useRef, useState } from 'react'
+import { Upload } from 'lucide-react'
+import { alcovesEndpoint } from '../lib/env'
 
 // const MiB = 0x10_00_00
 
@@ -21,8 +22,10 @@ interface AlcovesAPIUploadRes {
     url: string
 }
 
-export default function UploadDialog() {
-    // const { user } = useLoaderData()
+export default function UploadDialog(props: {
+    sessionId: string
+    alcoveId: string
+}) {
     const inputRef = useRef<HTMLInputElement>(null)
     const [file, setFile] = useState<File | null>(null)
     const [percentCompleted, setPercentCompleted] = useState<number>(0)
@@ -31,11 +34,20 @@ export default function UploadDialog() {
         console.log('Im gonnna upload', file.name)
 
         const { data: upload }: { data: AlcovesAPIUploadRes } =
-            await axios.post('http://localhost:3005/uploads', {
-                size: file.size,
-                filename: file.name,
-                contentType: file.type,
-            })
+            await axios.post(
+                `${alcovesEndpoint}/alcoves/${props.alcoveId}/uploads`,
+                {
+                    size: file.size,
+                    filename: file.name,
+                    contentType: file.type,
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: 'Bearer ' + props.sessionId,
+                    },
+                }
+            )
 
         await axios.put(upload.url, file, {
             headers: {
@@ -56,9 +68,15 @@ export default function UploadDialog() {
         })
 
         const { data: uploadComplete } = await axios.post(
-            `http://localhost:3005/uploads/${upload?.id}/complete`,
+            `${alcovesEndpoint}/alcoves/${props.alcoveId}/uploads/${upload?.id}/complete`,
             {
                 id: upload.id,
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: 'Bearer ' + props.sessionId,
+                },
             }
         )
 
@@ -70,8 +88,6 @@ export default function UploadDialog() {
     }, [file])
 
     const uploadDisabled = percentCompleted > 0 && percentCompleted < 100
-
-    // if (!user) return null
 
     return (
         <Dialog>
