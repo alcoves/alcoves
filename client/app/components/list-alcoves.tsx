@@ -11,7 +11,7 @@ export default function ListAlcoves(props: { alcoves: Alcoves[] | null }) {
                         <SidebarLink
                             to={`/alcoves/${alcove.id}`}
                             key={alcove.id}
-                            extraClasses="max-h-7 p-2 w-full truncate"
+                            extraClasses="w-full truncate" // max-h-7 p-2
                         >
                             {alcove.name}
                         </SidebarLink>

@@ -1,6 +1,5 @@
 import AccountMenu from '../components/account-menu'
 import SidebarMenu from '../components/sidebar-menu'
-import UploadDialog from '../components/upload-dialog'
 
 import { Menu } from 'lucide-react'
 import { Button } from '../components/ui/button'
@@ -52,7 +51,6 @@ export default function AppRoot() {
                         </div>
                     </div>
                     <div className="flex items-center gap-4">
-                        <UploadDialog />
                         <AccountMenu user={user} />
                     </div>
                 </div>

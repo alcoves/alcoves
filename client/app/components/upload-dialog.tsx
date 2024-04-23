@@ -10,12 +10,9 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '../components/ui/dialog'
+import { Upload } from 'lucide-react'
 import { Progress } from '../components/ui/progress'
 import { useEffect, useRef, useState } from 'react'
-import { Upload } from 'lucide-react'
-import { json, LoaderFunctionArgs } from '@remix-run/node'
-// import { authenticator } from '../lib/auth.server'
-import { useLoaderData } from '@remix-run/react'
 
 // const MiB = 0x10_00_00
 
@@ -23,11 +20,6 @@ interface AlcovesAPIUploadRes {
     id: string
     url: string
 }
-
-// export async function loader({ request }: LoaderFunctionArgs) {
-//     const user = await authenticator.isAuthenticated(request)
-//     return json({ user })
-// }
 
 export default function UploadDialog() {
     // const { user } = useLoaderData()
