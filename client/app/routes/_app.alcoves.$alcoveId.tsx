@@ -1,11 +1,11 @@
 import UploadDialog from '../components/upload-dialog'
+import AlcoveVideos from '../components/alcove-videos'
 import { ALCOVES_CLIENT_BROWSER_API_ENDPOINT } from '../lib/env'
 
-import { getAlcove, getAlcoveVideos } from '../lib/api.server.ts'
 import { useLoaderData } from '@remix-run/react'
 import { authenticator } from '../lib/auth.server'
-import AlcoveVideos from '../components/alcove-videos'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { getAlcove, getAlcoveVideos } from '../lib/api.server.ts'
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
     const user = await authenticator.isAuthenticated(request)

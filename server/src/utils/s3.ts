@@ -25,7 +25,6 @@ export async function generateSignedUrl(storageKey: string) {
         const signedUrl = await getSignedUrl(s3Client, command, {
             expiresIn: 3600 * 24,
         })
-        console.log('The signed URL is:', signedUrl)
         return signedUrl
     } catch (error) {
         console.error('Error generating signed URL:', error)

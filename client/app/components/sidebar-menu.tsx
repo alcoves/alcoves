@@ -1,30 +1,32 @@
 import ListAlcoves from './list-alcoves'
 
-import { NavLink } from '@remix-run/react'
-import { buttonVariants } from './ui/button'
+import { Button } from './ui/button'
+import { SheetClose } from './ui/sheet'
 import { Alcove } from '../lib/api.server.ts'
 import { UserRecord } from '../lib/auth.server'
 import { Home, SquarePlus } from 'lucide-react'
+import { useLocation, useNavigate } from '@remix-run/react'
 
 export function SidebarLink(props: {
     to: string
     extraClasses?: string
     children: React.ReactNode
 }) {
+    const navigate = useNavigate()
+    const location = useLocation()
+
     return (
-        <NavLink
-            to={props.to}
-            className={({ isActive, isPending }) => {
-                return `${buttonVariants({
-                    variant: isActive ? 'default' : 'ghost',
-                }).replace(
-                    'justify-center',
-                    'justify-start'
-                )} ${props.extraClasses}`
-            }}
-        >
-            {props.children}
-        </NavLink>
+        <SheetClose asChild>
+            <Button
+                variant={location.pathname === props.to ? 'default' : 'ghost'}
+                className="justify-start w-full"
+                onClick={() => {
+                    navigate(props.to)
+                }}
+            >
+                {props.children}
+            </Button>
+        </SheetClose>
     )
 }
 

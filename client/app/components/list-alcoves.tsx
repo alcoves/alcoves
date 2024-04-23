@@ -5,7 +5,7 @@ export default function ListAlcoves(props: { alcoves: Alcove[] | null }) {
     return (
         <div className="py-4">
             <div className="text-xs uppercase font-bold mb-2">Alcoves</div>
-            <ul>
+            <div>
                 {props?.alcoves?.map((alcove) => {
                     return (
                         <SidebarLink
@@ -17,7 +17,7 @@ export default function ListAlcoves(props: { alcoves: Alcove[] | null }) {
                         </SidebarLink>
                     )
                 })}
-            </ul>
+            </div>
         </div>
     )
 }

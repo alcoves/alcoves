@@ -16,27 +16,26 @@ export default function CreateAlcove() {
     const { video } = useLoaderData<typeof loader>()
 
     return (
-        <div className="container mx-auto max-w-xl">
-            <MediaPlayer
-                playsInline
-                src={video?.streams?.[0]?.url}
-                title={video.title}
-            >
-                <MediaProvider />
-                <DefaultVideoLayout icons={defaultLayoutIcons} />
-            </MediaPlayer>
+        <div className="border-2">
+            <div className="flex w-full justify-center">
+                <div className="max-h-[calc(100vh-50vh)] object-contain w-full">
+                    <MediaPlayer
+                        className="h-auto w-100vw"
+                        aspectRatio="16/9"
+                        playsInline
+                        load="visible"
+                        posterLoad="visible"
+                        // title={video.title}
+                        src={video?.streams?.[0]?.url}
+                    >
+                        <MediaProvider />
+                        <DefaultVideoLayout icons={defaultLayoutIcons} />
+                    </MediaPlayer>
+                </div>
+            </div>
+            <div className="container mx-auto max-w-lg">
+                <div className="text-xl">{video.title}</div>
+            </div>
         </div>
     )
 }
-
-// export async function action({ request }: ActionFunctionArgs) {
-//     const form = await request.formData()
-//     const name = form.get('name') as string
-
-//     const user = await authenticator.isAuthenticated(request)
-//     console.log(`Creating alcove: ${name} from user : ${user?.username}`)
-
-//     // Create the alcove here
-
-//     return redirect('/')
-// }
