@@ -12,16 +12,17 @@ export interface UserRecord {
 export const authenticator = new Authenticator<UserRecord>(sessionStorage)
 
 authenticator.use(
-    new FormStrategy<UserRecord>(async ({ form }) => {
-        const username = form.get('username') as string
-        const password = form.get('password') as string
+    new FormStrategy<UserRecord>(async (request) => {
+        const username = request.form.get('username') as string
+        const password = request.form.get('password') as string
 
-        const loginResponse = await login({ username, password }).catch(
-            (error) => {
-                console.error('Login error:', error)
-                throw new AuthorizationError('Invalid username or password')
-            }
-        )
+        const loginResponse = await login(
+            { username, password },
+            request
+        ).catch((error) => {
+            console.error('Login error:', error)
+            throw new AuthorizationError('Invalid username or password')
+        })
 
         return {
             username: username as string,

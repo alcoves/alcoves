@@ -1,9 +1,11 @@
-import { Button } from './ui/button'
-import { Menu } from 'lucide-react'
-import { UserRecord } from '../lib/auth.server'
 import AccountMenu from './account-menu'
 import SidebarMenu from './sidebar-menu'
 import UploadDialog from './upload-dialog'
+
+import { Menu } from 'lucide-react'
+import { Button } from './ui/button'
+import { Alcoves } from '../lib/api.server.ts'
+import { UserRecord } from '../lib/auth.server'
 
 import {
     Sheet,
@@ -16,6 +18,7 @@ import {
 
 export default function Layout(props: {
     user: UserRecord | null
+    alcoves: Alcoves[] | null
     children: React.ReactNode
 }) {
     return (
@@ -44,7 +47,10 @@ export default function Layout(props: {
                 </div>
                 <div className="flex flex-1">
                     <aside className="w-48 hidden md:block">
-                        <SidebarMenu user={props.user} />
+                        <SidebarMenu
+                            user={props.user}
+                            alcoves={props.alcoves}
+                        />
                     </aside>
                     <main className="flex-1 p-4">{props.children}</main>
                 </div>
@@ -63,7 +69,10 @@ export default function Layout(props: {
                             </div>
                         </SheetTitle>
                         <SheetDescription>
-                            <SidebarMenu user={props.user} />
+                            <SidebarMenu
+                                user={props.user}
+                                alcoves={props.alcoves}
+                            />
                         </SheetDescription>
                     </SheetHeader>
                 </SheetContent>

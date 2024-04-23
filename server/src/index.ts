@@ -1,46 +1,23 @@
-import { z } from 'zod'
+import auth from './routes/auth'
+import alcoves from './routes/alcoves'
+
 import { Hono } from 'hono'
 import { db } from './db/index'
 import { eq } from 'drizzle-orm'
 import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
 import { transcodeQueue } from './bullmq'
-import { createMiddleware } from 'hono/factory'
-import { zValidator } from '@hono/zod-validator'
 import { HTTPException } from 'hono/http-exception'
-import {
-    NewUpload,
-    NewVideo,
-    uploads,
-    users,
-    userSessions,
-    videos,
-} from './db/schema'
+import { NewUpload, NewVideo, uploads, videos } from './db/schema'
 
 import {
     generateSignedUrl,
     getUploadStorageKey,
     generatePresignedPutUrl,
 } from './s3'
+import { authMiddleware } from './middlewares/auth'
 
 const app = new Hono()
-
-const authMiddleware = createMiddleware<{
-    Variables: {
-        userId: number
-    }
-}>(async (c, next) => {
-    const sessionsId = c.req.header('Authorization')?.split('Bearer ')[1]
-    if (!sessionsId) throw new HTTPException(401)
-
-    const userSession = await db.query.userSessions.findFirst({
-        where: eq(userSessions.id, sessionsId),
-    })
-    if (!userSession) throw new HTTPException(401)
-
-    c.set('userId', parseInt(userSession.id))
-    await next()
-})
 
 app.use(logger())
 app.use(cors())
@@ -52,6 +29,9 @@ app.get('/', (c) => {
 app.get('/healthcheck', (c) => {
     return c.text('OK')
 })
+
+app.route('/auth', auth)
+app.route('/alcoves', alcoves)
 
 app.get('/videos', async (c) => {
     const videos = await db.query.videos.findMany({
@@ -87,77 +67,6 @@ app.get('/videos', async (c) => {
     return c.json({
         videos: videosWithSignedUrls,
     })
-})
-
-app.post('/auth/register', async (c) => {
-    const {
-        email,
-        username,
-        password,
-    }: { email: string; username: string; password: string } =
-        await c.req.json()
-
-    const user = await db.query.users.findFirst({
-        where: eq(users.username, username),
-    })
-
-    if (user) {
-        throw new HTTPException(400)
-    }
-
-    await db.insert(users).values({
-        email,
-        username,
-        password: await Bun.password.hash(password),
-    })
-
-    return c.json({
-        status: 'success',
-        message: 'User created',
-    })
-})
-
-const loginSchema = z.object({
-    username: z.string(),
-    password: z.string(),
-})
-
-app.post('/auth/login', zValidator('json', loginSchema), async (c) => {
-    const { username, password } = c.req.valid('json')
-
-    const user = await db.query.users.findFirst({
-        where: eq(users.username, username),
-    })
-
-    if (!user) throw new HTTPException(400)
-    const isPasswordValid = await Bun.password.verify(password, user.password)
-    if (!isPasswordValid) throw new HTTPException(400)
-
-    const session = await db.query.userSessions.findFirst({
-        where: eq(userSessions.userId, user.id),
-    })
-
-    if (session) {
-        return c.json({
-            status: 'success',
-            message: 'User logged in',
-            session_id: session.id,
-        })
-    } else {
-        const newSession = await db
-            .insert(userSessions)
-            .values({
-                userId: user.id,
-                userAgent: c.req.header('User-Agent'),
-            })
-            .returning({ id: userSessions.id })
-
-        return c.json({
-            status: 'success',
-            message: 'User logged in',
-            session_id: newSession[0].id,
-        })
-    }
 })
 
 app.post('/uploads', authMiddleware, async (c) => {

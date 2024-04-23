@@ -15,6 +15,7 @@ import {
 } from '@vidstack/react/player/layouts/default'
 import { authenticator } from '../lib/auth.server'
 import Layout from '../components/layout'
+import { getAlcoves } from '../lib/api.server.ts'
 
 export const meta: MetaFunction = () => {
     return [
@@ -44,29 +45,22 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
-    const response = await fetch(
-        `${process.env.ALCOVES_CLIENT_API_ENDPOINT || ''}/videos`
-    )
-    const data = await response.json()
-    const videos: Video[] = data.videos
-
     const privateServer = true
     const user = await authenticator.isAuthenticated(request, {
         failureRedirect: privateServer ? '/login' : '',
     })
 
-    return json({ user, videos })
+    const alcoves = await getAlcoves(request)
+    return json({ user, alcoves })
 }
 
 export default function Index() {
-    const { user, videos } = useLoaderData<typeof loader>()
-
-    console.log({ videos })
+    const { user, alcoves } = useLoaderData<typeof loader>()
 
     return (
-        <Layout user={user}>
+        <Layout user={user} alcoves={alcoves}>
             <div className="flex flex-col space-y-2 max-w-3xl">
-                {videos?.map((video) => (
+                {/* {videos?.map((video) => (
                     <div key={video.id}>
                         <MediaPlayer
                             playsInline
@@ -80,7 +74,7 @@ export default function Index() {
                             {video.title}
                         </div>
                     </div>
-                ))}
+                ))} */}
             </div>
         </Layout>
     )

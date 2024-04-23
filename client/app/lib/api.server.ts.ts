@@ -38,10 +38,20 @@ interface CompleteUploadRes {
     id: string
 }
 
+export interface Alcoves {
+    id: string
+    name: string
+    createdAt: string
+    updatedAt: string
+    membership: {
+        role: string
+    }
+}
+
 async function apiRequest<T>(
     url: string,
     options: RequestInit,
-    request?: Request | null
+    request: Request
 ): Promise<T> {
     const headers: HeadersInit = {
         'Content-Type': 'application/json',
@@ -49,7 +59,6 @@ async function apiRequest<T>(
 
     if (request) {
         const user = await authenticator.isAuthenticated(request)
-        console.log('API QUERY', user)
         if (user) {
             headers['Authorization'] = `Bearer ${user?.session_id}`
         }
@@ -64,36 +73,66 @@ async function apiRequest<T>(
 }
 
 export async function login(
-    input: UserLoginRequest
+    input: UserLoginRequest,
+    request: Request
 ): Promise<UserLoginResponse> {
-    return await apiRequest(`${alcovesEndpoint}/auth/login`, {
-        method: 'POST',
-        body: JSON.stringify(input),
-    })
+    return await apiRequest(
+        `${alcovesEndpoint}/auth/login`,
+        {
+            method: 'POST',
+            body: JSON.stringify(input),
+        },
+        request
+    )
 }
 
 export async function register(
-    input: UserRegisterRequest
+    input: UserRegisterRequest,
+    request: Request
 ): Promise<UserLoginResponse> {
-    return await apiRequest(`${alcovesEndpoint}/auth/register`, {
-        method: 'POST',
-        body: JSON.stringify(input),
-    })
+    return await apiRequest(
+        `${alcovesEndpoint}/auth/register`,
+        {
+            method: 'POST',
+            body: JSON.stringify(input),
+        },
+        request
+    )
 }
 
 export async function createUpload(
-    input: CreateUploadReq
+    input: CreateUploadReq,
+    request: Request
 ): Promise<CreateUploadRes> {
-    return await apiRequest(`${alcovesEndpoint}/uploads`, {
-        method: 'POST',
-        body: JSON.stringify(input),
-    })
+    return await apiRequest(
+        `${alcovesEndpoint}/uploads`,
+        {
+            method: 'POST',
+            body: JSON.stringify(input),
+        },
+        request
+    )
 }
 
 export async function completedUpload(
-    input: CompleteUploadReq
+    input: CompleteUploadReq,
+    request: Request
 ): Promise<CompleteUploadRes> {
-    return await apiRequest(`${alcovesEndpoint}/uploads/${input.id}/complete`, {
-        method: 'POST',
-    })
+    return await apiRequest(
+        `${alcovesEndpoint}/uploads/${input.id}/complete`,
+        {
+            method: 'POST',
+        },
+        request
+    )
+}
+
+export async function getAlcoves(request: Request): Promise<Alcoves[]> {
+    return await apiRequest(
+        `${alcovesEndpoint}/alcoves`,
+        {
+            method: 'GET',
+        },
+        request
+    )
 }

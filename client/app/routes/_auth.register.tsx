@@ -14,7 +14,7 @@ export async function action({ request }: ActionFunctionArgs) {
     const password = form.get('password') as string
 
     // Registers the user on the server
-    await register({ email, username, password })
+    await register({ email, username, password }, request)
 
     return await authenticator.authenticate('form', request, {
         successRedirect: '/',
