@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { Button } from './ui/button'
+import { Upload } from 'lucide-react'
 import { Input } from '../components/ui/input'
 import { DialogClose } from '@radix-ui/react-dialog'
 import {
@@ -12,8 +13,6 @@ import {
 } from '../components/ui/dialog'
 import { Progress } from '../components/ui/progress'
 import { useEffect, useRef, useState } from 'react'
-import { Upload } from 'lucide-react'
-import { alcovesEndpoint } from '../lib/env'
 
 // const MiB = 0x10_00_00
 
@@ -25,6 +24,7 @@ interface AlcovesAPIUploadRes {
 export default function UploadDialog(props: {
     sessionId: string
     alcoveId: string
+    alcovesEndpoint: string
 }) {
     const inputRef = useRef<HTMLInputElement>(null)
     const [file, setFile] = useState<File | null>(null)
@@ -35,7 +35,7 @@ export default function UploadDialog(props: {
 
         const { data: upload }: { data: AlcovesAPIUploadRes } =
             await axios.post(
-                `${alcovesEndpoint}/alcoves/${props.alcoveId}/uploads`,
+                `${props.alcovesEndpoint}/alcoves/${props.alcoveId}/uploads`,
                 {
                     size: file.size,
                     filename: file.name,
@@ -68,7 +68,7 @@ export default function UploadDialog(props: {
         })
 
         const { data: uploadComplete } = await axios.post(
-            `${alcovesEndpoint}/alcoves/${props.alcoveId}/uploads/${upload?.id}/complete`,
+            `${props.alcovesEndpoint}/alcoves/${props.alcoveId}/uploads/${upload?.id}/complete`,
             {
                 id: upload.id,
             },

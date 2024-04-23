@@ -1,5 +1,5 @@
-import { alcovesEndpoint } from './env'
 import { authenticator } from './auth.server'
+import { ALCOVES_CLIENT_API_ENDPOINT } from './env'
 
 export interface UserLoginResponse {
     status: string
@@ -84,7 +84,7 @@ export async function register(
     request: Request
 ): Promise<UserLoginResponse> {
     return await apiRequest(
-        `${alcovesEndpoint}/auth/register`,
+        `${ALCOVES_CLIENT_API_ENDPOINT}/auth/register`,
         {
             method: 'POST',
             body: JSON.stringify(input),
@@ -98,7 +98,7 @@ export async function createUpload(
     request: Request
 ): Promise<CreateUploadRes> {
     return await apiRequest(
-        `${alcovesEndpoint}/uploads`,
+        `${ALCOVES_CLIENT_API_ENDPOINT}/uploads`,
         {
             method: 'POST',
             body: JSON.stringify(input),
@@ -112,7 +112,7 @@ export async function completedUpload(
     request: Request
 ): Promise<CompleteUploadRes> {
     return await apiRequest(
-        `${alcovesEndpoint}/uploads/${input.id}/complete`,
+        `${ALCOVES_CLIENT_API_ENDPOINT}/uploads/${input.id}/complete`,
         {
             method: 'POST',
         },
@@ -122,7 +122,7 @@ export async function completedUpload(
 
 export async function getAlcoves(request: Request): Promise<Alcoves[]> {
     return await apiRequest(
-        `${alcovesEndpoint}/alcoves`,
+        `${ALCOVES_CLIENT_API_ENDPOINT}/alcoves`,
         {
             method: 'GET',
         },

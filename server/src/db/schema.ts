@@ -77,14 +77,21 @@ export const uploads = pgTable('uploads', {
     userId: integer('user_id')
         .notNull()
         .references(() => users.id),
+    alcoveId: integer('alcove_id')
+        .notNull()
+        .references(() => alcoves.id),
     createdAt: timestamp('created_at').notNull().defaultNow(),
     updatedAt: timestamp('updated_at').notNull().defaultNow(),
 })
 
-export const uploadsRelations = relations(userSessions, ({ one }) => ({
+export const uploadsRelations = relations(uploads, ({ one }) => ({
     user: one(users, {
         references: [users.id],
-        fields: [userSessions.userId],
+        fields: [uploads.userId],
+    }),
+    alcove: one(alcoves, {
+        references: [alcoves.id],
+        fields: [uploads.userId],
     }),
 }))
 
