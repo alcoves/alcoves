@@ -1,23 +1,6 @@
 import { authenticator } from './auth.server'
 import { ALCOVES_CLIENT_API_ENDPOINT } from './env'
 
-export interface UserLoginResponse {
-    status: string
-    message: string
-    session_id: string
-}
-
-interface UserLoginRequest {
-    username: string
-    password: string
-}
-
-interface UserRegisterRequest {
-    email: string
-    username: string
-    password: string
-}
-
 interface CreateUploadReq {
     size: number
     filename: string
@@ -38,7 +21,7 @@ interface CompleteUploadRes {
     id: string
 }
 
-export interface Alcoves {
+export interface Alcove {
     id: string
     name: string
     createdAt: string
@@ -46,6 +29,33 @@ export interface Alcoves {
     membership: {
         role: string
     }
+}
+
+export interface Video {
+    id: string
+    title: string
+    uploadId: string
+    userId: string
+    alcoveId: string
+    storageBucket: string
+    storageKey: string
+    createdAt: string
+    updatedAt: string
+    streams: {
+        url: string
+    }[]
+}
+
+export interface Upload {
+    id: string
+    size: number
+    filename: string
+    contentType: string
+    status: string
+    storageBucket: string
+    storageKey: string
+    createdAt: string
+    updatedAt: string
 }
 
 async function apiRequest<T>(
@@ -79,10 +89,22 @@ async function apiRequest<T>(
     }
 }
 
+export interface UserRegisterRes {
+    status: string
+    message: string
+    session_id: string
+}
+
+interface UserRegisterReq {
+    email: string
+    username: string
+    password: string
+}
+
 export async function register(
-    input: UserRegisterRequest,
+    input: UserRegisterReq,
     request: Request
-): Promise<UserLoginResponse> {
+): Promise<UserRegisterRes> {
     return await apiRequest(
         `${ALCOVES_CLIENT_API_ENDPOINT}/auth/register`,
         {
@@ -120,9 +142,49 @@ export async function completedUpload(
     )
 }
 
-export async function getAlcoves(request: Request): Promise<Alcoves[]> {
+export async function getAlcoves(request: Request): Promise<Alcove[]> {
     return await apiRequest(
         `${ALCOVES_CLIENT_API_ENDPOINT}/alcoves`,
+        {
+            method: 'GET',
+        },
+        request
+    )
+}
+
+interface GetAlcoveReq {
+    alcoveId: string
+}
+
+interface GetAlcoveRes {
+    id: string
+    name: string
+    createdAt: string
+    updatedAt: string
+    membership: {
+        role: string
+    }
+}
+
+export async function getAlcove(
+    input: GetAlcoveReq,
+    request: Request
+): Promise<GetAlcoveRes> {
+    return await apiRequest(
+        `${ALCOVES_CLIENT_API_ENDPOINT}/alcoves/${input.alcoveId}`,
+        {
+            method: 'GET',
+        },
+        request
+    )
+}
+
+export async function getAlcoveVideos(
+    input: { alcoveId: string },
+    request: Request
+): Promise<{ videos: Video[] }> {
+    return await apiRequest(
+        `${ALCOVES_CLIENT_API_ENDPOINT}/alcoves/${input.alcoveId}/videos`,
         {
             method: 'GET',
         },

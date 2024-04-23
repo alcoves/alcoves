@@ -1,7 +1,7 @@
-import { Alcoves } from '../lib/api.server.ts'
+import { Alcove } from '../lib/api.server.ts'
 import { SidebarLink } from './sidebar-menu.js'
 
-export default function ListAlcoves(props: { alcoves: Alcoves[] | null }) {
+export default function ListAlcoves(props: { alcoves: Alcove[] | null }) {
     return (
         <div className="py-4">
             <div className="text-xs uppercase font-bold mb-2">Alcoves</div>

@@ -29,7 +29,9 @@ const createAlcoveSchema = z.object({
 router.get('', authMiddleware, async (c) => {
     const memberships = await db.query.alcoveMemberships.findMany({
         where: eq(alcoveMemberships.userId, c.var.userId),
-        with: { alcove: true },
+        with: {
+            alcove: true,
+        },
     })
 
     return c.json(
@@ -44,10 +46,29 @@ router.get('', authMiddleware, async (c) => {
     )
 })
 
+router.get('/:alcoveId', authMiddleware, async (c) => {
+    const { alcoveId } = c.req.param()
+    const membership = await db.query.alcoveMemberships.findFirst({
+        where:
+            eq(alcoveMemberships.userId, c.var.userId) &&
+            eq(alcoveMemberships.alcoveId, parseInt(alcoveId)),
+        with: { alcove: true },
+    })
+
+    if (!membership) throw new HTTPException(404)
+
+    return c.json({
+        ...membership.alcove,
+        membership: {
+            role: membership.role,
+        },
+    })
+})
+
 router.post(
     '/',
-    authMiddleware,
     zValidator('json', createAlcoveSchema),
+    authMiddleware,
     async (c) => {
         const { name } = c.req.valid('json')
 
@@ -68,8 +89,11 @@ router.post(
     }
 )
 
-router.get('/videos', async (c) => {
-    const videos = await db.query.videos.findMany({
+router.get('/:alcoveId/videos', authMiddleware, async (c) => {
+    const { alcoveId } = c.req.param()
+
+    const vids = await db.query.videos.findMany({
+        where: eq(videos.alcoveId, alcoveId),
         with: {
             upload: true,
         },
@@ -77,7 +101,7 @@ router.get('/videos', async (c) => {
     })
 
     const videosWithSignedUrls = await Promise.all(
-        videos.map(async (video) => {
+        vids.map(async (video) => {
             const streams: { url: string | undefined }[] = []
 
             // TODO :: Check that the video is playable
@@ -113,7 +137,7 @@ router.post('/:alcoveId/uploads', authMiddleware, async (c) => {
 
     const storageKey = crypto.randomUUID()
     const upload: NewUpload = {
-        userId: c.get('userId'),
+        userId: c.var.userId,
         size: body.size,
         storageKey: storageKey,
         storageBucket: 'alcoves',
@@ -139,9 +163,9 @@ router.post(
     '/:alcoveId/uploads/:uploadId/complete',
     authMiddleware,
     async (c) => {
-        const { id, alcoveId } = c.req.param()
+        const { uploadId, alcoveId } = c.req.param()
         const upload = await db.query.uploads.findFirst({
-            where: eq(uploads.id, parseInt(id)),
+            where: eq(uploads.id, parseInt(uploadId)),
         })
 
         if (!upload) {
@@ -163,10 +187,10 @@ router.post(
         // Then add to the transcode queue
 
         const videoData: NewVideo = {
-            userId: c.get('userId'),
+            userId: c.var.userId,
             title: upload.filename,
             uploadId: upload.id,
-            alcovesId: parseInt(alcoveId),
+            alcoveId: parseInt(alcoveId),
             storageKey: upload.storageKey,
             storageBucket: upload.storageBucket,
         }

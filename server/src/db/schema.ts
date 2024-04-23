@@ -106,7 +106,7 @@ export const videos = pgTable('videos', {
     userId: integer('user_id')
         .notNull()
         .references(() => users.id),
-    alcovesId: integer('alcoves_id')
+    alcoveId: integer('alcoves_id')
         .notNull()
         .references(() => alcoves.id),
     createdAt: timestamp('created_at').notNull().defaultNow(),
@@ -124,7 +124,7 @@ export const videosRelations = relations(videos, ({ one, many }) => ({
     }),
     alcove: one(alcoves, {
         references: [alcoves.id],
-        fields: [videos.alcovesId],
+        fields: [videos.alcoveId],
     }),
     renditions: many(videoRendition),
 }))

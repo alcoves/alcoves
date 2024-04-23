@@ -2,7 +2,7 @@ import ListAlcoves from './list-alcoves'
 
 import { NavLink } from '@remix-run/react'
 import { buttonVariants } from './ui/button'
-import { Alcoves } from '../lib/api.server.ts'
+import { Alcove } from '../lib/api.server.ts'
 import { UserRecord } from '../lib/auth.server'
 import { Home, SquarePlus } from 'lucide-react'
 
@@ -30,7 +30,7 @@ export function SidebarLink(props: {
 
 export default function SidebarMenu(props: {
     user: UserRecord | null
-    alcoves: Alcoves[] | null
+    alcoves: Alcove[] | null
 }) {
     if (props.user) {
         return (

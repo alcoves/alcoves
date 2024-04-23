@@ -1,11 +1,12 @@
 import AccountMenu from '../components/account-menu'
 import SidebarMenu from '../components/sidebar-menu'
 
+import { useState } from 'react'
 import { Menu } from 'lucide-react'
 import { Button } from '../components/ui/button'
 import { authenticator } from '../lib/auth.server'
 import { getAlcoves } from '../lib/api.server.ts'
-import { Outlet, useLoaderData } from '@remix-run/react'
+import { Outlet, useLoaderData, useMatches } from '@remix-run/react'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 
 import {
@@ -29,22 +30,38 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function AppRoot() {
+    const matches = useMatches()
     const { user, alcoves } = useLoaderData<typeof loader>()
+    const isVideoPage = matches.some((match) => match.id?.includes('$videoId'))
+
+    const [isMenuOpen, setIsMenuOpen] = useState(true)
+    const [isSheetOpen, setIsSheetOpen] = useState(false)
+
+    const toggleMenu = () => {
+        setIsMenuOpen(!isMenuOpen)
+    }
 
     return (
-        <Sheet>
+        <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
             <div className="flex flex-col w-screen h-screen">
                 <div className="flex items-center justify-between p-2 h-12">
                     <div className="flex h-full items-center">
-                        <SheetTrigger asChild>
+                        {isVideoPage ? (
+                            <SheetTrigger asChild>
+                                <Button size="sm" variant="ghost">
+                                    <Menu size={24} />
+                                </Button>
+                            </SheetTrigger>
+                        ) : (
                             <Button
                                 size="sm"
                                 variant="ghost"
-                                className="md:hidden"
+                                onClick={toggleMenu}
+                                className="focus:outline-none"
                             >
                                 <Menu size={24} />
                             </Button>
-                        </SheetTrigger>
+                        )}
                         <img width={32} height={32} src="/favicon.ico" />
                         <div className="pl-2 text-lg font-medium self-end hidden md:block">
                             Alcoves
@@ -55,14 +72,16 @@ export default function AppRoot() {
                     </div>
                 </div>
                 <div className="flex flex-1">
-                    <aside className="w-48 hidden md:block">
-                        <SidebarMenu user={user} alcoves={alcoves || []} />
-                    </aside>
+                    {Boolean(isMenuOpen && !isVideoPage) && (
+                        <aside className={`w-48 hidden md:block`}>
+                            <SidebarMenu user={user} alcoves={alcoves || []} />
+                        </aside>
+                    )}
                     <main className="flex-1 p-4">
                         <Outlet />
                     </main>
                 </div>
-                <SheetContent side="left">
+                <SheetContent side="left" className="w-60">
                     <SheetHeader>
                         <SheetTitle>
                             <div className="flex h-full items-center">
