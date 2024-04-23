@@ -6,13 +6,6 @@ import { authenticator } from '../lib/auth.server'
 
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 
-export async function action({ request }: ActionFunctionArgs) {
-    return await authenticator.authenticate('form', request, {
-        successRedirect: '/',
-        failureRedirect: '/failed',
-    })
-}
-
 export async function loader({ request }: LoaderFunctionArgs) {
     return await authenticator.isAuthenticated(request, {
         successRedirect: '/',
@@ -62,4 +55,11 @@ export default function LoginPage() {
             </Form>
         </div>
     )
+}
+
+export async function action({ request }: ActionFunctionArgs) {
+    return await authenticator.authenticate('form', request, {
+        successRedirect: '/',
+        failureRedirect: '/failed',
+    })
 }

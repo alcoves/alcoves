@@ -64,26 +64,19 @@ async function apiRequest<T>(
         }
     }
 
-    const response = await fetch(url, {
-        headers,
-        ...options,
-    })
-    const data = await response.json()
-    return data as T
-}
-
-export async function login(
-    input: UserLoginRequest,
-    request: Request
-): Promise<UserLoginResponse> {
-    return await apiRequest(
-        `${alcovesEndpoint}/auth/login`,
-        {
-            method: 'POST',
-            body: JSON.stringify(input),
-        },
-        request
-    )
+    try {
+        const response = await fetch(url, {
+            headers,
+            ...options,
+        })
+        if (!response.ok) {
+            throw new Error(`Request failed with status ${response.status}`)
+        }
+        const data = await response.json()
+        return data as T
+    } catch (error) {
+        throw new Error(`API request failed: ${error}`)
+    }
 }
 
 export async function register(

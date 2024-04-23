@@ -2,6 +2,7 @@ import LogoutButton from './auth/logout'
 
 import { Button } from './ui/button'
 import { Link } from '@remix-run/react'
+import { UserRecord } from '../lib/auth.server'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 
 import {
@@ -12,7 +13,6 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from './ui/dropdown-menu'
-import { UserRecord } from '../lib/auth.server'
 
 export default function AccountMenu(props: { user: UserRecord | null }) {
     if (props.user) {
@@ -27,8 +27,13 @@ export default function AccountMenu(props: { user: UserRecord | null }) {
                     </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                    <DropdownMenuLabel>
+                        Hi {props.user.username}
+                    </DropdownMenuLabel>
                     <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                        <Link to="/account">My Account</Link>
+                    </DropdownMenuItem>
                     <DropdownMenuItem>
                         <LogoutButton />
                     </DropdownMenuItem>

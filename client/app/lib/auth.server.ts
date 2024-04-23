@@ -1,7 +1,7 @@
-import { login } from './api.server.ts'
+import { Authenticator } from 'remix-auth'
+import { alcovesEndpoint } from './env.js'
 import { FormStrategy } from 'remix-auth-form'
 import { sessionStorage } from './session.server'
-import { Authenticator, AuthorizationError } from 'remix-auth'
 
 export interface UserRecord {
     email?: string
@@ -16,17 +16,24 @@ authenticator.use(
         const username = request.form.get('username') as string
         const password = request.form.get('password') as string
 
-        const loginResponse = await login(
-            { username, password },
-            request
-        ).catch((error) => {
-            console.error('Login error:', error)
-            throw new AuthorizationError('Invalid username or password')
-        })
-
-        return {
-            username: username as string,
-            session_id: loginResponse.session_id,
+        try {
+            const response = await fetch(`${alcovesEndpoint}/auth/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password }),
+            })
+            if (!response.ok) {
+                throw new Error(`Request failed with status ${response.status}`)
+            }
+            const data = await response.json()
+            return {
+                username: username as string,
+                session_id: data.session_id,
+            }
+        } catch (error) {
+            throw new Error(`API request failed: ${error}`)
         }
     }),
     'form'

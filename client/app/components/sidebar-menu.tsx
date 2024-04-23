@@ -6,14 +6,21 @@ import { Alcoves } from '../lib/api.server.ts'
 import { UserRecord } from '../lib/auth.server'
 import { Home, SquarePlus } from 'lucide-react'
 
-function SidebarLink(props: { to: string; children: React.ReactNode }) {
+export function SidebarLink(props: {
+    to: string
+    extraClasses?: string
+    children: React.ReactNode
+}) {
     return (
         <NavLink
             to={props.to}
             className={({ isActive, isPending }) => {
                 return `${buttonVariants({
                     variant: isActive ? 'default' : 'ghost',
-                }).replace('justify-center', 'justify-start')}`
+                }).replace(
+                    'justify-center',
+                    'justify-start'
+                )} ${props.extraClasses}`
             }}
         >
             {props.children}
@@ -32,9 +39,9 @@ export default function SidebarMenu(props: {
                     <Home className="mr-2 h-4 w-4" />
                     <div className="text-sm">Home</div>
                 </SidebarLink>
-                <SidebarLink to="/alcoves/create">
+                <SidebarLink to="/create">
                     <SquarePlus className="mr-2 h-4 w-4" />
-                    <div className="text-sm">Create Alcove</div>
+                    <div className="text-sm">Create</div>
                 </SidebarLink>
                 <div>
                     <ListAlcoves alcoves={props.alcoves} />
@@ -43,5 +50,5 @@ export default function SidebarMenu(props: {
         )
     }
 
-    return <div>Sidebar</div>
+    return null
 }

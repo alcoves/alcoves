@@ -1,26 +1,37 @@
-import AccountMenu from './account-menu'
-import SidebarMenu from './sidebar-menu'
-import UploadDialog from './upload-dialog'
+import AccountMenu from '../components/account-menu'
+import SidebarMenu from '../components/sidebar-menu'
+import UploadDialog from '../components/upload-dialog'
 
 import { Menu } from 'lucide-react'
-import { Button } from './ui/button'
-import { Alcoves } from '../lib/api.server.ts'
-import { UserRecord } from '../lib/auth.server'
+import { Button } from '../components/ui/button'
+import { authenticator } from '../lib/auth.server'
+import { getAlcoves } from '../lib/api.server.ts'
+import { Outlet, useLoaderData } from '@remix-run/react'
+import { json, LoaderFunctionArgs } from '@remix-run/node'
 
 import {
     Sheet,
+    SheetTitle,
+    SheetHeader,
+    SheetTrigger,
     SheetContent,
     SheetDescription,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger,
-} from './ui/sheet'
+} from '../components/ui/sheet'
 
-export default function Layout(props: {
-    user: UserRecord | null
-    alcoves: Alcoves[] | null
-    children: React.ReactNode
-}) {
+export async function loader({ request }: LoaderFunctionArgs) {
+    const user = await authenticator.isAuthenticated(request)
+
+    let alcoves
+    if (user) {
+        alcoves = await getAlcoves(request)
+    }
+
+    return json({ user, alcoves })
+}
+
+export default function AppRoot() {
+    const { user, alcoves } = useLoaderData<typeof loader>()
+
     return (
         <Sheet>
             <div className="flex flex-col w-screen h-screen">
@@ -42,17 +53,16 @@ export default function Layout(props: {
                     </div>
                     <div className="flex items-center gap-4">
                         <UploadDialog />
-                        <AccountMenu user={props.user} />
+                        <AccountMenu user={user} />
                     </div>
                 </div>
                 <div className="flex flex-1">
                     <aside className="w-48 hidden md:block">
-                        <SidebarMenu
-                            user={props.user}
-                            alcoves={props.alcoves}
-                        />
+                        <SidebarMenu user={user} alcoves={alcoves || []} />
                     </aside>
-                    <main className="flex-1 p-4">{props.children}</main>
+                    <main className="flex-1 p-4">
+                        <Outlet />
+                    </main>
                 </div>
                 <SheetContent side="left">
                     <SheetHeader>
@@ -69,10 +79,7 @@ export default function Layout(props: {
                             </div>
                         </SheetTitle>
                         <SheetDescription>
-                            <SidebarMenu
-                                user={props.user}
-                                alcoves={props.alcoves}
-                            />
+                            <SidebarMenu user={user} alcoves={alcoves || []} />
                         </SheetDescription>
                     </SheetHeader>
                 </SheetContent>
