@@ -191,3 +191,16 @@ export async function getAlcoveVideos(
         request
     )
 }
+
+export async function getVideo(
+    input: { videoId: string },
+    request: Request
+): Promise<{ video: Video }> {
+    return await apiRequest(
+        `${ALCOVES_CLIENT_API_ENDPOINT}/videos/${input.videoId}`,
+        {
+            method: 'GET',
+        },
+        request
+    )
+}

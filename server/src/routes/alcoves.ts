@@ -93,7 +93,7 @@ router.get('/:alcoveId/videos', authMiddleware, async (c) => {
     const { alcoveId } = c.req.param()
 
     const vids = await db.query.videos.findMany({
-        where: eq(videos.alcoveId, alcoveId),
+        where: eq(videos.alcoveId, parseInt(alcoveId)),
         with: {
             upload: true,
         },

@@ -1,23 +1,32 @@
-import { Input } from '../components/ui/input'
-import { Button } from '../components/ui/button'
-import { Form, useLoaderData } from '@remix-run/react'
-import { authenticator } from '../lib/auth.server'
+import { getVideo } from '../lib/api.server.ts'
+import { useLoaderData } from '@remix-run/react'
+import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { MediaPlayer, MediaProvider } from '@vidstack/react'
 import {
-    ActionFunctionArgs,
-    json,
-    LoaderFunctionArgs,
-    redirect,
-} from '@remix-run/node'
+    defaultLayoutIcons,
+    DefaultVideoLayout,
+} from '@vidstack/react/player/layouts/default'
 
-// export async function loader({ request }: LoaderFunctionArgs) {
-//     const user = await authenticator.isAuthenticated(request)
-//     return json({ user })
-// }
+export async function loader({ params, request }: LoaderFunctionArgs) {
+    const { video } = await getVideo({ videoId: params.videoId ?? '' }, request)
+    return json({ video })
+}
 
 export default function CreateAlcove() {
-    // const { user } = useLoaderData<typeof loader>()
+    const { video } = useLoaderData<typeof loader>()
 
-    return <div className="container mx-auto max-w-xl">Here is the video</div>
+    return (
+        <div className="container mx-auto max-w-xl">
+            <MediaPlayer
+                playsInline
+                src={video?.streams?.[0]?.url}
+                title={video.title}
+            >
+                <MediaProvider />
+                <DefaultVideoLayout icons={defaultLayoutIcons} />
+            </MediaPlayer>
+        </div>
+    )
 }
 
 // export async function action({ request }: ActionFunctionArgs) {

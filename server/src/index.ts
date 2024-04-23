@@ -1,4 +1,5 @@
 import auth from './routes/auth'
+import videos from './routes/videos'
 import alcoves from './routes/alcoves'
 
 import { Hono } from 'hono'
@@ -19,6 +20,7 @@ app.get('/healthcheck', (c) => {
 })
 
 app.route('/auth', auth)
+app.route('/videos', videos)
 app.route('/alcoves', alcoves)
 
 export default {
