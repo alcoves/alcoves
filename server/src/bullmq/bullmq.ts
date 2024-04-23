@@ -1,4 +1,4 @@
-import { env } from './env'
+import { env } from '../utils/env'
 import { Queue } from 'bullmq'
 
 const transcodeQueueName = 'transcode'

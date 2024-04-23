@@ -1,5 +1,5 @@
 import { Worker } from 'bullmq'
-import { bullConnection, transcodeQueue } from './bullmq'
+import { bullConnection, transcodeQueue } from './bullmq/bullmq'
 
 const worker = new Worker(
     transcodeQueue.name,

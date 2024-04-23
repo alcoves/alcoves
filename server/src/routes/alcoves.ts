@@ -12,9 +12,13 @@ import {
     uploads,
     videos,
 } from '../db/schema'
-import { generatePresignedPutUrl, getUploadStorageKey } from '../s3'
+import {
+    generatePresignedPutUrl,
+    generateSignedUrl,
+    getUploadStorageKey,
+} from '../utils/s3'
 import { HTTPException } from 'hono/http-exception'
-import { transcodeQueue } from '../bullmq'
+import { transcodeQueue } from '../bullmq/bullmq'
 
 const router = new Hono()
 
@@ -63,6 +67,42 @@ router.post(
         return c.json(alcove)
     }
 )
+
+router.get('/videos', async (c) => {
+    const videos = await db.query.videos.findMany({
+        with: {
+            upload: true,
+        },
+        orderBy: (videos, { desc }) => [desc(videos.createdAt)],
+    })
+
+    const videosWithSignedUrls = await Promise.all(
+        videos.map(async (video) => {
+            const streams: { url: string | undefined }[] = []
+
+            // TODO :: Check that the video is playable
+            if (video.upload) {
+                streams.push({
+                    url: await generateSignedUrl(
+                        getUploadStorageKey(
+                            video.upload.storageKey,
+                            video.upload.contentType
+                        )
+                    ),
+                })
+            }
+
+            return {
+                ...video,
+                streams,
+            }
+        })
+    )
+
+    return c.json({
+        videos: videosWithSignedUrls,
+    })
+})
 
 router.post('/:alcoveId/uploads', authMiddleware, async (c) => {
     const { alcoveId } = c.req.param()
