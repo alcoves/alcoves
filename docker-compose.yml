@@ -1,201 +1,93 @@
 x-server-environment: &server-environment
-  ALCOVES_REDIS_HOST: redis
-  ALCOVES_REDIS_PORT: 6379
-  ALCOVES_DB_CONNECTION_STRING: postgres://postgres:postgres@postgres:5432/alcoves
+    ALCOVES_TASK_DB_PORT: 6379
+    ALCOVES_TASK_DB_HOST: dragonfly
+    ALCOVES_DB_CONNECTION_STRING: postgres://postgres:postgres@postgres:5432/alcoves
 
 services:
-  client:
-    container_name: client
-    build:
-      context: ./client
-      dockerfile: Dockerfile.dev
-    environment:
-      ALCOVES_CLIENT_SESSION_SECRET: changeme
-      ALCOVES_CLIENT_API_ENDPOINT: http://server:3005
-      ALCOVES_CLIENT_BROWSER_API_ENDPOINT: http://localhost:3005
-    volumes:
-      - ./client:/app
-      - /app/node_modules
-    depends_on:
-      - server
-    ports:
-      - 3000:3000
-      - 3001:3001 # HMR
+    server:
+        container_name: server
+        build:
+            context: .
+            dockerfile: Dockerfile.dev
+        command: bun run dev:server
+        environment:
+            <<: *server-environment
+        volumes:
+            - ./:/app
+            - /app/node_modules
+        depends_on:
+            - minio
+            - minio-mb
+            - postgres
+            - dragonfly
+        ports:
+            - 3000:3000
+    worker:
+        container_name: worker
+        build:
+            context: .
+            dockerfile: Dockerfile.dev
+        command: bun run dev:worker
+        environment:
+            <<: *server-environment
+        volumes:
+            - ./:/app
+            - /app/node_modules
+        depends_on:
+            - server
+            - minio
+            - minio-mb
+            - postgres
+            - dragonfly
+    dragonfly:
+        container_name: dragonfly
+        image: docker.dragonflydb.io/dragonflydb/dragonfly
+        restart: always
+        ulimits:
+            memlock: -1
+        ports:
+            - 6100:6379
+        volumes:
+            - dragonfly:/data
+    postgres:
+        container_name: postgres
+        image: postgres:16
+        restart: always
+        ports:
+            - 6200:5432
+        volumes:
+            - postgres:/var/lib/postgresql/data/
+        healthcheck:
+            test: ['CMD-SHELL', 'pg_isready', '-U', 'postgres', '-d', 'alcoves']
+            retries: 30
+            timeout: 5s
+            interval: 1s
+        user: postgres
+        environment:
+            POSTGRES_DB: alcoves
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+    minio:
+        image: minio/minio
+        volumes:
+            - minio:/data
+        environment:
+            MINIO_ROOT_USER: minioadmin
+            MINIO_ROOT_PASSWORD: minioadmin
+        ports:
+            - '9000:9000'
+            - '9001:9001'
+        command: server /data --console-address ":9001"
 
-  server:
-    container_name: server
-    build:
-      context: ./server
-      dockerfile: Dockerfile.dev
-    command: bun run dev:server
-    environment:
-      <<: *server-environment
-    volumes:
-      - ./server:/app
-      - /app/node_modules
-    depends_on:
-      - redis
-      - postgres
-      - minio
-      - minio-mb
-    ports:
-      - 3005:3005
-
-  worker:
-    container_name: worker
-    build:
-      context: ./server
-      dockerfile: Dockerfile.dev
-    command: bun run dev:worker
-    environment:
-      <<: *server-environment
-    volumes:
-      - ./server:/app
-      - /app/node_modules
-    depends_on:
-      - server
-      - redis
-      - postgres
-      - minio
-      - minio-mb
-
-  redis:
-    container_name: redis
-    image: redis:latest
-    restart: always
-    # --requirepass redis
-    command: redis-server --maxmemory-policy noeviction
-    ports:
-      - 6100:6379
-    volumes:
-      - redis:/data
-    healthcheck:
-      test: ['CMD-SHELL', 'redis-cli ping']
-      retries: 30
-      timeout: 5s
-      interval: 1s
-
-  postgres:
-    container_name: postgres
-    image: postgres:16-alpine
-    restart: always
-    ports:
-      - 6200:5432
-    volumes:
-      - postgres:/var/lib/postgresql/data/
-    healthcheck:
-      test:
-        ['CMD-SHELL', 'pg_isready', '-U', 'postgres', '-d', 'alcoves']
-      retries: 30
-      timeout: 5s
-      interval: 1s
-    user: postgres
-    environment:
-      POSTGRES_DB: alcoves
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-
-  # api:
-  #   container_name: api
-  #   build:
-  #     context: ./apps/api
-  #     dockerfile: Dockerfile.dev
-  #   environment:
-  #     ALCOVES_API_DB_HOST: postgres
-  #     ALCOVES_API_DB_PORT: 5432
-  #     ALCOVES_API_DB_USER: postgres
-  #     ALCOVES_API_DB_PASSWORD: postgres
-  #     ALCOVES_API_DB_NAME: alcoves
-  #     ALCOVES_API_REDIS_ADDR: redis:6379
-  #   volumes:
-  #     - ./apps/api:/app
-  #   depends_on:
-  #     - redis
-  #     - postgres
-  #   ports:
-  #     - 4000:4000
-  #   healthcheck:
-  #     test: ['CMD', 'curl', '-f', 'http://api:4000/health']
-  #     interval: 1s
-  #     timeout: 2s
-  #     retries: 30
-
-  # worker:
-  #   container_name: worker
-  #   build:
-  #     context: ./apps/api
-  #     dockerfile: Dockerfile.dev
-  #   environment:
-  #     ALCOVES_API_WORKER_MODE: 1
-  #     ALCOVES_API_REDIS_ADDR: redis:6379
-  #   volumes:
-  #     - ./apps/api:/app
-  #   depends_on:
-  #     - api
-  #     - redis
-  #     - postgres
-
-  #   alcoves:
-  #     container_name: alcoves
-  #     build:
-  #       dockerfile: docker/Dockerfile.dev
-  #     env_file:
-  #       - .env.local
-  #     volumes:
-  #       - ./:/app
-  #     depends_on:
-  #       redis:
-  #         condition: service_healthy
-  #     ports:
-  #       - 3000:3000
-  #       - 4000:4000
-
-  #   alcoves_cdn:
-  #     image: nginx:latest
-  #     depends_on:
-  #       - alcoves
-  #     volumes:
-  #       - ./docker/alcoves_cdn.conf:/etc/nginx/nginx.conf
-  #       - alcoves_cdn:/var/cache/nginx
-  #     ports:
-  #       - '4100:80'
-
-  #   storage_cdn:
-  #     image: nginx:latest
-  #     depends_on:
-  #       - alcoves
-  #     volumes:
-  #       - ./docker/storage_cdn.conf:/etc/nginx/nginx.conf
-  #       - storage_cdn:/var/cache/nginx
-  #     ports:
-  #       - '4200:80'
-
-  minio:
-    image: minio/minio
-    volumes:
-      - minio:/data
-    environment:
-      MINIO_ROOT_USER: minioadmin
-      MINIO_ROOT_PASSWORD: minioadmin
-    ports:
-      - '9000:9000'
-      - '9001:9001'
-    command: server /data --console-address ":9001"
-
-  minio-mb:
-    image: minio/mc
-    depends_on:
-      - minio
-    entrypoint: sh -c "mc config host add minio http://minio:9000 minioadmin minioadmin && mc mb minio/alcoves"
-
+    minio-mb:
+        image: minio/mc
+        depends_on:
+            - minio
+        entrypoint: sh -c "mc config host add minio http://minio:9000 minioadmin minioadmin && mc mb minio/alcoves"
 volumes:
-  minio:
-  redis:
-  postgres:
-  # alcoves:
-  # alcoves_cdn:
-  # storage_cdn:
-
+    minio:
+    postgres:
+    dragonfly:
 networks:
-  default:
-    name: alcoves
+    default:
+        name: alcoves

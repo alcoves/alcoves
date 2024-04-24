@@ -1,9 +1,0 @@
-if (!process.env.ALCOVES_CLIENT_API_ENDPOINT) {
-    throw new Error('ALCOVES_CLIENT_API_ENDPOINT is required')
-}
-
-export const ALCOVES_CLIENT_API_ENDPOINT =
-    process.env.ALCOVES_CLIENT_API_ENDPOINT
-
-export const ALCOVES_CLIENT_BROWSER_API_ENDPOINT =
-    process.env.ALCOVES_CLIENT_BROWSER_API_ENDPOINT
