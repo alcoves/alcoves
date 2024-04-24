@@ -110,9 +110,16 @@ function calculateDuration(start: number, end: number) {
             `${duration.minutes} minute${duration.minutes !== 1 ? 's' : ''}`
         )
     }
+    if (duration.minutes < 10) {
+        parts.push(
+            `${duration.seconds.toFixed(1)} second${
+                duration.seconds !== 1 ? 's' : ''
+            }`
+        )
+    }
 
     if (parts.length === 0) {
-        return '0 minutes' // Or some other default message for no time difference
+        return 'N/A' // Or some other default message for no time difference
     }
 
     return parts.join(' and ') + ''
