@@ -1,54 +1,61 @@
-x-server-environment: &server-environment
+x-api-environment: &api-environment
+    ALCOVES_ENABLE_WORKER: false
     ALCOVES_TASK_DB_PORT: 6379
-    ALCOVES_TASK_DB_HOST: dragonfly
+    ALCOVES_TASK_DB_HOST: task_db
+    ALCOVES_DB_CONNECTION_STRING: postgres://postgres:postgres@postgres:5432/alcoves
+
+x-worker-environment: &worker-environment
+    ALCOVES_ENABLE_WORKER: true
+    ALCOVES_TASK_DB_PORT: 6379
+    ALCOVES_TASK_DB_HOST: task_db
     ALCOVES_DB_CONNECTION_STRING: postgres://postgres:postgres@postgres:5432/alcoves
 
 services:
-    server:
-        container_name: server
+    api:
+        container_name: api
         build:
             context: .
-            dockerfile: Dockerfile.dev
-        command: bun run dev:server
+            dockerfile: Dockerfile
+        command: bun run dev:api
         environment:
-            <<: *server-environment
+            <<: *api-environment
         volumes:
             - ./:/app
             - /app/node_modules
         depends_on:
+            - task_db
             - minio
-            - minio-mb
+            - minio_mb
             - postgres
-            - dragonfly
         ports:
             - 3000:3000
     worker:
         container_name: worker
         build:
             context: .
-            dockerfile: Dockerfile.dev
+            dockerfile: Dockerfile
         command: bun run dev:worker
         environment:
-            <<: *server-environment
+            <<: *worker-environment
         volumes:
             - ./:/app
             - /app/node_modules
         depends_on:
-            - server
+            - api
+            - task_db
             - minio
-            - minio-mb
+            - minio_mb
             - postgres
-            - dragonfly
-    dragonfly:
-        container_name: dragonfly
-        image: docker.dragonflydb.io/dragonflydb/dragonfly
+    task_db:
+        container_name: task_db
+        image: eqalpha/keydb:latest
         restart: always
         ulimits:
             memlock: -1
         ports:
             - 6100:6379
         volumes:
-            - dragonfly:/data
+            - task_db:/eqalpha/keydb
     postgres:
         container_name: postgres
         image: postgres:16
@@ -79,15 +86,15 @@ services:
             - '9001:9001'
         command: server /data --console-address ":9001"
 
-    minio-mb:
+    minio_mb:
         image: minio/mc
         depends_on:
             - minio
         entrypoint: sh -c "mc config host add minio http://minio:9000 minioadmin minioadmin && mc mb minio/alcoves"
 volumes:
     minio:
+    task_db:
     postgres:
-    dragonfly:
 networks:
     default:
         name: alcoves

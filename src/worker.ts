@@ -1,4 +1,5 @@
 import { Worker } from 'bullmq'
+import { runFFmpeg } from './lib/ffmpeg'
 import { bullConnection, transcodeQueue } from './bullmq'
 
 const worker = new Worker(
@@ -6,7 +7,30 @@ const worker = new Worker(
     async (job) => {
         switch (job.name) {
             case 'transcode':
-                // Do the transcode
+                console.log('Starting FFmpeg process.')
+                await runFFmpeg({
+                    input: job.data.input,
+                    output: job.data.output,
+                    commands: job.data.commands,
+                    onProgress: async (progress, estimatedTimeRemaining) => {
+                        await job.updateProgress(progress)
+                        await job.updateData({
+                            ...job.data,
+                            estimatedTimeRemaining,
+                        })
+                        console.log(
+                            `Progress: ${progress}% - Estimated Time Remaining: ${estimatedTimeRemaining}`
+                        )
+                    },
+                })
+                    .then(async () => {
+                        console.log('FFmpeg processing completed successfully.')
+                        await job.updateProgress(100)
+                    })
+                    .catch((error) => {
+                        console.error('FFmpeg processing failed:', error)
+                        throw new Error(error)
+                    })
                 break
             case 'thumbnail':
                 // Generate the signed url
@@ -14,14 +38,10 @@ const worker = new Worker(
             default:
                 break
         }
-
-        console.log(job.data)
-        // const signedUrl = getSignedUrl
-        // const videoMetadata = getVideoMetadata
-        // const hlsAssets = transcodeVideo
-        // const outputDir = putInS3
     },
-    { connection: bullConnection }
+    {
+        connection: bullConnection,
+    }
 )
 
 worker.on('completed', (job) => {
