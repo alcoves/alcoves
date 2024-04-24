@@ -1,4 +1,5 @@
 import { Worker } from 'bullmq'
+import { env } from './lib/env'
 import { runFFmpeg } from './lib/ffmpeg'
 import { bullConnection, transcodeQueue } from './bullmq'
 
@@ -40,6 +41,7 @@ const worker = new Worker(
         }
     },
     {
+        concurrency: parseInt(env.ALCOVES_TASK_WORKER_CONCURRENCY || '1'),
         connection: bullConnection,
     }
 )

@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+const API_URL = window.location.origin // The UI must be hosted on the same domain as the API
 
 export const fetcher = (url: string) =>
     fetch(`${API_URL}${url}`).then((res) => res.json())
