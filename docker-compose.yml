@@ -1,11 +1,9 @@
 x-api-environment: &api-environment
-    ALCOVES_ENABLE_WORKER: false
     ALCOVES_TASK_DB_PORT: 6379
     ALCOVES_TASK_DB_HOST: task_db
     ALCOVES_DB_CONNECTION_STRING: postgres://postgres:postgres@postgres:5432/alcoves
 
 x-worker-environment: &worker-environment
-    ALCOVES_ENABLE_WORKER: true
     ALCOVES_TASK_DB_PORT: 6379
     ALCOVES_TASK_DB_HOST: task_db
     ALCOVES_DB_CONNECTION_STRING: postgres://postgres:postgres@postgres:5432/alcoves
