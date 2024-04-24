@@ -35,6 +35,7 @@ type Task = {
     queueQualifiedName: string
     finishedOn: number
     processedOn: number
+    failedReason?: string
 }
 
 function getColorScheme(t: Task): string {
@@ -46,7 +47,11 @@ function getColorScheme(t: Task): string {
         return 'orange'
     }
 
-    if (t.attemptsMade > 2) {
+    if (t.attemptsMade > 2 || t?.failedReason) {
+        return 'red'
+    }
+
+    if (t?.failedReason) {
         return 'red'
     }
 
@@ -149,6 +154,11 @@ export default function Tasks() {
                                         <Box>
                                             {JSON.stringify(task.data, null, 2)}
                                         </Box>
+                                        {task?.failedReason && (
+                                            <Box pt="2" color="red.500">
+                                                {task?.failedReason}
+                                            </Box>
+                                        )}
                                     </Box>
 
                                     <Flex w="100%" justify="space-between">
