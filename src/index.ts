@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
+import { serveStatic } from 'hono/bun'
 import { transcodeQueue } from './bullmq'
 import { zValidator } from '@hono/zod-validator'
 
@@ -23,6 +24,16 @@ app.get('/tasks', async (c) => {
     const tasks = await transcodeQueue.getJobs()
     return c.json({ tasks })
 })
+
+app.use('/favicon.ico', serveStatic({ path: './src/static/favicon.ico' }))
+
+app.use(
+    '/ui/*',
+    serveStatic({
+        root: './src/',
+        rewriteRequestPath: (path) => path.replace(/^\/ui/, '/static'),
+    })
+)
 
 const createTaskSchema = z.object({
     input: z.string(),

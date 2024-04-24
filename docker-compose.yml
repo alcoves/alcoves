@@ -18,7 +18,7 @@ services:
         environment:
             <<: *api-environment
         volumes:
-            - ./:/app
+            # - ./:/app
             - /app/node_modules
         depends_on:
             - task_db
