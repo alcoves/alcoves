@@ -187,7 +187,7 @@ export default function Tasks() {
                                                 {`${
                                                     task.progress
                                                         ? `${task.progress}% `
-                                                        : ''
+                                                        : '0%'
                                                 }`}
                                             </Text>
                                         </Flex>
