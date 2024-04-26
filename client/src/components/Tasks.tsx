@@ -71,11 +71,15 @@ function timeAgo(date: number) {
 
     let output = ''
     if (diff.days > 0) {
-        output = `${diff.days} day${diff.days !== 1 ? 's' : ''} ago`
+        output = `${diff.days.toFixed(1)} day${diff.days !== 1 ? 's' : ''} ago`
     } else if (diff.hours > 0) {
-        output = `${diff.hours} hour${diff.hours !== 1 ? 's' : ''} ago`
+        output = `${diff.hours.toFixed(1)} hour${
+            diff.hours !== 1 ? 's' : ''
+        } ago`
     } else if (diff.minutes > 0) {
-        output = `${diff.minutes} minute${diff.minutes !== 1 ? 's' : ''} ago`
+        output = `${diff.minutes.toFixed(1)} minute${
+            diff.minutes !== 1 ? 's' : ''
+        } ago`
     } else {
         output = 'just now'
     }
