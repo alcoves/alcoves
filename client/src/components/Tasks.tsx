@@ -11,6 +11,7 @@ import {
     Text,
     useColorModeValue,
 } from '@chakra-ui/react'
+import TaskCounts from './TaskCounts'
 
 type Task = {
     name: string
@@ -143,6 +144,9 @@ export default function Tasks() {
     return (
         <Box>
             <Heading mb="4">Tasks</Heading>
+
+            <TaskCounts />
+
             <Flex direction="column" gap="4">
                 {data?.tasks?.map((task: Task) => {
                     const colorScheme = getColorScheme(task)

@@ -25,6 +25,11 @@ app.get('/tasks', async (c) => {
     return c.json({ tasks })
 })
 
+app.get('/tasks/counts', async (c) => {
+    const counts = await transcodeQueue.getJobCounts()
+    return c.json({ counts })
+})
+
 app.use('/favicon.ico', serveStatic({ path: './src/static/favicon.ico' }))
 
 app.use(
