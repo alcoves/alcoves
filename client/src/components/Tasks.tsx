@@ -8,6 +8,11 @@ import {
     Flex,
     Heading,
     Progress,
+    Tab,
+    TabList,
+    TabPanel,
+    TabPanels,
+    Tabs,
     Text,
     useColorModeValue,
 } from '@chakra-ui/react'
@@ -155,27 +160,87 @@ export default function Tasks() {
                         <Box key={task.id}>
                             <Card bg={cardBg}>
                                 <CardBody>
-                                    <Heading size="sm">
-                                        Task Name: {task.name}
-                                    </Heading>
-                                    <Box
-                                        p="2"
-                                        my="2"
-                                        rounded="md"
-                                        bg={cardCodeBg}
-                                        fontFamily="monospace"
-                                    >
-                                        <Text>Task ID: {task.id}</Text>
-                                        <Box>
-                                            {JSON.stringify(task.data, null, 2)}
-                                        </Box>
-                                        {task?.failedReason && (
-                                            <Box pt="2" color="red.500">
-                                                {task?.failedReason}
-                                            </Box>
-                                        )}
+                                    <Box>
+                                        <Heading size="md">
+                                            {`${
+                                                task.queueQualifiedName.split(
+                                                    'bull:'
+                                                )[1]
+                                            }:${task.name}:${task.id}`}
+                                        </Heading>
                                     </Box>
 
+                                    <Tabs py="2">
+                                        <TabList>
+                                            <Tab>Info</Tab>
+                                            <Tab>Details</Tab>
+                                            <Tab>Log</Tab>
+                                            <Tab>Error</Tab>
+                                        </TabList>
+                                        <TabPanels>
+                                            <TabPanel
+                                                p="2"
+                                                bg={cardCodeBg}
+                                                roundedBottom="md"
+                                                fontFamily="monospace"
+                                            >
+                                                <Text>{`Queue Name: ${
+                                                    task.queueQualifiedName.split(
+                                                        'bull:'
+                                                    )[1]
+                                                }`}</Text>
+                                                <Text>{`Task Name: ${task.name}`}</Text>
+                                                <Text>{`Task ID: ${task.id}`}</Text>
+                                            </TabPanel>
+                                            <TabPanel
+                                                p="2"
+                                                bg={cardCodeBg}
+                                                roundedBottom="md"
+                                                fontFamily="monospace"
+                                            >
+                                                <pre>
+                                                    {JSON.stringify(
+                                                        task,
+                                                        null,
+                                                        2
+                                                    )}
+                                                </pre>
+                                            </TabPanel>
+                                            <TabPanel
+                                                p="2"
+                                                bg={cardCodeBg}
+                                                roundedBottom="md"
+                                                fontFamily="monospace"
+                                            >
+                                                <p>
+                                                    {JSON.stringify(
+                                                        task.returnvalue,
+                                                        null,
+                                                        2
+                                                    )}
+                                                </p>
+                                            </TabPanel>
+                                            <TabPanel
+                                                p="2"
+                                                bg={cardCodeBg}
+                                                roundedBottom="md"
+                                                fontFamily="monospace"
+                                            >
+                                                <p>{'N/A'}</p>
+                                            </TabPanel>
+                                            <TabPanel
+                                                p="2"
+                                                bg={cardCodeBg}
+                                                roundedBottom="md"
+                                                fontFamily="monospace"
+                                            >
+                                                <p>
+                                                    {task?.failedReason ||
+                                                        'N/A'}
+                                                </p>
+                                            </TabPanel>
+                                        </TabPanels>
+                                    </Tabs>
                                     <Flex w="100%" justify="space-between">
                                         <Box>
                                             <Text fontSize=".75rem">
