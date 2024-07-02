@@ -1,4 +1,4 @@
-import { Worker } from 'tasks'
+import { Worker } from 'bullmq'
 import { env } from './lib/env'
 import { runFFmpeg } from './lib/ffmpeg'
 import { bullConnection, transcodeQueue } from './tasks'
