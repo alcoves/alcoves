@@ -4,7 +4,7 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
 import { serveStatic } from 'hono/bun'
-import { transcodeQueue } from './bullmq'
+import { transcodeQueue } from './tasks'
 import { zValidator } from '@hono/zod-validator'
 
 const app = new Hono()

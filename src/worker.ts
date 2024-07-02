@@ -1,7 +1,7 @@
-import { Worker } from 'bullmq'
+import { Worker } from 'tasks'
 import { env } from './lib/env'
 import { runFFmpeg } from './lib/ffmpeg'
-import { bullConnection, transcodeQueue } from './bullmq'
+import { bullConnection, transcodeQueue } from './tasks'
 
 const worker = new Worker(
     transcodeQueue.name,
