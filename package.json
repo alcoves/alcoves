@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "scripts": {
     "start:api": "bun run src/index.ts",
     "start:worker": "bun run src/worker.ts",
@@ -6,13 +7,18 @@
     "dev:worker": "bun run --hot src/worker.ts"
   },
   "dependencies": {
-    "@hono/zod-validator": "^0.2.1",
-    "bullmq": "^5.7.4",
-    "hono": "^4.2.7",
-    "sharp": "^0.33.3",
-    "zod": "^3.23.4"
+    "@hono/oauth-providers": "^0.5.1",
+    "@hono/zod-validator": "^0.2.2",
+    "bullmq": "^5.8.4",
+    "drizzle-orm": "^0.31.4",
+    "google-auth-library": "^9.11.0",
+    "hono": "^4.4.12",
+    "postgres": "^3.4.4",
+    "sharp": "^0.33.4",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "drizzle-kit": "^0.22.8"
   }
 }

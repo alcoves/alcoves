@@ -1,8 +1,11 @@
 import './worker'
+import './db/migrate' // Runs database migrations
+
 import { z } from 'zod'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
+import { auth } from './routes/auth'
 import { serveStatic } from 'hono/bun'
 import { transcodeQueue } from './tasks'
 import { zValidator } from '@hono/zod-validator'
@@ -32,11 +35,13 @@ app.get('/tasks/counts', async (c) => {
 
 app.use('/favicon.ico', serveStatic({ path: './src/static/favicon.ico' }))
 
+app.route('/api/auth', auth)
+
 app.use(
-    '/ui/*',
+    '*',
     serveStatic({
         root: './src/',
-        rewriteRequestPath: (path) => path.replace(/^\/ui/, '/static'),
+        rewriteRequestPath: (path) => path.replace(/^\//, '/static'),
     })
 )
 

@@ -1,4 +1,12 @@
+x-client-environment: &client-environment
+    VITE_API_URL: http://localhost:3000
+    VITE_GOOGLE_CLIENT_ID: $ALCOVES_AUTH_GOOGLE_ID
+    VITE_GOOGLE_REDIRECT_URL: $ALCOVES_AUTH_GOOGLE_REDIRECT_URL
+
 x-api-environment: &api-environment
+    ALCOVES_AUTH_GOOGLE_ID: $ALCOVES_AUTH_GOOGLE_ID
+    ALCOVES_AUTH_GOOGLE_SECRET: $ALCOVES_AUTH_GOOGLE_SECRET
+    ALCOVES_AUTH_GOOGLE_REDIRECT_URL: $ALCOVES_AUTH_GOOGLE_REDIRECT_URL
     ALCOVES_TASK_DB_PORT: 6379
     ALCOVES_TASK_DB_HOST: task_db
     ALCOVES_TASK_WORKER_CONCURRENCY: 4
@@ -18,7 +26,7 @@ services:
             dockerfile: Dockerfile
         command: bun run dev
         environment:
-            VITE_API_URL: http://localhost:3000
+            <<: *client-environment
         volumes:
             - ./client:/app
             - /app/node_modules
