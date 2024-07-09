@@ -10,20 +10,11 @@ RUN wget -q https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpe
     rm -rf ffmpeg-n7.0-latest-linux64-gpl-7.0 && \
     rm ffmpeg-n7.0-latest-linux64-gpl-7.0.tar.xz
 
-WORKDIR /app/server
-COPY server/package.json server/bun.lockb ./
+COPY package.json bun.lockb ./
 RUN bun install --frozen-lockfile
 WORKDIR /app
 
 COPY . .
 
-RUN mkdir -p ./server/src/static && \
-    cd client && \
-    bun install && \
-    bun run build && \
-    cp -R ./dist/* ../server/src/static/ && \
-    rm -rf node_modules
-
-WORKDIR /app/server
 EXPOSE 3000
 CMD ["bun", "start:api"]

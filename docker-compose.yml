@@ -37,13 +37,13 @@ services:
     api:
         container_name: api
         build:
-            context: .
+            context: server
             dockerfile: Dockerfile
         command: bun run dev:api
         environment:
             <<: *api-environment
         volumes:
-            - ./:/app
+            - ./server:/app
             - /app/node_modules
         depends_on:
             - task_db
@@ -55,13 +55,13 @@ services:
     worker:
         container_name: worker
         build:
-            context: .
+            context: server
             dockerfile: Dockerfile
         command: bun run dev:worker
         environment:
             <<: *worker-environment
         volumes:
-            - ./:/app
+            - ./server:/app
             - /app/node_modules
         depends_on:
             - api

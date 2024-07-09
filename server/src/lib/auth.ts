@@ -2,7 +2,7 @@ import { OAuth2Client } from 'google-auth-library'
 
 const CLIENT_ID = process.env.ALCOVES_AUTH_GOOGLE_ID
 const CLIENT_SECRET = process.env.ALCOVES_AUTH_GOOGLE_SECRET
-const REDIRECT_URI = process.env.ALCOVES_AUTH_GOOGLE_REDIRECT_URI
+const REDIRECT_URI = process.env.ALCOVES_AUTH_GOOGLE_REDIRECT_URL
 
 const oAuth2Client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI)
 
