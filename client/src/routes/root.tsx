@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom'
+import { Navigate, Outlet } from 'react-router-dom'
 
 import { LayoutList, Moon, Sun } from 'lucide-react'
 
@@ -10,71 +10,87 @@ import {
     useColorMode,
     useColorModeValue,
 } from '@chakra-ui/react'
+import { useAuth } from '../hooks/useAuth'
+import UserAccountMenuButton from '../components/UserAccountMenu'
 
 function ColorModeToggle() {
     const { colorMode, toggleColorMode } = useColorMode()
     return (
-        <header>
-            <IconButton
-                size="sm"
-                aria-label="Theme"
-                onClick={toggleColorMode}
-                icon={
-                    colorMode === 'light' ? (
-                        <Moon size="1rem" />
-                    ) : (
-                        <Sun size="1rem" />
-                    )
-                }
-            ></IconButton>
-        </header>
+        <IconButton
+            size="sm"
+            aria-label="Theme"
+            onClick={toggleColorMode}
+            icon={
+                colorMode === 'light' ? (
+                    <Moon size="1rem" />
+                ) : (
+                    <Sun size="1rem" />
+                )
+            }
+        />
     )
 }
 
 export default function Root() {
+    const { user, loading } = useAuth()
+
     const sidebarBg = useColorModeValue('gray.50', 'gray.900')
     const contentBg = useColorModeValue('white', 'gray.800')
 
-    return (
-        <Flex w="100vw" h="100vh">
-            <Flex
-                p="2"
-                w="50px"
-                h="100%"
-                bg={sidebarBg}
-                align="center"
-                direction="column"
-                justify="space-between"
-            >
-                <Flex align="center" justify="center" direction="column">
-                    <a href="/">
-                        <Image src="/favicon.ico" alt="Logo" w="2rem" />
-                    </a>
-                    <Flex mt="4">
-                        <IconButton
-                            size="sm"
-                            aria-label="tasks"
-                            colorScheme={
-                                window?.location?.pathname === '/'
-                                    ? 'green'
-                                    : 'gray'
-                            }
-                            variant={
-                                window?.location?.pathname === '/'
-                                    ? 'solid'
-                                    : 'solid'
-                            }
-                            icon={<LayoutList size="1rem" />}
-                        />
+    if (!user && !loading) {
+        return <Navigate to="/auth/login" />
+    }
+
+    if (user) {
+        return (
+            <Flex w="100vw" h="100vh">
+                <Flex
+                    p="2"
+                    w="50px"
+                    h="100%"
+                    bg={sidebarBg}
+                    align="center"
+                    direction="column"
+                    justify="space-between"
+                >
+                    <Flex align="center" justify="center" direction="column">
+                        <a href="/">
+                            <Image src="/favicon.ico" alt="Logo" w="2rem" />
+                        </a>
+                        <Flex mt="4">
+                            <IconButton
+                                size="sm"
+                                aria-label="tasks"
+                                colorScheme={
+                                    window?.location?.pathname === '/'
+                                        ? 'green'
+                                        : 'gray'
+                                }
+                                variant={
+                                    window?.location?.pathname === '/'
+                                        ? 'solid'
+                                        : 'solid'
+                                }
+                                icon={<LayoutList size="1rem" />}
+                            />
+                        </Flex>
+                    </Flex>
+                    <Flex
+                        gap="1"
+                        direction="column"
+                        align="center"
+                        justify="center"
+                    >
+                        <UserAccountMenuButton />
+                        <ColorModeToggle />
                     </Flex>
                 </Flex>
-                <Flex align="center" justify="center">
-                    <ColorModeToggle />
-                </Flex>
+                <Box bg={contentBg} w="100%" p="4" overflowY="auto">
+                    <Outlet />
+                </Box>
             </Flex>
-            <Box bg={contentBg} w="100%" p="4" overflowY="auto">
-                <Outlet />
-            </Box>
-        </Flex>
-    )
+        )
+    }
+
+    return null
 }

@@ -1,62 +1,54 @@
-import { z } from 'zod'
 import { Hono } from 'hono'
-import { zValidator } from '@hono/zod-validator'
+import { db, lucia } from '../db/db'
+import { users } from '../db/schema'
+import { generateIdFromEntropySize } from 'lucia'
+import { HTTPException } from 'hono/http-exception'
 import { getGoogleOAuthTokens, getUserInfo } from '../lib/auth'
-
-// import { googleAuth } from '@hono/oauth-providers/google'
 
 const router = new Hono()
 
-// router.use(
-//     '/signup',
-//     googleAuth({
-//         client_id: Bun.env.GOOGLE_ID,
-//         client_secret: Bun.env.GOOGLE_SECRET,
-//         scope: ['openid', 'email', 'profile'],
-//     })
-// )
+router.get('/callbacks/google', async (c) => {
+    const code = c.req.query('code')
+    if (!code) throw new HTTPException(400, { message: 'No code was provided' })
 
-// router.get('/providers/google', (c) => {
-//     const token = c.get('token')
-//     const grantedScopes = c.get('granted-scopes')
-//     const user = c.get('user-google')
+    const tokens = await getGoogleOAuthTokens(code)
 
-//     return c.json({
-//         token,
-//         grantedScopes,
-//         user,
-//     })
-// })
+    if (tokens?.access_token) {
+        const userInfo = await getUserInfo(tokens.access_token)
+        console.log('userInfo', userInfo)
 
-router.post(
-    '/google',
-    zValidator(
-        'json',
-        z.object({
-            code: z.string(),
-        })
-    ),
-    async (c) => {
-        const { code } = c.req.valid('json')
-        const tokens = await getGoogleOAuthTokens(code)
+        console.info('Upsering user in the database...')
+        const [user] = await db
+            .insert(users)
+            .values({
+                email: userInfo?.email,
+                avatar: userInfo?.picture,
+                id: generateIdFromEntropySize(10),
+            })
+            .onConflictDoUpdate({
+                target: users.email,
+                set: { email: userInfo?.email, avatar: userInfo?.picture },
+            })
+            .returning()
 
-        if (tokens?.access_token) {
-            const userInfo = await getUserInfo(tokens.access_token)
-            console.log('userInfo', userInfo)
-            return c.text('Creating an account!')
-        } else {
-            return c.text('Failed to get Google OAuth tokens')
-        }
+        console.log(user)
+
+        const session = await lucia.createSession(user.id, {})
+        c.header(
+            'Set-Cookie',
+            lucia.createSessionCookie(session.id).serialize(),
+            { append: true }
+        )
+
+        // TODO :: Can the state object on the FE be used to pass the redirect URL?
+        const redirectUrl =
+            process.env.NODE_ENV === 'production'
+                ? '/'
+                : 'http://localhost:3005'
+        return c.redirect(redirectUrl)
+    } else {
+        return c.text('Failed to authenticate with Google OAuth')
     }
-)
+})
 
-// router.post('/signin', (c) => {
-//     const { email, password } = c.get('body')
-
-//     return c.json({
-//         email,
-//         password,
-//     })
-// })
-
-export const auth = router
+export const authRouter = router
