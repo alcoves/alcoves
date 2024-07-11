@@ -31,8 +31,7 @@ router.get('/me', async (c) => {
         where: eq(users.id, user.id),
     })
 
-    console.log({ user: extendedUser })
-    return c.json({ session })
+    return c.json({ payload: extendedUser })
 })
 
 export const usersRouter = router

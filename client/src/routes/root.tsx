@@ -1,35 +1,16 @@
+import { LayoutList } from 'lucide-react'
+import { useAuth } from '../hooks/useAuth'
 import { Navigate, Outlet } from 'react-router-dom'
-
-import { LayoutList, Moon, Sun } from 'lucide-react'
-
 import {
     Box,
     Flex,
-    IconButton,
     Image,
-    useColorMode,
+    IconButton,
     useColorModeValue,
 } from '@chakra-ui/react'
-import { useAuth } from '../hooks/useAuth'
-import UserAccountMenuButton from '../components/UserAccountMenu'
 
-function ColorModeToggle() {
-    const { colorMode, toggleColorMode } = useColorMode()
-    return (
-        <IconButton
-            size="sm"
-            aria-label="Theme"
-            onClick={toggleColorMode}
-            icon={
-                colorMode === 'light' ? (
-                    <Moon size="1rem" />
-                ) : (
-                    <Sun size="1rem" />
-                )
-            }
-        />
-    )
-}
+import ColorModeToggle from '../components/ColorModeToggle'
+import UserAccountMenuButton from '../components/UserAccountMenu'
 
 export default function Root() {
     const { user, loading } = useAuth()
@@ -81,8 +62,8 @@ export default function Root() {
                         align="center"
                         justify="center"
                     >
-                        <UserAccountMenuButton />
                         <ColorModeToggle />
+                        <UserAccountMenuButton />
                     </Flex>
                 </Flex>
                 <Box bg={contentBg} w="100%" p="4" overflowY="auto">

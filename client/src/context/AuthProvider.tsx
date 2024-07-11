@@ -28,22 +28,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         try {
             console.info('Attemping to log the user in')
             setLoading(true)
-            setUser({
-                id: 'test',
-                email: 'test',
-                avatar: 'test',
-            })
-            // call the @me endpoint to get the user info
-            const user = await fetch(`${API_URL}/api/users/me`, {
+            // call the /me endpoint to get the user info
+            const { payload: user } = await fetch(`${API_URL}/api/users/me`, {
                 credentials: 'include',
             }).then((res) => res.json())
-            console.log('USER', user)
+
+            setUser(user)
+            console.info(`The user ${user.id} is logged in`)
         } catch (e) {
             console.error(e)
         } finally {
             setLoading(false)
         }
-    }, [setUser])
+    }, [])
 
     const logout = useCallback(() => {
         setUser(null)

@@ -14,7 +14,28 @@ import { zValidator } from '@hono/zod-validator'
 const app = new Hono()
 
 app.use(logger())
-app.use(cors())
+
+if (process.env.NODE_ENV === 'production') {
+    app.use(
+        cors({
+            origin: '*',
+            credentials: true,
+            allowHeaders: [],
+            exposeHeaders: ['Content-Length'],
+            allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+        })
+    )
+} else {
+    app.use(
+        cors({
+            origin: 'http://localhost:3005',
+            credentials: true,
+            allowHeaders: [],
+            exposeHeaders: ['Content-Length'],
+            allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+        })
+    )
+}
 
 app.get('/', (c) => {
     return c.text('sup')

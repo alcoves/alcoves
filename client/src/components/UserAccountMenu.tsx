@@ -12,7 +12,14 @@ export default function UserAccountMenuButton() {
             size="sm"
             aria-label="user"
             onClick={() => navigate('/profile')}
-            icon={<Image src={user?.avatar || '/favicon.ico'} />}
+            icon={
+                <Image
+                    w="100%"
+                    h="100%"
+                    rounded="md"
+                    src={user?.avatar || '/favicon.ico'}
+                />
+            }
         />
     )
 }
