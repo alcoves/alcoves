@@ -1,3 +1,5 @@
+import UserAccountMenuButton from '../../components/userAccountMenu'
+
 import { LayoutList } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 import { Navigate, Outlet } from 'react-router-dom'
@@ -8,9 +10,6 @@ import {
     IconButton,
     useColorModeValue,
 } from '@chakra-ui/react'
-
-import ColorModeToggle from '../../components/colorModeToggle'
-import UserAccountMenuButton from '../../components/userAccountMenu'
 
 export default function RootRoute() {
     const { user, isLoading } = useAuth()
@@ -58,12 +57,11 @@ export default function RootRoute() {
                         </Flex>
                     </Flex>
                     <Flex
-                        gap="1"
+                        gap="2"
                         direction="column"
                         align="center"
                         justify="center"
                     >
-                        <ColorModeToggle />
                         <UserAccountMenuButton />
                     </Flex>
                 </Flex>

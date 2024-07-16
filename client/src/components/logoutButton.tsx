@@ -8,5 +8,9 @@ export default function LogoutButton() {
         await logout()
     }
 
-    return <Button onClick={handleLogout}>Logout</Button>
+    return (
+        <Button colorScheme="red" onClick={handleLogout}>
+            Logout
+        </Button>
+    )
 }

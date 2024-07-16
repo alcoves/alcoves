@@ -2,6 +2,7 @@ import LogoutButton from './logoutButton'
 
 import { User } from '../types/user'
 import { Avatar, Flex, Heading } from '@chakra-ui/react'
+import ColorModeToggle from './colorModeToggle'
 
 export default function Profile({ data }: { data: User }) {
     return (
@@ -11,6 +12,7 @@ export default function Profile({ data }: { data: User }) {
             <Heading size="xs" opacity=".4">
                 {data?.id}
             </Heading>
+            <ColorModeToggle />
             <LogoutButton />
         </Flex>
     )

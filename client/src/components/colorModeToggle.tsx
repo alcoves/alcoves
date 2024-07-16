@@ -5,7 +5,6 @@ export default function ColorModeToggle() {
     const { colorMode, toggleColorMode } = useColorMode()
     return (
         <IconButton
-            size="sm"
             aria-label="Theme"
             onClick={toggleColorMode}
             icon={

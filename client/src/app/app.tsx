@@ -1,58 +1,26 @@
-import Tasks from '../components/tasks'
-import { LayoutList } from 'lucide-react'
-import ColorModeToggle from '../components/colorModeToggle'
-import {
-    Box,
-    Flex,
-    Image,
-    IconButton,
-    useColorModeValue,
-} from '@chakra-ui/react'
+import '@fontsource/inter'
+import * as React from 'react'
+import * as ReactDOM from 'react-dom/client'
 
-export default function App() {
-    const sidebarBg = useColorModeValue('gray.50', 'gray.900')
-    const contentBg = useColorModeValue('white', 'gray.800')
+import { theme } from '../config/theme.tsx'
+import { router } from './routes.tsx'
+import { ChakraProvider } from '@chakra-ui/react'
+import { RouterProvider } from 'react-router-dom'
+import { ColorModeScript } from '@chakra-ui/react'
+import { AuthProvider } from '../context/authProvider.tsx'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
-    return (
-        <Flex w="100vw" h="100vh">
-            <Flex
-                p="2"
-                w="50px"
-                h="100%"
-                bg={sidebarBg}
-                align="center"
-                direction="column"
-                justify="space-between"
-            >
-                <Flex align="center" justify="center" direction="column">
-                    <a href="/">
-                        <Image src="/favicon.ico" alt="Logo" w="2rem" />
-                    </a>
-                    <Flex mt="4">
-                        <IconButton
-                            size="sm"
-                            aria-label="tasks"
-                            colorScheme={
-                                window?.location?.pathname === '/'
-                                    ? 'green'
-                                    : 'gray'
-                            }
-                            variant={
-                                window?.location?.pathname === '/'
-                                    ? 'solid'
-                                    : 'solid'
-                            }
-                            icon={<LayoutList size="1rem" />}
-                        />
-                    </Flex>
-                </Flex>
-                <Flex align="center" justify="center">
-                    <ColorModeToggle />
-                </Flex>
-            </Flex>
-            <Box bg={contentBg} w="100%" p="4" overflowY="auto">
-                <Tasks />
-            </Box>
-        </Flex>
-    )
-}
+const queryClient = new QueryClient()
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+    <React.StrictMode>
+        <ColorModeScript initialColorMode={theme.initialColorMode} />
+        <ChakraProvider theme={theme}>
+            <QueryClientProvider client={queryClient}>
+                <AuthProvider>
+                    <RouterProvider router={router} />
+                </AuthProvider>
+            </QueryClientProvider>
+        </ChakraProvider>
+    </React.StrictMode>
+)
