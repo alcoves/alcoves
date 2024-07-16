@@ -1,20 +1,15 @@
-import postgres from 'postgres'
 import * as schema from './schema'
 
+import { Client } from 'pg'
 import { Lucia } from 'lucia'
-import { drizzle } from 'drizzle-orm/postgres-js'
+import { drizzle } from 'drizzle-orm/node-postgres'
 import { DrizzlePostgreSQLAdapter } from '@lucia-auth/adapter-drizzle'
 
-export const connection = postgres(
-    process.env.ALCOVES_DB_CONNECTION_STRING as string
-)
+const connection = new Client({
+    connectionString: process.env.ALCOVES_DB_CONNECTION_STRING,
+})
 
-export const migrationConnection = postgres(
-    process.env.ALCOVES_DB_CONNECTION_STRING as string,
-    {
-        max: 1,
-    }
-)
+connection.connect()
 
 export const db = drizzle(connection, { schema })
 

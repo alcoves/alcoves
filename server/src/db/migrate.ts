@@ -1,13 +1,21 @@
-import { db, migrationConnection } from './db'
-import { migrate } from 'drizzle-orm/postgres-js/migrator'
+import { Pool } from 'pg'
+import { drizzle } from 'drizzle-orm/node-postgres'
+import { migrate } from 'drizzle-orm/node-postgres/migrator'
 
-console.info('Running database migrations...')
-await migrate(db, { migrationsFolder: './src/db/migrations' })
+const pool = new Pool({
+    connectionString: process.env.ALCOVES_DB_CONNECTION_STRING,
+})
 
-if (process.env.NODE_ENV === 'productioon') {
-    // Close the connection in production so it doesn't hang.
-    console.info('Closing migration connection...')
-    await migrationConnection.end()
+const db = drizzle(pool)
+
+async function main() {
+    console.log('Migration started...')
+    await migrate(db, { migrationsFolder: './src/db/migrations' })
+    console.log('Migration ended...')
+    // process.exit(0)
 }
 
-console.info('Database migrations complete.')
+main().catch((err) => {
+    console.log(err)
+    // process.exit(0)
+})

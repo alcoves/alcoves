@@ -1,12 +1,13 @@
 import { Hono } from 'hono'
 import { db, lucia } from '../db/db'
 import { users } from '../db/schema'
+import { setCookie } from 'hono/cookie'
 import { generateIdFromEntropySize } from 'lucia'
 import { HTTPException } from 'hono/http-exception'
+import { userAuth, UserAuthMiddleware } from '../middleware/auth'
 import { getGoogleOAuthTokens, getUserInfo } from '../lib/auth'
-import { getCookie } from 'hono/cookie'
 
-const router = new Hono()
+const router = new Hono<{ Variables: UserAuthMiddleware }>()
 
 router.get('/callbacks/google', async (c) => {
     const code = c.req.query('code')
@@ -35,10 +36,12 @@ router.get('/callbacks/google', async (c) => {
         console.log(user)
 
         const session = await lucia.createSession(user.id, {})
-        c.header(
-            'Set-Cookie',
-            lucia.createSessionCookie(session.id).serialize(),
-            { append: true }
+        const sessionCookie = lucia.createSessionCookie(session.id)
+        setCookie(
+            c,
+            sessionCookie.name,
+            sessionCookie.value,
+            sessionCookie.attributes
         )
 
         // TODO :: Can the state object on the FE be used to pass the redirect URL?
@@ -54,18 +57,17 @@ router.get('/callbacks/google', async (c) => {
     }
 })
 
-router.post('/logout', async (c) => {
-    const sessionId = getCookie(c, 'auth_session')
-    if (!sessionId) return c.json({ message: 'No session found' }, 204)
+router.post('/logout', userAuth, async (c) => {
+    const { session } = c.get('authorization')
+    await lucia.invalidateSession(session.id)
 
-    const { session, user } = await lucia.validateSession(sessionId)
-    if (!session || !user) throw new HTTPException(401)
-
-    const sessionCookie = lucia.createBlankSessionCookie()
-    c.header('Set-Cookie', sessionCookie.serialize(), { append: true })
-
-    await lucia.invalidateSession(sessionId)
-    await lucia.deleteExpiredSessions()
+    const emptySessionCookie = lucia.createBlankSessionCookie()
+    setCookie(
+        c,
+        emptySessionCookie.name,
+        emptySessionCookie.value,
+        emptySessionCookie.attributes
+    )
 
     return c.json({
         message: 'Successfully logged out',

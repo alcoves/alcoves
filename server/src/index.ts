@@ -15,6 +15,11 @@ const app = new Hono()
 
 app.use(logger())
 
+// import { compress } from 'hono/compress'
+// https://hono.dev/docs/middleware/builtin/compress
+// Bun: This middleware uses CompressionStream which is not yet supported in bun.
+// app.use(compress())
+
 if (process.env.NODE_ENV === 'production') {
     app.use(
         cors({
