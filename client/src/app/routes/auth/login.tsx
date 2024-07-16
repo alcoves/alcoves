@@ -1,4 +1,7 @@
 import { FaGoogle } from 'react-icons/fa'
+import { Navigate } from 'react-router-dom'
+import { useAuth } from '../../../hooks/useAuth'
+import { GOOGLE_REDIRECT_URL } from '../../../config/env'
 import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google'
 import {
     Button,
@@ -8,9 +11,6 @@ import {
     Link,
     useColorModeValue,
 } from '@chakra-ui/react'
-import { GOOGLE_REDIRECT_URL } from '../../lib/env'
-import { useAuth } from '../../hooks/useAuth'
-import { Navigate } from 'react-router-dom'
 
 const GOOGLE_CLIENT_ID =
     (import.meta.env.VITE_GOOGLE_CLIENT_ID as string) || window.location.origin
@@ -84,7 +84,7 @@ function LoginComponent() {
     )
 }
 
-export default function Login() {
+export default function AuthLoginRoute() {
     return (
         <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
             <LoginComponent />

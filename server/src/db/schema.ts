@@ -1,4 +1,4 @@
-import { text, pgTable, timestamp } from 'drizzle-orm/pg-core'
+import { text, pgTable, timestamp, jsonb } from 'drizzle-orm/pg-core'
 
 export const users = pgTable('users', {
     id: text('id').primaryKey(),
@@ -18,4 +18,16 @@ export const sessions = pgTable('sessions', {
         withTimezone: true,
         mode: 'date',
     }).notNull(),
+})
+
+export const mediaItems = pgTable('media_items', {
+    id: text('id').primaryKey(),
+    userId: text('user_id')
+        .notNull()
+        .references(() => users.id),
+    title: text('title').notNull(),
+    description: text('description'),
+    metadata: jsonb('metadata'),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
 })

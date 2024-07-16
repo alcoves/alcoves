@@ -4,6 +4,7 @@ import { users } from '../db/schema'
 import { generateIdFromEntropySize } from 'lucia'
 import { HTTPException } from 'hono/http-exception'
 import { getGoogleOAuthTokens, getUserInfo } from '../lib/auth'
+import { getCookie } from 'hono/cookie'
 
 const router = new Hono()
 
@@ -49,6 +50,22 @@ router.get('/callbacks/google', async (c) => {
     } else {
         return c.text('Failed to authenticate with Google OAuth')
     }
+})
+
+router.post('/logout', async (c) => {
+    const sessionId = getCookie(c, 'auth_session')
+    if (!sessionId) return c.text('No session found', 204)
+
+    const { session, user } = await lucia.validateSession(sessionId)
+    if (!session || !user) throw new HTTPException(401)
+
+    const sessionCookie = lucia.createBlankSessionCookie()
+    c.header('Set-Cookie', sessionCookie.serialize(), { append: true })
+
+    await lucia.invalidateSession(sessionId)
+    await lucia.deleteExpiredSessions()
+
+    return c.text('Logged out')
 })
 
 export const authRouter = router

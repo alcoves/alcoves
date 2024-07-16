@@ -1,9 +1,17 @@
-import { Box } from '@chakra-ui/react'
+import LogoutButton from './logoutButton'
 
-export default function Profile() {
+import { User } from '../types/user'
+import { Avatar, Flex, Heading } from '@chakra-ui/react'
+
+export default function Profile({ data }: { data: User }) {
     return (
-        <Box>
-            <Box>Profile</Box>
-        </Box>
+        <Flex w="100%" direction="column" align="center" gap="2">
+            <Avatar size="xl" src={data?.avatar} />
+            <Heading size="sm">{data?.email}</Heading>
+            <Heading size="xs" opacity=".4">
+                {data?.id}
+            </Heading>
+            <LogoutButton />
+        </Flex>
     )
 }

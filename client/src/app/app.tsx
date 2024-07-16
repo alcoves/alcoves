@@ -1,35 +1,13 @@
 import Tasks from '../components/tasks'
-
-import { LayoutList, Moon, Sun } from 'lucide-react'
-
+import { LayoutList } from 'lucide-react'
+import ColorModeToggle from '../components/colorModeToggle'
 import {
     Box,
     Flex,
-    IconButton,
     Image,
-    useColorMode,
+    IconButton,
     useColorModeValue,
 } from '@chakra-ui/react'
-
-function ColorModeToggle() {
-    const { colorMode, toggleColorMode } = useColorMode()
-    return (
-        <header>
-            <IconButton
-                size="sm"
-                aria-label="Theme"
-                onClick={toggleColorMode}
-                icon={
-                    colorMode === 'light' ? (
-                        <Moon size="1rem" />
-                    ) : (
-                        <Sun size="1rem" />
-                    )
-                }
-            ></IconButton>
-        </header>
-    )
-}
 
 export default function App() {
     const sidebarBg = useColorModeValue('gray.50', 'gray.900')

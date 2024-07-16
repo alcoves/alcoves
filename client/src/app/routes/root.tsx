@@ -1,5 +1,5 @@
 import { LayoutList } from 'lucide-react'
-import { useAuth } from '../hooks/useAuth'
+import { useAuth } from '../../hooks/useAuth'
 import { Navigate, Outlet } from 'react-router-dom'
 import {
     Box,
@@ -9,10 +9,10 @@ import {
     useColorModeValue,
 } from '@chakra-ui/react'
 
-import ColorModeToggle from '../components/colorModeToggle'
-import UserAccountMenuButton from '../components/userAccountMenu'
+import ColorModeToggle from '../../components/colorModeToggle'
+import UserAccountMenuButton from '../../components/userAccountMenu'
 
-export default function Root() {
+export default function RootRoute() {
     const { user, loading } = useAuth()
 
     const sidebarBg = useColorModeValue('gray.50', 'gray.900')

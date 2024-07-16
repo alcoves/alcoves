@@ -8,11 +8,13 @@ import { HTTPException } from 'hono/http-exception'
 const router = new Hono()
 
 router.get('/me', async (c) => {
+    // Start Middleware
     const sessionId = getCookie(c, 'auth_session')
     if (!sessionId) return c.text('No session found', 204)
 
     const { session, user } = await lucia.validateSession(sessionId)
     if (!session || !user) throw new HTTPException(401)
+    // End Middleware
 
     // If Session.fresh is true, it indicates the session expiration
     // has been extended and you should set a new session cookie.
