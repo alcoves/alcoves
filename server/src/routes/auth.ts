@@ -48,13 +48,15 @@ router.get('/callbacks/google', async (c) => {
                 : 'http://localhost:3005'
         return c.redirect(redirectUrl)
     } else {
-        return c.text('Failed to authenticate with Google OAuth')
+        return c.json({
+            message: 'Failed to authenticate user',
+        })
     }
 })
 
 router.post('/logout', async (c) => {
     const sessionId = getCookie(c, 'auth_session')
-    if (!sessionId) return c.text('No session found', 204)
+    if (!sessionId) return c.json({ message: 'No session found' }, 204)
 
     const { session, user } = await lucia.validateSession(sessionId)
     if (!session || !user) throw new HTTPException(401)
@@ -65,7 +67,9 @@ router.post('/logout', async (c) => {
     await lucia.invalidateSession(sessionId)
     await lucia.deleteExpiredSessions()
 
-    return c.text('Logged out')
+    return c.json({
+        message: 'Successfully logged out',
+    })
 })
 
 export const authRouter = router

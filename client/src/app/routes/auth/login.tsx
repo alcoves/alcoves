@@ -16,7 +16,7 @@ const GOOGLE_CLIENT_ID =
     (import.meta.env.VITE_GOOGLE_CLIENT_ID as string) || window.location.origin
 
 function LoginComponent() {
-    const { user, loading } = useAuth()
+    const { user, isLoading } = useAuth()
 
     const contentBg = useColorModeValue('white', 'gray.800')
 
@@ -32,7 +32,7 @@ function LoginComponent() {
         },
     })
 
-    if (user && !loading) {
+    if (user && !isLoading) {
         return <Navigate to="/" />
     }
 

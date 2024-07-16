@@ -13,12 +13,13 @@ import ColorModeToggle from '../../components/colorModeToggle'
 import UserAccountMenuButton from '../../components/userAccountMenu'
 
 export default function RootRoute() {
-    const { user, loading } = useAuth()
+    const { user, isLoading } = useAuth()
 
     const sidebarBg = useColorModeValue('gray.50', 'gray.900')
     const contentBg = useColorModeValue('white', 'gray.800')
 
-    if (!user && !loading) {
+    if (!user && !isLoading) {
+        console.info('RootRoute is redirecting to /auth/login')
         return <Navigate to="/auth/login" />
     }
 

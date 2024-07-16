@@ -38,11 +38,11 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 app.get('/', (c) => {
-    return c.text('sup')
+    return c.json({ status: 'ok' })
 })
 
 app.get('/healthcheck', (c) => {
-    return c.text('OK')
+    return c.json({ status: 'ok' })
 })
 
 app.get('/tasks', async (c) => {

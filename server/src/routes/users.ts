@@ -10,7 +10,7 @@ const router = new Hono()
 router.get('/me', async (c) => {
     // Start Middleware
     const sessionId = getCookie(c, 'auth_session')
-    if (!sessionId) return c.text('No session found', 204)
+    if (!sessionId) return c.json({ message: 'No session found' }, 204)
 
     const { session, user } = await lucia.validateSession(sessionId)
     if (!session || !user) throw new HTTPException(401)

@@ -1,25 +1,20 @@
+import { User } from '../types/user'
 import { getUser, logoutUser } from '../features/api'
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { createContext, useCallback, useEffect, useMemo, useState } from 'react'
-
-interface User {
-    email: string
-    avatar: string
-    id: string
-}
+import { createContext, useCallback, useMemo } from 'react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 export const AuthContext = createContext<{
     user: User | null
-    loading: boolean
+    isLoading: boolean
     logout: () => void
 }>({
     user: null,
-    loading: true,
+    isLoading: true,
     logout: () => {},
 })
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-    const [user, setUser] = useState<User | null>(null)
+    const queryClient = useQueryClient()
     const { mutateAsync } = useMutation({ mutationFn: logoutUser })
     const { data, isLoading } = useQuery({
         queryKey: ['user'],
@@ -28,39 +23,26 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const logout = useCallback(async () => {
         try {
-            console.info('Attemping to log the user out')
+            console.info('Attempting to log the user out')
             await mutateAsync()
+            queryClient.invalidateQueries({ queryKey: ['user'] })
 
-            setUser(null)
             console.info('Redirecting to the login page...')
             window.location.replace('/auth/login')
         } catch (e) {
             console.error(e)
         }
-    }, [mutateAsync])
+    }, [mutateAsync, queryClient])
 
-    useEffect(() => {
-        try {
-            if (!user && !isLoading) {
-                console.info('Attemping 1 to log the user in')
-                const user = data?.payload
-                console.info('Attemping 2 to log the user in')
-                setUser(user)
-                console.info('Attemping 3 to log the user in')
-                console.info(`The user ${user?.id} is logged in`)
-            }
-        } catch (e) {
-            console.error('test', e)
-        }
-    }, [user, loading: isLoading, data])
+    const user = data?.payload || null
 
     const value = useMemo(
         () => ({
             user,
-            loading: isLoading,
+            isLoading,
             logout,
         }),
-        [user, loading, logout]
+        [user, isLoading, logout]
     )
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
