@@ -1,8 +1,8 @@
 import UserAccountMenuButton from '../../components/userAccountMenu'
 
-import { LayoutList } from 'lucide-react'
+import { ImageIcon, UsersIcon } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
-import { Navigate, Outlet } from 'react-router-dom'
+import { Navigate, NavLink, Outlet } from 'react-router-dom'
 import {
     Box,
     Flex,
@@ -35,25 +35,34 @@ export default function RootRoute() {
                     justify="space-between"
                 >
                     <Flex align="center" justify="center" direction="column">
-                        <a href="/">
+                        <NavLink to="/">
                             <Image src="/favicon.ico" alt="Logo" w="2rem" />
-                        </a>
-                        <Flex mt="4">
-                            <IconButton
-                                size="sm"
-                                aria-label="tasks"
-                                colorScheme={
-                                    window?.location?.pathname === '/'
-                                        ? 'green'
-                                        : 'gray'
-                                }
-                                variant={
-                                    window?.location?.pathname === '/'
-                                        ? 'solid'
-                                        : 'solid'
-                                }
-                                icon={<LayoutList size="1rem" />}
-                            />
+                        </NavLink>
+                        <Flex mt="4" direction="column" gap="2">
+                            <NavLink to="/">
+                                {({ isActive }) => (
+                                    <IconButton
+                                        size="sm"
+                                        aria-label="home"
+                                        colorScheme={
+                                            isActive ? 'green' : 'gray'
+                                        }
+                                        icon={<ImageIcon size="1rem" />}
+                                    />
+                                )}
+                            </NavLink>
+                            <NavLink to="/collections">
+                                {({ isActive }) => (
+                                    <IconButton
+                                        size="sm"
+                                        aria-label="home"
+                                        colorScheme={
+                                            isActive ? 'green' : 'gray'
+                                        }
+                                        icon={<UsersIcon size="1rem" />}
+                                    />
+                                )}
+                            </NavLink>
                         </Flex>
                     </Flex>
                     <Flex

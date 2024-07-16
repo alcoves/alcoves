@@ -15,8 +15,8 @@
 		{ "path": "client", "symbol": "FE", "tooltip": "Frontend", "color": "custom2"}
 	],
 	"workbench.colorCustomizations": {
-		"folderPathColor.custom1": "#e26002",
-		"folderPathColor.custom2": "#44ff9b",
+		"folderPathColor.custom1": "#dc884b",
+		"folderPathColor.custom2": "#a176d4",
 		"activityBar.activeBackground": "#df3143",
 		"activityBar.activeBorder": "#14530d",
 		"activityBar.background": "#df3143",
