@@ -4,10 +4,10 @@ import * as ReactDOM from 'react-dom/client'
 
 import Root from './routes/root.tsx'
 import Login from './routes/auth/login.js'
-import Landing from './routes/landing.tsx'
-import ErrorPage from './components/Error.tsx'
+import Landing from './app/routes/landing.tsx'
+import ErrorPage from './components/error.tsx'
 
-import { AuthProvider } from './context/AuthProvider'
+import { AuthProvider } from './app/authProvider.tsx'
 import { ChakraProvider, ThemeConfig } from '@chakra-ui/react'
 import { ColorModeScript, extendTheme } from '@chakra-ui/react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'

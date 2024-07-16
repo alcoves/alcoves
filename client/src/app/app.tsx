@@ -1,4 +1,4 @@
-import Tasks from './components/Tasks'
+import Tasks from '../components/tasks'
 
 import { LayoutList, Moon, Sun } from 'lucide-react'
 

@@ -1,5 +1,5 @@
 import useSWR from 'swr'
-import { fetcher } from '../lib/swr'
+import { fetcher } from '../utils/swr'
 import { Box, Flex, Heading } from '@chakra-ui/react'
 
 export default function TaskCounts() {

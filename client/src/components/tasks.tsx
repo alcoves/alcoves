@@ -1,6 +1,6 @@
 import useSWR from 'swr'
 import { DateTime, Interval } from 'luxon'
-import { fetcher } from '../lib/swr'
+import { fetcher } from '../utils/swr'
 import {
     Box,
     Card,
@@ -16,7 +16,7 @@ import {
     Text,
     useColorModeValue,
 } from '@chakra-ui/react'
-import TaskCounts from './TaskCounts'
+import TaskCounts from './taskCounts'
 
 type Task = {
     name: string

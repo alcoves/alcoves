@@ -1,5 +1,5 @@
 import { createContext, useCallback, useEffect, useMemo, useState } from 'react'
-import { API_URL } from '../lib/env'
+import { API_URL } from '../config/env'
 
 interface User {
     email: string

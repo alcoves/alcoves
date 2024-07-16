@@ -9,8 +9,8 @@ import {
     useColorModeValue,
 } from '@chakra-ui/react'
 
-import ColorModeToggle from '../components/ColorModeToggle'
-import UserAccountMenuButton from '../components/UserAccountMenu'
+import ColorModeToggle from '../components/colorModeToggle'
+import UserAccountMenuButton from '../components/userAccountMenu'
 
 export default function Root() {
     const { user, loading } = useAuth()
