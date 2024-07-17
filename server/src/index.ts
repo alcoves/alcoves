@@ -10,6 +10,7 @@ import { transcodeQueue } from './tasks'
 import { authRouter } from './routes/auth'
 import { usersRouter } from './routes/users'
 import { zValidator } from '@hono/zod-validator'
+import { assetsRouter } from './routes/assets'
 
 const app = new Hono()
 
@@ -64,6 +65,7 @@ app.use('/favicon.ico', serveStatic({ path: './src/static/favicon.ico' }))
 
 app.route('/api/auth', authRouter)
 app.route('/api/users', usersRouter)
+app.route('/api/assets', assetsRouter)
 
 app.use(
     '*',

@@ -36,6 +36,20 @@
       "when": 1720555310835,
       "tag": "0004_quiet_siren",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1721165361116,
+      "tag": "0005_spicy_paibok",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1721172859249,
+      "tag": "0006_stormy_ricochet",
+      "breakpoints": true
     }
   ]
 }

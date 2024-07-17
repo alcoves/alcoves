@@ -1,6 +1,6 @@
 import UserAccountMenuButton from '../../components/userAccountMenu'
 
-import { ImageIcon, UsersIcon } from 'lucide-react'
+import { ImageIcon, Upload, UsersIcon } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 import { Navigate, NavLink, Outlet } from 'react-router-dom'
 import {
@@ -48,6 +48,18 @@ export default function RootRoute() {
                                             isActive ? 'green' : 'gray'
                                         }
                                         icon={<ImageIcon size="1rem" />}
+                                    />
+                                )}
+                            </NavLink>
+                            <NavLink to="/upload">
+                                {({ isActive }) => (
+                                    <IconButton
+                                        size="sm"
+                                        aria-label="home"
+                                        colorScheme={
+                                            isActive ? 'green' : 'gray'
+                                        }
+                                        icon={<Upload size="1rem" />}
                                     />
                                 )}
                             </NavLink>

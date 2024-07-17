@@ -4,9 +4,13 @@
     "start:api": "bun run src/index.ts",
     "start:worker": "bun run src/worker.ts",
     "dev:api": "bun run --hot src/index.ts",
-    "dev:worker": "bun run --hot src/worker.ts"
+    "dev:worker": "bun run --hot src/worker.ts",
+    "drizzle:generate": "bun run drizzle-kit generate",
+    "drizzle:migrate": "bun run drizzle-kit migrate"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.614.0",
+    "@aws-sdk/s3-request-presigner": "^3.614.0",
     "@hono/zod-validator": "^0.2.2",
     "@lucia-auth/adapter-drizzle": "^1.0.7",
     "bullmq": "^5.8.4",
@@ -17,6 +21,7 @@
     "pg": "^8.12.0",
     "postgres": "^3.4.4",
     "sharp": "^0.33.4",
+    "uuid": "^10.0.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {

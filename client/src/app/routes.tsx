@@ -1,4 +1,5 @@
 import RootRoute from './routes/root'
+import UploadRoute from './routes/upload'
 import LandingRoute from './routes/landing'
 import ProfileRoute from './routes/profile'
 import ErrorPage from '../components/error'
@@ -15,6 +16,10 @@ export const router = createBrowserRouter([
             {
                 path: '/',
                 element: <LandingRoute />,
+            },
+            {
+                path: '/upload',
+                element: <UploadRoute />,
             },
             {
                 path: '/profile',
