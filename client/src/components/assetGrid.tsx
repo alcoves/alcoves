@@ -7,11 +7,7 @@ export default function AssetGrid({ assets }: { assets: Asset[] | undefined }) {
         <Box>
             {assets?.map((asset) => (
                 <Box key={asset.id} border="solid red 1px" rounded="md">
-                    <h2>{asset.title}</h2>
-                    <p>{asset.size}</p>
-                    <p>{asset.contentType}</p>
-                    <p>{asset.createdAt}</p>
-                    <p>{asset.updatedAt}</p>
+                    <img src={asset?.url} width="400px" />
                     <DeleteAsset id={asset?.id} />
                 </Box>
             ))}

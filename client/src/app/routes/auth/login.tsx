@@ -48,7 +48,7 @@ function LoginComponent() {
                 <Flex
                     p="4"
                     w="100%"
-                    maxW="350px"
+                    maxW="300px"
                     align="center"
                     justify="center"
                     direction="column"

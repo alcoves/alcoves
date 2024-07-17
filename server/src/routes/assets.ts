@@ -7,7 +7,7 @@ import { assets } from '../db/schema'
 import { constants } from '../lib/constants'
 import { generateIdFromEntropySize } from 'lucia'
 import { HTTPException } from 'hono/http-exception'
-import { ListPartsCommand } from '@aws-sdk/client-s3'
+import { GetObjectCommand, ListPartsCommand } from '@aws-sdk/client-s3'
 import { userAuth, UserAuthMiddleware } from '../middleware/auth'
 import {
     s3Client,
@@ -16,6 +16,7 @@ import {
     completeMultipartUpload,
     deleteS3ObjectsByPrefix,
 } from '../lib/s3'
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 
 const router = new Hono<{ Variables: UserAuthMiddleware }>()
 
@@ -50,7 +51,24 @@ router.get('/', async (c) => {
         where: eq(assets.userId, user.id),
     })
 
-    return c.json({ payload: userAssets })
+    const userAssetsWithSignedUrls = await Promise.all(
+        userAssets.map(async (asset) => {
+            const command = new GetObjectCommand({
+                Bucket: asset.storageBucket,
+                Key: asset.storageKey,
+            })
+            const url = await getSignedUrl(s3Client, command, {
+                expiresIn: 3600,
+            })
+
+            return {
+                ...asset,
+                url,
+            }
+        })
+    )
+
+    return c.json({ payload: userAssetsWithSignedUrls })
 })
 
 router.post('/', async (c) => {
