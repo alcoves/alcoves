@@ -19,7 +19,7 @@ router.get('/callbacks/google', async (c) => {
         const userInfo = await getUserInfo(tokens.access_token)
         console.log('userInfo', userInfo)
 
-        console.info('Upsering user in the database...')
+        console.info('Upserting user in the database...')
         const [user] = await db
             .insert(users)
             .values({

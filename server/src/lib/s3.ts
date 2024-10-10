@@ -1,4 +1,9 @@
 import { env } from './env'
+import { join } from 'path'
+import { promisify } from 'util'
+import { pipeline } from 'node:stream'
+import { createWriteStream } from 'node:fs'
+
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import {
     S3Client,
@@ -8,7 +13,11 @@ import {
     CreateMultipartUploadCommandInput,
     ListObjectsV2Command,
     DeleteObjectsCommand,
+    GetObjectCommand,
+    PutObjectCommand,
 } from '@aws-sdk/client-s3'
+
+const pipelineAsync = promisify(pipeline)
 
 export const s3Client = new S3Client({
     region: env.ALCOVES_OBJECT_STORE_REGION,
@@ -109,5 +118,70 @@ export async function deleteS3ObjectsByPrefix({
         }
 
         await s3Client.send(new DeleteObjectsCommand(deleteParams))
+    }
+}
+
+export async function downloadObject({
+    localDir,
+    bucket,
+    key,
+}: {
+    localDir: string
+    bucket: string
+    key: string
+}): Promise<string> {
+    const downloadPath = join(
+        localDir,
+        key.split('/').pop() || 'downloadedFile'
+    )
+
+    console.log('Downloading object', key, 'from', bucket, 'to', downloadPath)
+
+    try {
+        const command = new GetObjectCommand({ Bucket: bucket, Key: key })
+        const response = await s3Client.send(command)
+        await pipelineAsync(
+            response.Body as ReadableStream,
+            createWriteStream(downloadPath)
+        )
+        console.log(
+            `Successfully downloaded ${key} from ${bucket} to ${downloadPath}`
+        )
+    } catch (error) {
+        throw error
+    }
+
+    return downloadPath
+}
+
+export async function uploadBufferToS3({
+    imageBuffer,
+    bucket,
+    key,
+    contentType = 'image/jpeg',
+}: {
+    imageBuffer: Buffer
+    bucket: string
+    key: string
+    contentType?: string
+}): Promise<string> {
+    try {
+        await s3Client.send(
+            new PutObjectCommand({
+                Bucket: bucket,
+                Key: key,
+                Body: imageBuffer,
+                ContentType: contentType,
+            })
+        )
+
+        // Assuming the S3 bucket is public, construct the URL
+        // For private buckets, you might want to generate a signed URL instead
+        const imageUrl = `${env.ALCOVES_OBJECT_STORE_ENDPOINT}/${bucket}/${key}`
+        console.log(`Image successfully uploaded to ${imageUrl}`)
+        return imageUrl
+    } catch (error) {
+        console.error('Failed to upload image to S3:', error)
+        throw error
     }
 }

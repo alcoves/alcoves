@@ -1,7 +1,7 @@
 import { Worker } from 'bullmq'
-import { env } from './lib/env'
-import { runFFmpeg } from './lib/ffmpeg'
-import { bullConnection, transcodeQueue } from './tasks'
+import { env } from '../../lib/env'
+import { runFFmpeg } from '../../lib/ffmpeg'
+import { bullConnection, transcodeQueue } from '../queues'
 
 const worker = new Worker(
     transcodeQueue.name,
@@ -41,8 +41,8 @@ const worker = new Worker(
         }
     },
     {
-        concurrency: parseInt(env.ALCOVES_TASK_WORKER_CONCURRENCY || '1'),
         connection: bullConnection,
+        concurrency: parseInt(env.ALCOVES_TASK_WORKER_CONCURRENCY || '1'),
     }
 )
 

@@ -10,10 +10,6 @@
 	"[javascript]": {
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
-	"folder-path-color.folders": [
-		{ "path": "server", "symbol": "BE", "tooltip": "Backend",  "color": "custom1"},
-		{ "path": "client", "symbol": "FE", "tooltip": "Frontend", "color": "custom2"}
-	],
 	"workbench.colorCustomizations": {
 		"folderPathColor.custom1": "#dc884b",
 		"folderPathColor.custom2": "#a176d4",

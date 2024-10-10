@@ -17,6 +17,7 @@ import {
     deleteS3ObjectsByPrefix,
 } from '../lib/s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
+import { imageProcessingQueue, ImageTasks } from '../tasks/queues'
 
 const router = new Hono<{ Variables: UserAuthMiddleware }>()
 
@@ -59,6 +60,11 @@ router.get('/', async (c) => {
             })
             const url = await getSignedUrl(s3Client, command, {
                 expiresIn: 3600,
+            })
+
+            await imageProcessingQueue.add(ImageTasks.FETCH_IMAGE_METADATA, {
+                key: asset.storageKey,
+                bucket: asset.storageBucket,
             })
 
             return {
@@ -154,10 +160,15 @@ router.post('/:assetId/uploads/:uploadId', async (c) => {
         parts: uploadedParts,
         bucket: asset.storageBucket,
     })
-
     console.log('Multipart upload completed')
+
+    console.log('Enqueueing image proxy job')
+    await imageProcessingQueue.add(ImageTasks.GENERATE_IMAGE_PROXIES, {
+        test: 'test',
+        assetId: asset.id,
+    })
+
     return c.json({ payload: null })
-    // Update the database and enqueue proxy jobs / metadata jobs
 })
 
 export const assetsRouter = router

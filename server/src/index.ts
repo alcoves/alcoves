@@ -1,15 +1,12 @@
-import './worker' // Starts the worker
 import './db/migrate' // Runs database migrations
 
-import { z } from 'zod'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
 import { serveStatic } from 'hono/bun'
-import { transcodeQueue } from './tasks'
+
 import { authRouter } from './routes/auth'
 import { usersRouter } from './routes/users'
-import { zValidator } from '@hono/zod-validator'
 import { assetsRouter } from './routes/assets'
 
 const app = new Hono()
@@ -51,16 +48,6 @@ app.get('/healthcheck', (c) => {
     return c.json({ status: 'ok' })
 })
 
-app.get('/tasks', async (c) => {
-    const tasks = await transcodeQueue.getJobs()
-    return c.json({ tasks })
-})
-
-app.get('/tasks/counts', async (c) => {
-    const counts = await transcodeQueue.getJobCounts()
-    return c.json({ counts })
-})
-
 app.use('/favicon.ico', serveStatic({ path: './src/static/favicon.ico' }))
 
 app.route('/api/auth', authRouter)
@@ -75,20 +62,34 @@ app.use(
     })
 )
 
-const createTaskSchema = z.object({
-    input: z.string(),
-    output: z.string(),
-    commands: z.string(),
-})
+// import { z } from 'zod'
+// import { transcodeQueue } from './tasks'
+// import { zValidator } from '@hono/zod-validator'
 
-app.post('/tasks', zValidator('json', createTaskSchema), async (c) => {
-    const { input, output, commands } = c.req.valid('json')
-    const job = await transcodeQueue.add('transcode', {
-        input,
-        output,
-        commands,
-    })
-    return c.json({ job })
-})
+// const createTaskSchema = z.object({
+//     input: z.string(),
+//     output: z.string(),
+//     commands: z.string(),
+// })
+
+// app.get('/tasks', async (c) => {
+//     const tasks = await transcodeQueue.getJobs()
+//     return c.json({ tasks })
+// })
+
+// app.get('/tasks/counts', async (c) => {
+//     const counts = await transcodeQueue.getJobCounts()
+//     return c.json({ counts })
+// })
+
+// app.post('/tasks', zValidator('json', createTaskSchema), async (c) => {
+//     const { input, output, commands } = c.req.valid('json')
+//     const job = await transcodeQueue.add('transcode', {
+//         input,
+//         output,
+//         commands,
+//     })
+//     return c.json({ job })
+// })
 
 export default app

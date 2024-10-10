@@ -2,9 +2,9 @@
   "type": "module",
   "scripts": {
     "start:api": "bun run src/index.ts",
-    "start:worker": "bun run src/worker.ts",
+    "start:worker": "bun run src/tasks/index.ts",
     "dev:api": "bun run --hot src/index.ts",
-    "dev:worker": "bun run --hot src/worker.ts",
+    "dev:worker": "bun run --hot src/tasks/index.ts",
     "drizzle:generate": "bun run drizzle-kit generate",
     "drizzle:migrate": "bun run drizzle-kit migrate"
   },
@@ -27,6 +27,7 @@
   "devDependencies": {
     "@types/bun": "latest",
     "@types/pg": "^8.11.6",
+    "@types/uuid": "^10.0.0",
     "drizzle-kit": "^0.22.8"
   }
 }
