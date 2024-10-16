@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("ALCOVES_DB_URL")
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  avatar    String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Asset     Asset[]
+  Session   Session[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Asset {
+  id          Int              @id @default(autoincrement())
+  type        AssetType
+  title       String
+  description String           @default("")
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  userId      Int
+  user        User             @relation(fields: [userId], references: [id])
+  metadata    AssetMetadata?
+  renditions  AssetRendition[]
+}
+
+model AssetMetadata {
+  id             Int      @id @default(autoincrement())
+  filename       String
+  width          Int      @default(0)
+  height         Int      @default(0)
+  duration       Int      @default(0)
+  cameraMake     String
+  cameraModel    String
+  assetCreatedAt DateTime @default(now())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  asset          Asset    @relation(fields: [assetId], references: [id])
+  assetId        Int      @unique
+}
+
+model AssetRendition {
+  id            Int       @id @default(autoincrement())
+  type          AssetType
+  size          Int
+  mimeType      String
+  metadata      Json?
+  storageKey    String
+  storageBucket String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  asset         Asset     @relation(fields: [assetId], references: [id])
+  assetId       Int
+}
+
+enum AssetType {
+  PHOTO
+  VIDEO
+}
