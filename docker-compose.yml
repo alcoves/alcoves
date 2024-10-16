@@ -3,7 +3,8 @@ x-client-environment: &client-environment
     VITE_GOOGLE_CLIENT_ID: $ALCOVES_AUTH_GOOGLE_ID
     VITE_GOOGLE_REDIRECT_URL: $ALCOVES_AUTH_GOOGLE_REDIRECT_URL
 
-x-api-environment: &api-environment
+x-server-environment: &server-environment
+    ALCOVES_DB_URL: $ALCOVES_DB_URL
     ALCOVES_OBJECT_STORE_DEFAULT_BUCKET: alcoves
     ALCOVES_OBJECT_STORE_ENDPOINT: $ALCOVES_OBJECT_STORE_ENDPOINT
     ALCOVES_OBJECT_STORE_ACCESS_KEY_ID: minioadmin
@@ -11,16 +12,6 @@ x-api-environment: &api-environment
     ALCOVES_AUTH_GOOGLE_ID: $ALCOVES_AUTH_GOOGLE_ID
     ALCOVES_AUTH_GOOGLE_SECRET: $ALCOVES_AUTH_GOOGLE_SECRET
     ALCOVES_AUTH_GOOGLE_REDIRECT_URL: $ALCOVES_AUTH_GOOGLE_REDIRECT_URL
-    ALCOVES_TASK_DB_PORT: 6379
-    ALCOVES_TASK_DB_HOST: task_db
-    ALCOVES_TASK_WORKER_CONCURRENCY: 4
-    ALCOVES_DB_CONNECTION_STRING: postgres://postgres:postgres@postgres:5432/alcoves
-
-x-worker-environment: &worker-environment
-    ALCOVES_OBJECT_STORE_DEFAULT_BUCKET: alcoves
-    ALCOVES_OBJECT_STORE_ENDPOINT: $ALCOVES_OBJECT_STORE_ENDPOINT
-    ALCOVES_OBJECT_STORE_ACCESS_KEY_ID: minioadmin
-    ALCOVES_OBJECT_STORE_SECRET_ACCESS_KEY: minioadmin
     ALCOVES_TASK_DB_PORT: 6379
     ALCOVES_TASK_DB_HOST: task_db
     ALCOVES_TASK_WORKER_CONCURRENCY: 4
@@ -39,17 +30,17 @@ services:
             - ./client:/app
             - /app/node_modules
         depends_on:
-            - api
+            - server
         ports:
             - 3005:3005
-    api:
-        container_name: api
+    server:
+        container_name: server
         build:
             context: server
             dockerfile: Dockerfile
-        command: bun run dev:api
+        command: bun run dev
         environment:
-            <<: *api-environment
+            <<: *server-environment
         volumes:
             - ./server:/app
             - /app/node_modules
@@ -60,25 +51,6 @@ services:
             - postgres
         ports:
             - 3000:3000
-        extra_hosts:
-            - 'host.docker.internal:host-gateway'
-    worker:
-        container_name: worker
-        build:
-            context: server
-            dockerfile: Dockerfile
-        command: bun run dev:worker
-        environment:
-            <<: *worker-environment
-        volumes:
-            - ./server:/app
-            - /app/node_modules
-        depends_on:
-            - api
-            - task_db
-            - minio
-            - minio_mb
-            - postgres
         extra_hosts:
             - 'host.docker.internal:host-gateway'
     task_db:
@@ -110,7 +82,7 @@ services:
             POSTGRES_USER: postgres
             POSTGRES_PASSWORD: postgres
     minio:
-        image: minio/minio
+        image: minio/minio:latest
         volumes:
             - minio:/data
         environment:
@@ -122,7 +94,7 @@ services:
         command: server /data --console-address ":9001"
 
     minio_mb:
-        image: minio/mc
+        image: minio/mc:latest
         depends_on:
             - minio
         entrypoint: sh -c "mc config host add minio http://minio:9000 minioadmin minioadmin && mc mb minio/alcoves"

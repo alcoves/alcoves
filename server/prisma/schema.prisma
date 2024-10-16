@@ -7,6 +7,11 @@ datasource db {
   url      = env("ALCOVES_DB_URL")
 }
 
+enum AssetType {
+  PHOTO
+  VIDEO
+}
+
 model User {
   id        Int       @id @default(autoincrement())
   email     String    @unique
@@ -18,12 +23,12 @@ model User {
 }
 
 model Session {
-  id        String   @id @default(cuid())
+  id        String   @id
   expiresAt DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   userId    Int
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Asset {
@@ -35,23 +40,8 @@ model Asset {
   updatedAt   DateTime         @updatedAt
   userId      Int
   user        User             @relation(fields: [userId], references: [id])
-  metadata    AssetMetadata?
+  // metadata    AssetMetadata?
   renditions  AssetRendition[]
-}
-
-model AssetMetadata {
-  id             Int      @id @default(autoincrement())
-  filename       String
-  width          Int      @default(0)
-  height         Int      @default(0)
-  duration       Int      @default(0)
-  cameraMake     String
-  cameraModel    String
-  assetCreatedAt DateTime @default(now())
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  asset          Asset    @relation(fields: [assetId], references: [id])
-  assetId        Int      @unique
 }
 
 model AssetRendition {
@@ -68,7 +58,18 @@ model AssetRendition {
   assetId       Int
 }
 
-enum AssetType {
-  PHOTO
-  VIDEO
-}
+// WIP
+// model AssetMetadata {
+//   id             Int      @id @default(autoincrement())
+//   filename       String
+//   width          Int      @default(0)
+//   height         Int      @default(0)
+//   duration       Int      @default(0)
+//   cameraMake     String
+//   cameraModel    String
+//   assetCreatedAt DateTime @default(now())
+//   createdAt      DateTime @default(now())
+//   updatedAt      DateTime @updatedAt
+//   asset          Asset    @relation(fields: [assetId], references: [id])
+//   assetId        Int      @unique
+// }

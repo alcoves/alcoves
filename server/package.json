@@ -1,33 +1,32 @@
 {
-  "type": "module",
-  "scripts": {
-    "start:api": "bun run src/index.ts",
-    "start:worker": "bun run src/tasks/index.ts",
-    "dev:api": "bun run --hot src/index.ts",
-    "dev:worker": "bun run --hot src/tasks/index.ts",
-    "drizzle:generate": "bun run drizzle-kit generate",
-    "drizzle:migrate": "bun run drizzle-kit migrate"
-  },
-  "dependencies": {
-    "@aws-sdk/client-s3": "^3.670.0",
-    "@aws-sdk/s3-request-presigner": "^3.670.0",
-    "@hono/zod-validator": "^0.2.2",
-    "@lucia-auth/adapter-prisma": "^4.0.1",
-    "@prisma/client": "^5.21.0",
-    "bullmq": "^5.20.0",
-    "google-auth-library": "^9.14.2",
-    "hono": "^4.6.5",
-    "lucia": "^3.2.1",
-    "pg": "^8.13.0",
-    "postgres": "^3.4.4",
-    "sharp": "^0.33.5",
-    "uuid": "^10.0.0",
-    "zod": "^3.23.8"
-  },
-  "devDependencies": {
-    "@types/bun": "latest",
-    "@types/pg": "^8.11.10",
-    "@types/uuid": "^10.0.0",
-    "prisma": "^5.21.0"
-  }
+    "type": "module",
+    "scripts": {
+        "start": "bun run src/index.ts",
+        "dev": "bunx prisma generate && bun run --hot src/index.ts",
+        "prisma:generate": "bun run prisma generate",
+        "prisma:migrate": "bun run prisma migrate dev",
+        "test": "bunx prisma db push --skip-generate && bun test"
+    },
+    "dependencies": {
+        "@aws-sdk/client-s3": "^3.670.0",
+        "@aws-sdk/s3-request-presigner": "^3.670.0",
+        "@hono/zod-validator": "^0.2.2",
+        "@lucia-auth/adapter-prisma": "^4.0.1",
+        "@prisma/client": "^5.21.0",
+        "bullmq": "^5.20.0",
+        "google-auth-library": "^9.14.2",
+        "hono": "^4.6.5",
+        "lucia": "^3.2.1",
+        "pg": "^8.13.0",
+        "postgres": "^3.4.4",
+        "sharp": "^0.33.5",
+        "uuid": "^10.0.0",
+        "zod": "^3.23.8"
+    },
+    "devDependencies": {
+        "@types/bun": "latest",
+        "@types/pg": "^8.11.10",
+        "@types/uuid": "^10.0.0",
+        "prisma": "^5.21.0"
+    }
 }

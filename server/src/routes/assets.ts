@@ -1,5 +1,4 @@
 import { Hono } from 'hono'
-import { db } from '../db/db'
 import { env } from '../lib/env'
 import { v4 as uuidv4 } from 'uuid'
 import { and, eq } from 'drizzle-orm'
