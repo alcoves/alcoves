@@ -1,6 +1,8 @@
 import { Hono } from 'hono'
-import { db, lucia } from '../lib/db'
+import { users } from '../db/schema'
+import { db, lucia } from '../db/index'
 import { setCookie } from 'hono/cookie'
+import { generateIdFromEntropySize } from 'lucia'
 import { HTTPException } from 'hono/http-exception'
 import { userAuth, UserAuthMiddleware } from '../middleware/auth'
 import { getGoogleOAuthTokens, getUserInfo } from '../lib/auth'
@@ -17,22 +19,22 @@ router.get('/callbacks/google', async (c) => {
         const userInfo = await getUserInfo(tokens.access_token)
         console.log('userInfo', userInfo)
 
-        console.info('Upserting user in the database...')
-        const user = await db.user.upsert({
-            where: { email: userInfo?.email },
-            create: {
+        console.info('Upsering user in the database...')
+        const [user] = await db
+            .insert(users)
+            .values({
                 email: userInfo?.email,
                 avatar: userInfo?.picture,
-            },
-            update: {
-                email: userInfo?.email,
-                avatar: userInfo?.picture,
-            },
-        })
+                id: generateIdFromEntropySize(10),
+            })
+            .onConflictDoUpdate({
+                target: users.email,
+                set: { email: userInfo?.email, avatar: userInfo?.picture },
+            })
+            .returning()
 
         console.log(user)
 
-        // @ts-ignore - This type hint is wrong
         const session = await lucia.createSession(user.id, {})
         const sessionCookie = lucia.createSessionCookie(session.id)
         setCookie(

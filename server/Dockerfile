@@ -1,7 +1,9 @@
-FROM oven/bun:latest
+FROM ubuntu:24.04
+
 WORKDIR /app
 
-RUN apt update && apt install -y wget xz-utils && rm -rf /var/lib/apt/lists/*
+RUN apt update && apt install -y wget xz-utils curl unzip && rm -rf /var/lib/apt/lists/*
+RUN curl -fsSL https://bun.sh/install | BUN_INSTALL=/usr bash
 
 RUN wget -q https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-n7.1-latest-linux64-gpl-7.1.tar.xz && \
     tar -xvf ffmpeg-n7.1-latest-linux64-gpl-7.1.tar.xz && \
@@ -12,7 +14,6 @@ RUN wget -q https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpe
 
 COPY package.json bun.lockb ./
 RUN bun install --frozen-lockfile
-WORKDIR /app
 
 COPY . .
 

@@ -19,7 +19,6 @@ x-server-environment: &server-environment
 
 services:
     client:
-        container_name: client
         build:
             context: client
             dockerfile: Dockerfile
@@ -34,16 +33,16 @@ services:
         ports:
             - 3005:3005
     server:
-        container_name: server
         build:
             context: server
             dockerfile: Dockerfile
         command: bun run dev
+        tty: true
+        user: '${UID}:${GID}'
         environment:
             <<: *server-environment
         volumes:
             - ./server:/app
-            - /app/node_modules
         depends_on:
             - task_db
             - minio
@@ -51,12 +50,10 @@ services:
             - postgres
         ports:
             - 3000:3000
-        extra_hosts:
-            - 'host.docker.internal:host-gateway'
     task_db:
-        container_name: task_db
         image: eqalpha/keydb:latest
         restart: always
+        attach: false
         ulimits:
             memlock: -1
         ports:
@@ -64,9 +61,9 @@ services:
         volumes:
             - task_db:/eqalpha/keydb
     postgres:
-        container_name: postgres
         image: postgres:17
         restart: always
+        attach: false
         ports:
             - 6200:5432
         volumes:
@@ -83,6 +80,7 @@ services:
             POSTGRES_PASSWORD: postgres
     minio:
         image: minio/minio:latest
+        attach: false
         volumes:
             - minio:/data
         environment:
@@ -95,13 +93,12 @@ services:
 
     minio_mb:
         image: minio/mc:latest
+        attach: false
         depends_on:
             - minio
         entrypoint: sh -c "mc config host add minio http://minio:9000 minioadmin minioadmin && mc mb minio/alcoves"
+
 volumes:
     minio:
     task_db:
     postgres:
-networks:
-    default:
-        name: alcoves

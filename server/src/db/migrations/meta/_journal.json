@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1729146947180,
+      "tag": "0000_illegal_firelord",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1729149338815,
+      "tag": "0001_first_shinko_yamashiro",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1729149565311,
+      "tag": "0002_flashy_agent_zero",
+      "breakpoints": true
+    }
+  ]
+}

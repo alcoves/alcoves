@@ -1,4 +1,4 @@
-import { lucia } from '../lib/db'
+import { lucia } from '../db/index'
 import { Session, User } from 'lucia'
 import { createMiddleware } from 'hono/factory'
 import { getCookie, setCookie } from 'hono/cookie'

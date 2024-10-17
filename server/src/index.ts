@@ -2,22 +2,20 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
 import { serveStatic } from 'hono/bun'
-
-import imageWorker from './tasks/tasks/images'
+import { startWorkers } from './tasks'
 
 import { authRouter } from './routes/auth'
 import { rootRouter } from './routes/root'
 import { usersRouter } from './routes/users'
+import { migrateDatabase } from './db/migrate'
 // import { assetsRouter } from './routes/assets'
+
+await migrateDatabase()
+await startWorkers()
 
 const app = new Hono()
 
 app.use(logger())
-
-// import { compress } from 'hono/compress'
-// https://hono.dev/docs/middleware/builtin/compress
-// Bun: This middleware uses CompressionStream which is not yet supported in bun.
-// app.use(compress())
 
 const defaultCorsOptions = {
     origin: '*',
@@ -52,8 +50,5 @@ app.use(
         rewriteRequestPath: (path) => path.replace(/^\//, '/static'),
     })
 )
-
-console.log('Booting up worker...')
-imageWorker()
 
 export default app

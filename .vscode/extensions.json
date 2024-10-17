@@ -1,8 +1,8 @@
 {
     "recommendations": [
-        "prisma.prisma",
         "esbenp.prettier-vscode",
         "bradlc.vscode-tailwindcss",
-        "ms-azuretools.vscode-docker"
+        "ms-azuretools.vscode-docker",
+        "oven.bun-vscode"
     ]
 }

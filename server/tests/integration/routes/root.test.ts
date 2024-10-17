@@ -1,4 +1,4 @@
-import app from '../index'
+import app from '../../../src/index'
 import { expect, test, describe } from 'bun:test'
 
 describe('Root', () => {
