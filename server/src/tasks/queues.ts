@@ -1,23 +1,23 @@
-import { env } from '../lib/env'
-import { Queue } from 'bullmq'
+import { env } from "../lib/env";
+import { Queue } from "bullmq";
 
-const transcodeQueueName = 'transcode'
-const imageProcessingQueueName = 'images'
+const transcodeQueueName = "transcode";
+const imageProcessingQueueName = "images";
 
 export enum ImageTasks {
-  FETCH_IMAGE_METADATA = 'fetch_image_metadata',
-  GENERATE_IMAGE_PROXIES = 'generate_image_proxies',
+	FETCH_IMAGE_METADATA = "fetch_image_metadata",
+	GENERATE_IMAGE_PROXIES = "generate_image_proxies",
 }
 
 export const bullConnection = {
-  host: env.ALCOVES_TASK_DB_HOST,
-  port: parseInt(env.ALCOVES_TASK_DB_PORT),
-}
+	host: env.ALCOVES_TASK_DB_HOST,
+	port: Number.parseInt(env.ALCOVES_TASK_DB_PORT),
+};
 
 export const transcodeQueue = new Queue(transcodeQueueName, {
-  connection: bullConnection,
-})
+	connection: bullConnection,
+});
 
 export const imageProcessingQueue = new Queue(imageProcessingQueueName, {
-  connection: bullConnection,
-})
+	connection: bullConnection,
+});

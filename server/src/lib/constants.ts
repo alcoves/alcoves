@@ -1,3 +1,3 @@
 export const constants = {
-  alcovesAssetsPrefix: 'assets',
-}
+	alcovesAssetsPrefix: "assets",
+};
