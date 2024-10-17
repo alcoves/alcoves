@@ -4,22 +4,22 @@ import { listUserAssets } from '../../features/api'
 import AssetGrid from '../../components/assetGrid'
 
 export default function LandingRoute() {
-    const { data, isLoading } = useQuery({
-        queryKey: ['assets'],
-        queryFn: listUserAssets,
-    })
+  const { data, isLoading } = useQuery({
+    queryKey: ['assets'],
+    queryFn: listUserAssets,
+  })
 
-    if (isLoading) {
-        return (
-            <Box>
-                <Spinner />
-            </Box>
-        )
-    }
-
+  if (isLoading) {
     return (
-        <Box>
-            <AssetGrid assets={data?.payload} />
-        </Box>
+      <Box>
+        <Spinner />
+      </Box>
     )
+  }
+
+  return (
+    <Box>
+      <AssetGrid assets={data?.payload} />
+    </Box>
+  )
 }

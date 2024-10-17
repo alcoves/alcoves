@@ -18,22 +18,22 @@ const app = new Hono()
 app.use(logger())
 
 const defaultCorsOptions = {
-    origin: '*',
-    credentials: true,
-    allowHeaders: [],
-    exposeHeaders: ['Content-Length'],
-    allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  origin: '*',
+  credentials: true,
+  allowHeaders: [],
+  exposeHeaders: ['Content-Length'],
+  allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 }
 
 if (process.env.NODE_ENV !== 'production') {
-    app.use(
-        cors({
-            ...defaultCorsOptions,
-            origin: 'http://localhost:3005',
-        })
-    )
+  app.use(
+    cors({
+      ...defaultCorsOptions,
+      origin: 'http://localhost:3005',
+    })
+  )
 } else {
-    app.use(cors(defaultCorsOptions))
+  app.use(cors(defaultCorsOptions))
 }
 
 app.use('/favicon.ico', serveStatic({ path: './src/static/favicon.ico' }))
@@ -44,11 +44,11 @@ app.route('/api/users', usersRouter)
 // app.route('/api/assets', assetsRouter)
 
 app.use(
-    '*',
-    serveStatic({
-        root: './src/',
-        rewriteRequestPath: (path) => path.replace(/^\//, '/static'),
-    })
+  '*',
+  serveStatic({
+    root: './src/',
+    rewriteRequestPath: (path) => path.replace(/^\//, '/static'),
+  })
 )
 
 export default app

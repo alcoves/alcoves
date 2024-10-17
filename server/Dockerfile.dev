@@ -12,10 +12,5 @@ RUN wget -q https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpe
     rm -rf ffmpeg-n7.1-latest-linux64-gpl-7.1 && \
     rm ffmpeg-n7.1-latest-linux64-gpl-7.1.tar.xz
 
-COPY package.json bun.lockb ./
-RUN bun install --frozen-lockfile
-
-COPY . .
-
 EXPOSE 3000
-CMD ["bun", "start:api"]
+CMD ["bun", "dev"]
