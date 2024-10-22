@@ -2,13 +2,12 @@ import { Hono } from "hono";
 import { serveStatic } from "hono/bun";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
-import { startWorkers } from "./tasks";
-
 import { migrateDatabase } from "./db/migrate";
+import { assetsRouter } from "./routes/assets";
 import { authRouter } from "./routes/auth";
 import { rootRouter } from "./routes/root";
 import { usersRouter } from "./routes/users";
-// import { assetsRouter } from './routes/assets'
+import { startWorkers } from "./tasks";
 
 const app = new Hono();
 
@@ -42,7 +41,7 @@ async function main() {
 	app.route("/", rootRouter);
 	app.route("/api/auth", authRouter);
 	app.route("/api/users", usersRouter);
-	// app.route('/api/assets', assetsRouter)
+	app.route("/api/assets", assetsRouter);
 
 	app.use(
 		"*",

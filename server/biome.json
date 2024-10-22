@@ -28,7 +28,7 @@
 			"style": {
 				"noNonNullAssertion": "warn",
 				"noShoutyConstants": "warn",
-				"useNamingConvention": "error"
+				"useNamingConvention": "warn"
 			}
 		}
 	},

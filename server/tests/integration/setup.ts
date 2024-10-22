@@ -1,6 +1,6 @@
+import { afterAll, beforeAll } from "bun:test";
 import { eq } from "drizzle-orm";
 import { db } from "../../src/db";
-import { beforeAll, afterAll } from "bun:test";
 import { sessions, users } from "../../src/db/schema";
 
 export const testUser = {
@@ -10,9 +10,13 @@ export const testUser = {
 };
 
 export const testSession = {
-	id: "mocked-secure-session-id",
 	userId: testUser.id,
+	id: "mocked-secure-session-id",
 	expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24),
+};
+
+export const testHeaders = {
+	Cookie: `auth_session=${testSession.id}; HttpOnly; Secure`,
 };
 
 beforeAll(async () => {

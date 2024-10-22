@@ -25,8 +25,7 @@ router.patch("/:assetId", (c) => {
 	return c.json({ status: "ok" });
 });
 
-export const assetRouter = router;
-
+export const assetsRouter = router;
 
 // import { GetObjectCommand, ListPartsCommand } from "@aws-sdk/client-s3";
 // import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
