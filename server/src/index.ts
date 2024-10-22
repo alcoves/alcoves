@@ -10,45 +10,49 @@ import { rootRouter } from "./routes/root";
 import { usersRouter } from "./routes/users";
 // import { assetsRouter } from './routes/assets'
 
-await migrateDatabase();
-await startWorkers();
-
 const app = new Hono();
 
-app.use(logger());
+async function main() {
+	await migrateDatabase();
+	await startWorkers();
 
-const defaultCorsOptions = {
-	origin: "*",
-	credentials: true,
-	allowHeaders: [],
-	exposeHeaders: ["Content-Length"],
-	allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-};
+	app.use(logger());
 
-if (process.env.NODE_ENV !== "production") {
+	const defaultCorsOptions = {
+		origin: "*",
+		credentials: true,
+		allowHeaders: [],
+		exposeHeaders: ["Content-Length"],
+		allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+	};
+
+	if (process.env.NODE_ENV !== "production") {
+		app.use(
+			cors({
+				...defaultCorsOptions,
+				origin: "http://localhost:3005",
+			}),
+		);
+	} else {
+		app.use(cors(defaultCorsOptions));
+	}
+
+	app.use("/favicon.ico", serveStatic({ path: "./src/static/favicon.ico" }));
+
+	app.route("/", rootRouter);
+	app.route("/api/auth", authRouter);
+	app.route("/api/users", usersRouter);
+	// app.route('/api/assets', assetsRouter)
+
 	app.use(
-		cors({
-			...defaultCorsOptions,
-			origin: "http://localhost:3005",
+		"*",
+		serveStatic({
+			root: "./src/",
+			rewriteRequestPath: (path) => path.replace(/^\//, "/static"),
 		}),
 	);
-} else {
-	app.use(cors(defaultCorsOptions));
 }
 
-app.use("/favicon.ico", serveStatic({ path: "./src/static/favicon.ico" }));
-
-app.route("/", rootRouter);
-app.route("/api/auth", authRouter);
-app.route("/api/users", usersRouter);
-// app.route('/api/assets', assetsRouter)
-
-app.use(
-	"*",
-	serveStatic({
-		root: "./src/",
-		rewriteRequestPath: (path) => path.replace(/^\//, "/static"),
-	}),
-);
+main();
 
 export default app;
