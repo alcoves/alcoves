@@ -13,6 +13,12 @@ router.get("/", (c) => {
 // This route creates a new asset. It returns a signed URL for upload or it can take a url as an argument
 router.post("/", (c) => {
 	return c.json({ status: "ok" });
+
+	// Create the asset
+
+	// Create a signed URL for the asset
+
+	// Return the signed URL
 });
 
 // Delete multiple assets

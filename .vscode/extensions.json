@@ -4,6 +4,7 @@
         "bradlc.vscode-tailwindcss",
         "ms-azuretools.vscode-docker",
         "oven.bun-vscode",
-        "biomejs.biome"
+        "biomejs.biome",
+        "svelte.svelte-vscode"
     ]
 }

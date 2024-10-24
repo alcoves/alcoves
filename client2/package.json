@@ -1,0 +1,33 @@
+{
+	"name": "client2",
+	"version": "0.0.1",
+	"type": "module",
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build",
+		"preview": "vite preview",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+	},
+	"devDependencies": {
+		"@sveltejs/adapter-auto": "^3.3.0",
+		"@sveltejs/kit": "^2.7.2",
+		"@sveltejs/vite-plugin-svelte": "^4.0.0",
+		"@tailwindcss/typography": "^0.5.14",
+		"autoprefixer": "^10.4.20",
+		"bits-ui": "^0.21.16",
+		"clsx": "^2.1.1",
+		"svelte": "^5.1.0",
+		"svelte-check": "^4.0.5",
+		"tailwind-merge": "^2.5.4",
+		"tailwind-variants": "^0.2.1",
+		"tailwindcss": "^3.4.9",
+		"typescript": "^5.6.3",
+		"vite": "^5.4.10"
+	},
+	"dependencies": {
+		"@fontsource/inter": "^5.1.0",
+		"lucide-svelte": "^0.453.0",
+		"mode-watcher": "^0.4.1"
+	}
+}
