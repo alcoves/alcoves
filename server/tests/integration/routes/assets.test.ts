@@ -1,11 +1,10 @@
 import { describe, expect, test } from "bun:test";
 import app from "../../../src/index";
-import { testHeaders, testUser } from "../setup";
 
 describe("Users", () => {
 	test("GET /api/assets", async () => {
 		const res = await app.request("/api/assets", {
-			headers: testHeaders,
+			headers: testUser.apiHeaders,
 		});
 		expect(res.status).toBe(200);
 		const responseBody = await res.json();
@@ -19,7 +18,7 @@ describe("Users", () => {
 	test("POST /api/assets", async () => {
 		const res = await app.request("/api/assets", {
 			method: "POST",
-			headers: testHeaders,
+			headers: testUser.apiHeaders,
 		});
 		expect(res.status).toBe(200);
 		const responseBody = await res.json();
@@ -33,7 +32,7 @@ describe("Users", () => {
 	test("DELETE /api/assets", async () => {
 		const res = await app.request("/api/assets", {
 			method: "DELETE",
-			headers: testHeaders,
+			headers: testUser.apiHeaders,
 		});
 		expect(res.status).toBe(200);
 		const responseBody = await res.json();
@@ -47,7 +46,7 @@ describe("Users", () => {
 	test("PATCH /api/assets/:assetId", async () => {
 		const res = await app.request("/api/assets/123", {
 			method: "PATCH",
-			headers: testHeaders,
+			headers: testUser.apiHeaders,
 		});
 		expect(res.status).toBe(200);
 		const responseBody = await res.json();

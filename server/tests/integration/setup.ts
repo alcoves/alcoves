@@ -1,39 +1,43 @@
-import { afterAll, beforeAll } from "bun:test";
+import app from "../../src";
 import { eq } from "drizzle-orm";
-import { db } from "../../src/db";
-import { sessions, users } from "../../src/db/schema";
+import { db } from "../../src/db/db";
+import { users } from "../../src/db/schema";
+import { afterAll, beforeAll } from "bun:test";
 
-export const testUser = {
-	id: "test-user-id",
+declare global {
+	var testUser: typeof userData;
+}
+
+const userData = {
 	email: "test@alcoves.io",
-	avatar: "https://example.com/avatar.jpg",
-};
-
-export const testSession = {
-	userId: testUser.id,
-	id: "mocked-secure-session-id",
-	expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24),
-};
-
-export const testHeaders = {
-	Cookie: `auth_session=${testSession.id}; HttpOnly; Secure`,
-};
+	password: "password",
+	apiHeaders: {}
+}
 
 beforeAll(async () => {
-	await db.transaction(async (tx) => {
-		await tx.delete(users).where(eq(users.id, testUser.id));
-		await tx.delete(sessions).where(eq(sessions.id, testSession.id));
+	await db.delete(users).where(eq(users.email, userData.email));
+
+	const createRes = await app.request("/api/auth/signup", {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({
+			email: userData.email,
+			password: userData.password,
+		}),
 	});
 
-	await db.transaction(async (tx) => {
-		await tx.insert(users).values(testUser);
-		await tx.insert(sessions).values(testSession);
-	});
+	const loginCookie = createRes.headers.get("set-cookie") || ''
+	const sessionCookie = loginCookie.split('session=')[1].split(';')[0]
+
+	global.testUser = {
+		...userData,
+		apiHeaders: {
+			"Content-Type": "application/json",
+			Cookie: `session=${sessionCookie}`,
+		}
+	};
 });
 
 afterAll(async () => {
-	await db.transaction(async (tx) => {
-		await tx.delete(users).where(eq(users.id, testUser.id));
-		await tx.delete(sessions).where(eq(sessions.id, testSession.id));
-	});
+	await db.delete(users).where(eq(users.email, userData.email));
 });

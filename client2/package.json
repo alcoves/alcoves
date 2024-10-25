@@ -27,6 +27,8 @@
 	},
 	"dependencies": {
 		"@fontsource/inter": "^5.1.0",
+		"@lucia-auth/sveltekit": "^0.6.11",
+		"lucia-auth": "^1.8.0",
 		"lucide-svelte": "^0.453.0",
 		"mode-watcher": "^0.4.1"
 	}
