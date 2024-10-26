@@ -33,7 +33,7 @@
 
 <div class="flex h-screen bg-base-100 text-base-content">
     <!-- Sidebar -->
-    <aside class="w-48 bg-base-200 text-base-content flex-shrink-0">
+    <aside class="w-48 text-base-content flex-shrink-0">
         <div class="p-6 text-lg font-semibold">
             <a href="/" class="hover:text-primary">Alcoves</a>
         </div>
