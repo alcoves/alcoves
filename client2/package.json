@@ -10,26 +10,20 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
 	},
 	"devDependencies": {
-		"@sveltejs/adapter-auto": "^3.3.0",
-		"@sveltejs/kit": "^2.7.2",
+		"@fontsource/inter": "^5.1.0",
+		"@sveltejs/adapter-auto": "^3.3.1",
+		"@sveltejs/kit": "^2.7.3",
 		"@sveltejs/vite-plugin-svelte": "^4.0.0",
-		"@tailwindcss/typography": "^0.5.14",
 		"autoprefixer": "^10.4.20",
-		"bits-ui": "^0.21.16",
-		"clsx": "^2.1.1",
-		"svelte": "^5.1.0",
+		"lucide-svelte": "^0.453.0",
+		"postcss": "^8.4.47",
+		"svelte": "^5.1.2",
 		"svelte-check": "^4.0.5",
-		"tailwind-merge": "^2.5.4",
-		"tailwind-variants": "^0.2.1",
-		"tailwindcss": "^3.4.9",
+		"tailwindcss": "^3.4.14",
 		"typescript": "^5.6.3",
 		"vite": "^5.4.10"
 	},
 	"dependencies": {
-		"@fontsource/inter": "^5.1.0",
-		"@lucia-auth/sveltekit": "^0.6.11",
-		"lucia-auth": "^1.8.0",
-		"lucide-svelte": "^0.453.0",
-		"mode-watcher": "^0.4.1"
+		"daisyui": "^4.12.13"
 	}
 }

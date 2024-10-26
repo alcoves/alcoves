@@ -1,33 +1,80 @@
 <script>
-  import * as Card from "$lib/components/ui/card";
-  import Button from "$lib/components/ui/button/button.svelte";
-  import Input from "$lib/components/ui/input/input.svelte";
+  import { goto } from "$app/navigation";
+
+  let email = "";
+  let password = "";
+  let errorMessage = "";
+  let loading = false;
+  let cardTitle = "Create an Account";
+  let cardAction = "Sign Up";
+  let alternateButtonText = "Or log in";
+  let alternateButtonLink = "/login";
+
+  async function handleSubmit() {
+    loading = true;
+    errorMessage = "";
+
+    try {
+      const response = await fetch("http://localhost:3000/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      console.log("Sign up successful:", data);
+      goto("/");
+    } catch (error) {
+      console.error("Sign up Error:", error);
+      errorMessage = "An error occurred during sign up";
+    } finally {
+      email = "";
+      password = "";
+      loading = false;
+    }
+  }
 </script>
 
-<Card.Root>
-  <Card.Header>
-    <h3 class="text-xl">Sign Up</h3>
-  </Card.Header>
-
-  <Card.Content>
-    <form method="POST" class="flex flex-col gap-2">
-      <Input
-        class="w-72"
-        required
-        name="email"
-        type="email"
-        placeholder="Email"
-      />
-      <Input required name="password" type="password" placeholder="Password" />
-      <button class="mt-4 bg-slate-800 text-white py-2 px-4 rounded">
-        Sign Up
-      </button>
+<div class="card bg-neutral text-neutral-content w-96">
+  <div class="card-body items-center text-center">
+    <h2 class="card-title">{cardTitle}</h2>
+    <form on:submit|preventDefault={handleSubmit}>
+      <div class="mt-2 card-actions justify-center">
+        <input
+          class="input w-full"
+          required
+          bind:value={email}
+          name="email"
+          type="email"
+          placeholder="Email"
+        />
+        <input
+          class="input w-full"
+          required
+          bind:value={password}
+          name="password"
+          type="password"
+          placeholder="Password"
+        />
+        {#if errorMessage}
+          <div class="text-red-500">{errorMessage}</div>
+        {/if}
+        <button
+          class="btn w-full btn-primary mt-4"
+          type="submit"
+          disabled={loading}
+        >
+          {cardAction}
+        </button>
+        <a class="mt-2" href={alternateButtonLink}>{alternateButtonText}</a>
+      </div>
     </form>
-    <a
-      href="/login"
-      class="mt-2 flex justify-center text-blue-500 hover:underline"
-    >
-      Or log in
-    </a>
-  </Card.Content>
-</Card.Root>
+  </div>
+</div>

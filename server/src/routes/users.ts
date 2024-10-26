@@ -10,6 +10,7 @@ router.use(userAuth);
 
 router.get("/me", async (c) => {
 	const { user } = c.get("authorization");
+
 	const [userRecord] = await db.select({
 		id: users.id,
 		email: users.email,
@@ -17,8 +18,8 @@ router.get("/me", async (c) => {
 		createdAt: users.createdAt,
 		updatedAt: users.updatedAt,
 	}).from(users).where(eq(users.id, user.id));
-	if (!userRecord) throw new HTTPException(500) // Somehow the user is not in the database but they authenticated
 
+	if (!userRecord) throw new HTTPException(500) // Somehow the user is not in the database but they authenticated
 	return c.json({ payload: userRecord });
 });
 

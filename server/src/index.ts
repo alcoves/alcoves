@@ -28,7 +28,7 @@ if (process.env.NODE_ENV !== "production") {
 	app.use(
 		cors({
 			...defaultCorsOptions,
-			origin: "http://localhost:3005",
+			origin: "http://localhost:5173",
 		}),
 	);
 } else {

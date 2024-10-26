@@ -1,19 +1,43 @@
-	
 <script lang="ts">
-  import Moon from "lucide-svelte/icons/moon";
-  import Sun from "lucide-svelte/icons/sun";
- 
-import { Button } from "$lib/components/ui/button/index.js";
-    import { toggleMode } from "mode-watcher";
-</script>
- 
-<Button on:click={toggleMode} variant="outline" size='icon' class='h-8 w-8'>
-  <Sun
-    class="h-[1rem] w-[1rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"
-  />
-  <Moon
-    class="absolute h-[1rem] w-[1rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"
-  />
-  <span class="sr-only">Toggle theme</span>
-</Button>
+  import { onMount } from "svelte";
+  import { Sun, Moon } from "lucide-svelte";
 
+  const themes = ["sunset", "bumblebee"];
+  let currentTheme: string;
+
+  onMount(() => {
+    currentTheme = localStorage.getItem("theme") || "sunset"; // Default theme as set by tailwind.config.ts
+    applyTheme(currentTheme);
+  });
+
+  function applyTheme(theme: string) {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+    currentTheme = theme;
+  }
+
+  function toggleTheme() {
+    const newTheme = currentTheme === "bumblebee" ? "sunset" : "bumblebee";
+    applyTheme(newTheme);
+  }
+</script>
+
+<label class="swap swap-rotate">
+  <!-- this hidden checkbox controls the state -->
+  <input
+    type="checkbox"
+    class="theme-controller"
+    on:change={toggleTheme}
+    checked={currentTheme === "bumblebee"}
+  />
+
+  <!-- Sun icon for light mode -->
+  <div class="swap-off flex items-center justify-center">
+    <Sun size={24} class="text-primary" />
+  </div>
+
+  <!-- Moon icon for dark mode -->
+  <div class="swap-on flex items-center justify-center">
+    <Moon size={24} class="text-primary" />
+  </div>
+</label>
