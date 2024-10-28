@@ -1,9 +1,11 @@
 x-client-environment: &client-environment
-  VITE_API_URL: http://localhost:3000
-  VITE_GOOGLE_CLIENT_ID: $ALCOVES_AUTH_GOOGLE_ID
-  VITE_GOOGLE_REDIRECT_URL: $ALCOVES_AUTH_GOOGLE_REDIRECT_URL
+  PRIVATE_ALCOVES_API_URL: http://server:3000
+  PUBLIC_ALCOVES_API_URL: http://localhost:3000
+  # VITE_GOOGLE_CLIENT_ID: $ALCOVES_AUTH_GOOGLE_ID
+  # VITE_GOOGLE_REDIRECT_URL: $ALCOVES_AUTH_GOOGLE_REDIRECT_URL
 
 x-server-environment: &server-environment
+  CORS_ORIGIN: http://localhost:5173
   ALCOVES_DB_URL: $ALCOVES_DB_URL
   ALCOVES_OBJECT_STORE_DEFAULT_BUCKET: alcoves
   ALCOVES_OBJECT_STORE_ENDPOINT: $ALCOVES_OBJECT_STORE_ENDPOINT
@@ -18,20 +20,20 @@ x-server-environment: &server-environment
   ALCOVES_DB_CONNECTION_STRING: postgres://postgres:postgres@postgres:5432/alcoves
 
 services:
-  client:
-    build:
-      context: client
-      dockerfile: Dockerfile.dev
-    command: bun run dev
-    user: '${UID}:${GID}'
-    environment:
-      <<: *client-environment
-    volumes:
-      - ./client:/app
-    depends_on:
-      - server
-    ports:
-      - 3005:3005
+  # client:
+  #   build:
+  #     context: client
+  #     dockerfile: Dockerfile.dev
+  #   command: bun run dev
+  #   user: '${UID}:${GID}'
+  #   environment:
+  #     <<: *client-environment
+  #   volumes:
+  #     - ./client:/app
+  #   depends_on:
+  #     - server
+  #   ports:
+  #     - 5173:5173
   server:
     build:
       context: server

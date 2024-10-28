@@ -1,21 +1,23 @@
 <script>
   import { goto } from "$app/navigation";
+  import { PUBLIC_ALCOVES_API_URL } from "$env/static/public";
 
   let email = "";
   let password = "";
   let errorMessage = "";
   let loading = false;
-  let cardTitle = "Create an Account";
-  let cardAction = "Sign Up";
-  let alternateButtonText = "Or log in";
-  let alternateButtonLink = "/login";
+
+  let cardTitle = "Let's get logged in";
+  let cardAction = "Log In";
+  let alternateButtonText = "Or create an account";
+  let alternateButtonLink = "/signup";
 
   async function handleSubmit() {
     loading = true;
     errorMessage = "";
 
     try {
-      const response = await fetch("http://localhost:3000/api/auth/signup", {
+      const response = await fetch(`${PUBLIC_ALCOVES_API_URL}/api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -29,14 +31,12 @@
       }
 
       const data = await response.json();
-      console.log("Sign up successful:", data);
+      console.log("Login successful:", data);
       goto("/");
     } catch (error) {
-      console.error("Sign up Error:", error);
-      errorMessage = "An error occurred during sign up";
+      console.error("Login Error:", error);
+      errorMessage = "An error occurred during login";
     } finally {
-      email = "";
-      password = "";
       loading = false;
     }
   }

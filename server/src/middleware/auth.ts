@@ -13,6 +13,7 @@ export type UserAuthMiddleware = {
 
 export const userAuth = createMiddleware(async (c, next) => {
 	const sessionId = getCookie(c, "session");
+	console.log(sessionId)
 	if (!sessionId) throw new HTTPException(401);
 
 	const { session, user } = await validateSessionToken(sessionId);

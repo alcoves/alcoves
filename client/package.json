@@ -1,42 +1,29 @@
 {
-	"name": "client",
-	"private": true,
-	"version": "0.0.0",
+	"name": "client2",
+	"version": "0.0.1",
 	"type": "module",
 	"scripts": {
-		"dev": "bun install && bunx --bun vite --port 3005 --host",
-		"build": "tsc && bunx --bun vite build",
-		"lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-		"preview": "bunx --bun vite preview"
-	},
-	"dependencies": {
-		"@chakra-ui/react": "^2.10.2",
-		"@emotion/react": "^11.13.3",
-		"@emotion/styled": "^11.13.0",
-		"@fontsource/inter": "^5.1.0",
-		"@react-oauth/google": "^0.12.1",
-		"@tanstack/react-query": "^5.59.15",
-		"framer-motion": "^11.11.9",
-		"lucide-react": "^0.373.0",
-		"luxon": "^3.5.0",
-		"react": "^18.3.1",
-		"react-dom": "^18.3.1",
-		"react-icons": "^5.3.0",
-		"react-router-dom": "^6.27.0"
+		"dev": "vite dev --host",
+		"build": "vite build",
+		"preview": "vite preview",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "1.9.3",
-		"@tanstack/eslint-plugin-query": "^5.59.7",
-		"@types/luxon": "^3.4.2",
-		"@types/react": "^18.3.11",
-		"@types/react-dom": "^18.3.1",
-		"@typescript-eslint/eslint-plugin": "^7.18.0",
-		"@typescript-eslint/parser": "^7.18.0",
-		"@vitejs/plugin-react-swc": "^3.7.1",
-		"eslint": "^8.57.1",
-		"eslint-plugin-react-hooks": "^4.6.2",
-		"eslint-plugin-react-refresh": "^0.4.12",
+		"@fontsource/inter": "^5.1.0",
+		"@sveltejs/adapter-auto": "^3.3.1",
+		"@sveltejs/kit": "^2.7.3",
+		"@sveltejs/vite-plugin-svelte": "^4.0.0",
+		"autoprefixer": "^10.4.20",
+		"lucide-svelte": "^0.453.0",
+		"postcss": "^8.4.47",
+		"svelte": "^5.1.2",
+		"svelte-check": "^4.0.5",
+		"tailwindcss": "^3.4.14",
 		"typescript": "^5.6.3",
-		"vite": "^5.4.9"
+		"vite": "^5.4.10"
+	},
+	"dependencies": {
+		"daisyui": "^4.12.13"
 	}
 }

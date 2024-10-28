@@ -1,41 +1,46 @@
 <script>
   import { goto } from "$app/navigation";
+  import { PUBLIC_ALCOVES_API_URL } from "$env/static/public";
 
   let email = "";
   let password = "";
   let errorMessage = "";
   let loading = false;
-
-  let cardTitle = "Let's get logged in";
-  let cardAction = "Log In";
-  let alternateButtonText = "Or create an account";
-  let alternateButtonLink = "/signup";
+  let cardTitle = "Create an Account";
+  let cardAction = "Sign Up";
+  let alternateButtonText = "Or log in";
+  let alternateButtonLink = "/login";
 
   async function handleSubmit() {
     loading = true;
     errorMessage = "";
 
     try {
-      const response = await fetch("http://localhost:3000/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `${PUBLIC_ALCOVES_API_URL}/api/auth/signup`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+          credentials: "include",
         },
-        body: JSON.stringify({ email, password }),
-        credentials: "include",
-      });
+      );
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
 
       const data = await response.json();
-      console.log("Login successful:", data);
+      console.log("Sign up successful:", data);
       goto("/");
     } catch (error) {
-      console.error("Login Error:", error);
-      errorMessage = "An error occurred during login";
+      console.error("Sign up Error:", error);
+      errorMessage = "An error occurred during sign up";
     } finally {
+      email = "";
+      password = "";
       loading = false;
     }
   }

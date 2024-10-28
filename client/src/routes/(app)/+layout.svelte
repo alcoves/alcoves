@@ -3,6 +3,7 @@
     import DarkModeToggle from "$lib/components/DarkModeToggle.svelte";
     import { user } from "$lib/stores/user";
     import { goto } from "$app/navigation";
+    import { PUBLIC_ALCOVES_API_URL } from '$env/static/public'
 
     let { data, children } = $props();
     user.set(data.authenticatedUser);
@@ -10,7 +11,7 @@
     async function handleLogout() {
         try {
             const response = await fetch(
-                "http://localhost:3000/api/auth/logout",
+                `${PUBLIC_ALCOVES_API_URL}/api/auth/logout`,
                 {
                     method: "POST",
                     headers: {
@@ -69,7 +70,7 @@
                             <button
                                 type="button"
                                 class="btn btn-sm"
-                                on:click={handleLogout}
+                                onclick={handleLogout}
                             >
                                 Logout
                             </button>

@@ -5,5 +5,5 @@ COPY package.json bun.lockb ./
 RUN bun install --frozen-lockfile
 COPY . .
 
-EXPOSE 3005
+EXPOSE 5173
 CMD ["bun", "dev"]
