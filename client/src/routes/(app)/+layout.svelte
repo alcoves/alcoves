@@ -4,6 +4,7 @@
     import { user } from "$lib/stores/user";
     import { goto } from "$app/navigation";
     import { PUBLIC_ALCOVES_API_URL } from '$env/static/public'
+    import Uploader from "$lib/components/Uploader.svelte";
 
     let { data, children } = $props();
     user.set(data.authenticatedUser);
@@ -49,6 +50,7 @@
         <div class="navbar bg-base-100">
             <div class="flex-1"></div>
             <div class="flex-none gap-2">
+                <Uploader />
                 <DarkModeToggle />
                 <div class="dropdown dropdown-end">
                     <div
