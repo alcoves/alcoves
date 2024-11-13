@@ -1,7 +1,7 @@
 CREATE TYPE "public"."status" AS ENUM('UPLOADING', 'UPLOADED', 'PROCESSING', 'READY', 'ERROR');--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "assets" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"owner_id" text,
+	"owner_id" integer,
 	"title" text NOT NULL,
 	"description" text,
 	"metadata" jsonb,

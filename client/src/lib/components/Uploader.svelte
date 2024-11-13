@@ -84,14 +84,24 @@
     return response.headers["etag"];
   }
 
-  async function completeMultipartUpload(
-    key: string,
-    uploadId: string,
-    parts: { ETag: string; PartNumber: number }[],
-  ) {
+  async function completeMultipartUpload({
+    key,
+    uploadId,
+    parts,
+    name,
+    size,
+    mimeType,
+  }: {
+    name: string;
+    size: number;
+    mimeType: string;
+    key: string;
+    uploadId: string;
+    parts: { ETag: string; PartNumber: number }[];
+  }) {
     const response = await clientApi.post(
       `${PUBLIC_ALCOVES_API_URL}/api/uploads/complete`,
-      { key, uploadId, parts },
+      { key, uploadId, parts, name, size, mimeType },
     );
     return response.data;
   }
@@ -130,7 +140,14 @@
       recalculateTotalProgress(upload);
 
       console.info("All parts uploaded", completedParts);
-      await completeMultipartUpload(key, uploadId, completedParts);
+      await completeMultipartUpload({
+        key,
+        uploadId,
+        parts: completedParts,
+        name: file.name,
+        size: file.size,
+        mimeType: file.type,
+      });
 
       upload.progress = 100;
       upload.status = "completed";

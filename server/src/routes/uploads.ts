@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import path from 'path';
 import { v4 as uuid } from "uuid";
 import { userAuth, UserAuthMiddleware } from "../middleware/auth";
 import {
@@ -11,6 +12,8 @@ import { s3InternalClient, s3PublicClient } from "../lib/s3";
 import { env } from "../lib/env";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
+import { db } from "../db/db";
+import { assets } from "../db/schema";
 
 
 const router = new Hono<{ Variables: UserAuthMiddleware }>();
@@ -65,6 +68,9 @@ router.post('/', zValidator('json', z.object({
 })
 
 router.post('/complete', zValidator('json', z.object({
+  name: z.string(),
+  size: z.number(),
+  mimeType: z.string(),
   key: z.string(),
   uploadId: z.string(),
   parts: z.array(z.object({
@@ -72,7 +78,7 @@ router.post('/complete', zValidator('json', z.object({
     PartNumber: z.number()
   }))
 })), async (c) => {
-  const { key, uploadId, parts } = c.req.valid('json')
+  const { key, uploadId, parts, name, size, mimeType } = c.req.valid('json')
 
   try {
     const command = new CompleteMultipartUploadCommand({
@@ -88,9 +94,22 @@ router.post('/complete', zValidator('json', z.object({
     });
 
     const result = await s3InternalClient.send(command);
+    const assetTitle = path.parse(name).name || 'New Upload';
+
+    const [asset] = await db.insert(assets).values({
+      ownerId: c.get('authorization').user.id,
+      title: assetTitle,
+      description: "",
+      metadata: {},
+      size: size || 0,
+      storageKey: key,
+      storageBucket: env.ALCOVES_OBJECT_STORE_DEFAULT_BUCKET,
+      mimeType: mimeType || "application/octet-stream",
+    }).returning()
 
     return c.json({
       payload: {
+        asset,
         location: result.Location,
         key: result.Key,
         bucket: result.Bucket

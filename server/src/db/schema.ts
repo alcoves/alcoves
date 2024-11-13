@@ -43,7 +43,7 @@ export const assetStatusEnum = pgEnum("status", [
 
 export const assets = pgTable("assets", {
 	id: serial().primaryKey(),
-	ownerId: text("owner_id"),
+	ownerId: integer("owner_id"),
 	title: text("title").notNull(),
 	description: text("description"),
 	metadata: jsonb("metadata"),

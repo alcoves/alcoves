@@ -56,6 +56,6 @@ if (process.env.ALCOVES_OBJECT_STORE_PUBLIC_ENDPOINT !== env.ALCOVES_OBJECT_STOR
 WARNING: The public and private s3 endpoints do not match. Ensure the public endpoint is accessible from the browser.
 This is an advisory message and may not indicate an issue.
 The private s3 endpoint is ${env.ALCOVES_OBJECT_STORE_ENDPOINT}
-The public s3 endpoint is  ${process.env.ALCOVES_OBJECT_STORE_PUBLIC_ENDPOINT}
+The public  s3 endpoint is ${process.env.ALCOVES_OBJECT_STORE_PUBLIC_ENDPOINT}
 	`);
 }
