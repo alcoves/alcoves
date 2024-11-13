@@ -7,6 +7,7 @@ interface EnvConfig {
 	ALCOVES_TASK_DB_HOST: string;
 	ALCOVES_TASK_DB_PORT: string;
 	ALCOVES_TASK_WORKER_CONCURRENCY: string;
+	ALCOVES_OBJECT_STORE_UPLOAD_PREFIX: string;
 }
 
 function createEnvConfig(
@@ -38,8 +39,19 @@ export const env = createEnvConfig(
 		"ALCOVES_TASK_WORKER_CONCURRENCY",
 	],
 	{
+		ALCOVES_OBJECT_STORE_UPLOAD_PREFIX: "uploads",
 		ALCOVES_OBJECT_STORE_REGION: "us-east-1",
 		ALCOVES_OBJECT_STORE_DEFAULT_BUCKET: "alcoves",
 		ALCOVES_TASK_WORKER_CONCURRENCY: "1",
 	},
 );
+
+
+if (process.env.ALCOVES_OBJECT_STORE_PUBLIC_ENDPOINT !== env.ALCOVES_OBJECT_STORE_ENDPOINT) {
+	console.warn(`
+WARNING: The public and private s3 endpoints do not match. Ensure the public endpoint is accessible from the browser.
+This is an advisory message and may not indicate an issue.
+The private s3 endpoint is ${env.ALCOVES_OBJECT_STORE_ENDPOINT}
+The public s3 endpoint is  ${process.env.ALCOVES_OBJECT_STORE_PUBLIC_ENDPOINT}
+	`);
+}

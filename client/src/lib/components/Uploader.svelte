@@ -1,30 +1,112 @@
 <script lang="ts">
   import { v4 as uuidV4 } from "uuid";
   import { UploadIcon } from "lucide-svelte";
+  import { PUBLIC_ALCOVES_API_URL } from "$env/static/public";
+  import { clientApi } from "$lib/api";
 
   interface Upload {
     file: File;
     progress: number;
     id: string;
+    urlProgress: {
+      [key: string]: number;
+    };
     status: "queued" | "uploading" | "completed" | "failed";
   }
 
-  let uploads = $state<Record<string, Upload>>({});
-  let files: FileList | undefined = $state();
+  const CHUNK_SIZE = 25 * 1024 * 1024; // 25MB chunks
+  // const uploadLimit = pLimit(4);
+
   let modalOpen = $state(false);
+  let files: FileList | undefined = $state();
+  let uploads = $state<Record<string, Upload>>({});
+
+  async function initiateMultipartUpload(file: File) {
+    const response = await clientApi.post(
+      `${PUBLIC_ALCOVES_API_URL}/api/uploads`,
+      {
+        filename: file.name,
+        contentType: file.type,
+        parts: Math.ceil(file.size / CHUNK_SIZE),
+      },
+      {
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" },
+      },
+    );
+    return response.data;
+  }
+
+  function recalculateTotalProgress(upload: Upload) {
+    upload.progress = Math.round(
+      Object.values(upload.urlProgress).reduce((a, b) => a + b, 0) /
+        Object.keys(upload.urlProgress).length,
+    );
+  }
+
+  async function uploadPart(url: string, chunk: Blob, upload: Upload) {
+    const response = await clientApi.put(url, chunk, {
+      headers: { "Content-Type": "application/octet-stream" },
+      onUploadProgress: (e) => {
+        if (!e.total || !e.loaded) return;
+        const progress = Math.round((e.loaded * 100) / e.total);
+        upload.urlProgress[url] = progress;
+        recalculateTotalProgress(upload);
+      },
+    });
+    return response.headers["etag"];
+  }
+
+  async function completeMultipartUpload(
+    key: string,
+    uploadId: string,
+    parts: { ETag: string; PartNumber: number }[],
+  ) {
+    const response = await clientApi.post(
+      `${PUBLIC_ALCOVES_API_URL}/api/uploads/complete`,
+      { key, uploadId, parts },
+    );
+    return response.data;
+  }
 
   async function startUpload(upload: Upload) {
     try {
+      upload.urlProgress = {};
       upload.status = "uploading";
+      const file = upload.file;
+      const chunks: Blob[] = [];
 
-      setTimeout(() => {
-        // I'm really surprised that this works. We don't need to reassign the upload object?
-        // Svelte is smart enough to know that the object has changed? 🤯
-        upload.progress = 100;
-        upload.status = "completed";
+      console.info("Splitting file into chunks");
+      for (let start = 0; start < file.size; start += CHUNK_SIZE) {
+        const chunk = file.slice(start, start + CHUNK_SIZE);
+        chunks.push(chunk);
+      }
 
-        delete uploads[upload.id];
-      }, 2000);
+      console.info("File split into chunks", chunks);
+      const {
+        payload: { uploadId, key, parts },
+      } = await initiateMultipartUpload(file);
+
+      const uploadPromises = chunks.map(async (chunk, index) => {
+        const { signedUrl, partNumber } = parts[index];
+        const etag = await uploadPart(signedUrl, chunk, upload);
+        if (!etag) {
+          throw new Error("ETag is null");
+        }
+        return { ETag: etag, PartNumber: partNumber };
+      });
+
+      console.info("Multipart upload initiated", uploadId, key, parts);
+      const completedParts = await Promise.all(uploadPromises);
+      recalculateTotalProgress(upload);
+
+      console.info("All parts uploaded", completedParts);
+      await completeMultipartUpload(key, uploadId, completedParts);
+
+      upload.progress = 100;
+      upload.status = "completed";
+      delete uploads[upload.id];
+      console.info("Upload Succeeded");
     } catch (error) {
       console.error("Upload Error:", error);
       upload.status = "failed";
@@ -92,16 +174,23 @@
     accept="image/png, image/jpeg"
   />
 
-  <button
-    class="btn btn-primary"
-    onclick={() =>
-      Object.keys(uploads).length
-        ? (modalOpen = true)
-        : document.getElementById("uploadInput")?.click()}
-  >
-    <UploadIcon size="1.2rem" />
-    {Object.keys(uploads).length ? "Uploading" : "Upload"}
-  </button>
+  {#if Object.keys(uploads).length}
+    <button
+      class="btn btn-primary min-w-[140px]"
+      onclick={() => (modalOpen = true)}
+    >
+      <span class="loading loading-spinner"></span>
+      {"Uploading"}
+    </button>
+  {:else}
+    <button
+      class="btn btn-primary min-w-[140px]"
+      onclick={() => document.getElementById("uploadInput")?.click()}
+    >
+      <UploadIcon size="1.2rem" />
+      {"Upload"}
+    </button>
+  {/if}
 
   <dialog class="modal" class:modal-open={modalOpen}>
     <div class="modal-box">

@@ -48,7 +48,7 @@ export const assetsRouter = router;
 // 	createMultipartUpload,
 // 	deleteS3ObjectsByPrefix,
 // 	getUploadPartUrl,
-// 	s3Client,
+// 	s3InternalClient,
 // } from "../lib/s3";
 // import { type UserAuthMiddleware, userAuth } from "../middleware/auth";
 // import { ImageTasks, imageProcessingQueue } from "../tasks/queues";
@@ -92,7 +92,7 @@ export const assetsRouter = router;
 // 				Bucket: asset.storageBucket,
 // 				Key: asset.storageKey,
 // 			});
-// 			const url = await getSignedUrl(s3Client, command, {
+// 			const url = await getSignedUrl(s3InternalClient, command, {
 // 				expiresIn: 3600,
 // 			});
 
@@ -181,7 +181,7 @@ export const assetsRouter = router;
 // 		Bucket: asset.storageBucket,
 // 	});
 
-// 	const listedParts = await s3Client.send(listPartsCommand);
+// 	const listedParts = await s3InternalClient.send(listPartsCommand);
 
 // 	const uploadedParts = listedParts.Parts?.map((part) => ({
 // 		ETag: part.ETag,

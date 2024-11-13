@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import { assetsRouter } from "./routes/assets";
+import { uploadsRouter } from "./routes/uploads";
 import { authRouter } from "./routes/auth";
 import { rootRouter } from "./routes/root";
 import { usersRouter } from "./routes/users";
@@ -28,5 +29,6 @@ app.route("/", rootRouter);
 app.route("/api/auth", authRouter);
 app.route("/api/users", usersRouter);
 app.route("/api/assets", assetsRouter);
+app.route("/api/uploads", uploadsRouter);
 
 export default app;
