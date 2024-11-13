@@ -26,6 +26,7 @@
 	"dependencies": {
 		"axios": "^1.7.7",
 		"daisyui": "^4.12.13",
+		"p-limit": "^6.1.0",
 		"uuid": "^11.0.3"
 	}
 }

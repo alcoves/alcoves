@@ -1,4 +1,5 @@
 <script lang="ts">
+  import pLimit from "p-limit";
   import { v4 as uuidV4 } from "uuid";
   import { UploadIcon } from "lucide-svelte";
   import { PUBLIC_ALCOVES_API_URL } from "$env/static/public";
@@ -7,6 +8,7 @@
   interface Upload {
     file: File;
     progress: number;
+    totalParts: number;
     id: string;
     urlProgress: {
       [key: string]: number;
@@ -14,9 +16,33 @@
     status: "queued" | "uploading" | "completed" | "failed";
   }
 
-  const CHUNK_SIZE = 25 * 1024 * 1024; // 25MB chunks
-  // const uploadLimit = pLimit(4);
+  function getChunkSize(totalSize: number): number {
+    const _25mb = 25 * 1024 * 1024;
+    const _50mb = 50 * 1024 * 1024;
+    const _100mb = 100 * 1024 * 1024;
+    const _250mb = 250 * 1024 * 1024;
+    const _500mb = 500 * 1024 * 1024;
+    const _1gb = 1000 * 1024 * 1024;
+    const _3gb = 3000 * 1024 * 1024;
+    const _10gb = 10000 * 1024 * 1024;
+    const _20gb = 20000 * 1024 * 1024;
 
+    const DEFAULT_CHUNK_SIZE = _25mb;
+
+    if (totalSize <= DEFAULT_CHUNK_SIZE) {
+      return DEFAULT_CHUNK_SIZE;
+    } else if (totalSize <= _500mb) {
+      return _50mb;
+    } else if (totalSize <= _3gb) {
+      return _100mb;
+    } else if (totalSize <= _10gb) {
+      return _250mb;
+    } else {
+      return _500mb;
+    }
+  }
+
+  const uploadLimiter = pLimit(4);
   let modalOpen = $state(false);
   let files: FileList | undefined = $state();
   let uploads = $state<Record<string, Upload>>({});
@@ -27,7 +53,7 @@
       {
         filename: file.name,
         contentType: file.type,
-        parts: Math.ceil(file.size / CHUNK_SIZE),
+        parts: Math.ceil(file.size / getChunkSize(file.size)),
       },
       {
         withCredentials: true,
@@ -38,10 +64,11 @@
   }
 
   function recalculateTotalProgress(upload: Upload) {
-    upload.progress = Math.round(
-      Object.values(upload.urlProgress).reduce((a, b) => a + b, 0) /
-        Object.keys(upload.urlProgress).length,
+    const totalProgress = Object.values(upload.urlProgress).reduce(
+      (a, b) => a + b,
+      0,
     );
+    upload.progress = Math.round(totalProgress / upload.totalParts);
   }
 
   async function uploadPart(url: string, chunk: Blob, upload: Upload) {
@@ -76,26 +103,28 @@
       const file = upload.file;
       const chunks: Blob[] = [];
 
-      console.info("Splitting file into chunks");
-      for (let start = 0; start < file.size; start += CHUNK_SIZE) {
-        const chunk = file.slice(start, start + CHUNK_SIZE);
+      console.info("Splitting file into chunks", getChunkSize(file.size));
+      for (let start = 0; start < file.size; start += getChunkSize(file.size)) {
+        const chunk = file.slice(start, start + getChunkSize(file.size));
         chunks.push(chunk);
       }
 
+      upload.totalParts = chunks.length;
       console.info("File split into chunks", chunks);
       const {
         payload: { uploadId, key, parts },
       } = await initiateMultipartUpload(file);
 
-      const uploadPromises = chunks.map(async (chunk, index) => {
-        const { signedUrl, partNumber } = parts[index];
-        const etag = await uploadPart(signedUrl, chunk, upload);
-        if (!etag) {
-          throw new Error("ETag is null");
-        }
-        return { ETag: etag, PartNumber: partNumber };
-      });
-
+      const uploadPromises = chunks.map((chunk, index) =>
+        uploadLimiter(async () => {
+          const { signedUrl, partNumber } = parts[index];
+          const etag = await uploadPart(signedUrl, chunk, upload);
+          if (!etag) {
+            throw new Error("ETag is null");
+          }
+          return { ETag: etag, PartNumber: partNumber };
+        }),
+      );
       console.info("Multipart upload initiated", uploadId, key, parts);
       const completedParts = await Promise.all(uploadPromises);
       recalculateTotalProgress(upload);
@@ -171,7 +200,7 @@
     type="file"
     id="uploadInput"
     class="hidden"
-    accept="image/png, image/jpeg"
+    accept="image/png, image/jpeg, video/mp4"
   />
 
   {#if Object.keys(uploads).length}
