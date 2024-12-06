@@ -3,7 +3,7 @@
   import { v4 as uuidV4 } from "uuid";
   import { UploadIcon } from "lucide-svelte";
   import { PUBLIC_ALCOVES_API_URL } from "$env/static/public";
-  import { clientApi } from "$lib/api";
+  import { clientApi, queryClient } from "$lib/api";
 
   interface Upload {
     file: File;
@@ -22,10 +22,8 @@
     const _100mb = 100 * 1024 * 1024;
     const _250mb = 250 * 1024 * 1024;
     const _500mb = 500 * 1024 * 1024;
-    const _1gb = 1000 * 1024 * 1024;
     const _3gb = 3000 * 1024 * 1024;
     const _10gb = 10000 * 1024 * 1024;
-    const _20gb = 20000 * 1024 * 1024;
 
     const DEFAULT_CHUNK_SIZE = _25mb;
 
@@ -153,6 +151,7 @@
       upload.status = "completed";
       delete uploads[upload.id];
       console.info("Upload Succeeded");
+      await queryClient.invalidateQueries({ queryKey: ["assets"] });
     } catch (error) {
       console.error("Upload Error:", error);
       upload.status = "failed";

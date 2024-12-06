@@ -1,13 +1,76 @@
 import { Hono } from "hono";
+import { db } from "../db/db";
+import { userAuth, UserAuthMiddleware } from "../middleware/auth";
+import { HTTPException } from "hono/http-exception";
+import { getPresignedUrl } from "../lib/s3";
+import { imageProcessingQueue, ImageTasks } from "../tasks/queues";
+import { ImageProxyJobData } from "../tasks/tasks/images";
+import { assetImageProxies, assets } from "../db/schema";
+import { and, eq, inArray } from "drizzle-orm";
 
-const router = new Hono();
+const router = new Hono<{ Variables: UserAuthMiddleware }>();
+
+router.use(userAuth);
 
 // Create a maintenance job which checks assets that are status UPLOADING and see if their storage object exists, mark as UPLOADED if it does
 // After the source asset is marked as UPLOADED, a job to optimize the asset should be enqueued
 
 // This route returns all the users assets
-router.get("/", (c) => {
-	return c.json({ status: "ok" });
+router.get("/", async (c) => {
+	const { user } = c.get("authorization");
+	const getTrashed = Boolean(c.req.query("trashed")) || false;
+
+	const assetsQuery = await db.query.assets.findMany({
+		with: {
+			assetImageProxies: {
+				orderBy: (assetImageProxies, { desc }) => [desc(assetImageProxies.size)],
+			},
+		},
+		where: (assets, { eq }) => eq(assets.ownerId, user.id) && eq(assets.trashed, getTrashed),
+	});
+
+	if (!assetsQuery) {
+		throw new HTTPException(400, { message: "No assets found" });
+	}
+
+	// const imageProxiesDelete = await db.delete(assetImageProxies)
+
+	const assetsWithUrls = await Promise.all(assetsQuery.map(async (asset) => {
+		if (asset.assetImageProxies.length === 0) {
+			await imageProcessingQueue.add(ImageTasks.GENERATE_IMAGE_PROXIES, {
+				assetId: asset.id,
+				sourceKey: asset.storageKey,
+				sourceBucket: asset.storageBucket,
+			} as ImageProxyJobData);
+		}
+
+		const signedUrl =await  getPresignedUrl({
+			bucket: asset.storageBucket,
+			key: asset.storageKey,
+			expiration: 3600,
+		})
+
+		const proxiesWithUrls = await Promise.all(asset.assetImageProxies.map(async (proxy) => {
+			const signedProxyUrl = await getPresignedUrl({
+				bucket: proxy.storageBucket,
+				key: proxy.storageKey,
+				expiration: 3600,
+			});
+
+			return {
+				...proxy,
+				url: signedProxyUrl,
+			}
+		}))
+
+		return {
+			...asset,
+			url: signedUrl,
+			assetImageProxies: proxiesWithUrls,
+		}
+	}));
+
+	return c.json({ assets: assetsWithUrls });
 });
 
 // This route creates a new asset. It returns a signed URL for upload or it can take a url as an argument
@@ -22,7 +85,19 @@ router.post("/", (c) => {
 });
 
 // Delete multiple assets
-router.delete("/", (c) => {
+router.delete("/", async (c) => {
+	const { ids } = await c.req.json();
+	const { user } = c.get("authorization");
+
+	await db.update(assets)
+		.set({ trashed: true })
+    .where(
+      and(
+        eq(assets.ownerId, user.id),
+        inArray(assets.id, ids)
+      )
+    );
+
 	return c.json({ status: "ok" });
 });
 

@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { text, jsonb, integer, pgTable, timestamp, pgEnum, serial } from "drizzle-orm/pg-core";
+import { text, jsonb, integer, pgTable, timestamp, pgEnum, serial, boolean } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
 	id: serial().primaryKey(),
@@ -51,15 +51,36 @@ export const assets = pgTable("assets", {
 	storageKey: text("storage_key").notNull(),
 	storageBucket: text("storage_bucket").notNull(),
 	mimeType: text("mime_type").notNull(),
+	trashed: boolean("trashed").notNull().default(false),
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 	updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
-export const assetsRelations = relations(assets, ({ one }) => ({
+export const assetsRelations = relations(assets, ({ one, many }) => ({
+	assetImageProxies: many(assetImageProxies),
 	owner: one(users, {
 		fields: [assets.ownerId],
 		references: [users.id],
 	}),
+}));
+
+export const assetImageProxies = pgTable("asset_image_proxies", {
+	id: serial().primaryKey(),
+	assetId: integer("asset_id").notNull(),
+	size: integer().notNull(),
+	width: integer().notNull(),
+	height: integer().notNull(),
+	storageKey: text("storage_key").notNull(),
+	storageBucket: text("storage_bucket").notNull(),
+	createdAt: timestamp("created_at").notNull().defaultNow(),
+	updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const assetImageProxiesRelations = relations(assetImageProxies, ({ one }) => ({
+	asset: one(assets, {
+		fields: [assetImageProxies.assetId],
+		references: [assets.id],
+	})
 }));
 
 export type User = typeof users.$inferSelect;

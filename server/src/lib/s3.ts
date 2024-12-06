@@ -2,7 +2,9 @@ import { env } from "./env";
 import { join } from "path";
 import { promisify } from "util";
 import { pipeline } from "node:stream";
-import { createWriteStream } from "node:fs";
+import { basename } from "path";
+import { Upload } from "@aws-sdk/lib-storage";
+import { createReadStream, createWriteStream } from "node:fs";
 
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import {
@@ -136,7 +138,7 @@ export async function downloadObject({
 	bucket: string;
 	key: string;
 }): Promise<string> {
-	const downloadPath = join(localDir, key.split("/").pop() || "downloadedFile");
+	const downloadPath = join(localDir, "downloadedFile");
 
 	console.log("Downloading object", key, "from", bucket, "to", downloadPath);
 
@@ -182,4 +184,59 @@ export async function uploadBufferToS3({
 		console.error("Failed to upload image to S3:", error);
 		throw error;
 	}
+}
+
+export async function getPresignedUrl({
+	client = s3PublicClient,
+	bucket,
+	key,
+	expiration = 3600,
+}: {
+	client?: S3Client;
+	bucket: string;
+	key: string;
+	expiration?: number;
+}): Promise<string> {
+	const command = new GetObjectCommand({
+		Bucket: bucket,
+		Key: key,
+	});
+
+	return getSignedUrl(client, command, {
+		expiresIn: expiration
+	});
+}
+
+export async function uploadFileToS3({
+  filePath,
+  bucket,
+  key,
+	contentType,
+}: {
+	filePath: string,
+  bucket: string,
+  key: string
+	contentType: string;
+}): Promise<{ location: string; key: string }> {
+  try {
+    const fileStream = createReadStream(filePath);
+    const upload = new Upload({
+      client: s3InternalClient,
+      params: {
+        Key: key,
+        Bucket: bucket,
+        Body: fileStream,
+				ContentType: contentType,
+      },
+    });
+
+    const result = await upload.done();
+    return {
+      location: result.Location!,
+      key: result.Key!,
+    };
+  } catch (error) {
+    console.error("Upload failed:", error);
+    throw error;
+  }
 }
