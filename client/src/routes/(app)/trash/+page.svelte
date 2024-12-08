@@ -40,7 +40,7 @@
     }
   }
 
-  function toggleSelect(assetId: number, index: number, event: MouseEvent) {
+  function toggleSelect(assetId: string, index: number, event: MouseEvent) {
     event.stopPropagation();
     if (event.shiftKey && lastSelectedIndex >= 0) {
       const start = Math.min(lastSelectedIndex, index);

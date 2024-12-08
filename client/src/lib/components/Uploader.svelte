@@ -51,6 +51,7 @@
       {
         filename: file.name,
         contentType: file.type,
+        size: file.size,
         parts: Math.ceil(file.size / getChunkSize(file.size)),
       },
       {
@@ -85,21 +86,17 @@
   async function completeMultipartUpload({
     key,
     uploadId,
+    assetId,
     parts,
-    name,
-    size,
-    mimeType,
   }: {
-    name: string;
-    size: number;
-    mimeType: string;
+    assetId: string;
     key: string;
     uploadId: string;
     parts: { ETag: string; PartNumber: number }[];
   }) {
     const response = await clientApi.post(
       `${PUBLIC_ALCOVES_API_URL}/api/uploads/complete`,
-      { key, uploadId, parts, name, size, mimeType },
+      { key, uploadId, parts, assetId },
     );
     return response.data;
   }
@@ -120,7 +117,7 @@
       upload.totalParts = chunks.length;
       console.info("File split into chunks", chunks);
       const {
-        payload: { uploadId, key, parts },
+        payload: { uploadId, key, parts, assetId },
       } = await initiateMultipartUpload(file);
 
       const uploadPromises = chunks.map((chunk, index) =>
@@ -141,10 +138,8 @@
       await completeMultipartUpload({
         key,
         uploadId,
+        assetId,
         parts: completedParts,
-        name: file.name,
-        size: file.size,
-        mimeType: file.type,
       });
 
       upload.progress = 100;

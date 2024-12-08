@@ -4,6 +4,7 @@ import { users } from "../db/schema";
 import { db } from "../db/db";
 import { userAuth, type UserAuthMiddleware } from "../middleware/auth";
 import { HTTPException } from "hono/http-exception";
+
 const router = new Hono<{ Variables: UserAuthMiddleware }>();
 
 router.use(userAuth);

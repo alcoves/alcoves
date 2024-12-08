@@ -16,24 +16,39 @@ import { db } from "../db/db";
 import { assets } from "../db/schema";
 import { videoProcessingQueue, VideoTasks } from "../tasks/queues";
 import { VideoProxyJobData, VideoThumbnailJobData } from "../tasks/tasks/videos";
+import { eq } from "drizzle-orm";
 
 
 const router = new Hono<{ Variables: UserAuthMiddleware }>();
 router.use(userAuth);
 
 router.post('/', zValidator('json', z.object({
+  size: z.number(),
   filename: z.string(),
   contentType: z.string(),
   parts: z.number()
 })), async (c) => {
   // const { user } = c.get("authorization");
-  const { filename, contentType, parts } = c.req.valid('json');
+  const { filename, contentType, size, parts } = c.req.valid('json');
 
-  const uploadId = uuid()
-  const key = `${env.ALCOVES_OBJECT_STORE_UPLOAD_PREFIX}/${uploadId}`;
+  const assetId = uuid()
+  const storageKey = `${env.ALCOVES_OBJECT_STORE_ASSETS_PREFIX}/${assetId}/${assetId}`;
+
+  const [asset] = await db.insert(assets).values({
+    id: assetId,
+    ownerId: c.get('authorization').user.id,
+    title: path.parse(filename).name || 'New Upload',
+    description: "",
+    metadata: {},
+    size: size || 0,
+    storageKey,
+    status: "UPLOADING",
+    storageBucket: env.ALCOVES_OBJECT_STORE_DEFAULT_BUCKET,
+    mimeType: contentType || "application/octet-stream",
+  }).returning()
 
   const createCommand = new CreateMultipartUploadCommand({
-    Key: key,
+    Key: storageKey,
     ContentType: contentType,
     Bucket: env.ALCOVES_OBJECT_STORE_DEFAULT_BUCKET,
   });
@@ -43,10 +58,10 @@ router.post('/', zValidator('json', z.object({
   const signedUrls = await Promise.all(
     Array.from({ length: parts }, (_, i) => i + 1).map(async (partNumber) => {
       const command = new UploadPartCommand({
-        Bucket: env.ALCOVES_OBJECT_STORE_DEFAULT_BUCKET,
-        Key: key,
         UploadId,
-        PartNumber: partNumber
+        Key: storageKey,
+        PartNumber: partNumber,
+        Bucket: env.ALCOVES_OBJECT_STORE_DEFAULT_BUCKET,
       });
 
       const signedUrl = await getSignedUrl(s3PublicClient, command, {
@@ -62,25 +77,24 @@ router.post('/', zValidator('json', z.object({
 
   return c.json({
     payload: {
+      key: storageKey,
+      assetId: asset.id,
+      parts: signedUrls,
       uploadId: UploadId,
-      key,
-      parts: signedUrls
     }
   });
 })
 
 router.post('/complete', zValidator('json', z.object({
-  name: z.string(),
-  size: z.number(),
-  mimeType: z.string(),
   key: z.string(),
   uploadId: z.string(),
+  assetId: z.string(),
   parts: z.array(z.object({
     ETag: z.string(),
     PartNumber: z.number()
   }))
 })), async (c) => {
-  const { key, uploadId, parts, name, size, mimeType } = c.req.valid('json')
+  const { key, uploadId, parts, assetId } = c.req.valid('json')
 
   try {
     const command = new CompleteMultipartUploadCommand({
@@ -96,18 +110,10 @@ router.post('/complete', zValidator('json', z.object({
     });
 
     const result = await s3InternalClient.send(command);
-    const assetTitle = path.parse(name).name || 'New Upload';
 
-    const [asset] = await db.insert(assets).values({
-      ownerId: c.get('authorization').user.id,
-      title: assetTitle,
-      description: "",
-      metadata: {},
-      size: size || 0,
-      storageKey: key,
-      storageBucket: env.ALCOVES_OBJECT_STORE_DEFAULT_BUCKET,
-      mimeType: mimeType || "application/octet-stream",
-    }).returning()
+    const [asset] = await db.update(assets)
+      .set({ status: "UPLOADED" })
+      .where(eq(assets.id, assetId)).returning({ id: assets.id, storageKey: assets.storageKey, storageBucket: assets.storageBucket });
 
     await videoProcessingQueue.add(VideoTasks.GENERATE_VIDEO_THUMBNAIL, {
       assetId: asset.id,

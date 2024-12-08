@@ -56,7 +56,9 @@ export async function runFFmpeg({
           const estimatedTotalTime = elapsedTime / (progress / 100);
           const estimatedTimeRemaining = estimatedTotalTime - elapsedTime;
           const formattedEtr = formatTime(estimatedTimeRemaining);
-          onProgress(Math.floor(progress), formattedEtr);
+          if (onProgress) {
+            onProgress(Math.floor(progress), formattedEtr);
+          }
         }
       }
     });
@@ -68,7 +70,9 @@ export async function runFFmpeg({
 
     ffmpeg.on("close", (code) => {
       if (code === 0) {
-        onProgress(100, "00:00:00");
+          if (onProgress) {
+            onProgress(100, "00:00:00");
+          }
         resolve();
       } else {
         console.error("FFmpeg stderr output:", errorMessage);

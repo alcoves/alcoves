@@ -11,7 +11,7 @@ import { assetImageProxies } from "../../db/schema";
 import { v4 as uuid } from "uuid";
 
 export interface ImageProxyJobData {
-	assetId: number;
+	assetId: string;
 	sourceKey: string;
 	sourceBucket: string;
 }
@@ -53,7 +53,7 @@ async function main() {
 
 							const proxyStorageId = uuid();
 							const storageBucket = env.ALCOVES_OBJECT_STORE_DEFAULT_BUCKET;
-							const storageKey = `${env.ALCOVES_OBJECT_STORE_PROXIES_PREFIX}/${proxyStorageId}`;
+							const storageKey = `DEBUG/${proxyStorageId}`;
 
 							const uploadedObject = await uploadFileToS3({
 								filePath: filepath,
@@ -80,7 +80,7 @@ async function main() {
 
 						const proxyStorageId = uuid();
 						const storageBucket = env.ALCOVES_OBJECT_STORE_DEFAULT_BUCKET;
-						const storageKey = `${env.ALCOVES_OBJECT_STORE_PROXIES_PREFIX}/${proxyStorageId}`;
+						const storageKey = `DEBUG/${proxyStorageId}`;
 
 						const uploadedObject = await uploadFileToS3({
 							filePath: filepath,

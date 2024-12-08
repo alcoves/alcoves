@@ -1,8 +1,8 @@
 import { relations } from "drizzle-orm";
-import { text, jsonb, integer, pgTable, timestamp, pgEnum, serial, boolean } from "drizzle-orm/pg-core";
+import { text, jsonb, integer, pgTable, timestamp, boolean, uuid } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
-	id: serial().primaryKey(),
+	id: uuid().defaultRandom().primaryKey(),
 	email: text("email").notNull().unique(),
 	avatar: text("avatar"),
 	passwordHash: text("password_hash").notNull(),
@@ -12,7 +12,7 @@ export const users = pgTable("users", {
 
 export const sessions = pgTable("sessions", {
 	id: text("id").primaryKey(),
-	userId: integer("user_id"),
+	userId: uuid("user_id"),
 	expiresAt: timestamp("expires_at", {
 		withTimezone: true,
 		mode: "date",
@@ -34,8 +34,8 @@ export const sessionsRelations = relations(sessions, ({ one }) => ({
 }));
 
 export const assets = pgTable("assets", {
-	id: serial().primaryKey(),
-	ownerId: integer("owner_id"),
+	id: uuid().defaultRandom().primaryKey(),
+	ownerId: uuid("owner_id").notNull(),
 	title: text("title").notNull(),
 	description: text("description"),
 	status: text({ enum: ['UPLOADING', 'UPLOADED', "PROCESSING", "READY", "ERROR"] }),
@@ -59,8 +59,8 @@ export const assetsRelations = relations(assets, ({ one, many }) => ({
 }));
 
 export const assetImageProxies = pgTable("asset_image_proxies", {
-	id: serial().primaryKey(),
-	assetId: integer("asset_id").notNull(),
+	id: uuid().defaultRandom().primaryKey(),
+	assetId: uuid("asset_id").notNull(),
 	size: integer().notNull(),
 	width: integer().notNull(),
 	height: integer().notNull(),
@@ -72,8 +72,8 @@ export const assetImageProxies = pgTable("asset_image_proxies", {
 });
 
 export const assetVideoProxies = pgTable("asset_video_proxies", {
-	id: serial().primaryKey(),
-	assetId: integer("asset_id").notNull(),
+	id: uuid().defaultRandom().primaryKey(),
+	assetId: uuid("asset_id").notNull(),
 	type: text({ enum: ["HLS"] }).notNull(),
 	progress: integer().notNull().default(0),
 	status: text({ enum: ["PROCESSING", "READY", "ERROR"] }),

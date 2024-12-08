@@ -13,13 +13,13 @@ import { runFFmpeg } from "../../lib/ffmpeg";
 import { eq } from "drizzle-orm";
 
 export interface VideoProxyJobData {
-	assetId: number;
+	assetId: string;
 	sourceKey: string;
 	sourceBucket: string;
 }
 
 export interface VideoThumbnailJobData {
-	assetId: number;
+	assetId: string;
 	sourceKey: string;
 	sourceBucket: string;
 }
@@ -43,7 +43,7 @@ async function main() {
 					await mkdir(proxyStorageFolder, { recursive: true });
 
 					const proxyStorageBucket = env.ALCOVES_OBJECT_STORE_DEFAULT_BUCKET;
-					const proxyStorageKey = `${env.ALCOVES_OBJECT_STORE_PROXIES_PREFIX}/${proxyStorageId}`;
+					const proxyStorageKey = `${env.ALCOVES_OBJECT_STORE_ASSETS_PREFIX}/${job.data.assetId}/streams/${proxyStorageId}`;
 					const mainPlaylistName = "main.m3u8";
 					const mainPlaylistKey = `${proxyStorageKey}/${mainPlaylistName}`;
 
