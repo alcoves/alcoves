@@ -1,1 +1,0 @@
-ALTER TABLE "assets" ADD COLUMN "trashed" boolean DEFAULT false NOT NULL;

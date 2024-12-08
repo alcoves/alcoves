@@ -1,14 +1,40 @@
-CREATE TYPE "public"."status" AS ENUM('UPLOADING', 'UPLOADED', 'PROCESSING', 'READY', 'ERROR');--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "asset_image_proxies" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"asset_id" integer NOT NULL,
+	"size" integer NOT NULL,
+	"width" integer NOT NULL,
+	"height" integer NOT NULL,
+	"status" text,
+	"storage_key" text NOT NULL,
+	"storage_bucket" text NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "asset_video_proxies" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"asset_id" integer NOT NULL,
+	"type" text,
+	"progress" integer DEFAULT 0 NOT NULL,
+	"status" text,
+	"storage_key" text NOT NULL,
+	"storage_bucket" text NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "assets" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"owner_id" integer,
 	"title" text NOT NULL,
 	"description" text,
+	"status" text,
 	"metadata" jsonb,
 	"size" integer NOT NULL,
 	"storage_key" text NOT NULL,
 	"storage_bucket" text NOT NULL,
 	"mime_type" text NOT NULL,
+	"trashed" boolean DEFAULT false NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );

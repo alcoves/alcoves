@@ -1,12 +1,17 @@
 import { env } from "../lib/env";
 import { Queue } from "bullmq";
 
-const transcodeQueueName = "transcode";
 const imageProcessingQueueName = "images";
+const videoProcessingQueueName = "videos";
 
 export enum ImageTasks {
 	FETCH_IMAGE_METADATA = "fetch_image_metadata",
 	GENERATE_IMAGE_PROXIES = "generate_image_proxies",
+}
+
+export enum VideoTasks {
+	GENERATE_VIDEO_PROXIES = "generate_video_proxies",
+	GENERATE_VIDEO_THUMBNAIL = "generate_video_thumbnail"
 }
 
 export const bullConnection = {
@@ -14,10 +19,10 @@ export const bullConnection = {
 	port: Number.parseInt(env.ALCOVES_TASK_DB_PORT),
 };
 
-export const transcodeQueue = new Queue(transcodeQueueName, {
+export const imageProcessingQueue = new Queue(imageProcessingQueueName, {
 	connection: bullConnection,
 });
 
-export const imageProcessingQueue = new Queue(imageProcessingQueueName, {
+export const videoProcessingQueue = new Queue(videoProcessingQueueName, {
 	connection: bullConnection,
 });

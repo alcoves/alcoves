@@ -1,10 +1,11 @@
 import { env } from "./env";
-import { join } from "path";
+import { join, relative } from "path";
 import { promisify } from "util";
 import { pipeline } from "node:stream";
-import { basename } from "path";
 import { Upload } from "@aws-sdk/lib-storage";
 import { createReadStream, createWriteStream } from "node:fs";
+import { readdir } from "node:fs/promises";
+import { getMimeType } from "hono/utils/mime";
 
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import {
@@ -17,7 +18,9 @@ import {
 	DeleteObjectsCommand,
 	GetObjectCommand,
 	PutObjectCommand,
+	GetObjectCommandOutput,
 } from "@aws-sdk/client-s3";
+
 
 const pipelineAsync = promisify(pipeline);
 
@@ -207,6 +210,22 @@ export async function getPresignedUrl({
 	});
 }
 
+export async function getObjectFromS3({
+	bucket,
+	key,
+}: {
+	bucket: string;
+	key: string;
+}): Promise<GetObjectCommandOutput> {
+	try {
+		const command = new GetObjectCommand({ Bucket: bucket, Key: key });
+		return s3InternalClient.send(command);
+	} catch (error) {
+		console.error("Failed to get object from S3:", error);
+		throw error;
+	}
+}
+
 export async function uploadFileToS3({
   filePath,
   bucket,
@@ -237,6 +256,55 @@ export async function uploadFileToS3({
     };
   } catch (error) {
     console.error("Upload failed:", error);
+    throw error;
+  }
+}
+
+async function* getFilesRecursively(dir: string): AsyncGenerator<string> {
+  const entries = await readdir(dir, { withFileTypes: true });
+  for (const entry of entries) {
+    const fullPath = join(dir, entry.name);
+    if (entry.isDirectory()) {
+      yield* getFilesRecursively(fullPath);
+    } else {
+      yield fullPath;
+    }
+  }
+}
+
+export async function uploadDirectoryToS3({
+  dirPath,
+  bucket,
+  prefix = '',
+}: {
+  dirPath: string;
+  bucket: string;
+  prefix?: string;
+}): Promise<Array<{ location: string; key: string }>> {
+  const uploads: Promise<{ location: string; key: string }>[] = [];
+
+  try {
+    for await (const filePath of getFilesRecursively(dirPath)) {
+      // Create S3 key preserving directory structure
+      const relativePath = relative(dirPath, filePath);
+      const key = prefix ? join(prefix, relativePath) : relativePath;
+
+      // Queue upload
+      uploads.push(
+        uploadFileToS3({
+          filePath,
+          bucket,
+          key,
+          contentType: getMimeType(filePath) || 'application/octet-stream',
+        })
+      );
+    }
+
+    // Upload all files concurrently
+    const results = await Promise.all(uploads);
+    return results;
+  } catch (error) {
+    console.error('Directory upload failed:', error);
     throw error;
   }
 }

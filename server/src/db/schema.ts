@@ -33,19 +33,12 @@ export const sessionsRelations = relations(sessions, ({ one }) => ({
 	}),
 }));
 
-export const assetStatusEnum = pgEnum("status", [
-	"UPLOADING",
-	"UPLOADED",
-	"PROCESSING",
-	"READY",
-	"ERROR",
-]);
-
 export const assets = pgTable("assets", {
 	id: serial().primaryKey(),
 	ownerId: integer("owner_id"),
 	title: text("title").notNull(),
 	description: text("description"),
+	status: text({ enum: ['UPLOADING', 'UPLOADED', "PROCESSING", "READY", "ERROR"] }),
 	metadata: jsonb("metadata"),
 	size: integer("size").notNull(),
 	storageKey: text("storage_key").notNull(),
@@ -58,6 +51,7 @@ export const assets = pgTable("assets", {
 
 export const assetsRelations = relations(assets, ({ one, many }) => ({
 	assetImageProxies: many(assetImageProxies),
+	assetVideoProxies: many(assetVideoProxies),
 	owner: one(users, {
 		fields: [assets.ownerId],
 		references: [users.id],
@@ -70,6 +64,19 @@ export const assetImageProxies = pgTable("asset_image_proxies", {
 	size: integer().notNull(),
 	width: integer().notNull(),
 	height: integer().notNull(),
+	status: text({ enum: ["PROCESSING", "READY", "ERROR"] }),
+	storageKey: text("storage_key").notNull(),
+	storageBucket: text("storage_bucket").notNull(),
+	createdAt: timestamp("created_at").notNull().defaultNow(),
+	updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const assetVideoProxies = pgTable("asset_video_proxies", {
+	id: serial().primaryKey(),
+	assetId: integer("asset_id").notNull(),
+	type: text({ enum: ["HLS"] }).notNull(),
+	progress: integer().notNull().default(0),
+	status: text({ enum: ["PROCESSING", "READY", "ERROR"] }),
 	storageKey: text("storage_key").notNull(),
 	storageBucket: text("storage_bucket").notNull(),
 	createdAt: timestamp("created_at").notNull().defaultNow(),
@@ -79,6 +86,13 @@ export const assetImageProxies = pgTable("asset_image_proxies", {
 export const assetImageProxiesRelations = relations(assetImageProxies, ({ one }) => ({
 	asset: one(assets, {
 		fields: [assetImageProxies.assetId],
+		references: [assets.id],
+	})
+}));
+
+export const assetVideoProxiesRelations = relations(assetVideoProxies, ({ one }) => ({
+	asset: one(assets, {
+		fields: [assetVideoProxies.assetId],
 		references: [assets.id],
 	})
 }));

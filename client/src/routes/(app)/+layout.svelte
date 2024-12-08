@@ -44,7 +44,9 @@
                 <a href="/" class="hover:text-primary">Alcoves</a>
             </div>
             <nav class="mt-10">
-                <a href="/" class="block py-2.5 px-4 hover:bg-base-300">Home</a>
+                <a href="/" class="block py-2.5 px-4 hover:bg-base-300"
+                    >My Library</a
+                >
                 <a href="/trash" class="block py-2.5 px-4 hover:bg-base-300"
                     >Trash</a
                 >

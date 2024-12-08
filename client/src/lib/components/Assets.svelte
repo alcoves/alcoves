@@ -71,15 +71,15 @@
 <div>
   {#if $assets.isSuccess && $assets.data.length > 0}
     <div class="flex items-center gap-2 mb-4">
-      <button class="btn btn-sm" on:click={selectAll}>Select All</button>
+      <button class="btn btn-sm" onclick={selectAll}>Select All</button>
       {#if selectedAssets.length > 0}
-        <button class="btn btn-sm btn-ghost" on:click={deselectAll}
+        <button class="btn btn-sm btn-ghost" onclick={deselectAll}
           >Deselect All</button
         >
-        <span class="text-sm opacity-70"
-          >{selectedAssets.length} of {$assets.data.length} selected</span
-        >
-        <button class="btn btn-sm btn-error" on:click={trashSelectedAssets}
+        <span class="text-sm opacity-70">
+          {selectedAssets.length} of {$assets.data.length} selected
+        </span>
+        <button class="btn btn-sm btn-error" onclick={trashSelectedAssets}
           >Delete</button
         >
       {/if}
@@ -87,31 +87,41 @@
 
     <div class="flex flex-wrap gap-2">
       {#each $assets.data as asset, index}
-        <div class="relative group">
-          <div
-            class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-md"
-            role="button"
-            tabindex="0"
-            on:click={() => openPreview(asset)}
-            on:keydown={(e) => e.key === "Enter" && openPreview(asset)}
-          >
-            <button
-              class="absolute top-2 right-2"
-              on:click={(e) => toggleSelect(asset.id, index, e)}
+        <div class="card bg-base-100 w-96 shadow-lg relative group">
+          <figure class="relative h-40">
+            <div
+              class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity z-10"
+              role="button"
+              tabindex="0"
+              onclick={() => openPreview(asset)}
+              onkeydown={(e) => e.key === "Enter" && openPreview(asset)}
             >
-              <CheckCircle
-                size={24}
-                class={selectedAssets.includes(asset.id)
-                  ? "text-primary"
-                  : "text-white"}
-              />
-            </button>
+              <button
+                class="absolute top-2 right-2"
+                onclick={(e) => toggleSelect(asset.id, index, e)}
+              >
+                <CheckCircle
+                  size={24}
+                  class={selectedAssets.includes(asset.id)
+                    ? "text-primary"
+                    : "text-white"}
+                />
+              </button>
+            </div>
+            <img
+              src={asset?.assetImageProxies?.[0]?.url || asset.url}
+              alt="thumbnail-not-found"
+              class={`object-contain max-h-48 ${selectedAssets.includes(asset.id) ? "ring-2 ring-primary rounded-xl" : ""}`}
+            />
+          </figure>
+          <div class="card-body p-4">
+            <h2 class="card-title text-sm">{asset.title}</h2>
+            <div class="card-actions justify-end">
+              <span class="text-xs opacity-70"
+                >{(asset.size / 1024 / 1024).toFixed(1)} MB</span
+              >
+            </div>
           </div>
-          <img
-            src={asset?.assetImageProxies?.[0]?.url || asset.url}
-            alt={asset.title}
-            class={`object-scale-down rounded-md max-h-48 max-w-96 ${selectedAssets.includes(asset.id) ? "ring-2 ring-primary" : ""}`}
-          />
         </div>
       {/each}
     </div>

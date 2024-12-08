@@ -22,7 +22,7 @@ app.use(cors({
   allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowHeaders: ["Content-Type", "Authorization", "Cookie"],
   exposeHeaders: ["Set-Cookie", "Content-Length"],
-  maxAge: 600,
+  maxAge: 86400,
 }));
 
 app.route("/", rootRouter);

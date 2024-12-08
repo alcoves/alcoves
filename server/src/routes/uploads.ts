@@ -14,6 +14,8 @@ import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 import { db } from "../db/db";
 import { assets } from "../db/schema";
+import { videoProcessingQueue, VideoTasks } from "../tasks/queues";
+import { VideoProxyJobData, VideoThumbnailJobData } from "../tasks/tasks/videos";
 
 
 const router = new Hono<{ Variables: UserAuthMiddleware }>();
@@ -106,6 +108,18 @@ router.post('/complete', zValidator('json', z.object({
       storageBucket: env.ALCOVES_OBJECT_STORE_DEFAULT_BUCKET,
       mimeType: mimeType || "application/octet-stream",
     }).returning()
+
+    await videoProcessingQueue.add(VideoTasks.GENERATE_VIDEO_THUMBNAIL, {
+      assetId: asset.id,
+      sourceKey: asset.storageKey,
+      sourceBucket: asset.storageBucket,
+    } as VideoThumbnailJobData);
+
+    await videoProcessingQueue.add(VideoTasks.GENERATE_VIDEO_PROXIES, {
+      assetId: asset.id,
+      sourceKey: asset.storageKey,
+      sourceBucket: asset.storageBucket,
+    } as VideoProxyJobData);
 
     return c.json({
       payload: {
