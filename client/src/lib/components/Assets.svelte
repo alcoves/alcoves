@@ -108,11 +108,21 @@
                 />
               </button>
             </div>
-            <img
-              src={asset?.assetImageProxies?.[0]?.url || asset.url}
-              alt="thumbnail-not-found"
-              class={`object-contain max-h-48 ${selectedAssets.includes(asset.id) ? "ring-2 ring-primary rounded-xl" : ""}`}
-            />
+            {#if asset.assetImageProxies?.[0]?.url}
+              <img
+                src={asset.assetImageProxies[0].url}
+                alt="thumbnail-not-found"
+                class={`object-cover w-full h-full ${
+                  selectedAssets.includes(asset.id)
+                    ? "ring-2 ring-primary m-4"
+                    : ""
+                }`}
+              />
+            {:else}
+              <div
+                class={`bg-black w-full h-full ${selectedAssets.includes(asset.id) ? "ring-2 ring-primary" : ""}`}
+              ></div>
+            {/if}
           </figure>
           <div class="card-body p-4">
             <h2 class="card-title text-sm">{asset.title}</h2>

@@ -11,6 +11,7 @@ import { assetImageProxies, assetVideoProxies } from "../../db/schema";
 import { v4 as uuid } from "uuid";
 import { runFFmpeg } from "../../lib/ffmpeg";
 import { eq } from "drizzle-orm";
+import { getMimeType } from "hono/utils/mime";
 
 export interface VideoProxyJobData {
 	assetId: string;
@@ -154,9 +155,8 @@ async function main() {
 						input: sourceFileUrl,
 						output: thumbnailPath,
 						commands: [
-							"-vf", "thumbnail",
-							"-frames:v", "1",
-							"-q:v", "2",
+							"-ss", "00:00:01",
+							"-vframes", "1",
 						],
 					});
 
@@ -175,6 +175,13 @@ async function main() {
 						storageBucket: proxyStorageBucket,
 						storageKey: proxyStorageKey
 					}).returning();
+
+					const uploadedObject = await uploadFileToS3({
+						filePath: compressedImageLocalPath,
+						key: proxyStorageKey,
+						bucket: proxyStorageBucket,
+						contentType: getMimeType(proxyStorageName) || "image/avif",
+					});
 				}
 			} catch (error) {
 				console.error("Error processing video", error);
