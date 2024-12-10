@@ -8,7 +8,10 @@ const config: Config = {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 	plugins: [daisyui],
   daisyui: {
-    themes: ["sunset", "bumblebee"],
+    themes: [
+      "dark",
+			"light"
+    ],
   },
 	theme: {
 		extend: {

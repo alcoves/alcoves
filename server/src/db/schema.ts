@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { text, jsonb, integer, pgTable, timestamp, boolean, uuid } from "drizzle-orm/pg-core";
+import { text, jsonb, integer, pgTable, timestamp, boolean, uuid, bigint } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
 	id: uuid().defaultRandom().primaryKey(),
@@ -40,11 +40,11 @@ export const assets = pgTable("assets", {
 	description: text("description"),
 	status: text({ enum: ['UPLOADING', 'UPLOADED', "PROCESSING", "READY", "ERROR"] }),
 	metadata: jsonb("metadata"),
-	size: integer("size").notNull(),
+	size: text("size").notNull(),
 	storageKey: text("storage_key").notNull(),
 	storageBucket: text("storage_bucket").notNull(),
 	mimeType: text("mime_type").notNull(),
-	trashed: boolean("trashed").notNull().default(false),
+	deleted: boolean("deleted").notNull().default(false),
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 	updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });

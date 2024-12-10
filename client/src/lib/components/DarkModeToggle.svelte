@@ -2,11 +2,11 @@
   import { onMount } from "svelte";
   import { Sun, Moon } from "lucide-svelte";
 
-  const themes = ["sunset", "bumblebee"];
+  const themes = ["dark", "light"];
   let currentTheme: string;
 
   onMount(() => {
-    currentTheme = localStorage.getItem("theme") || "sunset"; // Default theme as set by tailwind.config.ts
+    currentTheme = localStorage.getItem("theme") || "dark"; // Default theme as set by tailwind.config.ts
     applyTheme(currentTheme);
   });
 
@@ -17,7 +17,7 @@
   }
 
   function toggleTheme() {
-    const newTheme = currentTheme === "bumblebee" ? "sunset" : "bumblebee";
+    const newTheme = currentTheme === "light" ? "dark" : "light";
     applyTheme(newTheme);
   }
 </script>
@@ -28,7 +28,7 @@
     type="checkbox"
     class="theme-controller"
     on:change={toggleTheme}
-    checked={currentTheme === "bumblebee"}
+    checked={currentTheme === "light"}
   />
 
   <!-- Sun icon for light mode -->

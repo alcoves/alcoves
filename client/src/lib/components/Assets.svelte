@@ -1,7 +1,7 @@
 <script lang="ts">
   import { clientApi, queryClient } from "$lib/api";
   import { createQuery } from "@tanstack/svelte-query";
-  import { CheckCircle } from "lucide-svelte";
+  import { Check, CheckCircle } from "lucide-svelte";
   import Preview from "./Preview.svelte";
 
   let selectedAsset = $state<any>(null);
@@ -16,7 +16,7 @@
     },
   });
 
-  async function trashSelectedAssets() {
+  async function deleteSelectedAssets() {
     try {
       await clientApi.delete("/api/assets", {
         data: { ids: selectedAssets },
@@ -79,7 +79,7 @@
         <span class="text-sm opacity-70">
           {selectedAssets.length} of {$assets.data.length} selected
         </span>
-        <button class="btn btn-sm btn-error" onclick={trashSelectedAssets}
+        <button class="btn btn-sm btn-error" onclick={deleteSelectedAssets}
           >Delete</button
         >
       {/if}
@@ -90,40 +90,53 @@
         <div class="card bg-base-100 w-96 shadow-lg relative group">
           <figure class="relative h-40">
             <div
-              class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity z-10"
-              role="button"
-              tabindex="0"
-              onclick={() => openPreview(asset)}
-              onkeydown={(e) => e.key === "Enter" && openPreview(asset)}
+              class="bg-cover bg-center w-full h-full"
+              style={`${
+                asset.assetImageProxies?.[0]?.url
+                  ? `background-image: url(${asset.assetImageProxies?.[0]?.url})`
+                  : "background-color: black"
+              }`}
             >
-              <button
-                class="absolute top-2 right-2"
-                onclick={(e) => toggleSelect(asset.id, index, e)}
-              >
-                <CheckCircle
-                  size={24}
-                  class={selectedAssets.includes(asset.id)
-                    ? "text-primary"
-                    : "text-white"}
-                />
-              </button>
+              {#if asset.status !== "READY"}
+                <div
+                  class="flex flex-col justify-center items-center w-full h-full bg-black/50"
+                >
+                  <span class="text-white"
+                    >{asset.status === "UPLOADING"
+                      ? "Uploading..."
+                      : "Processing..."}</span
+                  >
+                  <progress
+                    class="progress progress-info w-56 bg-neutral h-3 rounded-sm"
+                    value={asset?.assetVideoProxies?.[0]?.progress}
+                    max="100"
+                  ></progress>
+                </div>
+              {:else}
+                <div
+                  class="flex flex-col w-full h-full group-hover:bg-black/50 transition-background duration-200"
+                  role="button"
+                  tabindex="0"
+                  onclick={() => openPreview(asset)}
+                  onkeydown={(e) => e.key === "Enter" && openPreview(asset)}
+                >
+                  <div class="flex justify-end p-2 w-full">
+                    <button
+                      class={`rounded-md p-1 ${
+                        selectedAssets.includes(asset.id)
+                          ? "bg-primary text-neutral"
+                          : "bg-neutral text-neutral-content"
+                      }`}
+                      onclick={(e) => toggleSelect(asset.id, index, e)}
+                    >
+                      <Check strokeWidth="4" class="w-5 h-5" />
+                    </button>
+                  </div>
+                </div>
+              {/if}
             </div>
-            {#if asset.assetImageProxies?.[0]?.url}
-              <img
-                src={asset.assetImageProxies[0].url}
-                alt="thumbnail-not-found"
-                class={`object-cover w-full h-full ${
-                  selectedAssets.includes(asset.id)
-                    ? "ring-2 ring-primary m-4"
-                    : ""
-                }`}
-              />
-            {:else}
-              <div
-                class={`bg-black w-full h-full ${selectedAssets.includes(asset.id) ? "ring-2 ring-primary" : ""}`}
-              ></div>
-            {/if}
           </figure>
+
           <div class="card-body p-4">
             <h2 class="card-title text-sm">{asset.title}</h2>
             <div class="card-actions justify-end">

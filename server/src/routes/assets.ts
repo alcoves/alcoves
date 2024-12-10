@@ -18,7 +18,7 @@ router.use(userAuth);
 // This route returns all the users assets
 router.get("/", async (c) => {
 	const { user } = c.get("authorization");
-	const getTrashed = Boolean(c.req.query("trashed")) || false;
+	const getDeleted = Boolean(c.req.query("deleted")) || false;
 
 	const assetsQuery = await db.query.assets.findMany({
 		orderBy: (assets, { desc }) => [desc(assets.createdAt)],
@@ -30,7 +30,7 @@ router.get("/", async (c) => {
 				orderBy: (assetVideoProxies, { desc }) => [desc(assetVideoProxies.status)],
 			},
 		},
-		where: (assets, { eq }) => eq(assets.ownerId, user.id) && eq(assets.trashed, getTrashed),
+		where: (assets, { eq }) => eq(assets.ownerId, user.id) && eq(assets.deleted, getDeleted),
 	});
 
 	if (!assetsQuery) {
@@ -38,26 +38,7 @@ router.get("/", async (c) => {
 	}
 
 	const assetsWithUrls = await Promise.all(assetsQuery.map(async (asset) => {
-		const signedUrl = await getPresignedUrl({
-			bucket: asset.storageBucket,
-			key: asset.storageKey,
-			expiration: 3600,
-		})
-
 		const imageProxiesWithUrls = await Promise.all(asset.assetImageProxies.map(async (proxy) => {
-			const signedProxyUrl = await getPresignedUrl({
-				bucket: proxy.storageBucket,
-				key: proxy.storageKey,
-				expiration: 3600,
-			});
-
-			return {
-				...proxy,
-				url: signedProxyUrl,
-			}
-		}))
-
-		const videoProxiesWithUrls = await Promise.all(asset.assetImageProxies.map(async (proxy) => {
 			const signedProxyUrl = await getPresignedUrl({
 				bucket: proxy.storageBucket,
 				key: proxy.storageKey,
@@ -72,8 +53,6 @@ router.get("/", async (c) => {
 
 		return {
 			...asset,
-			url: signedUrl,
-			assetVideoProxies: videoProxiesWithUrls,
 			assetImageProxies: imageProxiesWithUrls,
 		}
 	}));
@@ -90,7 +69,7 @@ router.get('/:assetId/manifest/:manifestName', async (c) => {
 				orderBy: (assetVideoProxies, { desc }) => [desc(assetVideoProxies.status)],
 			},
 		},
-		where: (assets, { eq, and }) => and(eq(assets.id, assetId), eq(assets.trashed, false))
+		where: (assets, { eq, and }) => and(eq(assets.id, assetId), eq(assets.deleted, false))
 	});
 
 	if (!asset) {
@@ -177,7 +156,7 @@ router.delete("/", async (c) => {
 	const { user } = c.get("authorization");
 
 	await db.update(assets)
-		.set({ trashed: true })
+		.set({ deleted: true })
     .where(
       and(
         eq(assets.ownerId, user.id),
