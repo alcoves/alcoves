@@ -21,6 +21,7 @@ router.get("/", async (c) => {
 	const getTrashed = Boolean(c.req.query("trashed")) || false;
 
 	const assetsQuery = await db.query.assets.findMany({
+		orderBy: (assets, { desc }) => [desc(assets.createdAt)],
 		with: {
 			assetImageProxies: {
 				orderBy: (assetImageProxies, { desc }) => [desc(assetImageProxies.size)],
@@ -80,21 +81,28 @@ router.get("/", async (c) => {
 	return c.json({ assets: assetsWithUrls });
 });
 
-router.get('/:assetId/main.m3u8', async (c) => {
+router.get('/:assetId/manifest/:manifestName', async (c) => {
 	const { user } = c.get("authorization");
-	const { assetId } = c.req.param();
+	const { assetId, manifestName } = c.req.param();
 	const asset = await db.query.assets.findFirst({
 		with: {
 			assetVideoProxies: {
 				orderBy: (assetVideoProxies, { desc }) => [desc(assetVideoProxies.status)],
 			},
 		},
-		where: (assets, { eq }) => eq(assets.id, parseInt(assetId)) && eq(assets.ownerId, user.id) && eq(assets.trashed, false),
+		where: (assets, { eq, and }) => and(eq(assets.id, assetId), eq(assets.trashed, false))
 	});
 
 	if (!asset) {
 		throw new HTTPException(404, { message: "Asset not found" });
 	}
+
+	if (asset.ownerId !== user.id) {
+		// this is where we can do a check based on video visibility
+		throw new HTTPException(403, { message: "Forbidden" });
+	}
+
+	console.log("All Proxies", asset.assetVideoProxies);
 
 	const mainProxy = asset.assetVideoProxies.find((proxy) => proxy.type === "HLS");
 
@@ -102,20 +110,58 @@ router.get('/:assetId/main.m3u8', async (c) => {
 		throw new HTTPException(404, { message: "Asset not processed" });
 	}
 
-	const { Body } = await getObjectFromS3({
+	console.info(`Fetched proxy ${mainProxy.id} for asset ${assetId}`);
+
+	let fetchParams = {
 		bucket: mainProxy.storageBucket,
 		key: mainProxy.storageKey,
+	}
+
+	if (manifestName !== 'main.m3u8') {
+		fetchParams = {
+			bucket: mainProxy.storageBucket,
+			key: mainProxy.storageKey.replace('main.m3u8', manifestName),
+		}
+	}
+
+	const { Body } = await getObjectFromS3(fetchParams).catch((err) => {
+		throw new HTTPException(400, { message: "Bad manifest name" });
 	})
 
 	const parsedManifest = await Body?.transformToString()
 
-	const manifestWithApiUrls = parsedManifest?.split("\n").map((line) => {
+	const manifestWithApiUrls = parsedManifest ? await Promise.all(parsedManifest.split("\n").map(async (line) => {
+		// Replaces the .m3u8 file with the API endpoint
 		if (line.includes('.m3u8')) {
-			return `http://localhost:3000/assets/${assetId}/${line}`
+			return `http://localhost:3000/api/assets/${assetId}/manifest/${line}`
+		}
+
+		// #EXT-X-MAP:URI="stream_video_init.mp4"
+		if (line.includes('EXT-X-MAP:URI=')) {
+			const initFile = line.split('URI=')[1].replace(/"/g, '');
+
+			const signedUrl = await getPresignedUrl({
+				bucket: mainProxy.storageBucket,
+				key: mainProxy.storageKey.replace('main.m3u8', initFile),
+				expiration: 3600,
+			})
+
+			return line.replace(initFile, signedUrl)
+		}
+
+		// Replaces .m4s files with signed urls
+		if (line.includes('.m4s') || line.includes('.mp4')) {
+			const signedUrl= await getPresignedUrl({
+				bucket: mainProxy.storageBucket,
+				key: mainProxy.storageKey.replace('main.m3u8', line),
+				expiration: 3600,
+			})
+
+			return signedUrl
 		}
 
 		return line
-	})
+	})) : [];
 
 	if (!manifestWithApiUrls) {
 		throw new HTTPException(500, { message: "Failed to parse manifest" });

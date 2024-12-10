@@ -7,7 +7,7 @@ import { rm, mkdtemp, mkdir } from "node:fs/promises";
 import { downloadObject, getPresignedUrl, s3InternalClient, uploadDirectoryToS3, uploadFileToS3 } from "../../lib/s3";
 import { VideoTasks, bullConnection, videoProcessingQueue } from "../queues";
 import { db } from "../../db/db";
-import { assetImageProxies, assetVideoProxies } from "../../db/schema";
+import { assetImageProxies, assets, assetVideoProxies } from "../../db/schema";
 import { v4 as uuid } from "uuid";
 import { runFFmpeg } from "../../lib/ffmpeg";
 import { eq } from "drizzle-orm";
@@ -37,55 +37,122 @@ async function main() {
 			const tmpDir = await mkdtemp(join(tmpdir(), "alcoves-"));
 			console.info(`Created temporary directory: ${tmpDir}`);
 
+			
+
 			try {
 				if (job.name === VideoTasks.GENERATE_VIDEO_PROXIES) {
+					const downloadFirst = false
+
 					const proxyStorageId = uuid();
 					const proxyStorageFolder = join(tmpDir, proxyStorageId);
 					await mkdir(proxyStorageFolder, { recursive: true });
 
+					const asset = await db.query.assets.findFirst({
+						where: eq(assets.id, job.data.assetId),
+					});
+
+					if (!asset) {
+						throw new Error("Asset not found");
+					}
+
 					const proxyStorageBucket = env.ALCOVES_OBJECT_STORE_DEFAULT_BUCKET;
-					const proxyStorageKey = `${env.ALCOVES_OBJECT_STORE_ASSETS_PREFIX}/${job.data.assetId}/streams/${proxyStorageId}`;
+					const proxyStorageKey = `${env.ALCOVES_OBJECT_STORE_ASSETS_PREFIX}/${asset.id}/streams/${proxyStorageId}`;
 					const mainPlaylistName = "main.m3u8";
 					const mainPlaylistKey = `${proxyStorageKey}/${mainPlaylistName}`;
 
 					const assetVideoProxy = await db.insert(assetVideoProxies).values({
+						id: proxyStorageId,
 						type: "HLS",
-						assetId: job.data.assetId,
+						assetId: asset.id,
 						storageBucket: proxyStorageBucket,
 						storageKey: mainPlaylistKey
 					}).returning();
 
-					const sourceFileUrl = await getPresignedUrl({
-						client: s3InternalClient,
-						key: job.data.sourceKey,
-						bucket: job.data.sourceBucket,
-					});
+					let sourceUri = ''
+					if (downloadFirst) {
+						sourceUri = await downloadObject({
+							localDir: tmpDir,
+							key: job.data.sourceKey,
+							bucket: job.data.sourceBucket,
+						});
+					} else {
+						sourceUri = await getPresignedUrl({
+							client: s3InternalClient,
+							key: job.data.sourceKey,
+							bucket: job.data.sourceBucket,
+						});
+					}
+
+					const qualities = {
+						av1: [
+							{ name: 'av1_1080p', scale: 'scale=-2:1080', crf: '34', codec: 'libsvtav1', preset: '6', svtParams: 'tune=0:mbr=5000' },
+							{ name: 'av1_720p', scale: 'scale=-2:720', crf: '34', codec: 'libsvtav1', preset: '6', svtParams: 'tune=0:mbr=2500' },
+							{ name: 'av1_360p', scale: 'scale=-2:360', crf: '34', codec: 'libsvtav1', preset: '6', svtParams: 'tune=0:mbr=500' },
+						],
+						x264: [
+							{ name: '264_1080p', scale: 'scale=-2:1080', crf: '20', codec: 'libx264', preset: 'medium', bitrate: { rate: '4000K', maxrate: '4000K', bufsize: '4000K' } },
+							{ name: '264_720p', scale: 'scale=-2:720', crf: '20', codec: 'libx264', preset: 'medium',  bitrate: { rate: '1500K', maxrate: '1500K', bufsize: '1500K' } },
+							{ name: '264_360p', scale: 'scale=-2:360', crf: '20', codec: 'libx264', preset: 'medium', bitrate: { rate: '400K', maxrate: '400K', bufsize: '400K' } },
+						]
+					}
+
+					const { inputStreams, filters, streamMaps } = qualities.av1.reduce((acc: { filters: string[], inputStreams: string[], streamMaps: string[] }, cv, index, arr) => {
+						acc.filters.push(...[
+							`-filter:v:${index}`,cv.scale,
+							`-crf:v:${index}`, cv.crf,
+							`-c:v:${index}`, cv.codec,
+							`-preset:v:${index}`, cv.preset,
+						]);
+
+						if (cv.svtParams) {
+							acc.filters.push(`-svtav1-params:${index}`, cv.svtParams);
+						}
+
+						if (cv.bitrate?.rate) {
+							acc.filters.push(`-b:v:${index}`, cv.bitrate.rate);
+						}
+
+						if (cv?.bitrate?.maxrate) {
+							acc.filters.push(`-maxrate:v:${index}`, cv.bitrate.maxrate);
+						}
+
+						if (cv?.bitrate?.bufsize) {
+							acc.filters.push(`-bufsize:v:${index}`, cv.bitrate.bufsize);
+						}
+
+						acc.inputStreams.push('-map', '0:v:0'); //  '-map', 'a:0' is not added because we are creating a dedicated audio group
+						acc.streamMaps.push(`v:${index},name:${cv.name},agroup:audio`)
+						return acc
+					}, {
+						filters: [],
+						inputStreams: ['-map', '0:a:0'],
+						// Create a dedicated audio group. Then reference it in the video group. Set default audio to yes
+						streamMaps: ['a:0,name:audio,agroup:audio,default:yes']
+					})
 
 					const commands = [
-						"-map", "0:v",
-						"-map", "0:a",
-						"-vf", "scale=-2:720",
-						"-c:v", "libsvtav1",
-						"-crf", "36",
-						"-preset", "8",
+						"-hide_banner",
+						// For each rendition we need a mapping
+						...inputStreams,
+						...filters,
+						"-var_stream_map", streamMaps.join(" "),
 						"-g", "300",
-						"-c:a", "libopus",
+						"-c:a", "libopus", // "aac",
 						"-b:a", "128k",
 						"-ac", "2",
 						"-f", "hls",
 						"-hls_time", "6",
-						"-hls_list_size", "0",
-						"-hls_segment_filename", `${proxyStorageFolder}/stream_%v_%03d.m4s`,
+						"-hls_playlist_type", "vod",
+						"-hls_flags", "independent_segments",
+						"-hls_segment_type", "fmp4",
+						"-hls_segment_filename", `${proxyStorageFolder}/stream_%v_%d.m4s`,
 						"-hls_fmp4_init_filename", "stream_%v_init.mp4",
-						"-var_stream_map", "v:0,name:video a:0,name:audio",
-						"-hls_flags", "delete_segments+independent_segments",
 						"-master_pl_name", mainPlaylistName,
-						"-hls_playlist_type", "event"
 					];
 
 					console.log("Starting FFmpeg process.");
 					await runFFmpeg({
-						input: sourceFileUrl,
+						input: sourceUri,
 						output: `${proxyStorageFolder}/stream_%v.m3u8`,
 						commands,
 						onProgress: async (progress, estimatedTimeRemaining) => {
