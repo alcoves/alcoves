@@ -81,15 +81,11 @@ router.get('/:assetId/manifest/:manifestName', async (c) => {
 		throw new HTTPException(403, { message: "Forbidden" });
 	}
 
-	console.log("All Proxies", asset.assetVideoProxies);
-
 	const mainProxy = asset.assetVideoProxies.find((proxy) => proxy.type === "HLS");
 
 	if (!mainProxy) {
 		throw new HTTPException(404, { message: "Asset not processed" });
 	}
-
-	console.info(`Fetched proxy ${mainProxy.id} for asset ${assetId}`);
 
 	let fetchParams = {
 		bucket: mainProxy.storageBucket,
