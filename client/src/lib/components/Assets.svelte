@@ -1,14 +1,15 @@
 <script lang="ts">
   import { clientApi, queryClient } from "$lib/api";
   import { createQuery } from "@tanstack/svelte-query";
-  import { Check, CheckCircle } from "lucide-svelte";
+  import { Check } from "lucide-svelte";
   import Preview from "./Preview.svelte";
 
   let selectedAsset = $state<any>(null);
-  let selectedAssets = $state<number[]>([]);
+  let selectedAssets = $state<string[]>([]);
   let lastSelectedIndex = $state<number>(-1);
 
   const assets = createQuery({
+    refetchInterval: 5000,
     queryKey: ["assets"],
     queryFn: async () => {
       const response = await clientApi.get("/api/assets");
@@ -33,9 +34,11 @@
     if (event.shiftKey && lastSelectedIndex >= 0) {
       const start = Math.min(lastSelectedIndex, index);
       const end = Math.max(lastSelectedIndex, index);
-      const assetsInRange = $assets.data.slice(start, end + 1).map((a) => a.id);
+      const assetsInRange = $assets.data
+        .slice(start, end + 1)
+        .map((a: any) => a.id);
 
-      const allSelected = assetsInRange.every((id) =>
+      const allSelected = assetsInRange.every((id: string) =>
         selectedAssets.includes(id),
       );
       if (allSelected) {
@@ -60,7 +63,7 @@
   }
 
   function selectAll() {
-    selectedAssets = $assets.data.map((asset) => asset.id);
+    selectedAssets = $assets.data.map((asset: any) => asset.id);
   }
 
   function deselectAll() {
@@ -87,54 +90,63 @@
 
     <div class="flex flex-wrap gap-2">
       {#each $assets.data as asset, index}
-        <div class="card bg-base-100 w-96 shadow-lg relative group">
-          <figure class="relative h-40">
-            <div
-              class="bg-cover bg-center w-full h-full"
-              style={`${
-                asset.assetImageProxies?.[0]?.url
-                  ? `background-image: url(${asset.assetImageProxies?.[0]?.url})`
-                  : "background-color: black"
-              }`}
-            >
-              {#if asset.status !== "READY"}
-                <div
-                  class="flex flex-col justify-center items-center w-full h-full bg-black/50"
-                >
-                  <span class="text-white"
-                    >{asset.status === "UPLOADING"
-                      ? "Uploading..."
-                      : "Processing..."}</span
-                  >
-                  <progress
-                    class="progress progress-info w-56 bg-neutral h-3 rounded-sm"
-                    value={asset?.assetVideoProxies?.[0]?.progress}
-                    max="100"
-                  ></progress>
-                </div>
+        <div class="card bg-neutral w-96 shadow-md">
+          <figure class="relative h-40 w-full group">
+            {#if asset.status !== "READY"}
+              {#if asset.assetImageProxies?.[0]?.url}
+                <img
+                  alt={asset.title}
+                  src={asset.assetImageProxies?.[0]?.url}
+                  class="absolute object-cover w-full h-full"
+                />
               {:else}
-                <div
-                  class="flex flex-col w-full h-full group-hover:bg-black/50 transition-background duration-200"
-                  role="button"
-                  tabindex="0"
-                  onclick={() => openPreview(asset)}
-                  onkeydown={(e) => e.key === "Enter" && openPreview(asset)}
-                >
-                  <div class="flex justify-end p-2 w-full">
-                    <button
-                      class={`rounded-md p-1 ${
-                        selectedAssets.includes(asset.id)
-                          ? "bg-primary text-neutral"
-                          : "bg-neutral text-neutral-content"
-                      }`}
-                      onclick={(e) => toggleSelect(asset.id, index, e)}
-                    >
-                      <Check strokeWidth="4" class="w-5 h-5" />
-                    </button>
-                  </div>
-                </div>
+                <div class="absolute object-cover w-full h-full bg-black"></div>
               {/if}
-            </div>
+              <div
+                class="flex flex-col w-full h-full justify-center items-center bg-black/50 z-10"
+              >
+                <span class="text-white"
+                  >{asset.status === "UPLOADING"
+                    ? "Uploading..."
+                    : "Processing..."}</span
+                >
+                <progress
+                  class="progress progress-info w-56 bg-neutral h-3 rounded-sm"
+                  value={asset?.assetVideoProxies?.[0]?.progress}
+                  max="100"
+                ></progress>
+              </div>
+            {:else}
+              {#if asset.assetImageProxies?.[0]?.url}
+                <img
+                  alt={asset.title}
+                  src={asset.assetImageProxies?.[0]?.url}
+                  class="absolute object-cover w-full h-full"
+                />
+              {:else}
+                <div class="absolute object-cover w-full h-full bg-black"></div>
+              {/if}
+              <div
+                class="flex flex-col w-full h-full group-hover:bg-black/50 transition-background duration-200 z-10"
+                role="button"
+                tabindex="0"
+                onclick={() => openPreview(asset)}
+                onkeydown={(e) => e.key === "Enter" && openPreview(asset)}
+              >
+                <div class="flex w-full justify-end p-2">
+                  <button
+                    class={`rounded-md p-1 ${
+                      selectedAssets.includes(asset.id)
+                        ? "bg-primary text-neutral"
+                        : "bg-neutral text-neutral-content"
+                    }`}
+                    onclick={(e) => toggleSelect(asset.id, index, e)}
+                  >
+                    <Check strokeWidth="4" class="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+            {/if}
           </figure>
 
           <div class="card-body p-4">
