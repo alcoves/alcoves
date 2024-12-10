@@ -90,7 +90,9 @@
 
     <div class="flex flex-wrap gap-2">
       {#each $assets.data as asset, index}
-        <div class="card bg-neutral w-96 shadow-md">
+        <div
+          class={`card bg-base-200 w-full md:w-96 shadow-md  ${selectedAssets.includes(asset.id) ? "border border-primary" : "border border-base-300"}`}
+        >
           <figure class="relative h-40 w-full group">
             {#if asset.status !== "READY"}
               {#if asset.assetImageProxies?.[0]?.url}

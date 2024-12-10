@@ -186,6 +186,10 @@
       );
       if (selectedUploadToStart) startUpload(selectedUploadToStart);
     }
+
+    if (!files?.length && Object.keys(uploads).length === 0) {
+      modalOpen = false;
+    }
   });
 
   function beforeunload(e: BeforeUnloadEvent) {
