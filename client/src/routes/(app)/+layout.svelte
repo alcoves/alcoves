@@ -9,7 +9,6 @@
     import Uploader from "$lib/components/Uploader.svelte";
     import { queryClient } from "$lib/api";
     import { Film, Menu } from "lucide-svelte";
-    import Websocket from "$lib/components/Websocket.svelte";
 
     let { data, children } = $props();
     user.set(data.authenticatedUser);
@@ -39,7 +38,6 @@
 </script>
 
 <QueryClientProvider client={queryClient}>
-    <Websocket />
     <div class="flex h-screen bg-base-100 text-base-content overflow-hidden">
         <div class="drawer lg:drawer-open">
             <input id="default-drawer" type="checkbox" class="drawer-toggle" />
@@ -99,7 +97,7 @@
                     class="drawer-overlay"
                 ></label>
                 <div
-                    class="flex flex-col justify-start items-start min-h-full bg-base-100 text-base-content w-80 border-r border-base-300"
+                    class="flex flex-col justify-start items-start min-h-full bg-base-100 text-base-content w-80"
                 >
                     <div
                         class="flex justify-start items-center h-[65px] p-2 w-full"
@@ -119,16 +117,20 @@
                             >Alcoves</a
                         >
                     </div>
-                    <ul class="menu p-4 w-full">
-                        <li>
-                            <a
-                                href="/"
-                                class:active={$page.url.pathname == "/"}
-                            >
-                                <Film class="w-5 h-5" />My Library</a
-                            >
-                        </li>
-                    </ul>
+                    <div
+                        class="h-[calc(100vh-65px)] w-full border-r border-base-300"
+                    >
+                        <ul class="menu p-4 w-full">
+                            <li>
+                                <a
+                                    href="/"
+                                    class:active={$page.url.pathname == "/"}
+                                >
+                                    <Film class="w-5 h-5" />My Library</a
+                                >
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
