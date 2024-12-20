@@ -4,7 +4,9 @@
 		"start": "bun run src/index.ts",
 		"dev": "bun install && bun run --hot src/index.ts",
 		"test": "bun run src/db/migrate.ts && bun test",
-		"db:generate": "bunx drizzle-kit generate"
+		"db:generate": "bunx drizzle-kit generate",
+		"lint": "bunx biome lint --write .",
+		"format": "bunx biome format --write ."
 	},
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.705.0",

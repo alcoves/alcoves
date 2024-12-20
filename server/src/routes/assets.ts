@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { db } from "../db/db";
-import { userAuth, UserAuthMiddleware } from "../middleware/auth";
+import { userAuth, type UserAuthMiddleware } from "../middleware/auth";
 import { HTTPException } from "hono/http-exception";
 import { getObjectFromS3, getPresignedUrl } from "../lib/s3";
 import { assets } from "../db/schema";
@@ -39,7 +39,7 @@ router.get("/", async (c) => {
 	return c.json({ assets: await assetsWithUrls(assetsQuery) });
 });
 
-router.get('/:assetId/manifest/:manifestName', async (c) => {
+router.get("/:assetId/manifest/:manifestName", async (c) => {
 	const { user } = c.get("authorization");
 	const { assetId, manifestName } = c.req.param();
 	const asset = await db.query.assets.findFirst({
@@ -48,7 +48,7 @@ router.get('/:assetId/manifest/:manifestName', async (c) => {
 				orderBy: (assetVideoProxies, { desc }) => [desc(assetVideoProxies.status)],
 			},
 		},
-		where: (assets, { eq, and }) => and(eq(assets.id, assetId), eq(assets.deleted, false))
+		where: (assets, { eq, and }) => and(eq(assets.id, assetId), eq(assets.deleted, false)),
 	});
 
 	if (!asset) {
@@ -69,53 +69,57 @@ router.get('/:assetId/manifest/:manifestName', async (c) => {
 	let fetchParams = {
 		bucket: mainProxy.storageBucket,
 		key: mainProxy.storageKey,
-	}
+	};
 
-	if (manifestName !== 'main.m3u8') {
+	if (manifestName !== "main.m3u8") {
 		fetchParams = {
 			bucket: mainProxy.storageBucket,
-			key: mainProxy.storageKey.replace('main.m3u8', manifestName),
-		}
+			key: mainProxy.storageKey.replace("main.m3u8", manifestName),
+		};
 	}
 
 	const { Body } = await getObjectFromS3(fetchParams).catch((err) => {
 		throw new HTTPException(400, { message: "Bad manifest name" });
-	})
+	});
 
-	const parsedManifest = await Body?.transformToString()
+	const parsedManifest = await Body?.transformToString();
 
-	const manifestWithApiUrls = parsedManifest ? await Promise.all(parsedManifest.split("\n").map(async (line) => {
-		// Replaces the .m3u8 file with the API endpoint
-		if (line.includes('.m3u8')) {
-			return `http://localhost:3000/api/assets/${assetId}/manifest/${line}`
-		}
+	const manifestWithApiUrls = parsedManifest
+		? await Promise.all(
+				parsedManifest.split("\n").map(async (line) => {
+					// Replaces the .m3u8 file with the API endpoint
+					if (line.includes(".m3u8")) {
+						return `http://localhost:3000/api/assets/${assetId}/manifest/${line}`;
+					}
 
-		// #EXT-X-MAP:URI="stream_video_init.mp4"
-		if (line.includes('EXT-X-MAP:URI=')) {
-			const initFile = line.split('URI=')[1].replace(/"/g, '');
+					// #EXT-X-MAP:URI="stream_video_init.mp4"
+					if (line.includes("EXT-X-MAP:URI=")) {
+						const initFile = line.split("URI=")[1].replace(/"/g, "");
 
-			const signedUrl = await getPresignedUrl({
-				bucket: mainProxy.storageBucket,
-				key: mainProxy.storageKey.replace('main.m3u8', initFile),
-				expiration: 3600,
-			})
+						const signedUrl = await getPresignedUrl({
+							bucket: mainProxy.storageBucket,
+							key: mainProxy.storageKey.replace("main.m3u8", initFile),
+							expiration: 3600,
+						});
 
-			return line.replace(initFile, signedUrl)
-		}
+						return line.replace(initFile, signedUrl);
+					}
 
-		// Replaces .m4s files with signed urls
-		if (line.includes('.m4s') || line.includes('.mp4')) {
-			const signedUrl= await getPresignedUrl({
-				bucket: mainProxy.storageBucket,
-				key: mainProxy.storageKey.replace('main.m3u8', line),
-				expiration: 3600,
-			})
+					// Replaces .m4s files with signed urls
+					if (line.includes(".m4s") || line.includes(".mp4")) {
+						const signedUrl = await getPresignedUrl({
+							bucket: mainProxy.storageBucket,
+							key: mainProxy.storageKey.replace("main.m3u8", line),
+							expiration: 3600,
+						});
 
-			return signedUrl
-		}
+						return signedUrl;
+					}
 
-		return line
-	})) : [];
+					return line;
+				}),
+			)
+		: [];
 
 	if (!manifestWithApiUrls) {
 		throw new HTTPException(500, { message: "Failed to parse manifest" });
@@ -124,20 +128,15 @@ router.get('/:assetId/manifest/:manifestName', async (c) => {
 	return c.text(manifestWithApiUrls?.join("\n"));
 });
 
-
 // Delete multiple assets
 router.delete("/", async (c) => {
 	const { ids } = await c.req.json();
 	const { user } = c.get("authorization");
 
-	await db.update(assets)
+	await db
+		.update(assets)
 		.set({ deleted: true })
-    .where(
-      and(
-        eq(assets.ownerId, user.id),
-        inArray(assets.id, ids)
-      )
-    );
+		.where(and(eq(assets.ownerId, user.id), inArray(assets.id, ids)));
 
 	return c.json({ status: "ok" });
 });

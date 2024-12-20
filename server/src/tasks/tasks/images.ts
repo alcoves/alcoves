@@ -30,51 +30,24 @@ async function main() {
 
 			try {
 				if (job.name === ImageTasks.GENERATE_IMAGE_PROXIES) {
-						const sourceImage = await downloadObject({
-							localDir: tmpDir,
-							key: job.data.sourceKey,
-							bucket: job.data.sourceBucket,
-						});
+					const sourceImage = await downloadObject({
+						localDir: tmpDir,
+						key: job.data.sourceKey,
+						bucket: job.data.sourceBucket,
+					});
 
-						const filepath = join(tmpDir, "image.avif");
+					const filepath = join(tmpDir, "image.avif");
 
-						const sizes = [
-							{ size: 'sm', width: 400, quality: 50 },
-							{ size: 'md', width: 800, quality: 65, },
-							{ size: 'lg', width: 1200, quality: 75, },
-						];
+					const sizes = [
+						{ size: "sm", width: 400, quality: 50 },
+						{ size: "md", width: 800, quality: 65 },
+						{ size: "lg", width: 1200, quality: 75 },
+					];
 
-						for (const size of sizes) {
-							const compressedImage = await sharp(sourceImage)
-								.resize({ width: 400, })
-								.avif({ quality: 65, })
-								.rotate() // auto-rotate based on EXIF data
-								.toFile(filepath);
-
-							const proxyStorageId = uuid();
-							const storageBucket = env.ALCOVES_OBJECT_STORE_DEFAULT_BUCKET;
-							const storageKey = `DEBUG/${proxyStorageId}`;
-
-							const uploadedObject = await uploadFileToS3({
-								filePath: filepath,
-								key: storageKey,
-								bucket: storageBucket,
-								contentType: "image/avif",
-							});
-
-							const assetImageProxy = await db.insert(assetImageProxies).values({
-								assetId: job.data.assetId,
-								size: compressedImage.size,
-								width: compressedImage.width,
-								height: compressedImage.height,
-								storageBucket: storageBucket,
-								storageKey: storageKey
-							}).returning();
-						}
-
+					for (const size of sizes) {
 						const compressedImage = await sharp(sourceImage)
-							.resize({ width: 400, })
-							.avif({ quality: 65, })
+							.resize({ width: 400 })
+							.avif({ quality: 65 })
 							.rotate() // auto-rotate based on EXIF data
 							.toFile(filepath);
 
@@ -89,14 +62,47 @@ async function main() {
 							contentType: "image/avif",
 						});
 
-						const assetImageProxy = await db.insert(assetImageProxies).values({
+						const assetImageProxy = await db
+							.insert(assetImageProxies)
+							.values({
+								assetId: job.data.assetId,
+								size: compressedImage.size,
+								width: compressedImage.width,
+								height: compressedImage.height,
+								storageBucket: storageBucket,
+								storageKey: storageKey,
+							})
+							.returning();
+					}
+
+					const compressedImage = await sharp(sourceImage)
+						.resize({ width: 400 })
+						.avif({ quality: 65 })
+						.rotate() // auto-rotate based on EXIF data
+						.toFile(filepath);
+
+					const proxyStorageId = uuid();
+					const storageBucket = env.ALCOVES_OBJECT_STORE_DEFAULT_BUCKET;
+					const storageKey = `DEBUG/${proxyStorageId}`;
+
+					const uploadedObject = await uploadFileToS3({
+						filePath: filepath,
+						key: storageKey,
+						bucket: storageBucket,
+						contentType: "image/avif",
+					});
+
+					const assetImageProxy = await db
+						.insert(assetImageProxies)
+						.values({
 							assetId: job.data.assetId,
 							size: compressedImage.size,
 							width: compressedImage.width,
 							height: compressedImage.height,
 							storageBucket: storageBucket,
-							storageKey: storageKey
-						}).returning();
+							storageKey: storageKey,
+						})
+						.returning();
 				}
 
 				// switch (job.name) {

@@ -18,9 +18,8 @@ import {
 	DeleteObjectsCommand,
 	GetObjectCommand,
 	PutObjectCommand,
-	GetObjectCommandOutput,
+	type GetObjectCommandOutput,
 } from "@aws-sdk/client-s3";
-
 
 const pipelineAsync = promisify(pipeline);
 
@@ -206,7 +205,7 @@ export async function getPresignedUrl({
 	});
 
 	return getSignedUrl(client, command, {
-		expiresIn: expiration
+		expiresIn: expiration,
 	});
 }
 
@@ -227,84 +226,84 @@ export async function getObjectFromS3({
 }
 
 export async function uploadFileToS3({
-  filePath,
-  bucket,
-  key,
+	filePath,
+	bucket,
+	key,
 	contentType,
 }: {
-	filePath: string,
-  bucket: string,
-  key: string
+	filePath: string;
+	bucket: string;
+	key: string;
 	contentType: string;
 }): Promise<{ location: string; key: string }> {
-  try {
-    const fileStream = createReadStream(filePath);
-    const upload = new Upload({
-      client: s3InternalClient,
-      params: {
-        Key: key,
-        Bucket: bucket,
-        Body: fileStream,
+	try {
+		const fileStream = createReadStream(filePath);
+		const upload = new Upload({
+			client: s3InternalClient,
+			params: {
+				Key: key,
+				Bucket: bucket,
+				Body: fileStream,
 				ContentType: contentType,
-      },
-    });
+			},
+		});
 
-    const result = await upload.done();
-    return {
-      location: result.Location!,
-      key: result.Key!,
-    };
-  } catch (error) {
-    console.error("Upload failed:", error);
-    throw error;
-  }
+		const result = await upload.done();
+		return {
+			location: result.Location!,
+			key: result.Key!,
+		};
+	} catch (error) {
+		console.error("Upload failed:", error);
+		throw error;
+	}
 }
 
 async function* getFilesRecursively(dir: string): AsyncGenerator<string> {
-  const entries = await readdir(dir, { withFileTypes: true });
-  for (const entry of entries) {
-    const fullPath = join(dir, entry.name);
-    if (entry.isDirectory()) {
-      yield* getFilesRecursively(fullPath);
-    } else {
-      yield fullPath;
-    }
-  }
+	const entries = await readdir(dir, { withFileTypes: true });
+	for (const entry of entries) {
+		const fullPath = join(dir, entry.name);
+		if (entry.isDirectory()) {
+			yield* getFilesRecursively(fullPath);
+		} else {
+			yield fullPath;
+		}
+	}
 }
 
 export async function uploadDirectoryToS3({
-  dirPath,
-  bucket,
-  prefix = '',
+	dirPath,
+	bucket,
+	prefix = "",
 }: {
-  dirPath: string;
-  bucket: string;
-  prefix?: string;
+	dirPath: string;
+	bucket: string;
+	prefix?: string;
 }): Promise<Array<{ location: string; key: string }>> {
-  const uploads: Promise<{ location: string; key: string }>[] = [];
+	const uploads: Promise<{ location: string; key: string }>[] = [];
 
-  try {
-    for await (const filePath of getFilesRecursively(dirPath)) {
-      // Create S3 key preserving directory structure
-      const relativePath = relative(dirPath, filePath);
-      const key = prefix ? join(prefix, relativePath) : relativePath;
+	try {
+		for await (const filePath of getFilesRecursively(dirPath)) {
+			// Create S3 key preserving directory structure
+			const relativePath = relative(dirPath, filePath);
+			const key = prefix ? join(prefix, relativePath) : relativePath;
 
-      // Queue upload
-      uploads.push(
-        uploadFileToS3({
-          filePath,
-          bucket,
-          key,
-          contentType: getMimeType(filePath) || 'application/octet-stream',
-        })
-      );
-    }
+			// Queue upload
+			uploads.push(
+				uploadFileToS3({
+					filePath,
+					bucket,
+					key,
+					contentType: getMimeType(filePath) || "application/octet-stream",
+				}),
+			);
+		}
 
-    // Upload all files concurrently
-    const results = await Promise.all(uploads);
-    return results;
-  } catch (error) {
-    console.error('Directory upload failed:', error);
-    throw error;
-  }
+		// Upload all files concurrently
+		const results = await Promise.all(uploads);
+		return results;
+	} catch (error) {
+		console.error("Directory upload failed:", error);
+		throw error;
+	}
 }

@@ -3,8 +3,8 @@
 import { encodeBase32LowerCaseNoPadding, encodeHexLowerCase } from "@oslojs/encoding";
 import { sha256 } from "@oslojs/crypto/sha2";
 import { eq } from "drizzle-orm";
-import { CookieOptions } from "hono/utils/cookie";
-import { Session, sessions, User, users } from "../db/schema";
+import type { CookieOptions } from "hono/utils/cookie";
+import { type Session, sessions, type User, users } from "../db/schema";
 import { db } from "../db/db";
 
 export function generateSessionToken(): string {
@@ -16,11 +16,14 @@ export function generateSessionToken(): string {
 
 export async function createSession(token: string, userId: string): Promise<Session> {
 	const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
-	const [session] = await db.insert(sessions).values({
-		id: sessionId,
-		userId,
-		expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30)
-	}).returning();
+	const [session] = await db
+		.insert(sessions)
+		.values({
+			id: sessionId,
+			userId,
+			expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+		})
+		.returning();
 	return session;
 }
 
@@ -44,7 +47,7 @@ export async function validateSessionToken(token: string): Promise<SessionValida
 		await db
 			.update(sessions)
 			.set({
-				expiresAt: session.expiresAt
+				expiresAt: session.expiresAt,
 			})
 			.where(eq(sessions.id, session.id));
 	}
@@ -52,7 +55,7 @@ export async function validateSessionToken(token: string): Promise<SessionValida
 }
 
 export async function invalidateSession(sessionId: string): Promise<void> {
-		await db.delete(sessions).where(eq(sessions.id, sessionId));
+	await db.delete(sessions).where(eq(sessions.id, sessionId));
 }
 
 export type SessionValidationResult =
@@ -74,7 +77,7 @@ export function createSessionCookie(sessionId: string): AuthCookie {
 			path: "/",
 			sameSite: "Lax",
 			maxAge: 60 * 60 * 24 * 30,
-			secure: Bun.env.NODE_ENV === 'production' ? true : false,
+			secure: Bun.env.NODE_ENV === "production" ? true : false,
 		},
 	};
 }
@@ -88,8 +91,8 @@ export function deleteSessionCookie(): AuthCookie {
 			path: "/",
 			sameSite: "Lax",
 			maxAge: 0,
-			secure: Bun.env.NODE_ENV === 'production' ? true : false,
-		}
+			secure: Bun.env.NODE_ENV === "production" ? true : false,
+		},
 	};
 }
 

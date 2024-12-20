@@ -11,8 +11,8 @@ declare global {
 const userData = {
 	email: "test@alcoves.io",
 	password: "password",
-	apiHeaders: {}
-}
+	apiHeaders: {},
+};
 
 beforeAll(async () => {
 	await db.delete(users).where(eq(users.email, userData.email));
@@ -26,15 +26,15 @@ beforeAll(async () => {
 		}),
 	});
 
-	const loginCookie = createRes.headers.get("set-cookie") || ''
-	const sessionCookie = loginCookie.split('session=')[1].split(';')[0]
+	const loginCookie = createRes.headers.get("set-cookie") || "";
+	const sessionCookie = loginCookie.split("session=")[1].split(";")[0];
 
 	global.testUser = {
 		...userData,
 		apiHeaders: {
 			"Content-Type": "application/json",
 			Cookie: `session=${sessionCookie}`,
-		}
+		},
 	};
 });
 

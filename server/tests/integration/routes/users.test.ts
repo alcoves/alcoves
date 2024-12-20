@@ -8,14 +8,14 @@ describe("Users", () => {
 		});
 		expect(res.status).toBe(200);
 		const { payload } = await res.json();
-		console.log(payload)
+		console.log(payload);
 		expect(payload.passwordHash).toBeUndefined();
 		expect(payload).toMatchObject({
-				avatar: null,
-				id: expect.any(Number),
-				email: testUser.email,
-				createdAt: expect.any(String),
-				updatedAt: expect.any(String),
-			})
+			avatar: null,
+			id: expect.any(Number),
+			email: testUser.email,
+			createdAt: expect.any(String),
+			updatedAt: expect.any(String),
+		});
 	});
 });

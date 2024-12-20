@@ -7,21 +7,19 @@ export const apiEndpoint = PUBLIC_ALCOVES_API_URL;
 export const apiWsEndpoint = `${PUBLIC_ALCOVES_API_URL.replace("http", "ws").replace("https", "wss")}/ws`;
 
 export const clientApi = axios.create({
-    baseURL: PUBLIC_ALCOVES_API_URL,
-    withCredentials: true,
-    headers: {
-      "Content-Type": "application/json"
-    }
+	baseURL: PUBLIC_ALCOVES_API_URL,
+	withCredentials: true,
+	headers: {
+		"Content-Type": "application/json",
+	},
 });
-
 
 const queryClient = new QueryClient({
-    defaultOptions: {
-        queries: {
-            enabled: browser,
-        },
-    },
+	defaultOptions: {
+		queries: {
+			enabled: browser,
+		},
+	},
 });
 
-
-export { queryClient }
+export { queryClient };

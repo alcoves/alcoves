@@ -11,7 +11,7 @@ export enum ImageTasks {
 
 export enum VideoTasks {
 	GENERATE_VIDEO_PROXIES = "generate_video_proxies",
-	GENERATE_VIDEO_THUMBNAIL = "generate_video_thumbnail"
+	GENERATE_VIDEO_THUMBNAIL = "generate_video_thumbnail",
 }
 
 export const bullConnection = {

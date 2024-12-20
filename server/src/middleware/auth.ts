@@ -2,7 +2,7 @@ import { getCookie, setCookie } from "hono/cookie";
 import { createMiddleware } from "hono/factory";
 import { HTTPException } from "hono/http-exception";
 import { validateSessionToken } from "../lib/session";
-import { Session, User } from "../db/schema";
+import type { Session, User } from "../db/schema";
 
 export type UserAuthMiddleware = {
 	authorization: {

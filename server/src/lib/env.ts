@@ -47,7 +47,6 @@ export const env = createEnvConfig(
 	},
 );
 
-
 if (process.env.ALCOVES_OBJECT_STORE_PUBLIC_ENDPOINT !== env.ALCOVES_OBJECT_STORE_ENDPOINT) {
 	console.warn(`
 WARNING: The public and private s3 endpoints do not match. Ensure the public endpoint is accessible from the browser.

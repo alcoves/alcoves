@@ -1,5 +1,14 @@
 import { relations } from "drizzle-orm";
-import { text, jsonb, integer, pgTable, timestamp, boolean, uuid, bigint } from "drizzle-orm/pg-core";
+import {
+	text,
+	jsonb,
+	integer,
+	pgTable,
+	timestamp,
+	boolean,
+	uuid,
+	bigint,
+} from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
 	id: uuid().defaultRandom().primaryKey(),
@@ -38,7 +47,7 @@ export const assets = pgTable("assets", {
 	ownerId: uuid("owner_id").notNull(),
 	title: text("title").notNull(),
 	description: text("description"),
-	status: text({ enum: ['UPLOADING', 'UPLOADED', "PROCESSING", "READY", "ERROR"] }),
+	status: text({ enum: ["UPLOADING", "UPLOADED", "PROCESSING", "READY", "ERROR"] }),
 	metadata: jsonb("metadata"),
 	size: text("size").notNull(),
 	storageKey: text("storage_key").notNull(),
@@ -87,14 +96,14 @@ export const assetImageProxiesRelations = relations(assetImageProxies, ({ one })
 	asset: one(assets, {
 		fields: [assetImageProxies.assetId],
 		references: [assets.id],
-	})
+	}),
 }));
 
 export const assetVideoProxiesRelations = relations(assetVideoProxies, ({ one }) => ({
 	asset: one(assets, {
 		fields: [assetVideoProxies.assetId],
 		references: [assets.id],
-	})
+	}),
 }));
 
 export type User = typeof users.$inferSelect;

@@ -4,67 +4,89 @@ import { HTTPException } from "hono/http-exception";
 import { type UserAuthMiddleware, userAuth } from "../middleware/auth";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
-import { createSession, createSessionCookie, deleteSessionCookie, generateSessionToken, invalidateSession } from "../lib/session";
+import {
+	createSession,
+	createSessionCookie,
+	deleteSessionCookie,
+	generateSessionToken,
+	invalidateSession,
+} from "../lib/session";
 import { eq } from "drizzle-orm";
 import { users } from "../db/schema";
 import { db } from "../db/db";
 
 const router = new Hono<{ Variables: UserAuthMiddleware }>();
 
-router.post("/signup", zValidator('json', z.object({
-  email: z.string(),
-  password: z.string(),
-})), async (c) => {
-	const { email, password } = c.req.valid('json')
+router.post(
+	"/signup",
+	zValidator(
+		"json",
+		z.object({
+			email: z.string(),
+			password: z.string(),
+		}),
+	),
+	async (c) => {
+		const { email, password } = c.req.valid("json");
 
-	const [user] = await db.select().from(users).where(eq(users.email, email))
-	if (user) throw new HTTPException(400)
+		const [user] = await db.select().from(users).where(eq(users.email, email));
+		if (user) throw new HTTPException(400);
 
-	const passwordHash = await Bun.password.hash(password);
+		const passwordHash = await Bun.password.hash(password);
 
-	const [newUser] = await db.insert(users).values({
-		email,
-		passwordHash,
-	}).returning();
+		const [newUser] = await db
+			.insert(users)
+			.values({
+				email,
+				passwordHash,
+			})
+			.returning();
 
-	const token = generateSessionToken();
-	await createSession(token, newUser.id)
-	const sessionCookie = createSessionCookie(token)
-	setCookie(c, sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+		const token = generateSessionToken();
+		await createSession(token, newUser.id);
+		const sessionCookie = createSessionCookie(token);
+		setCookie(c, sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 
-	return c.json({
-		message: "Successfully signed up",
-	})
-});
+		return c.json({
+			message: "Successfully signed up",
+		});
+	},
+);
 
-router.post("/login", zValidator('json', z.object({
-  email: z.string(),
-  password: z.string(),
-})), async (c) => {
-	const { email, password } = c.req.valid('json')
+router.post(
+	"/login",
+	zValidator(
+		"json",
+		z.object({
+			email: z.string(),
+			password: z.string(),
+		}),
+	),
+	async (c) => {
+		const { email, password } = c.req.valid("json");
 
-	const [user] = await db.select().from(users).where(eq(users.email, email))
-	if (!user) throw new HTTPException(400)
+		const [user] = await db.select().from(users).where(eq(users.email, email));
+		if (!user) throw new HTTPException(400);
 
-	const passwordsMatch = await Bun.password.verify(password, user.passwordHash);
-	if (!passwordsMatch) throw new HTTPException(400)
+		const passwordsMatch = await Bun.password.verify(password, user.passwordHash);
+		if (!passwordsMatch) throw new HTTPException(400);
 
-	const token = generateSessionToken();
-	await createSession(token, user.id)
-	const sessionCookie = createSessionCookie(token)
-	setCookie(c, sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+		const token = generateSessionToken();
+		await createSession(token, user.id);
+		const sessionCookie = createSessionCookie(token);
+		setCookie(c, sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 
-	return c.json({
-		message: "Successfully logged in",
-	})
-});
-
+		return c.json({
+			message: "Successfully logged in",
+		});
+	},
+);
 
 router.post("/logout", userAuth, async (c) => {
 	const { session } = c.get("authorization");
 	await invalidateSession(session.id);
 
-	const emptySessionCookie = deleteSessionCookie()
+	const emptySessionCookie = deleteSessionCookie();
 	setCookie(c, emptySessionCookie.name, emptySessionCookie.value, emptySessionCookie.attributes);
 
 	return c.json({
@@ -73,8 +95,6 @@ router.post("/logout", userAuth, async (c) => {
 });
 
 export const authRouter = router;
-
-
 
 // import { getGoogleOAuthTokens, getUserInfo } from "../lib/auth";
 
