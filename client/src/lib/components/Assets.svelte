@@ -3,13 +3,64 @@
   import { createQuery } from "@tanstack/svelte-query";
   import { Check } from "lucide-svelte";
   import Preview from "./Preview.svelte";
+  import { onDestroy, onMount } from "svelte";
+
+  import wsStore, { WebSocketMessageType } from "$lib/stores/ws";
+
+  onDestroy(() => {
+    if (wsStore) {
+      // I don't know if we should do this because other components might be using the same store?
+      // wsStore.close();
+    }
+  });
+
+  onMount(() => {
+    // TODO :: Types for wsStore
+    wsStore.subscribe((message) => {
+      console.info("Asset component received websocket message:", message);
+      // Do something with the message
+
+      if (message?.type === WebSocketMessageType.PROXY_UPDATED) {
+        console.info(`${message?.type}: hydrating asset proxy with ws message`);
+        queryClient.setQueryData(["assets"], (data: any) => {
+          return data.map((a: any) => {
+            if (a.id === message.payload?.assetId) {
+              return {
+                ...a,
+                // TODO :: This is quite brittle
+                assetVideoProxies: [
+                  {
+                    ...a.assetVideoProxies[0],
+                    ...message.payload,
+                  },
+                ],
+              };
+            }
+            return a;
+          });
+        });
+      } else if (message?.type === WebSocketMessageType.ASSET_UPDATED) {
+        console.info(`${message?.type}: hydrating asset with ws message`);
+        queryClient.setQueryData(["assets"], (data: any) => {
+          return data.map((a: any) => {
+            if (a.id === message.payload?.id) {
+              return {
+                ...a,
+                ...message.payload,
+              };
+            }
+            return a;
+          });
+        });
+      }
+    });
+  });
 
   let selectedAsset = $state<any>(null);
   let selectedAssets = $state<string[]>([]);
   let lastSelectedIndex = $state<number>(-1);
 
   const assets = createQuery({
-    refetchInterval: 5000,
     queryKey: ["assets"],
     queryFn: async () => {
       const response = await clientApi.get("/api/assets");
@@ -63,7 +114,7 @@
   }
 
   function selectAll() {
-    selectedAssets = $assets.data.map((asset: any) => asset.id);
+    selectedAssets = $assets.data.map((asset: any) => asset?.id);
   }
 
   function deselectAll() {
@@ -91,14 +142,14 @@
     <div class="flex flex-wrap gap-2">
       {#each $assets.data as asset, index}
         <div
-          class={`card bg-base-200 w-full md:w-96 shadow-md  ${selectedAssets.includes(asset.id) ? "border border-primary" : "border border-base-300"}`}
+          class={`card bg-base-200 w-full md:w-96 shadow-md  ${selectedAssets.includes(asset?.id) ? "border border-primary" : "border border-base-300"}`}
         >
           <figure class="relative h-40 w-full group">
-            {#if asset.status !== "READY"}
-              {#if asset.assetImageProxies?.[0]?.url}
+            {#if asset?.status !== "READY"}
+              {#if asset?.assetImageProxies?.[0]?.url}
                 <img
-                  alt={asset.title}
-                  src={asset.assetImageProxies?.[0]?.url}
+                  alt={asset?.title}
+                  src={asset?.assetImageProxies?.[0]?.url}
                   class="absolute object-cover w-full h-full"
                 />
               {:else}
@@ -108,7 +159,7 @@
                 class="flex flex-col w-full h-full justify-center items-center bg-black/50 z-10"
               >
                 <span class="text-white"
-                  >{asset.status === "UPLOADING"
+                  >{asset?.status === "UPLOADING"
                     ? "Uploading..."
                     : "Processing..."}</span
                 >
@@ -119,10 +170,10 @@
                 ></progress>
               </div>
             {:else}
-              {#if asset.assetImageProxies?.[0]?.url}
+              {#if asset?.assetImageProxies?.[0]?.url}
                 <img
-                  alt={asset.title}
-                  src={asset.assetImageProxies?.[0]?.url}
+                  alt={asset?.title}
+                  src={asset?.assetImageProxies?.[0]?.url}
                   class="absolute object-cover w-full h-full"
                 />
               {:else}
@@ -138,11 +189,11 @@
                 <div class="flex w-full justify-end p-2">
                   <button
                     class={`rounded-md p-1 ${
-                      selectedAssets.includes(asset.id)
+                      selectedAssets.includes(asset?.id)
                         ? "bg-primary text-neutral"
                         : "bg-neutral text-neutral-content"
                     }`}
-                    onclick={(e) => toggleSelect(asset.id, index, e)}
+                    onclick={(e) => toggleSelect(asset?.id, index, e)}
                   >
                     <Check strokeWidth="4" class="w-5 h-5" />
                   </button>
@@ -152,10 +203,10 @@
           </figure>
 
           <div class="card-body p-4">
-            <h2 class="card-title text-sm">{asset.title}</h2>
+            <h2 class="card-title text-sm">{asset?.title}</h2>
             <div class="card-actions justify-end">
               <span class="text-xs opacity-70"
-                >{(asset.size / 1024 / 1024).toFixed(1)} MB</span
+                >{(asset?.size / 1024 / 1024).toFixed(1)} MB</span
               >
             </div>
           </div>

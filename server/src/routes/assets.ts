@@ -3,10 +3,9 @@ import { db } from "../db/db";
 import { userAuth, UserAuthMiddleware } from "../middleware/auth";
 import { HTTPException } from "hono/http-exception";
 import { getObjectFromS3, getPresignedUrl } from "../lib/s3";
-import { imageProcessingQueue, ImageTasks } from "../tasks/queues";
-import { ImageProxyJobData } from "../tasks/tasks/images";
 import { assets } from "../db/schema";
 import { and, eq, inArray } from "drizzle-orm";
+import { assetsWithUrls } from "../services/assets";
 
 const router = new Hono<{ Variables: UserAuthMiddleware }>();
 
@@ -37,27 +36,7 @@ router.get("/", async (c) => {
 		throw new HTTPException(400, { message: "No assets found" });
 	}
 
-	const assetsWithUrls = await Promise.all(assetsQuery.map(async (asset) => {
-		const imageProxiesWithUrls = await Promise.all(asset.assetImageProxies.map(async (proxy) => {
-			const signedProxyUrl = await getPresignedUrl({
-				bucket: proxy.storageBucket,
-				key: proxy.storageKey,
-				expiration: 3600,
-			});
-
-			return {
-				...proxy,
-				url: signedProxyUrl,
-			}
-		}))
-
-		return {
-			...asset,
-			assetImageProxies: imageProxiesWithUrls,
-		}
-	}));
-
-	return c.json({ assets: assetsWithUrls });
+	return c.json({ assets: await assetsWithUrls(assetsQuery) });
 });
 
 router.get('/:assetId/manifest/:manifestName', async (c) => {

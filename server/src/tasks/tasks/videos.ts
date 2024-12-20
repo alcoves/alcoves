@@ -12,6 +12,9 @@ import { v4 as uuid } from "uuid";
 import { runFFmpeg } from "../../lib/ffmpeg";
 import { eq } from "drizzle-orm";
 import { getMimeType } from "hono/utils/mime";
+import { pubClient } from "../../lib/redis";
+import { getAsset } from "../../services/assets";
+import { channelName, WebSocketMessage } from "../../routes/ws";
 
 export interface VideoProxyJobData {
 	assetId: string;
@@ -31,6 +34,8 @@ interface VideoProxyJob extends Job {
 }
 
 async function main() {
+	const client = await pubClient();
+
 	const worker = new Worker(
 		videoProcessingQueue.name,
 		async (job: VideoProxyJob) => {
@@ -166,6 +171,7 @@ async function main() {
 									updatedAt: new Date(),
 								})
 								.where(eq(assetVideoProxies.id, assetVideoProxy[0].id));
+							await job.updateProgress(0.1);
 
 							console.log(
 								`Progress: ${progress}% - Estimated Time Remaining: ${estimatedTimeRemaining}`,
@@ -176,7 +182,7 @@ async function main() {
 							console.log("FFmpeg processing completed successfully.");
 							await job.updateProgress(100);
 
-							const locations = await uploadDirectoryToS3({
+							await uploadDirectoryToS3({
 								dirPath: proxyStorageFolder,
 								prefix: proxyStorageKey,
 								bucket: proxyStorageBucket,
@@ -249,16 +255,16 @@ async function main() {
 								.rotate()
 								.toFile(compressedImageLocalPath);
 
-					const assetVideoThumbnail = await db.insert(assetImageProxies).values({
+					await db.insert(assetImageProxies).values({
 						size: compressedImage.size,
 						height: compressedImage.height,
 						width: compressedImage.width,
 						assetId: job.data.assetId,
 						storageBucket: proxyStorageBucket,
 						storageKey: proxyStorageKey
-					}).returning();
+					});
 
-					const uploadedObject = await uploadFileToS3({
+					await uploadFileToS3({
 						filePath: compressedImageLocalPath,
 						key: proxyStorageKey,
 						bucket: proxyStorageBucket,
@@ -279,12 +285,25 @@ async function main() {
 		},
 	);
 
-	worker.on("completed", (job) => {
-		console.log(`${job.id} has completed!`);
+	worker.on('progress', async (job) => {
+		console.log(`${job.id} has updated!`);
+		const asset = await getAsset(job.data.assetId)
+	  asset ? client.publish(channelName, JSON.stringify({ type: "ASSET_UPDATED", payload: asset } as WebSocketMessage)) : null
 	});
 
-	worker.on("failed", (job, err) => {
+
+	worker.on("completed", async (job) => {
+		console.log(`${job.id} has completed!`);
+		const asset = await getAsset(job.data.assetId)
+	  asset ? client.publish(channelName, JSON.stringify({ type: "ASSET_UPDATED", payload: asset } as WebSocketMessage)) : null
+	});
+
+	worker.on("failed", async (job, err) => {
 		console.log(`${job?.id} has failed with ${err.message}`);
+		if (job?.data?.assetId) {
+			const asset = await getAsset(job.data.assetId)
+			asset ? client.publish(channelName, JSON.stringify({ type: "ASSET_UPDATED", payload: asset } as WebSocketMessage)) : null
+		}
 	});
 
 	console.info(`Starting worker: ${worker.name} for queue: ${videoProcessingQueue.name}`);
