@@ -1,45 +1,52 @@
-CREATE TABLE IF NOT EXISTS "asset_image_proxies" (
+CREATE TABLE "asset_proxies" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"asset_id" uuid NOT NULL,
-	"size" integer NOT NULL,
-	"width" integer NOT NULL,
-	"height" integer NOT NULL,
+	"isDefault" boolean DEFAULT false NOT NULL,
 	"status" text,
-	"storage_key" text NOT NULL,
-	"storage_bucket" text NOT NULL,
-	"created_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp DEFAULT now() NOT NULL
-);
---> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "asset_video_proxies" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"asset_id" uuid NOT NULL,
 	"type" text NOT NULL,
-	"progress" integer DEFAULT 0 NOT NULL,
-	"status" text,
 	"storage_key" text NOT NULL,
 	"storage_bucket" text NOT NULL,
+	"size" integer DEFAULT 0 NOT NULL,
+	"progress" integer DEFAULT 0 NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "assets" (
+CREATE TABLE "asset_thumbnails" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"asset_id" uuid NOT NULL,
+	"status" text,
+	"storage_key" text NOT NULL,
+	"storage_bucket" text NOT NULL,
+	"size" integer DEFAULT 0 NOT NULL,
+	"width" integer DEFAULT 0 NOT NULL,
+	"height" integer DEFAULT 0 NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE "assets" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"owner_id" uuid NOT NULL,
+	"type" text DEFAULT 'VIDEO' NOT NULL,
 	"title" text NOT NULL,
 	"description" text,
 	"status" text,
-	"metadata" jsonb,
-	"size" integer NOT NULL,
 	"storage_key" text NOT NULL,
 	"storage_bucket" text NOT NULL,
+	"metadata" jsonb,
+	"size" integer DEFAULT 0 NOT NULL,
+	"width" integer DEFAULT 0 NOT NULL,
+	"height" integer DEFAULT 0 NOT NULL,
+	"duration" integer DEFAULT 0 NOT NULL,
 	"mime_type" text NOT NULL,
-	"trashed" boolean DEFAULT false NOT NULL,
+	"c_time" timestamp DEFAULT now() NOT NULL,
+	"deleted" boolean DEFAULT false NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "sessions" (
+CREATE TABLE "sessions" (
 	"id" text PRIMARY KEY NOT NULL,
 	"user_id" uuid,
 	"expires_at" timestamp with time zone NOT NULL,
@@ -47,7 +54,7 @@ CREATE TABLE IF NOT EXISTS "sessions" (
 	"created_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "users" (
+CREATE TABLE "users" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"email" text NOT NULL,
 	"avatar" text,

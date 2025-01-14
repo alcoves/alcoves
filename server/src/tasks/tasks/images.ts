@@ -5,7 +5,7 @@ import { Worker } from "bullmq";
 import sharp from "sharp";
 import { v4 as uuid } from "uuid";
 import { db } from "../../db/db";
-import { thumbnails } from "../../db/schema";
+import { assetThumbnails } from "../../db/schema";
 import { env } from "../../lib/env";
 import { downloadObject, uploadFileToS3 } from "../../lib/s3";
 import { ImageTasks, bullConnection, imageProcessingQueue } from "../queues";
@@ -92,8 +92,8 @@ async function main() {
 						contentType: "image/avif",
 					});
 
-					const assetImageProxy = await db
-						.insert(thumbnails)
+					const assetThumbnail = await db
+						.insert(assetThumbnails)
 						.values({
 							assetId: job.data.assetId,
 							size: compressedImage.size,

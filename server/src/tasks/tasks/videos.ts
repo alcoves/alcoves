@@ -7,7 +7,7 @@ import { getMimeType } from "hono/utils/mime";
 import sharp from "sharp";
 import { v4 as uuid } from "uuid";
 import { db } from "../../db/db";
-import { assets, proxies, thumbnails } from "../../db/schema";
+import { assetProxies, assetThumbnails, assets } from "../../db/schema";
 import { env } from "../../lib/env";
 import { runFFmpeg } from "../../lib/ffmpeg";
 import { pubClient } from "../../lib/redis";
@@ -70,7 +70,7 @@ async function main() {
 					const mainPlaylistKey = `${proxyStorageKey}/${mainPlaylistName}`;
 
 					const assetVideoProxy = await db
-						.insert(proxies)
+						.insert(assetProxies)
 						.values({
 							id: proxyStorageId,
 							type: "HLS",
@@ -247,13 +247,13 @@ async function main() {
 								estimatedTimeRemaining,
 							});
 							await db
-								.update(proxies)
+								.update(assetProxies)
 								.set({
 									status: "PROCESSING",
 									progress: progress,
 									updatedAt: new Date(),
 								})
-								.where(eq(proxies.id, assetVideoProxy[0].id));
+								.where(eq(assetProxies.id, assetVideoProxy[0].id));
 							await job.updateProgress(0.1);
 
 							console.log(
@@ -273,13 +273,13 @@ async function main() {
 
 							await db.transaction(async (tx) => {
 								await tx
-									.update(proxies)
+									.update(assetProxies)
 									.set({
 										status: "READY",
 										progress: 100,
 										updatedAt: new Date(),
 									})
-									.where(eq(proxies.id, assetVideoProxy[0].id));
+									.where(eq(assetProxies.id, assetVideoProxy[0].id));
 
 								await tx
 									.update(assets)
@@ -295,12 +295,12 @@ async function main() {
 							// Update record with error status
 							await db.transaction(async (tx) => {
 								await tx
-									.update(proxies)
+									.update(assetProxies)
 									.set({
 										status: "ERROR",
 										updatedAt: new Date(),
 									})
-									.where(eq(proxies.id, assetVideoProxy[0].id));
+									.where(eq(assetProxies.id, assetVideoProxy[0].id));
 
 								await tx
 									.update(assets)
@@ -339,7 +339,7 @@ async function main() {
 						.rotate()
 						.toFile(compressedImageLocalPath);
 
-					await db.insert(thumbnails).values({
+					await db.insert(assetThumbnails).values({
 						size: compressedImage.size,
 						height: compressedImage.height,
 						width: compressedImage.width,

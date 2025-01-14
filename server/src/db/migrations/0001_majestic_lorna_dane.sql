@@ -1,1 +1,0 @@
-ALTER TABLE "assets" RENAME COLUMN "trashed" TO "deleted";

@@ -83,7 +83,7 @@ export const assetsRelations = relations(assets, ({ one, many }) => ({
 export const assetProxies = pgTable("asset_proxies", {
 	id: uuid().defaultRandom().primaryKey(),
 	assetId: uuid("asset_id").notNull(),
-	isDefault: boolean().notNull().default(false),
+	isDefault: boolean("is_default").notNull().default(false),
 	status: text({ enum: ["PROCESSING", "READY", "ERROR"] }),
 	type: text({ enum: ["HLS"] }).notNull(),
 	storageKey: text("storage_key").notNull(),
@@ -122,7 +122,7 @@ export const assetProxyRelations = relations(assetProxies, ({ one }) => ({
 		fields: [assetProxies.assetId],
 		references: [assets.id],
 	}),
-);
+}));
 
 export type User = typeof users.$inferSelect;
 export type Session = typeof sessions.$inferSelect;
