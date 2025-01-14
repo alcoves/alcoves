@@ -53,6 +53,22 @@ services:
       - postgres
     ports:
       - 3000:3000
+  worker:
+    build:
+      context: server
+      dockerfile: Dockerfile.dev
+    command: bun run dev:worker
+    tty: true
+    user: '${UID}:${GID}'
+    environment:
+      <<: *server-environment
+    volumes:
+      - ./server:/app
+    depends_on:
+      - task_db
+      - minio
+      - minio_mb
+      - postgres
   task_db:
     image: eqalpha/keydb:latest
     restart: always

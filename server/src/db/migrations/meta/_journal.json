@@ -15,6 +15,13 @@
       "when": 1736826154523,
       "tag": "0001_strong_ser_duncan",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1736829734398,
+      "tag": "0002_last_odin",
+      "breakpoints": true
     }
   ]
 }

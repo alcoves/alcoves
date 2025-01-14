@@ -4,6 +4,7 @@ import {
 	integer,
 	jsonb,
 	pgTable,
+	real,
 	text,
 	timestamp,
 	uuid,
@@ -60,7 +61,7 @@ export const assets = pgTable("assets", {
 	size: integer().notNull().default(0),
 	width: integer().notNull().default(0),
 	height: integer().notNull().default(0),
-	duration: integer().notNull().default(0),
+	duration: real().notNull().default(0),
 	mimeType: text("mime_type").notNull(),
 
 	// Time when asset was physically created

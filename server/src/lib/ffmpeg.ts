@@ -1,5 +1,110 @@
 import { spawn } from "child_process";
 
+type VideoMetadata = {
+	streams: Stream[];
+	format: Format;
+};
+
+type Stream = {
+	index: number;
+	codec_name: string;
+	codec_long_name: string;
+	profile?: string;
+	codec_type: "video" | "audio";
+	codec_tag_string: string;
+	codec_tag: string;
+	width?: number;
+	height?: number;
+	coded_width?: number;
+	coded_height?: number;
+	closed_captions?: number;
+	film_grain?: number;
+	has_b_frames?: number;
+	sample_aspect_ratio?: string;
+	display_aspect_ratio?: string;
+	pix_fmt?: string;
+	level?: number;
+	color_range?: string;
+	color_space?: string;
+	color_transfer?: string;
+	color_primaries?: string;
+	chroma_location?: string;
+	field_order?: string;
+	refs?: number;
+	id: string;
+	r_frame_rate: string;
+	avg_frame_rate: string;
+	time_base: string;
+	start_pts: number;
+	start_time: string;
+	duration_ts: number;
+	duration: string;
+	bit_rate: string;
+	nb_frames: string;
+	extradata_size: number;
+	disposition: Disposition;
+	tags: StreamTags;
+	// Audio-specific properties
+	sample_fmt?: string;
+	sample_rate?: string;
+	channels?: number;
+	channel_layout?: string;
+	bits_per_sample?: number;
+	initial_padding?: number;
+};
+
+type Disposition = {
+	default: number;
+	dub: number;
+	original: number;
+	comment: number;
+	lyrics: number;
+	karaoke: number;
+	forced: number;
+	hearing_impaired: number;
+	visual_impaired: number;
+	clean_effects: number;
+	attached_pic: number;
+	timed_thumbnails: number;
+	non_diegetic: number;
+	captions: number;
+	descriptions: number;
+	metadata: number;
+	dependent: number;
+	still_image: number;
+	multilayer: number;
+};
+
+type StreamTags = {
+	language: string;
+	handler_name: string;
+	vendor_id: string;
+	encoder?: string;
+};
+
+type Format = {
+	filename: string;
+	nb_streams: number;
+	nb_programs: number;
+	nb_stream_groups: number;
+	format_name: string;
+	format_long_name: string;
+	start_time: string;
+	duration: string;
+	size: string;
+	bit_rate: string;
+	probe_score: number;
+	tags: FormatTags;
+};
+
+type FormatTags = {
+	major_brand: string;
+	minor_version: string;
+	compatible_brands: string;
+	date: string;
+	encoder: string;
+};
+
 export async function runFFmpeg({
 	input,
 	output,
@@ -34,7 +139,9 @@ export async function runFFmpeg({
 			errorMessage += dataStr; // Collect error messages
 
 			// Duration parsing
-			const durationMatch = dataStr.match(/Duration: (\d{2}):(\d{2}):(\d{2}\.\d{2})/);
+			const durationMatch = dataStr.match(
+				/Duration: (\d{2}):(\d{2}):(\d{2}\.\d{2})/,
+			);
 			if (durationMatch) {
 				const hours = Number.parseFloat(durationMatch[1]);
 				const minutes = Number.parseFloat(durationMatch[2]);
@@ -65,7 +172,9 @@ export async function runFFmpeg({
 
 		ffmpeg.on("error", (error) => {
 			console.error("Error occurred in FFmpeg process:", error);
-			reject(new Error(`FFmpeg process error: ${error.message}\n${errorMessage}`));
+			reject(
+				new Error(`FFmpeg process error: ${error.message}\n${errorMessage}`),
+			);
 		});
 
 		ffmpeg.on("close", (code) => {
@@ -76,13 +185,61 @@ export async function runFFmpeg({
 				resolve();
 			} else {
 				console.error("FFmpeg stderr output:", errorMessage);
-				reject(new Error(`FFmpeg exited with code ${code}. Error output: ${errorMessage}`));
+				reject(
+					new Error(
+						`FFmpeg exited with code ${code}. Error output: ${errorMessage}`,
+					),
+				);
 			}
 		});
 
 		// Validate input file exists
 		ffmpeg.stdin.on("error", (error) => {
 			reject(new Error(`Input file error: ${error.message}`));
+		});
+	});
+}
+
+export async function getMediaInfo(
+	input: string,
+): Promise<VideoMetadata | undefined> {
+	return new Promise((resolve, reject) => {
+		let outputBuffer = "";
+		let errorBuffer = "";
+
+		const ffprobe = spawn("ffprobe", [
+			"-v",
+			"quiet",
+			"-print_format",
+			"json",
+			"-show_format",
+			"-show_streams",
+			input,
+		]);
+
+		ffprobe.stdout.on("data", (data) => {
+			outputBuffer += data.toString();
+		});
+
+		ffprobe.stderr.on("data", (data) => {
+			errorBuffer += data.toString();
+		});
+
+		ffprobe.on("close", (code) => {
+			if (code === 0) {
+				try {
+					const parsedOutput = JSON.parse(outputBuffer);
+					resolve(parsedOutput);
+				} catch (error) {
+					reject(new Error(`Failed to parse ffprobe output: ${error.message}`));
+				}
+			} else {
+				reject(new Error(`ffprobe exited with code ${code}: ${errorBuffer}`));
+			}
+		});
+
+		ffprobe.on("error", (error) => {
+			reject(new Error(`Failed to start ffprobe: ${error.message}`));
 		});
 	});
 }

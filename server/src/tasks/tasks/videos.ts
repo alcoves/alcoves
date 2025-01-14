@@ -9,7 +9,7 @@ import { v4 as uuid } from "uuid";
 import { db } from "../../db/db";
 import { assetProxies, assetThumbnails, assets } from "../../db/schema";
 import { env } from "../../lib/env";
-import { runFFmpeg } from "../../lib/ffmpeg";
+import { getMediaInfo, runFFmpeg } from "../../lib/ffmpeg";
 import { pubClient } from "../../lib/redis";
 import {
 	downloadObject,
@@ -38,6 +38,61 @@ interface VideoProxyJob extends Job {
 	name: VideoTasks;
 	data: VideoProxyJobData;
 }
+
+const qualities = {
+	av1: [
+		{
+			name: "av1_1080p",
+			scale: "scale=-2:1080",
+			crf: "36",
+			codec: "libsvtav1",
+			preset: "6",
+			svtParams: "mbr=10000k",
+		},
+		{
+			name: "av1_720p",
+			scale: "scale=-2:720",
+			crf: "36",
+			codec: "libsvtav1",
+			preset: "6",
+			svtParams: "mbr=5500k",
+		},
+		{
+			name: "av1_360p",
+			scale: "scale=-2:360",
+			crf: "36",
+			codec: "libsvtav1",
+			preset: "6",
+			svtParams: "mbr=1000k",
+		},
+	],
+	x264: [
+		{
+			name: "264_1080p",
+			scale: "scale=-2:1080",
+			crf: "20",
+			codec: "libx264",
+			preset: "medium",
+			bitrate: { rate: "4000K", maxrate: "4000K", bufsize: "4000K" },
+		},
+		{
+			name: "264_720p",
+			scale: "scale=-2:720",
+			crf: "20",
+			codec: "libx264",
+			preset: "medium",
+			bitrate: { rate: "1500K", maxrate: "1500K", bufsize: "1500K" },
+		},
+		{
+			name: "264_360p",
+			scale: "scale=-2:360",
+			crf: "20",
+			codec: "libx264",
+			preset: "medium",
+			bitrate: { rate: "400K", maxrate: "400K", bufsize: "400K" },
+		},
+	],
+};
 
 async function main() {
 	const client = await pubClient();
@@ -95,60 +150,28 @@ async function main() {
 						});
 					}
 
-					const qualities = {
-						av1: [
-							{
-								name: "av1_1080p",
-								scale: "scale=-2:1080",
-								crf: "36",
-								codec: "libsvtav1",
-								preset: "6",
-								svtParams: "mbr=10000k",
-							},
-							{
-								name: "av1_720p",
-								scale: "scale=-2:720",
-								crf: "36",
-								codec: "libsvtav1",
-								preset: "6",
-								svtParams: "mbr=5500k",
-							},
-							{
-								name: "av1_360p",
-								scale: "scale=-2:360",
-								crf: "36",
-								codec: "libsvtav1",
-								preset: "6",
-								svtParams: "mbr=1000k",
-							},
-						],
-						x264: [
-							{
-								name: "264_1080p",
-								scale: "scale=-2:1080",
-								crf: "20",
-								codec: "libx264",
-								preset: "medium",
-								bitrate: { rate: "4000K", maxrate: "4000K", bufsize: "4000K" },
-							},
-							{
-								name: "264_720p",
-								scale: "scale=-2:720",
-								crf: "20",
-								codec: "libx264",
-								preset: "medium",
-								bitrate: { rate: "1500K", maxrate: "1500K", bufsize: "1500K" },
-							},
-							{
-								name: "264_360p",
-								scale: "scale=-2:360",
-								crf: "20",
-								codec: "libx264",
-								preset: "medium",
-								bitrate: { rate: "400K", maxrate: "400K", bufsize: "400K" },
-							},
-						],
-					};
+					// TODO :: getMediaInfo could be more strict on what it returns.
+					const metadata = await getMediaInfo(sourceUri);
+					// console.log("Video metadata:", metadata);
+
+					if (metadata?.streams?.some((s) => s.codec_type === "video")) {
+						const vStream = metadata.streams.find(
+							(s) => s.codec_type === "video",
+						);
+						await db
+							.update(assets)
+							.set({
+								metadata: metadata,
+								duration: Number.parseFloat(metadata?.format.duration),
+								width: vStream?.width,
+								height: vStream?.height,
+							})
+							.where(eq(assets.id, asset.id));
+					} else {
+						throw new Error(
+							"Failed to get media metadata, video could be missing streams or specific metadata",
+						);
+					}
 
 					const { inputStreams, filters, streamMaps } = qualities.av1.reduce(
 						(

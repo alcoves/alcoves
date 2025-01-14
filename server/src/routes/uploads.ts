@@ -1,22 +1,25 @@
-import { Hono } from "hono";
 import path from "path";
-import { v4 as uuid } from "uuid";
-import { userAuth, type UserAuthMiddleware } from "../middleware/auth";
 import {
-	UploadPartCommand,
-	CreateMultipartUploadCommand,
 	CompleteMultipartUploadCommand,
+	CreateMultipartUploadCommand,
+	UploadPartCommand,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { s3InternalClient, s3PublicClient } from "../lib/s3";
-import { env } from "../lib/env";
 import { zValidator } from "@hono/zod-validator";
+import { eq } from "drizzle-orm";
+import { Hono } from "hono";
+import { v4 as uuid } from "uuid";
 import { z } from "zod";
 import { db } from "../db/db";
 import { assets } from "../db/schema";
-import { videoProcessingQueue, VideoTasks } from "../tasks/queues";
-import type { VideoProxyJobData, VideoThumbnailJobData } from "../tasks/tasks/videos";
-import { eq } from "drizzle-orm";
+import { env } from "../lib/env";
+import { s3InternalClient, s3PublicClient } from "../lib/s3";
+import { type UserAuthMiddleware, userAuth } from "../middleware/auth";
+import { VideoTasks, videoProcessingQueue } from "../tasks/queues";
+import type {
+	VideoProxyJobData,
+	VideoThumbnailJobData,
+} from "../tasks/tasks/videos";
 
 const router = new Hono<{ Variables: UserAuthMiddleware }>();
 router.use(userAuth);

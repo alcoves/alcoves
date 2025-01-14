@@ -1,6 +1,6 @@
+import type { ServerWebSocket } from "bun";
 import { Hono } from "hono";
 import { createBunWebSocket } from "hono/bun";
-import type { ServerWebSocket } from "bun";
 import { getClient } from "../lib/redis";
 
 const router = new Hono();
@@ -35,7 +35,7 @@ router.get(
 				}
 
 				await sharedClient.subscribe(channelName, (message) => {
-					console.debug(`Received message from channel ${channelName}: ${message}`);
+					// console.debug(`Received message from channel ${channelName}: ${message}`);
 					ws.send(message);
 				});
 			},

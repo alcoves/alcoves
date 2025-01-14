@@ -1,9 +1,10 @@
-import { env } from "../lib/env";
 import { Queue } from "bullmq";
+import { env } from "../lib/env";
 
 const imageProcessingQueueName = "images";
 const videoProcessingQueueName = "videos";
 
+// Not currently used really.
 export enum ImageTasks {
 	FETCH_IMAGE_METADATA = "fetch_image_metadata",
 	GENERATE_IMAGE_PROXIES = "generate_image_proxies",

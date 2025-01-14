@@ -1,19 +1,21 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
-import { ws, wsRouter } from "./routes/ws";
+import { migrateDatabase } from "./db/migrate";
 import { assetsRouter } from "./routes/assets";
-import { uploadsRouter } from "./routes/uploads";
 import { authRouter } from "./routes/auth";
 import { rootRouter } from "./routes/root";
+import { uploadsRouter } from "./routes/uploads";
 import { usersRouter } from "./routes/users";
+import { ws, wsRouter } from "./routes/ws";
 import { startWorkers } from "./tasks";
-import { migrateDatabase } from "./db/migrate";
 
 const app = new Hono();
 
 await migrateDatabase();
-await startWorkers();
+
+// TODO :: Add flag to enable workers on api server
+// await startWorkers();
 
 app.use(logger());
 

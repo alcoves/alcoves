@@ -1,0 +1,1 @@
+ALTER TABLE "assets" ALTER COLUMN "duration" SET DATA TYPE real;
