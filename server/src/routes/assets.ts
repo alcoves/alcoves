@@ -1,10 +1,10 @@
-import { Hono } from "hono";
-import { db } from "../db/db";
-import { userAuth, type UserAuthMiddleware } from "../middleware/auth";
-import { HTTPException } from "hono/http-exception";
-import { getObjectFromS3, getPresignedUrl } from "../lib/s3";
-import { assets } from "../db/schema";
 import { and, eq, inArray } from "drizzle-orm";
+import { Hono } from "hono";
+import { HTTPException } from "hono/http-exception";
+import { db } from "../db/db";
+import { assets } from "../db/schema";
+import { getObjectFromS3, getPresignedUrl } from "../lib/s3";
+import { type UserAuthMiddleware, userAuth } from "../middleware/auth";
 import { assetsWithUrls } from "../services/assets";
 
 const router = new Hono<{ Variables: UserAuthMiddleware }>();
@@ -22,14 +22,15 @@ router.get("/", async (c) => {
 	const assetsQuery = await db.query.assets.findMany({
 		orderBy: (assets, { desc }) => [desc(assets.createdAt)],
 		with: {
-			assetImageProxies: {
-				orderBy: (assetImageProxies, { desc }) => [desc(assetImageProxies.size)],
+			thumbnails: {
+				orderBy: (thumbnails, { desc }) => [desc(thumbnails.size)],
 			},
-			assetVideoProxies: {
-				orderBy: (assetVideoProxies, { desc }) => [desc(assetVideoProxies.status)],
+			proxies: {
+				orderBy: (proxies, { desc }) => [desc(proxies.status)],
 			},
 		},
-		where: (assets, { eq }) => eq(assets.ownerId, user.id) && eq(assets.deleted, getDeleted),
+		where: (assets, { eq }) =>
+			eq(assets.ownerId, user.id) && eq(assets.deleted, getDeleted),
 	});
 
 	if (!assetsQuery) {
@@ -44,11 +45,12 @@ router.get("/:assetId/manifest/:manifestName", async (c) => {
 	const { assetId, manifestName } = c.req.param();
 	const asset = await db.query.assets.findFirst({
 		with: {
-			assetVideoProxies: {
-				orderBy: (assetVideoProxies, { desc }) => [desc(assetVideoProxies.status)],
+			proxies: {
+				orderBy: (proxies, { desc }) => [desc(proxies.status)],
 			},
 		},
-		where: (assets, { eq, and }) => and(eq(assets.id, assetId), eq(assets.deleted, false)),
+		where: (assets, { eq, and }) =>
+			and(eq(assets.id, assetId), eq(assets.deleted, false)),
 	});
 
 	if (!asset) {
@@ -60,7 +62,7 @@ router.get("/:assetId/manifest/:manifestName", async (c) => {
 		throw new HTTPException(403, { message: "Forbidden" });
 	}
 
-	const mainProxy = asset.assetVideoProxies.find((proxy) => proxy.type === "HLS");
+	const mainProxy = asset.proxies.find((proxy) => proxy.type === "HLS");
 
 	if (!mainProxy) {
 		throw new HTTPException(404, { message: "Asset not processed" });

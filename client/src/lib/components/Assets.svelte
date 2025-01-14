@@ -2,8 +2,8 @@
   import { clientApi, queryClient } from "$lib/api";
   import { createQuery } from "@tanstack/svelte-query";
   import { Check } from "lucide-svelte";
-  import Preview from "./Preview.svelte";
   import { onDestroy, onMount } from "svelte";
+  import Preview from "./Preview.svelte";
 
   import wsStore, { WebSocketMessageType } from "$lib/stores/ws";
 
@@ -28,9 +28,9 @@
               return {
                 ...a,
                 // TODO :: This is quite brittle
-                assetVideoProxies: [
+                proxies: [
                   {
-                    ...a.assetVideoProxies[0],
+                    ...a.proxies[0],
                     ...message.payload,
                   },
                 ],
@@ -146,10 +146,10 @@
         >
           <figure class="relative h-40 w-full group">
             {#if asset?.status !== "READY"}
-              {#if asset?.assetImageProxies?.[0]?.url}
+              {#if asset?.thumbnails?.[0]?.url}
                 <img
                   alt={asset?.title}
-                  src={asset?.assetImageProxies?.[0]?.url}
+                  src={asset?.thumbnails?.[0]?.url}
                   class="absolute object-cover w-full h-full"
                 />
               {:else}
@@ -165,15 +165,15 @@
                 >
                 <progress
                   class="progress progress-info w-56 bg-neutral h-3 rounded-sm"
-                  value={asset?.assetVideoProxies?.[0]?.progress}
+                  value={asset?.proxies?.[0]?.progress}
                   max="100"
                 ></progress>
               </div>
             {:else}
-              {#if asset?.assetImageProxies?.[0]?.url}
+              {#if asset?.thumbnails?.[0]?.url}
                 <img
                   alt={asset?.title}
-                  src={asset?.assetImageProxies?.[0]?.url}
+                  src={asset?.thumbnails?.[0]?.url}
                   class="absolute object-cover w-full h-full"
                 />
               {:else}

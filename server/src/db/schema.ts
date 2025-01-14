@@ -1,6 +1,5 @@
 import { relations } from "drizzle-orm";
 import {
-	bigint,
 	boolean,
 	integer,
 	jsonb,
@@ -45,53 +44,52 @@ export const sessionsRelations = relations(sessions, ({ one }) => ({
 export const assets = pgTable("assets", {
 	id: uuid().defaultRandom().primaryKey(),
 	ownerId: uuid("owner_id").notNull(),
-	title: text("title").notNull(),
-	description: text("description"),
+	type: text({ enum: ["VIDEO", "IMAGE"] })
+		.default("VIDEO")
+		.notNull(),
+	title: text().notNull(),
+	description: text(),
 	status: text({
 		enum: ["UPLOADING", "UPLOADED", "PROCESSING", "READY", "ERROR"],
 	}),
 	storageKey: text("storage_key").notNull(),
 	storageBucket: text("storage_bucket").notNull(),
 
-	proxy: text("proxy"), // One to one mapping to the proxy asset
-	thumbnails: text("thumbnails"), // One to many mapping to the thumbnails
-
 	// Original asset metadata
-	metadata: jsonb("metadata"), // Metadata of the original asset. Either ffmpeg or exiftool metadata
-	size: integer("size").notNull().default(0),
-	width: integer("width").notNull().default(0),
-	height: integer("height").notNull().default(0),
-	duration: integer("duration").notNull().default(0),
+	metadata: jsonb(), // Metadata of the original asset. Either ffmpeg or exiftool metadata
+	size: integer().notNull().default(0),
+	width: integer().notNull().default(0),
+	height: integer().notNull().default(0),
+	duration: integer().notNull().default(0),
 	mimeType: text("mime_type").notNull(),
 
 	// Time when asset was physically created
 	cTime: timestamp("c_time").notNull().defaultNow(),
 
-	deleted: boolean("deleted").notNull().default(false),
+	deleted: boolean().notNull().default(false),
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 	updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
 export const assetsRelations = relations(assets, ({ one, many }) => ({
+	proxies: many(assetProxies),
 	thumbnails: many(assetThumbnails),
-	proxy: one(assetProxy, {
-		fields: [assets.proxyId],
-		references: [assetProxy.id],
-	}),
 	owner: one(users, {
 		fields: [assets.ownerId],
 		references: [users.id],
 	}),
 }));
 
-export const assetProxy = pgTable("asset_proxies", {
+export const assetProxies = pgTable("asset_proxies", {
 	id: uuid().defaultRandom().primaryKey(),
-	assetId: uuid("asset_id"),
-	type: text({ enum: ["HLS"] }).notNull(),
-	progress: integer().notNull().default(0),
+	assetId: uuid("asset_id").notNull(),
+	isDefault: boolean().notNull().default(false),
 	status: text({ enum: ["PROCESSING", "READY", "ERROR"] }),
+	type: text({ enum: ["HLS"] }).notNull(),
 	storageKey: text("storage_key").notNull(),
 	storageBucket: text("storage_bucket").notNull(),
+	size: integer().notNull().default(0),
+	progress: integer().notNull().default(0),
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 	updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
@@ -99,45 +97,30 @@ export const assetProxy = pgTable("asset_proxies", {
 export const assetThumbnails = pgTable("asset_thumbnails", {
 	id: uuid().defaultRandom().primaryKey(),
 	assetId: uuid("asset_id").notNull(),
-	size: integer().notNull(),
-	width: integer().notNull(),
-	height: integer().notNull(),
 	status: text({ enum: ["PROCESSING", "READY", "ERROR"] }),
 	storageKey: text("storage_key").notNull(),
 	storageBucket: text("storage_bucket").notNull(),
+	size: integer().notNull().default(0),
+	width: integer().notNull().default(0),
+	height: integer().notNull().default(0),
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 	updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
-export const assetVideoProxies = pgTable("asset_video_proxies", {
-	id: uuid().defaultRandom().primaryKey(),
-	assetId: uuid("asset_id").notNull(),
-	type: text({ enum: ["HLS"] }).notNull(),
-	progress: integer().notNull().default(0),
-	status: text({ enum: ["PROCESSING", "READY", "ERROR"] }),
-	storageKey: text("storage_key").notNull(),
-	storageBucket: text("storage_bucket").notNull(),
-	createdAt: timestamp("created_at").notNull().defaultNow(),
-	updatedAt: timestamp("updated_at").notNull().defaultNow(),
-});
-
-export const assetImageProxiesRelations = relations(
-	assetImageProxies,
+export const assetThumbnailRelations = relations(
+	assetThumbnails,
 	({ one }) => ({
 		asset: one(assets, {
-			fields: [assetImageProxies.assetId],
+			fields: [assetThumbnails.assetId],
 			references: [assets.id],
 		}),
 	}),
 );
 
-export const assetVideoProxiesRelations = relations(
-	assetVideoProxies,
-	({ one }) => ({
-		asset: one(assets, {
-			fields: [assetVideoProxies.assetId],
-			references: [assets.id],
-		}),
+export const assetProxyRelations = relations(assetProxies, ({ one }) => ({
+	asset: one(assets, {
+		fields: [assetProxies.assetId],
+		references: [assets.id],
 	}),
 );
 

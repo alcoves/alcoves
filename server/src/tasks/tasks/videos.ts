@@ -1,9 +1,16 @@
-import sharp from "sharp";
-import { join } from "path";
+import { mkdir, mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "os";
+import { join } from "path";
 import { type Job, Worker } from "bullmq";
+import { eq } from "drizzle-orm";
+import { getMimeType } from "hono/utils/mime";
+import sharp from "sharp";
+import { v4 as uuid } from "uuid";
+import { db } from "../../db/db";
+import { assets, proxies, thumbnails } from "../../db/schema";
 import { env } from "../../lib/env";
-import { rm, mkdtemp, mkdir } from "node:fs/promises";
+import { runFFmpeg } from "../../lib/ffmpeg";
+import { pubClient } from "../../lib/redis";
 import {
 	downloadObject,
 	getPresignedUrl,
@@ -11,16 +18,9 @@ import {
 	uploadDirectoryToS3,
 	uploadFileToS3,
 } from "../../lib/s3";
-import { VideoTasks, bullConnection, videoProcessingQueue } from "../queues";
-import { db } from "../../db/db";
-import { assetImageProxies, assets, assetVideoProxies } from "../../db/schema";
-import { v4 as uuid } from "uuid";
-import { runFFmpeg } from "../../lib/ffmpeg";
-import { eq } from "drizzle-orm";
-import { getMimeType } from "hono/utils/mime";
-import { pubClient } from "../../lib/redis";
+import { type WebSocketMessage, channelName } from "../../routes/ws";
 import { getAsset } from "../../services/assets";
-import { channelName, type WebSocketMessage } from "../../routes/ws";
+import { VideoTasks, bullConnection, videoProcessingQueue } from "../queues";
 
 export interface VideoProxyJobData {
 	assetId: string;
@@ -70,7 +70,7 @@ async function main() {
 					const mainPlaylistKey = `${proxyStorageKey}/${mainPlaylistName}`;
 
 					const assetVideoProxy = await db
-						.insert(assetVideoProxies)
+						.insert(proxies)
 						.values({
 							id: proxyStorageId,
 							type: "HLS",
@@ -152,7 +152,11 @@ async function main() {
 
 					const { inputStreams, filters, streamMaps } = qualities.av1.reduce(
 						(
-							acc: { filters: string[]; inputStreams: string[]; streamMaps: string[] },
+							acc: {
+								filters: string[];
+								inputStreams: string[];
+								streamMaps: string[];
+							},
 							cv,
 							index,
 							arr,
@@ -243,13 +247,13 @@ async function main() {
 								estimatedTimeRemaining,
 							});
 							await db
-								.update(assetVideoProxies)
+								.update(proxies)
 								.set({
 									status: "PROCESSING",
 									progress: progress,
 									updatedAt: new Date(),
 								})
-								.where(eq(assetVideoProxies.id, assetVideoProxy[0].id));
+								.where(eq(proxies.id, assetVideoProxy[0].id));
 							await job.updateProgress(0.1);
 
 							console.log(
@@ -269,13 +273,13 @@ async function main() {
 
 							await db.transaction(async (tx) => {
 								await tx
-									.update(assetVideoProxies)
+									.update(proxies)
 									.set({
 										status: "READY",
 										progress: 100,
 										updatedAt: new Date(),
 									})
-									.where(eq(assetVideoProxies.id, assetVideoProxy[0].id));
+									.where(eq(proxies.id, assetVideoProxy[0].id));
 
 								await tx
 									.update(assets)
@@ -291,12 +295,12 @@ async function main() {
 							// Update record with error status
 							await db.transaction(async (tx) => {
 								await tx
-									.update(assetVideoProxies)
+									.update(proxies)
 									.set({
 										status: "ERROR",
 										updatedAt: new Date(),
 									})
-									.where(eq(assetVideoProxies.id, assetVideoProxy[0].id));
+									.where(eq(proxies.id, assetVideoProxy[0].id));
 
 								await tx
 									.update(assets)
@@ -335,7 +339,7 @@ async function main() {
 						.rotate()
 						.toFile(compressedImageLocalPath);
 
-					await db.insert(assetImageProxies).values({
+					await db.insert(thumbnails).values({
 						size: compressedImage.size,
 						height: compressedImage.height,
 						width: compressedImage.width,
@@ -371,7 +375,10 @@ async function main() {
 		asset
 			? client.publish(
 					channelName,
-					JSON.stringify({ type: "ASSET_UPDATED", payload: asset } as WebSocketMessage),
+					JSON.stringify({
+						type: "ASSET_UPDATED",
+						payload: asset,
+					} as WebSocketMessage),
 				)
 			: null;
 	});
@@ -382,7 +389,10 @@ async function main() {
 		asset
 			? client.publish(
 					channelName,
-					JSON.stringify({ type: "ASSET_UPDATED", payload: asset } as WebSocketMessage),
+					JSON.stringify({
+						type: "ASSET_UPDATED",
+						payload: asset,
+					} as WebSocketMessage),
 				)
 			: null;
 	});
@@ -394,13 +404,18 @@ async function main() {
 			asset
 				? client.publish(
 						channelName,
-						JSON.stringify({ type: "ASSET_UPDATED", payload: asset } as WebSocketMessage),
+						JSON.stringify({
+							type: "ASSET_UPDATED",
+							payload: asset,
+						} as WebSocketMessage),
 					)
 				: null;
 		}
 	});
 
-	console.info(`Starting worker: ${worker.name} for queue: ${videoProcessingQueue.name}`);
+	console.info(
+		`Starting worker: ${worker.name} for queue: ${videoProcessingQueue.name}`,
+	);
 }
 
 export default main;

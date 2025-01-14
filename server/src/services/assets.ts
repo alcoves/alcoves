@@ -5,11 +5,11 @@ export async function getAsset(id: string): Promise<any | null> {
 	const asset = await db.query.assets.findFirst({
 		orderBy: (assets, { desc }) => [desc(assets.createdAt)],
 		with: {
-			assetImageProxies: {
-				orderBy: (assetImageProxies, { desc }) => [desc(assetImageProxies.size)],
+			thumbnails: {
+				orderBy: (thumbnails, { desc }) => [desc(thumbnails.size)],
 			},
-			assetVideoProxies: {
-				orderBy: (assetVideoProxies, { desc }) => [desc(assetVideoProxies.status)],
+			proxies: {
+				orderBy: (proxies, { desc }) => [desc(proxies.status)],
 			},
 		},
 	});
@@ -22,9 +22,9 @@ export async function getAsset(id: string): Promise<any | null> {
 export function assetsWithUrls(a: any[]): Promise<any[]> {
 	return Promise.all(
 		a.map(async (asset) => {
-			if (asset?.assetImageProxies?.length) {
+			if (asset?.thumbnails?.length) {
 				const imageProxiesWithUrls = await Promise.all(
-					asset?.assetImageProxies.map(async (proxy: any) => {
+					asset?.thumbnails.map(async (proxy: any) => {
 						if (proxy?.storageBucket && proxy?.storageKey) {
 							const signedProxyUrl = await getPresignedUrl({
 								bucket: proxy.storageBucket,
@@ -44,7 +44,7 @@ export function assetsWithUrls(a: any[]): Promise<any[]> {
 
 				return {
 					...asset,
-					assetImageProxies: imageProxiesWithUrls,
+					thumbnails: imageProxiesWithUrls,
 				};
 			}
 			return asset;

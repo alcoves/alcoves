@@ -1,14 +1,14 @@
-import sharp from "sharp";
-import { join } from "path";
+import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "os";
+import { join } from "path";
 import { Worker } from "bullmq";
+import sharp from "sharp";
+import { v4 as uuid } from "uuid";
+import { db } from "../../db/db";
+import { thumbnails } from "../../db/schema";
 import { env } from "../../lib/env";
-import { rm, mkdtemp } from "node:fs/promises";
 import { downloadObject, uploadFileToS3 } from "../../lib/s3";
 import { ImageTasks, bullConnection, imageProcessingQueue } from "../queues";
-import { db } from "../../db/db";
-import { assetImageProxies } from "../../db/schema";
-import { v4 as uuid } from "uuid";
 
 export interface ImageProxyJobData {
 	assetId: string;
@@ -63,7 +63,7 @@ async function main() {
 						});
 
 						const assetImageProxy = await db
-							.insert(assetImageProxies)
+							.insert(thumbnails)
 							.values({
 								assetId: job.data.assetId,
 								size: compressedImage.size,
@@ -93,7 +93,7 @@ async function main() {
 					});
 
 					const assetImageProxy = await db
-						.insert(assetImageProxies)
+						.insert(thumbnails)
 						.values({
 							assetId: job.data.assetId,
 							size: compressedImage.size,
@@ -164,7 +164,9 @@ async function main() {
 		console.log(`${job?.id} has failed with ${err.message}`);
 	});
 
-	console.info(`Starting worker: ${worker.name} for queue: ${imageProcessingQueue.name}`);
+	console.info(
+		`Starting worker: ${worker.name} for queue: ${imageProcessingQueue.name}`,
+	);
 }
 
 export default main;
