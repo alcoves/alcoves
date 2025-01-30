@@ -1,1 +1,0 @@
-ALTER TABLE "asset_proxies" RENAME COLUMN "isDefault" TO "is_default";

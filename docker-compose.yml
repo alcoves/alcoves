@@ -1,74 +1,24 @@
-x-client-environment: &client-environment
-  PRIVATE_ALCOVES_API_URL: http://server:3000
-  PUBLIC_ALCOVES_API_URL: http://localhost:3000
-  # VITE_GOOGLE_CLIENT_ID: $ALCOVES_AUTH_GOOGLE_ID
-  # VITE_GOOGLE_REDIRECT_URL: $ALCOVES_AUTH_GOOGLE_REDIRECT_URL
-
-x-server-environment: &server-environment
-  CORS_ORIGIN: http://localhost:5173
-  ALCOVES_DB_URL: $ALCOVES_DB_URL
-  ALCOVES_OBJECT_STORE_DEFAULT_BUCKET: alcoves
-  ALCOVES_OBJECT_STORE_ENDPOINT: $ALCOVES_OBJECT_STORE_ENDPOINT
-  ALCOVES_OBJECT_STORE_PUBLIC_ENDPOINT: $ALCOVES_OBJECT_STORE_PUBLIC_ENDPOINT
-  ALCOVES_OBJECT_STORE_ACCESS_KEY_ID: minioadmin
-  ALCOVES_OBJECT_STORE_SECRET_ACCESS_KEY: minioadmin
-  ALCOVES_AUTH_GOOGLE_ID: $ALCOVES_AUTH_GOOGLE_ID
-  ALCOVES_AUTH_GOOGLE_SECRET: $ALCOVES_AUTH_GOOGLE_SECRET
-  ALCOVES_AUTH_GOOGLE_REDIRECT_URL: $ALCOVES_AUTH_GOOGLE_REDIRECT_URL
-  ALCOVES_TASK_DB_PORT: 6379
-  ALCOVES_TASK_DB_HOST: task_db
-  ALCOVES_TASK_WORKER_CONCURRENCY: 4
-  ALCOVES_DB_CONNECTION_STRING: postgres://postgres:postgres@postgres:5432/alcoves
-
 services:
-  # client:
-  #   build:
-  #     context: client
-  #     dockerfile: Dockerfile.dev
-  #   command: bun run dev
-  #   user: '${UID}:${GID}'
-  #   environment:
-  #     <<: *client-environment
-  #   volumes:
-  #     - ./client:/app
-  #   depends_on:
-  #     - server
-  #   ports:
-  #     - 5173:5173
-  server:
+  app:
     build:
-      context: server
+      context: app
       dockerfile: Dockerfile.dev
-    command: bun run dev
-    tty: true
-    user: '${UID}:${GID}'
-    environment:
-      <<: *server-environment
+    command: bash -c "bun db:migrate && bun dev"
+    container_name: app
+    env_file:
+      - .env
     volumes:
-      - ./server:/app
+      - ./app:/opt/alcoves
+      - app_node_modules:/opt/alcoves/node_modules
     depends_on:
-      - task_db
-      - minio
-      - minio_mb
-      - postgres
+      minio:
+        condition: service_started
+      task_db:
+        condition: service_started
+      postgres:
+        condition: service_healthy
     ports:
-      - 3000:3000
-  worker:
-    build:
-      context: server
-      dockerfile: Dockerfile.dev
-    command: bun run dev:worker
-    tty: true
-    user: '${UID}:${GID}'
-    environment:
-      <<: *server-environment
-    volumes:
-      - ./server:/app
-    depends_on:
-      - task_db
-      - minio
-      - minio_mb
-      - postgres
+      - 5173:5173
   task_db:
     image: eqalpha/keydb:latest
     restart: always
@@ -114,10 +64,12 @@ services:
     image: minio/mc:latest
     attach: false
     depends_on:
-      - minio
+      minio:
+        condition: service_started
     entrypoint: sh -c "mc config host add minio http://minio:9000 minioadmin minioadmin && mc mb minio/alcoves"
 
 volumes:
   minio:
   task_db:
   postgres:
+  app_node_modules:
