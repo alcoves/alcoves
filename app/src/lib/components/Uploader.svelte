@@ -1,7 +1,7 @@
 <script lang="ts">
   import { UploadIcon } from "lucide-svelte";
   import pLimit from "p-limit";
-  import { v4 as uuidV4 } from "uuid";
+  import { v5 as uuidv5 } from "uuid";
 
   interface Upload {
     file: File;
@@ -11,12 +11,32 @@
   }
 
   const uploadLimiter = pLimit(4);
-  const authorizedExtensions = [".jpg", ".jpeg", ".png", ".webp"];
+  const GB = 20;
+  const MAX_FILE_SIZE = GB * 1024 * 1024 * 1024;
+  const authorizedMimeTypes = ["image/*", "video/*"];
   let modalOpen = $state(false);
   let files: FileList | undefined = $state();
   let uploads = $state<Upload[]>([]);
 
+  function validateFile(file: File): { valid: boolean; error: string } {
+    if (
+      !authorizedMimeTypes.some((type) =>
+        type.endsWith("/*")
+          ? file.type.startsWith(type.slice(0, -2))
+          : file.type === type,
+      )
+    ) {
+      return { valid: false, error: "File type not supported" };
+    }
+    if (file.size > MAX_FILE_SIZE) {
+      return { valid: false, error: `File too large (max ${GB})` };
+    }
+    return { valid: true, error: "" };
+  }
+
   async function startUpload(upload: Upload) {
+    uploads.push(upload);
+
     const formData = new FormData();
     formData.append("file", upload.file);
 
@@ -46,8 +66,14 @@
             ? resolve(xhr.response)
             : reject(new Error("Upload failed"));
         xhr.onerror = () => reject(new Error("Upload failed"));
-
         xhr.open("POST", "?/upload");
+
+        const safeFileName = encodeURIComponent(upload.file.name);
+        xhr.setRequestHeader(
+          "Content-Disposition",
+          `form-data; content-type="${upload.file.type}"; filename="${safeFileName}"`,
+        );
+
         xhr.send(formData);
       });
 
@@ -59,41 +85,29 @@
     }
   }
 
-  function processUploads() {
-    return Promise.all(
-      uploads
-        .filter(({ status }) => status === "queued")
-        .map((u) => uploadLimiter(() => startUpload(u))),
-    );
-  }
-
   $effect(() => {
     if (files?.length) {
       for (const file of files) {
-        uploads.push({
-          file,
-          progress: 0,
-          id: uuidV4(),
-          status: "queued",
+        const { valid, error } = validateFile(file);
+        if (!valid) {
+          console.error(`${file.name}: ${error}`);
+          continue;
+        }
+
+        uploadLimiter(() => {
+          modalOpen = true;
+          startUpload({
+            file,
+            progress: 0,
+            status: "queued",
+            id: uuidv5(file.name, uuidv5.URL),
+          });
         });
       }
-
       files = undefined;
       modalOpen = true;
     }
 
-    const totals = uploads.reduce(
-      (acc, { status }) => {
-        if (status === "queued") acc.queued++;
-        if (status === "failed") acc.failed++;
-        if (status === "uploading") acc.uploading++;
-        if (status === "completed") acc.completed++;
-        return acc;
-      },
-      { queued: 0, uploading: 0, completed: 0, failed: 0 },
-    );
-
-    if (!totals.uploading && totals.queued) processUploads();
     if (!files?.length && !uploads.length) modalOpen = false;
   });
 
@@ -121,7 +135,7 @@
       type="file"
       id="uploadInput"
       class="hidden"
-      accept={authorizedExtensions.join(",")}
+      accept={authorizedMimeTypes.join(",")}
     />
 
     {#if Object.keys(uploads).length}
@@ -129,7 +143,7 @@
         class="btn btn-primary min-w-[140px]"
         onclick={() => (modalOpen = true)}
       >
-        <span class="loading loading-spinner"></span>
+        <span class="loading loading-ring loading-sm"></span>
         {"Uploading"}
       </button>
     {:else}

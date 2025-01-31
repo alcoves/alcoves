@@ -1,18 +1,11 @@
 import { type Actions, fail } from "@sveltejs/kit";
-import {
-  S3Client,
-  UploadPartCommand,
-  AbortMultipartUploadCommand,
-  CreateMultipartUploadCommand,
-  CompleteMultipartUploadCommand,
-} from "@aws-sdk/client-s3";
-
-const CHUNK_SIZE = 25 * 1024 * 1024; // 25MB chunks
+import { S3Client } from "@aws-sdk/client-s3";
+import { Upload } from "@aws-sdk/lib-storage";
 
 const internalS3Client = new S3Client({
   region: process.env.ALCOVES_OBJECT_STORE_REGION!,
-	endpoint: process.env.ALCOVES_OBJECT_STORE_ENDPOINT!,
-	forcePathStyle: true,
+  endpoint: process.env.ALCOVES_OBJECT_STORE_ENDPOINT!,
+  forcePathStyle: true,
   credentials: {
     accessKeyId: process.env.ALCOVES_OBJECT_STORE_ACCESS_KEY_ID!,
     secretAccessKey: process.env.ALCOVES_OBJECT_STORE_SECRET_ACCESS_KEY!
@@ -22,75 +15,37 @@ const internalS3Client = new S3Client({
 export const actions = {
   upload: async ({ request }) => {
     try {
-      const formData = Object.fromEntries(await request.formData());
-      const { file } = formData as { file: File };
-      
-      if (!file?.name || file.name === "undefined") {
-        return fail(400, { error: true, message: "Invalid file" });
+      const contentType = request.headers.get('content-type');
+      if (!contentType?.includes('multipart/form-data')) {
+        return fail(400, { error: true, message: "Invalid content type" });
       }
 
-      const key = `uploads/${Date.now()}-${file.name}`;
-      const buffer = Buffer.from(await file.arrayBuffer());
-      
-      // Start multipart upload
-      const multipartUpload = await internalS3Client.send(new CreateMultipartUploadCommand({
-        Bucket: process.env.ALCOVES_OBJECT_STORE_DEFAULT_BUCKET!,
-        Key: key,
-        ContentType: file.type
-      }));
+      const boundary = contentType.split('boundary=')[1];
+      if (!boundary) {
+        return fail(400, { error: true, message: "No boundary found" });
+      }
 
-      const uploadId = multipartUpload.UploadId!;
-      const parts: { ETag: string; PartNumber: number; }[] = [];
+      const key = `uploads/${Date.now()}-${getFilenameFromHeader(request.headers)}`;
 
-      try {
-        // Upload parts in parallel
-        const chunkPromises = [];
-        let partNumber = 1;
-        
-        for (let i = 0; i < buffer.length; i += CHUNK_SIZE) {
-          const chunk = buffer.slice(i, Math.min(i + CHUNK_SIZE, buffer.length));
-          
-          const uploadPartCommand = new UploadPartCommand({
-            Bucket: process.env.ALCOVES_OBJECT_STORE_DEFAULT_BUCKET!,
-            Key: key,
-            UploadId: uploadId,
-            PartNumber: partNumber,
-            Body: chunk
-          });
-
-          const promise = internalS3Client.send(uploadPartCommand)
-            .then(response => {
-              parts.push({
-                ETag: response.ETag!,
-                PartNumber: partNumber
-              });
-            });
-
-          chunkPromises.push(promise);
-          partNumber++;
+      const parallelUpload = new Upload({
+        client: internalS3Client,
+        queueSize: 4,
+        partSize: 25 * 1024 * 1024,
+        leavePartsOnError: false,
+        params: {
+          Bucket: process.env.ALCOVES_OBJECT_STORE_DEFAULT_BUCKET!,
+          Key: key,
+          Body: request.body ?? undefined,
+          ContentType: getContentTypeFromHeader(request.headers)
         }
+      });
 
-        await Promise.all(chunkPromises);
+      await parallelUpload.done();
 
-        // Complete multipart upload
-        await internalS3Client.send(new CompleteMultipartUploadCommand({
-          Bucket: process.env.ALCOVES_OBJECT_STORE_DEFAULT_BUCKET!,
-          Key: key,
-          UploadId: uploadId,
-          MultipartUpload: { Parts: parts.sort((a, b) => a.PartNumber - b.PartNumber) }
-        }));
-
-        return { success: true, key };
-
-      } catch (error) {
-        // Abort multipart upload on failure
-        await internalS3Client.send(new AbortMultipartUploadCommand({
-          Bucket: process.env.ALCOVES_OBJECT_STORE_DEFAULT_BUCKET!,
-          Key: key,
-          UploadId: uploadId
-        }));
-        throw error;
-      }
+      return {
+        success: true,
+        key
+      };
 
     } catch (error) {
       console.error("Upload error:", error);
@@ -98,3 +53,19 @@ export const actions = {
     }
   }
 } satisfies Actions;
+
+function getFilenameFromHeader(headers: Headers): string {
+  const contentDisposition = headers.get('content-disposition');
+  if (!contentDisposition) return 'unknown';
+  
+  const filenameMatch = contentDisposition.match(/filename="?([^"]+)"?/);
+  return filenameMatch ? filenameMatch[1] : 'unknown';
+}
+
+function getContentTypeFromHeader(headers: Headers): string {
+  const contentType = headers.get('content-disposition');
+  if (!contentType) return 'application/octet-stream';
+  
+  const contentTypeMatch = contentType.match(/content-type="?([^"]+)"?/);
+  return contentTypeMatch ? contentTypeMatch[1] : 'application/octet-strea';
+}
