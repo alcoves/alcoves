@@ -1,13 +1,13 @@
 <script lang="ts">
     import { page } from "$app/stores";
     import "../../app.css";
-    import DarkModeToggle from "$lib/components/DarkModeToggle.svelte";
-    import { user } from "$lib/stores/user";
     import { goto } from "$app/navigation";
-    // import Uploader from "$lib/components/Uploader.svelte";
+    import DarkModeToggle from "$lib/components/DarkModeToggle.svelte";
+    import Uploader from "$lib/components/Uploader.svelte";
+    import { user } from "$lib/stores/user";
     import { Film, Menu } from "lucide-svelte";
 
-    let { data, children } = $props();
+    const { data, children } = $props();
     user.set(data.authenticatedUser);
 
     async function handleLogout() {
@@ -48,7 +48,7 @@
                     </label>
                 </div>
                 <div class="flex-none gap-2">
-                    <!-- <Uploader /> -->
+                    <Uploader />
                     <DarkModeToggle />
                     <div class="dropdown dropdown-end">
                         <div

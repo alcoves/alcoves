@@ -1,9 +1,58 @@
 <script lang="ts">
-  import pLimit from "p-limit";
-  import { v4 as uuidV4 } from "uuid";
+  import { enhance } from "$app/forms";
   import { UploadIcon } from "lucide-svelte";
+  import type { PageProps } from "./$types";
+
+  let { form }: PageProps = $props();
+  let files: FileList | null = null;
+  const authorizedExtensions = [".jpg", ".jpeg", ".png", ".webp"];
+
+  let submitting = false;
+
+  function onSubmit() {
+    submitting = true;
+
+    return ({ update }) => {
+      submitting = false;
+      update();
+    };
+  }
+</script>
+
+<div>
+  <form
+    use:enhance={onSubmit}
+    method="post"
+    action="?/upload"
+    enctype="multipart/form-data"
+  >
+    <div class="group">
+      <input
+        class="hidden"
+        required
+        id="file"
+        type="file"
+        name="fileToUpload"
+        bind:files
+        accept={authorizedExtensions.join(",")}
+      />
+      <label
+        for="file"
+        class={`btn btn-primary min-w-[140px] ${submitting ? "disabled" : ""}`}
+      >
+        <UploadIcon size="1.2rem" />
+        {"Upload"}
+      </label>
+    </div>
+  </form>
+</div>
+
+<!-- <script lang="ts">
   import { PUBLIC_ALCOVES_API_URL } from "$env/static/public";
   import { clientApi, queryClient } from "$lib/api";
+  import { UploadIcon } from "lucide-svelte";
+  import pLimit from "p-limit";
+  import { v4 as uuidV4 } from "uuid";
 
   interface Upload {
     file: File;
@@ -268,4 +317,4 @@
       <button onclick={() => (modalOpen = false)}>Close</button>
     </form>
   </dialog>
-</div>
+</div> -->
