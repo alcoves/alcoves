@@ -1,249 +1,105 @@
 <script lang="ts">
-  import { enhance } from "$app/forms";
-  import { UploadIcon } from "lucide-svelte";
-  import type { PageProps } from "./$types";
-
-  let { form }: PageProps = $props();
-  let files: FileList | null = null;
-  const authorizedExtensions = [".jpg", ".jpeg", ".png", ".webp"];
-
-  let submitting = false;
-
-  function onSubmit() {
-    submitting = true;
-
-    return ({ update }) => {
-      submitting = false;
-      update();
-    };
-  }
-</script>
-
-<div>
-  <form
-    use:enhance={onSubmit}
-    method="post"
-    action="?/upload"
-    enctype="multipart/form-data"
-  >
-    <div class="group">
-      <input
-        class="hidden"
-        required
-        id="file"
-        type="file"
-        name="fileToUpload"
-        bind:files
-        accept={authorizedExtensions.join(",")}
-      />
-      <label
-        for="file"
-        class={`btn btn-primary min-w-[140px] ${submitting ? "disabled" : ""}`}
-      >
-        <UploadIcon size="1.2rem" />
-        {"Upload"}
-      </label>
-    </div>
-  </form>
-</div>
-
-<!-- <script lang="ts">
-  import { PUBLIC_ALCOVES_API_URL } from "$env/static/public";
-  import { clientApi, queryClient } from "$lib/api";
   import { UploadIcon } from "lucide-svelte";
   import pLimit from "p-limit";
   import { v4 as uuidV4 } from "uuid";
 
   interface Upload {
     file: File;
-    progress: number;
-    totalParts: number;
     id: string;
-    urlProgress: {
-      [key: string]: number;
-    };
+    progress: number;
     status: "queued" | "uploading" | "completed" | "failed";
   }
 
-  function getChunkSize(totalSize: number): number {
-    const _25mb = 25 * 1024 * 1024;
-    const _50mb = 50 * 1024 * 1024;
-    const _100mb = 100 * 1024 * 1024;
-    const _250mb = 250 * 1024 * 1024;
-    const _500mb = 500 * 1024 * 1024;
-    const _3gb = 3000 * 1024 * 1024;
-    const _10gb = 10000 * 1024 * 1024;
-
-    const DEFAULT_CHUNK_SIZE = _25mb;
-
-    if (totalSize <= DEFAULT_CHUNK_SIZE) {
-      return DEFAULT_CHUNK_SIZE;
-    } else if (totalSize <= _500mb) {
-      return _50mb;
-    } else if (totalSize <= _3gb) {
-      return _100mb;
-    } else if (totalSize <= _10gb) {
-      return _250mb;
-    } else {
-      return _500mb;
-    }
-  }
-
   const uploadLimiter = pLimit(4);
+  const authorizedExtensions = [".jpg", ".jpeg", ".png", ".webp"];
   let modalOpen = $state(false);
   let files: FileList | undefined = $state();
-  let uploads = $state<Record<string, Upload>>({});
-
-  async function initiateMultipartUpload(file: File) {
-    const response = await clientApi.post(
-      `${PUBLIC_ALCOVES_API_URL}/api/uploads`,
-      {
-        filename: file.name,
-        contentType: file.type,
-        size: file.size,
-        parts: Math.ceil(file.size / getChunkSize(file.size)),
-      },
-      {
-        withCredentials: true,
-        headers: { "Content-Type": "application/json" },
-      },
-    );
-    return response.data;
-  }
-
-  function recalculateTotalProgress(upload: Upload) {
-    const totalProgress = Object.values(upload.urlProgress).reduce(
-      (a, b) => a + b,
-      0,
-    );
-    upload.progress = Math.round(totalProgress / upload.totalParts);
-  }
-
-  async function uploadPart(url: string, chunk: Blob, upload: Upload) {
-    const response = await clientApi.put(url, chunk, {
-      headers: { "Content-Type": "application/octet-stream" },
-      onUploadProgress: (e) => {
-        if (!e.total || !e.loaded) return;
-        const progress = Math.round((e.loaded * 100) / e.total);
-        upload.urlProgress[url] = progress;
-        recalculateTotalProgress(upload);
-      },
-    });
-    return response.headers["etag"];
-  }
-
-  async function completeMultipartUpload({
-    key,
-    uploadId,
-    assetId,
-    parts,
-  }: {
-    assetId: string;
-    key: string;
-    uploadId: string;
-    parts: { ETag: string; PartNumber: number }[];
-  }) {
-    const response = await clientApi.post(
-      `${PUBLIC_ALCOVES_API_URL}/api/uploads/complete`,
-      { key, uploadId, parts, assetId },
-    );
-    return response.data;
-  }
+  let uploads = $state<Upload[]>([]);
 
   async function startUpload(upload: Upload) {
-    try {
-      upload.urlProgress = {};
-      upload.status = "uploading";
-      const file = upload.file;
-      const chunks: Blob[] = [];
+    const formData = new FormData();
+    formData.append("file", upload.file);
 
-      console.info("Splitting file into chunks", getChunkSize(file.size));
-      for (let start = 0; start < file.size; start += getChunkSize(file.size)) {
-        const chunk = file.slice(start, start + getChunkSize(file.size));
-        chunks.push(chunk);
+    const updateUpload = (updates: Partial<Upload>) => {
+      const idx = uploads.findIndex((u) => u.id === upload.id);
+      if (idx !== -1) {
+        Object.assign(uploads[idx], updates);
       }
+    };
 
-      upload.totalParts = chunks.length;
-      console.info("File split into chunks", chunks);
-      const {
-        payload: { uploadId, key, parts, assetId },
-      } = await initiateMultipartUpload(file);
+    try {
+      updateUpload({ status: "uploading" });
 
-      const uploadPromises = chunks.map((chunk, index) =>
-        uploadLimiter(async () => {
-          const { signedUrl, partNumber } = parts[index];
-          const etag = await uploadPart(signedUrl, chunk, upload);
-          if (!etag) {
-            throw new Error("ETag is null");
+      await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+
+        xhr.upload.onprogress = (event) => {
+          if (event.lengthComputable) {
+            updateUpload({
+              progress: Math.round((event.loaded / event.total) * 100),
+            });
           }
-          return { ETag: etag, PartNumber: partNumber };
-        }),
-      );
-      console.info("Multipart upload initiated", uploadId, key, parts);
-      const completedParts = await Promise.all(uploadPromises);
-      recalculateTotalProgress(upload);
+        };
 
-      console.info("All parts uploaded", completedParts);
-      await completeMultipartUpload({
-        key,
-        uploadId,
-        assetId,
-        parts: completedParts,
+        xhr.onload = () =>
+          xhr.status === 200
+            ? resolve(xhr.response)
+            : reject(new Error("Upload failed"));
+        xhr.onerror = () => reject(new Error("Upload failed"));
+
+        xhr.open("POST", "?/upload");
+        xhr.send(formData);
       });
 
-      upload.progress = 100;
-      upload.status = "completed";
-      delete uploads[upload.id];
-      console.info("Upload Succeeded");
-      await queryClient.invalidateQueries({ queryKey: ["assets"] });
+      updateUpload({ progress: 100, status: "completed" });
+      uploads = uploads.filter((u) => u.id !== upload.id);
     } catch (error) {
-      console.error("Upload Error:", error);
-      upload.status = "failed";
+      updateUpload({ status: "failed" });
+      console.error(error);
     }
+  }
+
+  function processUploads() {
+    return Promise.all(
+      uploads
+        .filter(({ status }) => status === "queued")
+        .map((u) => uploadLimiter(() => startUpload(u))),
+    );
   }
 
   $effect(() => {
     if (files?.length) {
-      let selectedFilesAddition = {};
-      console.info("Some files were selected for uploading", files);
-
       for (const file of files) {
-        const uniqueId = uuidV4();
-        const addition = {
-          [uniqueId]: {
-            file,
-            progress: 0,
-            id: uniqueId,
-            status: "queued",
-          },
-        };
-        selectedFilesAddition = { ...selectedFilesAddition, ...addition };
+        uploads.push({
+          file,
+          progress: 0,
+          id: uuidV4(),
+          status: "queued",
+        });
       }
 
-      uploads = { ...uploads, ...selectedFilesAddition };
       files = undefined;
       modalOpen = true;
     }
 
-    const isOneUploading = Object.values(uploads).some(
-      (upload) => upload.status === "uploading",
+    const totals = uploads.reduce(
+      (acc, { status }) => {
+        if (status === "queued") acc.queued++;
+        if (status === "failed") acc.failed++;
+        if (status === "uploading") acc.uploading++;
+        if (status === "completed") acc.completed++;
+        return acc;
+      },
+      { queued: 0, uploading: 0, completed: 0, failed: 0 },
     );
 
-    if (!isOneUploading) {
-      const selectedUploadToStart = Object.values(uploads).find(
-        (upload) => upload.status === "queued",
-      );
-      if (selectedUploadToStart) startUpload(selectedUploadToStart);
-    }
-
-    if (!files?.length && Object.keys(uploads).length === 0) {
-      modalOpen = false;
-    }
+    if (!totals.uploading && totals.queued) processUploads();
+    if (!files?.length && !uploads.length) modalOpen = false;
   });
 
   function beforeunload(e: BeforeUnloadEvent) {
-    const hasActiveUploads = Object.values(uploads).some(
-      (upload) => upload.status === "queued" || upload.status === "uploading",
+    const hasActiveUploads = uploads.some(
+      ({ status }) => status === "queued" || status === "uploading",
     );
 
     if (hasActiveUploads) {
@@ -258,32 +114,31 @@
 <svelte:window onbeforeunload={beforeunload} />
 
 <div class="flex flex-col gap-4">
-  <input
-    bind:files
-    multiple
-    type="file"
-    id="uploadInput"
-    class="hidden"
-    accept="image/png, image/jpeg, video/mp4"
-  />
+  <div>
+    <input
+      bind:files
+      multiple
+      type="file"
+      id="uploadInput"
+      class="hidden"
+      accept={authorizedExtensions.join(",")}
+    />
 
-  {#if Object.keys(uploads).length}
-    <button
-      class="btn btn-primary min-w-[140px]"
-      onclick={() => (modalOpen = true)}
-    >
-      <span class="loading loading-spinner"></span>
-      {"Uploading"}
-    </button>
-  {:else}
-    <button
-      class="btn btn-primary min-w-[140px]"
-      onclick={() => document.getElementById("uploadInput")?.click()}
-    >
-      <UploadIcon size="1.2rem" />
-      {"Upload"}
-    </button>
-  {/if}
+    {#if Object.keys(uploads).length}
+      <button
+        class="btn btn-primary min-w-[140px]"
+        onclick={() => (modalOpen = true)}
+      >
+        <span class="loading loading-spinner"></span>
+        {"Uploading"}
+      </button>
+    {:else}
+      <label for="uploadInput" class="btn btn-primary min-w-[140px]">
+        <UploadIcon size="1.2rem" />
+        {"Upload"}
+      </label>
+    {/if}
+  </div>
 
   <dialog class="modal" class:modal-open={modalOpen}>
     <div class="modal-box">
@@ -317,4 +172,4 @@
       <button onclick={() => (modalOpen = false)}>Close</button>
     </form>
   </dialog>
-</div> -->
+</div>

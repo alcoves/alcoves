@@ -47,7 +47,7 @@
                         <Menu />
                     </label>
                 </div>
-                <div class="flex-none gap-2">
+                <div class="flex gap-2">
                     <Uploader />
                     <DarkModeToggle />
                     <div class="dropdown dropdown-end">

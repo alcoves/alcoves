@@ -1,13 +1,14 @@
 import { type Actions, fail } from "@sveltejs/kit";
+import { writeFileSync } from "node:fs";
 
 export const actions = {
 	upload: async ({ request }) => {
-		console.log("Uploading File!");
+		console.log("Handling backend file upload");
 		const formData = Object.fromEntries(await request.formData());
 
 		if (
-			!(formData.fileToUpload as File).name ||
-			(formData.fileToUpload as File).name === "undefined"
+			!(formData.file as File).name ||
+			(formData.file as File).name === "undefined"
 		) {
 			return fail(400, {
 				error: true,
@@ -15,12 +16,12 @@ export const actions = {
 			});
 		}
 
-		const { fileToUpload } = formData as { fileToUpload: File };
+		const { file } = formData as { file: File };
 
 		// // Write the file to the static folder
 		// writeFileSync(
-		// 	`static/${fileToUpload.name}`,
-		// 	Buffer.from(await fileToUpload.arrayBuffer()),
+		// 	`./${file.name}`,
+		// 	Buffer.from(await file.arrayBuffer()),
 		// );
 
 		return {
