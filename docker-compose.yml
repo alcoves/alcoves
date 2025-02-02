@@ -66,6 +66,28 @@ services:
       start_period: 0s
     command: server /data --console-address ":9001"
 
+  # Not working with current version of bun
+  # drizzle-studio:
+  #   build:
+  #     context: app
+  #     dockerfile: Dockerfile.dev
+  #   command: bun run drizzle-kit studio --host=0.0.0.0
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - ./app:/opt/alcoves
+  #     - app_node_modules:/opt/alcoves/node_modules
+  #   restart: always
+  #   depends_on:
+  #     minio:
+  #       condition: service_started
+  #     task_db:
+  #       condition: service_started
+  #     postgres:
+  #       condition: service_healthy
+  #   ports:
+  #     - 4983:4983
+
   minio_mb:
     image: minio/mc:latest
     attach: false

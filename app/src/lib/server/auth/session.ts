@@ -53,6 +53,7 @@ export async function validateSessionToken(token: string): Promise<SessionValida
 	return { session, user };
 }
 
+// Not used, need to implement logout
 export async function invalidateSession(sessionId: string): Promise<void> {
 	await db.delete(sessions).where(eq(sessions.id, sessionId));
 }
@@ -61,64 +62,23 @@ export type SessionValidationResult =
 	| { session: Session; user: User }
 	| { session: null; user: null };
 
-interface AuthCookie {
-	name: string;
-	value: string;
-	attributes: any;
+	import type { RequestEvent } from "@sveltejs/kit";
+
+
+export function setSessionTokenCookie(event: RequestEvent, token: string, expiresAt: Date): void {
+	event.cookies.set("session", token, {
+		httpOnly: true,
+		sameSite: "lax",
+		expires: expiresAt,
+		path: "/"
+	});
 }
 
-export function createSessionCookie(sessionId: string): AuthCookie {
-	return {
-		name: "session",
-		value: sessionId,
-		attributes: {
-			httpOnly: true,
-			path: "/",
-			sameSite: "Lax",
-			maxAge: 60 * 60 * 24 * 30,
-			secure: Bun.env.NODE_ENV === "production" ? true : false,
-		},
-	};
+export function deleteSessionTokenCookie(event: RequestEvent): void {
+	event.cookies.set("session", "", {
+		httpOnly: true,
+		sameSite: "lax",
+		maxAge: 0,
+		path: "/"
+	});
 }
-
-export function deleteSessionCookie(): AuthCookie {
-	return {
-		name: "session",
-		value: "",
-		attributes: {
-			httpOnly: true,
-			path: "/",
-			sameSite: "Lax",
-			maxAge: 0,
-			secure: Bun.env.NODE_ENV === "production" ? true : false,
-		},
-	};
-}
-
-// const CLIENT_ID = process.env.ALCOVES_AUTH_GOOGLE_ID;
-// const CLIENT_SECRET = process.env.ALCOVES_AUTH_GOOGLE_SECRET;
-// const REDIRECT_URI = process.env.ALCOVES_AUTH_GOOGLE_REDIRECT_URL;
-
-// const oAuth2Client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
-
-// export async function getGoogleOAuthTokens(authCode: string) {
-// 	try {
-// 		const { tokens } = await oAuth2Client.getToken(authCode);
-// 		return tokens?.access_token ? tokens : Promise.reject();
-// 	} catch (e) {
-// 		console.error(e);
-// 		throw new Error("Failed to get Google OAuth tokens");
-// 	}
-// }
-
-// export async function getUserInfo(accessToken: string) {
-// 	const url = "https://www.googleapis.com/oauth2/v3/userinfo";
-// 	const res = await fetch(url, {
-// 		headers: {
-// 			Authorization: `Bearer ${accessToken}`,
-// 		},
-// 	});
-// 	const userInfo = await res.json();
-// 	console.log(userInfo);
-// 	return userInfo;
-// }

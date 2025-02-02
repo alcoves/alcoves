@@ -1,64 +1,70 @@
 <script lang="ts">
-  import { clientApi, queryClient } from "$lib/api";
+  const test = "test";
+</script>
+
+<div>Here are the assets</div>
+
+<!-- <script lang="ts">
+  // import { clientApi, queryClient } from "$lib/api";
   // import { createQuery } from "@tanstack/svelte-query";
   import { Check } from "lucide-svelte";
   import { onDestroy, onMount } from "svelte";
   import Preview from "./Preview.svelte";
 
-  import wsStore, { WebSocketMessageType } from "$lib/stores/ws";
+  // import wsStore, { WebSocketMessageType } from "$lib/stores/ws";
 
-  onDestroy(() => {
-    if (wsStore) {
-      // I don't know if we should do this because other components might be using the same store?
-      // wsStore.close();
-    }
-  });
+  // onDestroy(() => {
+  //   if (wsStore) {
+  //     // I don't know if we should do this because other components might be using the same store?
+  //     // wsStore.close();
+  //   }
+  // });
 
-  onMount(() => {
-    // TODO :: Types for wsStore
-    wsStore.subscribe((message) => {
-      console.info("Asset component received websocket message:", message);
-      // Do something with the message
+  // onMount(() => {
+  //   // TODO :: Types for wsStore
+  //   wsStore.subscribe((message) => {
+  //     console.info("Asset component received websocket message:", message);
+  //     // Do something with the message
 
-      if (message?.type === WebSocketMessageType.PROXY_UPDATED) {
-        console.info(`${message?.type}: hydrating asset proxy with ws message`);
-        queryClient.setQueryData(["assets"], (data: any) => {
-          return data.map((a: any) => {
-            if (a.id === message.payload?.assetId) {
-              return {
-                ...a,
-                // TODO :: This is quite brittle
-                proxies: [
-                  {
-                    ...a.proxies[0],
-                    ...message.payload,
-                  },
-                ],
-              };
-            }
-            return a;
-          });
-        });
-      } else if (message?.type === WebSocketMessageType.ASSET_UPDATED) {
-        console.info(`${message?.type}: hydrating asset with ws message`);
-        queryClient.setQueryData(["assets"], (data: any) => {
-          return data.map((a: any) => {
-            if (a.id === message.payload?.id) {
-              return {
-                ...a,
-                ...message.payload,
-              };
-            }
-            return a;
-          });
-        });
-      }
-    });
-  });
+  //     if (message?.type === WebSocketMessageType.PROXY_UPDATED) {
+  //       console.info(`${message?.type}: hydrating asset proxy with ws message`);
+  //       queryClient.setQueryData(["assets"], (data: any) => {
+  //         return data.map((a: any) => {
+  //           if (a.id === message.payload?.assetId) {
+  //             return {
+  //               ...a,
+  //               // TODO :: This is quite brittle
+  //               proxies: [
+  //                 {
+  //                   ...a.proxies[0],
+  //                   ...message.payload,
+  //                 },
+  //               ],
+  //             };
+  //           }
+  //           return a;
+  //         });
+  //       });
+  //     } else if (message?.type === WebSocketMessageType.ASSET_UPDATED) {
+  //       console.info(`${message?.type}: hydrating asset with ws message`);
+  //       queryClient.setQueryData(["assets"], (data: any) => {
+  //         return data.map((a: any) => {
+  //           if (a.id === message.payload?.id) {
+  //             return {
+  //               ...a,
+  //               ...message.payload,
+  //             };
+  //           }
+  //           return a;
+  //         });
+  //       });
+  //     }
+  //   });
+  // });
 
-  let selectedAsset = $state<any>(null);
-  let selectedAssets = $state<string[]>([]);
-  let lastSelectedIndex = $state<number>(-1);
+  // let selectedAsset = $state<any>(null);
+  // let selectedAssets = $state<string[]>([]);
+  // let lastSelectedIndex = $state<number>(-1);
 
   // const assets = createQuery({
   //   queryKey: ["assets"],
@@ -236,4 +242,4 @@
 
 {#if selectedAsset}
   <Preview asset={selectedAsset} onClose={() => (selectedAsset = null)} />
-{/if}
+{/if} -->

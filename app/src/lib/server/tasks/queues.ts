@@ -1,5 +1,5 @@
 import { Queue } from "bullmq";
-import { env } from "../lib/env";
+import { env } from "../lib_need_migrate/env";
 
 const imageProcessingQueueName = "images";
 const videoProcessingQueueName = "videos";

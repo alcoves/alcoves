@@ -1,5 +1,5 @@
 import { db } from "../db/db";
-import { getPresignedUrl } from "../lib/s3";
+import { getPresignedUrl } from "../lib_need_migrate/s3";
 
 export async function getAsset(id: string): Promise<any | null> {
 	const asset = await db.query.assets.findFirst({

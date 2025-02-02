@@ -12,8 +12,8 @@ import { v4 as uuid } from "uuid";
 import { z } from "zod";
 import { db } from "../db/db";
 import { assets } from "../db/schema";
-import { env } from "../lib/env";
-import { s3InternalClient, s3PublicClient } from "../lib/s3";
+import { env } from "../lib_need_migrate/env";
+import { s3InternalClient, s3PublicClient } from "../lib_need_migrate/s3";
 import { type UserAuthMiddleware, userAuth } from "../middleware/auth";
 import { VideoTasks, videoProcessingQueue } from "../tasks/queues";
 import type {

@@ -3,7 +3,7 @@ import type { Actions } from './$types';
 import { db } from '$lib/server/db/db';
 import { users } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
-import { createSession, createSessionCookie, generateSessionToken } from '$lib/server/lib/session';
+import { createSession, createSessionCookie, generateSessionToken } from '$lib/server/auth/session';
 
 export const actions = {
   default: async ({ cookies, request, }) => {

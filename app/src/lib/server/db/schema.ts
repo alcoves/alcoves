@@ -45,19 +45,23 @@ export const sessionsRelations = relations(sessions, ({ one }) => ({
 export const assets = pgTable("assets", {
 	id: uuid().defaultRandom().primaryKey(),
 	ownerId: uuid("owner_id").notNull(),
-	type: text({ enum: ["VIDEO", "IMAGE"] })
-		.default("VIDEO")
-		.notNull(),
+	type: text({ enum: ["VIDEO", "IMAGE"] }).notNull(),
 	title: text().notNull(),
-	description: text(),
+	description: text().notNull().default(""),
 	status: text({
 		enum: ["UPLOADING", "UPLOADED", "PROCESSING", "READY", "ERROR"],
 	}),
-	storageKey: text("storage_key").notNull(),
+
+	// The prefix is the root of the asset directory in storage
+	storagePrefix: text("storage_prefix").notNull(),
 	storageBucket: text("storage_bucket").notNull(),
+
+	// Where the uploaded asset is stored
+	storageKey: text("storage_key").notNull(),
 
 	// Original asset metadata
 	metadata: jsonb(), // Metadata of the original asset. Either ffmpeg or exiftool metadata
+	filename: text().notNull(),
 	size: integer().notNull().default(0),
 	width: integer().notNull().default(0),
 	height: integer().notNull().default(0),

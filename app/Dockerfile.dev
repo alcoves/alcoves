@@ -11,7 +11,7 @@ RUN wget -q https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpe
   rm -rf ffmpeg-n7.1-latest-linux64-gpl-7.1 && \
   rm ffmpeg-n7.1-latest-linux64-gpl-7.1.tar.xz
 
-RUN curl -fsSL https://bun.sh/install | BUN_INSTALL=/usr bash -s "bun-v1.2.1"
+RUN curl -fsSL https://bun.sh/install | BUN_INSTALL=/usr bash -s "bun-v1.2.2"
 
 COPY package.json bun.lock ./
 RUN bun install --frozen-lockfile

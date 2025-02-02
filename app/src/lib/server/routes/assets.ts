@@ -3,7 +3,7 @@ import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
 import { db } from "../db/db";
 import { assets } from "../db/schema";
-import { getObjectFromS3, getPresignedUrl } from "../lib/s3";
+import { getObjectFromS3, getPresignedUrl } from "../lib_need_migrate/s3";
 import { type UserAuthMiddleware, userAuth } from "../middleware/auth";
 import { assetsWithUrls } from "../services/assets";
 

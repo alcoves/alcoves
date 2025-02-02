@@ -3,9 +3,9 @@ import type { Actions } from './$types';
 import { db } from '$lib/server/db/db';
 import { users } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
-import { generateSessionToken } from '$lib/server/lib/session';
-import { createSession } from '$lib/server/lib/session';
-import { createSessionCookie } from '$lib/server/lib/session';
+import { generateSessionToken } from '$lib/server/auth/session';
+import { createSession } from '$lib/server/auth/session';
+import { createSessionCookie } from '$lib/server/auth/session';
 
 export const actions = {
   default: async ({ cookies, request, }) => {

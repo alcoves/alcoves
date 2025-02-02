@@ -8,16 +8,16 @@ import sharp from "sharp";
 import { v4 as uuid } from "uuid";
 import { db } from "../../db/db";
 import { assetProxies, assetThumbnails, assets } from "../../db/schema";
-import { env } from "../../lib/env";
-import { getMediaInfo, runFFmpeg } from "../../lib/ffmpeg";
-import { pubClient } from "../../lib/redis";
+import { env } from "../../lib_need_migrate/env";
+import { getMediaInfo, runFFmpeg } from "../../lib_need_migrate/ffmpeg";
+import { pubClient } from "../../lib_need_migrate/redis";
 import {
 	downloadObject,
 	getPresignedUrl,
 	s3InternalClient,
 	uploadDirectoryToS3,
 	uploadFileToS3,
-} from "../../lib/s3";
+} from "../../lib_need_migrate/s3";
 import { type WebSocketMessage, channelName } from "../../routes/ws";
 import { getAsset } from "../../services/assets";
 import { VideoTasks, bullConnection, videoProcessingQueue } from "../queues";

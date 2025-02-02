@@ -6,8 +6,8 @@ import sharp from "sharp";
 import { v4 as uuid } from "uuid";
 import { db } from "../../db/db";
 import { assetThumbnails } from "../../db/schema";
-import { env } from "../../lib/env";
-import { downloadObject, uploadFileToS3 } from "../../lib/s3";
+import { env } from "../../lib_need_migrate/env";
+import { downloadObject, uploadFileToS3 } from "../../lib_need_migrate/s3";
 import { ImageTasks, bullConnection, imageProcessingQueue } from "../queues";
 
 export interface ImageProxyJobData {

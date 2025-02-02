@@ -4,11 +4,11 @@
     import { goto } from "$app/navigation";
     import DarkModeToggle from "$lib/components/DarkModeToggle.svelte";
     import Uploader from "$lib/components/Uploader.svelte";
-    import { user } from "$lib/stores/user";
+    // import { user } from "$lib/stores/user";
     import { Film, Menu } from "lucide-svelte";
 
     const { data, children } = $props();
-    user.set(data.authenticatedUser);
+    // user.set(data.authenticatedUser);
 
     async function handleLogout() {
         try {
@@ -60,7 +60,7 @@
                                 class="bg-neutral text-neutral-content w-10 rounded-full"
                             >
                                 <span class="text-xl"
-                                    >{$user?.email[0].toUpperCase()}</span
+                                    >{data.authenticatedUser?.email[0].toUpperCase()}</span
                                 >
                             </div>
                         </div>
