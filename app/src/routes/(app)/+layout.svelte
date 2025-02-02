@@ -4,11 +4,9 @@
     import { goto } from "$app/navigation";
     import DarkModeToggle from "$lib/components/DarkModeToggle.svelte";
     import Uploader from "$lib/components/Uploader.svelte";
-    // import { user } from "$lib/stores/user";
     import { Film, Menu } from "lucide-svelte";
 
     const { data, children } = $props();
-    // user.set(data.authenticatedUser);
 
     async function handleLogout() {
         try {
@@ -54,7 +52,7 @@
                         <div
                             tabindex="0"
                             role="button"
-                            class="btn btn-ghost btn-circle avatar placeholder"
+                            class="btn btn-ghost btn-circle avatar avatar-placeholder"
                         >
                             <div
                                 class="bg-neutral text-neutral-content w-10 rounded-full"
