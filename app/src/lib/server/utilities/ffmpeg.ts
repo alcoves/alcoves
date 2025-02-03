@@ -203,46 +203,87 @@ export async function runFFmpeg({
 export async function getMediaInfo(
 	input: string,
 ): Promise<VideoMetadata | undefined> {
-	return new Promise((resolve, reject) => {
-		let outputBuffer = "";
-		let errorBuffer = "";
+  return new Promise((resolve, reject) => {
+    const args = [
+      "-v",
+      "quiet",
+      "-print_format",
+      "json",
+      "-show_format",
+      "-show_streams",
+      input
+    ];
+    const ffprobe = spawn("ffprobe", args);
 
-		const ffprobe = spawn("ffprobe", [
-			"-v",
-			"quiet",
-			"-print_format",
-			"json",
-			"-show_format",
-			"-show_streams",
-			input,
-		]);
+    let outputBuffer = "";
+    let errorBuffer = "";
 
-		ffprobe.stdout.on("data", (data) => {
-			outputBuffer += data.toString();
-		});
+    ffprobe.stdout.on("data", (data: Buffer) => {
+      outputBuffer += data.toString();
+    });
 
-		ffprobe.stderr.on("data", (data) => {
-			errorBuffer += data.toString();
-		});
+    ffprobe.stderr.on("data", (data: Buffer) => {
+      errorBuffer += data.toString();
+    });
 
-		ffprobe.on("close", (code) => {
-			if (code === 0) {
-				try {
-					const parsedOutput = JSON.parse(outputBuffer);
-					resolve(parsedOutput);
-				} catch (error) {
-					reject(new Error(`Failed to parse ffprobe output: ${error.message}`));
-				}
-			} else {
-				reject(new Error(`ffprobe exited with code ${code}: ${errorBuffer}`));
-			}
-		});
-
-		ffprobe.on("error", (error) => {
-			reject(new Error(`Failed to start ffprobe: ${error.message}`));
-		});
-	});
+    ffprobe.on("close", (code: number) => {
+      if (code === 0) {
+        try {
+          const parsedOutput = JSON.parse(outputBuffer);
+          resolve(parsedOutput);
+        } catch (parseError: any) {
+          reject(new Error(`Failed to parse ffprobe output: ${parseError.message}. Raw output: ${outputBuffer}`));
+        }
+      } else {
+        reject(new Error(`ffprobe exited with code ${code}: ${errorBuffer}`));
+      }
+    });
+  });
 }
+
+// export async function getMediaInfo(
+// 	input: string,
+// ): Promise<VideoMetadata | undefined> {
+// 	return new Promise((resolve, reject) => {
+// 		let outputBuffer = "";
+// 		let errorBuffer = "";
+
+// 		const ffprobe = spawn("ffprobe", [
+// 			"-v",
+// 			"quiet",
+// 			"-print_format",
+// 			"json",
+// 			"-show_format",
+// 			"-show_streams",
+// 			input,
+// 		]);
+
+// 		ffprobe.stdout.on("data", (data) => {
+// 			outputBuffer += data.toString();
+// 		});
+
+// 		ffprobe.stderr.on("data", (data) => {
+// 			errorBuffer += data.toString();
+// 		});
+
+// 		ffprobe.on("close", (code) => {
+// 			if (code === 0) {
+// 				try {
+// 					const parsedOutput = JSON.parse(outputBuffer);
+// 					resolve(parsedOutput);
+// 				} catch (error) {
+// 					reject(new Error(`Failed to parse ffprobe output: ${error.message}`));
+// 				}
+// 			} else {
+// 				reject(new Error(`ffprobe exited with code ${code}: ${errorBuffer}`));
+// 			}
+// 		});
+
+// 		ffprobe.on("error", (error) => {
+// 			reject(new Error(`Failed to start ffprobe: ${error.message}`));
+// 		});
+// 	});
+// }
 
 function formatTime(seconds: number): string {
 	const h = Math.floor(seconds / 3600);

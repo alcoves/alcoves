@@ -1,146 +1,69 @@
 <script lang="ts">
-  const test = "test";
-</script>
-
-<div>Here are the assets</div>
-
-<!-- <script lang="ts">
-  // import { clientApi, queryClient } from "$lib/api";
-  // import { createQuery } from "@tanstack/svelte-query";
-  import { Check } from "lucide-svelte";
-  import { onDestroy, onMount } from "svelte";
   import Preview from "./Preview.svelte";
+  import { Check } from "lucide-svelte";
+  import { createEventDispatcher } from "svelte";
 
-  // import wsStore, { WebSocketMessageType } from "$lib/stores/ws";
+  export let assets: any[] = [];
 
-  // onDestroy(() => {
-  //   if (wsStore) {
-  //     // I don't know if we should do this because other components might be using the same store?
-  //     // wsStore.close();
-  //   }
-  // });
+  const dispatch = createEventDispatcher();
 
-  // onMount(() => {
-  //   // TODO :: Types for wsStore
-  //   wsStore.subscribe((message) => {
-  //     console.info("Asset component received websocket message:", message);
-  //     // Do something with the message
+  let selectedAssets: string[] = [];
+  let selectedAsset: any = null;
 
-  //     if (message?.type === WebSocketMessageType.PROXY_UPDATED) {
-  //       console.info(`${message?.type}: hydrating asset proxy with ws message`);
-  //       queryClient.setQueryData(["assets"], (data: any) => {
-  //         return data.map((a: any) => {
-  //           if (a.id === message.payload?.assetId) {
-  //             return {
-  //               ...a,
-  //               // TODO :: This is quite brittle
-  //               proxies: [
-  //                 {
-  //                   ...a.proxies[0],
-  //                   ...message.payload,
-  //                 },
-  //               ],
-  //             };
-  //           }
-  //           return a;
-  //         });
-  //       });
-  //     } else if (message?.type === WebSocketMessageType.ASSET_UPDATED) {
-  //       console.info(`${message?.type}: hydrating asset with ws message`);
-  //       queryClient.setQueryData(["assets"], (data: any) => {
-  //         return data.map((a: any) => {
-  //           if (a.id === message.payload?.id) {
-  //             return {
-  //               ...a,
-  //               ...message.payload,
-  //             };
-  //           }
-  //           return a;
-  //         });
-  //       });
-  //     }
-  //   });
-  // });
+  function formatDuration(seconds: number): string {
+    const sec = typeof seconds === "string" ? parseFloat(seconds) : seconds;
+    const hours = Math.floor(sec / 3600);
+    const minutes = Math.floor((sec % 3600) / 60);
+    const remainingSeconds = Math.floor(sec % 60);
 
-  // let selectedAsset = $state<any>(null);
-  // let selectedAssets = $state<string[]>([]);
-  // let lastSelectedIndex = $state<number>(-1);
-
-  // const assets = createQuery({
-  //   queryKey: ["assets"],
-  //   queryFn: async () => {
-  //     const response = await clientApi.get("/api/assets");
-  //     return response.data.assets;
-  //   },
-  // });
-
-  async function deleteSelectedAssets() {
-    try {
-      await clientApi.delete("/api/assets", {
-        data: { ids: selectedAssets },
-      });
-      await queryClient.invalidateQueries({ queryKey: ["assets"] });
-      selectedAssets = [];
-    } catch (error) {
-      console.error("Failed to delete assets:", error);
+    if (hours > 0) {
+      return `${hours}:${minutes.toString().padStart(2, "0")}:${remainingSeconds
+        .toString()
+        .padStart(2, "0")}`;
     }
-  }
-
-  function toggleSelect(assetId: string, index: number, event: MouseEvent) {
-    event.stopPropagation();
-    if (event.shiftKey && lastSelectedIndex >= 0) {
-      const start = Math.min(lastSelectedIndex, index);
-      const end = Math.max(lastSelectedIndex, index);
-      const assetsInRange = $assets.data
-        .slice(start, end + 1)
-        .map((a: any) => a.id);
-
-      const allSelected = assetsInRange.every((id: string) =>
-        selectedAssets.includes(id),
-      );
-      if (allSelected) {
-        selectedAssets = selectedAssets.filter(
-          (id) => !assetsInRange.includes(id),
-        );
-      } else {
-        selectedAssets = [...new Set([...selectedAssets, ...assetsInRange])];
-      }
-    } else {
-      if (selectedAssets.includes(assetId)) {
-        selectedAssets = selectedAssets.filter((id) => id !== assetId);
-      } else {
-        selectedAssets = [...selectedAssets, assetId];
-      }
-    }
-    lastSelectedIndex = index;
-  }
-
-  function openPreview(asset: any) {
-    selectedAsset = asset;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
   }
 
   function selectAll() {
-    selectedAssets = $assets.data.map((asset: any) => asset?.id);
+    selectedAssets = assets.map((asset) => asset.id);
   }
 
   function deselectAll() {
     selectedAssets = [];
   }
 
-  function formatDuration(seconds: number): string {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const remainingSeconds = Math.floor(seconds % 60);
-
-    if (hours > 0) {
-      return `${hours}:${minutes.toString().padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
+  function toggleSelect(id: string, event: MouseEvent) {
+    event.stopPropagation();
+    if (selectedAssets.includes(id)) {
+      selectedAssets = selectedAssets.filter((assetId) => assetId !== id);
+    } else {
+      selectedAssets = [...selectedAssets, id];
     }
-    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
+  }
+
+  function deleteSelectedAssets() {
+    const confirmDeletion = confirm(
+      "Are you sure you want to delete the selected assets?",
+    );
+    if (!confirmDeletion) return;
+    // Emit deletion event so parent can handle deletion
+    dispatch("deleteAssets", { assetIds: selectedAssets });
+    // For local demo, remove assets from view
+    assets = assets.filter((asset) => !selectedAssets.includes(asset.id));
+    selectedAssets = [];
+  }
+
+  function openPreview(asset: any) {
+    selectedAsset = asset;
+  }
+
+  function closePreview() {
+    selectedAsset = null;
   }
 </script>
 
 <div>
-  {#if $assets.isSuccess && $assets.data.length > 0}
+  {#if assets.length > 0}
     <div class="flex items-center gap-2 mb-4">
       <button class="btn btn-sm" onclick={selectAll}>Select All</button>
       {#if selectedAssets.length > 0}
@@ -148,18 +71,26 @@
           >Deselect All</button
         >
         <span class="text-sm opacity-70">
-          {selectedAssets.length} of {$assets.data.length} selected
+          {selectedAssets.length} of {assets.length} selected
         </span>
-        <button class="btn btn-sm btn-error" onclick={deleteSelectedAssets}
-          >Delete</button
-        >
+        <button class="btn btn-sm btn-error" onclick={deleteSelectedAssets}>
+          Delete
+        </button>
       {/if}
     </div>
 
     <div class="flex flex-wrap gap-2">
-      {#each $assets.data as asset, index}
+      {#each assets as asset, index}
         <div
-          class={`card bg-base-200 w-full md:w-96 shadow-md  ${selectedAssets.includes(asset?.id) ? "border border-primary" : "border border-base-300"}`}
+          role="button"
+          tabindex="0"
+          class="card bg-base-200 w-full md:w-96 shadow-md {selectedAssets.includes(
+            asset?.id,
+          )
+            ? 'border border-primary'
+            : 'border border-base-300'}"
+          onclick={() => openPreview(asset)}
+          onkeydown={(e) => e.key === "Enter" && openPreview(asset)}
         >
           <figure class="relative h-40 w-full group">
             {#if asset?.status !== "READY"}
@@ -175,49 +106,51 @@
               <div
                 class="flex flex-col w-full h-full justify-center items-center bg-black/50 z-10"
               >
-                <span class="text-white"
-                  >{asset?.status === "UPLOADING"
+                <span class="text-white">
+                  {asset?.status === "UPLOADING"
                     ? "Uploading..."
-                    : "Processing..."}</span
-                >
+                    : "Processing..."}
+                </span>
                 <progress
                   class="progress progress-info w-56 bg-neutral h-3 rounded-sm"
-                  value={asset?.proxies?.[0]?.progress}
+                  value={asset?.proxies?.[0]?.progress || 0}
                   max="100"
                 ></progress>
               </div>
             {:else}
               {#if asset?.thumbnails?.[0]?.url}
-                {#if asset?.duration}
-                  <div
-                    class="absolute bottom-1 right-1 bg-black/75 px-2 py-0.5 rounded font-semibold text-xs text-white z-20"
-                  >
-                    {formatDuration(parseFloat(asset.metadata.format.duration))}
-                  </div>
-                {/if}
                 <img
                   alt={asset?.title}
                   src={asset?.thumbnails?.[0]?.url}
                   class="absolute object-cover w-full h-full"
                 />
+                {#if asset?.metadata?.format?.duration}
+                  <div
+                    class="absolute bottom-1 right-1 bg-black/75 px-2 py-0.5 rounded font-semibold text-xs text-white z-20"
+                  >
+                    {formatDuration(asset.metadata.format.duration)}
+                  </div>
+                {/if}
               {:else}
                 <div class="absolute object-cover w-full h-full bg-black"></div>
               {/if}
               <div
-                class="flex flex-col w-full h-full group-hover:bg-black/50 transition-background duration-200 z-10"
+                class="flex flex-col w-full h-full group-hover:bg-black/50 transition duration-200 z-10"
                 role="button"
                 tabindex="0"
-                onclick={() => openPreview(asset)}
-                onkeydown={(e) => e.key === "Enter" && openPreview(asset)}
+                onclick={(e) => e.stopPropagation()}
+                onkeydown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.stopPropagation();
+                  }
+                }}
               >
                 <div class="flex w-full justify-end p-2">
                   <button
-                    class={`rounded-md p-1 ${
-                      selectedAssets.includes(asset?.id)
-                        ? "bg-primary text-neutral"
-                        : "bg-neutral text-neutral-content"
-                    }`}
-                    onclick={(e) => toggleSelect(asset?.id, index, e)}
+                    type="button"
+                    class="rounded-md p-1"
+                    class:selected={selectedAssets.includes(asset?.id)}
+                    onclick={(e) => toggleSelect(asset?.id, e)}
                   >
                     <Check strokeWidth="4" class="w-5 h-5" />
                   </button>
@@ -229,17 +162,19 @@
           <div class="card-body p-4">
             <h2 class="card-title text-sm">{asset?.title}</h2>
             <div class="card-actions justify-end">
-              <span class="text-xs opacity-70"
-                >{(asset?.size / 1024 / 1024).toFixed(1)} MB</span
-              >
+              <span class="text-xs opacity-70">
+                {(asset?.size / 1024 / 1024).toFixed(1)} MB
+              </span>
             </div>
           </div>
         </div>
       {/each}
     </div>
+  {:else}
+    <p>No assets found.</p>
   {/if}
 </div>
 
 {#if selectedAsset}
-  <Preview asset={selectedAsset} onClose={() => (selectedAsset = null)} />
-{/if} -->
+  <Preview asset={selectedAsset} on:close={closePreview} />
+{/if}

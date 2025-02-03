@@ -2,21 +2,59 @@
   import { UploadIcon } from "lucide-svelte";
   import pLimit from "p-limit";
   import { v5 as uuidv5 } from "uuid";
+  import PQueue from "p-queue";
+  import { deserialize } from "$app/forms";
+  import type { ActionResult } from "@sveltejs/kit";
 
   interface Upload {
     file: File;
     id: string;
+    chunkSize: number;
     progress: number;
+    urlProgress: {
+      [key: string]: number;
+    };
     status: "queued" | "uploading" | "completed" | "failed";
   }
 
-  const uploadLimiter = pLimit(4);
+  interface CreateUploadFormResponseData {
+    assetId: string;
+    storageKey: string;
+    uploadId: string;
+    uploadUrls: { signedUrl: string; partNumber: number }[];
+  }
+
+  function getChunkSize(totalSize: number): number {
+    const _25mb = 25 * 1024 * 1024;
+    const _50mb = 50 * 1024 * 1024;
+    const _100mb = 100 * 1024 * 1024;
+    const _250mb = 250 * 1024 * 1024;
+    const _500mb = 500 * 1024 * 1024;
+    const _3gb = 3000 * 1024 * 1024;
+    const _10gb = 10000 * 1024 * 1024;
+
+    const DEFAULT_CHUNK_SIZE = _25mb;
+
+    if (totalSize <= DEFAULT_CHUNK_SIZE) {
+      return DEFAULT_CHUNK_SIZE;
+    } else if (totalSize <= _500mb) {
+      return _50mb;
+    } else if (totalSize <= _3gb) {
+      return _100mb;
+    } else if (totalSize <= _10gb) {
+      return _250mb;
+    } else {
+      return _500mb;
+    }
+  }
+
   const GB = 20;
   const MAX_FILE_SIZE = GB * 1024 * 1024 * 1024;
   const authorizedMimeTypes = ["image/*", "video/*"];
   let modalOpen = $state(false);
   let files: FileList | undefined = $state();
   let uploads = $state<Upload[]>([]);
+  const uploadQueue = new PQueue({ concurrency: 2 });
 
   function validateFile(file: File): { valid: boolean; error: string } {
     if (
@@ -35,54 +73,151 @@
   }
 
   async function startUpload(upload: Upload) {
-    uploads.push(upload);
+    const chunks: Blob[] = [];
+    const multipartUploadLimit = pLimit(4);
 
-    const formData = new FormData();
-    formData.append("file", upload.file);
+    for (let start = 0; start < upload.file.size; start += upload.chunkSize) {
+      const chunk = upload.file.slice(start, start + upload.chunkSize);
+      chunks.push(chunk);
+    }
 
-    const updateUpload = (updates: Partial<Upload>) => {
+    const totalParts = chunks.length;
+
+    function updateUpload(updates: Partial<Upload>) {
       const idx = uploads.findIndex((u) => u.id === upload.id);
       if (idx !== -1) {
         Object.assign(uploads[idx], updates);
       }
-    };
+    }
 
-    try {
-      updateUpload({ status: "uploading" });
+    function recalculateTotalProgress(upload: Upload, totalParts: number) {
+      const totalProgress = Object.values(upload.urlProgress).reduce(
+        (a, b) => a + b,
+        0,
+      );
+      upload.progress = Math.round(totalProgress / totalParts);
+    }
 
-      await new Promise((resolve, reject) => {
+    async function uploadPart(url: string, chunk: Blob, upload: Upload) {
+      return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
+        xhr.open("PUT", url, true);
+        xhr.setRequestHeader("Content-Type", "application/octet-stream");
 
-        xhr.upload.onprogress = (event) => {
-          if (event.lengthComputable) {
-            updateUpload({
-              progress: Math.round((event.loaded / event.total) * 100),
-            });
+        xhr.upload.onprogress = (e) => {
+          if (!e.total || !e.loaded) return;
+          const progress = Math.round((e.loaded * 100) / e.total);
+          upload.urlProgress[url] = progress;
+          recalculateTotalProgress(upload, totalParts);
+        };
+
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            resolve(xhr.getResponseHeader("etag"));
+          } else {
+            reject(new Error(`HTTP Error: ${xhr.status}`));
           }
         };
 
-        xhr.onload = () =>
-          xhr.status === 200
-            ? resolve(xhr.response)
-            : reject(new Error("Upload failed"));
-        xhr.onerror = () => reject(new Error("Upload failed"));
-        xhr.open("POST", "?/upload");
+        xhr.onerror = () => {
+          reject(new Error("Network Error"));
+        };
 
-        const safeFileName = encodeURIComponent(upload.file.name);
-        xhr.setRequestHeader(
-          "Content-Disposition",
-          `form-data; content-type="${upload.file.type}"; filename="${safeFileName}"`,
-        );
-
-        xhr.send(formData);
+        xhr.send(chunk);
       });
-
-      updateUpload({ progress: 100, status: "completed" });
-      uploads = uploads.filter((u) => u.id !== upload.id);
-    } catch (error) {
-      updateUpload({ status: "failed" });
-      console.error(error);
     }
+
+    const createUploadFormData = new FormData();
+    createUploadFormData.append("filename", upload.file.name);
+    createUploadFormData.append("totalParts", totalParts.toString());
+    createUploadFormData.append("type", upload.file.type);
+
+    const createUploadResponse = await fetch("?/createUpload", {
+      method: "POST",
+      body: createUploadFormData,
+    });
+
+    // Get form response
+    const result: ActionResult = deserialize(await createUploadResponse.text());
+    const createUploadResponseData: CreateUploadFormResponseData = result.data;
+
+    if (result.type === "success") {
+      console.log("Success", result);
+    } else {
+      console.error("Error", result);
+      return;
+    }
+
+    const { assetId, storageKey, uploadId, uploadUrls } =
+      createUploadResponseData;
+    console.log({ assetId, storageKey, uploadId, uploadUrls });
+
+    const completedParts = await Promise.all(
+      chunks.map((chunk, index) =>
+        multipartUploadLimit(async () => {
+          const { signedUrl, partNumber } = uploadUrls[index];
+          const etag = await uploadPart(signedUrl, chunk, upload);
+          if (!etag) {
+            throw new Error("ETag is null");
+          }
+          return { ETag: etag, PartNumber: partNumber };
+        }),
+      ),
+    );
+
+    console.log("completedParts", completedParts.length);
+
+    console.log("createUploadResponse", createUploadResponse);
+    updateUpload({ progress: 25, status: "uploading" });
+
+    const completeUploadFormData = new FormData();
+    createUploadFormData.append("filename", upload.file.name);
+    createUploadFormData.append("chunks", chunks.toString());
+
+    const completeUploadResponse = await fetch("?/completeUpload", {
+      method: "POST",
+      body: completeUploadFormData,
+    });
+
+    console.log("completeUploadResponse", completeUploadResponse);
+    updateUpload({ progress: 100, status: "completed" });
+
+    // try {
+    //   updateUpload({ status: "uploading" });
+
+    //   await new Promise((resolve, reject) => {
+    //     const xhr = new XMLHttpRequest();
+
+    //     xhr.upload.onprogress = (event) => {
+    //       if (event.lengthComputable) {
+    //         updateUpload({
+    //           progress: Math.round((event.loaded / event.total) * 100),
+    //         });
+    //       }
+    //     };
+
+    //     xhr.onload = () =>
+    //       xhr.status === 200
+    //         ? resolve(xhr.response)
+    //         : reject(new Error("Upload failed"));
+    //     xhr.onerror = () => reject(new Error("Upload failed"));
+    //     xhr.open("POST", "?/upload");
+
+    //     const safeFileName = encodeURIComponent(upload.file.name);
+    //     xhr.setRequestHeader(
+    //       "Content-Disposition",
+    //       `form-data; content-type="${upload.file.type}"; filename="${safeFileName}"`,
+    //     );
+
+    //     xhr.send(formData);
+    //   });
+
+    //   updateUpload({ progress: 100, status: "completed" });
+    //   uploads = uploads.filter((u) => u.id !== upload.id);
+    // } catch (error) {
+    //   updateUpload({ status: "failed" });
+    //   console.error(error);
+    // }
   }
 
   $effect(() => {
@@ -94,16 +229,18 @@
           continue;
         }
 
-        uploadLimiter(() => {
-          modalOpen = true;
-          startUpload({
-            file,
-            progress: 0,
-            status: "queued",
-            id: uuidv5(file.name, uuidv5.URL),
-          });
-        });
+        const upload: Upload = {
+          file,
+          progress: 0,
+          status: "queued",
+          id: uuidv5(file.name, uuidv5.URL),
+          urlProgress: {},
+          chunkSize: getChunkSize(file.size),
+        };
+        uploads.push(upload);
+        uploadQueue.add(() => startUpload(upload));
       }
+
       files = undefined;
       modalOpen = true;
     }
@@ -158,11 +295,11 @@
     <div class="modal-box">
       <h3 class="text-lg font-bold">Uploader</h3>
       <p class="py-4">
-        {`There are ${Object.keys(uploads).length} files in the upload queue`}
+        {`There are ${uploads.length} files in the upload queue`}
       </p>
-      {#if Object.keys(uploads).length}
+      {#if uploads.length}
         <div class="flex flex-col w-full gap-4">
-          {#each Object.values(uploads) as upload}
+          {#each uploads as upload}
             <div
               class="p-2 flex flex-col w-full rounded-md border-2 border-primary"
             >

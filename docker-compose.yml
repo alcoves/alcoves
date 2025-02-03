@@ -5,6 +5,7 @@ services:
       dockerfile: Dockerfile.dev
     command: bash -c "bun db:migrate && bun dev"
     container_name: app
+    network_mode: host
     env_file:
       - .env
     volumes:

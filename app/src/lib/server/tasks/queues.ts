@@ -1,18 +1,12 @@
 import { Queue } from "bullmq";
-import { env } from "../lib_need_migrate/env";
+import { env } from "../utilities/env";
 
-const imageProcessingQueueName = "images";
-const videoProcessingQueueName = "videos";
+const assetProcessingQueueName = "assets";
 
-// Not currently used really.
-export enum ImageTasks {
-	FETCH_IMAGE_METADATA = "fetch_image_metadata",
-	GENERATE_IMAGE_PROXIES = "generate_image_proxies",
-}
-
-export enum VideoTasks {
-	GENERATE_VIDEO_PROXIES = "generate_video_proxies",
-	GENERATE_VIDEO_THUMBNAIL = "generate_video_thumbnail",
+export enum AssetTasks {
+	INGEST_ASSET = "ingest_asset",
+	GENERATE_ASSET_VIDEO_PROXY = "generate_asset_video_proxy",
+	GENERATE_ASSET_VIDEO_THUMBNAIL = "generate_asset_video_thumbnail",
 }
 
 export const bullConnection = {
@@ -20,10 +14,6 @@ export const bullConnection = {
 	port: Number.parseInt(env.ALCOVES_TASK_DB_PORT),
 };
 
-export const imageProcessingQueue = new Queue(imageProcessingQueueName, {
-	connection: bullConnection,
-});
-
-export const videoProcessingQueue = new Queue(videoProcessingQueueName, {
+export const assetProcessingQueue = new Queue(assetProcessingQueueName, {
 	connection: bullConnection,
 });

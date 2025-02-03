@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { apiEndpoint } from "$lib/api";
   import { isHLSProvider } from "vidstack";
   import "vidstack/bundle";
 
@@ -49,7 +48,7 @@
       volume={0.5}
       title={asset?.title}
       crossorigin="use-credentials"
-      src={`${apiEndpoint}/api/assets/${asset?.id}/manifest/main.m3u8`}
+      src={`/api/assets/${asset?.id}/manifest/main.m3u8`}
     >
       <media-provider></media-provider>
       <media-video-layout></media-video-layout>

@@ -1,6 +1,9 @@
 import type { Handle } from "@sveltejs/kit";
+import { startWorkers } from "$lib/server/tasks";
 import { validateSessionToken } from "$lib/server/auth/session";
 import { deleteSessionTokenCookie, setSessionTokenCookie } from "$lib/server/auth/session";
+
+startWorkers()
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const token = event.cookies.get("session") ?? null;

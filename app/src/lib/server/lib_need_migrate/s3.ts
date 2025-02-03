@@ -131,30 +131,7 @@ export async function deleteS3ObjectsByPrefix({
 	}
 }
 
-export async function downloadObject({
-	localDir,
-	bucket,
-	key,
-}: {
-	localDir: string;
-	bucket: string;
-	key: string;
-}): Promise<string> {
-	const downloadPath = join(localDir, "downloadedFile");
 
-	console.log("Downloading object", key, "from", bucket, "to", downloadPath);
-
-	try {
-		const command = new GetObjectCommand({ Bucket: bucket, Key: key });
-		const response = await s3InternalClient.send(command);
-		await pipelineAsync(response.Body as ReadableStream, createWriteStream(downloadPath));
-		console.log(`Successfully downloaded ${key} from ${bucket} to ${downloadPath}`);
-	} catch (error) {
-		throw error;
-	}
-
-	return downloadPath;
-}
 
 export async function uploadBufferToS3({
 	imageBuffer,
@@ -188,27 +165,6 @@ export async function uploadBufferToS3({
 	}
 }
 
-export async function getPresignedUrl({
-	client = s3PublicClient,
-	bucket,
-	key,
-	expiration = 3600,
-}: {
-	client?: S3Client;
-	bucket: string;
-	key: string;
-	expiration?: number;
-}): Promise<string> {
-	const command = new GetObjectCommand({
-		Bucket: bucket,
-		Key: key,
-	});
-
-	return getSignedUrl(client, command, {
-		expiresIn: expiration,
-	});
-}
-
 export async function getObjectFromS3({
 	bucket,
 	key,
@@ -221,40 +177,6 @@ export async function getObjectFromS3({
 		return s3InternalClient.send(command);
 	} catch (error) {
 		console.error("Failed to get object from S3:", error);
-		throw error;
-	}
-}
-
-export async function uploadFileToS3({
-	filePath,
-	bucket,
-	key,
-	contentType,
-}: {
-	filePath: string;
-	bucket: string;
-	key: string;
-	contentType: string;
-}): Promise<{ location: string; key: string }> {
-	try {
-		const fileStream = createReadStream(filePath);
-		const upload = new Upload({
-			client: s3InternalClient,
-			params: {
-				Key: key,
-				Bucket: bucket,
-				Body: fileStream,
-				ContentType: contentType,
-			},
-		});
-
-		const result = await upload.done();
-		return {
-			location: result.Location!,
-			key: result.Key!,
-		};
-	} catch (error) {
-		console.error("Upload failed:", error);
 		throw error;
 	}
 }

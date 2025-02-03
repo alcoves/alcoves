@@ -5,10 +5,10 @@ import { Worker } from "bullmq";
 import sharp from "sharp";
 import { v4 as uuid } from "uuid";
 import { db } from "../../db/db";
-import { assetThumbnails } from "../../db/schema";
-import { env } from "../../lib_need_migrate/env";
-import { downloadObject, uploadFileToS3 } from "../../lib_need_migrate/s3";
+import { env } from "$lib/server/utilities/env";
+import { assetThumbnails } from "../../db/schema";;
 import { ImageTasks, bullConnection, imageProcessingQueue } from "../queues";
+import { downloadObject, uploadFileToS3 } from "$lib/server/utilities/s3";
 
 export interface ImageProxyJobData {
 	assetId: string;
@@ -63,7 +63,7 @@ async function main() {
 						});
 
 						const assetImageProxy = await db
-							.insert(thumbnails)
+							.insert(assetThumbnails)
 							.values({
 								assetId: job.data.assetId,
 								size: compressedImage.size,
@@ -152,7 +152,7 @@ async function main() {
 		},
 		{
 			connection: bullConnection,
-			concurrency: Number.parseInt(env.ALCOVES_TASK_WORKER_CONCURRENCY || "1"),
+			concurrency: Number.parseInt(env.ALCOVES_TASK_WORKER_CONCURRENCY),
 		},
 	);
 
