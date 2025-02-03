@@ -95,7 +95,7 @@
         (a, b) => a + b,
         0,
       );
-      upload.progress = Math.round(totalProgress / totalParts);
+      updateUpload({ progress: Math.round(totalProgress / totalParts) });
     }
 
     async function uploadPart(url: string, chunk: Blob, upload: Upload) {
@@ -138,6 +138,7 @@
     });
 
     // Get form response
+    updateUpload({ status: "uploading" });
     const result: ActionResult = deserialize(await createUploadResponse.text());
     const createUploadResponseData: CreateUploadFormResponseData = result.data;
 
@@ -166,13 +167,15 @@
     );
 
     console.log("completedParts", completedParts.length);
-
     console.log("createUploadResponse", createUploadResponse);
-    updateUpload({ progress: 25, status: "uploading" });
 
     const completeUploadFormData = new FormData();
-    createUploadFormData.append("filename", upload.file.name);
-    createUploadFormData.append("chunks", chunks.toString());
+    completeUploadFormData.append("key", storageKey);
+    completeUploadFormData.append("uploadId", uploadId);
+    completeUploadFormData.append("assetId", assetId);
+    completeUploadFormData.append("type", upload.file.type);
+    completeUploadFormData.append("filename", upload.file.name);
+    completeUploadFormData.append("parts", JSON.stringify(completedParts));
 
     const completeUploadResponse = await fetch("?/completeUpload", {
       method: "POST",
@@ -182,42 +185,11 @@
     console.log("completeUploadResponse", completeUploadResponse);
     updateUpload({ progress: 100, status: "completed" });
 
-    // try {
-    //   updateUpload({ status: "uploading" });
-
-    //   await new Promise((resolve, reject) => {
-    //     const xhr = new XMLHttpRequest();
-
-    //     xhr.upload.onprogress = (event) => {
-    //       if (event.lengthComputable) {
-    //         updateUpload({
-    //           progress: Math.round((event.loaded / event.total) * 100),
-    //         });
-    //       }
-    //     };
-
-    //     xhr.onload = () =>
-    //       xhr.status === 200
-    //         ? resolve(xhr.response)
-    //         : reject(new Error("Upload failed"));
-    //     xhr.onerror = () => reject(new Error("Upload failed"));
-    //     xhr.open("POST", "?/upload");
-
-    //     const safeFileName = encodeURIComponent(upload.file.name);
-    //     xhr.setRequestHeader(
-    //       "Content-Disposition",
-    //       `form-data; content-type="${upload.file.type}"; filename="${safeFileName}"`,
-    //     );
-
-    //     xhr.send(formData);
-    //   });
-
-    //   updateUpload({ progress: 100, status: "completed" });
-    //   uploads = uploads.filter((u) => u.id !== upload.id);
-    // } catch (error) {
-    //   updateUpload({ status: "failed" });
-    //   console.error(error);
-    // }
+    // Remove upload from the queue
+    const idx = uploads.findIndex((u) => u.id === upload.id);
+    if (idx !== -1) {
+      uploads.splice(idx, 1);
+    }
   }
 
   $effect(() => {

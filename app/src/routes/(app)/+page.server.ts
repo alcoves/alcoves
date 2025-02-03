@@ -6,129 +6,176 @@ import { v4 as uuidv4 } from "uuid";
 import { eq } from "drizzle-orm";
 import type { PageServerLoad } from "./$types";
 import { assetProcessingQueue, AssetTasks } from "$lib/server/tasks/queues";
-import { CompleteMultipartUploadCommand, CreateMultipartUploadCommand, UploadPartCommand } from "@aws-sdk/client-s3";
+import {
+  CompleteMultipartUploadCommand,
+  CreateMultipartUploadCommand,
+  UploadPartCommand
+} from "@aws-sdk/client-s3";
 import { env } from "$lib/server/utilities/env";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import path from "path";
 
-function getAssetType(mimeType: string): "IMAGE" | "VIDEO" {
-  if (mimeType.startsWith("image/")) {
-    return "IMAGE";
-  } else if (mimeType.startsWith("video/")) {
-    return "VIDEO";
-  } else {
-    throw new Error("Invalid asset type");
+import { z } from "zod";
+
+const mimeTypeValidator = z.string().refine(
+  (val) => val.startsWith("image/") || val.startsWith("video/"),
+  { message: "Invalid MIME type. Must be an image or video type" }
+);
+
+const createUploadSchema = z.object({
+  filename: z.string().min(1, { message: "Filename is required" }),
+  totalParts: z.string()
+    .min(1, { message: "Total parts is required" })
+    .transform((val) => parseInt(val, 10))
+    .refine((val) => !isNaN(val) && val > 0, { 
+      message: "Total parts must be a positive number" 
+    }),
+  type: mimeTypeValidator
+});
+
+const completeUploadSchema = z.object({
+  key: z.string().min(1, { message: "Storage key is required" }),
+  uploadId: z.string().min(1, { message: "Upload ID is required" }),
+  parts: z.preprocess(
+    (arg) => {
+      if (typeof arg === "string") {
+        try {
+          return JSON.parse(arg);
+        } catch (e) {
+          return arg;
+        }
+      }
+      return arg;
+    },
+    z.array(z.object({
+      ETag: z.string(),
+      PartNumber: z.number()
+    }))
+  ),
+  assetId: z.string().uuid({ message: "Invalid asset ID format" }),
+  type: mimeTypeValidator,
+  filename: z.string().min(1, { message: "Filename is required" })
+});
+
+const validateFormData = async <T extends z.ZodSchema>(
+  formData: FormData,
+  schema: T
+): Promise<{ success: true; data: z.infer<T> } | { success: false; error: z.ZodError }> => {
+  try {
+    const data = Object.fromEntries(formData);
+    const validatedData = await schema.parseAsync(data);
+    return { success: true, data: validatedData };
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return { success: false, error };
+    }
+    throw error;
   }
+};
+
+type CreateUploadInput = z.infer<typeof createUploadSchema>;
+type CompleteUploadInput = z.infer<typeof completeUploadSchema>;
+
+function getAssetType(mimeType: string): "IMAGE" | "VIDEO" {
+  if (mimeType.startsWith("image/")) return "IMAGE";
+  if (mimeType.startsWith("video/")) return "VIDEO";
+  throw new Error("Invalid asset type");
 }
 
 export const load: PageServerLoad = async ({ locals }) => {
-  const fetchedAssets = await db.select().from(assets).where(eq(assets.ownerId, locals.user.id));
-  return {
-    assets: fetchedAssets
-  };
+  const assetsList = await db
+    .select()
+    .from(assets)
+    .where(eq(assets.ownerId, locals.user.id));
+  return { assets: assetsList };
 };
 
 export const actions = {
   createUpload: async ({ request, locals }) => {
-    const user = locals.user;
-    if (user === null) throw fail(401);
-    
-	  const data = await request.formData();
-		const filename = data.get('filename')?.toString();
-		const totalParts = data.get('totalParts')?.toString();
-    const type = data.get('type')?.toString();
+    if (!locals.user) throw fail(401);
+    const formData = await request.formData();
 
-    if (!totalParts || !type || !filename) {
-      return fail(400, { error: true, message: "Missing required fields" });
+    const validation = await validateFormData(formData, createUploadSchema);
+    if (!validation.success) {
+      return fail(400, { 
+        error: true, 
+        message: "Invalid form data", 
+        issues: validation.error.issues 
+      });
     }
     
+    const { filename, totalParts, type } = validation.data;
     const assetId = uuidv4();
     const storageKey = `${ASSET_STORAGE_PREFIX}/${assetId}/${assetId}`;
-    console.info("createUpload", filename, totalParts, new Date().toISOString());
 
     const createCommand = new CreateMultipartUploadCommand({
       Key: storageKey,
       ContentType: type,
-      Bucket: env.ALCOVES_OBJECT_STORE_DEFAULT_BUCKET,
+      Bucket: env.ALCOVES_OBJECT_STORE_DEFAULT_BUCKET
     });
-
     const { UploadId } = await s3Client.send(createCommand);
 
-		const signedUrls = await Promise.all(
-			Array.from({ length: parseInt(totalParts) }, (_, i) => i + 1).map(async (partNumber) => {
-				const command = new UploadPartCommand({
-					UploadId,
-					Key: storageKey,
-					PartNumber: partNumber,
-					Bucket: env.ALCOVES_OBJECT_STORE_DEFAULT_BUCKET,
-				});
+    const uploadUrls = await Promise.all(
+      Array.from({ length: totalParts }, (_, i) => i + 1).map(async (partNumber) => {
+        const command = new UploadPartCommand({
+          UploadId,
+          Key: storageKey,
+          PartNumber: partNumber,
+          Bucket: env.ALCOVES_OBJECT_STORE_DEFAULT_BUCKET
+        });
+        const signedUrl = await getSignedUrl(s3Client, command, {
+          expiresIn: 3600 * 24 // 24 hours
+        });
+        return { signedUrl, partNumber };
+      })
+    );
 
-				const signedUrl = await getSignedUrl(s3Client, command, {
-					expiresIn: 3600 * 24, // 24 hours
-				});
-
-				return {
-					signedUrl,
-					partNumber,
-				};
-			}),
-		);
-
-    return { 
-      assetId,
-      storageKey,
-      uploadId: UploadId,
-      uploadUrls: signedUrls,
-     };
+    return { assetId, storageKey, uploadId: UploadId, uploadUrls };
   },
-  completeUpload: async ({ request, locals }) => {
-    const user = locals.user;
-    if (user === null) throw fail(401);
-    console.info("completeUpload", new Date().toISOString());
 
-	  const data = await request.formData();
-		const key = data.get('key')?.toString();
-		const uploadId = data.get('uploadId')?.toString();
-    const parts = data.get('parts')?.toString();
-    const assetId = data.get('assetId')?.toString();
-    const type = data.get('type')?.toString();
-    const filename = data.get('filename')?.toString();
+  completeUpload: async ({ request, locals }) => {
+    if (!locals.user) throw fail(401);
+    const formData = await request.formData();
+
+    const validation = await validateFormData(formData, completeUploadSchema);
+    if (!validation.success) {
+      return fail(400, { 
+        error: true, 
+        message: "Invalid form data", 
+        issues: validation.error.issues 
+      });
+    }
+    
+    const { key, uploadId, parts, assetId, type, filename } = validation.data;
 
     const command = new CompleteMultipartUploadCommand({
       Bucket: env.ALCOVES_OBJECT_STORE_DEFAULT_BUCKET,
       Key: key,
       UploadId: uploadId,
       MultipartUpload: {
-        Parts: parts.map(({ ETag, PartNumber }) => ({
-          ETag,
-          PartNumber,
-        })),
-      },
+        Parts: parts.map((p: { ETag: string; PartNumber: number }) => ({
+          ETag: p.ETag,
+          PartNumber: p.PartNumber
+        }))
+      }
     });
+    await s3Client.send(command);
 
-    const result = await s3Client.send(command);
     const assetStoragePrefix = `${ASSET_STORAGE_PREFIX}/${assetId}`;
+    await db.insert(assets).values({
+      id: assetId,
+      ownerId: locals.user.id,
+      type: getAssetType(type),
+      status: "UPLOADED",
+      title: path.parse(filename).name,
+      filename,
+      mimeType: type,
+      storagePrefix: assetStoragePrefix,
+      storageKey: `${assetStoragePrefix}/${assetId}`,
+      storageBucket: process.env.ALCOVES_OBJECT_STORE_DEFAULT_BUCKET!
+    }).returning();
 
-    const [asset] = await db
-      .insert(assets)
-      .values({
-        id: assetId,
-        ownerId: user.id,
-        type: getAssetType(type),
-        status: "UPLOADED",
-        title: path.parse(filename).name,
-        filename: filename,
-        mimeType: type,
-        storagePrefix: assetStoragePrefix,
-        storageKey: `${assetStoragePrefix}/${assetId}`,
-        storageBucket: process.env.ALCOVES_OBJECT_STORE_DEFAULT_BUCKET!
-      })
-      .returning();
-
-    await assetProcessingQueue.add(AssetTasks.INGEST_ASSET, {
-      assetId
-    });
-
+    await assetProcessingQueue.add(AssetTasks.INGEST_ASSET, { assetId });
     return { success: true };
-  },
+  }
 } satisfies Actions;
