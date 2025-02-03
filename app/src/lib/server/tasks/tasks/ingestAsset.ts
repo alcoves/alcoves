@@ -1,12 +1,14 @@
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, basename  } from "node:path";
 import type { AssetJob } from "../workers/assets";
 import { db } from "$lib/server/db/db";
 import { eq } from "drizzle-orm";
 import { assets } from "$lib/server/db/schema";
 import { getMediaInfo } from "$lib/server/utilities/ffmpeg";
 import { getPresignedUrl } from "$lib/server/utilities/s3";
+
+const getBytesAsMegabytes = (bytes: number) => bytes / 1024 / 1024
 
 export async function ingestAsset(job: AssetJob): Promise<void> {
   const tmpDir = await mkdtemp(join(tmpdir(), "alcoves-"));
@@ -24,7 +26,42 @@ export async function ingestAsset(job: AssetJob): Promise<void> {
         bucket: asset.storageBucket,
       })
       const metadata = await getMediaInfo(sourceMediaUrl)
-      console.log("Metadata", metadata);
+
+      // TODO :: This should probably be a zod validated data object
+
+      if (!metadata) {
+        throw new Error("Failed to fetch media metadata");
+      }
+
+      const updates: any = {}
+    
+      const size = Math.ceil(getBytesAsMegabytes(parseInt(metadata.format.size)))
+      if (size) updates.size = size
+
+      const duration = parseFloat(metadata.format.duration)
+      if (duration) updates.duration = duration
+
+      const videoStream = metadata.streams.find(stream => stream.codec_type === "video")
+      if (!videoStream) throw new Error("Video stream not found");
+      const width = videoStream.width
+      const height = videoStream.height
+      if (width) updates.width = width
+      if (height) updates.height = height
+
+      // If there is no creation time, try to parse a timestamp from the filename
+      const filename = basename(asset.filename);
+      const match = filename.match(/(\d{4}-\d{2}-\d{2})_(\d{2}-\d{2}-\d{2})/);
+      if (match) {
+        const [date, time] = match.slice(1);
+        const [hour, min, sec] = time.split('-');
+        const cTime = new Date(`${date}T${hour}:${min}:${sec}`)
+        console.log("Creation time", cTime);
+        if (cTime) updates.cTime = cTime     
+      } else {
+        console.warn("No creation time found in filename");
+      }
+ 
+      await db.update(assets).set({ ...updates, metadata }).where(eq(assets.id, asset.id));
     } else if (asset.type === "IMAGE") {
       throw new Error("Image processing not implemented");
     } else {

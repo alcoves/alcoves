@@ -211,6 +211,8 @@ export async function getMediaInfo(
       "json",
       "-show_format",
       "-show_streams",
+			"-show_entries",
+			"stream_tags:format_tags",
       input
     ];
     const ffprobe = spawn("ffprobe", args);
