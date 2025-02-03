@@ -25,8 +25,8 @@ With the docker compose stack up and running
 
 ```
 # Generate SQL Migration files
-docker compose run app bun run db:generate
+docker compose run --rm app bun run db:generate
 
 # Apply the migration (it is also done when the stack starts)
-docker compose run app bun run db:migrate
+docker compose run --rm app bun run db:migrate
 ```

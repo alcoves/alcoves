@@ -35,8 +35,8 @@ export async function ingestAsset(job: AssetJob): Promise<void> {
 
       const updates: any = {}
     
-      const size = Math.ceil(getBytesAsMegabytes(parseInt(metadata.format.size)))
-      if (size) updates.size = size
+      const size = getBytesAsMegabytes(parseFloat(metadata.format.size))
+      if (size) updates.size = size.toFixed(2)
 
       const duration = parseFloat(metadata.format.duration)
       if (duration) updates.duration = duration
@@ -48,17 +48,23 @@ export async function ingestAsset(job: AssetJob): Promise<void> {
       if (width) updates.width = width
       if (height) updates.height = height
 
-      // If there is no creation time, try to parse a timestamp from the filename
-      const filename = basename(asset.filename);
-      const match = filename.match(/(\d{4}-\d{2}-\d{2})_(\d{2}-\d{2}-\d{2})/);
-      if (match) {
-        const [date, time] = match.slice(1);
-        const [hour, min, sec] = time.split('-');
-        const cTime = new Date(`${date}T${hour}:${min}:${sec}`)
-        console.log("Creation time", cTime);
-        if (cTime) updates.cTime = cTime     
-      } else {
-        console.warn("No creation time found in filename");
+      try {
+        const filename = basename(asset.filename);
+        const match = filename.match(/(\d{4}-\d{2}-\d{2})_(\d{2}-\d{2}-\d{2})/);
+      
+        if (match) {
+          const [date, time] = match.slice(1);
+          const [hour, min, sec] = time.split('-');
+          const cTime = new Date(`${date}T${hour}:${min}:${sec}`)
+          
+          // test the date 
+          cTime.toISOString()
+
+          console.log("Creation time", cTime);
+          if (cTime) updates.cTime = cTime     
+        } 
+      } catch (error) {
+        console.warn("Unable to parse creation time from filename, skipping...");
       }
  
       await db.update(assets).set({ ...updates, metadata }).where(eq(assets.id, asset.id));

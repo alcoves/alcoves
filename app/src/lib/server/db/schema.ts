@@ -62,7 +62,7 @@ export const assets = pgTable("assets", {
 	// Original asset metadata
 	metadata: jsonb(), // Metadata of the original asset. Either ffmpeg or exiftool metadata
 	filename: text().notNull(),
-	size: integer().notNull().default(0),
+	size: real().notNull().default(0),
 	width: integer().notNull().default(0),
 	height: integer().notNull().default(0),
 	duration: real().notNull().default(0),
