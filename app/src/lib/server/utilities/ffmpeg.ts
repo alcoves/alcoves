@@ -1,6 +1,6 @@
-import { spawn } from "child_process";
+import { spawn } from "node:child_process";
 
-type VideoMetadata = {
+export type VideoMetadata = {
 	streams: Stream[];
 	format: Format;
 };
@@ -105,6 +105,61 @@ type FormatTags = {
 	encoder: string;
 };
 
+export const qualities = {
+	av1: [
+		{
+			name: "av1_1080p",
+			scale: "scale=-2:1080",
+			crf: "36",
+			codec: "libsvtav1",
+			preset: "6",
+			svtParams: "mbr=10000k",
+		},
+		{
+			name: "av1_720p",
+			scale: "scale=-2:720",
+			crf: "36",
+			codec: "libsvtav1",
+			preset: "6",
+			svtParams: "mbr=5500k",
+		},
+		{
+			name: "av1_360p",
+			scale: "scale=-2:360",
+			crf: "36",
+			codec: "libsvtav1",
+			preset: "6",
+			svtParams: "mbr=1000k",
+		},
+	],
+	x264: [
+		{
+			name: "264_1080p",
+			scale: "scale=-2:1080",
+			crf: "20",
+			codec: "libx264",
+			preset: "medium",
+			bitrate: { rate: "4000K", maxrate: "4000K", bufsize: "4000K" },
+		},
+		{
+			name: "264_720p",
+			scale: "scale=-2:720",
+			crf: "20",
+			codec: "libx264",
+			preset: "medium",
+			bitrate: { rate: "1500K", maxrate: "1500K", bufsize: "1500K" },
+		},
+		{
+			name: "264_360p",
+			scale: "scale=-2:360",
+			crf: "20",
+			codec: "libx264",
+			preset: "medium",
+			bitrate: { rate: "400K", maxrate: "400K", bufsize: "400K" },
+		},
+	],
+};
+
 export async function runFFmpeg({
 	input,
 	output,
@@ -203,44 +258,48 @@ export async function runFFmpeg({
 export async function getMediaInfo(
 	input: string,
 ): Promise<VideoMetadata | undefined> {
-  return new Promise((resolve, reject) => {
-    const args = [
-      "-v",
-      "quiet",
-      "-print_format",
-      "json",
-      "-show_format",
-      "-show_streams",
+	return new Promise((resolve, reject) => {
+		const args = [
+			"-v",
+			"quiet",
+			"-print_format",
+			"json",
+			"-show_format",
+			"-show_streams",
 			"-show_entries",
 			"stream_tags:format_tags",
-      input
-    ];
-    const ffprobe = spawn("ffprobe", args);
+			input,
+		];
+		const ffprobe = spawn("ffprobe", args);
 
-    let outputBuffer = "";
-    let errorBuffer = "";
+		let outputBuffer = "";
+		let errorBuffer = "";
 
-    ffprobe.stdout.on("data", (data: Buffer) => {
-      outputBuffer += data.toString();
-    });
+		ffprobe.stdout.on("data", (data: Buffer) => {
+			outputBuffer += data.toString();
+		});
 
-    ffprobe.stderr.on("data", (data: Buffer) => {
-      errorBuffer += data.toString();
-    });
+		ffprobe.stderr.on("data", (data: Buffer) => {
+			errorBuffer += data.toString();
+		});
 
-    ffprobe.on("close", (code: number) => {
-      if (code === 0) {
-        try {
-          const parsedOutput = JSON.parse(outputBuffer);
-          resolve(parsedOutput);
-        } catch (parseError: any) {
-          reject(new Error(`Failed to parse ffprobe output: ${parseError.message}. Raw output: ${outputBuffer}`));
-        }
-      } else {
-        reject(new Error(`ffprobe exited with code ${code}: ${errorBuffer}`));
-      }
-    });
-  });
+		ffprobe.on("close", (code: number) => {
+			if (code === 0) {
+				try {
+					const parsedOutput = JSON.parse(outputBuffer);
+					resolve(parsedOutput);
+				} catch (parseError: any) {
+					reject(
+						new Error(
+							`Failed to parse ffprobe output: ${parseError.message}. Raw output: ${outputBuffer}`,
+						),
+					);
+				}
+			} else {
+				reject(new Error(`ffprobe exited with code ${code}: ${errorBuffer}`));
+			}
+		});
+	});
 }
 
 // export async function getMediaInfo(

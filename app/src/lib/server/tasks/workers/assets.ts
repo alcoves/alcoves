@@ -1,14 +1,15 @@
-import { Worker } from "bullmq";
 import { env } from "$lib/server/utilities/env";
-import { ingestAsset } from "../tasks/ingestAsset";
-import { assetProcessingQueue, AssetTasks, bullConnection } from "../queues";
+import { type Job, Worker } from "bullmq";
+import { AssetTasks, assetProcessingQueue, bullConnection } from "../queues";
+import { generateVideoProxy } from "../tasks/generateVideoProxy";
 import { generateVideoThumbnail } from "../tasks/generateVideoThumbnail";
+import { ingestAsset } from "../tasks/ingestAsset";
 
-export interface AssetJob {
+export interface AssetJob extends Job {
 	name: AssetTasks;
 	data: {
-    assetId: string;
-  };
+		assetId: string;
+	};
 }
 
 async function main() {
@@ -21,7 +22,7 @@ async function main() {
 						await ingestAsset(job);
 						break;
 					case AssetTasks.GENERATE_ASSET_VIDEO_PROXY:
-						console.log("NOT IMPLEMENTED: Generating video proxy");
+						await generateVideoProxy(job);
 						break;
 					case AssetTasks.GENERATE_ASSET_VIDEO_THUMBNAIL:
 						await generateVideoThumbnail(job);
@@ -30,9 +31,9 @@ async function main() {
 						console.error(`Invalid job name: ${job.name}`);
 						break;
 				}
-			} catch(error) {
+			} catch (error) {
 				console.error("Worker Error:", error);
-				throw error
+				throw error;
 			}
 		},
 		{

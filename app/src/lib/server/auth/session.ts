@@ -1,10 +1,13 @@
 // import { OAuth2Client } from "google-auth-library";
 
-import { encodeBase32LowerCaseNoPadding, encodeHexLowerCase } from "@oslojs/encoding";
 import { sha256 } from "@oslojs/crypto/sha2";
+import {
+	encodeBase32LowerCaseNoPadding,
+	encodeHexLowerCase,
+} from "@oslojs/encoding";
 import { eq } from "drizzle-orm";
-import { type Session, sessions, type User, users } from "../db/schema";
 import { db } from "../db/db";
+import { type Session, type User, sessions, users } from "../db/schema";
 
 export function generateSessionToken(): string {
 	const bytes = new Uint8Array(20);
@@ -13,7 +16,10 @@ export function generateSessionToken(): string {
 	return token;
 }
 
-export async function createSession(token: string, userId: string): Promise<Session> {
+export async function createSession(
+	token: string,
+	userId: string,
+): Promise<Session> {
 	const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
 	const [session] = await db
 		.insert(sessions)
@@ -26,7 +32,9 @@ export async function createSession(token: string, userId: string): Promise<Sess
 	return session;
 }
 
-export async function validateSessionToken(token: string): Promise<SessionValidationResult> {
+export async function validateSessionToken(
+	token: string,
+): Promise<SessionValidationResult> {
 	const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
 	const result = await db
 		.select({ user: users, session: sessions })
@@ -62,15 +70,18 @@ export type SessionValidationResult =
 	| { session: Session; user: User }
 	| { session: null; user: null };
 
-	import type { RequestEvent } from "@sveltejs/kit";
+import type { RequestEvent } from "@sveltejs/kit";
 
-
-export function setSessionTokenCookie(event: RequestEvent, token: string, expiresAt: Date): void {
+export function setSessionTokenCookie(
+	event: RequestEvent,
+	token: string,
+	expiresAt: Date,
+): void {
 	event.cookies.set("session", token, {
 		httpOnly: true,
 		sameSite: "lax",
 		expires: expiresAt,
-		path: "/"
+		path: "/",
 	});
 }
 
@@ -79,6 +90,6 @@ export function deleteSessionTokenCookie(event: RequestEvent): void {
 		httpOnly: true,
 		sameSite: "lax",
 		maxAge: 0,
-		path: "/"
+		path: "/",
 	});
 }
