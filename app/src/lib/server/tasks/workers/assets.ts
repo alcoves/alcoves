@@ -2,13 +2,12 @@ import { Worker } from "bullmq";
 import { env } from "$lib/server/utilities/env";
 import { ingestAsset } from "../tasks/ingestAsset";
 import { assetProcessingQueue, AssetTasks, bullConnection } from "../queues";
+import { generateVideoThumbnail } from "../tasks/generateVideoThumbnail";
 
 export interface AssetJob {
 	name: AssetTasks;
 	data: {
     assetId: string;
-    sourceKey: string;
-    sourceBucket: string;
   };
 }
 
@@ -16,20 +15,25 @@ async function main() {
 	const worker = new Worker(
 		assetProcessingQueue.name,
 		async (job: AssetJob) => {
-      switch (job.name) {
-        case AssetTasks.INGEST_ASSET:
-          ingestAsset(job);
-          break;
-        case AssetTasks.GENERATE_ASSET_VIDEO_PROXY:
-          console.log("NOT IMPLEMENTED: Generating video proxy");
-          break;
-        case AssetTasks.GENERATE_ASSET_VIDEO_THUMBNAIL:
-          console.log("NOT IMPLEMENTED: Generating video thumbnail");
-          break;
-        default:
-          console.error(`Invalid job name: ${job.name}`);
-          break;
-      }
+			try {
+				switch (job.name) {
+					case AssetTasks.INGEST_ASSET:
+						await ingestAsset(job);
+						break;
+					case AssetTasks.GENERATE_ASSET_VIDEO_PROXY:
+						console.log("NOT IMPLEMENTED: Generating video proxy");
+						break;
+					case AssetTasks.GENERATE_ASSET_VIDEO_THUMBNAIL:
+						await generateVideoThumbnail(job);
+						break;
+					default:
+						console.error(`Invalid job name: ${job.name}`);
+						break;
+				}
+			} catch(error) {
+				console.error("Worker Error:", error);
+				throw error
+			}
 		},
 		{
 			connection: bullConnection,

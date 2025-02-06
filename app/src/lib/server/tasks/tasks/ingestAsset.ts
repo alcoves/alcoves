@@ -7,6 +7,7 @@ import { eq } from "drizzle-orm";
 import { assets } from "$lib/server/db/schema";
 import { getMediaInfo } from "$lib/server/utilities/ffmpeg";
 import { getPresignedUrl } from "$lib/server/utilities/s3";
+import { assetProcessingQueue, AssetTasks } from "../queues";
 
 const getBytesAsMegabytes = (bytes: number) => bytes / 1024 / 1024
 
@@ -60,22 +61,31 @@ export async function ingestAsset(job: AssetJob): Promise<void> {
           // test the date 
           cTime.toISOString()
 
-          console.log("Creation time", cTime);
-          if (cTime) updates.cTime = cTime     
+          if (cTime) {
+            console.info("A creation time was parsed from the filename", cTime);
+            updates.cTime = cTime     
+          } 
         } 
       } catch (error) {
         console.warn("Unable to parse creation time from filename, skipping...");
       }
  
       await db.update(assets).set({ ...updates, metadata }).where(eq(assets.id, asset.id));
+
+      await assetProcessingQueue.add(AssetTasks.GENERATE_ASSET_VIDEO_THUMBNAIL, {
+        assetId: asset.id,
+      });
+
+      // Enqueue video processing job
+
     } else if (asset.type === "IMAGE") {
       throw new Error("Image processing not implemented");
     } else {
       throw new Error("Invalid asset type");
     }
   } catch(error) {
-    console.error("Error", error);
-    // Do not rethrow, this is the last place to catch errors
+    // Rethrow error for worker try catch
+    throw error
   } finally {
     console.info("Removing temporary directory");
     await rm(tmpDir, { recursive: true, force: true });

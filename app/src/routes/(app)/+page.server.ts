@@ -1,9 +1,8 @@
 import { type Actions, fail } from "@sveltejs/kit";
-import { ASSET_STORAGE_PREFIX, s3Client } from "$lib/server/utilities/s3";
+import { ASSET_STORAGE_PREFIX, getPresignedUrl, s3Client } from "$lib/server/utilities/s3";
 import { db } from "$lib/server/db/db";
-import { assets } from "$lib/server/db/schema";
+import { assets, type AssetProxy } from "$lib/server/db/schema";
 import { v4 as uuidv4 } from "uuid";
-import { eq } from "drizzle-orm";
 import type { PageServerLoad } from "./$types";
 import { assetProcessingQueue, AssetTasks } from "$lib/server/tasks/queues";
 import {
@@ -83,11 +82,43 @@ function getAssetType(mimeType: string): "IMAGE" | "VIDEO" {
 }
 
 export const load: PageServerLoad = async ({ locals }) => {
-  const assetsList = await db
-    .select()
-    .from(assets)
-    .where(eq(assets.ownerId, locals.user.id));
-  return { assets: assetsList };
+	const getDeleted = false
+
+  function getThumbnailFromProxies(proxies: AssetProxy[]): AssetProxy | null {
+    if (!proxies) return null;
+    const thumbnails = proxies.filter((proxy) => proxy.type === "THUMBNAIL");
+    if (thumbnails.length === 0) return null;
+    const selectedThumbnail = thumbnails.find(
+      (thumbnail) => thumbnail.isDefault,
+    );
+    if (!selectedThumbnail) return thumbnails[0];
+    return selectedThumbnail;
+  }
+
+	const assetsList = await db.query.assets.findMany({
+		orderBy: (assets, { desc }) => [desc(assets.createdAt)],
+		with: {
+			proxies: {
+				orderBy: (proxies, { desc }) => [desc(proxies.status)],
+			},
+		},
+		where: (assets, { eq }) =>
+			eq(assets.ownerId, locals.user.id) && eq(assets.deleted, getDeleted),
+	});
+
+  const enrichedAssets = await Promise.all(assetsList.map(async(asset) => {
+    const thumbnail = getThumbnailFromProxies(asset.proxies);
+    const thumbnailUrl = thumbnail ? await getPresignedUrl({ bucket: thumbnail.storageBucket, key: thumbnail.storageKey }) : null;
+    return {
+      ...asset,
+      thumbnail: {
+        url: thumbnailUrl,
+        ...thumbnail
+      }
+    };
+  }))
+
+  return { assets: enrichedAssets };
 };
 
 export const actions = {

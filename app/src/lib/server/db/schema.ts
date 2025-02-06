@@ -78,7 +78,6 @@ export const assets = pgTable("assets", {
 
 export const assetsRelations = relations(assets, ({ one, many }) => ({
 	proxies: many(assetProxies),
-	thumbnails: many(assetThumbnails),
 	owner: one(users, {
 		fields: [assets.ownerId],
 		references: [users.id],
@@ -90,37 +89,16 @@ export const assetProxies = pgTable("asset_proxies", {
 	assetId: uuid("asset_id").notNull(),
 	isDefault: boolean("is_default").notNull().default(false),
 	status: text({ enum: ["PROCESSING", "READY", "ERROR"] }),
-	type: text({ enum: ["HLS"] }).notNull(),
-	storageKey: text("storage_key").notNull(),
-	storageBucket: text("storage_bucket").notNull(),
-	size: integer().notNull().default(0),
-	progress: integer().notNull().default(0),
-	createdAt: timestamp("created_at").notNull().defaultNow(),
-	updatedAt: timestamp("updated_at").notNull().defaultNow(),
-});
-
-export const assetThumbnails = pgTable("asset_thumbnails", {
-	id: uuid().defaultRandom().primaryKey(),
-	assetId: uuid("asset_id").notNull(),
-	status: text({ enum: ["PROCESSING", "READY", "ERROR"] }),
+	type: text({ enum: ["HLS", "THUMBNAIL"] }).notNull(),
 	storageKey: text("storage_key").notNull(),
 	storageBucket: text("storage_bucket").notNull(),
 	size: integer().notNull().default(0),
 	width: integer().notNull().default(0),
 	height: integer().notNull().default(0),
+	progress: integer().notNull().default(0),
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 	updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
-
-export const assetThumbnailRelations = relations(
-	assetThumbnails,
-	({ one }) => ({
-		asset: one(assets, {
-			fields: [assetThumbnails.assetId],
-			references: [assets.id],
-		}),
-	}),
-);
 
 export const assetProxyRelations = relations(assetProxies, ({ one }) => ({
 	asset: one(assets, {
@@ -130,4 +108,6 @@ export const assetProxyRelations = relations(assetProxies, ({ one }) => ({
 }));
 
 export type User = typeof users.$inferSelect;
+export type Asset = typeof assets.$inferSelect;
 export type Session = typeof sessions.$inferSelect;
+export type AssetProxy = typeof assetProxies.$inferSelect;
