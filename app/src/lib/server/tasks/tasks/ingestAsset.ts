@@ -76,8 +76,9 @@ export async function ingestAsset(job: AssetJob): Promise<void> {
         assetId: asset.id,
       });
 
-      // Enqueue video processing job
-
+      await assetProcessingQueue.add(AssetTasks.GENERATE_ASSET_VIDEO_PROXY, {
+        assetId: asset.id,
+      });
     } else if (asset.type === "IMAGE") {
       throw new Error("Image processing not implemented");
     } else {
