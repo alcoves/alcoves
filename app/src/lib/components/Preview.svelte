@@ -1,24 +1,41 @@
 <script lang="ts">
+  import type { Asset } from "$lib/server/db/schema";
   import { isHLSProvider } from "vidstack";
   import "vidstack/bundle";
 
-  const modalId = "preview-player";
-  export let asset: any;
-  export let onClose: () => void;
-  let modalOpen = true;
+  const { asset, onClose } = $props<{
+    asset: Asset;
+    onClose: () => void;
+  }>();
 
-  $: if (!modalOpen) {
-    onClose();
+  let dialog = $state<HTMLDialogElement | null>(null);
+
+  $effect(() => {
+    // Open modal when dialog is available
+    if (dialog) {
+      dialog.showModal();
+
+      // Add event listener for the dialog close event
+      const handleClose = () => onClose();
+      dialog.addEventListener("close", handleClose);
+
+      // Cleanup event listener
+      return () => {
+        dialog?.removeEventListener("close", handleClose);
+      };
+    }
+  });
+
+  // Handle backdrop clicks to close modal
+  function handleBackdropClick(event: MouseEvent) {
+    if (event.target === dialog) {
+      dialog?.close();
+    }
   }
 </script>
 
-<input
-  id={modalId}
-  type="checkbox"
-  class="modal-toggle"
-  bind:checked={modalOpen}
-/>
-<div class="modal" role="dialog">
+<dialog bind:this={dialog} class="modal">
+  <div class="backdrop" on:click={handleBackdropClick}></div>
   <div
     class="modal-box bg-transparent p-2 flex flex-col items-center justify-center gap-2 max-w-7xl"
   >
@@ -27,12 +44,13 @@
         {asset?.title}
       </h3>
       <button
-        on:click={onClose}
+        on:click={() => dialog?.close()}
         class="btn btn-sm text-white bg-primary hover:bg-success"
       >
         Close
       </button>
     </div>
+
     <media-player
       on:provider-change={({ detail }) => {
         if (isHLSProvider(detail)) {
@@ -48,11 +66,23 @@
       volume={0.5}
       title={asset?.title}
       crossorigin="use-credentials"
-      src={`/api/assets/${asset?.id}/manifest/main.m3u8`}
+      src={`/api/assets/${asset?.id}/main.m3u8`}
     >
       <media-provider></media-provider>
       <media-video-layout></media-video-layout>
     </media-player>
   </div>
-  <label class="modal-backdrop bg-black/70" for={modalId}>Close</label>
-</div>
+</dialog>
+
+<style>
+  dialog {
+    /* Reset default dialog styles */
+    padding: 0;
+    border: none;
+    background: transparent;
+  }
+
+  dialog::backdrop {
+    background: rgba(0, 0, 0, 0.7);
+  }
+</style>

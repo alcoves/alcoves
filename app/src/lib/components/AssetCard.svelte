@@ -1,14 +1,28 @@
 <script lang="ts">
   import { Check } from "lucide-svelte";
-  import { createEventDispatcher } from "svelte";
 
-  export let asset: any;
-  export let isSelected: boolean = false;
+  const {
+    asset,
+    isSelected = false,
+    onSelect,
+    onPreview,
+  } = $props<{
+    asset: any;
+    isSelected?: boolean;
+    onSelect?: (id: string) => void;
+    onPreview?: (asset: any) => void;
+  }>();
 
-  const dispatch = createEventDispatcher();
+  const hasReadyHLSProxy = $derived(
+    asset?.proxies?.some(
+      (proxy: any) =>
+        proxy?.type === "HLS" && proxy?.status === "READY" && proxy.isDefault,
+    ),
+  );
 
   function formatDuration(seconds: number): string {
-    const sec = typeof seconds === "string" ? parseFloat(seconds) : seconds;
+    const sec =
+      typeof seconds === "string" ? Number.parseFloat(seconds) : seconds;
     const hours = Math.floor(sec / 3600);
     const minutes = Math.floor((sec % 3600) / 60);
     const remainingSeconds = Math.floor(sec % 60);
@@ -23,11 +37,13 @@
 
   function handleSelect(event: MouseEvent) {
     event.stopPropagation();
-    dispatch("select", { id: asset.id });
+    onSelect?.(asset.id);
   }
 
   function handleClick() {
-    dispatch("preview", { asset });
+    if (hasReadyHLSProxy) {
+      onPreview?.(asset);
+    }
   }
 
   function handleKeydown(event: KeyboardEvent) {
@@ -43,8 +59,8 @@
   class="card bg-base-200 w-full md:w-96 shadow-md {isSelected
     ? 'border border-primary'
     : 'border border-base-300'}"
-  on:click={handleClick}
-  on:keydown={handleKeydown}
+  onclick={handleClick}
+  onkeydown={handleKeydown}
 >
   <figure class="relative h-40 w-full group">
     {#if asset?.status !== "READY"}
@@ -87,22 +103,18 @@
         <div class="absolute object-cover w-full h-full bg-black"></div>
       {/if}
       <div
-        class="flex flex-col w-full h-full group-hover:bg-black/50 transition duration-200 z-10"
+        class="flex flex-col w-full h-full {hasReadyHLSProxy
+          ? 'group-hover:bg-black/50 cursor-pointer'
+          : ''} transition duration-200 z-10"
         role="button"
         tabindex="0"
-        on:click={(e) => e.stopPropagation()}
-        on:keydown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.stopPropagation();
-          }
-        }}
       >
         <div class="flex w-full justify-end p-2">
           <button
             type="button"
-            class="rounded-md p-1"
+            class="cursor-pointer rounded-md p-1"
             class:selected={isSelected}
-            on:click={handleSelect}
+            onclick={handleSelect}
           >
             <Check strokeWidth="4" class="w-5 h-5" />
           </button>

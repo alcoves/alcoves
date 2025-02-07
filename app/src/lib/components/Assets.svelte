@@ -1,14 +1,14 @@
 <script lang="ts">
-  import Preview from "./Preview.svelte";
   import AssetCard from "./AssetCard.svelte";
-  import { createEventDispatcher } from "svelte";
+  import Preview from "./Preview.svelte";
 
-  export let assets: any[] = [];
+  let { assets = [], onDeleteAssets } = $props<{
+    assets: any[];
+    onDeleteAssets?: (assetIds: string[]) => void;
+  }>();
 
-  const dispatch = createEventDispatcher();
-
-  let selectedAssets: string[] = [];
-  let selectedAsset: any = null;
+  let selectedAssets = $state<string[]>([]);
+  let selectedAsset = $state<any>(null);
 
   function selectAll() {
     selectedAssets = assets.map((asset) => asset.id);
@@ -18,8 +18,7 @@
     selectedAssets = [];
   }
 
-  function handleSelect({ detail }: CustomEvent<{ id: string }>) {
-    const id = detail.id;
+  function handleSelect(id: string) {
     if (selectedAssets.includes(id)) {
       selectedAssets = selectedAssets.filter((assetId) => assetId !== id);
     } else {
@@ -32,13 +31,14 @@
       "Are you sure you want to delete the selected assets?",
     );
     if (!confirmDeletion) return;
-    dispatch("deleteAssets", { assetIds: selectedAssets });
+
+    onDeleteAssets?.(selectedAssets);
     assets = assets.filter((asset) => !selectedAssets.includes(asset.id));
     selectedAssets = [];
   }
 
-  function handlePreview({ detail }: CustomEvent<{ asset: any }>) {
-    selectedAsset = detail.asset;
+  function handlePreview(asset: any) {
+    selectedAsset = asset;
   }
 
   function closePreview() {
@@ -49,15 +49,15 @@
 <div>
   {#if assets.length > 0}
     <div class="flex items-center gap-2 mb-4">
-      <button class="btn btn-sm" on:click={selectAll}>Select All</button>
+      <button class="btn btn-sm" onclick={selectAll}>Select All</button>
       {#if selectedAssets.length > 0}
-        <button class="btn btn-sm btn-ghost" on:click={deselectAll}
-          >Deselect All</button
-        >
+        <button class="btn btn-sm btn-ghost" onclick={deselectAll}>
+          Deselect All
+        </button>
         <span class="text-sm opacity-70">
           {selectedAssets.length} of {assets.length} selected
         </span>
-        <button class="btn btn-sm btn-error" on:click={deleteSelectedAssets}>
+        <button class="btn btn-sm btn-error" onclick={deleteSelectedAssets}>
           Delete
         </button>
       {/if}
@@ -68,8 +68,8 @@
         <AssetCard
           {asset}
           isSelected={selectedAssets.includes(asset.id)}
-          on:select={handleSelect}
-          on:preview={handlePreview}
+          onSelect={handleSelect}
+          onPreview={handlePreview}
         />
       {/each}
     </div>
