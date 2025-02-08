@@ -1,53 +1,55 @@
+import { eq } from "drizzle-orm";
 import { db } from "../db/db";
-import { getPresignedUrl } from "../lib_need_migrate/s3";
+import { assets, type AssetProxy } from "../db/schema";
+import { getPresignedUrl } from "../utilities/s3";
+
+function getThumbnailFromProxies(proxies: AssetProxy[]): AssetProxy | null {
+	if (!proxies) return null;
+	const thumbnails = proxies.filter((proxy) => proxy.type === "THUMBNAIL");
+	if (thumbnails.length === 0) return null;
+	const selectedThumbnail = thumbnails.find(
+		(thumbnail) => thumbnail.isDefault,
+	);
+	if (!selectedThumbnail) return thumbnails[0];
+	return selectedThumbnail;
+}
 
 export async function getAsset(id: string): Promise<any | null> {
 	const asset = await db.query.assets.findFirst({
 		orderBy: (assets, { desc }) => [desc(assets.createdAt)],
 		with: {
-			thumbnails: {
-				orderBy: (thumbnails, { desc }) => [desc(thumbnails.size)],
-			},
 			proxies: {
 				orderBy: (proxies, { desc }) => [desc(proxies.status)],
 			},
 		},
+		where: eq(assets.id, id),
 	});
 
 	if (!asset) return null;
-	const updatedAsset = await assetsWithUrls([asset]);
-	return updatedAsset[0];
+	return asset;
 }
 
-export function assetsWithUrls(a: any[]): Promise<any[]> {
-	return Promise.all(
-		a.map(async (asset) => {
-			if (asset?.thumbnails?.length) {
-				const imageProxiesWithUrls = await Promise.all(
-					asset?.thumbnails.map(async (proxy: any) => {
-						if (proxy?.storageBucket && proxy?.storageKey) {
-							const signedProxyUrl = await getPresignedUrl({
-								bucket: proxy.storageBucket,
-								key: proxy.storageKey,
-								expiration: 3600,
-							});
+export async function getAssets() {
+	const assetsList = await db.query.assets.findMany({
+		orderBy: (assets, { desc }) => [desc(assets.createdAt)],
+		with: {
+			proxies: {
+				orderBy: (proxies, { desc }) => [desc(proxies.status)],
+			},
+		},
+		where: (assets, { eq }) =>
+			eq(assets.ownerId, locals.user.id) && eq(assets.deleted, getDeleted),
+	});
 
-							return {
-								...proxy,
-								url: signedProxyUrl,
-							};
-						}
-
-						return proxy;
-					}),
-				);
-
-				return {
-					...asset,
-					thumbnails: imageProxiesWithUrls,
-				};
+	const enrichedAssets = await Promise.all(assetsList.map(async(asset) => {
+		const thumbnail = getThumbnailFromProxies(asset.proxies);
+		const thumbnailUrl = thumbnail ? await getPresignedUrl({ bucket: thumbnail.storageBucket, key: thumbnail.storageKey }) : null;
+		return {
+			...asset,
+			thumbnail: {
+				url: thumbnailUrl,
+				...thumbnail
 			}
-			return asset;
-		}),
-	);
+		};
+	}))
 }

@@ -1,23 +1,38 @@
 <script lang="ts">
   import { Check } from "lucide-svelte";
+  import type { Asset } from "../../stores/assets";
 
-  const {
-    asset,
-    isSelected = false,
-    onSelect,
-    onPreview,
-  } = $props<{
-    asset: any;
+  let props = $props<{
+    asset: Asset;
     isSelected?: boolean;
     onSelect?: (id: string) => void;
-    onPreview?: (asset: any) => void;
+    onPreview?: (asset: Asset) => void;
   }>();
 
   const hasReadyHLSProxy = $derived(
-    asset?.proxies?.some(
+    props.asset?.proxies?.some(
       (proxy: any) =>
         proxy?.type === "HLS" && proxy?.status === "READY" && proxy.isDefault,
     ),
+  );
+
+  const inProgressHLSProxy = $derived(
+    props.asset?.proxies?.find(
+      (proxy: any) => proxy?.type === "HLS" && proxy?.status === "PROCESSING",
+    ),
+  );
+
+  const thumbnailReadyProxy = $derived(
+    props.asset?.proxies?.find(
+      (proxy: any) =>
+        proxy?.type === "THUMBNAIL" &&
+        proxy?.status === "READY" &&
+        proxy.isDefault,
+    ),
+  );
+
+  const thumbnailUrl = $derived(
+    `http://localhost:5173/api/proxy/${thumbnailReadyProxy?.storageKey}`,
   );
 
   function formatDuration(seconds: number): string {
@@ -37,12 +52,12 @@
 
   function handleSelect(event: MouseEvent) {
     event.stopPropagation();
-    onSelect?.(asset.id);
+    props.onSelect?.(props.asset.id);
   }
 
   function handleClick() {
     if (hasReadyHLSProxy) {
-      onPreview?.(asset);
+      props.onPreview?.(props.asset);
     }
   }
 
@@ -54,16 +69,16 @@
 </script>
 
 <div
-  class="card bg-base-200 w-full md:w-96 shadow-md {isSelected
+  class="card bg-base-200 w-full md:w-96 shadow-md {props.isSelected
     ? 'border border-primary'
     : 'border border-base-300'}"
 >
   <figure class="relative h-40 w-full group">
-    {#if asset?.status !== "READY"}
-      {#if asset?.thumbnail?.url}
+    {#if props.asset?.status !== "READY"}
+      {#if thumbnailUrl}
         <img
-          alt={asset?.title}
-          src={asset.thumbnail.url}
+          alt={props.asset?.title}
+          src={thumbnailUrl}
           class="absolute object-cover w-full h-full"
         />
       {:else}
@@ -73,26 +88,28 @@
         class="flex flex-col w-full h-full justify-center items-center bg-black/50 z-10"
       >
         <span class="text-white">
-          {asset?.status === "UPLOADING" ? "Uploading..." : "Processing..."}
+          {props.asset?.status === "UPLOADING"
+            ? "Uploading..."
+            : "Processing..."}
         </span>
         <progress
           class="progress progress-info w-56 bg-neutral h-3 rounded-sm"
-          value={asset?.proxies?.[0]?.progress || 0}
+          value={inProgressHLSProxy?.progress || 0}
           max="100"
         ></progress>
       </div>
     {:else}
-      {#if asset?.thumbnail?.url}
+      {#if thumbnailUrl}
         <img
-          alt={asset?.title}
-          src={asset.thumbnail.url}
+          alt={props.asset?.title}
+          src={thumbnailUrl}
           class="absolute object-cover w-full h-full"
         />
-        {#if asset?.metadata?.format?.duration}
+        {#if props.asset?.metadata?.format?.duration}
           <div
             class="absolute bottom-1 right-1 bg-black/75 px-2 py-0.5 rounded font-semibold text-xs text-white z-20"
           >
-            {formatDuration(asset.metadata.format.duration)}
+            {formatDuration(props.asset.metadata.format.duration)}
           </div>
         {/if}
       {:else}
@@ -111,7 +128,7 @@
           <button
             type="button"
             class="cursor-pointer rounded-md p-1"
-            class:selected={isSelected}
+            class:selected={props.isSelected}
             onclick={handleSelect}
           >
             <Check strokeWidth="4" class="w-5 h-5" />
@@ -122,10 +139,10 @@
   </figure>
 
   <div class="card-body p-4">
-    <h2 class="card-title text-sm">{asset?.title}</h2>
+    <h2 class="card-title text-sm">{props.asset?.title}</h2>
     <div class="card-actions justify-end">
       <span class="text-xs opacity-70">
-        {(asset?.size / 1024 / 1024).toFixed(1)} MB
+        {(props.asset?.size / 1024 / 1024).toFixed(1)} MB
       </span>
     </div>
   </div>

@@ -52,25 +52,26 @@ export async function GET({ params, locals, request }) {
 						// #EXT-X-MAP:URI="stream_video_init.mp4"
 						if (line.includes("EXT-X-MAP:URI=")) {
 							const initFile = line.split("URI=")[1].replace(/"/g, "");
+							// const signedUrl = await getPresignedUrl({
+							// 	bucket: mainProxy.storageBucket,
+							// 	key: mainProxy.storageKey.replace("main.m3u8", initFile),
+							// 	expiration: 3600,
+							// });
 
-							const signedUrl = await getPresignedUrl({
-								bucket: mainProxy.storageBucket,
-								key: mainProxy.storageKey.replace("main.m3u8", initFile),
-								expiration: 3600,
-							});
-
-							return line.replace(initFile, signedUrl);
+							const proxyUrl = `http://localhost:5173/api/proxy/${mainProxy.storageKey.replace("main.m3u8", initFile)}`;
+							return line.replace(initFile, proxyUrl);
 						}
 
 						// Replaces .m4s files with signed urls
 						if (line.includes(".m4s") || line.includes(".mp4")) {
-							const signedUrl = await getPresignedUrl({
-								bucket: mainProxy.storageBucket,
-								key: mainProxy.storageKey.replace("main.m3u8", line),
-								expiration: 3600,
-							});
+							// const signedUrl = await getPresignedUrl({
+							// 	bucket: mainProxy.storageBucket,
+							// 	key: mainProxy.storageKey.replace("main.m3u8", line),
+							// 	expiration: 3600,
+							// });
 
-							return signedUrl;
+							const proxyUrl = `http://localhost:5173/api/proxy/${mainProxy.storageKey.replace("main.m3u8", line)}`;
+							return proxyUrl;
 						}
 
 						return line;

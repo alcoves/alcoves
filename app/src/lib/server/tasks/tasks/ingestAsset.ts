@@ -8,6 +8,7 @@ import { assets } from "$lib/server/db/schema";
 import { getMediaInfo } from "$lib/server/utilities/ffmpeg";
 import { getPresignedUrl } from "$lib/server/utilities/s3";
 import { assetProcessingQueue, AssetTasks } from "../queues";
+import { notifyAssetCreate } from "$lib/server/services/notify";
 
 const getBytesAsMegabytes = (bytes: number) => bytes / 1024 / 1024
 
@@ -71,6 +72,7 @@ export async function ingestAsset(job: AssetJob): Promise<void> {
       }
  
       await db.update(assets).set({ ...updates, metadata }).where(eq(assets.id, asset.id));
+      await notifyAssetCreate('assets')
 
       await assetProcessingQueue.add(AssetTasks.GENERATE_ASSET_VIDEO_THUMBNAIL, {
         assetId: asset.id,
