@@ -54,13 +54,9 @@
 </script>
 
 <div
-  role="button"
-  tabindex="0"
   class="card bg-base-200 w-full md:w-96 shadow-md {isSelected
     ? 'border border-primary'
     : 'border border-base-300'}"
-  onclick={handleClick}
-  onkeydown={handleKeydown}
 >
   <figure class="relative h-40 w-full group">
     {#if asset?.status !== "READY"}
@@ -103,9 +99,11 @@
         <div class="absolute object-cover w-full h-full bg-black"></div>
       {/if}
       <div
-        class="flex flex-col w-full h-full {hasReadyHLSProxy
+        class="flex flex-col w-full h-full transition duration-200 z-10 {hasReadyHLSProxy
           ? 'group-hover:bg-black/50 cursor-pointer'
-          : ''} transition duration-200 z-10"
+          : ''}"
+        onclick={hasReadyHLSProxy ? handleClick : undefined}
+        onkeydown={hasReadyHLSProxy ? handleKeydown : undefined}
         role="button"
         tabindex="0"
       >
