@@ -110,10 +110,10 @@ export const qualities = {
 		{
 			name: "av1_1080p",
 			scale: "scale=-2:1080",
-			crf: "36",
+			crf: "35",
 			codec: "libsvtav1",
-			preset: "6",
-			svtParams: "mbr=10000k",
+			preset: "5",
+			// svtParams: "mbr=10000k",
 		},
 		{
 			name: "av1_720p",
@@ -121,7 +121,7 @@ export const qualities = {
 			crf: "36",
 			codec: "libsvtav1",
 			preset: "6",
-			svtParams: "mbr=5500k",
+			// svtParams: "mbr=5500k",
 		},
 		{
 			name: "av1_360p",
@@ -129,7 +129,7 @@ export const qualities = {
 			crf: "36",
 			codec: "libsvtav1",
 			preset: "6",
-			svtParams: "mbr=1000k",
+			// svtParams: "mbr=1000k",
 		},
 	],
 	x264: [
@@ -219,7 +219,9 @@ export async function runFFmpeg({
 					const estimatedTimeRemaining = estimatedTotalTime - elapsedTime;
 					const formattedEtr = formatTime(estimatedTimeRemaining);
 					if (onProgress) {
-						onProgress(Math.floor(progress), formattedEtr);
+						if (progress > .2) {
+							onProgress(Math.floor(progress), formattedEtr);
+						}
 					}
 				}
 			}
