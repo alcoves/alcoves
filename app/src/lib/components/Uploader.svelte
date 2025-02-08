@@ -56,6 +56,13 @@
   let uploads = $state<Upload[]>([]);
   const uploadQueue = new PQueue({ concurrency: 2 });
 
+  import.meta?.hot?.dispose(() => {
+    console.log("hot reload detected, clearing uploads");
+    uploads = [];
+    files = undefined;
+    modalOpen = false;
+  });
+
   function validateFile(file: File): { valid: boolean; error: string } {
     if (
       !authorizedMimeTypes.some((type) =>
