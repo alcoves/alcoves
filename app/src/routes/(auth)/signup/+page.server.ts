@@ -3,10 +3,11 @@ import type { Actions } from './$types';
 import { db } from '$lib/server/db/db';
 import { users } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
-import { createSession, createSessionCookie, generateSessionToken } from '$lib/server/auth/session';
+import { createSession, setSessionTokenCookie, generateSessionToken } from '$lib/server/auth/session';
 
 export const actions = {
-  default: async ({ cookies, request, }) => {
+  default: async (event) => {
+    const { request } = event;
     const data = await request.formData();
     const email = data.get('email');
     const password = data.get('password');
@@ -28,10 +29,8 @@ export const actions = {
       .returning();
 
     const token = generateSessionToken();
-    await createSession(token, newUser.id);
-    const sessionCookie = createSessionCookie(token);
-    cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
-
+    const session = await createSession(token, newUser.id);
+    setSessionTokenCookie(event, token, session.expiresAt);
     return { success: true }
   }
 } satisfies Actions;

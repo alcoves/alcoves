@@ -1,14 +1,15 @@
-import { fail, redirect } from '@sveltejs/kit';
+import { fail } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import { db } from '$lib/server/db/db';
 import { users } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
 import { generateSessionToken } from '$lib/server/auth/session';
 import { createSession } from '$lib/server/auth/session';
-import { createSessionCookie } from '$lib/server/auth/session';
+import { setSessionTokenCookie } from '$lib/server/auth/session';
 
 export const actions = {
-  default: async ({ cookies, request, }) => {
+  default: async (event) => {
+    const { request } = event;
     const data = await request.formData();
     const email = data.get('email');
     const password = data.get('password');
@@ -23,9 +24,8 @@ export const actions = {
     if (!passwordsMatch) return fail(403, {  error: "Failed to login" });
 
     const token = generateSessionToken();
-    await createSession(token, user.id);
-    const sessionCookie = createSessionCookie(token);
-    cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+    const session = await createSession(token, user.id);
+    setSessionTokenCookie(event, token, session.expiresAt);
 
     console.log("User logged in successfully!")
     return { success: true }
