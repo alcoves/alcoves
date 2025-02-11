@@ -1,10 +1,10 @@
 <script lang="ts">
+  import { invalidateAll } from "$app/navigation";
   import { source } from "sveltekit-sse";
-  import { assets, type Asset } from "../../stores/assets";
+  import { type Asset, assets } from "../../stores/assets";
+  import { type AssetNotification } from "../../types/ambient";
   import AssetCard from "./AssetCard.svelte";
   import Preview from "./Preview.svelte";
-  import { invalidateAll } from "$app/navigation";
-  import { type AssetNotification } from "../../types/ambient";
 
   let { initialAssets, onDeleteAssets } = $props<{
     initialAssets?: Asset[];

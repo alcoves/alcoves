@@ -1,15 +1,13 @@
 import { eq } from "drizzle-orm";
 import { db } from "../db/db";
-import { assets, type AssetProxy } from "../db/schema";
+import { type AssetProxy, assets } from "../db/schema";
 import { getPresignedUrl } from "../utilities/s3";
 
 function getThumbnailFromProxies(proxies: AssetProxy[]): AssetProxy | null {
 	if (!proxies) return null;
 	const thumbnails = proxies.filter((proxy) => proxy.type === "THUMBNAIL");
 	if (thumbnails.length === 0) return null;
-	const selectedThumbnail = thumbnails.find(
-		(thumbnail) => thumbnail.isDefault,
-	);
+	const selectedThumbnail = thumbnails.find((thumbnail) => thumbnail.isDefault);
 	if (!selectedThumbnail) return thumbnails[0];
 	return selectedThumbnail;
 }
@@ -41,15 +39,22 @@ export async function getAssets() {
 			eq(assets.ownerId, locals.user.id) && eq(assets.deleted, getDeleted),
 	});
 
-	const enrichedAssets = await Promise.all(assetsList.map(async(asset) => {
-		const thumbnail = getThumbnailFromProxies(asset.proxies);
-		const thumbnailUrl = thumbnail ? await getPresignedUrl({ bucket: thumbnail.storageBucket, key: thumbnail.storageKey }) : null;
-		return {
-			...asset,
-			thumbnail: {
-				url: thumbnailUrl,
-				...thumbnail
-			}
-		};
-	}))
+	const enrichedAssets = await Promise.all(
+		assetsList.map(async (asset) => {
+			const thumbnail = getThumbnailFromProxies(asset.proxies);
+			const thumbnailUrl = thumbnail
+				? await getPresignedUrl({
+						bucket: thumbnail.storageBucket,
+						key: thumbnail.storageKey,
+					})
+				: null;
+			return {
+				...asset,
+				thumbnail: {
+					url: thumbnailUrl,
+					...thumbnail,
+				},
+			};
+		}),
+	);
 }

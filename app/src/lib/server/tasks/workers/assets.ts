@@ -1,11 +1,11 @@
+import { getAsset } from "$lib/server/services/assets";
+import { dispatchAssetNotification } from "$lib/server/services/notify";
 import { env } from "$lib/server/utilities/env";
 import { type Job, Worker } from "bullmq";
 import { AssetTasks, assetProcessingQueue, bullConnection } from "../queues";
 import { generateVideoProxy } from "../tasks/generateVideoProxy";
 import { generateVideoThumbnail } from "../tasks/generateVideoThumbnail";
 import { ingestAsset } from "../tasks/ingestAsset";
-import { dispatchAssetNotification } from "$lib/server/services/notify";
-import { getAsset } from "$lib/server/services/assets";
 
 export interface AssetJob extends Job {
 	name: AssetTasks;
@@ -44,7 +44,7 @@ async function main() {
 		},
 	);
 
-	worker.on('progress', async (job, progress) => {
+	worker.on("progress", async (job, progress) => {
 		console.log(`${job.id} has progressed to ${progress}%`);
 		const asset = await getAsset(job.data.assetId);
 		await dispatchAssetNotification("assets", "ASSET_UPDATED", [asset]);

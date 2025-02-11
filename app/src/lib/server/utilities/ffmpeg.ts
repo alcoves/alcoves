@@ -219,7 +219,7 @@ export async function runFFmpeg({
 					const estimatedTimeRemaining = estimatedTotalTime - elapsedTime;
 					const formattedEtr = formatTime(estimatedTimeRemaining);
 					if (onProgress) {
-						if (progress > .2) {
+						if (progress > 0.2) {
 							onProgress(Math.floor(progress), formattedEtr);
 						}
 					}

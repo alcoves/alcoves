@@ -1,18 +1,18 @@
-import { maintenanceQueue } from './queues';
-import assetWorker from './workers/assets'
-import maintenanceWorker from './workers/maintenance'
+import { maintenanceQueue } from "./queues";
+import assetWorker from "./workers/assets";
+import maintenanceWorker from "./workers/maintenance";
 
 export async function startWorkers() {
 	assetWorker();
-	maintenanceWorker()
+	maintenanceWorker();
 
 	await maintenanceQueue.upsertJobScheduler(
-		'delete-assets-scheduler',
+		"delete-assets-scheduler",
 		{
 			every: 1000,
 		},
 		{
-			name: 'delete_asset',
+			name: "delete_asset",
 		},
 	);
 }

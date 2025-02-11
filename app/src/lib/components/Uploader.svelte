@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { UploadIcon } from "lucide-svelte";
-  import pLimit from "p-limit";
-  import { v5 as uuidv5 } from "uuid";
-  import PQueue from "p-queue";
   import { deserialize } from "$app/forms";
   import type { ActionResult } from "@sveltejs/kit";
+  import { UploadIcon } from "lucide-svelte";
+  import pLimit from "p-limit";
+  import PQueue from "p-queue";
+  import { v5 as uuidv5 } from "uuid";
 
   interface Upload {
     file: File;

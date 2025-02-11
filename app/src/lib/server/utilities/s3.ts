@@ -1,13 +1,13 @@
 import { readdir } from "node:fs/promises";
 import { join, relative } from "node:path";
 import {
-  ListObjectsV2Command,
-  S3Client as S3AWSClientMethod,
-  type ListObjectsV2CommandInput,
+	ListObjectsV2Command,
+	type ListObjectsV2CommandInput,
+	S3Client as S3AWSClientMethod,
 } from "@aws-sdk/client-s3";
+import { S3Client as S3BunClientMethod, type S3File } from "bun";
 import mime from "mime";
 import { env } from "./env";
-import { S3Client as S3BunClientMethod, type S3File } from "bun";
 
 export const ASSET_STORAGE_PREFIX = "assets";
 
@@ -30,137 +30,137 @@ export const S3BunClient = new S3BunClientMethod({
 });
 
 export async function getPresignedUrl({
-  client = S3BunClient,
-  bucket,
-  key,
-  expiresIn = 3600,
+	client = S3BunClient,
+	bucket,
+	key,
+	expiresIn = 3600,
 }: {
-  client?: S3BunClientMethod;
-  bucket: string;
-  key: string;
-  expiresIn?: number;
+	client?: S3BunClientMethod;
+	bucket: string;
+	key: string;
+	expiresIn?: number;
 }): Promise<string> {
-  const file = client.file(key, { bucket });
-  return file.presign({ expiresIn });
+	const file = client.file(key, { bucket });
+	return file.presign({ expiresIn });
 }
 
 export async function downloadObject({
-  localDir,
-  bucket,
-  key,
+	localDir,
+	bucket,
+	key,
 }: {
-  localDir: string;
-  bucket: string;
-  key: string;
+	localDir: string;
+	bucket: string;
+	key: string;
 }): Promise<string> {
-  const downloadPath = join(localDir, "downloadedFile");
-  console.log("Downloading object", key, "from", bucket, "to", downloadPath);
+	const downloadPath = join(localDir, "downloadedFile");
+	console.log("Downloading object", key, "from", bucket, "to", downloadPath);
 
-  const file = S3BunClient.file(key, { bucket });
-  const content = await file.arrayBuffer();
-  await Bun.write(downloadPath, content);
+	const file = S3BunClient.file(key, { bucket });
+	const content = await file.arrayBuffer();
+	await Bun.write(downloadPath, content);
 
-  console.log(
-    `Successfully downloaded ${key} from ${bucket} to ${downloadPath}`
-  );
+	console.log(
+		`Successfully downloaded ${key} from ${bucket} to ${downloadPath}`,
+	);
 
-  return downloadPath;
+	return downloadPath;
 }
 
 async function* getFilesRecursively(dir: string): AsyncGenerator<string> {
-  const entries = await readdir(dir, { withFileTypes: true });
-  for (const entry of entries) {
-    const fullPath = join(dir, entry.name);
-    if (entry.isDirectory()) {
-      yield* getFilesRecursively(fullPath);
-    } else {
-      yield fullPath;
-    }
-  }
+	const entries = await readdir(dir, { withFileTypes: true });
+	for (const entry of entries) {
+		const fullPath = join(dir, entry.name);
+		if (entry.isDirectory()) {
+			yield* getFilesRecursively(fullPath);
+		} else {
+			yield fullPath;
+		}
+	}
 }
 
 export async function uploadDirectoryToS3({
-  dirPath,
-  bucket,
-  prefix = "",
+	dirPath,
+	bucket,
+	prefix = "",
 }: {
-  dirPath: string;
-  bucket: string;
-  prefix?: string;
+	dirPath: string;
+	bucket: string;
+	prefix?: string;
 }): Promise<Array<{ location: string; key: string }>> {
-  const uploads: Promise<{ location: string; key: string }>[] = [];
+	const uploads: Promise<{ location: string; key: string }>[] = [];
 
-  try {
-    for await (const filePath of getFilesRecursively(dirPath)) {
-      const relativePath = relative(dirPath, filePath);
-      const key = prefix ? join(prefix, relativePath) : relativePath;
+	try {
+		for await (const filePath of getFilesRecursively(dirPath)) {
+			const relativePath = relative(dirPath, filePath);
+			const key = prefix ? join(prefix, relativePath) : relativePath;
 
-      uploads.push(
-        uploadFileToS3({
-          filePath,
-          bucket,
-          key,
-          contentType: mime.getType(filePath) || "application/octet-stream",
-        })
-      );
-    }
+			uploads.push(
+				uploadFileToS3({
+					filePath,
+					bucket,
+					key,
+					contentType: mime.getType(filePath) || "application/octet-stream",
+				}),
+			);
+		}
 
-    return await Promise.all(uploads);
-  } catch (error) {
-    console.error("Directory upload failed:", error);
-    throw error;
-  }
+		return await Promise.all(uploads);
+	} catch (error) {
+		console.error("Directory upload failed:", error);
+		throw error;
+	}
 }
 
 export async function uploadFileToS3({
-  filePath,
-  bucket,
-  key,
-  contentType,
+	filePath,
+	bucket,
+	key,
+	contentType,
 }: {
-  filePath: string;
-  bucket: string;
-  key: string;
-  contentType: string;
+	filePath: string;
+	bucket: string;
+	key: string;
+	contentType: string;
 }): Promise<{ location: string; key: string }> {
-  try {
-    const file = S3BunClient.file(key, { bucket });
-    const fileContent = await Bun.file(filePath).arrayBuffer();
-    await file.write(fileContent, { type: contentType });
+	try {
+		const file = S3BunClient.file(key, { bucket });
+		const fileContent = await Bun.file(filePath).arrayBuffer();
+		await file.write(fileContent, { type: contentType });
 
-    // Create signed URL for location
-    const location = file.presign();
+		// Create signed URL for location
+		const location = file.presign();
 
-    return {
-      location,
-      key,
-    };
-  } catch (error) {
-    console.error("Upload failed:", error);
-    throw error;
-  }
+		return {
+			location,
+			key,
+		};
+	} catch (error) {
+		console.error("Upload failed:", error);
+		throw error;
+	}
 }
 
 export async function getObjectFromS3({
-  bucket,
-  key,
+	bucket,
+	key,
 }: {
-  bucket: string;
-  key: string;
+	bucket: string;
+	key: string;
 }): Promise<S3File> {
-  try {
-    return S3BunClient.file(key, { bucket });
-  } catch (error) {
-    console.error("Failed to get object from S3:", error);
-    throw error;
-  }
+	try {
+		return S3BunClient.file(key, { bucket });
+	} catch (error) {
+		console.error("Failed to get object from S3:", error);
+		throw error;
+	}
 }
 
 const listAllKeys = async (
-  params: ListObjectsV2CommandInput,
-  out: any[] = []
-  ): Promise<any[]> => {
-  const command = new ListObjectsV2Command(params);
+	params: ListObjectsV2CommandInput,
+	out: any[] = [],
+): Promise<any[]> => {
+	const command = new ListObjectsV2Command(params);
 	const response = await S3AWSClient.send(command);
 
 	if (response.Contents) {
@@ -176,35 +176,41 @@ const listAllKeys = async (
 	}
 
 	return out;
-	};
-
+};
 
 export async function deletePrefixFromS3({
-  bucket,
-  prefix,
+	bucket,
+	prefix,
 }: {
-  bucket: string;
-  prefix: string;
+	bucket: string;
+	prefix: string;
 }): Promise<void> {
-  try {
-    // Validate the prefix format
-    const uuidPattern = new RegExp(
-      `^${env.ALCOVES_OBJECT_STORE_ASSETS_PREFIX}/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$`,
-      'i'
-    );
-    console.assert(prefix && uuidPattern.test(prefix), `Invalid prefix: ${prefix}`);
-    console.log("Deleting prefix", prefix, "from bucket", bucket);
-
+	try {
+		// Validate the prefix format
+		const uuidPattern = new RegExp(
+			`^${env.ALCOVES_OBJECT_STORE_ASSETS_PREFIX}/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$`,
+			"i",
+		);
+		console.assert(
+			prefix && uuidPattern.test(prefix),
+			`Invalid prefix: ${prefix}`,
+		);
+		console.log("Deleting prefix", prefix, "from bucket", bucket);
 
 		const files = await listAllKeys({ Bucket: bucket, Prefix: prefix }, []);
 
-		await Promise.all(files.map(async ({ Key }) => {
-			return S3BunClient.delete(Key);
-		}))
+		await Promise.all(
+			files.map(async ({ Key }) => {
+				return S3BunClient.delete(Key);
+			}),
+		);
 
-    console.log(`Successfully deleted objects with prefix ${prefix}`);
-  } catch (error) {
-    console.error(`Failed to delete prefix: s3://${bucket}/${prefix} from S3:`, error);
-    throw error;
-  }
+		console.log(`Successfully deleted objects with prefix ${prefix}`);
+	} catch (error) {
+		console.error(
+			`Failed to delete prefix: s3://${bucket}/${prefix} from S3:`,
+			error,
+		);
+		throw error;
+	}
 }

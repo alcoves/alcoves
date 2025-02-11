@@ -67,6 +67,17 @@ export async function generateVideoProxy(job: AssetJob): Promise<void> {
 
 		// TODO :: Could do better validation here
 		const metadata = asset.metadata as VideoMetadata;
+		const hasAudio = metadata.streams.some(
+			(stream) => stream.codec_type === "audio",
+		);
+
+		const baseAcc = {
+			filters: [] as string[],
+			inputStreams: hasAudio ? ["-map", "0:a:0"] : ([] as string[]),
+			streamMaps: hasAudio
+				? ["a:0,name:audio,agroup:audio,default:yes"]
+				: ([] as string[]),
+		};
 
 		const { inputStreams, filters, streamMaps } = qualities.av1.reduce(
 			(
@@ -77,52 +88,42 @@ export async function generateVideoProxy(job: AssetJob): Promise<void> {
 				},
 				cv,
 				index,
-				arr,
 			) => {
 				acc.filters.push(
-					...[
-						`-filter:v:${index}`,
-						cv.scale,
-						`-crf:v:${index}`,
-						cv.crf,
-						`-c:v:${index}`,
-						cv.codec,
-						`-preset:v:${index}`,
-						cv.preset,
-					],
+					`-filter:v:${index}`,
+					cv.scale,
+					`-crf:v:${index}`,
+					cv.crf,
+					`-c:v:${index}`,
+					cv.codec,
+					`-preset:v:${index}`,
+					cv.preset,
 				);
 
 				if (cv.svtParams) {
 					acc.filters.push(`-svtav1-params:${index}`, cv.svtParams);
 				}
-
 				if (cv.bitrate?.rate) {
 					acc.filters.push(`-b:v:${index}`, cv.bitrate.rate);
 				}
-
-				if (cv?.bitrate?.maxrate) {
+				if (cv.bitrate?.maxrate) {
 					acc.filters.push(`-maxrate:v:${index}`, cv.bitrate.maxrate);
 				}
-
-				if (cv?.bitrate?.bufsize) {
+				if (cv.bitrate?.bufsize) {
 					acc.filters.push(`-bufsize:v:${index}`, cv.bitrate.bufsize);
 				}
 
-				acc.inputStreams.push("-map", "0:v:0"); //  '-map', 'a:0' is not added because we are creating a dedicated audio group
+				// Always map video stream
+				acc.inputStreams.push("-map", "0:v:0");
 				acc.streamMaps.push(`v:${index},name:${cv.name},agroup:audio`);
+
 				return acc;
 			},
-			{
-				filters: [],
-				inputStreams: ["-map", "0:a:0"],
-				// Create a dedicated audio group. Then reference it in the video group. Set default audio to yes
-				streamMaps: ["a:0,name:audio,agroup:audio,default:yes"],
-			},
+			baseAcc,
 		);
 
 		const commands = [
 			"-hide_banner",
-			// For each rendition we need a mapping
 			...inputStreams,
 			...filters,
 			"-var_stream_map",
@@ -130,7 +131,7 @@ export async function generateVideoProxy(job: AssetJob): Promise<void> {
 			"-g",
 			"300",
 			"-c:a",
-			"libopus", // "aac",
+			"libopus", // or "aac" if preferred
 			"-b:a",
 			"128k",
 			"-ac",

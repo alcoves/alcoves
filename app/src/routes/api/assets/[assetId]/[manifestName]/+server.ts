@@ -38,7 +38,7 @@ export async function GET({ params, locals, request }) {
 
 	try {
 		const file = await getObjectFromS3(fetchParams);
-		const body = await file.text()
+		const body = await file.text();
 
 		const manifestWithApiUrls = body
 			? await Promise.all(
