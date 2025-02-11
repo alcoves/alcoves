@@ -1,25 +1,25 @@
 <script lang="ts">
-  import { Moon, Sun } from "lucide-svelte";
-  import { onMount } from "svelte";
+import { Moon, Sun } from "lucide-svelte";
+import { onMount } from "svelte";
 
-  const themes = ["dark", "light"];
-  let currentTheme: string;
+const themes = ["dark", "light"];
+let currentTheme: string;
 
-  onMount(() => {
-    currentTheme = localStorage.getItem("theme") || "dark"; // Default theme as set by tailwind.config.ts
-    applyTheme(currentTheme);
-  });
+onMount(() => {
+	currentTheme = localStorage.getItem("theme") || "dark"; // Default theme as set by tailwind.config.ts
+	applyTheme(currentTheme);
+});
 
-  function applyTheme(theme: string) {
-    document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("theme", theme);
-    currentTheme = theme;
-  }
+function applyTheme(theme: string) {
+	document.documentElement.setAttribute("data-theme", theme);
+	localStorage.setItem("theme", theme);
+	currentTheme = theme;
+}
 
-  function toggleTheme() {
-    const newTheme = currentTheme === "light" ? "dark" : "light";
-    applyTheme(newTheme);
-  }
+function toggleTheme() {
+	const newTheme = currentTheme === "light" ? "dark" : "light";
+	applyTheme(newTheme);
+}
 </script>
 
 <label class="swap swap-rotate">

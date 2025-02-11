@@ -1,12 +1,12 @@
 <script lang="ts">
-  import type { PageProps } from "./$types";
+import type { PageProps } from "./$types";
 
-  const cardTitle = "Let's get logged in";
-  const cardAction = "Log In";
-  const alternateButtonText = "Or create an account";
-  const alternateButtonLink = "/signup";
+const cardTitle = "Let's get logged in";
+const cardAction = "Log In";
+const alternateButtonText = "Or create an account";
+const alternateButtonLink = "/signup";
 
-  let { form }: PageProps = $props();
+let { form }: PageProps = $props();
 </script>
 
 <div class="card bg-neutral text-neutral-content w-96">

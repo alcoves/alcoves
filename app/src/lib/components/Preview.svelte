@@ -1,32 +1,32 @@
 <script lang="ts">
-  import type { Asset } from "$lib/server/db/schema";
-  import "vidstack/bundle";
+import type { Asset } from "$lib/server/db/schema";
+import "vidstack/bundle";
 
-  // import { isHLSProvider } from "vidstack";
+// import { isHLSProvider } from "vidstack";
 
-  const { asset, onClose } = $props<{
-    asset: Asset;
-    onClose: () => void;
-  }>();
+const { asset, onClose } = $props<{
+	asset: Asset;
+	onClose: () => void;
+}>();
 
-  let dialog = $state<HTMLDialogElement | null>(null);
+let dialog = $state<HTMLDialogElement | null>(null);
 
-  $effect(() => {
-    if (dialog) {
-      dialog.showModal();
-      const handleClose = () => onClose();
-      dialog.addEventListener("close", handleClose);
-      return () => {
-        dialog?.removeEventListener("close", handleClose);
-      };
-    }
-  });
+$effect(() => {
+	if (dialog) {
+		dialog.showModal();
+		const handleClose = () => onClose();
+		dialog.addEventListener("close", handleClose);
+		return () => {
+			dialog?.removeEventListener("close", handleClose);
+		};
+	}
+});
 
-  function handleBackdropClick(event: MouseEvent | KeyboardEvent) {
-    if (event.target === dialog) {
-      dialog?.close();
-    }
-  }
+function handleBackdropClick(event: MouseEvent | KeyboardEvent) {
+	if (event.target === dialog) {
+		dialog?.close();
+	}
+}
 </script>
 
 <dialog bind:this={dialog} class="modal">

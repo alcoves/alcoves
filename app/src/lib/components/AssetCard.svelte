@@ -1,73 +1,73 @@
 <script lang="ts">
-  import { Check } from "lucide-svelte";
-  import type { Asset } from "../../stores/assets";
+import { Check } from "lucide-svelte";
+import type { Asset } from "../../stores/assets";
 
-  let props = $props<{
-    asset: Asset;
-    isSelected?: boolean;
-    onSelect?: (id: string) => void;
-    onPreview?: (asset: Asset) => void;
-  }>();
+let props = $props<{
+	asset: Asset;
+	isSelected?: boolean;
+	onSelect?: (id: string) => void;
+	onPreview?: (asset: Asset) => void;
+}>();
 
-  const hasReadyHLSProxy = $derived(
-    props.asset?.proxies?.some(
-      (proxy: any) =>
-        proxy?.type === "HLS" && proxy?.status === "READY" && proxy.isDefault,
-    ),
-  );
+const hasReadyHLSProxy = $derived(
+	props.asset?.proxies?.some(
+		(proxy: any) =>
+			proxy?.type === "HLS" && proxy?.status === "READY" && proxy.isDefault,
+	),
+);
 
-  const inProgressHLSProxy = $derived(
-    props.asset?.proxies?.find(
-      (proxy: any) => proxy?.type === "HLS" && proxy?.status === "PROCESSING",
-    ),
-  );
+const inProgressHLSProxy = $derived(
+	props.asset?.proxies?.find(
+		(proxy: any) => proxy?.type === "HLS" && proxy?.status === "PROCESSING",
+	),
+);
 
-  const thumbnailReadyProxy = $derived(
-    props.asset?.proxies?.find(
-      (proxy: any) =>
-        proxy?.type === "THUMBNAIL" &&
-        proxy?.status === "READY" &&
-        proxy.isDefault,
-    ),
-  );
+const thumbnailReadyProxy = $derived(
+	props.asset?.proxies?.find(
+		(proxy: any) =>
+			proxy?.type === "THUMBNAIL" &&
+			proxy?.status === "READY" &&
+			proxy.isDefault,
+	),
+);
 
-  const thumbnailUrl = $derived(
-    thumbnailReadyProxy
-      ? `http://localhost:5173/api/proxy/${thumbnailReadyProxy?.storageKey}`
-      : null,
-  );
+const thumbnailUrl = $derived(
+	thumbnailReadyProxy
+		? `http://localhost:5173/api/proxy/${thumbnailReadyProxy?.storageKey}`
+		: null,
+);
 
-  function formatDuration(seconds: number): string {
-    const sec =
-      typeof seconds === "string" ? Number.parseFloat(seconds) : seconds;
-    const hours = Math.floor(sec / 3600);
-    const minutes = Math.floor((sec % 3600) / 60);
-    const remainingSeconds = Math.floor(sec % 60);
+function formatDuration(seconds: number): string {
+	const sec =
+		typeof seconds === "string" ? Number.parseFloat(seconds) : seconds;
+	const hours = Math.floor(sec / 3600);
+	const minutes = Math.floor((sec % 3600) / 60);
+	const remainingSeconds = Math.floor(sec % 60);
 
-    if (hours > 0) {
-      return `${hours}:${minutes.toString().padStart(2, "0")}:${remainingSeconds
-        .toString()
-        .padStart(2, "0")}`;
-    }
-    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
-  }
+	if (hours > 0) {
+		return `${hours}:${minutes.toString().padStart(2, "0")}:${remainingSeconds
+			.toString()
+			.padStart(2, "0")}`;
+	}
+	return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
+}
 
-  function handleSelect(event: MouseEvent) {
-    event.stopPropagation();
-    props.onSelect?.(props.asset.id);
-  }
+function handleSelect(event: MouseEvent) {
+	event.stopPropagation();
+	props.onSelect?.(props.asset.id);
+}
 
-  function handleClick() {
-    if (hasReadyHLSProxy) {
-      props.onPreview?.(props.asset);
-    }
-  }
+function handleClick() {
+	if (hasReadyHLSProxy) {
+		props.onPreview?.(props.asset);
+	}
+}
 
-  function handleKeydown(event: KeyboardEvent) {
-    if (event.key === "Enter") {
-      handleClick();
-    }
-  }
+function handleKeydown(event: KeyboardEvent) {
+	if (event.key === "Enter") {
+		handleClick();
+	}
+}
 </script>
 
 <div
