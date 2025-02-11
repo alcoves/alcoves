@@ -32,7 +32,9 @@
   );
 
   const thumbnailUrl = $derived(
-    `http://localhost:5173/api/proxy/${thumbnailReadyProxy?.storageKey}`,
+    thumbnailReadyProxy
+      ? `http://localhost:5173/api/proxy/${thumbnailReadyProxy?.storageKey}`
+      : null,
   );
 
   function formatDuration(seconds: number): string {
@@ -77,8 +79,8 @@
     {#if props.asset?.status !== "READY"}
       {#if thumbnailUrl}
         <img
-          alt={props.asset?.title}
           src={thumbnailUrl}
+          alt={props.asset?.title}
           class="absolute object-cover w-full h-full"
         />
       {:else}

@@ -1,5 +1,5 @@
 import { env } from '$lib/server/utilities/env.js';
-import { getPresignedUrl, s3Client } from '$lib/server/utilities/s3';
+import { getPresignedUrl, S3AWSClient } from '$lib/server/utilities/s3';
 import { GetObjectCommand } from '@aws-sdk/client-s3';
 import { error } from '@sveltejs/kit';
 import { Readable } from 'stream';
@@ -41,7 +41,7 @@ export async function GET({ url, params, request }) {
         });
 
         // Get object from S3
-        const s3Response = await s3Client.send(command);
+        const s3Response = await S3AWSClient.send(command);
 
         // Ensure s3Response.Body is defined and cast it to an AsyncIterable if needed
         if (!s3Response.Body) {

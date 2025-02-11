@@ -4,7 +4,8 @@ import { AssetTasks, assetProcessingQueue, bullConnection } from "../queues";
 import { generateVideoProxy } from "../tasks/generateVideoProxy";
 import { generateVideoThumbnail } from "../tasks/generateVideoThumbnail";
 import { ingestAsset } from "../tasks/ingestAsset";
-import { notifyAsset } from "$lib/server/services/notify";
+import { dispatchAssetNotification } from "$lib/server/services/notify";
+import { getAsset } from "$lib/server/services/assets";
 
 export interface AssetJob extends Job {
 	name: AssetTasks;
@@ -45,17 +46,22 @@ async function main() {
 
 	worker.on('progress', async (job, progress) => {
 		console.log(`${job.id} has progressed to ${progress}%`);
-		await notifyAsset(job.data.assetId, "ASSET_UPDATED");
+		const asset = await getAsset(job.data.assetId);
+		await dispatchAssetNotification("assets", "ASSET_UPDATED", [asset]);
 	});
 
 	worker.on("completed", async (job) => {
 		console.log(`${job.id} has completed!`);
-		await notifyAsset(job.data.assetId, "ASSET_UPDATED");
+		const asset = await getAsset(job.data.assetId);
+		await dispatchAssetNotification("assets", "ASSET_UPDATED", [asset]);
 	});
 
 	worker.on("failed", async (job, err) => {
 		console.log(`${job?.id} has failed with ${err.message}`);
-		if (job?.data?.assetId) await notifyAsset(job.data.assetId, "ASSET_UPDATED");
+		if (job?.data?.assetId) {
+			const asset = await getAsset(job.data.assetId);
+			await dispatchAssetNotification("assets", "ASSET_UPDATED", [asset]);
+		}
 	});
 
 	console.info(

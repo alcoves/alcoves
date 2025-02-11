@@ -1,15 +1,9 @@
 
 import createSubscriber from "pg-listen"
 import type { Asset } from "../db/schema"
-import { getAsset } from "./assets";
+import type { AssetNotification } from "../../../types/ambient";
 
-export interface AssetNotification {
-  type: "ASSET_CREATED" | "ASSET_UPDATED" | "ASSET_DELETED";
-  asset: Asset;
-  time: number;
-}
-
-export const subscriber = createSubscriber({ 
+export let subscriber = createSubscriber({ 
   connectionString: process.env.ALCOVES_DB_CONNECTION_STRING!,
 })
 
@@ -21,6 +15,9 @@ let isConnected = false
 
 export async function ensureConnection() {
   if (!isConnected) {
+    subscriber = createSubscriber({ 
+      connectionString: process.env.ALCOVES_DB_CONNECTION_STRING!,
+    })
     await subscriber.connect()
     isConnected = true
     console.log('Successfully connected to PostgreSQL')
@@ -32,17 +29,12 @@ export async function getNotifySubscriber() {
   return subscriber
 }
 
-export async function notifyAssetCreate(channelId: string) {
-  const subscriber = await getNotifySubscriber()
-  const payload = { type: "ASSET_CREATED", time: Date.now() } as AssetNotification;
-  await subscriber.notify(channelId, JSON.stringify(payload));
-}
-
-export async function notifyAsset(assetId: string, type: AssetNotification["type"]) {
-  const asset = await getAsset(assetId);
-  if (!asset) return
-  delete asset.metadata; // Because it is huge
-  const payload = { type, asset, time: Date.now() } as AssetNotification;
+export async function dispatchAssetNotification(channelId: string, type: "ASSET_UPDATED" | "ASSET_CREATED" | "ASSET_DELETED", assets: Partial<Asset>[]) {
   const subscriber = await getNotifySubscriber();
-  await subscriber.notify("assets", JSON.stringify(payload));
+  const cleanedAssets = assets.map((asset) => {
+    delete asset.metadata; // Because it is huge
+    return asset;
+  })
+  const payload = { type, assets: cleanedAssets, time: Date.now() } as AssetNotification;
+  await subscriber.notify(channelId, JSON.stringify(payload));
 }

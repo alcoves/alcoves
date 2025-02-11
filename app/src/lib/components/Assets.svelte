@@ -1,9 +1,10 @@
 <script lang="ts">
   import { source } from "sveltekit-sse";
-  import { assets, updateAsset, type Asset } from "../../stores/assets";
+  import { assets, type Asset } from "../../stores/assets";
   import AssetCard from "./AssetCard.svelte";
   import Preview from "./Preview.svelte";
   import { invalidateAll } from "$app/navigation";
+  import { type AssetNotification } from "../../types/ambient";
 
   let { initialAssets, onDeleteAssets } = $props<{
     initialAssets?: Asset[];
@@ -29,23 +30,36 @@
   $effect(() => {
     const unsubscribe = connection.select("assets").subscribe((message) => {
       try {
-        const parsedMessage = JSON.parse(message);
-        switch (parsedMessage?.type) {
-          case "ASSET_CREATED":
-            console.log("ASSET_CREATED");
-            invalidateAll();
-            break;
-          case "ASSET_DELETED":
-            console.log("ASSET_DELETED");
-            invalidateAll();
-            break;
-          case "ASSET_UPDATED":
-            console.log("ASSET_UPDATED");
-            updateAsset(parsedMessage.asset);
-            break;
+        const parsedMessage: AssetNotification = JSON.parse(message);
+        console.log(`Received message: ${parsedMessage.type}`);
+
+        if (parsedMessage.assets.length === 0) {
+          return;
+        } else if (parsedMessage.type === "ASSET_CREATED") {
+          assets.update((currentAssets: Asset[]) => {
+            const newAssets = parsedMessage.assets.filter(
+              (newAsset: Asset) =>
+                !currentAssets.some((asset) => asset.id === newAsset.id),
+            );
+            return [...newAssets, ...currentAssets];
+          });
+        } else if (parsedMessage.type === "ASSET_UPDATED") {
+          assets.update((currentAssets: Asset[]) =>
+            currentAssets.map((asset: Asset) => {
+              const found = parsedMessage.assets.find((a) => a.id === asset.id);
+              return found ? { ...asset, ...found } : asset;
+            }),
+          );
+        } else if (parsedMessage.type === "ASSET_DELETED") {
+          assets.update((currentAssets: Asset[]) =>
+            currentAssets.filter(
+              (asset: Asset) => !parsedMessage.assets.includes(asset.id),
+            ),
+          );
         }
       } catch (error) {
         // Ignore json parse error
+        // invalidateAll();
       }
     });
 
@@ -75,25 +89,31 @@
     }
   }
 
-  function deleteSelectedAssets() {
-    const confirmDeletion = confirm(
-      "Are you sure you want to delete the selected assets?",
-    );
-    if (!confirmDeletion) return;
-
-    onDeleteAssets?.(selectedAssets);
-    assets.update((currentAssets) =>
-      currentAssets.filter((asset) => !selectedAssets.includes(asset.id)),
-    );
-    selectedAssets = [];
-  }
-
   function handlePreview(asset: Asset) {
     selectedAsset = asset;
   }
 
   function closePreview() {
     selectedAsset = null;
+  }
+
+  async function handleDelete(event: SubmitEvent) {
+    event.preventDefault();
+    const form = event.currentTarget as HTMLFormElement;
+    const formData = new FormData(form);
+    const response = await fetch(form.action, {
+      method: form.method,
+      body: formData,
+    });
+    if (response.ok) {
+      invalidateAll();
+      assets.update((currentAssets) =>
+        currentAssets.filter((asset) => !selectedAssets.includes(asset.id)),
+      );
+      selectedAssets = [];
+    } else {
+      console.error("Failed to delete assets");
+    }
   }
 </script>
 
@@ -108,9 +128,16 @@
         <span class="text-sm opacity-70">
           {selectedAssets.length} of {$assets.length} selected
         </span>
-        <button class="btn btn-sm btn-error" onclick={deleteSelectedAssets}>
-          Delete
-        </button>
+        <!-- Delete form that submits to the deleteAssets action -->
+        <form method="post" action="?/deleteAssets" onsubmit={handleDelete}>
+          <!-- Pass the selected asset ids as a comma‐separated string -->
+          <input
+            type="hidden"
+            name="assetIds"
+            value={selectedAssets.join(",")}
+          />
+          <button type="submit" class="btn btn-sm btn-error">Delete</button>
+        </form>
       {/if}
     </div>
 

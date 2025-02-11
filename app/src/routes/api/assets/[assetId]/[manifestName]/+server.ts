@@ -1,5 +1,5 @@
 import { db } from "$lib/server/db/db";
-import { getObjectFromS3, getPresignedUrl } from "$lib/server/utilities/s3";
+import { getObjectFromS3 } from "$lib/server/utilities/s3";
 import { error } from "@sveltejs/kit";
 
 export async function GET({ params, locals, request }) {
@@ -37,12 +37,12 @@ export async function GET({ params, locals, request }) {
 	}
 
 	try {
-		const { Body } = await getObjectFromS3(fetchParams);
-		const parsedManifest = await Body?.transformToString();
+		const file = await getObjectFromS3(fetchParams);
+		const body = await file.text()
 
-		const manifestWithApiUrls = parsedManifest
+		const manifestWithApiUrls = body
 			? await Promise.all(
-					parsedManifest.split("\n").map(async (line) => {
+					body.split("\n").map(async (line) => {
 						// Replaces the .m3u8 file with the API endpoint
 						if (line.includes(".m3u8")) {
 							const url = new URL(request.url);

@@ -86,7 +86,7 @@ export const assetsRelations = relations(assets, ({ one, many }) => ({
 
 export const assetProxies = pgTable("asset_proxies", {
 	id: uuid().defaultRandom().primaryKey(),
-	assetId: uuid("asset_id").notNull(),
+	assetId: uuid("asset_id").notNull().references(() => assets.id, { onDelete: 'cascade' }), 
 	isDefault: boolean("is_default").notNull().default(false),
 	status: text({ enum: ["PROCESSING", "READY", "ERROR"] }),
 	type: text({ enum: ["HLS", "THUMBNAIL"] }).notNull(),

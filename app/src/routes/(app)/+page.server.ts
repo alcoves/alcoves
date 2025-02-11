@@ -1,5 +1,6 @@
 import { type Actions, fail } from "@sveltejs/kit";
-import { ASSET_STORAGE_PREFIX, getPresignedUrl, s3Client } from "$lib/server/utilities/s3";
+import { eq, and, inArray } from "drizzle-orm";
+import { ASSET_STORAGE_PREFIX, getPresignedUrl, S3AWSClient } from "$lib/server/utilities/s3";
 import { db } from "$lib/server/db/db";
 import { assets, type AssetProxy } from "$lib/server/db/schema";
 import { v4 as uuidv4 } from "uuid";
@@ -15,6 +16,7 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import path from "path";
 
 import { z } from "zod";
+import { dispatchAssetNotification } from "$lib/server/services/notify";
 
 const mimeTypeValidator = z.string().refine(
   (val) => val.startsWith("image/") || val.startsWith("video/"),
@@ -122,6 +124,21 @@ export const load: PageServerLoad = async ({ locals }) => {
 };
 
 export const actions = {
+  deleteAssets: async ({ request, locals }) => {
+    if (!locals.user) throw fail(401);
+    const data = await request.formData();
+    const assetIds = data.get('assetIds')?.toString();
+    if (!assetIds) return { success: false };
+    const ids = assetIds.split(',').map((id) => id.trim());
+
+    await db.update(assets)
+      .set({ deleted: true })
+      .where(and(inArray(assets.id, ids), eq(assets.ownerId, locals.user.id)));
+
+    await dispatchAssetNotification("assets", 'ASSET_DELETED', ids.map((id) => ({ id })));
+
+    return { success: true };
+  },
   createUpload: async ({ request, locals }) => {
     if (!locals.user) throw fail(401);
     const formData = await request.formData();
@@ -144,7 +161,7 @@ export const actions = {
       ContentType: type,
       Bucket: env.ALCOVES_OBJECT_STORE_DEFAULT_BUCKET
     });
-    const { UploadId } = await s3Client.send(createCommand);
+    const { UploadId } = await S3AWSClient.send(createCommand);
 
     const uploadUrls = await Promise.all(
       Array.from({ length: totalParts }, (_, i) => i + 1).map(async (partNumber) => {
@@ -154,7 +171,7 @@ export const actions = {
           PartNumber: partNumber,
           Bucket: env.ALCOVES_OBJECT_STORE_DEFAULT_BUCKET
         });
-        const signedUrl = await getSignedUrl(s3Client, command, {
+        const signedUrl = await getSignedUrl(S3AWSClient, command, {
           expiresIn: 3600 * 24 // 24 hours
         });
         return { signedUrl, partNumber };
@@ -190,10 +207,10 @@ export const actions = {
         }))
       }
     });
-    await s3Client.send(command);
+    await S3AWSClient.send(command);
 
     const assetStoragePrefix = `${ASSET_STORAGE_PREFIX}/${assetId}`;
-    await db.insert(assets).values({
+    const [asset] = await db.insert(assets).values({
       id: assetId,
       ownerId: locals.user.id,
       type: getAssetType(type),
@@ -206,6 +223,7 @@ export const actions = {
       storageBucket: process.env.ALCOVES_OBJECT_STORE_DEFAULT_BUCKET!
     }).returning();
 
+    await dispatchAssetNotification("assets", "ASSET_CREATED", [asset]);
     await assetProcessingQueue.add(AssetTasks.INGEST_ASSET, { assetId });
     return { success: true };
   }
