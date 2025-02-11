@@ -1,7 +1,8 @@
 <script lang="ts">
   import type { Asset } from "$lib/server/db/schema";
-  import { isHLSProvider } from "vidstack";
   import "vidstack/bundle";
+
+  // import { isHLSProvider } from "vidstack";
 
   const { asset, onClose } = $props<{
     asset: Asset;
@@ -11,23 +12,17 @@
   let dialog = $state<HTMLDialogElement | null>(null);
 
   $effect(() => {
-    // Open modal when dialog is available
     if (dialog) {
       dialog.showModal();
-
-      // Add event listener for the dialog close event
       const handleClose = () => onClose();
       dialog.addEventListener("close", handleClose);
-
-      // Cleanup event listener
       return () => {
         dialog?.removeEventListener("close", handleClose);
       };
     }
   });
 
-  // Handle backdrop clicks to close modal
-  function handleBackdropClick(event: MouseEvent) {
+  function handleBackdropClick(event: MouseEvent | KeyboardEvent) {
     if (event.target === dialog) {
       dialog?.close();
     }
@@ -35,7 +30,16 @@
 </script>
 
 <dialog bind:this={dialog} class="modal">
-  <div class="backdrop" on:click={handleBackdropClick}></div>
+  <div
+    class="backdrop"
+    role="button"
+    tabindex="0"
+    onclick={handleBackdropClick}
+    onkeydown={(event) => {
+      if (event.key === "Enter" || event.key === " ")
+        handleBackdropClick(event);
+    }}
+  ></div>
   <div
     class="modal-box bg-transparent p-2 flex flex-col items-center justify-center gap-2 max-w-7xl"
   >
@@ -44,15 +48,16 @@
         {asset?.title}
       </h3>
       <button
-        on:click={() => dialog?.close()}
+        onclick={() => dialog?.close()}
         class="btn btn-sm text-white bg-primary hover:bg-success"
       >
         Close
       </button>
     </div>
 
+    <!-- 
     <media-player
-      on:provider-change={({ detail }) => {
+      onprovider-change={({ detail }) => {
         if (isHLSProvider(detail)) {
           detail.config = {
             xhrSetup(xhr) {
@@ -60,7 +65,9 @@
             },
           };
         }
-      }}
+      }} -->
+
+    <media-player
       autoPlay
       playsInline
       volume={0.5}
