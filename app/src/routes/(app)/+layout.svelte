@@ -1,35 +1,35 @@
 <script lang="ts">
-import { page } from "$app/stores";
-import "../../app.css";
-import { goto } from "$app/navigation";
-import DarkModeToggle from "$lib/components/DarkModeToggle.svelte";
-import Uploader from "$lib/components/Uploader.svelte";
-import { Film, Menu } from "lucide-svelte";
+    import { page } from "$app/stores";
+    import "../../app.css";
+    import { goto } from "$app/navigation";
+    import DarkModeToggle from "$lib/components/DarkModeToggle.svelte";
+    import Uploader from "$lib/components/Uploader.svelte";
+    import { Film, Menu } from "lucide-svelte";
 
-const { data, children } = $props();
+    const { data, children } = $props();
 
-async function handleLogout() {
-	try {
-		// const response = await fetch(
-		//     `${PUBLIC_ALCOVES_API_URL}/api/auth/logout`,
-		//     {
-		//         method: "POST",
-		//         headers: {
-		//             "Content-Type": "application/json",
-		//         },
-		//         credentials: "include",
-		//     },
-		// );
+    async function handleLogout() {
+        try {
+            // const response = await fetch(
+            //     `${PUBLIC_ALCOVES_API_URL}/api/auth/logout`,
+            //     {
+            //         method: "POST",
+            //         headers: {
+            //             "Content-Type": "application/json",
+            //         },
+            //         credentials: "include",
+            //     },
+            // );
 
-		// if (!response.ok) {
-		//     throw new Error("Network response was not ok");
-		// }
+            // if (!response.ok) {
+            //     throw new Error("Network response was not ok");
+            // }
 
-		goto("/login");
-	} catch (error) {
-		console.error("Login Error:", error);
-	}
-}
+            goto("/login");
+        } catch (error) {
+            console.error("Login Error:", error);
+        }
+    }
 </script>
 
 <div class="flex h-screen bg-base-100 text-base-content overflow-hidden">
@@ -91,7 +91,7 @@ async function handleLogout() {
                 class="drawer-overlay"
             ></label>
             <div
-                class="flex flex-col justify-start items-start min-h-full bg-base-100 text-base-content w-80"
+                class="flex flex-col justify-start items-start min-h-full bg-base-100 text-base-content w-52"
             >
                 <div
                     class="flex justify-start items-center h-[65px] p-2 w-full"
