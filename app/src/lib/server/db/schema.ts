@@ -17,6 +17,9 @@ export const users = pgTable("users", {
 	passwordHash: text("password_hash").notNull(),
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 	updatedAt: timestamp("updated_at").notNull().defaultNow(),
+	role: text({ enum: ["USER", "ADMIN"] })
+		.notNull()
+		.default("USER"),
 });
 
 export const sessions = pgTable("sessions", {

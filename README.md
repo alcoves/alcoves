@@ -23,7 +23,7 @@ https://lucia-auth.com/sessions/cookies/sveltekit
 
 With the docker compose stack up and running
 
-```
+```bash
 # Generate SQL Migration files
 docker compose run --rm app bun run db:generate
 

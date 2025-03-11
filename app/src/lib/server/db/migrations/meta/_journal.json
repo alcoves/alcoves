@@ -43,6 +43,13 @@
       "when": 1739251000887,
       "tag": "0005_luxuriant_abomination",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1739752607837,
+      "tag": "0006_serious_black_cat",
+      "breakpoints": true
     }
   ]
 }
