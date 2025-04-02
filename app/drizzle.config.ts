@@ -1,12 +1,15 @@
-import { defineConfig } from "drizzle-kit";
+import type { Config } from "drizzle-kit";
 
-export default defineConfig({
-	out: "./src/lib/server/db/migrations",
+export const ALCOVES_DB_PATH =
+	process.env.ALCOVES_DB_PATH || "../data/alcoves.db";
+
+export default {
 	schema: "./src/lib/server/db/schema.ts",
-	dialect: "postgresql",
+	out: "./src/lib/server/db/migrations",
+	dialect: "sqlite",
 	dbCredentials: {
-		url: process.env.ALCOVES_DB_CONNECTION_STRING!,
+		url: `file:${ALCOVES_DB_PATH}`,
 	},
 	verbose: true,
 	strict: true,
-});
+} satisfies Config;

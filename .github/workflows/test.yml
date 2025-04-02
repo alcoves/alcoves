@@ -5,7 +5,7 @@ on:
   pull_request:
 
 jobs:
-  server-lint:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -15,15 +15,4 @@ jobs:
         with:
           version: latest
       - name: Run Biome
-        run: cd server && biome ci .
-  client-lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Biome
-        uses: biomejs/setup-biome@v2
-        with:
-          version: latest
-      - name: Run Biome
-        run: cd client && biome ci .
+        run: cd app && biome ci .

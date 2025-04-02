@@ -1,5 +1,8 @@
 node_modules
 
+# DB
+alcoves.db
+
 # Output
 .output
 .vercel

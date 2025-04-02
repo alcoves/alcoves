@@ -1,7 +1,10 @@
-FROM oven/bun:latest
+FROM ubuntu:24.04
+
 WORKDIR /app
 
-RUN apt update && apt install -y wget xz-utils && rm -rf /var/lib/apt/lists/*
+ENV ALCOVES_DB_PATH=/data/alcoves.db
+
+RUN apt update && apt install -y wget xz-utils curl unzip && rm -rf /var/lib/apt/lists/*
 
 RUN wget -q https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-n7.1-latest-linux64-gpl-7.1.tar.xz && \
     tar -xvf ffmpeg-n7.1-latest-linux64-gpl-7.1.tar.xz && \
@@ -10,20 +13,12 @@ RUN wget -q https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpe
     rm -rf ffmpeg-n7.1-latest-linux64-gpl-7.1 && \
     rm ffmpeg-n7.1-latest-linux64-gpl-7.1.tar.xz
 
-WORKDIR /app/server
-COPY server/package.json server/bun.lockb ./
+RUN curl -fsSL https://bun.sh/install | BUN_INSTALL=/usr bash -s "bun-v1.2.2"
+
+COPY package.json bun.lock ./
 RUN bun install --frozen-lockfile
-WORKDIR /app
 
 COPY . .
 
-RUN mkdir -p ./server/src/static && \
-    cd client && \
-    bun install && \
-    bun run build && \
-    cp -R ./dist/* ../server/src/static/ && \
-    rm -rf node_modules
-
-WORKDIR /app/server
-EXPOSE 3000
-CMD ["bun", "start:api"]
+EXPOSE 5173
+CMD ["bun", "dev"]
