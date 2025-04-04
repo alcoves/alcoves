@@ -3,6 +3,8 @@ services:
     build:
       context: app
       dockerfile: ../docker/Dockerfile
+    environment:
+      TEST: test
     volumes:
       - ./app:/app
       - ./data:/data
@@ -12,6 +14,7 @@ services:
     # depends_on:
     #   tasks:
     #     condition: service_started
+
   # tasks:
   #   image: eqalpha/keydb:latest
   #   restart: always
