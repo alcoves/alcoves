@@ -2,6 +2,7 @@
   // import { page } from "$app/state";
   import "../../app.css";
   import { goto } from "$app/navigation";
+  import Uploader from "$lib/components/Uploader.svelte";
   import { Film, Menu } from "lucide-svelte";
 
   const { data, children } = $props();
@@ -21,7 +22,7 @@
           </label>
         </div>
         <div class="flex gap-2">
-          upload and dark mode toggle
+          <Uploader />
           <div class="dropdown dropdown-end">
             <div
               tabindex="0"
