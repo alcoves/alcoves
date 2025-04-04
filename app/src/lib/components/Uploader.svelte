@@ -11,7 +11,7 @@
   }
 
   // Only allow images
-  const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+  const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
   const authorizedMimeTypes = ["image/*"];
 
   let modalOpen = $state(false);
@@ -36,7 +36,7 @@
       return { valid: false, error: "Only images are supported" };
     }
     if (file.size > MAX_FILE_SIZE) {
-      return { valid: false, error: "File too large (max 10MB)" };
+      return { valid: false, error: "File too large (max 100MB)" };
     }
     return { valid: true, error: "" };
   }

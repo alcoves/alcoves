@@ -1,35 +1,62 @@
-import { exists, mkdir, readFile } from "node:fs/promises";
+import { existsSync, mkdirSync, readFileSync } from "node:fs";
 
-async function isRunningInDocker(): Promise<boolean> {
+function isRunningInDocker(): boolean {
+	let inDocker = false;
 	try {
-		if (await exists("/.dockerenv")) {
-			return true;
+		if (existsSync("/.dockerenv")) {
+			inDocker = true;
+			return inDocker;
 		}
 
-		const cgroupContent = await readFile("/proc/self/cgroup", "utf-8");
+		const cgroupContent = readFileSync("/proc/self/cgroup", "utf-8");
 		return cgroupContent.includes("docker");
 	} catch (error) {
 		return false;
 	}
 }
 
-export async function getRootDirectory(): Promise<string> {
-	const rootDir = (await isRunningInDocker()) ? "/data" : process.cwd();
+export function getDataDirectory(): string {
+	let dataDir = "";
+	const ENV_OVERRIDE = process.env.ALCOVES_DATA_DIR;
 
-	if (!(await exists(rootDir))) {
-		await mkdir(rootDir, { recursive: true });
+	if (ENV_OVERRIDE) {
+		dataDir = ENV_OVERRIDE;
 	}
 
-	return rootDir;
-}
-
-export async function getAssetsDirectory(): Promise<string> {
-	const rootDirectory = await getRootDirectory();
-	const assetsDirectory = `${rootDirectory}/assets`;
-
-	if (!(await exists(assetsDirectory))) {
-		await mkdir(assetsDirectory, { recursive: true });
+	if (isRunningInDocker()) {
+		dataDir = "/data";
+	} else {
+		dataDir = `${process.cwd()}/../data`;
 	}
 
-	return `${rootDirectory}/assets`;
+	if (!existsSync(dataDir)) {
+		mkdirSync(dataDir, { recursive: true });
+	}
+
+	return dataDir;
 }
+
+export function getAssetsDirectory(): string {
+	const dataDir = getDataDirectory();
+	const assetsDir = `${dataDir}/assets`;
+
+	if (!existsSync(assetsDir)) {
+		mkdirSync(assetsDir, { recursive: true });
+	}
+
+	return assetsDir;
+}
+
+export function getDatabasePath(): string {
+	const dataDir = getDataDirectory();
+	const databasePath = `${dataDir}/alcoves.db`;
+
+	return databasePath;
+}
+
+console.info("Alcoves Data Directory:", getDataDirectory());
+console.info("Database path:", getDatabasePath());
+console.info("Assets path:", getAssetsDirectory());
+console.info(
+	`Alcoves is ${isRunningInDocker() ? "running in a container" : "not running in a container"}.`,
+);

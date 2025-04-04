@@ -1,14 +1,18 @@
-import { mkdir, writeFile } from "node:fs/promises";
+import { exists, mkdir, readdir, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { db } from "$lib/server/db/db";
 import { getAssetsDirectory } from "$lib/server/utils";
 // import { db } from "$lib/server/db/db";
 // import { assets } from "$lib/server/db/schema";
 // import { AssetTasks, assetProcessingQueue } from "$lib/server/tasks/queues";
 import { type Actions, fail } from "@sveltejs/kit";
 import { randomUUIDv7 } from "bun";
+import sharp from "sharp";
 import { z } from "zod";
 // import { and, eq, inArray } from "drizzle-orm";
 import type { PageServerLoad } from "./$types";
+
+import ExifReader from "exifreader";
 
 // import { dispatchAssetNotification } from "$lib/server/services/notify";
 
@@ -67,7 +71,35 @@ export const load: PageServerLoad = async ({ locals }) => {
 	// 	};
 	// });
 
-	return { assets: [] };
+	const assets = await readdir(getAssetsDirectory());
+
+	return {
+		assets: await Promise.all(
+			assets.map(async (asset) => {
+				const fileUrl = `${getAssetsDirectory()}/${asset}/${asset}.JPG`;
+
+				if (fileUrl.includes("placeholder")) {
+					return {
+						id: asset,
+					};
+				}
+
+				const sharpMetadata = await sharp(fileUrl).metadata();
+				console.log(sharpMetadata.exif);
+				const tags = await ExifReader.load(fileUrl);
+
+				const datetime = tags["DateTimeOriginal"].description;
+
+				// const tags = [];
+
+				return {
+					id: asset,
+					// exif: tags,
+					createdAt: datetime,
+				};
+			}),
+		),
+	};
 };
 
 export const actions = {
@@ -118,7 +150,7 @@ export const actions = {
 		// 	.insert(assets)
 		// 	.values({
 		// 		id: assetId,
-		// 		ownerId: locals.user.id,
+		// 		ownerId: "test" || locals?.user?.id,
 		// 		type: "IMAGE",
 		// 		status: "UPLOADED",
 		// 		title: path.parse(filename).name,
